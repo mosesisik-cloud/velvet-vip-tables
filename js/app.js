@@ -931,6 +931,9 @@ const paramRoutes = [
 const safeDecode = (s) => { try { return decodeURIComponent(s); } catch { return s; } };
 
 function route() {
+  // Stäng ev. öppen modal vid ruttbyte (t.ex. bakåtknapp med öppen modal)
+  const modalRoot = document.getElementById("modal-root");
+  if (modalRoot && modalRoot.innerHTML) modalRoot.innerHTML = "";
   const h = location.hash;
   let fn = routes[h];
   let active = h || "#/";
