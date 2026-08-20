@@ -301,6 +301,13 @@ button { font-family: inherit; cursor: pointer; }
 .venue-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .venue-name { font-family: var(--font-display); font-size: 19px; font-weight: 600; line-height: 1.25; letter-spacing: 0.2px; }
 .venue-loc { font-size: 12.5px; color: var(--gold); font-weight: 500; letter-spacing: 0.6px; text-transform: uppercase; margin-top: 4px; }
+
+/* Prisklass — guldfärgade €-tecken (€–€€€€), resten dimmade */
+.price-tier { color: var(--gold-bright); font-weight: 700; letter-spacing: 1.5px; white-space: nowrap; }
+.price-tier-off { color: rgba(212, 175, 95, 0.24); }
+.venue-loc .price-tier { margin-left: 7px; }
+.detail-kicker .price-tier, .modal-sub .price-tier { font-size: 0.95em; }
+.detail-cta-sub .price-tier { margin-left: 5px; font-size: 13px; }
 .prio {
   flex-shrink: 0; display: flex; flex-direction: column; align-items: center;
   min-width: 48px; padding: 7px 10px; border-radius: 10px; background: var(--gold-dim);

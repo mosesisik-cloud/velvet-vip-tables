@@ -4,7 +4,7 @@
 let DESTINATIONS = [];
 let VENUES = [];
 const state = {
-  filters: { q: "", dest: "", cat: "", status: "", sort: "priority" },
+  filters: { q: "", dest: "", cat: "", status: "", price: "", sort: "priority" },
 };
 
 const CATEGORY_GROUPS = [
@@ -47,6 +47,28 @@ function packagesFor(v) {
 
 // Defensiv: icke-numeriskt in (t.ex. manipulerad localStorage) → 0 € i stället för "NaN"
 const fmtEUR = (n) => new Intl.NumberFormat("sv-SE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(Number.isFinite(Number(n)) ? Number(n) : 0);
+
+// ---------- Prisklass (€–€€€€) ----------
+// Härleds deterministiskt ur billigaste paketets pris. Trösklarna är kalibrerade
+// mot faktiska datat (från-pris 950–2950 €) så att alla fyra klasser förekommer:
+// € <2500 (44 st) · €€ 2500–2799 (11) · €€€ 2800–2949 (20) · €€€€ ≥2950 (45).
+const PRICE_TIERS = [
+  { n: 1, max: 2500, label: "Under 2 500 €" },
+  { n: 2, max: 2800, label: "2 500–2 799 €" },
+  { n: 3, max: 2950, label: "2 800–2 949 €" },
+  { n: 4, max: Infinity, label: "Från 2 950 €" },
+];
+const fromPriceFor = (v) => Math.min(...packagesFor(v).map((p) => p.price));
+function priceTier(v) {
+  const from = fromPriceFor(v);
+  const t = PRICE_TIERS.find((x) => from < x.max) || PRICE_TIERS[PRICE_TIERS.length - 1];
+  return { n: t.n, sym: "€".repeat(t.n), from };
+}
+// Guldfärgade €-tecken: aktiva i guld, resten dimmade upp till fyra
+function priceTierHTML(v, extraClass = "") {
+  const t = priceTier(v);
+  return `<span class="price-tier${extraClass ? ` ${extraClass}` : ""}" title="Prisklass ${t.sym} · paket från ${fmtEUR(t.from)}" role="img" aria-label="Prisklass ${t.n} av 4, paket från ${fmtEUR(t.from)}">${t.sym}<span class="price-tier-off" aria-hidden="true">${"€".repeat(4 - t.n)}</span></span>`;
+}
 
 // ---------- Bookings (localStorage) ----------
 // Defensivt: getItem/parse kan kasta (private mode, korrupt data) och innehållet
@@ -337,7 +359,7 @@ function renderDestinationDetail(code) {
   // "Visa i listan" — förifiltrera venue-listan på destinationen
   const goList = (e) => {
     e.preventDefault();
-    state.filters = { q: "", dest: d.name, cat: "", status: "", sort: "priority" };
+    state.filters = { q: "", dest: d.name, cat: "", status: "", price: "", sort: "priority" };
     location.hash = "#/venues";
   };
   $("#dd-list").addEventListener("click", goList);
@@ -353,7 +375,7 @@ function venueCard(v) {
     <div class="venue-top">
       <div>
         <div class="venue-name">${esc(v.name)}</div>
-        <div class="venue-loc">${esc(v.destination)}</div>
+        <div class="venue-loc">${esc(v.destination)} ${priceTierHTML(v)}</div>
       </div>
       <div class="prio"><span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">Prio</span></div>
     </div>
@@ -377,6 +399,7 @@ function applyFilters() {
     if (f.dest && v.destination !== f.dest) return false;
     if (f.cat && venueGroup(v) !== f.cat) return false;
     if (f.status && statusInfo(v.research_status).cls !== f.status) return false;
+    if (f.price && priceTier(v).n !== Number(f.price)) return false;
     if (f.q) {
       const q = f.q.toLowerCase();
       if (!`${v.name} ${v.destination} ${v.category} ${v.notes}`.toLowerCase().includes(q)) return false;
@@ -386,6 +409,7 @@ function applyFilters() {
   if (f.sort === "priority") list.sort((a, b) => b.priority_score - a.priority_score || a.name.localeCompare(b.name));
   else if (f.sort === "name") list.sort((a, b) => a.name.localeCompare(b.name));
   else if (f.sort === "luxury") list.sort((a, b) => b.luxury_score - a.luxury_score || b.priority_score - a.priority_score);
+  else if (f.sort === "price") list.sort((a, b) => fromPriceFor(a) - fromPriceFor(b) || b.priority_score - a.priority_score || a.name.localeCompare(b.name));
   return list;
 }
 
@@ -413,9 +437,14 @@ function renderVenues() {
         <option value="tag-research" ${f.status === "tag-research" ? "selected" : ""}>Research</option>
         <option value="tag-check" ${f.status === "tag-check" ? "selected" : ""}>Kontrollera status</option>
       </select>
+      <select id="f-price" aria-label="Prisklass">
+        <option value="">Alla prisklasser</option>
+        ${PRICE_TIERS.map((t) => `<option value="${t.n}" ${f.price === String(t.n) ? "selected" : ""}>${"€".repeat(t.n)} · ${t.label}</option>`).join("")}
+      </select>
       <select id="f-sort" aria-label="Sortering">
         <option value="priority" ${f.sort === "priority" ? "selected" : ""}>Högst prioritet</option>
         <option value="luxury" ${f.sort === "luxury" ? "selected" : ""}>Mest lyx</option>
+        <option value="price" ${f.sort === "price" ? "selected" : ""}>Lägst från-pris</option>
         <option value="name" ${f.sort === "name" ? "selected" : ""}>A–Ö</option>
       </select>
       <span class="filter-count" id="f-count" role="status" aria-live="polite" aria-atomic="true"></span>
@@ -436,6 +465,7 @@ function renderVenues() {
   $("#f-dest").addEventListener("change", (e) => { state.filters.dest = e.target.value; renderList(); });
   $("#f-cat").addEventListener("change", (e) => { state.filters.cat = e.target.value; renderList(); });
   $("#f-status").addEventListener("change", (e) => { state.filters.status = e.target.value; renderList(); });
+  $("#f-price").addEventListener("change", (e) => { state.filters.price = e.target.value; renderList(); });
   $("#f-sort").addEventListener("change", (e) => { state.filters.sort = e.target.value; renderList(); });
   renderList();
 }
@@ -500,7 +530,7 @@ function renderVenueDetail(id) {
 
     <div class="detail-hero">
       <div class="detail-hero-main">
-        <div class="detail-kicker">${esc(v.destination)}${dest ? ` · ${esc(dest.country)}` : ""} · ${esc(v.category)}</div>
+        <div class="detail-kicker">${esc(v.destination)}${dest ? ` · ${esc(dest.country)}` : ""} · ${esc(v.category)} · ${priceTierHTML(v)}</div>
         <h1 class="detail-name">${esc(v.name)}</h1>
         <div class="venue-tags detail-tags">
           <span class="tag ${st.cls}">${st.label}</span>
@@ -540,7 +570,7 @@ function renderVenueDetail(id) {
 
       <div class="detail-panel detail-cta">
         <h2 class="detail-panel-title">Boka & dela kostnaden</h2>
-        <p class="detail-cta-sub">Paket från</p>
+        <p class="detail-cta-sub">Paket från ${priceTierHTML(v)}</p>
         <div class="detail-price">${fmtEUR(fromPrice)}</div>
         <p class="detail-cta-note">Välj paket, sällskap och datum — notan splittas automatiskt per person.</p>
         <button class="btn btn-gold" id="d-book" style="width:100%">Boka bord</button>
@@ -573,7 +603,7 @@ function openBookingModal(v) {
     <div class="modal" role="dialog" aria-modal="true" aria-label="Boka ${esc(v.name)}" tabindex="-1">
       <button class="modal-close" id="m-close" aria-label="Stäng">✕</button>
       <h2>${esc(v.name)}</h2>
-      <div class="modal-sub">${esc(v.destination)} · ${esc(v.category)}</div>
+      <div class="modal-sub">${esc(v.destination)} · ${esc(v.category)} · ${priceTierHTML(v)}</div>
 
       <div class="form-group">
         <label for="m-date">Datum</label>
