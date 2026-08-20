@@ -1612,7 +1612,7 @@
     "destination_code": "ATH",
     "name": "Akanthus",
     "category": "Beach club / Nightlife",
-    "website_url": "https://akanthus.gr/",
+    "website_url": null,
     "instagram_url": "https://www.instagram.com/akanthus_club/",
     "vip_table_potential": true,
     "shareable_format": true,
@@ -1621,7 +1621,7 @@
     "shareability_score": 4,
     "booking_potential": 4,
     "research_status": "Web-verified",
-    "notes": "Tier 2 V1 candidate; IG handle corrected from @akanthus to @akanthus_club",
+    "notes": "Tier 2 V1 candidate; IG handle corrected from @akanthus to @akanthus_club; VARNING: tidigare hemsidedomän visar casino-innehåll (kapad/utgången) — länk borttagen 2026-08-21, IG är officiell kanal",
     "source_url": "https://akanthus.gr/",
     "priority_score": 80
   },
