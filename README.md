@@ -6,6 +6,8 @@ Concierge-förhandsversion. Inte en automatisk bokningsmotor. Knappen ljuger int
 
 30 destinationer · 120 handplockade lyxställen (Hï Ibiza, Scorpios Mykonos, Nammos, Nikki Beach Dubai …).
 
+**Live:** https://mosesisik-cloud.github.io/velvet-vip-tables/
+
 Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk UI, premium dark/gold.
 
 ## Vad som är på riktigt i V4
