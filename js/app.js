@@ -340,7 +340,7 @@ function renderHome() {
 
 // ---------- Hero-video (V2) ----------
 // Ambient stämningsvideo i heron (Pexels, fri licens — nattklubb/ljusshow,
-// URL:er verifierade HTTP 200 2026-08-20). Laddas EFTER första render
+// URL:er verifierade HTTP 200 2026-08-20, omverifierade 2026-08-21). Laddas EFTER första render
 // (dubbel rAF + idle) med preload="metadata" så LCP inte påverkas.
 // prefers-reduced-motion → stillbild (postern) istället för video.
 // Fel (offline, borttagen fil, CSP …) → elementet tas bort och den
