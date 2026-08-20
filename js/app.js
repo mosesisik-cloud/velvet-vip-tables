@@ -233,7 +233,7 @@ function renderHome() {
   view().innerHTML = `
   <section class="hero">
     <div class="hero-media" id="hero-media" aria-hidden="true"></div>
-    <div class="hero-kicker">Nu i förhandsversion · V1</div>
+    <div class="hero-kicker">Nu i förhandsversion · V2</div>
     <h1>VIP-bord på världens bästa klubbar.<br><em>Dela kostnaden.</em></h1>
     <p>Boka bord, cabanas och daybeds på ${VENUES.length} handplockade lyxställen i ${DESTINATIONS.length} destinationer — och splitta notan med ditt sällskap, automatiskt.</p>
     <div class="hero-cta">
@@ -1101,6 +1101,9 @@ function updateNavDest() {
   if (!el) return;
   const d = homeDestination();
   el.textContent = d ? d.name : "Alla destinationer";
+  // Guldton på väljaren när en hem-destination är vald
+  const btn = document.getElementById("nav-dest");
+  if (btn) btn.classList.toggle("has-dest", !!d);
 }
 
 // Unika länder ur katalogen, med sina destinationer (flest först, sedan A–Ö)
@@ -1239,15 +1242,17 @@ function openOnboarding(opts = {}) {
     <div class="ob-overlay" id="ob-overlay">
       <div class="ob" role="dialog" aria-modal="true" aria-label="Välj din destination" tabindex="-1">
         ${dismissable ? `<button class="modal-close ob-close" id="ob-close" aria-label="Stäng">✕</button>` : ""}
-        <div class="ob-kicker">Välkommen till VELVET</div>
+        <div class="ob-brand" aria-hidden="true">VELVET<span class="logo-dot">.</span></div>
+        <div class="ob-brand-rule" aria-hidden="true"></div>
+        <div class="ob-kicker">VIP-bord · Delad lyx</div>
         ${step === 1 ? `
         <h1 class="ob-title">Var vill du <em>fira</em>?</h1>
-        <p class="ob-sub">Välj land och destination så skräddarsyr vi utbudet. Du kan byta när som helst via 📍 i menyn.</p>
+        <p class="ob-sub">Välj land och destination så skräddarsyr vi utbudet. Du kan byta när som helst via väljaren uppe till höger.</p>
         <div class="ob-step">Steg 1 av 2 · Välj land</div>
         ${geoPanel()}
         <div class="ob-grid">
-          ${countries.map((c) => `
-          <div class="ob-card" data-country="${esc(c.country)}" role="button" tabindex="0" aria-label="Välj ${esc(c.country)}">
+          ${countries.map((c, i) => `
+          <div class="ob-card" style="animation-delay:${(0.42 + Math.min(i, 14) * 0.045).toFixed(2)}s" data-country="${esc(c.country)}" role="button" tabindex="0" aria-label="Välj ${esc(c.country)}">
             <div class="dest-emblem ob-emblem" style="--h:${destHue(c.country)}" aria-hidden="true">${esc(c.country.slice(0, 2).toUpperCase())}</div>
             <h3>${esc(c.country)}</h3>
             <div class="ob-meta">${c.dests.length} ${c.dests.length === 1 ? "destination" : "destinationer"}</div>
@@ -1258,10 +1263,10 @@ function openOnboarding(opts = {}) {
         <p class="ob-sub">${dests.length} ${dests.length === 1 ? "destination" : "destinationer"} i ${esc(country)}.</p>
         <div class="ob-step">Steg 2 av 2 · ${esc(country)}</div>
         <div class="ob-grid">
-          ${dests.map((d) => {
+          ${dests.map((d, i) => {
             const km = distanceToDest(d);
             return `
-          <div class="ob-card" data-dest="${esc(d.code)}" role="button" tabindex="0" aria-label="Välj ${esc(d.name)}">
+          <div class="ob-card" style="animation-delay:${(0.42 + Math.min(i, 14) * 0.045).toFixed(2)}s" data-dest="${esc(d.code)}" role="button" tabindex="0" aria-label="Välj ${esc(d.name)}">
             <div class="dest-emblem ob-emblem" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
             <h3>${esc(d.name)}</h3>
             <div class="ob-meta"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span> · Säsong ${esc(d.peak_season)}${km != null ? ` · ~${fmtKm(km)} km` : ""}</div>
