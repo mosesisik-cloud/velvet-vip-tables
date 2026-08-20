@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELVET — Offline</title>
+<meta name="theme-color" content="#0b0b0f">
+<!-- Fristående offline-sida: allt inline (inga externa beroenden — nätet är ju nere). -->
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: radial-gradient(ellipse 90% 60% at 50% 35%, #14141b 0%, #0b0b0f 70%);
+    color: #f2efe9;
+    font-family: "Inter", -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+  }
+  .card { text-align: center; max-width: 420px; }
+  .monogram {
+    width: 76px; height: 76px;
+    margin: 0 auto 26px;
+    border-radius: 50%;
+    border: 1px solid rgba(212, 175, 95, 0.35);
+    display: grid; place-items: center;
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 40px; font-weight: 600;
+    color: #d4af5f;
+    background: rgba(212, 175, 95, 0.06);
+  }
+  .brand {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 26px; font-weight: 700;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .brand .dot { color: #d4af5f; }
+  .tag {
+    color: #d4af5f;
+    font-size: 11px; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    margin-bottom: 26px;
+  }
+  h1 {
+    font-family: "Playfair Display", Georgia, serif;
+    font-size: 22px; font-weight: 600;
+    margin-bottom: 10px;
+  }
+  p { color: #a8a49b; margin-bottom: 28px; }
+  .retry {
+    display: inline-block;
+    font: inherit; font-weight: 600;
+    color: #0b0b0f;
+    background: linear-gradient(180deg, #e8c87e, #d4af5f);
+    border: 0; border-radius: 999px;
+    padding: 12px 30px;
+    cursor: pointer;
+    transition: transform 0.18s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.18s;
+  }
+  .retry:hover { transform: translateY(-1px); box-shadow: 0 10px 28px -10px rgba(212, 175, 95, 0.5); }
+  .retry:focus-visible { outline: 2px solid #d4af5f; outline-offset: 3px; }
+  .hint { margin-top: 20px; margin-bottom: 0; font-size: 12.5px; color: #8a867d; }
+</style>
+</head>
+<body>
+<main class="card">
+  <div class="monogram" aria-hidden="true">V</div>
+  <div class="brand">VELVET<span class="dot">.</span></div>
+  <div class="tag">VIP-bord. Delad lyx.</div>
+  <h1>Du är offline</h1>
+  <p>Vi når inte nätet just nu. Dina sparade bokningar finns kvar på den här enheten — anslut igen för att bläddra bland ställen och boka bord.</p>
+  <button class="retry" onclick="location.replace('./index.html#/')">Försök igen</button>
+  <p class="hint">Sidan laddas om automatiskt när anslutningen är tillbaka.</p>
+</main>
+<script>
+  window.addEventListener("online", function () { location.replace("./index.html#/"); });
+</script>
+</body>
+</html>

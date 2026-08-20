@@ -1,0 +1,57 @@
+{
+  "name": "VELVET — VIP-bord. Delad lyx.",
+  "short_name": "VELVET",
+  "description": "Boka VIP-bord, cabanas och daybeds på världens främsta klubbar och beach clubs — och dela kostnaden med ditt sällskap.",
+  "lang": "sv",
+  "dir": "ltr",
+  "start_url": "./index.html#/",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b0b0f",
+  "theme_color": "#0b0b0f",
+  "categories": ["travel", "lifestyle", "entertainment"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Favoriter",
+      "short_name": "Favoriter",
+      "description": "Dina sparade ställen",
+      "url": "./index.html#/favorites",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Ställen",
+      "short_name": "Ställen",
+      "description": "Bläddra bland alla VIP-ställen",
+      "url": "./index.html#/venues",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Förfrågningar",
+      "short_name": "Förfrågningar",
+      "description": "Visa dina VELVET-förfrågningar",
+      "url": "./index.html#/bookings",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

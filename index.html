@@ -10,9 +10,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/app.css">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥂</text></svg>">
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b0b0f">
+<meta name="color-scheme" content="dark">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="VELVET">
 </head>
 <body>
 <a class="skip-link" href="#view" id="skip-link">Hoppa till huvudinnehållet</a>
+<div class="preview-ribbon" role="status">
+  Förhandsversion · VELVET-teamet bokar bordet åt er · inga automatiska bokningar, inga dragningar
+</div>
 <div id="app">
   <!-- Nav -->
   <nav class="nav" aria-label="Huvudnavigation">
@@ -21,9 +33,13 @@
       <a href="#/destinations" data-nav>Destinationer</a>
       <a href="#/venues" data-nav>Ställen</a>
       <a href="#/map" data-nav>Karta</a>
-      <a href="#/bookings" data-nav>Mina bokningar <span id="booking-count" class="badge hidden"></span></a>
+      <a href="#/favorites" data-nav>Favoriter <span id="fav-count" class="badge hidden"></span></a>
+      <a href="#/bookings" data-nav>Förfrågningar <span id="booking-count" class="badge hidden"></span></a>
     </div>
     <div class="nav-side">
+      <button class="nav-search" id="nav-search" aria-label="Sök" title="Sök (/)">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      </button>
       <button class="nav-dest" id="nav-dest" aria-haspopup="dialog" title="Byt destination">
         <svg class="nav-dest-pin" viewBox="0 0 12 14" width="11" height="13" aria-hidden="true"><path d="M6 1a4.6 4.6 0 0 0-4.6 4.6C1.4 8.9 6 13 6 13s4.6-4.1 4.6-7.4A4.6 4.6 0 0 0 6 1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="6" cy="5.7" r="1.6" fill="currentColor"/></svg>
         <span class="nav-dest-name" id="nav-dest-name">Alla destinationer</span>
@@ -43,7 +59,11 @@
       <span class="footer-brand">VELVET<span class="logo-dot">.</span></span>
       <span class="footer-tag">VIP-bord. Delad lyx.</span>
     </div>
-    <div class="footer-meta">V3 · 30 destinationer · 120 handplockade ställen · Interaktiv karta · Riktiga venue-bilder & webbverifierade sociala länkar · Dataset: Luxury Experience Venue Master</div>
+    <div class="footer-meta">
+      V4 · Concierge-förhandsversion · 30 destinationer · 120 handplockade ställen
+      · <a href="#/villkor" data-nav>Villkor</a>
+      · <a href="#/integritet" data-nav>Integritet</a>
+    </div>
   </footer>
 </div>
 
@@ -52,6 +72,9 @@
 
 <!-- Booking modal -->
 <div id="modal-root"></div>
+
+<!-- Global search -->
+<div id="search-root"></div>
 
 <script type="module" src="js/app.js"></script>
 </body>

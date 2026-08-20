@@ -4,6 +4,7 @@
 let DESTINATIONS = [];
 let VENUES = [];
 let VENUE_IMAGES = {}; // venue_id -> bild från ställets egen hemsida (data/venue-images.json)
+let VENUE_EVENTS = { fetched: null, venues: {} }; // kommande events per venue (data/venue-events.json)
 const state = {
   filters: { q: "", dest: "", cat: "", status: "", price: "", sort: "priority" },
 };
@@ -136,6 +137,141 @@ function updateBookingBadge() {
   el.classList.toggle("hidden", n === 0);
 }
 
+// ---------- Favoriter (localStorage) + delbar lista ----------
+const FAVS_KEY = "velvet_favs_v1";
+const loadFavs = () => {
+  try {
+    const raw = JSON.parse(localStorage.getItem(FAVS_KEY));
+    if (!Array.isArray(raw)) return [];
+    return raw.filter((id) => typeof id === "string" && id);
+  } catch { return []; }
+};
+const saveFavs = (ids) => {
+  try { localStorage.setItem(FAVS_KEY, JSON.stringify([...new Set(ids)])); }
+  catch { showToast("Kunde inte spara favoriter — lagringsutrymmet är fullt eller blockerat."); }
+  updateFavBadge();
+};
+const isFav = (id) => loadFavs().includes(id);
+function toggleFav(id) {
+  const cur = loadFavs();
+  saveFavs(cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id]);
+  return isFav(id);
+}
+function updateFavBadge() {
+  const n = loadFavs().length;
+  const el = document.getElementById("fav-count");
+  if (!el) return;
+  el.textContent = n;
+  el.classList.toggle("hidden", n === 0);
+}
+function favBtnHTML(id) {
+  const on = isFav(id);
+  return `<button class="fav-btn" type="button" data-fav="${esc(id)}" aria-pressed="${on}" title="${on ? "Sparad" : "Spara"}" aria-label="${on ? "Ta bort från favoriter" : "Spara som favorit"}">
+    <svg viewBox="0 0 24 24" fill="${on ? "currentColor" : "none"}" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12.1 21s-7.2-4.5-9.6-8.3C.3 9.3 2.2 5.4 6.3 5.4c2.1 0 3.5 1.3 4.4 2.6.9-1.3 2.3-2.6 4.4-2.6 4.1 0 6 3.9 3.8 7.3-2.4 3.8-9.6 8.3-9.6 8.3z"/></svg>
+  </button>`;
+}
+function bindFavButtons(root = document) {
+  root.querySelectorAll("[data-fav]").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const on = toggleFav(btn.dataset.fav);
+      btn.setAttribute("aria-pressed", String(on));
+      btn.setAttribute("aria-label", on ? "Ta bort från favoriter" : "Spara som favorit");
+      btn.title = on ? "Sparad" : "Spara";
+      const svg = btn.querySelector("svg");
+      if (svg) svg.setAttribute("fill", on ? "currentColor" : "none");
+    });
+  });
+}
+
+// ---------- Concierge: förfrågan (inte fake-bokning) ----------
+const CONCIERGE_MAIL = "gabrielhadodo@gmail.com";
+const HOST_KEY = "velvet_host_v1";
+const loadHost = () => {
+  try {
+    const h = JSON.parse(sessionStorage.getItem(HOST_KEY) || localStorage.getItem(HOST_KEY));
+    if (h && typeof h === "object") return { name: String(h.name || ""), email: String(h.email || ""), phone: String(h.phone || "") };
+  } catch {}
+  return { name: "", email: "", phone: "" };
+};
+const saveHost = (h) => {
+  try {
+    localStorage.setItem(HOST_KEY, JSON.stringify(h));
+    sessionStorage.setItem(HOST_KEY, JSON.stringify(h));
+  } catch {}
+};
+
+function icsFor(b) {
+  const ymd = String(b.date || "").replace(/-/g, "");
+  const uid = `${b.id}@velvet.app`;
+  const summary = `VELVET · ${b.venue}`;
+  const desc = [
+    `Förfrågan ${b.id} (ej bekräftad bokning).`,
+    `${b.package} · ${b.party} personer · indikativt ${fmtEUR(b.per_person)}/person.`,
+    `Länk: ${shareLinkFor(b)}`,
+  ].join("\\n");
+  const ics = [
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//VELVET//Concierge//SV", "CALSCALE:GREGORIAN",
+    "BEGIN:VEVENT",
+    `UID:${uid}`,
+    `DTSTAMP:${ymd}T120000Z`,
+    `DTSTART;VALUE=DATE:${ymd}`,
+    `SUMMARY:${summary}`,
+    `DESCRIPTION:${desc}`,
+    `LOCATION:${b.venue}, ${b.destination}`,
+    "END:VEVENT", "END:VCALENDAR",
+  ].join("\r\n");
+  return `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
+}
+function inviteTextFor(b) {
+  return [
+    `Du är bjuden till ${b.venue} (${b.destination}).`,
+    `${b.date} · ${b.package} · ${b.party} personer.`,
+    `Indikativ andel: ${fmtEUR(b.per_person)} per person (totalt ${fmtEUR(b.total)}).`,
+    `VELVET-teamet bokar bordet — detta är en förfrågan, inte en bekräftad reservation.`,
+    `Gå med: ${shareLinkFor(b)}`,
+  ].join("\n");
+}
+
+async function sendConciergeRequest(b) {
+  const payload = {
+    _subject: `VELVET-förfrågan ${b.id} · ${b.venue} ${b.date}`,
+    id: b.id,
+    venue: b.venue,
+    venue_id: b.venue_id,
+    destination: b.destination,
+    date: b.date,
+    package: b.package,
+    party: b.party,
+    total_indicative_eur: b.total,
+    per_person_indicative_eur: b.per_person,
+    host_name: b.host?.name || "",
+    host_email: b.host?.email || "",
+    host_phone: b.host?.phone || "",
+    guests: (b.guests || []).map((g) => `${g.name}${g.email ? ` <${g.email}>` : ""}`).join(", "),
+    note: "Förfrågan från VELVET-appen. INTE en bekräftad bokning — återkoppla till värden.",
+  };
+  try {
+    const r = await fetch(`https://formsubmit.co/ajax/${CONCIERGE_MAIL}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (r.ok) return "sent";
+  } catch {}
+  return "local";
+}
+function mailtoFor(b) {
+  const subject = encodeURIComponent(`VELVET-förfrågan ${b.id} · ${b.venue}`);
+  const body = encodeURIComponent(inviteTextFor(b) + `\n\nVärd: ${b.host?.name || ""} ${b.host?.email || ""} ${b.host?.phone || ""}`);
+  return `mailto:${CONCIERGE_MAIL}?subject=${subject}&body=${body}`;
+}
+
+function setTitle(t) {
+  document.title = t ? `${t} · VELVET` : "VELVET — VIP-bord. Delad lyx.";
+}
+
 // ---------- Dela bokning (base64-länk, ingen backend) ----------
 // URL-säker base64 av unicode-JSON: + / = ersätts så länken tål kopiering överallt.
 const b64urlEncode = (obj) => {
@@ -235,9 +371,9 @@ function renderHome() {
   view().innerHTML = `
   <section class="hero">
     <div class="hero-media" id="hero-media" aria-hidden="true"></div>
-    <div class="hero-kicker">Nu i förhandsversion · V3</div>
+    <div class="hero-kicker">Concierge-förhandsversion · V4</div>
     <h1>VIP-bord på världens bästa klubbar.<br><em>Dela kostnaden.</em></h1>
-    <p>Boka bord, cabanas och daybeds på ${VENUES.length} handplockade lyxställen i ${DESTINATIONS.length} destinationer — och splitta notan med ditt sällskap, automatiskt.</p>
+    <p>Skicka en förfrågan till ${VENUES.length} handplockade lyxställen i ${DESTINATIONS.length} destinationer. VELVET-teamet bokar bordet — ni splittrar notan.</p>
     <div class="hero-cta">
       <a class="btn btn-gold" href="#/venues" data-nav>Utforska ställen</a>
       <a class="btn btn-ghost" href="#/destinations" data-nav>Se destinationer</a>
@@ -390,6 +526,7 @@ function renderDestinationDetail(code) {
     </section>`;
     return;
   }
+  setTitle(d.name);
   const venues = VENUES.filter((v) => v.destination === d.name)
     .sort((a, b) => b.priority_score - a.priority_score || a.name.localeCompare(b.name));
   const useCases = String(d.use_cases || "").split(",").map((s) => s.trim()).filter(Boolean);
@@ -490,6 +627,7 @@ function venueCard(v) {
   return `
   <div class="venue-card venue-card-link" data-id="${esc(v.venue_id)}" role="link" tabindex="0" aria-label="Visa detaljer för ${esc(v.name)}">
     ${venueMediaHTML(v, "venue-media")}
+    ${favBtnHTML(v.venue_id)}
     <div class="venue-top">
       <div>
         <div class="venue-name">${esc(v.name)}</div>
@@ -501,10 +639,11 @@ function venueCard(v) {
       <span class="tag">${esc(v.category)}</span>
       <span class="tag ${st.cls}">${st.label}</span>
       ${v.shareable_format ? '<span class="tag tag-verified">Delbar kostnad</span>' : ""}
+      ${eventsFor(v).length ? `<span class="tag tag-events">🎟 ${eventsFor(v).length} kommande</span>` : ""}
     </div>
     <div class="venue-note">${esc(v.notes || "")}</div>
     <div class="venue-actions">
-      <button class="btn btn-gold btn-sm" data-book="${esc(v.venue_id)}">Boka bord</button>
+      <button class="btn btn-gold btn-sm" data-book="${esc(v.venue_id)}">Skicka förfrågan</button>
       ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">Hemsida</a>` : ""}
       ${igLinkHTML(v)}
     </div>
@@ -531,13 +670,26 @@ function applyFilters() {
   return list;
 }
 
+function parseVenueQuery() {
+  const i = location.hash.indexOf("?");
+  if (i < 0) return;
+  const p = new URLSearchParams(location.hash.slice(i + 1));
+  if (p.has("q")) state.filters.q = p.get("q") || "";
+  if (p.has("dest")) state.filters.dest = p.get("dest") || "";
+  if (p.has("cat")) state.filters.cat = p.get("cat") || "";
+  if (p.has("status")) state.filters.status = p.get("status") || "";
+  if (p.has("pris")) state.filters.price = p.get("pris") || "";
+  if (p.has("sort")) state.filters.sort = p.get("sort") || "priority";
+}
+
 function renderVenues() {
+  parseVenueQuery();
   const f = state.filters;
   const dests = [...new Set(VENUES.map((v) => v.destination))].sort();
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
-      <div><h2>Ställen</h2><div class="sub">Bordsbokning med delad kostnad — filtrera och boka</div></div>
+      <div><h2>Ställen</h2><div class="sub">Filtrera katalogen och skicka en förfrågan — VELVET-teamet bokar</div></div>
     </div>
     <div class="filters">
       <input type="search" id="f-q" placeholder="Sök ställe, stad, kategori…" value="${esc(f.q)}" aria-label="Sök">
@@ -579,18 +731,33 @@ function renderVenues() {
     bindVenueCards();
   };
 
-  $("#f-q").addEventListener("input", (e) => { state.filters.q = e.target.value; renderList(); });
-  $("#f-dest").addEventListener("change", (e) => { state.filters.dest = e.target.value; renderList(); });
-  $("#f-cat").addEventListener("change", (e) => { state.filters.cat = e.target.value; renderList(); });
-  $("#f-status").addEventListener("change", (e) => { state.filters.status = e.target.value; renderList(); });
-  $("#f-price").addEventListener("change", (e) => { state.filters.price = e.target.value; renderList(); });
-  $("#f-sort").addEventListener("change", (e) => { state.filters.sort = e.target.value; renderList(); });
+  const syncHash = () => {
+    const f = state.filters;
+    const p = new URLSearchParams();
+    if (f.q) p.set("q", f.q);
+    if (f.dest) p.set("dest", f.dest);
+    if (f.cat) p.set("cat", f.cat);
+    if (f.status) p.set("status", f.status);
+    if (f.price) p.set("pris", f.price);
+    if (f.sort && f.sort !== "priority") p.set("sort", f.sort);
+    const qs = p.toString();
+    const next = qs ? `#/venues?${qs}` : "#/venues";
+    if (location.hash !== next) history.replaceState(null, "", next);
+  };
+
+  $("#f-q").addEventListener("input", (e) => { state.filters.q = e.target.value; renderList(); syncHash(); });
+  $("#f-dest").addEventListener("change", (e) => { state.filters.dest = e.target.value; renderList(); syncHash(); });
+  $("#f-cat").addEventListener("change", (e) => { state.filters.cat = e.target.value; renderList(); syncHash(); });
+  $("#f-status").addEventListener("change", (e) => { state.filters.status = e.target.value; renderList(); syncHash(); });
+  $("#f-price").addEventListener("change", (e) => { state.filters.price = e.target.value; renderList(); syncHash(); });
+  $("#f-sort").addEventListener("change", (e) => { state.filters.sort = e.target.value; renderList(); syncHash(); });
   renderList();
 }
 
 function bindVenueCards() {
   document.querySelectorAll("[data-book]").forEach((btn) => {
-    btn.addEventListener("click", () => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
       const v = VENUES.find((x) => x.venue_id === btn.dataset.book);
       if (v) openBookingModal(v);
     });
@@ -607,6 +774,7 @@ function bindVenueCards() {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
     });
   });
+  bindFavButtons();
 }
 
 // ---------- Venue detail ----------
@@ -620,6 +788,39 @@ function scoreMeter(label, val) {
       <span class="meter-val">${n}<span class="meter-max">/5</span></span>
     </div>
     <div class="meter-track"><div class="meter-fill" style="width:${pct}%"></div></div>
+  </div>`;
+}
+
+const SV_MONTHS = ["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"];
+function eventsFor(v) {
+  const rec = VENUE_EVENTS.venues[v.venue_id];
+  return rec && Array.isArray(rec.events) ? rec.events : [];
+}
+function eventWhen(e) {
+  if (e.date && /^\d{4}-\d{2}-\d{2}$/.test(e.date)) {
+    const [y, m, d] = e.date.split("-").map(Number);
+    return `${d} ${SV_MONTHS[m - 1]}`;
+  }
+  return e.recurring || "";
+}
+function eventsSectionHTML(v) {
+  const evs = eventsFor(v);
+  if (!evs.length) return "";
+  const rec = VENUE_EVENTS.venues[v.venue_id] || {};
+  const rows = evs.map((e) => `
+    <li class="event-row">
+      <span class="event-when">${esc(eventWhen(e))}</span>
+      <span class="event-body">
+        <span class="event-title">${e.url ? `<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.title)} ↗</a>` : esc(e.title)}</span>
+        ${e.note ? `<span class="event-note">${esc(e.note)}</span>` : ""}
+      </span>
+    </li>`).join("");
+  const src = rec.source ? ` · <a href="${esc(rec.source)}" target="_blank" rel="noopener">källa ↗</a>` : "";
+  return `
+  <div class="detail-panel events-panel">
+    <h2 class="detail-panel-title">🎟 Kommande</h2>
+    <ul class="event-list">${rows}</ul>
+    <p class="events-meta">Hämtat ${esc(VENUE_EVENTS.fetched || "")} från ställets officiella kanaler${src} — dubbelkolla alltid innan du bokar resan.</p>
   </div>`;
 }
 
@@ -647,6 +848,8 @@ function renderVenueDetail(id) {
     <a class="detail-back" href="#/venues" data-nav>← Alla ställen</a>
 
     ${venueMediaHTML(v, "venue-hero-media", { eager: true })}
+    ${favBtnHTML(v.venue_id)}
+    ${venuePhoto(v) ? `<p class="photo-attr">Bild: ställets officiella hemsida · förhandsvisning, inte kommersiell licens</p>` : ""}
 
     <div class="detail-hero">
       <div class="detail-hero-main">
@@ -659,12 +862,21 @@ function renderVenueDetail(id) {
           ${dest ? `<span class="tag">Säsong ${esc(dest.peak_season)}</span>` : ""}
         </div>
         ${v.notes ? `<p class="detail-notes">${esc(v.notes)}</p>` : ""}
-        <div class="detail-links">
-          ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}
-          ${igLinkHTML(v, { arrow: true })}
-          ${v.tiktok_url ? `<a class="icon-link" href="${esc(v.tiktok_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på TikTok">${TIKTOK_ICON}<span>TikTok</span> ↗</a>` : ""}
-          ${v.facebook_url ? `<a class="icon-link" href="${esc(v.facebook_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på Facebook">${FB_ICON}<span>Facebook</span> ↗</a>` : ""}
-          ${v.source_url ? `<a class="icon-link" href="${esc(v.source_url)}" target="_blank" rel="noopener">Källa ↗</a>` : ""}
+        <div class="follow-block">
+          ${v.instagram_url ? `
+          <div class="follow-ig">
+            <div>
+              <div class="soc-handle">${esc(igHandle(v.instagram_url) || "Instagram")}</div>
+              <p>Följ &amp; inspireras — ställets skyltfönster</p>
+            </div>
+            <a class="btn btn-gold btn-sm" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">Öppna Instagram</a>
+          </div>` : ""}
+          <div class="detail-links">
+            ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}
+            ${v.tiktok_url ? `<a class="icon-link" href="${esc(v.tiktok_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på TikTok">${TIKTOK_ICON}<span>TikTok</span> ↗</a>` : ""}
+            ${v.facebook_url ? `<a class="icon-link" href="${esc(v.facebook_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på Facebook">${FB_ICON}<span>Facebook</span> ↗</a>` : ""}
+            ${v.source_url ? `<a class="icon-link" href="${esc(v.source_url)}" target="_blank" rel="noopener">Källa ↗</a>` : ""}
+          </div>
         </div>
       </div>
       <div class="prio prio-lg" title="Priority score">
@@ -674,6 +886,7 @@ function renderVenueDetail(id) {
     </div>
 
     <div class="detail-grid">
+      ${eventsSectionHTML(v)}
       <div class="detail-panel">
         <h2 class="detail-panel-title">Betyg</h2>
         <div class="meters">
@@ -691,21 +904,39 @@ function renderVenueDetail(id) {
       </div>
 
       <div class="detail-panel detail-cta">
-        <h2 class="detail-panel-title">Boka & dela kostnaden</h2>
-        <p class="detail-cta-sub">Paket från ${priceTierHTML(v)}</p>
-        <div class="detail-price">${fmtEUR(fromPrice)}</div>
-        <p class="detail-cta-note">Välj paket, sällskap och datum — notan splittas automatiskt per person.</p>
-        <button class="btn btn-gold" id="d-book" style="width:100%">Boka bord</button>
+        <h2 class="detail-panel-title">Förfrågan &amp; delad kostnad</h2>
+        <p class="detail-cta-sub">Indikativt från ${priceTierHTML(v)}</p>
+        <div class="detail-price" id="from-price">${fmtEUR(fromPrice)}</div>
+        <div class="from-calc">
+          <span class="from-calc-label">Per person vid</span>
+          <div class="stepper" role="group" aria-label="Sällskapsstorlek för från-pris">
+            <button type="button" id="from-minus" aria-label="Färre">−</button>
+            <span class="stepper-val" id="from-party">4</span>
+            <button type="button" id="from-plus" aria-label="Fler">+</button>
+          </div>
+          <span class="from-calc-val" id="from-per">${fmtEUR(Math.ceil(fromPrice / 4))}</span>
+        </div>
+        <p class="detail-cta-note">VELVET-teamet bokar bordet åt er. Priset är indikativt — klubben sätter det riktiga.</p>
+        <button class="btn btn-gold" id="d-book" style="width:100%">Skicka förfrågan</button>
         <ul class="detail-perks">
-          <li>Dedikerad service & host</li>
-          <li>Delad kostnad — betala bara din andel</li>
-          <li>Avboka kostnadsfritt i förhandsversionen</li>
+          <li>Concierge mot klubben — ingen automatisk bokning</li>
+          <li>Delad kostnad när bordet är bekräftat</li>
+          <li>Inga dragningar i förhandsversionen</li>
         </ul>
       </div>
     </div>
   </section>`;
 
   $("#d-book").addEventListener("click", () => openBookingModal(v));
+  bindFavButtons(view());
+  setTitle(v.name);
+  let fromParty = 4;
+  const paintFrom = () => {
+    $("#from-party").textContent = fromParty;
+    $("#from-per").textContent = fmtEUR(Math.ceil(fromPrice / fromParty));
+  };
+  $("#from-minus").addEventListener("click", () => { fromParty = Math.max(1, fromParty - 1); paintFrom(); });
+  $("#from-plus").addEventListener("click", () => { fromParty = Math.min(20, fromParty + 1); paintFrom(); });
 }
 
 // ---------- Booking modal ----------
@@ -716,16 +947,38 @@ function openBookingModal(v) {
   const pkgs = packagesFor(v);
   let sel = pkgs[0];
   let party = 4;
-  const guests = []; // { name, email } — mock-inbjudningar, ingen backend
+  const guests = [];
+  const host0 = loadHost();
   const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
   const root = document.getElementById("modal-root");
   root.innerHTML = `
   <div class="modal-overlay" id="overlay">
-    <div class="modal" role="dialog" aria-modal="true" aria-label="Boka ${esc(v.name)}" tabindex="-1">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Förfrågan ${esc(v.name)}" tabindex="-1">
       <button class="modal-close" id="m-close" aria-label="Stäng">✕</button>
       <h2>${esc(v.name)}</h2>
       <div class="modal-sub">${esc(v.destination)} · ${esc(v.category)} · ${priceTierHTML(v)}</div>
+      <div class="req-steps" aria-hidden="true">
+        <div class="req-step on">1 Datum</div>
+        <div class="req-step on">2 Paket</div>
+        <div class="req-step on">3 Sällskap</div>
+      </div>
+      <p class="req-summary" id="m-summary"></p>
+
+      <div class="form-group">
+        <label for="m-host">Ditt namn</label>
+        <input type="text" id="m-host" autocomplete="name" value="${esc(host0.name)}" placeholder="Namn på värden">
+        <div class="field-error hidden" id="err-host" role="alert"></div>
+      </div>
+      <div class="form-group">
+        <label for="m-email">E-post</label>
+        <input type="email" id="m-email" autocomplete="email" value="${esc(host0.email)}" placeholder="sarah.b@example.net">
+        <div class="field-error hidden" id="err-email" role="alert"></div>
+      </div>
+      <div class="form-group">
+        <label for="m-phone">Mobil <span class="label-optional">(valfritt)</span></label>
+        <input type="tel" id="m-phone" autocomplete="tel" value="${esc(host0.phone)}" placeholder="+46 …">
+      </div>
 
       <div class="form-group">
         <label for="m-date">Datum</label>
@@ -755,7 +1008,7 @@ function openBookingModal(v) {
       </div>
 
       <div class="form-group">
-        <label for="g-name">Bjud in sällskapet <span class="label-optional">(valfritt · mock, inga mejl skickas)</span></label>
+        <label for="g-name">Bjud in sällskapet <span class="label-optional">(valfritt · namn till concierge-teamet)</span></label>
         <div class="guest-row">
           <input type="text" id="g-name" placeholder="Namn" autocomplete="off">
           <input type="email" id="g-email" placeholder="E-post" autocomplete="off">
@@ -771,8 +1024,9 @@ function openBookingModal(v) {
         <div class="split-total" id="m-total"></div>
       </div>
 
+      <p class="price-disclaimer">Indikativt från-pris — klubben sätter det riktiga. Ingen bokning sker förrän VELVET återkommer.</p>
       <div class="field-error hidden" id="err-confirm" role="alert"></div>
-      <button class="btn btn-gold" id="m-confirm" style="width:100%">Bekräfta bokning</button>
+      <button class="btn btn-gold" id="m-confirm" style="width:100%">Skicka förfrågan</button>
     </div>
   </div>`;
 
@@ -803,7 +1057,10 @@ function openBookingModal(v) {
   const update = () => {
     $("#m-party").textContent = party;
     $("#m-per").textContent = fmtEUR(Math.ceil(sel.price / party));
-    $("#m-total").textContent = `Totalt ${fmtEUR(sel.price)} · delas på ${party} personer`;
+    $("#m-total").textContent = `Indikativt ${fmtEUR(sel.price)} · delas på ${party} personer`;
+    const dateEl = $("#m-date");
+    const dateTxt = dateEl && dateEl.value ? dateEl.value : "datum";
+    $("#m-summary").innerHTML = `<strong>${esc(sel.name)}</strong> · ${esc(dateTxt)} · ${party} pers · ${fmtEUR(Math.ceil(sel.price / party))}/person`;
     $("#m-party-hint").textContent = guests.length
       ? `Du + ${guests.length} ${guests.length === 1 ? "inbjuden gäst" : "inbjudna gäster"}${party > minParty() ? ` + ${party - minParty()} utan namn` : ""}`
       : "";
@@ -843,6 +1100,7 @@ function openBookingModal(v) {
   });
   $("#m-minus").addEventListener("click", () => { party = Math.max(minParty(), party - 1); update(); });
   $("#m-plus").addEventListener("click", () => { party = Math.min(20, party + 1); update(); });
+  $("#m-date").addEventListener("change", update);
 
   const modalEl = root.querySelector(".modal");
   const untrap = trapFocus(modalEl);
@@ -854,24 +1112,37 @@ function openBookingModal(v) {
   $("#overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });
   modalEl.focus();
 
-  $("#m-confirm").addEventListener("click", () => {
-    // Validering
+  $("#m-confirm").addEventListener("click", async () => {
     const date = $("#m-date").value;
-    setErr("err-date", ""); setErr("err-confirm", "");
+    const hostName = $("#m-host").value.trim();
+    const hostEmail = $("#m-email").value.trim();
+    const hostPhone = $("#m-phone").value.trim();
+    setErr("err-date", ""); setErr("err-confirm", ""); setErr("err-host", ""); setErr("err-email", "");
+    if (!hostName) { setErr("err-host", "Ange ditt namn så vi kan återkoppla."); $("#m-host").focus(); return; }
+    if (!hostEmail || !EMAIL_RE.test(hostEmail)) { setErr("err-email", "Ange en giltig e-post."); $("#m-email").focus(); return; }
     if (!date) { setErr("err-date", "Välj ett datum."); $("#m-date").focus(); return; }
     if (date < todayISO()) { setErr("err-date", "Datumet kan inte vara i det förflutna."); $("#m-date").focus(); return; }
     if (!Number.isInteger(party) || party < 1) { setErr("err-confirm", "Sällskapet måste vara minst 1 person."); return; }
 
+    const host = { name: hostName, email: hostEmail, phone: hostPhone };
+    saveHost(host);
     const booking = {
-      id: `BK-${Date.now().toString(36).toUpperCase()}`,
+      id: `RQ-${Date.now().toString(36).toUpperCase()}`,
       venue_id: v.venue_id, venue: v.name, destination: v.destination,
       date, package: sel.name, total: sel.price,
       party, per_person: Math.ceil(sel.price / party),
       guests: guests.map((g) => ({ name: g.name, email: g.email })),
+      host,
+      status: "requested",
       created: new Date().toISOString(),
     };
+    const btn = $("#m-confirm");
+    btn.disabled = true;
+    btn.textContent = "Skickar …";
+    const sent = await sendConciergeRequest(booking);
+    booking.delivery = sent;
     saveBookings([...loadBookings(), booking]);
-    cleanup(); // släpp fokus-fällan + Escape-lyssnaren innan bekräftelsemodalen tar över
+    cleanup();
     showConfirmation(booking, opener);
   });
 
@@ -881,12 +1152,13 @@ function openBookingModal(v) {
 
 function showConfirmation(b, opener) {
   const root = document.getElementById("modal-root");
+  const sent = b.delivery === "sent";
   root.innerHTML = `
   <div class="modal-overlay" id="overlay">
-    <div class="modal" style="text-align:center" role="dialog" aria-modal="true" aria-label="Bokning bekräftad" tabindex="-1">
+    <div class="modal" style="text-align:center" role="dialog" aria-modal="true" aria-label="Förfrågan skickad" tabindex="-1">
       <div class="confirm-check">✓</div>
-      <h2>Bokning bekräftad</h2>
-      <div class="modal-sub">${esc(b.id)}</div>
+      <h2>Förfrågan skickad</h2>
+      <div class="modal-sub">${esc(b.id)} · ${sent ? "till VELVET-teamet" : "sparad på den här enheten"}</div>
       <p style="color:var(--text-dim); margin-bottom:8px">${esc(b.package)} på <b>${esc(b.venue)}</b>, ${esc(b.destination)}</p>
       <p style="color:var(--text-dim)">${esc(b.date)} · ${num(b.party)} personer</p>
       ${(b.guests || []).length ? `
@@ -896,15 +1168,21 @@ function showConfirmation(b, opener) {
           <span class="chip chip-self">Du <em>värd</em></span>
           ${b.guests.map((g) => `<span class="chip">${esc(g.name)}${g.email ? ` <em>${esc(g.email)}</em>` : ""}</span>`).join("")}
         </div>
-        <div class="confirm-guests-note">Inbjudningar skickas när betalningen aktiveras (mock i förhandsversionen).</div>
+        <div class="confirm-guests-note">Gästlistan följer med förfrågan till VELVET-teamet. Inga automatiska mejl till gästerna ännu.</div>
       </div>` : ""}
       <div class="split-box">
         <div class="split-per">${fmtEUR(b.per_person)}</div>
         <div class="split-label">per person</div>
         <div class="split-total">Totalt ${fmtEUR(b.total)}</div>
       </div>
-      <div style="display:flex; gap:10px; justify-content:center">
-        <a class="btn btn-gold" href="#/bookings" data-nav id="c-go">Mina bokningar</a>
+      <p class="price-disclaimer">${sent
+        ? "Vi återkommer till din e-post när klubben svarat. Inget bord är reserverat ännu."
+        : "Kunde inte nå mejlvägen — förfrågan ligger under Förfrågningar. Du kan också skicka den via din e-postapp."}</p>
+      <div class="confirm-actions">
+        <a class="btn btn-gold" href="#/bookings" data-nav id="c-go">Mina förfrågningar</a>
+        <button class="btn btn-ghost" id="c-copy">Kopiera inbjudningstext</button>
+        <a class="btn btn-ghost" id="c-ics" download="${esc(b.id)}.ics" href="${icsFor(b)}">Lägg till i kalendern</a>
+        ${sent ? "" : `<a class="btn btn-ghost" href="${mailtoFor(b)}">Öppna i Mail</a>`}
         <button class="btn btn-ghost" id="c-close">Fortsätt utforska</button>
       </div>
     </div>
@@ -919,7 +1197,14 @@ function showConfirmation(b, opener) {
   const onKey = (e) => { if (e.key === "Escape") close(); };
   document.addEventListener("keydown", onKey);
   $("#c-close").addEventListener("click", close);
-  $("#c-go").addEventListener("click", () => close(false)); // navigerar till Mina bokningar — vyn renderas om
+  $("#c-go").addEventListener("click", () => close(false));
+  const copyBtn = $("#c-copy");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", async () => {
+      const ok = await copyText(inviteTextFor(b));
+      copyBtn.textContent = ok ? "Kopierad ✓" : "Kunde inte kopiera";
+    });
+  }
   $("#overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });
   modalEl.focus();
 }
@@ -929,13 +1214,13 @@ function renderBookings() {
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
-      <div><h2>Mina bokningar</h2><div class="sub">${bookings.length} ${bookings.length === 1 ? "bokning" : "bokningar"}</div></div>
+      <div><h2>Mina förfrågningar</h2><div class="sub">${bookings.length} ${bookings.length === 1 ? "förfrågan" : "förfrågningar"} · concierge, inte automatisk bokning</div></div>
     </div>
     ${bookings.length === 0 ? `
       <div class="empty-state">
         <div class="big">🥂</div>
-        <h3>Inga bokningar ännu</h3>
-        <p>Hitta ett VIP-bord och dela kostnaden med ditt sällskap.</p>
+        <h3>Inga förfrågningar ännu</h3>
+        <p>Välj ett ställe och skicka en förfrågan — VELVET-teamet tar den mot klubben.</p>
         <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>Utforska ställen</a></p>
       </div>` :
       bookings.map((b) => `
@@ -955,7 +1240,7 @@ function renderBookings() {
             <div class="total">Totalt ${fmtEUR(b.total)}</div>
           </div>
           <button class="btn btn-ghost btn-sm btn-share" data-share="${esc(b.id)}">Dela</button>
-          <button class="btn btn-ghost btn-sm btn-danger" data-cancel="${esc(b.id)}">Avboka</button>
+          <button class="btn btn-ghost btn-sm btn-danger" data-cancel="${esc(b.id)}">Ta bort</button>
         </div>
       </div>`).join("")}
   </section>`;
@@ -1026,10 +1311,10 @@ function renderJoin(raw) {
         </div>
         <div id="join-cta">
           ${already ? `
-            <p class="invite-joined" role="status">✓ Du är redan med i den här bokningen.</p>
-            <a class="btn btn-gold" href="#/bookings" data-nav style="width:100%">Mina bokningar</a>` : `
+            <p class="invite-joined" role="status">✓ Du är redan med i den här förfrågan.</p>
+            <a class="btn btn-gold" href="#/bookings" data-nav style="width:100%">Mina förfrågningar</a>` : `
             <button class="btn btn-gold" id="join-btn" style="width:100%">Jag är med 🥂</button>
-            <p class="invite-note">Bokningen sparas i "Mina bokningar" på den här enheten.</p>`}
+            <p class="invite-note">Förfrågan sparas under Förfrågningar på den här enheten. Bordet är inte reserverat förrän VELVET återkommer.</p>`}
         </div>
         ${v ? `<a class="icon-link invite-venue-link" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>Se stället →</a>` : ""}
       </div>
@@ -1042,8 +1327,8 @@ function renderJoin(raw) {
       if (loadBookings().some((b) => b.id === inv.id)) return; // skydd mot dubbelklick
       saveBookings([...loadBookings(), { ...inv, guests: [], joined: true, created: new Date().toISOString() }]);
       $("#join-cta").innerHTML = `
-        <p class="invite-joined" role="status">🥂 Klart — du är med! Bokningen ligger under Mina bokningar.</p>
-        <a class="btn btn-gold" href="#/bookings" data-nav style="width:100%">Mina bokningar</a>`;
+        <p class="invite-joined" role="status">🥂 Klart — du är med. Förfrågan ligger under Förfrågningar på den här enheten.</p>
+        <a class="btn btn-gold" href="#/bookings" data-nav style="width:100%">Mina förfrågningar</a>`;
     });
   }
 }
@@ -1610,6 +1895,178 @@ function openOnboarding(opts = {}) {
   render();
 }
 
+// ---------- Favoriter & delbar lista ----------
+function renderFavorites() {
+  const ids = loadFavs();
+  const list = ids.map((id) => VENUES.find((v) => v.venue_id === id)).filter(Boolean);
+  view().innerHTML = `
+  <section class="section">
+    <div class="section-head">
+      <div><h2>Favoriter</h2><div class="sub">${list.length} sparade ställen · dela listan med sällskapet</div></div>
+      ${list.length ? `<button class="btn btn-gold btn-sm" id="fav-share">Dela lista</button>` : ""}
+    </div>
+    ${list.length === 0 ? `
+      <div class="empty-state">
+        <div class="big">♡</div>
+        <h3>Inga favoriter ännu</h3>
+        <p>Tryck på hjärtat på ett ställe så landar det här — sen kan du skicka listan till Gabbe, Dan eller gänget.</p>
+        <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>Utforska ställen</a></p>
+      </div>` : `<div class="venue-grid">${list.map(venueCard).join("")}</div>`}
+  </section>`;
+  bindVenueCards();
+  const share = $("#fav-share");
+  if (share) {
+    share.addEventListener("click", async () => {
+      const payload = { name: "VELVET-lista", ids: loadFavs() };
+      const url = `${location.origin}${location.pathname}#/list/${b64urlEncode(payload)}`;
+      const ok = await copyText(url);
+      share.textContent = ok ? "Länk kopierad ✓" : "Kunde inte kopiera";
+      setTimeout(() => { share.textContent = "Dela lista"; }, 1800);
+    });
+  }
+}
+
+function renderSharedList(raw) {
+  let p;
+  try { p = b64urlDecode(raw); } catch { p = null; }
+  const ids = p && Array.isArray(p.ids) ? p.ids.filter((id) => typeof id === "string") : [];
+  const list = ids.map((id) => VENUES.find((v) => v.venue_id === id)).filter(Boolean);
+  const title = (p && typeof p.name === "string" && p.name) ? p.name : "Delad lista";
+  view().innerHTML = `
+  <section class="section">
+    <div class="section-head">
+      <div><h2>${esc(title)}</h2><div class="sub">${list.length} ställen · delad VELVET-lista</div></div>
+      ${list.length ? `<button class="btn btn-ghost btn-sm" id="list-save">Spara alla som favoriter</button>` : ""}
+    </div>
+    ${list.length === 0 ? `
+      <div class="empty-state">
+        <div class="big">🔗</div>
+        <h3>Listan är tom</h3>
+        <p>Länken saknar ställen, eller så har katalogen ändrats.</p>
+      </div>` : `<div class="venue-grid">${list.map(venueCard).join("")}</div>`}
+  </section>`;
+  bindVenueCards();
+  const save = $("#list-save");
+  if (save) {
+    save.addEventListener("click", () => {
+      saveFavs([...loadFavs(), ...ids]);
+      save.textContent = "Sparad ✓";
+      bindFavButtons();
+    });
+  }
+}
+
+function renderLegal(kind) {
+  const villkor = kind === "villkor";
+  view().innerHTML = `
+  <section class="section legal">
+    <a class="detail-back" href="#/" data-nav>← Start</a>
+    <h1>${villkor ? "Villkor" : "Integritet"}</h1>
+    ${villkor ? `
+      <p>VELVET är en concierge-förhandsversion. Ni skickar en <b>förfrågan</b> om VIP-bord, cabana eller daybed. Det är inte en bindande bokning, inte en betalning och inte en reservation hos klubben.</p>
+      <h2>Vad som händer</h2>
+      <ul>
+        <li>VELVET-teamet tar förfrågan mot klubben manuellt.</li>
+        <li>Priser i appen är indikativa mockar beräknade från research-scores — klubben sätter det riktiga priset.</li>
+        <li>Bilder tillhör respektive ställe/fotograf och används som förhandsvisning, inte i kommersiell drift utan licens.</li>
+        <li>Inga automatiska avgifter dras i den här versionen.</li>
+      </ul>
+      <h2>Ansvar</h2>
+      <p>Klubbarna äger sitt inventarie. VELVET garanterar inte tillgänglighet, minimi-spend eller insläpp. En förfrågan kan avslås.</p>
+    ` : `
+      <p>Vi samlar bara det som behövs för att återkoppla på en förfrågan: namn, e-post, valfritt telefonnummer, ställe, datum, sällskapsstorlek och gästlista ni själva fyller i.</p>
+      <h2>Lagring</h2>
+      <ul>
+        <li>Förfrågningar och favoriter sparas i er webbläsare (<code>localStorage</code>).</li>
+        <li>När mejlvägen är aktiv skickas förfrågan till VELVET-teamet (${esc(CONCIERGE_MAIL)}) via FormSubmit.</li>
+        <li>Positionsdata används bara i sessionen, om ni själva trycker på «Använd min plats».</li>
+      </ul>
+      <h2>Rättigheter</h2>
+      <p>Mejla ${esc(CONCIERGE_MAIL)} för radering. Ni kan rensa webbläsardata när som helst — då försvinner lokala förfrågningar och favoriter.</p>
+    `}
+  </section>`;
+}
+
+// ---------- Global sök (/) ----------
+function searchHits(q) {
+  const s = q.trim().toLowerCase();
+  if (s.length < 1) return [];
+  const out = [];
+  for (const d of DESTINATIONS) {
+    if (`${d.name} ${d.country} ${d.code}`.toLowerCase().includes(s)) {
+      out.push({ kind: "Destination", title: d.name, meta: d.country, href: `#/destination/${encodeURIComponent(d.code)}` });
+    }
+  }
+  for (const v of VENUES) {
+    if (`${v.name} ${v.destination} ${v.category}`.toLowerCase().includes(s)) {
+      out.push({ kind: "Ställe", title: v.name, meta: `${v.destination} · ${v.category}`, href: `#/venue/${encodeURIComponent(v.venue_id)}` });
+    }
+  }
+  return out.slice(0, 12);
+}
+
+function openSearch() {
+  const root = document.getElementById("search-root");
+  if (!root) return;
+  root.innerHTML = `
+    <div class="search-overlay" id="search-overlay">
+      <div class="search-panel" role="dialog" aria-modal="true" aria-label="Sök" tabindex="-1">
+        <input type="search" id="search-q" placeholder="Sök ställe, stad, kategori…" aria-label="Sök" autocomplete="off">
+        <div class="search-hits" id="search-hits" role="listbox" aria-live="polite"></div>
+      </div>
+    </div>`;
+  const input = $("#search-q");
+  const hitsEl = $("#search-hits");
+  let active = 0;
+  let hits = [];
+  const close = () => { root.innerHTML = ""; };
+  const paint = () => {
+    hits = searchHits(input.value);
+    active = 0;
+    hitsEl.innerHTML = hits.length
+      ? hits.map((h, i) => `
+        <div class="search-hit${i === 0 ? " active" : ""}" data-i="${i}" role="option">
+          <div><div>${esc(h.title)}</div><div class="search-hit-k">${esc(h.kind)}</div></div>
+          <div class="search-hit-k">${esc(h.meta)}</div>
+        </div>`).join("")
+      : `<div class="search-empty">${input.value.trim() ? "Inga träffar" : "Skriv för att söka · Esc stänger"}</div>`;
+    hitsEl.querySelectorAll(".search-hit").forEach((el) => {
+      el.addEventListener("click", () => go(Number(el.dataset.i)));
+    });
+  };
+  const go = (i) => {
+    const h = hits[i];
+    if (!h) return;
+    close();
+    location.hash = h.href.replace(/^#/, "#");
+  };
+  const mark = () => {
+    hitsEl.querySelectorAll(".search-hit").forEach((el, i) => el.classList.toggle("active", i === active));
+  };
+  input.addEventListener("input", paint);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") { e.preventDefault(); close(); }
+    else if (e.key === "ArrowDown") { e.preventDefault(); active = Math.min(hits.length - 1, active + 1); mark(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); active = Math.max(0, active - 1); mark(); }
+    else if (e.key === "Enter") { e.preventDefault(); go(active); }
+  });
+  $("#search-overlay").addEventListener("click", (e) => { if (e.target.id === "search-overlay") close(); });
+  paint();
+  input.focus();
+}
+
+function initSearch() {
+  const btn = document.getElementById("nav-search");
+  if (btn) btn.addEventListener("click", openSearch);
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "/") return;
+    const tag = (e.target && e.target.tagName) || "";
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || e.target.isContentEditable) return;
+    e.preventDefault();
+    openSearch();
+  });
+}
+
 // ---------- 404 ----------
 function render404(hash) {
   view().innerHTML = `
@@ -1634,6 +2091,9 @@ const routes = {
   "#/venues": renderVenues,
   "#/map": renderMapView,
   "#/bookings": renderBookings,
+  "#/favorites": renderFavorites,
+  "#/villkor": () => renderLegal("villkor"),
+  "#/integritet": () => renderLegal("integritet"),
 };
 
 // Parametriserade rutter: mönster → handler(param)
@@ -1641,6 +2101,7 @@ const paramRoutes = [
   { re: /^#\/venue\/(.+)$/, fn: renderVenueDetail, nav: "#/venues" },
   { re: /^#\/destination\/(.+)$/, fn: renderDestinationDetail, nav: "#/destinations" },
   { re: /^#\/join\/(.+)$/, fn: renderJoin, nav: "" },
+  { re: /^#\/list\/(.+)$/, fn: renderSharedList, nav: "#/favorites" },
 ];
 
 // Trasiga %-sekvenser i hashen får inte krascha routern
@@ -1650,9 +2111,12 @@ function route() {
   // Stäng ev. öppen modal vid ruttbyte (t.ex. bakåtknapp med öppen modal)
   const modalRoot = document.getElementById("modal-root");
   if (modalRoot && modalRoot.innerHTML) modalRoot.innerHTML = "";
+  const searchRoot = document.getElementById("search-root");
+  if (searchRoot && searchRoot.innerHTML) searchRoot.innerHTML = "";
   // Riv aktiva Leaflet-kartor innan vyn skrivs över — annars läcker lyssnare
   destroyMaps();
-  const h = location.hash;
+  const raw = location.hash || "#/";
+  const h = raw.split("?")[0];
   let fn = routes[h];
   let active = h || "#/";
   if (!fn) {
@@ -1664,6 +2128,18 @@ function route() {
   // Okänd rutt → 404-vy (ingen nav-länk markeras som aktiv)
   if (!fn) { fn = () => render404(h); active = null; }
   fn();
+  const titles = {
+    "#/": null,
+    "": null,
+    "#/destinations": "Destinationer",
+    "#/venues": "Ställen",
+    "#/map": "Karta",
+    "#/bookings": "Förfrågningar",
+    "#/favorites": "Favoriter",
+    "#/villkor": "Villkor",
+    "#/integritet": "Integritet",
+  };
+  if (Object.prototype.hasOwnProperty.call(titles, h)) setTitle(titles[h]);
   window.scrollTo(0, 0);
   document.querySelectorAll(".nav-links a").forEach((a) => {
     a.classList.toggle("active", a.getAttribute("href") === active);
@@ -1748,6 +2224,11 @@ async function init() {
       const r = await fetch("data/venue-images.json");
       if (r.ok) VENUE_IMAGES = await r.json() || {};
     } catch (_) { VENUE_IMAGES = {}; }
+    // Kommande events (crawlade från ställenas officiella kanaler) — saknas filen visas inget
+    try {
+      const re = await fetch("data/venue-events.json");
+      if (re.ok) { const d = await re.json(); if (d && d.venues) VENUE_EVENTS = d; }
+    } catch (_) { /* behåll tom */ }
   } catch (err) {
     console.error("VELVET: datainläsning misslyckades", err);
     renderLoadError();
@@ -1759,6 +2240,7 @@ async function init() {
     uiBound = true;
     initMobileNav();
     initSkipLink();
+    initSearch();
     window.addEventListener("hashchange", route);
     const navDest = document.getElementById("nav-dest");
     if (navDest) navDest.addEventListener("click", () => openOnboarding({ dismissable: true }));
@@ -1770,6 +2252,7 @@ async function init() {
   updateNavDest();
   route();
   updateBookingBadge();
+  updateFavBadge();
   // Första besöket (inget val sparat) och ingen direktlänk → visa onboardingen.
   // Direktlänkar (#/venue/…, #/join/…, …) får aldrig blockeras.
   if (!homeChoice && (!location.hash || location.hash === "#/")) {
@@ -1777,4 +2260,17 @@ async function init() {
   }
 }
 
+// PWA: service worker ger offline-stöd (cache-first-skal + stale-while-revalidate-bilder)
+// och gör appen installerbar från Chrome. Registreras efter load för att inte konkurrera
+// med första renderingen. Misslyckas registreringen (t.ex. file://) funkar appen som vanligt.
+function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) return;
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("sw.js")
+      .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
+  });
+}
+
+registerServiceWorker();
 init();
