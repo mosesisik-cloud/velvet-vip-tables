@@ -112,10 +112,18 @@ function renderHome() {
   bindDestCards();
 }
 
+// Deterministisk nyans per destinationskod → diskret gradient-emblem
+function destHue(code) {
+  let h = 0;
+  for (const c of String(code || "")) h = (h * 31 + c.charCodeAt(0)) % 360;
+  return h;
+}
+
 function destCard(d) {
   return `
   <div class="dest-card" data-dest="${esc(d.name)}" role="button" tabindex="0" aria-label="Visa ställen i ${esc(d.name)}">
     <span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span>
+    <div class="dest-emblem" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
     <h3>${esc(d.name)}</h3>
     <div class="dest-country">${esc(d.country)} · ${esc(d.region)}</div>
     <div class="dest-meta"><span>Säsong <b>${esc(d.peak_season)}</b></span></div>
