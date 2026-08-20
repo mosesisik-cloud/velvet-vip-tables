@@ -1,4 +1,4 @@
-// VELVET — VIP tables, shared. V1 SPA (no dependencies)
+// VELVET — VIP tables, shared. V2 SPA (no dependencies)
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -22,10 +22,10 @@ function venueGroup(v) {
   return "other";
 }
 
-// ---------- Genrebilder (V2) ----------
+// ---------- Venue-bilder (V2) ----------
 function venuePhoto(v) {
   // Endast ställets egen bild (hämtad från deras officiella hemsida).
-  // Ingen genrebild: saknas riktig bild visas gradient-emblemet.
+  // Saknas riktig bild visas gradient-emblemet.
   const u = VENUE_IMAGES[v.venue_id];
   return (typeof u === "string" && /^https?:\/\//.test(u)) ? u : null;
 }
@@ -885,7 +885,7 @@ function showConfirmation(b, opener) {
           <span class="chip chip-self">Du <em>värd</em></span>
           ${b.guests.map((g) => `<span class="chip">${esc(g.name)}${g.email ? ` <em>${esc(g.email)}</em>` : ""}</span>`).join("")}
         </div>
-        <div class="confirm-guests-note">Inbjudningar skickas när betalningen aktiveras (mock i V1).</div>
+        <div class="confirm-guests-note">Inbjudningar skickas när betalningen aktiveras (mock i förhandsversionen).</div>
       </div>` : ""}
       <div class="split-box">
         <div class="split-per">${fmtEUR(b.per_person)}</div>

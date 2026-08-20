@@ -332,7 +332,7 @@ button { font-family: inherit; cursor: pointer; }
   border-color: rgba(212,175,95,0.4); background: var(--bg-card-hover);
   transform: translateY(-2px); box-shadow: var(--shadow-card-hover);
 }
-/* Genrebild överst på kortet — full bredd (negativa marginaler mot kortets padding),
+/* Venue-bild överst på kortet — full bredd (negativa marginaler mot kortets padding),
    16:9, mörk gradient nedtill för läsbarhet. Emblemet ligger under bilden som
    placeholder/fallback; .img-fail (onerror) döljer bilden så emblemet tar över. */
 .venue-media {
@@ -563,7 +563,7 @@ button { font-family: inherit; cursor: pointer; }
 }
 .detail-back:hover { color: var(--gold-bright); }
 
-/* Stor genrebild på venue-detaljvyn — bredare beskärning än korten */
+/* Stor venue-bild på detaljvyn — bredare beskärning än korten */
 .venue-hero-media {
   position: relative; aspect-ratio: 21 / 9;
   border-radius: var(--radius); overflow: hidden;
@@ -671,7 +671,6 @@ button { font-family: inherit; cursor: pointer; }
 .footer-brand { font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: 2px; }
 .footer-tag { font-size: 13px; color: var(--text-faint); margin-left: 12px; }
 .footer-meta { font-size: 12px; color: var(--text-faint); }
-.footer-note { opacity: 0.75; font-style: italic; }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
