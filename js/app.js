@@ -143,7 +143,7 @@ function destHue(code) {
 
 function destCard(d) {
   return `
-  <div class="dest-card" data-dest="${esc(d.name)}" role="button" tabindex="0" aria-label="Visa ställen i ${esc(d.name)}">
+  <div class="dest-card" data-code="${esc(d.code)}" role="link" tabindex="0" aria-label="Visa destinationen ${esc(d.name)}">
     <span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span>
     <div class="dest-emblem" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
     <h3>${esc(d.name)}</h3>
@@ -168,10 +168,91 @@ function renderDestinations() {
 
 function bindDestCards() {
   document.querySelectorAll(".dest-card").forEach((el) => {
-    const go = () => { state.filters = { q: "", dest: el.dataset.dest, cat: "", status: "", sort: "priority" }; location.hash = "#/venues"; };
+    const go = () => { location.hash = `#/destination/${encodeURIComponent(el.dataset.code)}`; };
     el.addEventListener("click", go);
     el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); } });
   });
+}
+
+// ---------- Destination detail ----------
+function renderDestinationDetail(code) {
+  const d = DESTINATIONS.find((x) => String(x.code).toLowerCase() === String(code).toLowerCase());
+  if (!d) {
+    view().innerHTML = `
+    <section class="section">
+      <div class="empty-state">
+        <div class="big">🧭</div>
+        <h3>Destinationen hittades inte</h3>
+        <p>Koden "${esc(code)}" finns inte i katalogen.</p>
+        <p style="margin-top:20px"><a class="btn btn-gold" href="#/destinations" data-nav>Alla destinationer</a></p>
+      </div>
+    </section>`;
+    return;
+  }
+  const venues = VENUES.filter((v) => v.destination === d.name)
+    .sort((a, b) => b.priority_score - a.priority_score || a.name.localeCompare(b.name));
+  const useCases = String(d.use_cases || "").split(",").map((s) => s.trim()).filter(Boolean);
+
+  view().innerHTML = `
+  <section class="section detail">
+    <a class="detail-back" href="#/destinations" data-nav>← Alla destinationer</a>
+
+    <div class="detail-hero">
+      <div class="detail-hero-main">
+        <div class="detail-kicker">${esc(d.country)} · ${esc(d.region)} · Säsong ${esc(d.peak_season)}</div>
+        <h1 class="detail-name">${esc(d.name)}</h1>
+        <div class="venue-tags detail-tags">
+          <span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span>
+          ${useCases.map((u) => `<span class="tag">${esc(u)}</span>`).join("")}
+        </div>
+        ${d.note ? `<p class="detail-notes"><span class="dest-note-label">Strategisk not</span> ${esc(d.note)}</p>` : ""}
+        <div class="detail-links">
+          <a class="icon-link" href="#/venues" id="dd-list">Visa i listan →</a>
+        </div>
+      </div>
+      <div class="dest-emblem dest-emblem-lg" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
+    </div>
+
+    <div class="detail-grid dest-detail-grid">
+      <div class="detail-panel">
+        <h2 class="detail-panel-title">Betyg</h2>
+        <div class="meters">
+          ${scoreMeter("Lyx", d.luxury)}
+          ${scoreMeter("Party", d.party)}
+          ${scoreMeter("Delbarhet", d.shareability)}
+        </div>
+      </div>
+      <div class="detail-panel">
+        <h2 class="detail-panel-title">Fakta</h2>
+        <div class="detail-facts" style="margin-top:0; border-top:none; padding-top:0">
+          <div class="fact"><span class="fact-label">Land</span><span class="fact-val">${esc(d.country)}</span></div>
+          <div class="fact"><span class="fact-label">Region</span><span class="fact-val">${esc(d.region)}</span></div>
+          <div class="fact"><span class="fact-label">Tier</span><span class="fact-val"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span></span></div>
+          <div class="fact"><span class="fact-label">Högsäsong</span><span class="fact-val">${esc(d.peak_season)}</span></div>
+          <div class="fact"><span class="fact-label">Ställen i katalogen</span><span class="fact-val">${venues.length}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-top:44px">
+      <div><h2>Ställen i ${esc(d.name)}</h2><div class="sub">${venues.length} ${venues.length === 1 ? "ställe" : "ställen"} · sorterade efter prioritet</div></div>
+      <a class="link-gold" href="#/venues" id="dd-list-2">Visa i listan →</a>
+    </div>
+    ${venues.length
+      ? `<div class="venue-grid">${venues.map(venueCard).join("")}</div>`
+      : `<div class="empty-state"><div class="big">🥂</div><h3>Inga ställen ännu</h3><p>Katalogen för ${esc(d.name)} är under uppbyggnad.</p></div>`}
+  </section>`;
+
+  // "Visa i listan" — förifiltrera venue-listan på destinationen
+  const goList = (e) => {
+    e.preventDefault();
+    state.filters = { q: "", dest: d.name, cat: "", status: "", sort: "priority" };
+    location.hash = "#/venues";
+  };
+  $("#dd-list").addEventListener("click", goList);
+  const l2 = $("#dd-list-2");
+  if (l2) l2.addEventListener("click", goList);
+  bindVenueCards();
 }
 
 function venueCard(v) {
@@ -652,16 +733,24 @@ const routes = {
   "#/bookings": renderBookings,
 };
 
+// Parametriserade rutter: mönster → handler(param)
+const paramRoutes = [
+  { re: /^#\/venue\/(.+)$/, fn: renderVenueDetail, nav: "#/venues" },
+  { re: /^#\/destination\/(.+)$/, fn: renderDestinationDetail, nav: "#/destinations" },
+];
+
 function route() {
   const h = location.hash;
   let fn = routes[h];
+  let active = h || "#/";
   if (!fn) {
-    const m = h.match(/^#\/venue\/(.+)$/);
-    if (m) fn = () => renderVenueDetail(decodeURIComponent(m[1]));
+    for (const r of paramRoutes) {
+      const m = h.match(r.re);
+      if (m) { fn = () => r.fn(decodeURIComponent(m[1])); active = r.nav; break; }
+    }
   }
   (fn || renderHome)();
   window.scrollTo(0, 0);
-  const active = h.startsWith("#/venue/") ? "#/venues" : (h || "#/");
   document.querySelectorAll(".nav-links a").forEach((a) => {
     a.classList.toggle("active", a.getAttribute("href") === active);
   });

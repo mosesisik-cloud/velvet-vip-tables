@@ -548,6 +548,22 @@ button { font-family: inherit; cursor: pointer; }
   content: "✓"; position: absolute; left: 2px; color: var(--gold); font-weight: 700;
 }
 
+/* ---------- Destination detail ---------- */
+.dest-emblem-lg {
+  width: 108px; height: 108px; margin-bottom: 0; flex-shrink: 0;
+  font-size: 26px; letter-spacing: 3px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 0 34px -6px rgba(212,175,95,0.35), 0 8px 24px rgba(0,0,0,0.4);
+}
+.detail-tags .tier {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+  padding: 5px 12px; border-radius: 100px; align-self: center;
+}
+.dest-note-label {
+  display: block; font-size: 11.5px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 4px;
+}
+.dest-detail-grid { grid-template-columns: 1fr 1fr; }
+
 /* ---------- Footer ---------- */
 .footer {
   display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
