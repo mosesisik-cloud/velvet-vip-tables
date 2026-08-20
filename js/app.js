@@ -497,6 +497,23 @@ function renderDestinationDetail(code) {
   bindVenueCards();
 }
 
+// ---------- Sociala länkar ----------
+const IG_ICON = `<svg class="soc-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><rect x="2.6" y="2.6" width="18.8" height="18.8" rx="5.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.3" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.2" cy="6.8" r="1.35" fill="currentColor"/></svg>`;
+const TIKTOK_ICON = `<svg class="soc-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M14.2 3v10.9a3.9 3.9 0 1 1-3.4-3.87" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M14.2 4.2c.5 2.6 2.3 4.3 5 4.6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>`;
+const FB_ICON = `<svg class="soc-ico" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M13.4 21v-6.9h2.5l.4-2.9h-2.9V9.3c0-.85.3-1.5 1.6-1.5h1.4V5.2c-.25-.03-1.1-.1-2.1-.1-2.1 0-3.6 1.3-3.6 3.7v2.4H8.3v2.9h2.4V21z" fill="currentColor"/></svg>`;
+
+/** Plocka ut @handle ur en Instagram-URL, t.ex. ".../hiibizaofficial/" → "@hiibizaofficial" */
+function igHandle(url) {
+  const m = /instagram\.com\/([A-Za-z0-9_.]+)/.exec(url || "");
+  return m ? "@" + m[1] : null;
+}
+
+function igLinkHTML(v, { arrow = false } = {}) {
+  if (!v.instagram_url) return "";
+  const handle = igHandle(v.instagram_url) || "Instagram";
+  return `<a class="icon-link ig-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på Instagram">${IG_ICON}<span class="soc-handle">${esc(handle)}</span>${arrow ? " ↗" : ""}</a>`;
+}
+
 function venueCard(v) {
   const st = statusInfo(v.research_status);
   return `
@@ -518,7 +535,7 @@ function venueCard(v) {
     <div class="venue-actions">
       <button class="btn btn-gold btn-sm" data-book="${esc(v.venue_id)}">Boka bord</button>
       ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">Hemsida</a>` : ""}
-      ${v.instagram_url ? `<a class="icon-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">Instagram</a>` : ""}
+      ${igLinkHTML(v)}
     </div>
   </div>`;
 }
@@ -673,7 +690,9 @@ function renderVenueDetail(id) {
         ${v.notes ? `<p class="detail-notes">${esc(v.notes)}</p>` : ""}
         <div class="detail-links">
           ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}
-          ${v.instagram_url ? `<a class="icon-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">Instagram ↗</a>` : ""}
+          ${igLinkHTML(v, { arrow: true })}
+          ${v.tiktok_url ? `<a class="icon-link" href="${esc(v.tiktok_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på TikTok">${TIKTOK_ICON}<span>TikTok</span> ↗</a>` : ""}
+          ${v.facebook_url ? `<a class="icon-link" href="${esc(v.facebook_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på Facebook">${FB_ICON}<span>Facebook</span> ↗</a>` : ""}
           ${v.source_url ? `<a class="icon-link" href="${esc(v.source_url)}" target="_blank" rel="noopener">Källa ↗</a>` : ""}
         </div>
       </div>

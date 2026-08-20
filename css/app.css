@@ -384,6 +384,16 @@ button { font-family: inherit; cursor: pointer; }
   transition: all 0.15s;
 }
 .icon-link:hover { border-color: var(--gold); color: var(--gold-bright); }
+.icon-link .soc-ico { flex: none; opacity: 0.9; }
+
+/* Instagram-länk — tydligare, guldtonad */
+.ig-link {
+  color: var(--gold-bright);
+  border-color: rgba(212,175,95,0.38);
+  background: rgba(212,175,95,0.06);
+}
+.ig-link:hover { background: rgba(212,175,95,0.14); border-color: var(--gold-bright); }
+.ig-link .soc-handle { letter-spacing: 0.01em; }
 
 /* ---------- Modal ---------- */
 .modal-overlay {
