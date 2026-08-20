@@ -235,7 +235,7 @@ function renderHome() {
   view().innerHTML = `
   <section class="hero">
     <div class="hero-media" id="hero-media" aria-hidden="true"></div>
-    <div class="hero-kicker">Nu i förhandsversion · V2</div>
+    <div class="hero-kicker">Nu i förhandsversion · V3</div>
     <h1>VIP-bord på världens bästa klubbar.<br><em>Dela kostnaden.</em></h1>
     <p>Boka bord, cabanas och daybeds på ${VENUES.length} handplockade lyxställen i ${DESTINATIONS.length} destinationer — och splitta notan med ditt sällskap, automatiskt.</p>
     <div class="hero-cta">
@@ -436,6 +436,16 @@ function renderDestinationDetail(code) {
       </div>
     </div>
 
+    ${Number.isFinite(d.lat) && Number.isFinite(d.lng) ? `
+    <div class="detail-panel dest-map-panel">
+      <h2 class="detail-panel-title">På kartan</h2>
+      <div class="map-shell map-shell-mini">
+        <div id="map-dest" class="map-canvas map-canvas-mini" role="application" aria-label="Karta över ${esc(d.name)} och dess ställen"></div>
+        <div class="map-loading" id="dest-map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> Laddar kartan …</div>
+      </div>
+      <p class="map-note">Ungefärliga positioner — ställena grupperas kring ${esc(d.name)}. <a class="link-gold" href="#/map" data-nav>Hela kartan →</a></p>
+    </div>` : ""}
+
     <div class="section-head" style="margin-top:44px">
       <div><h2>Ställen i ${esc(d.name)}</h2><div class="sub">${venues.length} ${venues.length === 1 ? "ställe" : "ställen"} · sorterade efter prioritet</div></div>
       <a class="link-gold" href="#/venues" id="dd-list-2">Visa i listan →</a>
@@ -455,6 +465,7 @@ function renderDestinationDetail(code) {
   const l2 = $("#dd-list-2");
   if (l2) l2.addEventListener("click", goList);
   bindVenueCards();
+  mountDestMap(d, venues);
 }
 
 // ---------- Sociala länkar ----------
@@ -1084,6 +1095,245 @@ function distanceToDest(d) {
   return haversineKm(g.lat, g.lng, d.lat, d.lng);
 }
 
+// ---------- Karta (V3, Leaflet via CDN) ----------
+// Leaflet laddas LAZY först när en kartvy öppnas — unpkg-CDN med SRI-hashar
+// (verifierade mot unpkg 2026-08-21). Offline/blockerad CDN → graciös fallback-
+// panel med "Försök igen", appen kraschar aldrig. Tiles: CartoDB dark_all
+// (OpenStreetMap-data) som matchar appens mörka tema.
+const LEAFLET_CDN = {
+  css: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css",
+  cssIntegrity: "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=",
+  js: "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js",
+  jsIntegrity: "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=",
+};
+let leafletPromise = null;
+function ensureLeaflet() {
+  if (window.L && typeof window.L.map === "function") return Promise.resolve(window.L);
+  if (leafletPromise) return leafletPromise;
+  leafletPromise = new Promise((resolve, reject) => {
+    const fail = (msg) => {
+      leafletPromise = null; // nästa försök får injicera på nytt
+      reject(new Error(msg));
+    };
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = LEAFLET_CDN.css;
+    link.integrity = LEAFLET_CDN.cssIntegrity;
+    link.crossOrigin = "anonymous";
+    document.head.appendChild(link);
+    const s = document.createElement("script");
+    s.src = LEAFLET_CDN.js;
+    s.integrity = LEAFLET_CDN.jsIntegrity;
+    s.crossOrigin = "anonymous";
+    const guard = setTimeout(() => fail("Leaflet-CDN svarade inte i tid"), 12000);
+    s.onload = () => {
+      clearTimeout(guard);
+      if (window.L && typeof window.L.map === "function") resolve(window.L);
+      else fail("Leaflet laddades men initierades inte");
+    };
+    s.onerror = () => { clearTimeout(guard); link.remove(); s.remove(); fail("Kunde inte nå Leaflet-CDN"); };
+    document.head.appendChild(s);
+  });
+  return leafletPromise;
+}
+
+// Aktiva Leaflet-instanser rivs vid varje ruttbyte — annars läcker lyssnare
+// när vyns DOM skrivs över av nästa render.
+let ACTIVE_MAPS = [];
+function destroyMaps() {
+  ACTIVE_MAPS.forEach((m) => { try { m.remove(); } catch {} });
+  ACTIVE_MAPS = [];
+}
+
+function darkTileLayer(L) {
+  return L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
+    subdomains: "abcd",
+    maxZoom: 19,
+  });
+}
+
+// Guldnål i appens designspråk (CSS-ritad droppe, ingen bild-asset)
+function goldPin(L, { small = false } = {}) {
+  const size = small ? 22 : 30;
+  return L.divIcon({
+    className: "velvet-pin-wrap",
+    html: `<span class="velvet-pin${small ? " velvet-pin-sm" : ""}"></span>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size],
+    popupAnchor: [0, -size + 4],
+  });
+}
+
+// Diskret markör för användarens egen position
+function userDot(L) {
+  return L.divIcon({
+    className: "velvet-pin-wrap",
+    html: `<span class="velvet-user-dot" title="Din position"></span>`,
+    iconSize: [16, 16],
+    iconAnchor: [8, 8],
+  });
+}
+
+// Gemensam "Nära mig": känd position direkt, annars geolocation med timeout-vakt.
+function locateUser(onFound, onError) {
+  const known = loadGeo();
+  if (known) { onFound(known); return; }
+  if (!("geolocation" in navigator)) { onError(); return; }
+  let done = false;
+  const guard = setTimeout(() => { if (!done) { done = true; onError(); } }, 10000);
+  try {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        if (done) return;
+        done = true; clearTimeout(guard);
+        saveGeo(pos.coords.latitude, pos.coords.longitude);
+        onFound({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+      },
+      () => { if (done) return; done = true; clearTimeout(guard); onError(); },
+      { timeout: 8000, maximumAge: 300000 }
+    );
+  } catch { clearTimeout(guard); if (!done) { done = true; onError(); } }
+}
+
+// Fallback-panel när CDN inte kan nås (offline etc.) — med retry
+function mapFallbackHTML(id) {
+  return `
+  <div class="map-fallback" role="alert">
+    <div class="big" aria-hidden="true">🗺️</div>
+    <h3>Kartan kunde inte laddas</h3>
+    <p>Kartbiblioteket hämtas från nätet och verkar inte kunna nås just nu.<br>Kontrollera anslutningen och försök igen.</p>
+    <button class="btn btn-gold btn-sm" id="${id}">Försök igen</button>
+  </div>`;
+}
+
+// ---------- Kartvyn (#/map) ----------
+function renderMapView() {
+  view().innerHTML = `
+  <section class="section map-section">
+    <div class="section-head">
+      <div><h2>Karta</h2><div class="sub">${DESTINATIONS.length} destinationer · ${VENUES.length} ställen — klicka på en guldnål</div></div>
+      <button class="btn btn-ghost btn-sm map-near-btn" id="map-near" disabled><span aria-hidden="true">🧭</span> Nära mig</button>
+    </div>
+    <div class="map-shell">
+      <div id="map-all" class="map-canvas" role="application" aria-label="Interaktiv karta över alla destinationer"></div>
+      <div class="map-loading" id="map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> Laddar kartan …</div>
+    </div>
+  </section>`;
+
+  const shell = $(".map-shell");
+  const mount = () => {
+    ensureLeaflet().then((L) => {
+      if (!document.getElementById("map-all")) return; // navigerat bort under laddning
+      const status = $("#map-status");
+      if (status) status.remove();
+      const map = L.map("map-all", { worldCopyJump: true, zoomControl: true });
+      ACTIVE_MAPS.push(map);
+      darkTileLayer(L).addTo(map);
+
+      const pts = [];
+      DESTINATIONS.forEach((d) => {
+        if (!Number.isFinite(d.lat) || !Number.isFinite(d.lng)) return;
+        pts.push([d.lat, d.lng]);
+        const count = VENUES.filter((v) => v.destination === d.name).length;
+        L.marker([d.lat, d.lng], { icon: goldPin(L), title: d.name, alt: d.name })
+          .addTo(map)
+          .bindPopup(`
+            <div class="map-pop">
+              <div class="map-pop-kicker">${esc(d.country)} · ${esc(d.tier)}</div>
+              <div class="map-pop-name">${esc(d.name)}</div>
+              <div class="map-pop-meta">${count} ${count === 1 ? "ställe" : "ställen"} · Säsong ${esc(d.peak_season)}</div>
+              <a class="map-pop-link" href="#/destination/${encodeURIComponent(d.code)}">Visa destination →</a>
+            </div>`);
+      });
+      if (pts.length) map.fitBounds(pts, { padding: [36, 36] });
+      else map.setView([40, 10], 3);
+
+      // "Nära mig" — zooma till användarens position (återanvänd geo-logiken)
+      const near = $("#map-near");
+      near.disabled = false;
+      let userMarker = null;
+      near.addEventListener("click", () => {
+        if (near.disabled) return;
+        near.disabled = true;
+        const orig = near.innerHTML;
+        near.innerHTML = `<span class="spinner spinner-sm" aria-hidden="true"></span> Hämtar plats …`;
+        const done = () => { near.innerHTML = orig; near.disabled = false; };
+        locateUser(
+          (g) => {
+            done();
+            if (!ACTIVE_MAPS.includes(map)) return; // vyn har bytts
+            if (!userMarker) userMarker = L.marker([g.lat, g.lng], { icon: userDot(L), alt: "Din position" }).addTo(map);
+            else userMarker.setLatLng([g.lat, g.lng]);
+            map.flyTo([g.lat, g.lng], 7, { duration: 1.2 });
+          },
+          () => { done(); showToast("Kunde inte hämta din plats — tillåt platsåtkomst och försök igen."); }
+        );
+      });
+    }).catch(() => {
+      if (!document.contains(shell)) return;
+      shell.innerHTML = mapFallbackHTML("map-retry");
+      $("#map-retry").addEventListener("click", renderMapView);
+    });
+  };
+  mount();
+}
+
+// Mini-karta på destinationsdetaljen: destinationens venues grupperade kring
+// destinationens koordinat (venues saknar egna koordinater i datasetet —
+// positionerna är därför ungefärliga, vilket sägs rakt ut under kartan).
+function mountDestMap(d, venues) {
+  const host = document.getElementById("map-dest");
+  if (!host || !Number.isFinite(d.lat) || !Number.isFinite(d.lng)) return;
+  ensureLeaflet().then((L) => {
+    if (!document.contains(host)) return;
+    const status = document.getElementById("dest-map-status");
+    if (status) status.remove();
+    const map = L.map("map-dest", { scrollWheelZoom: false });
+    ACTIVE_MAPS.push(map);
+    darkTileLayer(L).addTo(map);
+
+    // Destinationens egen nål i centrum
+    L.marker([d.lat, d.lng], { icon: goldPin(L), title: d.name, alt: d.name })
+      .addTo(map)
+      .bindPopup(`<div class="map-pop"><div class="map-pop-name">${esc(d.name)}</div><div class="map-pop-meta">${esc(d.country)} · ${esc(d.region)}</div></div>`);
+
+    // Venues i en deterministisk ring runt centrum (~2 km) — stabil mellan renderingar
+    const pts = [[d.lat, d.lng]];
+    const n = venues.length;
+    const latRad = d.lat * Math.PI / 180;
+    venues.forEach((v, i) => {
+      const ang = (2 * Math.PI * i) / Math.max(n, 1) + destHue(v.venue_id) / 360;
+      const r = n > 1 ? 0.02 : 0.012;
+      const lat = d.lat + Math.sin(ang) * r * 0.75;
+      const lng = d.lng + (Math.cos(ang) * r) / Math.max(Math.cos(latRad), 0.2);
+      pts.push([lat, lng]);
+      L.circleMarker([lat, lng], {
+        radius: 7, color: "#d4af5f", weight: 1.5,
+        fillColor: "#e8c87e", fillOpacity: 0.55,
+      }).addTo(map).bindPopup(`
+        <div class="map-pop">
+          <div class="map-pop-kicker">${esc(v.category)}</div>
+          <div class="map-pop-name">${esc(v.name)}</div>
+          <div class="map-pop-meta">Paket från ${fmtEUR(fromPriceFor(v))}</div>
+          <a class="map-pop-link" href="#/venue/${encodeURIComponent(v.venue_id)}">Se stället →</a>
+        </div>`);
+    });
+    map.fitBounds(pts, { padding: [30, 30], maxZoom: 13 });
+  }).catch(() => {
+    const shell = host && host.closest(".map-shell");
+    if (!shell || !document.contains(shell)) return;
+    shell.innerHTML = mapFallbackHTML("dest-map-retry");
+    const btn = document.getElementById("dest-map-retry");
+    if (btn) btn.addEventListener("click", () => {
+      shell.innerHTML = `
+        <div id="map-dest" class="map-canvas map-canvas-mini" role="application" aria-label="Karta över ${esc(d.name)}"></div>
+        <div class="map-loading" id="dest-map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> Laddar kartan …</div>`;
+      mountDestMap(d, venues);
+    });
+  });
+}
+
 // ---------- Onboarding: hem-destination (land → stad) ----------
 // Sparat val: { code: "IBZ" } eller { all: true } ("Visa allt"). Defensiv inläsning.
 const HOME_KEY = "velvet_home_destination";
@@ -1382,6 +1632,7 @@ const routes = {
   "#/": renderHome,
   "#/destinations": renderDestinations,
   "#/venues": renderVenues,
+  "#/map": renderMapView,
   "#/bookings": renderBookings,
 };
 
@@ -1399,6 +1650,8 @@ function route() {
   // Stäng ev. öppen modal vid ruttbyte (t.ex. bakåtknapp med öppen modal)
   const modalRoot = document.getElementById("modal-root");
   if (modalRoot && modalRoot.innerHTML) modalRoot.innerHTML = "";
+  // Riv aktiva Leaflet-kartor innan vyn skrivs över — annars läcker lyssnare
+  destroyMaps();
   const h = location.hash;
   let fn = routes[h];
   let active = h || "#/";

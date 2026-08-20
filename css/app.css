@@ -988,3 +988,110 @@ body.ob-lock { overflow: hidden; }
 @media (max-width: 420px) {
   .ob-grid { grid-template-columns: 1fr; }
 }
+
+/* ---------- Karta (V3, Leaflet) ---------- */
+.map-shell {
+  position: relative;
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-card);
+  box-shadow: var(--shadow-card);
+}
+.map-canvas { height: min(66vh, 640px); min-height: 380px; width: 100%; }
+.map-canvas-mini { height: 340px; min-height: 260px; }
+.map-shell-mini { margin-top: 4px; }
+.dest-map-panel { margin-top: 26px; }
+.map-note { margin-top: 12px; font-size: 12.5px; color: var(--text-faint); }
+.map-note .link-gold { font-size: 12.5px; }
+
+/* Laddnings-/felstatus ovanpå kartytan */
+.map-loading {
+  position: absolute; inset: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  color: var(--text-dim); font-size: 14px;
+  background: var(--bg-card);
+}
+.spinner-sm { width: 18px; height: 18px; border-width: 2px; display: inline-block; }
+.map-near-btn { display: inline-flex; align-items: center; gap: 7px; }
+
+.map-fallback { text-align: center; padding: 72px 24px; color: var(--text-dim); }
+.map-fallback .big { font-size: 40px; margin-bottom: 14px; }
+.map-fallback h3 { font-family: var(--font-display); font-size: 22px; color: var(--text); margin-bottom: 8px; }
+.map-fallback p { margin-bottom: 20px; }
+
+/* Leaflet i appens mörka tema */
+.leaflet-container {
+  background: #0b0b0f;
+  font-family: var(--font-body);
+  font-size: 13px;
+}
+.leaflet-container a { color: var(--gold-bright); }
+.leaflet-bar { border: 1px solid var(--border) !important; box-shadow: var(--shadow-card-hover); }
+.leaflet-bar a {
+  background: var(--bg-elev); color: var(--text);
+  border-bottom: 1px solid var(--border-soft);
+}
+.leaflet-bar a:hover, .leaflet-bar a:focus { background: var(--bg-card-hover); color: var(--gold-bright); }
+.leaflet-bar a.leaflet-disabled { background: var(--bg-elev); color: var(--text-faint); }
+.leaflet-control-attribution {
+  background: rgba(11, 11, 15, 0.78) !important;
+  color: var(--text-faint);
+  backdrop-filter: blur(6px);
+}
+.leaflet-control-attribution a { color: var(--text-dim); }
+
+/* Popups i dark/gold */
+.leaflet-popup-content-wrapper {
+  background: var(--bg-elev); color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-modal);
+}
+.leaflet-popup-tip { background: var(--bg-elev); border: 1px solid var(--border); }
+.leaflet-popup-content { margin: 14px 16px; line-height: 1.5; }
+.leaflet-popup-close-button { color: var(--text-faint) !important; }
+.leaflet-popup-close-button:hover { color: var(--gold-bright) !important; }
+.map-pop { min-width: 168px; }
+.map-pop-kicker {
+  font-size: 10.5px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase;
+  color: var(--text-faint); margin-bottom: 3px;
+}
+.map-pop-name { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--text); }
+.map-pop-meta { font-size: 12.5px; color: var(--text-dim); margin-top: 3px; }
+.map-pop-link {
+  display: inline-block; margin-top: 9px;
+  font-size: 12.5px; font-weight: 600; letter-spacing: 0.3px;
+  color: var(--gold) !important;
+}
+.map-pop-link:hover { color: var(--gold-bright) !important; }
+
+/* Guldnål — CSS-ritad droppe i appens guld */
+.velvet-pin-wrap { background: none; border: none; }
+.velvet-pin {
+  display: block; width: 100%; height: 100%;
+  background: linear-gradient(160deg, var(--gold-bright), var(--gold) 70%);
+  border: 1.5px solid rgba(11, 11, 15, 0.55);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg) scale(0.92);
+  transform-origin: center;
+  box-shadow: 0 6px 14px -4px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+.velvet-pin::after {
+  content: ""; position: absolute; inset: 0; margin: auto;
+  width: 34%; height: 34%; border-radius: 50%;
+  background: #0b0b0f; opacity: 0.85;
+}
+.leaflet-marker-icon:hover .velvet-pin { filter: brightness(1.12); }
+.velvet-user-dot {
+  display: block; width: 100%; height: 100%; border-radius: 50%;
+  background: #7fb4e8; border: 2.5px solid #eaf3fc;
+  box-shadow: 0 0 0 5px rgba(127, 180, 232, 0.28), 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 720px) {
+  .map-canvas { height: 62vh; min-height: 320px; }
+  .map-canvas-mini { height: 280px; }
+  .map-section .section-head { align-items: center; }
+}
