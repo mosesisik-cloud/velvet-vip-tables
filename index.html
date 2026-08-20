@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELVET — VIP-bord. Delad lyx.</title>
+<meta name="description" content="Boka VIP-bord, cabanas och daybeds på världens främsta klubbar och beach clubs — och dela kostnaden med ditt sällskap.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥂</text></svg>">
+</head>
+<body>
+<div id="app">
+  <!-- Nav -->
+  <nav class="nav">
+    <a href="#/" class="nav-logo" data-nav>VELVET<span class="logo-dot">.</span></a>
+    <div class="nav-links">
+      <a href="#/destinations" data-nav>Destinationer</a>
+      <a href="#/venues" data-nav>Ställen</a>
+      <a href="#/bookings" data-nav>Mina bokningar <span id="booking-count" class="badge hidden"></span></a>
+    </div>
+  </nav>
+
+  <!-- Views render here -->
+  <main id="view"></main>
+
+  <footer class="footer">
+    <div>
+      <span class="footer-brand">VELVET<span class="logo-dot">.</span></span>
+      <span class="footer-tag">VIP-bord. Delad lyx.</span>
+    </div>
+    <div class="footer-meta">V1 · 30 destinationer · 120 verifierade ställen · Dataset: Luxury Experience Venue Master V1</div>
+  </footer>
+</div>
+
+<!-- Booking modal -->
+<div id="modal-root"></div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
