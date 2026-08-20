@@ -60,6 +60,62 @@ function updateBookingBadge() {
   el.classList.toggle("hidden", n === 0);
 }
 
+// ---------- Dela bokning (base64-länk, ingen backend) ----------
+// URL-säker base64 av unicode-JSON: + / = ersätts så länken tål kopiering överallt.
+const b64urlEncode = (obj) => {
+  const bytes = new TextEncoder().encode(JSON.stringify(obj));
+  let bin = "";
+  bytes.forEach((b) => { bin += String.fromCharCode(b); });
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+};
+const b64urlDecode = (s) => {
+  const norm = String(s).replace(/-/g, "+").replace(/_/g, "/");
+  const b64 = norm + "=".repeat((4 - (norm.length % 4)) % 4);
+  const bin = atob(b64);
+  return JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, (c) => c.charCodeAt(0))));
+};
+
+function shareLinkFor(b) {
+  const payload = {
+    id: b.id, venue_id: b.venue_id, venue: b.venue, destination: b.destination,
+    date: b.date, package: b.package, total: b.total, party: b.party, per_person: b.per_person,
+  };
+  return `${location.origin}${location.pathname}#/join/${b64urlEncode(payload)}`;
+}
+
+// Tolka inbjudnings-payload graciöst: trasig base64/JSON eller orimliga fält → null.
+function parseInvite(raw) {
+  let p;
+  try { p = b64urlDecode(raw); } catch { return null; }
+  if (!p || typeof p !== "object" || Array.isArray(p)) return null;
+  if (typeof p.id !== "string" || !p.id) return null;
+  if (typeof p.venue !== "string" || !p.venue) return null;
+  const party = Number(p.party), total = Number(p.total);
+  if (!Number.isFinite(total) || total <= 0) return null;
+  if (!Number.isInteger(party) || party < 1 || party > 99) return null;
+  const per = Number(p.per_person);
+  return {
+    id: p.id, venue_id: String(p.venue_id || ""), venue: p.venue,
+    destination: String(p.destination || ""), date: String(p.date || ""),
+    package: String(p.package || ""), total, party,
+    per_person: Number.isFinite(per) && per > 0 ? per : Math.ceil(total / party),
+  };
+}
+
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; }
+  catch {
+    // Fallback (t.ex. utan clipboard-behörighet): dold textarea + execCommand
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch {}
+    ta.remove();
+    return ok;
+  }
+}
+
 // ---------- Helpers ----------
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -711,6 +767,7 @@ function renderBookings() {
             <div class="per">${fmtEUR(b.per_person)} <span style="font-size:12px;color:var(--text-faint)">/person</span></div>
             <div class="total">Totalt ${fmtEUR(b.total)}</div>
           </div>
+          <button class="btn btn-ghost btn-sm btn-share" data-share="${esc(b.id)}">Dela</button>
           <button class="btn btn-ghost btn-sm btn-danger" data-cancel="${esc(b.id)}">Avboka</button>
         </div>
       </div>`).join("")}
@@ -722,6 +779,86 @@ function renderBookings() {
       renderBookings();
     });
   });
+
+  // Dela: kopiera inbjudningslänk till urklipp med feedback på knappen
+  document.querySelectorAll("[data-share]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const b = loadBookings().find((x) => x.id === btn.dataset.share);
+      if (!b || btn.disabled) return;
+      const ok = await copyText(shareLinkFor(b));
+      const orig = btn.textContent;
+      btn.textContent = ok ? "Länk kopierad ✓" : "Kunde inte kopiera";
+      btn.classList.toggle("copied", ok);
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.classList.remove("copied");
+        btn.disabled = false;
+      }, 1800);
+    });
+  });
+}
+
+// ---------- Inbjudningsvy (#/join/<base64>) ----------
+function renderJoin(raw) {
+  const inv = parseInvite(raw);
+  if (!inv) {
+    view().innerHTML = `
+    <section class="section">
+      <div class="empty-state">
+        <div class="big">🔗</div>
+        <h3>Ogiltig inbjudningslänk</h3>
+        <p>Länken verkar vara trasig eller ofullständig. Be värden dela en ny länk.</p>
+        <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>Utforska ställen</a></p>
+      </div>
+    </section>`;
+    return;
+  }
+
+  const v = VENUES.find((x) => x.venue_id === inv.venue_id);
+  const meta = [inv.destination, v ? v.category : ""].filter(Boolean).join(" · ");
+  const already = loadBookings().some((b) => b.id === inv.id);
+
+  view().innerHTML = `
+  <section class="section">
+    <div class="invite">
+      <div class="invite-card">
+        <div class="invite-kicker">Inbjudan · VELVET</div>
+        <div class="invite-glass" aria-hidden="true">🥂</div>
+        <h1 class="invite-title">Du är bjuden till<br><em>${esc(inv.venue)}</em></h1>
+        ${meta ? `<div class="invite-meta">${esc(meta)}</div>` : ""}
+        <div class="invite-facts">
+          ${inv.date ? `<div class="invite-fact"><span class="k">Datum</span><span class="v">${esc(inv.date)}</span></div>` : ""}
+          ${inv.package ? `<div class="invite-fact"><span class="k">Paket</span><span class="v">${esc(inv.package)}</span></div>` : ""}
+          <div class="invite-fact"><span class="k">Sällskap</span><span class="v">${inv.party} personer</span></div>
+        </div>
+        <div class="split-box">
+          <div class="split-per">${fmtEUR(inv.per_person)}</div>
+          <div class="split-label">din andel per person</div>
+          <div class="split-total">Totalt ${fmtEUR(inv.total)} · delas på ${inv.party} personer</div>
+        </div>
+        <div id="join-cta">
+          ${already ? `
+            <p class="invite-joined" role="status">✓ Du är redan med i den här bokningen.</p>
+            <a class="btn btn-gold" href="#/bookings" data-nav style="width:100%">Mina bokningar</a>` : `
+            <button class="btn btn-gold" id="join-btn" style="width:100%">Jag är med 🥂</button>
+            <p class="invite-note">Bokningen sparas i "Mina bokningar" på den här enheten.</p>`}
+        </div>
+        ${v ? `<a class="icon-link invite-venue-link" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>Se stället →</a>` : ""}
+      </div>
+    </div>
+  </section>`;
+
+  const joinBtn = $("#join-btn");
+  if (joinBtn) {
+    joinBtn.addEventListener("click", () => {
+      if (loadBookings().some((b) => b.id === inv.id)) return; // skydd mot dubbelklick
+      saveBookings([...loadBookings(), { ...inv, guests: [], joined: true, created: new Date().toISOString() }]);
+      $("#join-cta").innerHTML = `
+        <p class="invite-joined" role="status">🥂 Klart — du är med! Bokningen ligger under Mina bokningar.</p>
+        <a class="btn btn-gold" href="#/bookings" data-nav style="width:100%">Mina bokningar</a>`;
+    });
+  }
 }
 
 // ---------- Router ----------
@@ -737,7 +874,11 @@ const routes = {
 const paramRoutes = [
   { re: /^#\/venue\/(.+)$/, fn: renderVenueDetail, nav: "#/venues" },
   { re: /^#\/destination\/(.+)$/, fn: renderDestinationDetail, nav: "#/destinations" },
+  { re: /^#\/join\/(.+)$/, fn: renderJoin, nav: "" },
 ];
+
+// Trasiga %-sekvenser i hashen får inte krascha routern
+const safeDecode = (s) => { try { return decodeURIComponent(s); } catch { return s; } };
 
 function route() {
   const h = location.hash;
@@ -746,7 +887,7 @@ function route() {
   if (!fn) {
     for (const r of paramRoutes) {
       const m = h.match(r.re);
-      if (m) { fn = () => r.fn(decodeURIComponent(m[1])); active = r.nav; break; }
+      if (m) { fn = () => r.fn(safeDecode(m[1])); active = r.nav; break; }
     }
   }
   (fn || renderHome)();

@@ -656,3 +656,41 @@ button { font-family: inherit; cursor: pointer; }
   .prio-lg .prio-num { font-size: 26px; }
   .prio-lg .prio-label { margin-top: 0; }
 }
+
+/* ---------- Dela bokning & inbjudningsvy ---------- */
+.btn-share.copied { color: var(--green); border-color: rgba(111, 191, 143, 0.5); }
+
+.invite { display: flex; justify-content: center; padding: 24px 0 40px; }
+.invite-card {
+  max-width: 540px; width: 100%;
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 44px 40px 36px; text-align: center;
+  box-shadow: var(--shadow-card); position: relative; overflow: hidden;
+}
+.invite-card::before {
+  content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.invite-kicker {
+  font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--gold); font-weight: 600; margin-bottom: 18px;
+}
+.invite-glass { font-size: 42px; margin-bottom: 14px; }
+.invite-title { font-family: var(--font-display); font-size: 32px; line-height: 1.22; margin-bottom: 10px; }
+.invite-title em { color: var(--gold-bright); }
+.invite-meta { color: var(--text-dim); font-size: 15px; margin-bottom: 26px; }
+.invite-facts {
+  border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft);
+  padding: 16px 4px; margin-bottom: 22px; display: grid; gap: 10px; text-align: left;
+}
+.invite-fact { display: flex; justify-content: space-between; gap: 16px; font-size: 14px; }
+.invite-fact .k { color: var(--text-faint); }
+.invite-fact .v { color: var(--text); font-weight: 500; }
+.invite-joined { color: var(--green); font-weight: 500; margin-bottom: 14px; }
+.invite-note { color: var(--text-faint); font-size: 12.5px; margin-top: 14px; }
+.invite-venue-link { display: inline-block; margin-top: 18px; }
+
+@media (max-width: 720px) {
+  .invite-card { padding: 32px 22px 28px; }
+  .invite-title { font-size: 26px; }
+}
