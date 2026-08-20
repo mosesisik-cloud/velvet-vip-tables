@@ -283,6 +283,7 @@ function renderHome() {
   const top = [...VENUES].sort((a, b) => b.priority_score - a.priority_score).slice(0, 6);
   view().innerHTML = `
   <section class="hero">
+    <div class="hero-media" id="hero-media" aria-hidden="true"></div>
     <div class="hero-kicker">Nu i förhandsversion · V1</div>
     <h1>VIP-bord på världens bästa klubbar.<br><em>Dela kostnaden.</em></h1>
     <p>Boka bord, cabanas och daybeds på ${VENUES.length} handplockade lyxställen i ${DESTINATIONS.length} destinationer — och splitta notan med ditt sällskap, automatiskt.</p>
@@ -316,6 +317,62 @@ function renderHome() {
   </section>`;
   bindVenueCards();
   bindDestCards();
+  initHeroVideo();
+}
+
+// ---------- Hero-video (V2) ----------
+// Ambient stämningsvideo i heron (Pexels, fri licens — nattklubb/ljusshow,
+// URL:er verifierade HTTP 200 2026-08-20). Laddas EFTER första render
+// (dubbel rAF + idle) med preload="metadata" så LCP inte påverkas.
+// prefers-reduced-motion → stillbild (postern) istället för video.
+// Fel (offline, borttagen fil, CSP …) → elementet tas bort och den
+// befintliga gradient-bakgrunden i .hero står kvar som fallback.
+const HERO_VIDEO = {
+  mp4: "https://videos.pexels.com/video-files/2022395/2022395-hd_1920_1080_30fps.mp4",      // ~8 MB
+  mp4Small: "https://videos.pexels.com/video-files/2022395/2022395-sd_960_540_30fps.mp4",   // ~3 MB (mobil)
+  poster: "https://images.pexels.com/videos/2022395/free-video-2022395.jpg?auto=compress&cs=tinysrgb&w=1600",
+};
+function initHeroVideo() {
+  const host = document.getElementById("hero-media");
+  if (!host) return;
+  const fail = () => host.remove(); // gradienten bakom tar över
+  const mount = () => {
+    if (!document.contains(host) || host.childElementCount) return; // navigerat bort / redan monterad
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const img = new Image();
+      img.className = "hero-still";
+      img.alt = "";
+      img.decoding = "async";
+      img.onload = () => host.classList.add("loaded");
+      img.onerror = fail;
+      img.src = HERO_VIDEO.poster;
+      host.appendChild(img);
+      return;
+    }
+    const vid = document.createElement("video");
+    vid.muted = true;
+    vid.loop = true;
+    vid.autoplay = true;
+    vid.playsInline = true;
+    vid.setAttribute("playsinline", "");
+    vid.setAttribute("muted", "");
+    vid.preload = "metadata";
+    vid.poster = HERO_VIDEO.poster;
+    vid.tabIndex = -1;
+    vid.disablePictureInPicture = true;
+    vid.addEventListener("error", fail);
+    vid.addEventListener("canplay", () => host.classList.add("loaded"), { once: true });
+    vid.src = window.innerWidth < 720 ? HERO_VIDEO.mp4Small : HERO_VIDEO.mp4;
+    host.appendChild(vid);
+    const p = vid.play();
+    // Autoplay blockerad → visa postern som stillbild istället
+    if (p && typeof p.catch === "function") p.catch(() => host.classList.add("loaded"));
+  };
+  // Dubbel rAF garanterar att första paint hunnit ske, sedan idle-tid
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    if ("requestIdleCallback" in window) requestIdleCallback(mount, { timeout: 1500 });
+    else setTimeout(mount, 200);
+  }));
 }
 
 // Deterministisk nyans per destinationskod → diskret gradient-emblem

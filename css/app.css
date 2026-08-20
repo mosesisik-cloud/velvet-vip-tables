@@ -145,6 +145,32 @@ button { font-family: inherit; cursor: pointer; }
   width: min(640px, 80%); height: 1px;
   background: linear-gradient(90deg, transparent, rgba(212,175,95,0.4), transparent);
 }
+
+/* Ambient hero-video (V2): absolut bakgrundslager under innehållet.
+   Gradienten på .hero ligger kvar bakom som graceful fallback. */
+.hero { overflow: hidden; }
+.hero > :not(.hero-media) { position: relative; z-index: 2; }
+.hero-media {
+  position: absolute; inset: 0; z-index: 0;
+  overflow: hidden; pointer-events: none;
+}
+.hero-media video, .hero-media .hero-still {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0; transition: opacity 1.6s var(--ease);
+  filter: saturate(0.8) brightness(0.85);
+}
+.hero-media.loaded video, .hero-media.loaded .hero-still { opacity: 0.45; }
+/* Mörk overlay ovanpå videon så rubrik + guld fortsatt är läsbara */
+.hero-media::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    linear-gradient(180deg, rgba(11,11,15,0.78) 0%, rgba(11,11,15,0.5) 42%, var(--bg) 100%),
+    radial-gradient(ellipse 75% 65% at 50% 38%, rgba(11,11,15,0.2), rgba(11,11,15,0.6));
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-media video { display: none; } /* JS visar stillbild — detta är bältet och hängslena */
+}
 .hero-kicker {
   display: inline-block;
   font-size: 12px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase;
