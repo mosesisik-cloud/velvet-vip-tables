@@ -91,6 +91,25 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: 9px; font-size: 11px; font-weight: 700;
 }
 
+/* Hamburger — endast synlig under 720px */
+.nav-toggle {
+  display: none;
+  width: 44px; height: 44px;
+  flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+  background: none; border: 1px solid transparent; border-radius: 10px; padding: 0;
+  transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+}
+.nav-toggle:hover { border-color: var(--border); background: rgba(212,175,95,0.05); }
+.nav-toggle span {
+  display: block; width: 20px; height: 2px; border-radius: 2px;
+  background: var(--text);
+  transition: transform 0.25s var(--ease), opacity 0.2s var(--ease), background 0.2s var(--ease);
+}
+.nav-toggle.open span { background: var(--gold-bright); }
+.nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-toggle.open span:nth-child(2) { opacity: 0; }
+.nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
@@ -526,14 +545,78 @@ button { font-family: inherit; cursor: pointer; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 720px) {
-  .nav { padding: 14px 20px; }
-  .nav-links { gap: 16px; }
+  /* Nav → hamburger + dropdown-panel */
+  .nav { padding: 10px 14px 10px 20px; }
+  .nav-toggle { display: flex; }
+  .nav-links {
+    display: none;
+    position: absolute; top: 100%; left: 0; right: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: rgba(11, 11, 15, 0.97);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border-soft);
+    padding: 6px 20px 12px;
+    box-shadow: 0 24px 40px -20px rgba(0, 0, 0, 0.6);
+  }
+  .nav-links.open { display: flex; animation: fadeIn 0.18s ease; }
+  .nav-links a {
+    display: flex; align-items: center; gap: 8px;
+    min-height: 48px; padding: 12px 4px;
+    font-size: 15px;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .nav-links a:last-child { border-bottom: none; }
+  .nav-links a::after { display: none; }
+
   .hero { padding: 70px 20px 60px; }
   .section { padding: 50px 20px; }
   .stats { gap: 32px; padding: 26px 20px; }
-  .modal { padding: 24px; }
   .footer { padding: 24px 20px; }
+
+  /* Filterrad → horisontell scroll i full bredd */
+  .filters {
+    flex-wrap: nowrap; overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -20px 24px; padding: 4px 20px 10px;
+    scrollbar-width: none;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .filters input[type="search"] {
+    flex: 0 0 auto; min-width: min(280px, 70vw); max-width: none; min-height: 44px;
+  }
+  .filters select { flex: 0 0 auto; min-height: 44px; }
+  .filter-count { flex: 0 0 auto; margin-left: 4px; white-space: nowrap; }
+
+  /* Venue-grid → 1 kolumn */
+  .venue-grid { grid-template-columns: 1fr; }
+
+  /* Modaler → fullskärm */
+  .modal-overlay { padding: 0; align-items: stretch; }
+  .modal {
+    max-width: none; width: 100%;
+    height: 100vh; height: 100dvh; max-height: none;
+    border-radius: 0; border-left: none; border-right: none;
+    border-top: none; border-bottom: none;
+    padding: 22px 20px calc(28px + env(safe-area-inset-bottom, 0px));
+    overscroll-behavior: contain;
+  }
+
+  /* Touch-vänliga träffytor (min 44px) */
+  .btn { min-height: 44px; }
+  .btn-sm { min-height: 44px; padding: 10px 18px; }
+  .icon-link { min-height: 44px; padding: 10px 16px; }
+  .stepper button { width: 44px; height: 44px; }
+  .modal-close { width: 44px; height: 44px; padding: 0; }
+  .chip-x { padding: 8px 10px; margin: -6px -6px -6px -4px; }
+  .package { min-height: 44px; }
+  .guest-row { flex-direction: column; }
+  .guest-row .btn { align-self: stretch; }
+
   .detail-grid { grid-template-columns: 1fr; }
   .detail-cta { position: static; }
   .detail-panel { padding: 22px; }
+  .detail-hero { flex-direction: column-reverse; }
+  .prio-lg { flex-direction: row; align-items: baseline; gap: 10px; min-width: 0; padding: 10px 16px; }
+  .prio-lg .prio-num { font-size: 26px; }
+  .prio-lg .prio-label { margin-top: 0; }
 }

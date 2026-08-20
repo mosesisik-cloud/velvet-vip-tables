@@ -625,6 +625,26 @@ function route() {
   });
 }
 
+// ---------- Mobil nav (hamburger < 720px) ----------
+function initMobileNav() {
+  const toggle = document.getElementById("nav-toggle");
+  const links = document.getElementById("nav-links");
+  if (!toggle || !links) return;
+  const setOpen = (open) => {
+    links.classList.toggle("open", open);
+    toggle.classList.toggle("open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Stäng meny" : "Öppna meny");
+  };
+  toggle.addEventListener("click", () => setOpen(!links.classList.contains("open")));
+  // Stäng vid länkklick (även samma route, då hashchange inte triggas)
+  links.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
+  window.addEventListener("hashchange", () => setOpen(false));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && links.classList.contains("open")) setOpen(false);
+  });
+}
+
 // ---------- Init ----------
 async function init() {
   const [d, v] = await Promise.all([
@@ -633,6 +653,7 @@ async function init() {
   ]);
   DESTINATIONS = d;
   VENUES = v;
+  initMobileNav();
   window.addEventListener("hashchange", route);
   route();
   updateBookingBadge();
