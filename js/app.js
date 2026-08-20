@@ -45,12 +45,43 @@ function packagesFor(v) {
   return pkgs;
 }
 
-const fmtEUR = (n) => new Intl.NumberFormat("sv-SE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(n);
+// Defensiv: icke-numeriskt in (t.ex. manipulerad localStorage) → 0 € i stället för "NaN"
+const fmtEUR = (n) => new Intl.NumberFormat("sv-SE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(Number.isFinite(Number(n)) ? Number(n) : 0);
 
 // ---------- Bookings (localStorage) ----------
+// Defensivt: getItem/parse kan kasta (private mode, korrupt data) och innehållet
+// kan vara vad som helst — behåll bara objekt med giltigt id.
 const BOOKINGS_KEY = "velvet_bookings_v1";
-const loadBookings = () => { try { return JSON.parse(localStorage.getItem(BOOKINGS_KEY)) || []; } catch { return []; } };
-const saveBookings = (b) => { localStorage.setItem(BOOKINGS_KEY, JSON.stringify(b)); updateBookingBadge(); };
+const loadBookings = () => {
+  try {
+    const raw = JSON.parse(localStorage.getItem(BOOKINGS_KEY));
+    if (!Array.isArray(raw)) return [];
+    return raw.filter((b) => b && typeof b === "object" && !Array.isArray(b) && typeof b.id === "string" && b.id);
+  } catch { return []; }
+};
+const saveBookings = (b) => {
+  try { localStorage.setItem(BOOKINGS_KEY, JSON.stringify(b)); }
+  catch {
+    // Quota full eller lagring blockerad — appen ska inte krascha, men säg till.
+    showToast("Kunde inte spara — lagringsutrymmet är fullt eller blockerat.");
+  }
+  updateBookingBadge();
+};
+
+// Diskret toast för icke-blockerande fel
+let toastTimer = null;
+function showToast(msg) {
+  let el = document.getElementById("toast");
+  if (!el) {
+    el = document.createElement("div");
+    el.id = "toast"; el.className = "toast"; el.setAttribute("role", "status");
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 4000);
+}
 
 function updateBookingBadge() {
   const n = loadBookings().length;
@@ -118,6 +149,8 @@ async function copyText(text) {
 
 // ---------- Helpers ----------
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+// Datastyrda "tal" kan vara vad som helst i JSON — tvinga till number innan de hamnar i HTML
+const num = (x) => (Number.isFinite(Number(x)) ? Number(x) : 0);
 const $ = (sel, root = document) => root.querySelector(sel);
 const view = () => document.getElementById("view");
 
@@ -144,9 +177,10 @@ function restoreFocus(el) {
 }
 
 function pips(n) {
+  const v = Math.max(0, Math.min(5, num(n)));
   let h = "";
-  for (let i = 1; i <= 5; i++) h += `<div class="score-pip ${i <= n ? "on" : ""}"></div>`;
-  return `<div class="dest-scores" title="${n}/5">${h}</div>`;
+  for (let i = 1; i <= 5; i++) h += `<div class="score-pip ${i <= v ? "on" : ""}"></div>`;
+  return `<div class="dest-scores" title="${v}/5">${h}</div>`;
 }
 
 // ---------- Views ----------
@@ -320,7 +354,7 @@ function venueCard(v) {
         <div class="venue-name">${esc(v.name)}</div>
         <div class="venue-loc">${esc(v.destination)}</div>
       </div>
-      <div class="prio"><span class="prio-num">${v.priority_score}</span><span class="prio-label">Prio</span></div>
+      <div class="prio"><span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">Prio</span></div>
     </div>
     <div class="venue-tags">
       <span class="tag">${esc(v.category)}</span>
@@ -481,7 +515,7 @@ function renderVenueDetail(id) {
         </div>
       </div>
       <div class="prio prio-lg" title="Priority score">
-        <span class="prio-num">${v.priority_score}</span>
+        <span class="prio-num">${num(v.priority_score)}</span>
         <span class="prio-label">Priority score</span>
       </div>
     </div>
@@ -550,8 +584,8 @@ function openBookingModal(v) {
         <label id="lbl-pkgs">Välj paket</label>
         <div class="package-list" id="m-pkgs" role="radiogroup" aria-labelledby="lbl-pkgs">
           ${pkgs.map((p, i) => `
-            <div class="package ${i === 0 ? "selected" : ""}" data-pkg="${p.id}" role="radio" aria-checked="${i === 0}" tabindex="0">
-              <div><div class="package-name">${p.name}</div><div class="package-desc">${p.desc}</div></div>
+            <div class="package ${i === 0 ? "selected" : ""}" data-pkg="${esc(p.id)}" role="radio" aria-checked="${i === 0}" tabindex="0">
+              <div><div class="package-name">${esc(p.name)}</div><div class="package-desc">${esc(p.desc)}</div></div>
               <div class="package-price">${fmtEUR(p.price)}</div>
             </div>`).join("")}
         </div>
@@ -701,7 +735,7 @@ function showConfirmation(b, opener) {
       <h2>Bokning bekräftad</h2>
       <div class="modal-sub">${esc(b.id)}</div>
       <p style="color:var(--text-dim); margin-bottom:8px">${esc(b.package)} på <b>${esc(b.venue)}</b>, ${esc(b.destination)}</p>
-      <p style="color:var(--text-dim)">${esc(b.date)} · ${b.party} personer</p>
+      <p style="color:var(--text-dim)">${esc(b.date)} · ${num(b.party)} personer</p>
       ${(b.guests || []).length ? `
       <div class="confirm-guests">
         <div class="confirm-guests-title">Sällskap</div>
@@ -755,7 +789,7 @@ function renderBookings() {
       <div class="booking-card">
         <div class="booking-info">
           <h3>${esc(b.venue)}</h3>
-          <div class="booking-meta">${esc(b.destination)} · ${esc(b.date)} · ${esc(b.package)} · ${b.party} personer · ${esc(b.id)}</div>
+          <div class="booking-meta">${esc(b.destination)} · ${esc(b.date)} · ${esc(b.package)} · ${num(b.party)} personer · ${esc(b.id)}</div>
           ${(b.guests || []).length ? `
           <div class="chip-list booking-guests">
             <span class="chip chip-self">Du <em>${fmtEUR(b.per_person)}</em></span>
@@ -861,6 +895,22 @@ function renderJoin(raw) {
   }
 }
 
+// ---------- 404 ----------
+function render404(hash) {
+  view().innerHTML = `
+  <section class="section">
+    <div class="empty-state">
+      <div class="big">🚪</div>
+      <h3>Sidan hittades inte</h3>
+      <p>Rutten <code class="route-code">${esc(hash)}</code> finns inte. Kanske en gammal eller felskriven länk?</p>
+      <p style="margin-top:20px">
+        <a class="btn btn-gold" href="#/" data-nav>Till startsidan</a>
+        <a class="btn btn-ghost" href="#/venues" data-nav>Utforska ställen</a>
+      </p>
+    </div>
+  </section>`;
+}
+
 // ---------- Router ----------
 const routes = {
   "": renderHome,
@@ -890,7 +940,9 @@ function route() {
       if (m) { fn = () => r.fn(safeDecode(m[1])); active = r.nav; break; }
     }
   }
-  (fn || renderHome)();
+  // Okänd rutt → 404-vy (ingen nav-länk markeras som aktiv)
+  if (!fn) { fn = () => render404(h); active = null; }
+  fn();
   window.scrollTo(0, 0);
   document.querySelectorAll(".nav-links a").forEach((a) => {
     a.classList.toggle("active", a.getAttribute("href") === active);
@@ -929,17 +981,60 @@ function initSkipLink() {
   });
 }
 
-// ---------- Init ----------
+// ---------- Init: laddning, fel + retry ----------
+function renderLoading() {
+  view().innerHTML = `
+  <div class="load-state" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <p class="load-label">Laddar VELVET…</p>
+  </div>`;
+}
+
+function renderLoadError() {
+  view().innerHTML = `
+  <section class="section">
+    <div class="empty-state load-error" role="alert">
+      <div class="big">⚠️</div>
+      <h3>Kunde inte ladda katalogen</h3>
+      <p>Något gick fel när destinationer och ställen skulle hämtas.<br>Kontrollera anslutningen och försök igen.</p>
+      <p style="margin-top:20px"><button class="btn btn-gold" id="retry-btn">Försök igen</button></p>
+    </div>
+  </section>`;
+  $("#retry-btn").addEventListener("click", () => init());
+}
+
+async function fetchJSON(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+  const data = await r.json(); // kastar vid trasig JSON
+  if (!Array.isArray(data)) throw new Error(`${url}: oväntat format (förväntade en lista)`);
+  return data;
+}
+
+// Engångs-bindningar (nav, hashchange) får inte dubbleras vid retry
+let uiBound = false;
+
 async function init() {
-  const [d, v] = await Promise.all([
-    fetch("data/destinations.json").then((r) => r.json()),
-    fetch("data/venues.json").then((r) => r.json()),
-  ]);
+  renderLoading();
+  let d, v;
+  try {
+    [d, v] = await Promise.all([
+      fetchJSON("data/destinations.json"),
+      fetchJSON("data/venues.json"),
+    ]);
+  } catch (err) {
+    console.error("VELVET: datainläsning misslyckades", err);
+    renderLoadError();
+    return;
+  }
   DESTINATIONS = d;
   VENUES = v;
-  initMobileNav();
-  initSkipLink();
-  window.addEventListener("hashchange", route);
+  if (!uiBound) {
+    uiBound = true;
+    initMobileNav();
+    initSkipLink();
+    window.addEventListener("hashchange", route);
+  }
   route();
   updateBookingBadge();
 }

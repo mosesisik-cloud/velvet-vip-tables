@@ -694,3 +694,42 @@ button { font-family: inherit; cursor: pointer; }
   .invite-card { padding: 32px 22px 28px; }
   .invite-title { font-size: 26px; }
 }
+
+/* ---------- Robusthet: laddning, fel, 404, toast ---------- */
+.load-state {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 18px; min-height: 50vh; color: var(--text-dim);
+}
+.spinner {
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 2px solid var(--gold-dim);
+  border-top-color: var(--gold);
+  animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.load-label {
+  font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--text-faint); font-weight: 500;
+}
+@media (prefers-reduced-motion: reduce) {
+  .spinner { animation-duration: 2.4s; }
+}
+
+.route-code {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 13px; color: var(--gold-bright);
+  background: var(--gold-dim); border-radius: 6px; padding: 2px 8px;
+  word-break: break-all;
+}
+
+.toast {
+  position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 16px);
+  background: var(--bg-elev); color: var(--text);
+  border: 1px solid var(--border); border-left: 3px solid var(--amber);
+  border-radius: 10px; padding: 12px 18px; font-size: 14px;
+  box-shadow: var(--shadow-card-hover);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+  z-index: 200; max-width: min(92vw, 480px); text-align: center;
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }
