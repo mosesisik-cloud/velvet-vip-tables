@@ -24,20 +24,87 @@ function venueGroup(v) {
 
 // ---------- Venue-bilder (V2) ----------
 function venuePhoto(v) {
-  // Endast ställets egen bild (hämtad från deras officiella hemsida).
-  // Saknas riktig bild visas gradient-emblemet.
+  // Ställets egen bild (hämtad från deras officiella hemsida) i första hand.
   const u = VENUE_IMAGES[v.venue_id];
   return (typeof u === "string" && /^https?:\/\//.test(u)) ? u : null;
 }
+
+// ---------- Genrebilder (V2): kurerad Pexels-pool ----------
+// Saknar ett ställe egen bild får det ett passande stock-foto ur en kurerad
+// pool (Pexels CDN, fri licens — alla ID:n verifierade HTTP 200 + visuellt
+// granskade 2026-08-21). Mappning: kategori → pool, hash(venue_id) → foto,
+// med deterministisk sondering inom kategorin så att två ställen utan egen
+// bild aldrig delar foto förrän poolen är slut (grannar i listan skiljer sig).
+const pexels = (id) => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=800`;
+const STOCK_POOLS = {
+  nightclub: [1105666, 1190298, 1540406, 1763075, 2114365, 2240771, 2263436, 801863].map(pexels),   // dansgolv/DJ/ljusshow
+  beach: [1268855, 3155666, 1287460, 258154, 1732414, 296278, 261102, 2403017].map(pexels),          // strand/solsängar/marina
+  day: [189296, 261102, 1174732, 2403017, 261101].map(pexels),                                       // pool/dayclub
+  rooftop: [466685, 2096983, 1470405, 373912, 2246476].map(pexels),                                  // skyline/rooftop
+  restaurant: [262047, 941861, 1581384, 696218, 3201921].map(pexels),                                // fine dining
+  apres: [848599, 869258, 352093, 754268].map(pexels),                                               // vinter/après-ski
+};
+// Egen kategorimappning för foton — venueGroup går inte att återanvända här:
+// dess regex-ordning låter "club\b" fånga t.ex. "Beach club" som nattklubb.
+function photoGroup(v) {
+  const c = String(v.category || "");
+  if (/après|apres/i.test(c)) return "apres";
+  if (/rooftop/i.test(c)) return "rooftop";
+  if (/beach|floating|cliff/i.test(c)) return "beach";
+  if (/day ?club|pool/i.test(c)) return "day";
+  if (/restaurant|dinner|tavern/i.test(c)) return "restaurant";
+  return "nightclub"; // nightclub/nightlife/bar/show/live music
+}
+function hashStr(s) {
+  let h = 0;
+  for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return h;
+}
+// venue_id → stock-URL. Byggs om efter varje dataladdning (deterministiskt).
+let STOCK_ASSIGN = {};
+function buildStockAssignments() {
+  STOCK_ASSIGN = {};
+  const byGroup = {};
+  for (const v of VENUES) {
+    if (venuePhoto(v)) continue; // egen bild finns — stock behövs bara som onerror-reserv
+    const g = photoGroup(v);
+    (byGroup[g] = byGroup[g] || []).push(v);
+  }
+  for (const g of Object.keys(byGroup)) {
+    const pool = STOCK_POOLS[g] || STOCK_POOLS.nightclub;
+    const taken = new Set();
+    // Stabil ordning (venue_id) → samma tilldelning varje besök
+    for (const v of byGroup[g].sort((a, b) => a.venue_id.localeCompare(b.venue_id))) {
+      if (taken.size >= pool.length) taken.clear(); // pool slut → börja om
+      let i = hashStr(v.venue_id) % pool.length;
+      while (taken.has(i)) i = (i + 1) % pool.length; // närmaste lediga foto
+      taken.add(i);
+      STOCK_ASSIGN[v.venue_id] = pool[i];
+    }
+  }
+}
+// Stock-foto för ett venue: förtilldelat om egen bild saknas, annars hash-valt
+// (används då bara som reserv om den egna bilden inte laddar).
+function stockPhoto(v) {
+  if (STOCK_ASSIGN[v.venue_id]) return STOCK_ASSIGN[v.venue_id];
+  const pool = STOCK_POOLS[photoGroup(v)] || STOCK_POOLS.nightclub;
+  return pool[hashStr(v.venue_id) % pool.length];
+}
 // Bildblock med emblem-fallback under: emblemet syns medan bilden laddar
-// och tar över permanent om den misslyckas (onerror → .img-fail).
+// och tar över permanent om allt misslyckas. Fallback-kedja i onerror:
+// egen bild → genrebild (data-fb) → gradient-emblem (.img-fail).
 // { eager: true } för LCP-bilder (detalj-heron): laddas direkt med hög prioritet;
 // kort i listor förblir lazy så mobil inte laddar 120 bilder i onödan.
 function venueMediaHTML(v, cls, { eager = false } = {}) {
-  const url = venuePhoto(v);
+  const real = venuePhoto(v);
+  const stock = stockPhoto(v);
+  const url = real || stock;
+  const alt = real
+    ? `${v.name} — ${v.category || ""}`
+    : `${v.name} — genrebild (${v.category || ""})`;
   const img = url ? `
-    <img src="${esc(url)}" alt="${esc(v.name)} — ${esc(v.category || "")}" loading="${eager ? "eager" : "lazy"}"${eager ? ` fetchpriority="high"` : ""} decoding="async"
-         onerror="this.closest('.${cls}').classList.add('img-fail')">` : "";
+    <img src="${esc(url)}" alt="${esc(alt)}" loading="${eager ? "eager" : "lazy"}"${eager ? ` fetchpriority="high"` : ""} decoding="async"${real && stock ? ` data-fb="${esc(stock)}"` : ""}
+         onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.removeAttribute('data-fb')}else{this.closest('.${cls}').classList.add('img-fail')}">` : "";
   return `
   <div class="${cls}${url ? "" : " img-fail"}">
     <div class="dest-emblem venue-media-emblem" aria-hidden="true" style="--h:${destHue(v.destination_code)}">${esc(v.destination_code || "")}</div>${img}
@@ -1490,7 +1557,7 @@ async function init() {
       fetchJSON("data/destinations.json"),
       fetchJSON("data/venues.json"),
     ]);
-    // Riktiga bilder från ställenas hemsidor — saknas filen visas emblem istället
+    // Riktiga bilder från ställenas hemsidor — saknas filen/bilden används genrebild
     try {
       const r = await fetch("data/venue-images.json");
       if (r.ok) VENUE_IMAGES = await r.json() || {};
@@ -1502,6 +1569,7 @@ async function init() {
   }
   DESTINATIONS = d;
   VENUES = v;
+  buildStockAssignments(); // genrebilder till ställen utan egen bild
   if (!uiBound) {
     uiBound = true;
     initMobileNav();
