@@ -355,10 +355,14 @@ function renderVenueDetail(id) {
 }
 
 // ---------- Booking modal ----------
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const todayISO = () => new Date().toISOString().slice(0, 10);
+
 function openBookingModal(v) {
   const pkgs = packagesFor(v);
   let sel = pkgs[0];
   let party = 4;
+  const guests = []; // { name, email } — mock-inbjudningar, ingen backend
 
   const root = document.getElementById("modal-root");
   root.innerHTML = `
@@ -369,8 +373,9 @@ function openBookingModal(v) {
       <div class="modal-sub">${esc(v.destination)} · ${esc(v.category)}</div>
 
       <div class="form-group">
-        <label>Datum</label>
-        <input type="date" id="m-date" min="${new Date().toISOString().slice(0, 10)}" value="${new Date(Date.now() + 14 * 864e5).toISOString().slice(0, 10)}">
+        <label for="m-date">Datum</label>
+        <input type="date" id="m-date" min="${todayISO()}" value="${new Date(Date.now() + 14 * 864e5).toISOString().slice(0, 10)}">
+        <div class="field-error hidden" id="err-date" role="alert"></div>
       </div>
 
       <div class="form-group">
@@ -391,6 +396,18 @@ function openBookingModal(v) {
           <span class="stepper-val" id="m-party">4</span>
           <button id="m-plus" aria-label="Fler">+</button>
         </div>
+        <div class="stepper-hint" id="m-party-hint"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="g-name">Bjud in sällskapet <span class="label-optional">(valfritt · mock, inga mejl skickas)</span></label>
+        <div class="guest-row">
+          <input type="text" id="g-name" placeholder="Namn" autocomplete="off">
+          <input type="email" id="g-email" placeholder="E-post" autocomplete="off">
+          <button class="btn btn-ghost btn-sm" id="g-add" type="button">Lägg till</button>
+        </div>
+        <div class="field-error hidden" id="err-guest" role="alert"></div>
+        <div class="chip-list" id="g-chips" aria-live="polite"></div>
       </div>
 
       <div class="split-box">
@@ -399,15 +416,60 @@ function openBookingModal(v) {
         <div class="split-total" id="m-total"></div>
       </div>
 
+      <div class="field-error hidden" id="err-confirm" role="alert"></div>
       <button class="btn btn-gold" id="m-confirm" style="width:100%">Bekräfta bokning</button>
     </div>
   </div>`;
+
+  const minParty = () => Math.max(1, 1 + guests.length); // du + inbjudna gäster
+  const setErr = (id, msg) => {
+    const el = $("#" + id);
+    el.textContent = msg || "";
+    el.classList.toggle("hidden", !msg);
+  };
+
+  const renderChips = () => {
+    $("#g-chips").innerHTML = [
+      `<span class="chip chip-self">Du <em>värd</em></span>`,
+      ...guests.map((g, i) => `
+        <span class="chip">${esc(g.name)}${g.email ? ` <em>${esc(g.email)}</em>` : ""}
+          <button type="button" class="chip-x" data-rm="${i}" aria-label="Ta bort ${esc(g.name)}">✕</button>
+        </span>`),
+    ].join("");
+    $("#g-chips").querySelectorAll("[data-rm]").forEach((b) => {
+      b.addEventListener("click", () => {
+        guests.splice(Number(b.dataset.rm), 1);
+        party = Math.max(minParty(), party);
+        renderChips(); update();
+      });
+    });
+  };
 
   const update = () => {
     $("#m-party").textContent = party;
     $("#m-per").textContent = fmtEUR(Math.ceil(sel.price / party));
     $("#m-total").textContent = `Totalt ${fmtEUR(sel.price)} · delas på ${party} personer`;
+    $("#m-party-hint").textContent = guests.length
+      ? `Du + ${guests.length} ${guests.length === 1 ? "inbjuden gäst" : "inbjudna gäster"}${party > minParty() ? ` + ${party - minParty()} utan namn` : ""}`
+      : "";
   };
+
+  const addGuest = () => {
+    const name = $("#g-name").value.trim();
+    const email = $("#g-email").value.trim();
+    if (!name) { setErr("err-guest", "Ange ett namn på gästen."); $("#g-name").focus(); return; }
+    if (email && !EMAIL_RE.test(email)) { setErr("err-guest", "E-postadressen ser inte giltig ut."); $("#g-email").focus(); return; }
+    if (1 + guests.length + 1 > 20) { setErr("err-guest", "Max 20 personer per bokning."); return; }
+    setErr("err-guest", "");
+    guests.push({ name, email });
+    party = Math.max(party, minParty()); // synka antal med gästlistan
+    $("#g-name").value = ""; $("#g-email").value = ""; $("#g-name").focus();
+    renderChips(); update();
+  };
+  $("#g-add").addEventListener("click", addGuest);
+  ["g-name", "g-email"].forEach((id) => {
+    $("#" + id).addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); addGuest(); } });
+  });
 
   root.querySelectorAll("[data-pkg]").forEach((el) => {
     const pick = () => {
@@ -419,7 +481,7 @@ function openBookingModal(v) {
     el.addEventListener("click", pick);
     el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
   });
-  $("#m-minus").addEventListener("click", () => { party = Math.max(1, party - 1); update(); });
+  $("#m-minus").addEventListener("click", () => { party = Math.max(minParty(), party - 1); update(); });
   $("#m-plus").addEventListener("click", () => { party = Math.min(20, party + 1); update(); });
 
   const close = () => { root.innerHTML = ""; document.removeEventListener("keydown", onKey); };
@@ -429,17 +491,26 @@ function openBookingModal(v) {
   $("#overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });
 
   $("#m-confirm").addEventListener("click", () => {
+    // Validering
+    const date = $("#m-date").value;
+    setErr("err-date", ""); setErr("err-confirm", "");
+    if (!date) { setErr("err-date", "Välj ett datum."); $("#m-date").focus(); return; }
+    if (date < todayISO()) { setErr("err-date", "Datumet kan inte vara i det förflutna."); $("#m-date").focus(); return; }
+    if (!Number.isInteger(party) || party < 1) { setErr("err-confirm", "Sällskapet måste vara minst 1 person."); return; }
+
     const booking = {
       id: `BK-${Date.now().toString(36).toUpperCase()}`,
       venue_id: v.venue_id, venue: v.name, destination: v.destination,
-      date: $("#m-date").value, package: sel.name, total: sel.price,
+      date, package: sel.name, total: sel.price,
       party, per_person: Math.ceil(sel.price / party),
+      guests: guests.map((g) => ({ name: g.name, email: g.email })),
       created: new Date().toISOString(),
     };
     saveBookings([...loadBookings(), booking]);
     showConfirmation(booking, close);
   });
 
+  renderChips();
   update();
 }
 
@@ -453,6 +524,15 @@ function showConfirmation(b, closePrev) {
       <div class="modal-sub">${esc(b.id)}</div>
       <p style="color:var(--text-dim); margin-bottom:8px">${esc(b.package)} på <b>${esc(b.venue)}</b>, ${esc(b.destination)}</p>
       <p style="color:var(--text-dim)">${esc(b.date)} · ${b.party} personer</p>
+      ${(b.guests || []).length ? `
+      <div class="confirm-guests">
+        <div class="confirm-guests-title">Sällskap</div>
+        <div class="chip-list" style="justify-content:center">
+          <span class="chip chip-self">Du <em>värd</em></span>
+          ${b.guests.map((g) => `<span class="chip">${esc(g.name)}${g.email ? ` <em>${esc(g.email)}</em>` : ""}</span>`).join("")}
+        </div>
+        <div class="confirm-guests-note">Inbjudningar skickas när betalningen aktiveras (mock i V1).</div>
+      </div>` : ""}
       <div class="split-box">
         <div class="split-per">${fmtEUR(b.per_person)}</div>
         <div class="split-label">per person</div>
@@ -489,6 +569,11 @@ function renderBookings() {
         <div class="booking-info">
           <h3>${esc(b.venue)}</h3>
           <div class="booking-meta">${esc(b.destination)} · ${esc(b.date)} · ${esc(b.package)} · ${b.party} personer · ${esc(b.id)}</div>
+          ${(b.guests || []).length ? `
+          <div class="chip-list booking-guests">
+            <span class="chip chip-self">Du <em>${fmtEUR(b.per_person)}</em></span>
+            ${b.guests.map((g) => `<span class="chip">${esc(g.name)} <em>${fmtEUR(b.per_person)}</em></span>`).join("")}
+          </div>` : ""}
         </div>
         <div style="display:flex; gap:14px; align-items:center">
           <div class="booking-price">
