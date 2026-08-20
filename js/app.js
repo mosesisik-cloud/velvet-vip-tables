@@ -21,6 +21,78 @@ function venueGroup(v) {
   return "other";
 }
 
+// ---------- Genrebilder (V2) ----------
+// Kurerad pool av stockfoton (Pexels CDN) per kategorigrupp. Mappningen
+// venue→foto är deterministisk: FNV-1a-hash av venue_id väljer index i
+// gruppens pool, så samma ställe alltid får samma bild och grannar i listan
+// sprids över poolen. onerror i markupen faller tillbaka till det befintliga
+// gradient-emblemet om ett foto inte kan laddas (offline, borttaget, CSP …).
+const PHOTO_POOLS = {
+  nightclub: [1190298, 2114365, 1105666, 1763075, 1540406, 801863],   // dansgolv, DJ, ljusshow
+  beach:     [338504, 261102, 2265876, 1032650, 1174732, 3155666],    // beach club, solsängar, pool
+  day:       [261169, 2373201, 1049298, 221457],                      // day club / pool party
+  rooftop:   [169647, 313782, 2246476, 618079, 2096983],              // rooftop & skyline
+  restaurant:[262978, 67468, 260922, 941861, 776538, 1267320],        // fine dining & show
+  apres:     [869258, 352093, 356807, 1271619],                       // après-ski & vinter
+  other:     [1223649, 843633, 296278, 2404370],                      // yacht, marina, riviera
+};
+// FNV-1a (32-bit) — snabb, deterministisk stränghash utan beroenden
+function fnv1a(s) {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+  return h;
+}
+const pexelsUrl = (id, w) => `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=${w}`;
+// Egen klassificering för FOTON (rör inte venueGroup som styr filtren):
+// mer specifika miljöer testas först, annars skulle t.ex. "Beach club"
+// fastna på nattklubbsregexens /club\b/ och få dansgolvsbilder.
+const PHOTO_GROUPS = [
+  { key: "apres", match: /après|apres/i },
+  { key: "beach", match: /beach|floating|cliff/i },
+  { key: "day", match: /day ?club|pool/i },
+  { key: "rooftop", match: /rooftop/i },
+  { key: "nightclub", match: /night|hyperclub|open-air/i },
+  { key: "restaurant", match: /restaurant|dinner|show|tavern/i },
+  { key: "nightclub", match: /club|nightlife|bar\b/i },
+];
+function photoGroup(v) {
+  for (const g of PHOTO_GROUPS) if (g.match.test(v.category)) return g.key;
+  return "other";
+}
+// Tilldelning: hash av venue_id väljer basindex i gruppens pool; en engångs-
+// genomgång i standardsorteringen (prioritet) knuffar index ett steg om två
+// grannar annars skulle få samma foto. Deterministiskt och stabilt per venue.
+let PHOTO_ASSIGN = null; // Map<venue_id, pexels-id> — nollställs när VENUES laddas om
+function photoAssignments() {
+  if (PHOTO_ASSIGN) return PHOTO_ASSIGN;
+  PHOTO_ASSIGN = new Map();
+  const order = [...VENUES].sort((a, b) => b.priority_score - a.priority_score || a.name.localeCompare(b.name));
+  let prev = null;
+  for (const v of order) {
+    const pool = PHOTO_POOLS[photoGroup(v)] || PHOTO_POOLS.other;
+    let idx = fnv1a(String(v.venue_id)) % pool.length;
+    if (pool.length > 1 && pool[idx] === prev) idx = (idx + 1) % pool.length;
+    PHOTO_ASSIGN.set(v.venue_id, pool[idx]);
+    prev = pool[idx];
+  }
+  return PHOTO_ASSIGN;
+}
+function venuePhoto(v, w = 800) {
+  const pool = PHOTO_POOLS[photoGroup(v)] || PHOTO_POOLS.other;
+  const id = photoAssignments().get(v.venue_id) ?? pool[fnv1a(String(v.venue_id)) % pool.length];
+  return pexelsUrl(id, w);
+}
+// Bildblock med emblem-fallback under: emblemet syns medan bilden laddar
+// och tar över permanent om den misslyckas (onerror → .img-fail).
+function venueMediaHTML(v, cls, width) {
+  return `
+  <div class="${cls}" aria-hidden="true">
+    <div class="dest-emblem venue-media-emblem" style="--h:${destHue(v.destination_code)}">${esc(v.destination_code || "")}</div>
+    <img src="${esc(venuePhoto(v, width))}" alt="" loading="lazy" decoding="async"
+         onerror="this.closest('.${cls}').classList.add('img-fail')">
+  </div>`;
+}
+
 function statusInfo(s) {
   const t = (s || "").toLowerCase();
   if (t.includes("verified") || t.includes("web")) return { cls: "tag-verified", label: "Verifierad" };
@@ -372,6 +444,7 @@ function venueCard(v) {
   const st = statusInfo(v.research_status);
   return `
   <div class="venue-card venue-card-link" data-id="${esc(v.venue_id)}" role="link" tabindex="0" aria-label="Visa detaljer för ${esc(v.name)}">
+    ${venueMediaHTML(v, "venue-media", 800)}
     <div class="venue-top">
       <div>
         <div class="venue-name">${esc(v.name)}</div>
@@ -527,6 +600,8 @@ function renderVenueDetail(id) {
   view().innerHTML = `
   <section class="section detail">
     <a class="detail-back" href="#/venues" data-nav>← Alla ställen</a>
+
+    ${venueMediaHTML(v, "venue-hero-media", 1600)}
 
     <div class="detail-hero">
       <div class="detail-hero-main">
@@ -1347,6 +1422,7 @@ async function init() {
   }
   DESTINATIONS = d;
   VENUES = v;
+  PHOTO_ASSIGN = null; // ny data → räkna om fototilldelningen
   if (!uiBound) {
     uiBound = true;
     initMobileNav();

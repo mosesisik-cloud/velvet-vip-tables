@@ -298,6 +298,33 @@ button { font-family: inherit; cursor: pointer; }
   border-color: rgba(212,175,95,0.4); background: var(--bg-card-hover);
   transform: translateY(-2px); box-shadow: var(--shadow-card-hover);
 }
+/* Genrebild överst på kortet — full bredd (negativa marginaler mot kortets padding),
+   16:9, mörk gradient nedtill för läsbarhet. Emblemet ligger under bilden som
+   placeholder/fallback; .img-fail (onerror) döljer bilden så emblemet tar över. */
+.venue-media {
+  position: relative; aspect-ratio: 16 / 9;
+  margin: -22px -22px 6px; overflow: hidden;
+  border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
+  border-bottom: 1px solid var(--border-soft);
+  background: var(--bg-elevated, #14141a);
+}
+.venue-media img, .venue-hero-media img {
+  position: relative; width: 100%; height: 100%; object-fit: cover; display: block;
+}
+.venue-media img { transition: transform 0.5s var(--ease); }
+.venue-card:hover .venue-media img { transform: scale(1.045); }
+.venue-media::after, .venue-hero-media::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(11,11,15,0.08) 0%, rgba(11,11,15,0) 35%, rgba(11,11,15,0.62) 100%);
+}
+/* Emblem-fallback: fyller hela ytan, återanvänder gradient-emblemets nyans per destination */
+.venue-media .venue-media-emblem, .venue-hero-media .venue-media-emblem {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  margin: 0; border-radius: 0; border: none;
+  font-size: 22px; letter-spacing: 4px;
+}
+.venue-media.img-fail img, .venue-hero-media.img-fail img { display: none; }
+
 .venue-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
 .venue-name { font-family: var(--font-display); font-size: 19px; font-weight: 600; line-height: 1.25; letter-spacing: 0.2px; }
 .venue-loc { font-size: 12.5px; color: var(--gold); font-weight: 500; letter-spacing: 0.6px; text-transform: uppercase; margin-top: 4px; }
@@ -482,6 +509,17 @@ button { font-family: inherit; cursor: pointer; }
 }
 .detail-back:hover { color: var(--gold-bright); }
 
+/* Stor genrebild på venue-detaljvyn — bredare beskärning än korten */
+.venue-hero-media {
+  position: relative; aspect-ratio: 21 / 9;
+  border-radius: var(--radius); overflow: hidden;
+  margin-bottom: 34px;
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-card);
+  background: var(--bg-card);
+}
+.venue-hero-media .venue-media-emblem { font-size: 30px; letter-spacing: 6px; }
+
 .detail-hero {
   display: flex; justify-content: space-between; align-items: flex-start; gap: 28px;
   padding-bottom: 36px; margin-bottom: 36px;
@@ -579,6 +617,7 @@ button { font-family: inherit; cursor: pointer; }
 .footer-brand { font-family: var(--font-display); font-size: 17px; font-weight: 700; letter-spacing: 2px; }
 .footer-tag { font-size: 13px; color: var(--text-faint); margin-left: 12px; }
 .footer-meta { font-size: 12px; color: var(--text-faint); }
+.footer-note { opacity: 0.75; font-style: italic; }
 
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
@@ -659,6 +698,7 @@ button { font-family: inherit; cursor: pointer; }
   .detail-cta { position: static; }
   .detail-panel { padding: 22px; }
   .detail-hero { flex-direction: column-reverse; }
+  .venue-hero-media { aspect-ratio: 16 / 9; margin-bottom: 26px; }
   .prio-lg { flex-direction: row; align-items: baseline; gap: 10px; min-width: 0; padding: 10px 16px; }
   .prio-lg .prio-num { font-size: 26px; }
   .prio-lg .prio-label { margin-top: 0; }
