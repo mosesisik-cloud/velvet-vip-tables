@@ -31,10 +31,12 @@ function venuePhoto(v) {
 }
 // Bildblock med emblem-fallback under: emblemet syns medan bilden laddar
 // och tar över permanent om den misslyckas (onerror → .img-fail).
-function venueMediaHTML(v, cls) {
+// { eager: true } för LCP-bilder (detalj-heron): laddas direkt med hög prioritet;
+// kort i listor förblir lazy så mobil inte laddar 120 bilder i onödan.
+function venueMediaHTML(v, cls, { eager = false } = {}) {
   const url = venuePhoto(v);
   const img = url ? `
-    <img src="${esc(url)}" alt="${esc(v.name)} — ${esc(v.category || "")}" loading="lazy" decoding="async"
+    <img src="${esc(url)}" alt="${esc(v.name)} — ${esc(v.category || "")}" loading="${eager ? "eager" : "lazy"}"${eager ? ` fetchpriority="high"` : ""} decoding="async"
          onerror="this.closest('.${cls}').classList.add('img-fail')">` : "";
   return `
   <div class="${cls}${url ? "" : " img-fail"}">
@@ -309,10 +311,19 @@ function initHeroVideo() {
     vid.poster = HERO_VIDEO.poster;
     vid.tabIndex = -1;
     vid.disablePictureInPicture = true;
+    vid.setAttribute("aria-hidden", "true"); // ren dekor — osynlig för skärmläsare
     vid.addEventListener("error", fail);
     vid.addEventListener("canplay", () => host.classList.add("loaded"), { once: true });
     vid.src = window.innerWidth < 720 ? HERO_VIDEO.mp4Small : HERO_VIDEO.mp4;
     host.appendChild(vid);
+    // Växlar användaren till reduced-motion medan sidan är öppen → pausa direkt
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onMotionPref = () => {
+      if (!document.contains(vid)) { mq.removeEventListener("change", onMotionPref); return; }
+      if (mq.matches) vid.pause();
+      else { const pp = vid.play(); if (pp && typeof pp.catch === "function") pp.catch(() => {}); }
+    };
+    if (typeof mq.addEventListener === "function") mq.addEventListener("change", onMotionPref);
     const p = vid.play();
     // Autoplay blockerad → visa postern som stillbild istället
     if (p && typeof p.catch === "function") p.catch(() => host.classList.add("loaded"));
@@ -467,7 +478,7 @@ function venueCard(v) {
   const st = statusInfo(v.research_status);
   return `
   <div class="venue-card venue-card-link" data-id="${esc(v.venue_id)}" role="link" tabindex="0" aria-label="Visa detaljer för ${esc(v.name)}">
-    ${venueMediaHTML(v, "venue-media", 800)}
+    ${venueMediaHTML(v, "venue-media")}
     <div class="venue-top">
       <div>
         <div class="venue-name">${esc(v.name)}</div>
@@ -624,7 +635,7 @@ function renderVenueDetail(id) {
   <section class="section detail">
     <a class="detail-back" href="#/venues" data-nav>← Alla ställen</a>
 
-    ${venueMediaHTML(v, "venue-hero-media", 1600)}
+    ${venueMediaHTML(v, "venue-hero-media", { eager: true })}
 
     <div class="detail-hero">
       <div class="detail-hero-main">
@@ -1141,11 +1152,28 @@ function openOnboarding(opts = {}) {
 
   document.body.classList.add("ob-lock");
 
+  // Persistent aria-live-region för geo-status: render() skriver om hela dialogen,
+  // så role="status" inuti den annonseras inte pålitligt — den här ligger utanför
+  // och överlever varje re-render. Nollställ + kort delay tvingar ny uppläsning.
+  const live = document.createElement("div");
+  live.className = "sr-only";
+  live.setAttribute("aria-live", "polite");
+  live.setAttribute("aria-atomic", "true");
+  document.body.appendChild(live);
+  let liveTimer = null;
+  const announce = (msg) => {
+    live.textContent = "";
+    clearTimeout(liveTimer);
+    liveTimer = setTimeout(() => { live.textContent = msg; }, 50);
+  };
+
   const cleanup = () => {
     if (untrap) untrap();
     document.removeEventListener("keydown", onKey);
     window.removeEventListener("hashchange", onHash);
     document.body.classList.remove("ob-lock");
+    clearTimeout(liveTimer);
+    live.remove();
   };
   const close = (refocus = true) => {
     closed = true;
@@ -1154,17 +1182,22 @@ function openOnboarding(opts = {}) {
     if (refocus) restoreFocus(opener);
   };
 
-  // Nekad permission, timeout eller saknat stöd → felmeddelande + manuellt val, aldrig krasch
+  // Nekad permission, timeout eller saknat stöd → felmeddelande + manuellt val, aldrig krasch.
+  // Varje tillståndsbyte annonseras i live-regionen och fokus flyttas till den
+  // mest relevanta knappen så tangentbords-/skärmläsaranvändare inte tappas bort.
+  const GEO_ERROR_MSG = "Kunde inte hämta din plats — välj destination manuellt nedan.";
   const requestGeo = () => {
-    if (!geoSupported) { geoState = "error"; render(); return; }
+    if (!geoSupported) { geoState = "error"; announce(GEO_ERROR_MSG); render("#ob-geo-retry"); return; }
     geoState = "loading";
+    announce("Hämtar din plats …");
     render();
     let done = false;
     const fail = () => {
       if (done || closed) return;
       done = true;
       geoState = "error";
-      render();
+      announce(GEO_ERROR_MSG);
+      render("#ob-geo-retry");
     };
     const guard = setTimeout(fail, 10000); // fallback om webbläsaren aldrig svarar
     try {
@@ -1176,7 +1209,13 @@ function openOnboarding(opts = {}) {
           saveGeo(pos.coords.latitude, pos.coords.longitude);
           nearest = nearestDestination(pos.coords.latitude, pos.coords.longitude);
           geoState = nearest ? "found" : "error";
-          render();
+          if (nearest) {
+            announce(`Närmast dig: ${nearest.d.name}, cirka ${fmtKm(nearest.km)} kilometer bort.`);
+            render("#ob-geo-choose");
+          } else {
+            announce(GEO_ERROR_MSG);
+            render("#ob-geo-retry");
+          }
         },
         () => { clearTimeout(guard); fail(); },
         { timeout: 8000, maximumAge: 300000 }
@@ -1208,8 +1247,8 @@ function openOnboarding(opts = {}) {
     }
     return `
     <div class="ob-geo">
-      <button class="btn btn-ghost btn-sm" id="ob-geo-btn"><span aria-hidden="true">🧭</span> Använd min plats</button>
-      <span class="ob-geo-hint">hittar närmaste destination</span>
+      <button class="btn btn-ghost btn-sm" id="ob-geo-btn" aria-describedby="ob-geo-hint"><span aria-hidden="true">🧭</span> Använd min plats</button>
+      <span class="ob-geo-hint" id="ob-geo-hint">hittar närmaste destination</span>
     </div>`;
   };
   // Direktlänkar/bakåtknapp får aldrig blockeras — ruttbyte stänger onboardingen
@@ -1232,15 +1271,20 @@ function openOnboarding(opts = {}) {
     if (!location.hash || location.hash === "#/") route();
   };
 
-  const render = () => {
+  // focusSel: valfritt CSS-mål att fokusera efter re-render (annars dialogen) —
+  // så att t.ex. geo-flödet landar fokus på "Välj X"-knappen i stället för toppen.
+  const render = (focusSel) => {
     if (untrap) untrap();
     const countries = countryList();
     const inCountry = country ? countries.find((c) => c.country === country) : null;
     const dests = inCountry ? inCountry.dests : [];
+    const dlgLabel = step === 1
+      ? "Välj din destination — steg 1 av 2, välj land"
+      : `Välj din destination — steg 2 av 2, ${country}`;
 
     root.innerHTML = `
     <div class="ob-overlay" id="ob-overlay">
-      <div class="ob" role="dialog" aria-modal="true" aria-label="Välj din destination" tabindex="-1">
+      <div class="ob" role="dialog" aria-modal="true" aria-label="${esc(dlgLabel)}" tabindex="-1">
         ${dismissable ? `<button class="modal-close ob-close" id="ob-close" aria-label="Stäng">✕</button>` : ""}
         <div class="ob-brand" aria-hidden="true">VELVET<span class="logo-dot">.</span></div>
         <div class="ob-brand-rule" aria-hidden="true"></div>
@@ -1303,13 +1347,14 @@ function openOnboarding(opts = {}) {
     const geoChoose = $("#ob-geo-choose");
     if (geoChoose) geoChoose.addEventListener("click", () => { if (nearest) choose(nearest.d); });
     const geoDismiss = $("#ob-geo-dismiss");
-    if (geoDismiss) geoDismiss.addEventListener("click", () => { geoState = "idle"; render(); });
+    if (geoDismiss) geoDismiss.addEventListener("click", () => { geoState = "idle"; render("#ob-geo-btn"); });
     const x = $("#ob-close");
     if (x) x.addEventListener("click", () => close());
     if (dismissable) {
       $("#ob-overlay").addEventListener("click", (e) => { if (e.target.id === "ob-overlay") close(); });
     }
-    dialog.focus();
+    const target = focusSel ? root.querySelector(focusSel) : null;
+    if (target) target.focus(); else dialog.focus();
   };
 
   render();

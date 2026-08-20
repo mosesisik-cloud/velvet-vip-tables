@@ -41,6 +41,14 @@ a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; }
 .hidden { display: none !important; }
 
+/* Endast för skärmläsare — visuellt osynlig men uppläsbar (aria-live m.m.) */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 ::selection { background: rgba(212, 175, 95, 0.28); color: var(--text); }
 
 :focus-visible {
@@ -960,14 +968,23 @@ body.ob-lock { overflow: hidden; }
 .dest-km { color: var(--text-faint); white-space: nowrap; }
 
 @media (max-width: 720px) {
-  .nav-dest { padding: 8px 11px; }
+  /* Touchvänlig destinationsväljare i navigationen (≥44px träffyta) */
+  .nav-dest { padding: 8px 11px; min-height: 44px; }
   .nav-dest-name { max-width: 92px; }
-  .ob-overlay { padding: 34px 16px 40px; }
+  /* Fullskärms-onboarding: dynamisk viewport + safe areas (notch/hemindikator) */
+  .ob-overlay {
+    min-height: 100dvh;
+    padding: calc(28px + env(safe-area-inset-top, 0px)) 16px
+             calc(40px + env(safe-area-inset-bottom, 0px));
+  }
   .ob-close { top: -10px; right: 0; }
   .ob-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .ob-card { padding: 15px 13px 12px; }
+  .ob-card { padding: 15px 13px 12px; min-height: 44px; }
   .ob-card h3 { font-size: 16.5px; }
   .ob-names { display: none; }
+  /* Geo-panelens knappar sida vid sida utan att klippa på smala skärmar */
+  .ob-geo { padding: 0 4px; }
+  .ob-geo-found { width: 100%; }
 }
 @media (max-width: 420px) {
   .ob-grid { grid-template-columns: 1fr; }
