@@ -295,6 +295,84 @@ button { font-family: inherit; cursor: pointer; }
   font-size: 30px; color: var(--gold-bright);
 }
 
+/* ---------- Venue detail ---------- */
+.venue-card-link { cursor: pointer; }
+.venue-card-link:focus-visible { outline: none; border-color: var(--gold); box-shadow: 0 0 0 2px rgba(212,175,95,0.35); }
+
+.detail { padding-top: 46px; }
+.detail-back {
+  display: inline-block; font-size: 13.5px; font-weight: 500; color: var(--text-dim);
+  margin-bottom: 30px; transition: color 0.15s;
+}
+.detail-back:hover { color: var(--gold-bright); }
+
+.detail-hero {
+  display: flex; justify-content: space-between; align-items: flex-start; gap: 28px;
+  padding-bottom: 36px; margin-bottom: 36px;
+  border-bottom: 1px solid var(--border-soft);
+  flex-wrap: wrap;
+}
+.detail-kicker {
+  font-size: 12.5px; font-weight: 600; letter-spacing: 2.5px; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 12px;
+}
+.detail-name {
+  font-family: var(--font-display);
+  font-size: clamp(34px, 5vw, 52px); font-weight: 600; line-height: 1.1;
+  margin-bottom: 16px;
+}
+.detail-tags { margin-bottom: 18px; }
+.detail-notes { color: var(--text-dim); font-size: 15px; max-width: 620px; margin-bottom: 20px; }
+.detail-links { display: flex; gap: 9px; flex-wrap: wrap; }
+
+.prio-lg { min-width: 96px; padding: 16px 20px; border: 1px solid rgba(212,175,95,0.35); }
+.prio-lg .prio-num { font-size: 38px; }
+.prio-lg .prio-label { font-size: 10px; margin-top: 6px; }
+
+.detail-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 22px; align-items: start; }
+.detail-panel {
+  background: var(--bg-card); border: 1px solid var(--border-soft);
+  border-radius: var(--radius); padding: 28px;
+}
+.detail-panel-title {
+  font-family: var(--font-display); font-size: 21px; font-weight: 600; margin-bottom: 22px;
+}
+
+.meters { display: flex; flex-direction: column; gap: 18px; }
+.meter-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 7px; }
+.meter-label { font-size: 12.5px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); }
+.meter-val { font-family: var(--font-display); font-size: 18px; font-weight: 600; color: var(--gold-bright); }
+.meter-max { font-size: 12px; color: var(--text-faint); font-family: var(--font-body); font-weight: 500; }
+.meter-track { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
+.meter-fill {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+  transform-origin: left;
+  animation: meterIn 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@keyframes meterIn { from { transform: scaleX(0); } }
+
+.detail-facts { margin-top: 26px; border-top: 1px solid var(--border-soft); padding-top: 8px; }
+.fact {
+  display: flex; justify-content: space-between; align-items: center; gap: 14px;
+  padding: 11px 0; border-bottom: 1px solid var(--border-soft); font-size: 13.5px;
+}
+.fact:last-child { border-bottom: none; }
+.fact-label { color: var(--text-faint); font-weight: 500; letter-spacing: 0.3px; }
+.fact-val { color: var(--text); font-weight: 500; text-align: right; }
+
+.detail-cta { border-color: rgba(212,175,95,0.35); position: sticky; top: 88px; }
+.detail-cta-sub { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-faint); }
+.detail-price { font-family: var(--font-display); font-size: 40px; font-weight: 700; color: var(--gold-bright); margin: 4px 0 10px; }
+.detail-cta-note { font-size: 13.5px; color: var(--text-dim); margin-bottom: 20px; }
+.detail-perks { list-style: none; margin-top: 20px; }
+.detail-perks li {
+  font-size: 13px; color: var(--text-dim); padding: 7px 0 7px 24px; position: relative;
+}
+.detail-perks li::before {
+  content: "✓"; position: absolute; left: 2px; color: var(--gold); font-weight: 700;
+}
+
 /* ---------- Footer ---------- */
 .footer {
   display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
@@ -313,4 +391,7 @@ button { font-family: inherit; cursor: pointer; }
   .stats { gap: 32px; padding: 26px 20px; }
   .modal { padding: 24px; }
   .footer { padding: 24px 20px; }
+  .detail-grid { grid-template-columns: 1fr; }
+  .detail-cta { position: static; }
+  .detail-panel { padding: 22px; }
 }

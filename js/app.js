@@ -147,7 +147,7 @@ function bindDestCards() {
 function venueCard(v) {
   const st = statusInfo(v.research_status);
   return `
-  <div class="venue-card" data-id="${esc(v.venue_id)}">
+  <div class="venue-card venue-card-link" data-id="${esc(v.venue_id)}" role="link" tabindex="0" aria-label="Visa detaljer för ${esc(v.name)}">
     <div class="venue-top">
       <div>
         <div class="venue-name">${esc(v.name)}</div>
@@ -245,6 +245,113 @@ function bindVenueCards() {
       if (v) openBookingModal(v);
     });
   });
+  // Hela kortet öppnar detaljvyn — utom klick på knappar/länkar
+  document.querySelectorAll(".venue-card-link").forEach((card) => {
+    const go = () => { location.hash = `#/venue/${encodeURIComponent(card.dataset.id)}`; };
+    card.addEventListener("click", (e) => {
+      if (e.target.closest("button, a")) return;
+      go();
+    });
+    card.addEventListener("keydown", (e) => {
+      if (e.target !== card) return;
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); go(); }
+    });
+  });
+}
+
+// ---------- Venue detail ----------
+function scoreMeter(label, val) {
+  const n = Math.max(0, Math.min(5, Number(val) || 0));
+  const pct = (n / 5) * 100;
+  return `
+  <div class="meter" role="img" aria-label="${esc(label)}: ${n} av 5">
+    <div class="meter-head">
+      <span class="meter-label">${esc(label)}</span>
+      <span class="meter-val">${n}<span class="meter-max">/5</span></span>
+    </div>
+    <div class="meter-track"><div class="meter-fill" style="width:${pct}%"></div></div>
+  </div>`;
+}
+
+function renderVenueDetail(id) {
+  const v = VENUES.find((x) => x.venue_id === id);
+  if (!v) {
+    view().innerHTML = `
+    <section class="section">
+      <div class="empty-state">
+        <div class="big">🥂</div>
+        <h3>Stället hittades inte</h3>
+        <p>Det kan ha tagits bort ur katalogen.</p>
+        <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>Alla ställen</a></p>
+      </div>
+    </section>`;
+    return;
+  }
+  const st = statusInfo(v.research_status);
+  const dest = DESTINATIONS.find((d) => d.name === v.destination);
+  const pkgs = packagesFor(v);
+  const fromPrice = Math.min(...pkgs.map((p) => p.price));
+
+  view().innerHTML = `
+  <section class="section detail">
+    <a class="detail-back" href="#/venues" data-nav>← Alla ställen</a>
+
+    <div class="detail-hero">
+      <div class="detail-hero-main">
+        <div class="detail-kicker">${esc(v.destination)}${dest ? ` · ${esc(dest.country)}` : ""} · ${esc(v.category)}</div>
+        <h1 class="detail-name">${esc(v.name)}</h1>
+        <div class="venue-tags detail-tags">
+          <span class="tag ${st.cls}">${st.label}</span>
+          ${v.shareable_format ? '<span class="tag tag-verified">Delbar kostnad</span>' : ""}
+          ${v.vip_table_potential ? '<span class="tag">VIP-bord</span>' : ""}
+          ${dest ? `<span class="tag">Säsong ${esc(dest.peak_season)}</span>` : ""}
+        </div>
+        ${v.notes ? `<p class="detail-notes">${esc(v.notes)}</p>` : ""}
+        <div class="detail-links">
+          ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}
+          ${v.instagram_url ? `<a class="icon-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">Instagram ↗</a>` : ""}
+          ${v.source_url ? `<a class="icon-link" href="${esc(v.source_url)}" target="_blank" rel="noopener">Källa ↗</a>` : ""}
+        </div>
+      </div>
+      <div class="prio prio-lg" title="Priority score">
+        <span class="prio-num">${v.priority_score}</span>
+        <span class="prio-label">Priority score</span>
+      </div>
+    </div>
+
+    <div class="detail-grid">
+      <div class="detail-panel">
+        <h2 class="detail-panel-title">Betyg</h2>
+        <div class="meters">
+          ${scoreMeter("Lyx", v.luxury_score)}
+          ${scoreMeter("Party", v.party_score)}
+          ${scoreMeter("Delbarhet", v.shareability_score)}
+          ${scoreMeter("Bokningsbarhet", v.booking_potential)}
+        </div>
+        <div class="detail-facts">
+          <div class="fact"><span class="fact-label">Verifiering</span><span class="fact-val"><span class="tag ${st.cls}">${st.label}</span></span></div>
+          <div class="fact"><span class="fact-label">Kategori</span><span class="fact-val">${esc(v.category)}</span></div>
+          <div class="fact"><span class="fact-label">Venue-ID</span><span class="fact-val">${esc(v.venue_id)}</span></div>
+          ${dest ? `<div class="fact"><span class="fact-label">Region</span><span class="fact-val">${esc(dest.region)}</span></div>` : ""}
+        </div>
+      </div>
+
+      <div class="detail-panel detail-cta">
+        <h2 class="detail-panel-title">Boka & dela kostnaden</h2>
+        <p class="detail-cta-sub">Paket från</p>
+        <div class="detail-price">${fmtEUR(fromPrice)}</div>
+        <p class="detail-cta-note">Välj paket, sällskap och datum — notan splittas automatiskt per person.</p>
+        <button class="btn btn-gold" id="d-book" style="width:100%">Boka bord</button>
+        <ul class="detail-perks">
+          <li>Dedikerad service & host</li>
+          <li>Delad kostnad — betala bara din andel</li>
+          <li>Avboka kostnadsfritt i förhandsversionen</li>
+        </ul>
+      </div>
+    </div>
+  </section>`;
+
+  $("#d-book").addEventListener("click", () => openBookingModal(v));
 }
 
 // ---------- Booking modal ----------
@@ -411,11 +518,17 @@ const routes = {
 };
 
 function route() {
-  const fn = routes[location.hash] || renderHome;
-  fn();
+  const h = location.hash;
+  let fn = routes[h];
+  if (!fn) {
+    const m = h.match(/^#\/venue\/(.+)$/);
+    if (m) fn = () => renderVenueDetail(decodeURIComponent(m[1]));
+  }
+  (fn || renderHome)();
   window.scrollTo(0, 0);
+  const active = h.startsWith("#/venue/") ? "#/venues" : (h || "#/");
   document.querySelectorAll(".nav-links a").forEach((a) => {
-    a.classList.toggle("active", a.getAttribute("href") === (location.hash || "#/"));
+    a.classList.toggle("active", a.getAttribute("href") === active);
   });
 }
 
