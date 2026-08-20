@@ -65,6 +65,28 @@ const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "
 const $ = (sel, root = document) => root.querySelector(sel);
 const view = () => document.getElementById("view");
 
+// Fokus-fälla för modaler: håller Tab/Shift+Tab inom containern.
+// Returnerar en cleanup-funktion som tar bort lyssnaren.
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+function trapFocus(container) {
+  const handler = (e) => {
+    if (e.key !== "Tab") return;
+    const els = [...container.querySelectorAll(FOCUSABLE)].filter((el) => el.offsetParent !== null);
+    if (!els.length) return;
+    const first = els[0], last = els[els.length - 1];
+    if (!container.contains(document.activeElement)) { e.preventDefault(); first.focus(); }
+    else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  };
+  document.addEventListener("keydown", handler, true);
+  return () => document.removeEventListener("keydown", handler, true);
+}
+
+// Återställ fokus till elementet som öppnade en modal (om det finns kvar i DOM)
+function restoreFocus(el) {
+  if (el && document.contains(el) && typeof el.focus === "function") el.focus();
+}
+
 function pips(n) {
   let h = "";
   for (let i = 1; i <= 5; i++) h += `<div class="score-pip ${i <= n ? "on" : ""}"></div>`;
@@ -224,7 +246,7 @@ function renderVenues() {
         <option value="luxury" ${f.sort === "luxury" ? "selected" : ""}>Mest lyx</option>
         <option value="name" ${f.sort === "name" ? "selected" : ""}>A–Ö</option>
       </select>
-      <span class="filter-count" id="f-count"></span>
+      <span class="filter-count" id="f-count" role="status" aria-live="polite" aria-atomic="true"></span>
     </div>
     <div class="venue-grid" id="venue-list"></div>
   </section>`;
@@ -371,11 +393,12 @@ function openBookingModal(v) {
   let sel = pkgs[0];
   let party = 4;
   const guests = []; // { name, email } — mock-inbjudningar, ingen backend
+  const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
 
   const root = document.getElementById("modal-root");
   root.innerHTML = `
   <div class="modal-overlay" id="overlay">
-    <div class="modal" role="dialog" aria-modal="true" aria-label="Boka ${esc(v.name)}">
+    <div class="modal" role="dialog" aria-modal="true" aria-label="Boka ${esc(v.name)}" tabindex="-1">
       <button class="modal-close" id="m-close" aria-label="Stäng">✕</button>
       <h2>${esc(v.name)}</h2>
       <div class="modal-sub">${esc(v.destination)} · ${esc(v.category)}</div>
@@ -387,8 +410,8 @@ function openBookingModal(v) {
       </div>
 
       <div class="form-group">
-        <label>Välj paket</label>
-        <div class="package-list" id="m-pkgs">
+        <label id="lbl-pkgs">Välj paket</label>
+        <div class="package-list" id="m-pkgs" role="radiogroup" aria-labelledby="lbl-pkgs">
           ${pkgs.map((p, i) => `
             <div class="package ${i === 0 ? "selected" : ""}" data-pkg="${p.id}" role="radio" aria-checked="${i === 0}" tabindex="0">
               <div><div class="package-name">${p.name}</div><div class="package-desc">${p.desc}</div></div>
@@ -398,11 +421,11 @@ function openBookingModal(v) {
       </div>
 
       <div class="form-group">
-        <label>Antal i sällskapet</label>
-        <div class="stepper">
-          <button id="m-minus" aria-label="Färre">−</button>
-          <span class="stepper-val" id="m-party">4</span>
-          <button id="m-plus" aria-label="Fler">+</button>
+        <label id="lbl-party">Antal i sällskapet</label>
+        <div class="stepper" role="group" aria-labelledby="lbl-party">
+          <button id="m-minus" aria-label="Färre personer">−</button>
+          <span class="stepper-val" id="m-party" aria-live="polite" aria-atomic="true">4</span>
+          <button id="m-plus" aria-label="Fler personer">+</button>
         </div>
         <div class="stepper-hint" id="m-party-hint"></div>
       </div>
@@ -479,24 +502,33 @@ function openBookingModal(v) {
     $("#" + id).addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); addGuest(); } });
   });
 
-  root.querySelectorAll("[data-pkg]").forEach((el) => {
+  const pkgEls = [...root.querySelectorAll("[data-pkg]")];
+  pkgEls.forEach((el, idx) => {
     const pick = () => {
-      root.querySelectorAll("[data-pkg]").forEach((x) => { x.classList.remove("selected"); x.setAttribute("aria-checked", "false"); });
+      pkgEls.forEach((x) => { x.classList.remove("selected"); x.setAttribute("aria-checked", "false"); });
       el.classList.add("selected"); el.setAttribute("aria-checked", "true");
       sel = pkgs.find((p) => p.id === el.dataset.pkg);
       update();
     };
     el.addEventListener("click", pick);
-    el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); } });
+    el.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); }
+      else if (e.key === "ArrowDown" || e.key === "ArrowRight") { e.preventDefault(); pkgEls[(idx + 1) % pkgEls.length].focus(); }
+      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") { e.preventDefault(); pkgEls[(idx - 1 + pkgEls.length) % pkgEls.length].focus(); }
+    });
   });
   $("#m-minus").addEventListener("click", () => { party = Math.max(minParty(), party - 1); update(); });
   $("#m-plus").addEventListener("click", () => { party = Math.min(20, party + 1); update(); });
 
-  const close = () => { root.innerHTML = ""; document.removeEventListener("keydown", onKey); };
+  const modalEl = root.querySelector(".modal");
+  const untrap = trapFocus(modalEl);
+  const cleanup = () => { untrap(); document.removeEventListener("keydown", onKey); };
+  const close = () => { cleanup(); root.innerHTML = ""; restoreFocus(opener); };
   const onKey = (e) => { if (e.key === "Escape") close(); };
   document.addEventListener("keydown", onKey);
   $("#m-close").addEventListener("click", close);
   $("#overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });
+  modalEl.focus();
 
   $("#m-confirm").addEventListener("click", () => {
     // Validering
@@ -515,18 +547,19 @@ function openBookingModal(v) {
       created: new Date().toISOString(),
     };
     saveBookings([...loadBookings(), booking]);
-    showConfirmation(booking, close);
+    cleanup(); // släpp fokus-fällan + Escape-lyssnaren innan bekräftelsemodalen tar över
+    showConfirmation(booking, opener);
   });
 
   renderChips();
   update();
 }
 
-function showConfirmation(b, closePrev) {
+function showConfirmation(b, opener) {
   const root = document.getElementById("modal-root");
   root.innerHTML = `
   <div class="modal-overlay" id="overlay">
-    <div class="modal" style="text-align:center" role="dialog" aria-modal="true">
+    <div class="modal" style="text-align:center" role="dialog" aria-modal="true" aria-label="Bokning bekräftad" tabindex="-1">
       <div class="confirm-check">✓</div>
       <h2>Bokning bekräftad</h2>
       <div class="modal-sub">${esc(b.id)}</div>
@@ -552,10 +585,19 @@ function showConfirmation(b, closePrev) {
       </div>
     </div>
   </div>`;
-  const close = () => { root.innerHTML = ""; };
+  const modalEl = root.querySelector(".modal");
+  const untrap = trapFocus(modalEl);
+  const close = (refocus = true) => {
+    untrap(); document.removeEventListener("keydown", onKey);
+    root.innerHTML = "";
+    if (refocus) restoreFocus(opener);
+  };
+  const onKey = (e) => { if (e.key === "Escape") close(); };
+  document.addEventListener("keydown", onKey);
   $("#c-close").addEventListener("click", close);
-  $("#c-go").addEventListener("click", close);
+  $("#c-go").addEventListener("click", () => close(false)); // navigerar till Mina bokningar — vyn renderas om
   $("#overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });
+  modalEl.focus();
 }
 
 function renderBookings() {
@@ -645,6 +687,18 @@ function initMobileNav() {
   });
 }
 
+// ---------- Skip-link ----------
+function initSkipLink() {
+  const link = document.getElementById("skip-link");
+  if (!link) return;
+  link.addEventListener("click", (e) => {
+    e.preventDefault(); // ändra inte location.hash — det skulle trigga routern
+    const main = document.getElementById("view");
+    main.focus();
+    main.scrollIntoView({ block: "start" });
+  });
+}
+
 // ---------- Init ----------
 async function init() {
   const [d, v] = await Promise.all([
@@ -654,6 +708,7 @@ async function init() {
   DESTINATIONS = d;
   VENUES = v;
   initMobileNav();
+  initSkipLink();
   window.addEventListener("hashchange", route);
   route();
   updateBookingBadge();

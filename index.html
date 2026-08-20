@@ -12,9 +12,10 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥂</text></svg>">
 </head>
 <body>
+<a class="skip-link" href="#view" id="skip-link">Hoppa till huvudinnehållet</a>
 <div id="app">
   <!-- Nav -->
-  <nav class="nav">
+  <nav class="nav" aria-label="Huvudnavigation">
     <a href="#/" class="nav-logo" data-nav>VELVET<span class="logo-dot">.</span></a>
     <div class="nav-links" id="nav-links">
       <a href="#/destinations" data-nav>Destinationer</a>
@@ -27,7 +28,7 @@
   </nav>
 
   <!-- Views render here -->
-  <main id="view"></main>
+  <main id="view" tabindex="-1"></main>
 
   <footer class="footer">
     <div>

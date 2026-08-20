@@ -11,7 +11,7 @@
   --gold-dim: rgba(212, 175, 95, 0.14);
   --text: #f2efe9;
   --text-dim: #a8a49b;
-  --text-faint: #6d6a63;
+  --text-faint: #8a867d; /* WCAG AA: 5.4:1 mot --bg, 4.9:1 mot --bg-card */
   --green: #6fbf8f;
   --amber: #d9a24b;
   --red: #cf6f6f;
@@ -44,10 +44,30 @@ button { font-family: inherit; cursor: pointer; }
 ::selection { background: rgba(212, 175, 95, 0.28); color: var(--text); }
 
 :focus-visible {
-  outline: 2px solid rgba(212, 175, 95, 0.55);
+  outline: 2px solid var(--gold);
   outline-offset: 2px;
   border-radius: 4px;
 }
+/* Formkontroller nollställer outline i basreglerna — återställ guldring för tangentbord */
+.filters input:focus-visible, .filters select:focus-visible,
+.form-group input:focus-visible, .form-group select:focus-visible,
+.guest-row input:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+/* Skip-länken landar fokus på <main> — ingen ring runt hela vyn */
+#view:focus { outline: none; }
+
+/* ---------- Skip-link ---------- */
+.skip-link {
+  position: fixed; top: -64px; left: 16px; z-index: 200;
+  padding: 12px 22px; border-radius: 0 0 12px 12px;
+  background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+  color: #0b0b0f; font-weight: 600; font-size: 13.5px; letter-spacing: 0.3px;
+  box-shadow: 0 8px 24px -8px rgba(212, 175, 95, 0.5);
+  transition: top 0.2s var(--ease);
+}
+.skip-link:focus-visible { top: 0; outline-offset: -3px; }
 
 /* Diskret scrollbar i temats färger */
 * { scrollbar-width: thin; scrollbar-color: #2c2c37 transparent; }
