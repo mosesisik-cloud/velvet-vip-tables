@@ -895,6 +895,160 @@ function renderJoin(raw) {
   }
 }
 
+// ---------- Onboarding: hem-destination (land → stad) ----------
+// Sparat val: { code: "IBZ" } eller { all: true } ("Visa allt"). Defensiv inläsning.
+const HOME_KEY = "velvet_home_destination";
+function loadHomeChoice() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(HOME_KEY));
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) return null;
+    if (raw.all === true) return { all: true };
+    if (typeof raw.code === "string" && raw.code) return { code: raw.code };
+    return null;
+  } catch { return null; }
+}
+function saveHomeChoice(v) {
+  try { localStorage.setItem(HOME_KEY, JSON.stringify(v)); } catch {}
+  updateNavDest();
+}
+// Valets destination-objekt — null om "Visa allt", inget val eller okänd kod
+function homeDestination() {
+  const c = loadHomeChoice();
+  if (!c || c.all || !c.code) return null;
+  return DESTINATIONS.find((d) => String(d.code).toLowerCase() === c.code.toLowerCase()) || null;
+}
+
+function updateNavDest() {
+  const el = document.getElementById("nav-dest-name");
+  if (!el) return;
+  const d = homeDestination();
+  el.textContent = d ? d.name : "Alla destinationer";
+}
+
+// Unika länder ur katalogen, med sina destinationer (flest först, sedan A–Ö)
+function countryList() {
+  const map = new Map();
+  for (const d of DESTINATIONS) {
+    if (!map.has(d.country)) map.set(d.country, []);
+    map.get(d.country).push(d);
+  }
+  return [...map.entries()]
+    .map(([country, dests]) => ({ country, dests: [...dests].sort((a, b) => b.luxury - a.luxury || a.name.localeCompare(b.name, "sv")) }))
+    .sort((a, b) => b.dests.length - a.dests.length || a.country.localeCompare(b.country, "sv"));
+}
+
+// Helskärms-onboarding i två steg. dismissable=true när den öppnas som "byt destination".
+function openOnboarding(opts = {}) {
+  const root = document.getElementById("onboarding-root");
+  if (!root || root.innerHTML) return; // redan öppen
+  const dismissable = !!opts.dismissable;
+  const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  let step = 1;
+  let country = null;
+  let untrap = null;
+
+  document.body.classList.add("ob-lock");
+
+  const cleanup = () => {
+    if (untrap) untrap();
+    document.removeEventListener("keydown", onKey);
+    window.removeEventListener("hashchange", onHash);
+    document.body.classList.remove("ob-lock");
+  };
+  const close = (refocus = true) => {
+    cleanup();
+    root.innerHTML = "";
+    if (refocus) restoreFocus(opener);
+  };
+  // Direktlänkar/bakåtknapp får aldrig blockeras — ruttbyte stänger onboardingen
+  const onHash = () => close(false);
+  const onKey = (e) => { if (e.key === "Escape" && dismissable) close(); };
+  document.addEventListener("keydown", onKey);
+  window.addEventListener("hashchange", onHash);
+
+  const choose = (d) => {
+    saveHomeChoice({ code: d.code });
+    state.filters.dest = d.name; // förfiltrera venue-listan på hemdestinationen
+    close(false);
+    const target = `#/destination/${encodeURIComponent(d.code)}`;
+    if (location.hash === target) route(); else location.hash = target;
+  };
+  const skip = () => {
+    saveHomeChoice({ all: true });
+    state.filters.dest = "";
+    close(false);
+    if (!location.hash || location.hash === "#/") route();
+  };
+
+  const render = () => {
+    if (untrap) untrap();
+    const countries = countryList();
+    const inCountry = country ? countries.find((c) => c.country === country) : null;
+    const dests = inCountry ? inCountry.dests : [];
+
+    root.innerHTML = `
+    <div class="ob-overlay" id="ob-overlay">
+      <div class="ob" role="dialog" aria-modal="true" aria-label="Välj din destination" tabindex="-1">
+        ${dismissable ? `<button class="modal-close ob-close" id="ob-close" aria-label="Stäng">✕</button>` : ""}
+        <div class="ob-kicker">Välkommen till VELVET</div>
+        ${step === 1 ? `
+        <h1 class="ob-title">Var vill du <em>fira</em>?</h1>
+        <p class="ob-sub">Välj land och destination så skräddarsyr vi utbudet. Du kan byta när som helst via 📍 i menyn.</p>
+        <div class="ob-step">Steg 1 av 2 · Välj land</div>
+        <div class="ob-grid">
+          ${countries.map((c) => `
+          <div class="ob-card" data-country="${esc(c.country)}" role="button" tabindex="0" aria-label="Välj ${esc(c.country)}">
+            <div class="dest-emblem ob-emblem" style="--h:${destHue(c.country)}" aria-hidden="true">${esc(c.country.slice(0, 2).toUpperCase())}</div>
+            <h3>${esc(c.country)}</h3>
+            <div class="ob-meta">${c.dests.length} ${c.dests.length === 1 ? "destination" : "destinationer"}</div>
+            <div class="ob-names">${c.dests.slice(0, 3).map((d) => esc(d.name)).join(" · ")}${c.dests.length > 3 ? " …" : ""}</div>
+          </div>`).join("")}
+        </div>` : `
+        <h1 class="ob-title">Välj din <em>destination</em></h1>
+        <p class="ob-sub">${dests.length} ${dests.length === 1 ? "destination" : "destinationer"} i ${esc(country)}.</p>
+        <div class="ob-step">Steg 2 av 2 · ${esc(country)}</div>
+        <div class="ob-grid">
+          ${dests.map((d) => `
+          <div class="ob-card" data-dest="${esc(d.code)}" role="button" tabindex="0" aria-label="Välj ${esc(d.name)}">
+            <div class="dest-emblem ob-emblem" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
+            <h3>${esc(d.name)}</h3>
+            <div class="ob-meta"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span> · Säsong ${esc(d.peak_season)}</div>
+            ${pips(d.luxury)}
+          </div>`).join("")}
+        </div>`}
+        <div class="ob-actions">
+          ${step === 2 ? `<button class="btn btn-ghost" id="ob-back">← Byt land</button>` : ""}
+          <button class="btn btn-ghost" id="ob-skip">Visa allt</button>
+        </div>
+      </div>
+    </div>`;
+
+    const dialog = root.querySelector(".ob");
+    untrap = trapFocus(dialog);
+
+    const bindCard = (el, fn) => {
+      el.addEventListener("click", fn);
+      el.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fn(); } });
+    };
+    root.querySelectorAll("[data-country]").forEach((el) => bindCard(el, () => { country = el.dataset.country; step = 2; render(); }));
+    root.querySelectorAll("[data-dest]").forEach((el) => bindCard(el, () => {
+      const d = DESTINATIONS.find((x) => x.code === el.dataset.dest);
+      if (d) choose(d);
+    }));
+    const back = $("#ob-back");
+    if (back) back.addEventListener("click", () => { step = 1; country = null; render(); });
+    $("#ob-skip").addEventListener("click", skip);
+    const x = $("#ob-close");
+    if (x) x.addEventListener("click", () => close());
+    if (dismissable) {
+      $("#ob-overlay").addEventListener("click", (e) => { if (e.target.id === "ob-overlay") close(); });
+    }
+    dialog.focus();
+  };
+
+  render();
+}
+
 // ---------- 404 ----------
 function render404(hash) {
   view().innerHTML = `
@@ -1037,9 +1191,21 @@ async function init() {
     initMobileNav();
     initSkipLink();
     window.addEventListener("hashchange", route);
+    const navDest = document.getElementById("nav-dest");
+    if (navDest) navDest.addEventListener("click", () => openOnboarding({ dismissable: true }));
   }
+  // Hem-destination: förfiltrera venue-listan om ett val finns sparat
+  const homeChoice = loadHomeChoice();
+  const home = homeDestination();
+  if (home && !state.filters.dest) state.filters.dest = home.name;
+  updateNavDest();
   route();
   updateBookingBadge();
+  // Första besöket (inget val sparat) och ingen direktlänk → visa onboardingen.
+  // Direktlänkar (#/venue/…, #/join/…, …) får aldrig blockeras.
+  if (!homeChoice && (!location.hash || location.hash === "#/")) {
+    openOnboarding({ dismissable: false });
+  }
 }
 
 init();

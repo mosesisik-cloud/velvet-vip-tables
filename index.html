@@ -22,9 +22,16 @@
       <a href="#/venues" data-nav>Ställen</a>
       <a href="#/bookings" data-nav>Mina bokningar <span id="booking-count" class="badge hidden"></span></a>
     </div>
-    <button class="nav-toggle" id="nav-toggle" aria-label="Öppna meny" aria-expanded="false" aria-controls="nav-links">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="nav-side">
+      <button class="nav-dest" id="nav-dest" aria-haspopup="dialog" title="Byt destination">
+        <span aria-hidden="true">📍</span>
+        <span class="nav-dest-name" id="nav-dest-name">Alla destinationer</span>
+        <span class="nav-dest-caret" aria-hidden="true">▾</span>
+      </button>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Öppna meny" aria-expanded="false" aria-controls="nav-links">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </nav>
 
   <!-- Views render here -->
@@ -38,6 +45,9 @@
     <div class="footer-meta">V1 · 30 destinationer · 120 handplockade ställen · Dataset: Luxury Experience Venue Master V1</div>
   </footer>
 </div>
+
+<!-- Onboarding (land/stad-val) -->
+<div id="onboarding-root"></div>
 
 <!-- Booking modal -->
 <div id="modal-root"></div>
