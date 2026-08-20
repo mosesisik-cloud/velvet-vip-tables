@@ -819,11 +819,11 @@ function renderBookings() {
     btn.addEventListener("click", async () => {
       const b = loadBookings().find((x) => x.id === btn.dataset.share);
       if (!b || btn.disabled) return;
-      const ok = await copyText(shareLinkFor(b));
+      btn.disabled = true; // direkt — annars kan snabba dubbelklick passera innan await:en är klar
       const orig = btn.textContent;
+      const ok = await copyText(shareLinkFor(b));
       btn.textContent = ok ? "Länk kopierad ✓" : "Kunde inte kopiera";
       btn.classList.toggle("copied", ok);
-      btn.disabled = true;
       setTimeout(() => {
         btn.textContent = orig;
         btn.classList.remove("copied");
