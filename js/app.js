@@ -238,7 +238,7 @@ function destCard(d) {
     <div class="dest-emblem" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
     <h3>${esc(d.name)}</h3>
     <div class="dest-country">${esc(d.country)} · ${esc(d.region)}</div>
-    <div class="dest-meta"><span>Säsong <b>${esc(d.peak_season)}</b></span></div>
+    <div class="dest-meta"><span>Säsong <b>${esc(d.peak_season)}</b></span>${(() => { const km = distanceToDest(d); return km != null ? `<span class="dest-km">~${fmtKm(km)} km</span>` : ""; })()}</div>
     ${pips(d.luxury)}
   </div>`;
 }
@@ -320,6 +320,7 @@ function renderDestinationDetail(code) {
           <div class="fact"><span class="fact-label">Tier</span><span class="fact-val"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span></span></div>
           <div class="fact"><span class="fact-label">Högsäsong</span><span class="fact-val">${esc(d.peak_season)}</span></div>
           <div class="fact"><span class="fact-label">Ställen i katalogen</span><span class="fact-val">${venues.length}</span></div>
+          ${(() => { const km = distanceToDest(d); return km != null ? `<div class="fact"><span class="fact-label">Avstånd från dig</span><span class="fact-val">~${fmtKm(km)} km</span></div>` : ""; })()}
         </div>
       </div>
     </div>
@@ -895,6 +896,53 @@ function renderJoin(raw) {
   }
 }
 
+// ---------- Platstjänster: haversine + närmaste destination ----------
+// Användarens position sparas per session (sessionStorage) — aldrig obligatoriskt.
+const GEO_KEY = "velvet_geo";
+
+function haversineKm(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const rad = Math.PI / 180;
+  const dLat = (lat2 - lat1) * rad;
+  const dLng = (lng2 - lng1) * rad;
+  const a = Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+// "8,4 km" under en mil, annars heltal med svensk tusentalsavgränsning
+function fmtKm(km) {
+  return km < 10 ? km.toFixed(1).replace(".", ",") : Math.round(km).toLocaleString("sv-SE");
+}
+
+function loadGeo() {
+  try {
+    const g = JSON.parse(sessionStorage.getItem(GEO_KEY));
+    if (g && Number.isFinite(g.lat) && Number.isFinite(g.lng)) return g;
+  } catch {}
+  return null;
+}
+function saveGeo(lat, lng) {
+  try { sessionStorage.setItem(GEO_KEY, JSON.stringify({ lat, lng, ts: Date.now() })); } catch {}
+}
+
+function nearestDestination(lat, lng) {
+  let best = null;
+  for (const d of DESTINATIONS) {
+    if (!Number.isFinite(d.lat) || !Number.isFinite(d.lng)) continue;
+    const km = haversineKm(lat, lng, d.lat, d.lng);
+    if (!best || km < best.km) best = { d, km };
+  }
+  return best;
+}
+
+// Avstånd från sparad position till en destination — null om position/koordinat saknas
+function distanceToDest(d) {
+  const g = loadGeo();
+  if (!g || !d || !Number.isFinite(d.lat) || !Number.isFinite(d.lng)) return null;
+  return haversineKm(g.lat, g.lng, d.lat, d.lng);
+}
+
 // ---------- Onboarding: hem-destination (land → stad) ----------
 // Sparat val: { code: "IBZ" } eller { all: true } ("Visa allt"). Defensiv inläsning.
 const HOME_KEY = "velvet_home_destination";
@@ -946,6 +994,17 @@ function openOnboarding(opts = {}) {
   let step = 1;
   let country = null;
   let untrap = null;
+  let closed = false;
+
+  // Platsläge: idle → loading → found/error. Redan känd position → visa direkt.
+  const geoSupported = "geolocation" in navigator;
+  let geoState = "idle";
+  let nearest = null;
+  const knownGeo = loadGeo();
+  if (knownGeo) {
+    nearest = nearestDestination(knownGeo.lat, knownGeo.lng);
+    if (nearest) geoState = "found";
+  }
 
   document.body.classList.add("ob-lock");
 
@@ -956,9 +1015,69 @@ function openOnboarding(opts = {}) {
     document.body.classList.remove("ob-lock");
   };
   const close = (refocus = true) => {
+    closed = true;
     cleanup();
     root.innerHTML = "";
     if (refocus) restoreFocus(opener);
+  };
+
+  // Nekad permission, timeout eller saknat stöd → felmeddelande + manuellt val, aldrig krasch
+  const requestGeo = () => {
+    if (!geoSupported) { geoState = "error"; render(); return; }
+    geoState = "loading";
+    render();
+    let done = false;
+    const fail = () => {
+      if (done || closed) return;
+      done = true;
+      geoState = "error";
+      render();
+    };
+    const guard = setTimeout(fail, 10000); // fallback om webbläsaren aldrig svarar
+    try {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          if (done || closed) return;
+          done = true;
+          clearTimeout(guard);
+          saveGeo(pos.coords.latitude, pos.coords.longitude);
+          nearest = nearestDestination(pos.coords.latitude, pos.coords.longitude);
+          geoState = nearest ? "found" : "error";
+          render();
+        },
+        () => { clearTimeout(guard); fail(); },
+        { timeout: 8000, maximumAge: 300000 }
+      );
+    } catch { clearTimeout(guard); fail(); }
+  };
+
+  const geoPanel = () => {
+    if (!geoSupported && geoState !== "error") return "";
+    if (geoState === "loading") {
+      return `<div class="ob-geo" role="status"><span class="ob-geo-spin" aria-hidden="true"></span> Hämtar din plats …</div>`;
+    }
+    if (geoState === "found" && nearest) {
+      return `
+      <div class="ob-geo ob-geo-found" role="status">
+        <div class="ob-geo-text">Närmast dig: <b>${esc(nearest.d.name)}</b> <span class="ob-geo-km">(${fmtKm(nearest.km)} km)</span></div>
+        <div class="ob-geo-actions">
+          <button class="btn btn-gold btn-sm" id="ob-geo-choose">Välj ${esc(nearest.d.name)}</button>
+          <button class="btn btn-ghost btn-sm" id="ob-geo-dismiss">Välj manuellt</button>
+        </div>
+      </div>`;
+    }
+    if (geoState === "error") {
+      return `
+      <div class="ob-geo ob-geo-error" role="status">
+        Kunde inte hämta din plats — välj manuellt nedan.
+        ${geoSupported ? `<button class="btn btn-ghost btn-sm" id="ob-geo-retry">Försök igen</button>` : ""}
+      </div>`;
+    }
+    return `
+    <div class="ob-geo">
+      <button class="btn btn-ghost btn-sm" id="ob-geo-btn"><span aria-hidden="true">🧭</span> Använd min plats</button>
+      <span class="ob-geo-hint">hittar närmaste destination</span>
+    </div>`;
   };
   // Direktlänkar/bakåtknapp får aldrig blockeras — ruttbyte stänger onboardingen
   const onHash = () => close(false);
@@ -995,6 +1114,7 @@ function openOnboarding(opts = {}) {
         <h1 class="ob-title">Var vill du <em>fira</em>?</h1>
         <p class="ob-sub">Välj land och destination så skräddarsyr vi utbudet. Du kan byta när som helst via 📍 i menyn.</p>
         <div class="ob-step">Steg 1 av 2 · Välj land</div>
+        ${geoPanel()}
         <div class="ob-grid">
           ${countries.map((c) => `
           <div class="ob-card" data-country="${esc(c.country)}" role="button" tabindex="0" aria-label="Välj ${esc(c.country)}">
@@ -1008,13 +1128,16 @@ function openOnboarding(opts = {}) {
         <p class="ob-sub">${dests.length} ${dests.length === 1 ? "destination" : "destinationer"} i ${esc(country)}.</p>
         <div class="ob-step">Steg 2 av 2 · ${esc(country)}</div>
         <div class="ob-grid">
-          ${dests.map((d) => `
+          ${dests.map((d) => {
+            const km = distanceToDest(d);
+            return `
           <div class="ob-card" data-dest="${esc(d.code)}" role="button" tabindex="0" aria-label="Välj ${esc(d.name)}">
             <div class="dest-emblem ob-emblem" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
             <h3>${esc(d.name)}</h3>
-            <div class="ob-meta"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span> · Säsong ${esc(d.peak_season)}</div>
+            <div class="ob-meta"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span> · Säsong ${esc(d.peak_season)}${km != null ? ` · ~${fmtKm(km)} km` : ""}</div>
             ${pips(d.luxury)}
-          </div>`).join("")}
+          </div>`;
+          }).join("")}
         </div>`}
         <div class="ob-actions">
           ${step === 2 ? `<button class="btn btn-ghost" id="ob-back">← Byt land</button>` : ""}
@@ -1038,6 +1161,14 @@ function openOnboarding(opts = {}) {
     const back = $("#ob-back");
     if (back) back.addEventListener("click", () => { step = 1; country = null; render(); });
     $("#ob-skip").addEventListener("click", skip);
+    const geoBtn = $("#ob-geo-btn");
+    if (geoBtn) geoBtn.addEventListener("click", requestGeo);
+    const geoRetry = $("#ob-geo-retry");
+    if (geoRetry) geoRetry.addEventListener("click", requestGeo);
+    const geoChoose = $("#ob-geo-choose");
+    if (geoChoose) geoChoose.addEventListener("click", () => { if (nearest) choose(nearest.d); });
+    const geoDismiss = $("#ob-geo-dismiss");
+    if (geoDismiss) geoDismiss.addEventListener("click", () => { geoState = "idle"; render(); });
     const x = $("#ob-close");
     if (x) x.addEventListener("click", () => close());
     if (dismissable) {

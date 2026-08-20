@@ -10,7 +10,9 @@
     "shareability": 5,
     "peak_season": "Apr-Oct",
     "use_cases": "Superclubs, VIP tables, beach clubs",
-    "note": "Highest nightlife density"
+    "note": "Highest nightlife density",
+    "lat": 38.98,
+    "lng": 1.43
   },
   {
     "code": "MYK",
@@ -23,7 +25,9 @@
     "shareability": 5,
     "peak_season": "May-Oct",
     "use_cases": "Beach clubs, sunset, VIP, yachts",
-    "note": "Core launch market"
+    "note": "Core launch market",
+    "lat": 37.45,
+    "lng": 25.33
   },
   {
     "code": "DXB",
@@ -36,7 +40,9 @@
     "shareability": 5,
     "peak_season": "Oct-May",
     "use_cases": "Beach clubs, luxury dining, yachts",
-    "note": "Year-round premium audience"
+    "note": "Year-round premium audience",
+    "lat": 25.2,
+    "lng": 55.27
   },
   {
     "code": "MRB",
@@ -49,7 +55,9 @@
     "shareability": 5,
     "peak_season": "Apr-Oct",
     "use_cases": "Beach clubs, Puerto Banús, nightlife",
-    "note": "Strong table-sharing fit"
+    "note": "Strong table-sharing fit",
+    "lat": 36.51,
+    "lng": -4.88
   },
   {
     "code": "STT",
@@ -62,7 +70,9 @@
     "shareability": 5,
     "peak_season": "May-Sep",
     "use_cases": "Beach clubs, yachts, luxury dining",
-    "note": "Ultra-premium"
+    "note": "Ultra-premium",
+    "lat": 43.27,
+    "lng": 6.64
   },
   {
     "code": "MCO",
@@ -75,7 +85,9 @@
     "shareability": 5,
     "peak_season": "Apr-Sep",
     "use_cases": "F1, yachts, casinos, clubs",
-    "note": "Ultra-high spend"
+    "note": "Ultra-high spend",
+    "lat": 43.74,
+    "lng": 7.42
   },
   {
     "code": "CNS",
@@ -88,7 +100,9 @@
     "shareability": 5,
     "peak_season": "Apr-Sep",
     "use_cases": "Beach clubs, yachts, events",
-    "note": "Film Festival + summer"
+    "note": "Film Festival + summer",
+    "lat": 43.55,
+    "lng": 7.02
   },
   {
     "code": "BDR",
@@ -101,7 +115,9 @@
     "shareability": 5,
     "peak_season": "May-Oct",
     "use_cases": "Beach clubs, yachts, luxury hotels",
-    "note": "Fast-growing luxury scene"
+    "note": "Fast-growing luxury scene",
+    "lat": 37.04,
+    "lng": 27.43
   },
   {
     "code": "HKT",
@@ -114,7 +130,9 @@
     "shareability": 5,
     "peak_season": "Nov-Apr",
     "use_cases": "Beach clubs, nightlife, yachts",
-    "note": "Strong Asia launch city"
+    "note": "Strong Asia launch city",
+    "lat": 7.89,
+    "lng": 98.4
   },
   {
     "code": "BKK",
@@ -127,7 +145,9 @@
     "shareability": 4,
     "peak_season": "Year-round",
     "use_cases": "Rooftops, clubs, luxury dining",
-    "note": "Nightlife hub"
+    "note": "Nightlife hub",
+    "lat": 13.76,
+    "lng": 100.5
   },
   {
     "code": "BAL",
@@ -140,7 +160,9 @@
     "shareability": 5,
     "peak_season": "Apr-Oct",
     "use_cases": "Beach clubs, villas, nightlife",
-    "note": "Global social traveler base"
+    "note": "Global social traveler base",
+    "lat": -8.68,
+    "lng": 115.16
   },
   {
     "code": "MIA",
@@ -153,7 +175,9 @@
     "shareability": 5,
     "peak_season": "Year-round",
     "use_cases": "Beach, clubs, restaurants, yachts",
-    "note": "Major US premium market"
+    "note": "Major US premium market",
+    "lat": 25.76,
+    "lng": -80.19
   },
   {
     "code": "LAS",
@@ -166,7 +190,9 @@
     "shareability": 5,
     "peak_season": "Year-round",
     "use_cases": "Dayclubs, nightclubs, VIP tables",
-    "note": "Ideal table split model"
+    "note": "Ideal table split model",
+    "lat": 36.17,
+    "lng": -115.14
   },
   {
     "code": "TUL",
@@ -179,7 +205,9 @@
     "shareability": 5,
     "peak_season": "Nov-Apr",
     "use_cases": "Beach clubs, jungle parties",
-    "note": "Social/lifestyle market"
+    "note": "Social/lifestyle market",
+    "lat": 20.21,
+    "lng": -87.47
   },
   {
     "code": "BCN",
@@ -192,7 +220,9 @@
     "shareability": 4,
     "peak_season": "Apr-Oct",
     "use_cases": "Beachfront clubs, dining, nightlife",
-    "note": "Large international traffic"
+    "note": "Large international traffic",
+    "lat": 41.39,
+    "lng": 2.17
   },
   {
     "code": "CER",
@@ -205,7 +235,9 @@
     "shareability": 5,
     "peak_season": "Jun-Sep",
     "use_cases": "Yachts, clubs, luxury dining",
-    "note": "High-spend Sardinia"
+    "note": "High-spend Sardinia",
+    "lat": 41.14,
+    "lng": 9.54
   },
   {
     "code": "HVA",
@@ -218,7 +250,9 @@
     "shareability": 4,
     "peak_season": "May-Sep",
     "use_cases": "Beach clubs, yachts, nightlife",
-    "note": "Summer party hotspot"
+    "note": "Summer party hotspot",
+    "lat": 43.17,
+    "lng": 16.44
   },
   {
     "code": "ATH",
@@ -231,7 +265,9 @@
     "shareability": 4,
     "peak_season": "Apr-Oct",
     "use_cases": "Beach clubs, restaurants, yachts",
-    "note": "Good Mykonos feeder"
+    "note": "Good Mykonos feeder",
+    "lat": 37.81,
+    "lng": 23.78
   },
   {
     "code": "IST",
@@ -244,7 +280,9 @@
     "shareability": 4,
     "peak_season": "Year-round",
     "use_cases": "Bosporus clubs, dining",
-    "note": "Large luxury local market"
+    "note": "Large luxury local market",
+    "lat": 41.01,
+    "lng": 28.98
   },
   {
     "code": "CAP",
@@ -257,7 +295,9 @@
     "shareability": 4,
     "peak_season": "May-Sep",
     "use_cases": "Beach clubs, yachts, dining",
-    "note": "Luxury daytime experiences"
+    "note": "Luxury daytime experiences",
+    "lat": 40.55,
+    "lng": 14.24
   },
   {
     "code": "AMF",
@@ -270,7 +310,9 @@
     "shareability": 4,
     "peak_season": "May-Sep",
     "use_cases": "Beach clubs, boats, restaurants",
-    "note": "Experience-led"
+    "note": "Experience-led",
+    "lat": 40.63,
+    "lng": 14.6
   },
   {
     "code": "LON",
@@ -283,7 +325,9 @@
     "shareability": 4,
     "peak_season": "Year-round",
     "use_cases": "Private clubs, nightlife, dining",
-    "note": "High-value members"
+    "note": "High-value members",
+    "lat": 51.51,
+    "lng": -0.13
   },
   {
     "code": "PAR",
@@ -296,7 +340,9 @@
     "shareability": 3,
     "peak_season": "Year-round",
     "use_cases": "Luxury nightlife, dining",
-    "note": "Fashion/event demand"
+    "note": "Fashion/event demand",
+    "lat": 48.86,
+    "lng": 2.35
   },
   {
     "code": "SIN",
@@ -309,7 +355,9 @@
     "shareability": 4,
     "peak_season": "Year-round",
     "use_cases": "Rooftops, beach clubs, luxury",
-    "note": "Regional premium hub"
+    "note": "Regional premium hub",
+    "lat": 1.29,
+    "lng": 103.85
   },
   {
     "code": "LAX",
@@ -322,7 +370,9 @@
     "shareability": 4,
     "peak_season": "Year-round",
     "use_cases": "Clubs, rooftops, restaurants",
-    "note": "Celebrity/lifestyle"
+    "note": "Celebrity/lifestyle",
+    "lat": 34.05,
+    "lng": -118.24
   },
   {
     "code": "NYC",
@@ -335,7 +385,9 @@
     "shareability": 4,
     "peak_season": "Year-round",
     "use_cases": "Nightlife, rooftops, private clubs",
-    "note": "High-spend urban market"
+    "note": "High-spend urban market",
+    "lat": 40.71,
+    "lng": -74.01
   },
   {
     "code": "ASP",
@@ -348,7 +400,9 @@
     "shareability": 4,
     "peak_season": "Dec-Mar",
     "use_cases": "Ski, après, private experiences",
-    "note": "Seasonal ultra-premium"
+    "note": "Seasonal ultra-premium",
+    "lat": 39.19,
+    "lng": -106.82
   },
   {
     "code": "CRV",
@@ -361,7 +415,9 @@
     "shareability": 4,
     "peak_season": "Dec-Apr",
     "use_cases": "Ski, après, luxury hotels",
-    "note": "European winter premium"
+    "note": "European winter premium",
+    "lat": 45.42,
+    "lng": 6.63
   },
   {
     "code": "SBH",
@@ -374,7 +430,9 @@
     "shareability": 5,
     "peak_season": "Nov-Apr",
     "use_cases": "Beach clubs, yachts, restaurants",
-    "note": "Ultra-premium winter"
+    "note": "Ultra-premium winter",
+    "lat": 17.9,
+    "lng": -62.85
   },
   {
     "code": "PDE",
@@ -387,6 +445,8 @@
     "shareability": 4,
     "peak_season": "Dec-Feb",
     "use_cases": "Beach clubs, nightlife",
-    "note": "South America summer hub"
+    "note": "South America summer hub",
+    "lat": -34.94,
+    "lng": -54.95
   }
 ]

@@ -808,6 +808,29 @@ body.ob-lock { overflow: hidden; }
 .ob-card .dest-scores { margin-top: 10px; }
 .ob-actions { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
+/* Platspanel i onboardingen ("Använd min plats") */
+.ob-geo {
+  display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin: -6px auto 24px; font-size: 13.5px; color: var(--text-dim);
+}
+.ob-geo-hint { font-size: 12.5px; color: var(--text-faint); }
+.ob-geo-found {
+  padding: 12px 18px; border: 1px solid rgba(212, 175, 95, 0.35); border-radius: var(--radius);
+  background: rgba(212, 175, 95, 0.06); max-width: 560px;
+}
+.ob-geo-text b { color: var(--gold-bright); font-weight: 600; }
+.ob-geo-km { color: var(--text-faint); }
+.ob-geo-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.ob-geo-error { color: var(--text-faint); }
+.ob-geo-spin {
+  width: 14px; height: 14px; border-radius: 50%; flex: none;
+  border: 2px solid rgba(212, 175, 95, 0.25); border-top-color: var(--gold);
+  animation: spin 0.8s linear infinite;
+}
+
+/* Diskret avstånd på destinationskort */
+.dest-km { color: var(--text-faint); white-space: nowrap; }
+
 @media (max-width: 720px) {
   .nav-dest { padding: 8px 11px; }
   .nav-dest-name { max-width: 92px; }
