@@ -41,7 +41,14 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+}
+@supports not (overflow-x: clip) {
+  html { overflow-x: hidden; }
+}
 
 body {
   background: var(--bg);
@@ -50,6 +57,12 @@ body {
   font-size: 15px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
+  overscroll-behavior-x: none;
+  max-width: 100%;
+}
+@supports not (overflow-x: clip) {
+  body { overflow-x: hidden; }
 }
 
 a { color: inherit; text-decoration: none; }
@@ -100,20 +113,29 @@ button { font-family: inherit; cursor: pointer; }
 
 /* ---------- Nav ---------- */
 .site-header {
-  position: sticky; top: 0; z-index: 60;
+  position: sticky; top: 0; left: 0; right: 0; z-index: 60;
+  width: 100%;
+  max-width: 100%;
+  touch-action: pan-y;
 }
 .nav {
   position: relative; z-index: 50;
   display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: nowrap; gap: 12px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 18px 40px;
   background: rgba(11, 11, 15, 0.85);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-soft);
 }
 .nav-logo {
+  flex-shrink: 0;
   font-family: var(--font-display);
   font-size: 24px; font-weight: 700; letter-spacing: 3px;
 }
+.nav-links { min-width: 0; }
 .logo-dot { color: var(--gold); }
 .nav-links { display: flex; gap: 28px; align-items: center; }
 .nav-links a {
@@ -936,7 +958,10 @@ button { font-family: inherit; cursor: pointer; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
 /* ---------- Onboarding & hem-destination ---------- */
-.nav-side { display: flex; align-items: center; gap: 10px; }
+.nav-side {
+  display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0; flex-wrap: nowrap; margin-left: auto;
+}
 .nav-dest {
   display: inline-flex; align-items: center; gap: 8px;
   background: none; border: 1px solid var(--border); border-radius: 999px;
@@ -1465,7 +1490,7 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .venue-media { position: relative; }
 .venue-card { position: relative; }
 .venue-card > .fav-btn {
-  position: absolute; top: 10px; right: 10px; z-index: 3;
+  position: absolute; top: 10px; right: 10px; left: auto; z-index: 3;
 }
 .venue-hero-media { position: relative; }
 .venue-hero-media .fav-btn {
@@ -1762,7 +1787,7 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 }
 .venue-dock { display: none; }
 @media (max-width: 719px) {
-  html, body, #app { overflow-x: hidden; }
+  html, body { overflow-x: clip; }
   input, select, textarea { font-size: 16px; }
   a, button {
     touch-action: manipulation;
@@ -1780,7 +1805,11 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 
   .filters {
     flex-wrap: wrap;
-    overflow-x: visible;
+    overflow-x: clip;
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
     gap: 8px;
   }
   .filters input[type="search"] {
@@ -1822,6 +1851,9 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
     gap: 6px;
     position: fixed;
     left: 0; right: 0; bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    transform: none;
     z-index: 45;
     margin: 0;
     padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
