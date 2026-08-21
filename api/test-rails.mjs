@@ -7,6 +7,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
+import { parseTd3, extractMrzFromText, nameMatch, ICAO_SAMPLE, TEST_LIVE } from "./mrz.mjs";
 import { fileURLToPath } from "node:url";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
@@ -25,6 +26,35 @@ function fail(name, detail) {
 
 function loadJson(rel) {
   return JSON.parse(fs.readFileSync(path.join(ROOT, rel), "utf8"));
+}
+
+function fakeJpeg() {
+  const buf = Buffer.alloc(9000, 0x41);
+  buf[0] = 0xff; buf[1] = 0xd8; buf[2] = 0xff;
+  return "data:image/jpeg;base64," + buf.toString("base64");
+}
+
+function checkMrz() {
+  const icao = parseTd3(ICAO_SAMPLE.line1, ICAO_SAMPLE.line2);
+  if (!icao.checksumsOk || icao.fields.lastName !== "ERIKSSON" || icao.fields.firstName !== "ANNA MARIA") {
+    fail("mrz-icao", JSON.stringify(icao));
+  } else ok("mrz-icao", "checksums + names");
+  if (!icao.expired) fail("mrz-icao-expired", "sample 2012 should be expired");
+  else ok("mrz-icao-expired", icao.fields.expirationDate);
+
+  const live = parseTd3(TEST_LIVE.line1, TEST_LIVE.line2);
+  if (!live.valid || live.fields.lastName !== "ISIK" || live.fields.documentNumber !== "AB1234567") {
+    fail("mrz-live", JSON.stringify(live));
+  } else ok("mrz-live", live.fields.firstName + " " + live.fields.lastName);
+
+  const extracted = extractMrzFromText("header\n" + TEST_LIVE.line1 + "\n" + TEST_LIVE.line2 + "\nfooter");
+  if (!extracted?.valid) fail("mrz-extract", JSON.stringify(extracted && extracted.reasons));
+  else ok("mrz-extract", "from ocr text");
+
+  const full = nameMatch("MOSES", "ISIK", "Moses Isik");
+  const miss = nameMatch("MOSES", "ISIK", "Gabbe Velvet");
+  if (!full.ok || miss.ok) fail("mrz-name", JSON.stringify({ full, miss }));
+  else ok("mrz-name", "match vs mismatch");
 }
 
 function checkBookingUrls() {
@@ -127,7 +157,7 @@ async function runApi() {
   fs.writeFileSync(pay, "{}");
   const port = 18787;
   const child = spawn(process.execPath, [SERVER], {
-    env: { ...process.env, PORT: String(port), VELVET_DATA: data, VELVET_PAY: pay, VELVET_CRAWL: "0" },
+    env: { ...process.env, PORT: String(port), VELVET_DATA: data, VELVET_PAY: pay, VELVET_CRAWL: "0", VELVET_IDV: path.join(dir, "idv") },
     cwd: __dir,
     stdio: ["ignore", "pipe", "pipe"],
   });
@@ -231,6 +261,38 @@ async function runApi() {
     if (places.status !== 200 || !places.json.venues) fail("places", JSON.stringify(places.json).slice(0, 200));
     else ok("places", Object.keys(places.json.venues).length + " cached");
 
+    const img = fakeJpeg();
+    const noMrz = await req(base, "POST", "/idv", {
+      userId: guest.id, name: "Moses Isik", passport: img, selfie: img,
+    });
+    if (noMrz.status !== 422 || noMrz.json.error !== "mrz_unreadable") fail("idv-no-mrz", JSON.stringify(noMrz.json).slice(0, 200));
+    else ok("idv-no-mrz", "422 without MRZ");
+
+    const expired = await req(base, "POST", "/idv", {
+      userId: guest.id, name: "Anna Eriksson", passport: img, selfie: img, mrz: ICAO_SAMPLE,
+    });
+    if (expired.status !== 422 || expired.json.error !== "mrz_expired") fail("idv-expired", JSON.stringify(expired.json).slice(0, 200));
+    else ok("idv-expired", "rejected");
+
+    const mismatch = await req(base, "POST", "/idv", {
+      userId: guest.id, name: "Gabbe Velvet", passport: img, selfie: img, mrz: TEST_LIVE,
+    });
+    if (mismatch.json?.idv?.status !== "mismatch" || mismatch.json.idv.fields?.documentNumber) {
+      fail("idv-mismatch", JSON.stringify(mismatch.json).slice(0, 240));
+    } else ok("idv-mismatch", mismatch.json.idv.legalName);
+
+    const good = await req(base, "POST", "/idv", {
+      userId: guest.id, name: "Moses Isik", passport: img, selfie: img, mrz: TEST_LIVE,
+    });
+    if (good.status !== 200 || good.json.idv?.status !== "verified") fail("idv-ok", JSON.stringify(good.json).slice(0, 240));
+    else if (good.json.idv.fields?.documentNumber) fail("idv-ok", "leaked full passport number");
+    else if (good.json.idv.fields?.documentNumberMasked !== "•••567") fail("idv-ok", "mask " + good.json.idv.fields?.documentNumberMasked);
+    else ok("idv-ok", good.json.idv.legalName);
+
+    const gotIdv = await req(base, "GET", "/idv/" + encodeURIComponent(guest.id));
+    if (gotIdv.json.idv?.status !== "verified") fail("idv-get", JSON.stringify(gotIdv.json));
+    else ok("idv-get", "verified");
+
     const blocked = await req(base, "POST", "/events/refresh", { user: { id: "U-x" } });
     if (blocked.status !== 403) fail("events-refresh-off", "expected 403 got " + blocked.status);
     else ok("events-refresh-off", "VELVET_CRAWL=0");
@@ -243,6 +305,7 @@ async function runApi() {
 }
 
 const booking = checkBookingUrls();
+checkMrz();
 const api = await runApi();
 if (FAIL.length) {
   console.error(LOG.join("\n"));

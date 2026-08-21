@@ -6,11 +6,12 @@ import { fileURLToPath } from "node:url";
 import { loadEventsFile, loadCrawlStatus, runCrawl, getCrawlState, scheduleDailyCrawl } from "./crawl-events.mjs";
 import { loadPlacesFile, runPlacesLookup } from "./google-places.mjs";
 import { loadFactsFile, runFactsCrawl } from "./venue-facts.mjs";
+import { parseTd3, extractMrzFromText, nameMatch, publicFields, legalName } from "./mrz.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
-const IDV_DIR = path.join(__dir, "idv");
+const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);
 const PUBLIC_APP = process.env.PUBLIC_URL || "https://b2b.bakemyday.se/velvet";
 
@@ -89,6 +90,24 @@ function decodeDataUrl(dataUrl) {
   const buf = Buffer.from(m[3].replace(/\s/g, ""), "base64");
   if (buf.length < 8000 || buf.length > 5e6) return null;
   return { ext: m[2].toLowerCase() === "png" ? "png" : "jpg", buf };
+}
+function publicIdv(rec) {
+  if (!rec) return { status: "none" };
+  return {
+    status: rec.status || "none",
+    submitted: rec.submitted || null,
+    reasons: rec.reasons || [],
+    fields: rec.fieldsPublic || null,
+    legalName: rec.legalName || "",
+    nameMatch: rec.nameMatch || null,
+  };
+}
+function readMrzBody(b) {
+  const line1 = b?.mrz?.line1 || b?.line1 || "";
+  const line2 = b?.mrz?.line2 || b?.line2 || "";
+  if (line1 && line2) return parseTd3(line1, line2);
+  if (b?.mrz?.text) return extractMrzFromText(b.mrz.text);
+  return null;
 }
 function avgRating(reviews) {
   if (!reviews.length) return { avg: 0, n: 0 };
@@ -1048,27 +1067,68 @@ const server = http.createServer(async (req, res) => {
       const pass = decodeDataUrl(b.passport);
       const self = decodeDataUrl(b.selfie);
       if (!pass || !self) return send(res, 400, { error: "images" });
+      const parsed = readMrzBody(b);
       const dir = path.join(IDV_DIR, uid);
       fs.mkdirSync(dir, { recursive: true });
       fs.writeFileSync(path.join(dir, "passport." + pass.ext), pass.buf);
       fs.writeFileSync(path.join(dir, "selfie." + self.ext), self.buf);
+      const claimed = String(b.name || "");
       const db = load();
+      const now = new Date().toISOString();
+      if (!parsed || !parsed.checksumsOk || (parsed.reasons || []).includes("not_passport")) {
+        db.idv[b.userId] = {
+          userId: String(b.userId),
+          name: claimed,
+          status: "unreadable",
+          submitted: now,
+          reasons: (parsed && parsed.reasons) || ["mrz_unreadable"],
+        };
+        save(db);
+        return send(res, 422, { error: "mrz_unreadable", idv: publicIdv(db.idv[b.userId]) });
+      }
+      if (parsed.expired) {
+        db.idv[b.userId] = {
+          userId: String(b.userId),
+          name: claimed,
+          status: "expired",
+          submitted: now,
+          reasons: parsed.reasons,
+          fields: parsed.fields,
+          fieldsPublic: publicFields(parsed.fields),
+          legalName: legalName(parsed.fields),
+        };
+        save(db);
+        return send(res, 422, { error: "mrz_expired", idv: publicIdv(db.idv[b.userId]) });
+      }
+      const nm = nameMatch(parsed.fields.firstName, parsed.fields.lastName, claimed);
+      let status = "verified";
+      if (!nm.ok && !b.confirmMismatch) status = "mismatch";
       db.idv[b.userId] = {
         userId: String(b.userId),
-        name: String(b.name || ""),
-        status: "verified",
-        submitted: new Date().toISOString(),
-        note: "MVP: båda bilderna mottagna och sparade. Produktion ska använda Jumio/Persona.",
+        name: claimed,
+        status,
+        submitted: now,
+        reasons: parsed.reasons,
+        nameMatch: nm,
+        fields: parsed.fields,
+        fieldsPublic: publicFields(parsed.fields),
+        legalName: legalName(parsed.fields),
+        mrz: { line1: parsed.line1, line2: parsed.line2 },
       };
+      if (status === "verified" && db.users[b.userId]) {
+        db.users[b.userId].legalName = legalName(parsed.fields);
+      }
       save(db);
-      return send(res, 200, { idv: { status: "verified", submitted: db.idv[b.userId].submitted } });
+      if (status === "mismatch") {
+        return send(res, 200, { error: "name_mismatch", idv: publicIdv(db.idv[b.userId]) });
+      }
+      return send(res, 200, { idv: publicIdv(db.idv[b.userId]) });
     }
     const idvM = url.pathname.match(/^\/idv\/([^/]+)$/);
     if (req.method === "GET" && idvM) {
       const db = load();
       const rec = db.idv[decodeURIComponent(idvM[1])];
-      if (!rec) return send(res, 200, { idv: { status: "none" } });
-      return send(res, 200, { idv: { status: rec.status, submitted: rec.submitted } });
+      return send(res, 200, { idv: publicIdv(rec) });
     }
 
     if (req.method === "POST" && url.pathname === "/reviews") {

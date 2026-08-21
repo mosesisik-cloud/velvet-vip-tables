@@ -1,5 +1,7 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
 import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js";
+import { publicFields as mrzPublic, nameMatch } from "./mrz.js";
+import { readPassportMrz, jpegFromFile, snapshotVideo, startCamera, stopCamera } from "./passport-ocr.js";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -385,6 +387,7 @@ function loadUser() {
 }
 function displayName(u) {
   if (!u) return "";
+  if (u.legalName) return u.legalName;
   if (u.name) return u.name;
   const s = SOCIALS.find((x) => x.id === u.provider);
   return s ? s.label : (u.provider || "");
@@ -711,7 +714,13 @@ async function refreshIdv() {
   if (!u) return "none";
   const r = await apiJSON(`/idv/${encodeURIComponent(u.id)}`);
   const st = r?.idv?.status || "none";
-  saveUser({ ...u, idvStatus: st, idvSubmitted: r?.idv?.submitted || u.idvSubmitted });
+  saveUser({
+    ...u,
+    idvStatus: st,
+    idvSubmitted: r?.idv?.submitted || u.idvSubmitted,
+    legalName: r?.idv?.legalName || u.legalName || "",
+    idvFields: r?.idv?.fields || u.idvFields || null,
+  });
   return st;
 }
 function fileToJpeg(file) {
@@ -3254,6 +3263,26 @@ function starRow(n) {
   return `<span class="stars" aria-label="${v}/5">${"★".repeat(Math.round(v))}${"☆".repeat(5 - Math.round(v))}</span>`;
 }
 
+function mrzRowsHTML(fields) {
+  if (!fields) return "";
+  const sexKey = fields.sex === "F" ? "mrzSexF" : fields.sex === "M" ? "mrzSexM" : fields.sex === "X" ? "mrzSexX" : "";
+  const rows = [
+    [t("mrzName"), [fields.firstName, fields.lastName].filter(Boolean).join(" ")],
+    [t("mrzDob"), fields.birthDate],
+    [t("mrzSex"), sexKey ? t(sexKey) : fields.sex],
+    [t("mrzNat"), fields.nationality],
+    [t("mrzState"), fields.issuingState],
+    [t("mrzNo"), fields.documentNumberMasked],
+    [t("mrzExp"), fields.expirationDate],
+  ].filter(([, v]) => v);
+  return `<div class="mrz-card">
+    <p class="mrz-card-kicker">${esc(t("verifyReadOk"))}</p>
+    <div class="detail-facts facts-rows">${rows.map(([lab, val]) =>
+      `<div class="fact"><span class="fact-label">${esc(lab)}</span><span class="fact-val">${esc(val)}</span></div>`
+    ).join("")}</div>
+  </div>`;
+}
+
 async function renderVerify() {
   const u = loadUser();
   if (!u) {
@@ -3263,13 +3292,24 @@ async function renderVerify() {
   }
   await refreshIdv();
   const st = idvStatus();
+  const savedFields = (loadUser() && loadUser().idvFields) || null;
+  let passJpeg = "";
+  let selfJpeg = "";
+  let mrz = null;
+  let confirmMismatch = false;
   view().innerHTML = `
   <section class="section verify-page">
     <a class="detail-back" href="#/account" data-nav>← ${esc(t("account"))}</a>
     <h1>${esc(t("verifyTitle"))}</h1>
-    <p class="ob-sub" style="margin:0 0 22px;text-align:left">${esc(t("verifySub"))}</p>
-    ${st === "verified" ? `<p class="idv-badge ok">✓ ${esc(t("verifyOk"))}</p>` : ""}
+    <p class="ob-sub" style="margin:0 0 18px;text-align:left">${esc(t("verifySub"))}</p>
+    ${st === "verified" ? `<p class="idv-badge ok">✓ ${esc(t("verifyOk"))}</p>${mrzRowsHTML(savedFields)}` : ""}
     <p class="stepper-hint">${esc(t("verifyHint"))}</p>
+    <div class="mrz-cam-wrap" id="mrz-cam-wrap" hidden>
+      <video id="mrz-video" playsinline muted autoplay></video>
+      <div class="mrz-guide" aria-hidden="true"><span>${esc(t("verifyMrzGuide"))}</span></div>
+    </div>
+    <p class="mrz-status" id="mrz-status" hidden></p>
+    <div id="mrz-fields"></div>
     <div class="idv-grid">
       <label class="idv-slot">
         <span>${esc(t("verifyPassport"))}</span>
@@ -3284,56 +3324,176 @@ async function renderVerify() {
         <em>${esc(t("pickPhoto"))}</em>
       </label>
     </div>
+    <p class="idv-actions">
+      <button type="button" class="btn btn-ghost" id="idv-cam">${esc(t("verifyCam"))}</button>
+      <button type="button" class="btn btn-ghost hidden" id="idv-snap">${esc(t("verifySnap"))}</button>
+    </p>
     <p class="price-disclaimer">${esc(t("verifyStored"))}</p>
     <div class="field-error hidden" id="idv-err" role="alert"></div>
+    <label class="chk-row hidden" id="idv-confirm-row">
+      <input type="checkbox" id="idv-confirm"> ${esc(t("verifyConfirmName"))}
+    </label>
     <button class="btn btn-gold" id="idv-go" style="width:100%;margin-top:12px">${esc(t("verifyCta"))}</button>
   </section>`;
-  const bindPrev = (inputId, imgId) => {
-    $(inputId)?.addEventListener("change", async (e) => {
-      const f = e.target.files && e.target.files[0];
-      if (!f) return;
-      try {
-        const data = await fileToJpeg(f);
-        const img = $(imgId);
-        img.src = data;
-        img.hidden = false;
-        img.dataset.data = data;
-      } catch {
-        showToast("Kunde inte läsa bilden.");
-      }
-    });
-  };
-  bindPrev("#idv-pass", "#idv-pass-prev");
-  bindPrev("#idv-self", "#idv-self-prev");
-  $("#idv-go")?.addEventListener("click", async () => {
-    const pass = $("#idv-pass-prev")?.dataset.data;
-    const self = $("#idv-self-prev")?.dataset.data;
+
+  const setErr = (msg) => {
     const err = $("#idv-err");
-    if (!pass || !self) {
-      err.textContent = t("verifyHint");
-      err.classList.remove("hidden");
+    if (!err) return;
+    if (!msg) { err.classList.add("hidden"); err.textContent = ""; return; }
+    err.textContent = msg;
+    err.classList.remove("hidden");
+  };
+  const setStatus = (msg, show) => {
+    const el = $("#mrz-status");
+    if (!el) return;
+    el.textContent = msg || "";
+    el.hidden = !show;
+  };
+  const showMrz = (rec) => {
+    mrz = rec;
+    const fields = rec && rec.fields ? mrzPublic(rec.fields) : null;
+    const box = $("#mrz-fields");
+    if (box) box.innerHTML = rec && rec.checksumsOk ? mrzRowsHTML(fields) : "";
+    const row = $("#idv-confirm-row");
+    if (row && rec && rec.fields) {
+      const nm = nameMatch(rec.fields.firstName, rec.fields.lastName, u.name || displayName(u));
+      row.classList.toggle("hidden", nm.ok);
+    }
+  };
+  const readShot = async (data) => {
+    passJpeg = data;
+    const img = $("#idv-pass-prev");
+    if (img) { img.src = data; img.hidden = false; img.dataset.data = data; }
+    setStatus(t("verifyReading"), true);
+    setErr("");
+    try {
+      const rec = await readPassportMrz(data);
+      if (rec && rec.expired) {
+        setStatus("", false);
+        setErr(t("verifyExpired"));
+        showMrz(rec);
+        return;
+      }
+      if (!rec || !rec.checksumsOk) {
+        setStatus("", false);
+        setErr(t("verifyReadFail"));
+        showMrz(null);
+        return;
+      }
+      setStatus("", false);
+      showMrz(rec);
+    } catch {
+      setStatus("", false);
+      setErr(t("verifyReadFail"));
+    }
+  };
+
+  $("#idv-pass")?.addEventListener("change", async (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    try { await readShot(await jpegFromFile(f, 2000, 0.9)); }
+    catch { setErr(t("verifyReadFail")); }
+  });
+  $("#idv-self")?.addEventListener("change", async (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    try {
+      selfJpeg = await jpegFromFile(f, 1400, 0.84);
+      const img = $("#idv-self-prev");
+      if (img) { img.src = selfJpeg; img.hidden = false; }
+    } catch { setErr(t("verifyReadFail")); }
+  });
+  const camBtn = $("#idv-cam");
+  if (camBtn) {
+    camBtn.onclick = async () => {
+      if (camBtn.dataset.open === "1") {
+        stopCamera();
+        const wrap = $("#mrz-cam-wrap");
+        if (wrap) wrap.hidden = true;
+        $("#idv-snap")?.classList.add("hidden");
+        camBtn.dataset.open = "";
+        camBtn.textContent = t("verifyCam");
+        return;
+      }
+      const wrap = $("#mrz-cam-wrap");
+      const video = $("#mrz-video");
+      try {
+        await startCamera(video, "environment");
+        if (wrap) wrap.hidden = false;
+        $("#idv-snap")?.classList.remove("hidden");
+        camBtn.dataset.open = "1";
+        camBtn.textContent = t("verifyCamStop");
+      } catch {
+        stopCamera();
+        setErr(t("verifyCamFail"));
+      }
+    };
+  }
+  $("#idv-snap")?.addEventListener("click", async () => {
+    const video = $("#mrz-video");
+    if (!video || !video.videoWidth) return;
+    const data = snapshotVideo(video, 2000, 0.9);
+    stopCamera();
+    const wrap = $("#mrz-cam-wrap");
+    if (wrap) wrap.hidden = true;
+    $("#idv-snap")?.classList.add("hidden");
+    if (camBtn) { camBtn.dataset.open = ""; camBtn.textContent = t("verifyCam"); }
+    await readShot(data);
+  });
+  $("#idv-confirm")?.addEventListener("change", (e) => {
+    confirmMismatch = !!e.target.checked;
+  });
+  $("#idv-go")?.addEventListener("click", async () => {
+    const errNeed = !passJpeg || !selfJpeg || !mrz || !mrz.checksumsOk;
+    if (errNeed) {
+      setErr(!mrz || !mrz.checksumsOk ? t("verifyNeedMrz") : t("verifyHint"));
       return;
     }
+    if (mrz.expired) { setErr(t("verifyExpired")); return; }
     const btn = $("#idv-go");
     btn.disabled = true;
     btn.textContent = "…";
     const r = await apiJSON("/idv", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: u.id, name: u.name || displayName(u), passport: pass, selfie: self }),
+      body: JSON.stringify({
+        userId: u.id,
+        name: u.name || displayName(u),
+        passport: passJpeg,
+        selfie: selfJpeg,
+        mrz: { line1: mrz.line1, line2: mrz.line2 },
+        confirmMismatch,
+      }),
     });
     if (r?.idv?.status === "verified") {
       const next = (() => { try { const n = sessionStorage.getItem("velvet_after_idv") || ""; sessionStorage.removeItem("velvet_after_idv"); return n; } catch { return ""; } })();
-      saveUser({ ...loadUser(), name: loadUser()?.name || displayName(u), idvStatus: "verified", idvSubmitted: r.idv.submitted });
+      saveUser({
+        ...loadUser(),
+        legalName: r.idv.legalName || "",
+        idvStatus: "verified",
+        idvSubmitted: r.idv.submitted,
+        idvFields: r.idv.fields || null,
+      });
       showToast(t("verifyOk"));
       if (next) { location.hash = next; return; }
       renderVerify();
       return;
     }
-    // Local fallback if API is down: mark pending only — never store passport in localStorage.
+    if (r?.error === "name_mismatch" || r?.idv?.status === "mismatch") {
+      $("#idv-confirm-row")?.classList.remove("hidden");
+      setErr(t("verifyMismatch").replace("{name}", r?.idv?.legalName || ""));
+      btn.disabled = false;
+      btn.textContent = t("verifyCta");
+      return;
+    }
+    if (r?.error === "mrz_expired") {
+      setErr(t("verifyExpired"));
+      btn.disabled = false;
+      btn.textContent = t("verifyCta");
+      return;
+    }
     saveUser({ ...loadUser(), idvStatus: "pending" });
-    err.textContent = t("verifyPending");
-    err.classList.remove("hidden");
+    setErr(r?.error === "mrz_unreadable" ? t("verifyReadFail") : t("verifyPending"));
     btn.disabled = false;
     btn.textContent = t("verifyCta");
   });
@@ -3894,6 +4054,7 @@ function route() {
   // Riv aktiva Leaflet-kartor innan vyn skrivs över — annars läcker lyssnare
   destroyMaps();
   stopChatPoll();
+  if ((location.hash || "").split("?")[0] !== "#/verify") stopCamera();
   const raw = location.hash || "#/";
   const h = raw.split("?")[0];
   let fn = routes[h];

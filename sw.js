@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-20";
+const VERSION = "v4-real-21";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -23,6 +23,8 @@ const SHELL_ASSETS = [
   "./css/app.css",
   "./js/app.js",
   "./js/i18n.js",
+  "./js/mrz.js",
+  "./js/passport-ocr.js",
   "./fonts/inter-latin.woff2",
   "./fonts/playfair-display-latin.woff2",
   "./data/destinations.json",
@@ -45,6 +47,8 @@ function isRuntimeCdn(hostname) {
     hostname.endsWith(".gstatic.com") ||
     hostname === "unpkg.com" ||
     hostname.endsWith(".unpkg.com") ||
+    hostname === "cdn.jsdelivr.net" ||
+    hostname.endsWith(".jsdelivr.net") ||
     hostname === "basemaps.cartocdn.com" ||
     hostname.endsWith(".basemaps.cartocdn.com") ||
     hostname === "cartocdn.com" ||
