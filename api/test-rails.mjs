@@ -190,6 +190,10 @@ async function runApi() {
     if (sepa.status !== 409) fail("pay-intent-no-iban", "expected 409 got " + sepa.status + " " + JSON.stringify(sepa.json));
     else ok("pay-intent-no-iban", String(sepa.json.error || sepa.json.message || 409));
 
+    const auth = await req(base, "GET", "/auth/start/instagram");
+    if (auth.status !== 200 || !(auth.json.local === true || auth.json.url)) fail("auth-start", JSON.stringify(auth));
+    else ok("auth-start", auth.json.local ? "one-tap local" : "oauth url");
+
     return { cfg: cfg.json, table: paySelf.json.table };
   } finally {
     child.kill("SIGTERM");

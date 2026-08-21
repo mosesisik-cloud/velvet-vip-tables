@@ -256,9 +256,15 @@ const SOCIALS = [
 function loadUser() {
   try {
     const u = JSON.parse(localStorage.getItem(USER_KEY));
-    if (u && u.name && u.provider) return u;
+    if (u && u.provider && u.id) return u;
   } catch {}
   return null;
+}
+function displayName(u) {
+  if (!u) return "";
+  if (u.name) return u.name;
+  const s = SOCIALS.find((x) => x.id === u.provider);
+  return s ? s.label : (u.provider || "");
 }
 function saveUser(u) {
   try { localStorage.setItem(USER_KEY, JSON.stringify(u)); } catch {}
@@ -276,11 +282,33 @@ function socialUrl(provider, handle) {
   return "";
 }
 function registerUser(u) {
-  if (!u?.id || !u.name || !u.provider || !u.handle) return;
+  if (!u?.id || !u.provider) return;
   apiJSON("/users", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id: u.id, name: u.name, handle: u.handle, provider: u.provider }),
+    body: JSON.stringify({ id: u.id, name: u.name || "", handle: u.handle || "", provider: u.provider }),
+  });
+}
+async function loginWithSocial(provider) {
+  if (!SOCIALS.some((s) => s.id === provider)) return;
+  const start = await apiJSON(`/auth/start/${encodeURIComponent(provider)}`);
+  if (start?.url) {
+    location.href = start.url;
+    return;
+  }
+  let sid = "";
+  try { sid = localStorage.getItem("velvet_sid_" + provider) || ""; } catch {}
+  if (!sid) {
+    sid = (globalThis.crypto?.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random())).replace(/-/g, "").slice(0, 12);
+    try { localStorage.setItem("velvet_sid_" + provider, sid); } catch {}
+  }
+  saveUser({
+    id: `U-${provider}-${sid}`,
+    provider,
+    name: "",
+    handle: "",
+    auto: true,
+    created: new Date().toISOString(),
   });
 }
 function logoutUser() {
@@ -296,8 +324,9 @@ function paintUser() {
   const u = loadUser();
   const lab = document.getElementById("nav-user-label");
   const btn = document.getElementById("nav-user");
-  if (lab) lab.textContent = u ? (u.name.slice(0, 1).toUpperCase()) : "In";
-  if (btn) btn.title = u ? `${t("loggedInAs")} ${u.name}` : t("loginTitle");
+  const label = displayName(u);
+  if (lab) lab.textContent = u ? (label.slice(0, 1).toUpperCase() || "•") : "In";
+  if (btn) btn.title = u ? `${t("loggedInAs")} ${label}` : t("loginTitle");
 }
 function apiBase() {
   if (location.hostname === "b2b.bakemyday.se") return `${location.origin}/velvet-api`;
@@ -453,12 +482,13 @@ function personRowHTML(p, { me, hostId, tableId } = {}) {
     ? `data-pay="${esc(p.id)}"`
     : `data-pay-name="${esc(p.name)}"`;
   const handle = p.handle ? `@${p.handle}` : "";
+  const shown = p.name || displayName({ provider: p.provider, name: p.name });
   const nameInner = p.id
-    ? `<a href="#/user/${encodeURIComponent(p.id)}" data-nav>${esc(p.name)}</a>`
-    : esc(p.name);
+    ? `<a href="#/user/${encodeURIComponent(p.id)}" data-nav>${esc(shown)}</a>`
+    : esc(shown);
   return `
   <div class="person-row">
-    <div class="person-avatar soc-${esc(p.provider || "none")}" aria-hidden="true">${esc((p.name || "?").slice(0, 1).toUpperCase())}</div>
+    <div class="person-avatar soc-${esc(p.provider || "none")}" aria-hidden="true">${esc((p.name || p.provider || "?").slice(0, 1).toUpperCase())}</div>
     <div class="person-info">
       <div class="person-name">${nameInner}${p.role === "host" ? ` <span class="chip-mini">${esc(t("hostRole"))}</span>` : p.role === "invite" ? ` <span class="chip-mini">${esc(t("inviteRole"))}</span>` : ""}</div>
       <div class="person-meta">
@@ -2356,28 +2386,12 @@ function openOnboarding(opts = {}) {
           </div>` : `
           <h1 class="ob-title">${esc(t("loginTitle"))}</h1>
           <p class="ob-sub">${esc(t("loginSub"))}</p>
-          ${!authProvider ? `
           <div class="social-grid">
             ${SOCIALS.map((s) => `
               <button type="button" class="social-btn" data-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}">${esc(t("loginWith"))} ${esc(s.label)}</button>`).join("")}
           </div>
-          <div class="ob-actions"><button class="btn btn-ghost" id="ob-skip-auth">${esc(t("skipLogin"))}</button></div>` : `
-          <p class="ob-step">${esc(t("loginWith"))} ${esc(SOCIALS.find((s) => s.id === authProvider)?.label || "")}</p>
-          <div class="form-group" style="text-align:left">
-            <label>${esc(t("yourName"))}</label>
-            <input type="text" id="auth-name" autocomplete="name">
-          </div>
-          <div class="form-group" style="text-align:left">
-            <label>${esc(t("yourHandle"))} @</label>
-            <input type="text" id="auth-handle" autocomplete="username">
-          </div>
-          <div class="form-group" style="text-align:left">
-            <label>${esc(t("yourEmail"))}</label>
-            <input type="email" id="auth-email" autocomplete="email">
-          </div>
-          <div class="field-error hidden" id="err-auth" role="alert"></div>
-          <button class="btn btn-gold" id="auth-go" style="width:100%">${esc(t("loginCta"))}</button>
-          <div class="ob-actions"><button class="btn btn-ghost" id="ob-back-soc">←</button></div>`}
+          <p class="stepper-hint">${esc(t("loginAuto"))}</p>
+          <div class="ob-actions"><button class="btn btn-ghost" id="ob-skip-auth">${esc(t("skipLogin"))}</button></div>
           `}
         </div>
       </div>`;
@@ -2393,30 +2407,15 @@ function openOnboarding(opts = {}) {
         });
       });
       root.querySelectorAll("[data-soc]").forEach((el) => {
-        el.addEventListener("click", () => { authProvider = el.dataset.soc; render(); });
+        el.addEventListener("click", async () => {
+          el.disabled = true;
+          await loginWithSocial(el.dataset.soc);
+          if (loadUser()) { phase = "country"; render(); }
+          else el.disabled = false;
+        });
       });
       const skipA = $("#ob-skip-auth");
       if (skipA) skipA.addEventListener("click", () => { phase = "country"; render(); });
-      const backS = $("#ob-back-soc");
-      if (backS) backS.addEventListener("click", () => { authProvider = null; render(); });
-      const go = $("#auth-go");
-      if (go) go.addEventListener("click", () => {
-        const name = ($("#auth-name")?.value || "").trim();
-        const handle = ($("#auth-handle")?.value || "").trim().replace(/^@/, "");
-        const email = ($("#auth-email")?.value || "").trim();
-        const err = $("#err-auth");
-        if (!name || !handle) {
-          if (err) { err.textContent = t("yourName"); err.classList.remove("hidden"); }
-          return;
-        }
-        saveUser({
-          id: `U-${authProvider}-${handle.toLowerCase()}`,
-          name, handle, email, provider: authProvider,
-          created: new Date().toISOString(),
-        });
-        phase = "country";
-        render();
-      });
       return;
     }
     const countries = countryList();
@@ -2719,6 +2718,18 @@ async function renderPay(tableId) {
     $("#p-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
     return;
   }
+  await refreshIdv();
+  if (!isIdvOk()) {
+    try { sessionStorage.setItem("velvet_after_idv", `#/pay/${tableId}`); } catch {}
+    view().innerHTML = `
+    <section class="section pay-page">
+      <a class="detail-back" href="#/table/${encodeURIComponent(tableId)}" data-nav>← ${esc(t("navOpen"))}</a>
+      <h1>${esc(t("verifyTitle"))}</h1>
+      <p class="ob-sub" style="text-align:left">${esc(t("payNeedPassport"))}</p>
+      <p style="margin-top:20px"><a class="btn btn-gold" href="#/verify" data-nav>${esc(t("verifyCta"))}</a></p>
+    </section>`;
+    return;
+  }
   const tb = await getTable(tableId);
   const cfg = await apiJSON("/pay/config") || { methods: [], ready: false, currency: "EUR" };
   if (!tb) {
@@ -2850,6 +2861,12 @@ async function renderPayout() {
       <label>Revolut Merchant secret<input name="revolutMerchantSecret" type="password" placeholder="${cfg.keys?.revolut ? "•••• set" : ""}" autocomplete="off"></label>
       <label>PayPal client ID<input name="paypalClient" autocomplete="off"></label>
       <label>PayPal secret<input name="paypalSecret" type="password" autocomplete="off"></label>
+      <label>Facebook / Instagram App ID<input name="facebookId" autocomplete="off"></label>
+      <label>Facebook App secret<input name="facebookSecret" type="password" autocomplete="off"></label>
+      <label>TikTok client key<input name="tiktokKey" autocomplete="off"></label>
+      <label>TikTok secret<input name="tiktokSecret" type="password" autocomplete="off"></label>
+      <label>Snapchat client ID<input name="snapchatId" autocomplete="off"></label>
+      <label>Snapchat secret<input name="snapchatSecret" type="password" autocomplete="off"></label>
       <p class="stepper-hint">${esc(t("paySetupKeys"))}</p>
       <div class="field-error hidden" id="pay-setup-err"></div>
       <button class="btn btn-gold" type="submit">${esc(t("saveSettings"))}</button>
@@ -2946,11 +2963,13 @@ async function renderVerify() {
     const r = await apiJSON("/idv", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: u.id, name: u.name, passport: pass, selfie: self }),
+      body: JSON.stringify({ userId: u.id, name: u.name || displayName(u), passport: pass, selfie: self }),
     });
     if (r?.idv?.status === "verified") {
-      saveUser({ ...loadUser(), idvStatus: "verified", idvSubmitted: r.idv.submitted });
+      const next = (() => { try { const n = sessionStorage.getItem("velvet_after_idv") || ""; sessionStorage.removeItem("velvet_after_idv"); return n; } catch { return ""; } })();
+      saveUser({ ...loadUser(), name: loadUser()?.name || displayName(u), idvStatus: "verified", idvSubmitted: r.idv.submitted });
       showToast(t("verifyOk"));
+      if (next) { location.hash = next; return; }
       renderVerify();
       return;
     }
@@ -3037,9 +3056,9 @@ async function renderAccount() {
     <div class="section-head"><div><h2>${esc(t("account"))}</h2></div></div>
     ${u ? `
       <div class="profile-head" style="margin-bottom:16px">
-        <div class="person-avatar lg soc-${esc(u.provider || "none")}" aria-hidden="true">${esc((u.name || "?").slice(0, 1).toUpperCase())}</div>
+        <div class="person-avatar lg soc-${esc(u.provider || "none")}" aria-hidden="true">${esc((displayName(u) || "?").slice(0, 1).toUpperCase())}</div>
         <div>
-          <p>${esc(t("loggedInAs"))} <b>${esc(u.name)}</b></p>
+          <p>${esc(t("loggedInAs"))} <b>${esc(displayName(u))}</b></p>
           <p class="person-meta">
             <span class="soc-pill">${esc(u.provider)}</span>
             ${u.handle ? (socialUrl(u.provider, u.handle)
@@ -3638,6 +3657,12 @@ async function init() {
   VENUES = v;
   const existing = loadUser();
   if (existing) registerUser(existing);
+  const authTok = new URLSearchParams(location.search).get("auth");
+  if (authTok) {
+    const sess = await apiJSON("/auth/session?token=" + encodeURIComponent(authTok));
+    if (sess?.user) saveUser({ ...sess.user, created: sess.user.created || new Date().toISOString() });
+    history.replaceState(null, "", location.pathname + (location.hash || "#/"));
+  }
   const sid = new URLSearchParams(location.search).get("session_id");
   if (sid && (!location.hash || location.hash === "#/" || location.hash === "#")) {
     location.hash = "#/pay-return";

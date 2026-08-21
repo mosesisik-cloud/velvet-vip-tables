@@ -24,9 +24,10 @@ function load() {
       promoters: raw.promoters && typeof raw.promoters === "object" ? raw.promoters : {},
       users: raw.users && typeof raw.users === "object" ? raw.users : {},
       payments: Array.isArray(raw.payments) ? raw.payments : [],
+      auth: raw.auth && typeof raw.auth === "object" ? raw.auth : {},
     };
   } catch {}
-  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, users: {}, payments: [] };
+  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, users: {}, payments: [], auth: {} };
 }
 function isPromoter(user, venueId, db) {
   const uid = user?.id || "";
@@ -103,7 +104,7 @@ function socialUrl(provider, handle) {
   return "";
 }
 function upsertUser(db, u) {
-  if (!u || !u.id || !u.name) return;
+  if (!u || !u.id) return;
   const provider = String(u.provider || "");
   const handle = String(u.handle || "").replace(/^@/, "").slice(0, 40);
   const prev = db.users[u.id] || {};
@@ -207,6 +208,12 @@ function emptyPay() {
     revolut: { iban: "", bic: "", name: "", me: "", merchantSecret: "", sandbox: false },
     stripe: { secret: "", pub: "", webhook: "" },
     paypal: { client: "", secret: "", sandbox: false },
+    oauth: {
+      facebook: { id: "", secret: "" },
+      instagram: { id: "", secret: "" },
+      tiktok: { key: "", secret: "" },
+      snapchat: { id: "", secret: "" },
+    },
   };
 }
 function loadPay() {
@@ -218,6 +225,12 @@ function loadPay() {
       revolut: { ...base.revolut, ...(raw.revolut || {}) },
       stripe: { ...base.stripe, ...(raw.stripe || {}) },
       paypal: { ...base.paypal, ...(raw.paypal || {}) },
+      oauth: {
+        facebook: { ...base.oauth.facebook, ...(raw.oauth?.facebook || {}) },
+        instagram: { ...base.oauth.instagram, ...(raw.oauth?.instagram || {}) },
+        tiktok: { ...base.oauth.tiktok, ...(raw.oauth?.tiktok || {}) },
+        snapchat: { ...base.oauth.snapchat, ...(raw.oauth?.snapchat || {}) },
+      },
     };
   } catch {
     return emptyPay();
@@ -275,7 +288,154 @@ function publicPayConfig() {
       paypal: paypalOn,
       iban: bankOn,
     },
+    oauth: oauthFlags(p),
   };
+}
+function oauthFlags(p) {
+  const o = p.oauth || emptyPay().oauth;
+  const fb = !!(o.facebook?.id && o.facebook?.secret);
+  const ig = !!(o.instagram?.id && o.instagram?.secret) || fb;
+  return {
+    facebook: fb,
+    instagram: ig,
+    tiktok: !!(o.tiktok?.key && o.tiktok?.secret),
+    snapchat: !!(o.snapchat?.id && o.snapchat?.secret),
+  };
+}
+function oauthRedirect(provider) {
+  return `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL.replace(/\/velvet\/?$/, "") : "https://b2b.bakemyday.se"}/velvet-api/auth/callback/${provider}`;
+}
+function oauthAuthorizeUrl(provider, state) {
+  const p = loadPay();
+  const flags = oauthFlags(p);
+  if (!flags[provider]) return null;
+  const redir = oauthRedirect(provider);
+  if (provider === "facebook" || (provider === "instagram" && p.oauth.facebook?.id && !p.oauth.instagram?.id)) {
+    const id = p.oauth.facebook.id;
+    const scope = provider === "instagram" ? "public_profile,email,instagram_basic" : "public_profile,email";
+    return `https://www.facebook.com/v21.0/dialog/oauth?client_id=${encodeURIComponent(id)}&redirect_uri=${encodeURIComponent(redir)}&state=${encodeURIComponent(state)}&response_type=code&scope=${encodeURIComponent(scope)}`;
+  }
+  if (provider === "instagram") {
+    const id = p.oauth.instagram.id;
+    return `https://api.instagram.com/oauth/authorize?client_id=${encodeURIComponent(id)}&redirect_uri=${encodeURIComponent(redir)}&scope=user_profile,user_media&response_type=code&state=${encodeURIComponent(state)}`;
+  }
+  if (provider === "tiktok") {
+    return `https://www.tiktok.com/v2/auth/authorize/?client_key=${encodeURIComponent(p.oauth.tiktok.key)}&redirect_uri=${encodeURIComponent(redir)}&response_type=code&scope=user.info.basic&state=${encodeURIComponent(state)}`;
+  }
+  if (provider === "snapchat") {
+    return `https://accounts.snapchat.com/login/oauth2/authorize?client_id=${encodeURIComponent(p.oauth.snapchat.id)}&redirect_uri=${encodeURIComponent(redir)}&response_type=code&scope=https://auth.snapchat.com/oauth2/api/user.display_name&state=${encodeURIComponent(state)}`;
+  }
+  return null;
+}
+async function oauthProfile(provider, code) {
+  const p = loadPay();
+  const redir = oauthRedirect(provider);
+  if (provider === "facebook" || (provider === "instagram" && p.oauth.facebook?.id && !p.oauth.instagram?.id)) {
+    const tok = await fetch(`https://graph.facebook.com/v21.0/oauth/access_token?client_id=${encodeURIComponent(p.oauth.facebook.id)}&redirect_uri=${encodeURIComponent(redir)}&client_secret=${encodeURIComponent(p.oauth.facebook.secret)}&code=${encodeURIComponent(code)}`);
+    const tj = await tok.json();
+    if (!tj.access_token) throw new Error(tj.error?.message || "fb_token");
+    const me = await fetch(`https://graph.facebook.com/me?fields=id,name,email&access_token=${encodeURIComponent(tj.access_token)}`);
+    const u = await me.json();
+    return {
+      id: `U-${provider}-${u.id}`,
+      name: String(u.name || ""),
+      handle: String(u.id || ""),
+      email: String(u.email || ""),
+      provider,
+      oauth: true,
+    };
+  }
+  if (provider === "instagram") {
+    const body = new URLSearchParams({
+      client_id: p.oauth.instagram.id,
+      client_secret: p.oauth.instagram.secret,
+      grant_type: "authorization_code",
+      redirect_uri: redir,
+      code,
+    });
+    const tok = await fetch("https://api.instagram.com/oauth/access_token", { method: "POST", body });
+    const tj = await tok.json();
+    const token = tj.access_token || tj.data?.[0]?.access_token;
+    const iid = tj.user_id || tj.data?.[0]?.user_id;
+    if (!token) throw new Error("ig_token");
+    const me = await fetch(`https://graph.instagram.com/me?fields=id,username,name&access_token=${encodeURIComponent(token)}`);
+    const u = await me.json();
+    return {
+      id: `U-instagram-${u.id || iid}`,
+      name: String(u.name || u.username || ""),
+      handle: String(u.username || u.id || ""),
+      provider: "instagram",
+      oauth: true,
+    };
+  }
+  if (provider === "tiktok") {
+    const tok = await fetch("https://open.tiktokapis.com/v2/oauth/token/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_key: p.oauth.tiktok.key,
+        client_secret: p.oauth.tiktok.secret,
+        code,
+        grant_type: "authorization_code",
+        redirect_uri: redir,
+      }),
+    });
+    const tj = await tok.json();
+    const access = tj.access_token || tj.data?.access_token;
+    if (!access) throw new Error("tt_token");
+    const me = await fetch("https://open.tiktokapis.com/v2/user/info/?fields=open_id,display_name,username,avatar_url", {
+      headers: { Authorization: "Bearer " + access },
+    });
+    const u = (await me.json()).data?.user || {};
+    return {
+      id: `U-tiktok-${u.open_id || crypto.randomBytes(6).toString("hex")}`,
+      name: String(u.display_name || ""),
+      handle: String(u.username || ""),
+      provider: "tiktok",
+      oauth: true,
+    };
+  }
+  if (provider === "snapchat") {
+    const tok = await fetch("https://accounts.snapchat.com/login/oauth2/access_token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        client_id: p.oauth.snapchat.id,
+        client_secret: p.oauth.snapchat.secret,
+        code,
+        grant_type: "authorization_code",
+        redirect_uri: redir,
+      }),
+    });
+    const tj = await tok.json();
+    if (!tj.access_token) throw new Error("snap_token");
+    const me = await fetch("https://kit.snapchat.com/v1/me", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + tj.access_token, "Content-Type": "application/json" },
+      body: JSON.stringify({ query: "{ me { displayName bitmoji { avatar } externalId } }" }),
+    });
+    const u = (await me.json()).data?.me || {};
+    return {
+      id: `U-snapchat-${u.externalId || crypto.randomBytes(6).toString("hex")}`,
+      name: String(u.displayName || ""),
+      handle: String(u.externalId || ""),
+      provider: "snapchat",
+      oauth: true,
+    };
+  }
+  throw new Error("provider");
+}
+function mintAuthToken(user) {
+  const db = load();
+  if (!db.auth) db.auth = {};
+  const token = crypto.randomBytes(24).toString("hex");
+  db.auth[token] = { user, exp: Date.now() + 15 * 60 * 1000 };
+  const keys = Object.keys(db.auth);
+  if (keys.length > 80) {
+    for (const k of keys) if (db.auth[k].exp < Date.now()) delete db.auth[k];
+  }
+  save(db);
+  return token;
 }
 function applyIncomingPayment(db, { tableId, userId, amount, currency, method, provider, providerId }) {
   const t = db.tables.find((x) => x.id === tableId);
@@ -412,6 +572,54 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && url.pathname === "/pay/config") {
       return send(res, 200, publicPayConfig());
     }
+    const authStart = url.pathname.match(/^\/auth\/start\/(facebook|instagram|tiktok|snapchat)$/);
+    if (req.method === "GET" && authStart) {
+      const provider = authStart[1];
+      const state = crypto.randomBytes(12).toString("hex");
+      const db = load();
+      if (!db.auth) db.auth = {};
+      db.auth["st:" + state] = { provider, exp: Date.now() + 15 * 60 * 1000 };
+      save(db);
+      const dest = oauthAuthorizeUrl(provider, state);
+      if (!dest) return send(res, 200, { local: true, provider });
+      return send(res, 200, { url: dest, provider });
+    }
+    const authCb = url.pathname.match(/^\/auth\/callback\/(facebook|instagram|tiktok|snapchat)$/);
+    if (req.method === "GET" && authCb) {
+      const provider = authCb[1];
+      const code = url.searchParams.get("code") || "";
+      const state = url.searchParams.get("state") || "";
+      const fail = () => {
+        res.writeHead(302, { Location: `${PUBLIC_APP}/#/account` });
+        res.end();
+      };
+      if (!code) return fail();
+      const db0 = load();
+      const st = db0.auth?.["st:" + state];
+      if (!st || st.exp < Date.now()) return fail();
+      try {
+        const profile = await oauthProfile(provider, code);
+        profile.created = new Date().toISOString();
+        const db = load();
+        upsertUser(db, profile);
+        save(db);
+        const token = mintAuthToken(profile);
+        res.writeHead(302, { Location: `${PUBLIC_APP}/?auth=${encodeURIComponent(token)}#/` });
+        res.end();
+      } catch {
+        fail();
+      }
+      return;
+    }
+    if (req.method === "GET" && url.pathname === "/auth/session") {
+      const token = url.searchParams.get("token") || "";
+      const db = load();
+      const rec = db.auth?.[token];
+      if (!rec || rec.exp < Date.now() || !rec.user) return send(res, 401, { error: "auth" });
+      delete db.auth[token];
+      save(db);
+      return send(res, 200, { user: rec.user });
+    }
     if (req.method === "POST" && url.pathname === "/pay/setup") {
       const b = await readBody(req, 2e5);
       if (!isOperator(b.user)) return send(res, 403, { error: "operator" });
@@ -429,6 +637,15 @@ const server = http.createServer(async (req, res) => {
       if (b.paypalClient) cur.paypal.client = String(b.paypalClient);
       if (b.paypalSecret) cur.paypal.secret = String(b.paypalSecret);
       if (b.paypalSandbox !== undefined) cur.paypal.sandbox = !!b.paypalSandbox;
+      if (!cur.oauth) cur.oauth = emptyPay().oauth;
+      if (b.facebookId) cur.oauth.facebook.id = String(b.facebookId);
+      if (b.facebookSecret) cur.oauth.facebook.secret = String(b.facebookSecret);
+      if (b.instagramId) cur.oauth.instagram.id = String(b.instagramId);
+      if (b.instagramSecret) cur.oauth.instagram.secret = String(b.instagramSecret);
+      if (b.tiktokKey) cur.oauth.tiktok.key = String(b.tiktokKey);
+      if (b.tiktokSecret) cur.oauth.tiktok.secret = String(b.tiktokSecret);
+      if (b.snapchatId) cur.oauth.snapchat.id = String(b.snapchatId);
+      if (b.snapchatSecret) cur.oauth.snapchat.secret = String(b.snapchatSecret);
       savePay(cur);
       return send(res, 200, { ok: true, config: publicPayConfig() });
     }
@@ -594,7 +811,7 @@ const server = http.createServer(async (req, res) => {
 
     if (req.method === "POST" && url.pathname === "/users") {
       const b = await readBody(req, 2e5);
-      if (!b.id || !b.name || !b.provider || !b.handle) return send(res, 400, { error: "missing" });
+      if (!b.id || !b.provider) return send(res, 400, { error: "missing" });
       const db = load();
       upsertUser(db, b);
       save(db);
@@ -695,7 +912,7 @@ const server = http.createServer(async (req, res) => {
       }
       const joiner = {
         id: uid || `U-${Date.now().toString(36)}`,
-        name: String(b.user?.name || "Gäst"),
+        name: String(b.user?.name || b.user?.provider || "Gäst"),
         provider: String(b.user?.provider || ""),
         handle: String(b.user?.handle || "").replace(/^@/, ""),
         paid: false,
