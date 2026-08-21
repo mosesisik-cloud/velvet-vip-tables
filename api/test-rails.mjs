@@ -1,0 +1,210 @@
+#!/usr/bin/env node
+/**
+ * Hits the shipped VELVET API (api/server.mjs) and shipped data files.
+ * No reimplementation of roster/pay logic — HTTP against a child of server.mjs.
+ */
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { spawn } from "node:child_process";
+import { fileURLToPath } from "node:url";
+
+const __dir = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(__dir, "..");
+const SERVER = path.join(__dir, "server.mjs");
+const FAIL = [];
+const LOG = [];
+
+function ok(name, detail) {
+  LOG.push("OK  " + name + (detail ? " — " + detail : ""));
+}
+function fail(name, detail) {
+  FAIL.push(name + ": " + detail);
+  LOG.push("FAIL  " + name + " — " + detail);
+}
+
+function loadJson(rel) {
+  return JSON.parse(fs.readFileSync(path.join(ROOT, rel), "utf8"));
+}
+
+function checkBookingUrls() {
+  const venues = loadJson("data/venues.json");
+  const booking = loadJson("data/booking-urls.json");
+  const missing = [];
+  for (const v of venues) {
+    const rec = booking[v.venue_id];
+    const url = rec?.url || v.website_url || "";
+    if (!/^https:\/\//i.test(url)) missing.push(v.venue_id);
+  }
+  if (missing.length) fail("booking-coverage", "no https url: " + missing.join(","));
+  else ok("booking-coverage", venues.length + " venues");
+
+  const official = {
+    "IBZ-001": ["hiibiza.com", "/vip-tables"],
+    "IBZ-002": ["theushuaiaexperience.com", "/vip-tables"],
+    "IBZ-003": ["unvrs.com", "/vip-tables"],
+    "IBZ-004": ["pacha.com", "/vip-events"],
+  };
+  const reseller = /discotech|clubbookers|ticketsibiza|tasteibiza|nocovernightclubs|lasvegasnightclubs|miamiviptables|clubtickets/i;
+  const lines = [];
+  for (const [id, [host, needle]] of Object.entries(official)) {
+    const url = booking[id]?.url || "";
+    lines.push(id + " " + url);
+    if (!url.toLowerCase().includes(host)) fail("official-" + id, "host " + host + " not in " + url);
+    else if (!url.toLowerCase().includes(needle.replace(/^\//, "").toLowerCase()) && !url.toLowerCase().includes(needle.toLowerCase())) {
+      fail("official-" + id, "path " + needle + " not in " + url);
+    } else if (reseller.test(url)) fail("official-" + id, "reseller " + url);
+    else ok("official-" + id, url);
+  }
+  return { count: venues.length, missing: missing.length, lines };
+}
+
+async function waitBoot(child, ms = 8000) {
+  return new Promise((resolve, reject) => {
+    const t = setTimeout(() => reject(new Error("api boot timeout")), ms);
+    const on = (buf) => {
+      const s = String(buf);
+      if (s.includes("velvet-api")) {
+        clearTimeout(t);
+        child.stdout.off("data", on);
+        child.stderr.off("data", on);
+        resolve();
+      }
+    };
+    child.stdout.on("data", on);
+    child.stderr.on("data", on);
+    child.on("error", (e) => { clearTimeout(t); reject(e); });
+    child.on("exit", (c) => { clearTimeout(t); reject(new Error("api exited " + c)); });
+  });
+}
+
+async function req(base, method, p, body) {
+  const r = await fetch(base + p, {
+    method,
+    headers: body ? { "Content-Type": "application/json" } : {},
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const text = await r.text();
+  let json = null;
+  try { json = JSON.parse(text); } catch { json = { raw: text }; }
+  return { status: r.status, json };
+}
+
+async function runApi() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "velvet-rails-"));
+  const data = path.join(dir, "store.json");
+  const pay = path.join(dir, "pay.json");
+  fs.writeFileSync(data, JSON.stringify({
+    tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, users: {}, payments: [],
+  }));
+  fs.writeFileSync(pay, "{}");
+  const port = 18787;
+  const child = spawn(process.execPath, [SERVER], {
+    env: { ...process.env, PORT: String(port), VELVET_DATA: data, VELVET_PAY: pay },
+    cwd: __dir,
+    stdio: ["ignore", "pipe", "pipe"],
+  });
+  let out = "";
+  child.stdout.on("data", (d) => { out += d; });
+  child.stderr.on("data", (d) => { out += d; });
+  try {
+    await waitBoot(child);
+    ok("api-boot", "port " + port);
+    const base = "http://127.0.0.1:" + port;
+
+    const cfg = await req(base, "GET", "/pay/config");
+    const methods = (cfg.json.methods || []).map((m) => m.id);
+    const need = ["card", "applepay", "googlepay", "revolut", "paypal", "klarna", "sepa", "swift"];
+    const missingM = need.filter((id) => !methods.includes(id));
+    if (cfg.status !== 200) fail("pay-config", "HTTP " + cfg.status);
+    else if (missingM.length) fail("pay-config", "missing methods " + missingM.join(","));
+    else if (String(cfg.json.destination) !== "Revolut") fail("pay-config", "destination " + cfg.json.destination);
+    else if (cfg.json.ready !== false) fail("pay-config", "ready should be false without IBAN/keys, got " + cfg.json.ready);
+    else ok("pay-config", "8 methods, destination Revolut, ready=false");
+
+    const intent = await req(base, "POST", "/pay/intent", {
+      tableId: "nope",
+      user: { id: "U-instagram-a", name: "A" },
+      method: "card",
+    });
+    if (intent.status === 404 || intent.status === 401) ok("pay-intent-auth-table", "HTTP " + intent.status);
+    else fail("pay-intent-auth-table", "expected 404/401 got " + intent.status);
+
+    const host = { id: "U-instagram-gabbe", name: "Gabbe", handle: "gabbe", provider: "instagram" };
+    const guest = { id: "U-tiktok-dan", name: "Dan Grant", handle: "dan.grant", provider: "tiktok" };
+    const created = await req(base, "POST", "/tables", {
+      id: "TB-RAILS",
+      venue_id: "IBZ-001",
+      venue: "Hï Ibiza",
+      destination: "Ibiza",
+      date: "2026-08-29",
+      package: "VIP-bord",
+      total: 4800,
+      party: 6,
+      openSeats: 4,
+      host,
+    });
+    if (created.status !== 201 || created.json.table?.id !== "TB-RAILS") {
+      fail("tables-create", JSON.stringify(created));
+    } else ok("tables-create", created.json.table.id);
+
+    const joined = await req(base, "POST", "/tables/TB-RAILS/join", { user: guest });
+    if (joined.status !== 200 || !joined.json.table) fail("tables-join", JSON.stringify(joined));
+    else ok("tables-join", "openLeft=" + joined.json.table.openLeft);
+
+    const got = await req(base, "GET", "/tables/TB-RAILS");
+    const members = got.json.table?.members || [];
+    const ids = members.map((m) => m.id).sort();
+    if (got.status !== 200) fail("tables-get", "HTTP " + got.status);
+    else if (ids.join() !== [guest.id, host.id].sort().join()) fail("tables-get", "members " + ids.join());
+    else if (members.some((m) => m.paid)) fail("tables-get", "someone already paid");
+    else if (members.some((m) => m.idv === "verified")) fail("tables-get", "idv verified without /idv");
+    else ok("tables-get", members.length + " members unpaid unverified");
+
+    const paySelf = await req(base, "POST", "/tables/TB-RAILS/pay", {
+      user: guest,
+      targetId: guest.id,
+      paid: true,
+    });
+    const after = paySelf.json.table?.members || [];
+    const g = after.find((m) => m.id === guest.id);
+    const h = after.find((m) => m.id === host.id);
+    if (paySelf.status !== 200) fail("tables-pay", "HTTP " + paySelf.status);
+    else if (!g?.paid) fail("tables-pay", "guest not paid");
+    else if (h?.paid) fail("tables-pay", "host should still be unpaid");
+    else ok("tables-pay", "guest paid, host unpaid");
+
+    const sepa = await req(base, "POST", "/pay/intent", {
+      tableId: "TB-RAILS",
+      user: guest,
+      method: "sepa",
+    });
+    if (sepa.status !== 409) fail("pay-intent-no-iban", "expected 409 got " + sepa.status + " " + JSON.stringify(sepa.json));
+    else ok("pay-intent-no-iban", String(sepa.json.error || sepa.json.message || 409));
+
+    return { cfg: cfg.json, table: paySelf.json.table };
+  } finally {
+    child.kill("SIGTERM");
+    try { fs.rmSync(dir, { recursive: true, force: true }); } catch { /* tmp */ }
+  }
+}
+
+const booking = checkBookingUrls();
+const api = await runApi();
+if (FAIL.length) {
+  console.error(LOG.join("\n"));
+  console.error("FAILED " + FAIL.length);
+  process.exit(1);
+}
+console.log(LOG.join("\n"));
+console.log("PASS");
+
+const scratch = process.env.VELVET_SCRATCH;
+if (scratch) {
+  fs.mkdirSync(scratch, { recursive: true });
+  fs.writeFileSync(path.join(scratch, "booking-urls.txt"),
+    "count=" + booking.count + " missing=" + booking.missing + "\n" + booking.lines.join("\n") + "\n");
+  fs.writeFileSync(path.join(scratch, "pay-config.json"), JSON.stringify(api.cfg, null, 2));
+  fs.writeFileSync(path.join(scratch, "table-roster.json"), JSON.stringify(api.table, null, 2));
+  fs.writeFileSync(path.join(scratch, "test-rails.log"), LOG.join("\n") + "\nPASS\n");
+}

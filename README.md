@@ -46,6 +46,7 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 
 ```bash
 npx serve -l 4173 .
+node api/test-rails.mjs
 ```
 
 Öppna `http://localhost:4173`. `file://` fungerar inte (JSON via `fetch`).
