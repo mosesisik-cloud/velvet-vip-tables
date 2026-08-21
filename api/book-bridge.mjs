@@ -25,6 +25,8 @@ function hostOf(url) {
   try { return new URL(url).host.replace(/^www\./, ""); } catch { return ""; }
 }
 
+const RESELLER = /discotech|clubbookers|ticketsibiza|tasteibiza|nocovernightclubs|lasvegasnightclubs|miamiviptables|clubtickets|viator|getyourguide/i;
+
 function engineOf(url) {
   const s = String(url || "").toLowerCase();
   if (/sevenrooms/.test(s)) return "sevenrooms";
@@ -62,10 +64,52 @@ export function officialBooking(venueId) {
   };
 }
 
+export function venueInventory(venueId) {
+  const id = String(venueId || "");
+  const eventsFile = readJson("venue-events.json") || {};
+  const rec = eventsFile.venues && eventsFile.venues[id] ? eventsFile.venues[id] : {};
+  const today = new Date().toISOString().slice(0, 10);
+  const nights = (Array.isArray(rec.events) ? rec.events : [])
+    .filter((e) => e && e.title && (!e.date || String(e.date) >= today))
+    .slice(0, 40)
+    .map((e) => ({
+      title: String(e.title).slice(0, 140),
+      date: e.date || "",
+      note: String(e.note || "").slice(0, 160),
+      url: /^https:\/\//i.test(e.url || "") && !RESELLER.test(e.url) ? e.url : "",
+    }));
+  const facts = loadFactsFile()?.venues?.[id] || {};
+  return {
+    nights,
+    source: String(rec.source || ""),
+    fetched: String(eventsFile.fetched || rec.fetched || "").slice(0, 10),
+    vipHow: String(facts.vipHow || "").slice(0, 280),
+    hours: String(facts.hours || "").slice(0, 160),
+    dressCode: String(facts.dressCode || "").slice(0, 120),
+    ageLimit: String(facts.ageLimit || "").slice(0, 40),
+    season: String(facts.season || "").slice(0, 80),
+    email: String(facts.email || "").trim(),
+    phone: String(facts.phone || "").trim(),
+  };
+}
+
+export function officialEventUrl(officialUrl, eventUrl) {
+  const ev = String(eventUrl || "").trim();
+  if (!/^https:\/\//i.test(ev) || RESELLER.test(ev)) return "";
+  try {
+    const a = new URL(officialUrl).hostname.replace(/^www\./i, "").toLowerCase();
+    const b = new URL(ev).hostname.replace(/^www\./i, "").toLowerCase();
+    if (a === b) return ev;
+    const root = (h) => h.split(".").slice(-2).join(".");
+    if (root(a) && root(a) === root(b) && root(a).length > 4) return ev;
+  } catch { /* ignore */ }
+  return "";
+}
+
 export function bookingAdapter(venueId) {
   const off = officialBooking(venueId);
   if (!off) return null;
-  const facts = loadFactsFile()?.venues?.[venueId] || {};
+  const inv = venueInventory(venueId);
   const engine = engineOf(off.url);
   return {
     venueId: off.venueId,
@@ -78,9 +122,14 @@ export function bookingAdapter(venueId) {
     engine,
     mode: "handoff",
     writesToClub: false,
-    clubEmail: String(facts.email || "").trim(),
-    clubPhone: String(facts.phone || "").trim(),
-    vipHow: String(facts.vipHow || "").slice(0, 240),
+    clubEmail: inv.email,
+    clubPhone: inv.phone,
+    vipHow: inv.vipHow,
+    hours: inv.hours,
+    dressCode: inv.dressCode,
+    ageLimit: inv.ageLimit,
+    season: inv.season,
+    inventory: inv,
     fields: ["date", "party", "legalName", "nationality", "documentMasked", "cardLast4", "email", "phone", "note"],
   };
 }
@@ -101,6 +150,7 @@ export function packetText(bridge) {
     `Officiell bokning: ${bridge.officialUrl || ""}`,
     `Datum: ${bridge.date || ""}`,
     `Sällskap: ${bridge.party || ""}`,
+    bridge.eventTitle ? `Kväll på klubbens sajt: ${bridge.eventTitle}` : "",
     bridge.package ? `Paket: ${bridge.package}` : "",
     g.legalName ? `Namn (pass): ${g.legalName}` : "",
     g.nationality ? `Nationalitet: ${g.nationality}` : "",
@@ -134,6 +184,8 @@ export function publicBridge(rec) {
     party: rec.party,
     package: rec.package || "",
     note: rec.note || "",
+    eventTitle: rec.eventTitle || "",
+    eventUrl: rec.eventUrl || "",
     status: rec.status || "handed_off",
     created: rec.created,
     clubEmail: rec.clubEmail || "",

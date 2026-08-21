@@ -7,7 +7,7 @@ import { loadEventsFile, loadCrawlStatus, runCrawl, getCrawlState, scheduleDaily
 import { loadPlacesFile, runPlacesLookup } from "./google-places.mjs";
 import { loadFactsFile, runFactsCrawl } from "./venue-facts.mjs";
 import { parseTd3, extractMrzFromText, nameMatch, publicFields, legalName, ageYears } from "./mrz.mjs";
-import { bookingAdapter, handoffUrl, packetText, publicBridge } from "./book-bridge.mjs";
+import { bookingAdapter, handoffUrl, packetText, publicBridge, officialEventUrl } from "./book-bridge.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
@@ -1921,6 +1921,8 @@ const server = http.createServer(async (req, res) => {
       const date = String(b.date || "");
       if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return send(res, 400, { error: "date" });
       const party = Math.max(1, Math.min(20, Number(b.party) || 2));
+      const eventTitle = String(b.eventTitle || "").trim().slice(0, 140);
+      const eventUrl = officialEventUrl(adapter.officialUrl, b.eventUrl);
       upsertUser(db, b.user);
       const d = dossier(uid, db) || {};
       const guest = {
@@ -1940,8 +1942,10 @@ const server = http.createServer(async (req, res) => {
         venueId,
         venue: adapter.name,
         destination: adapter.destination,
-        officialUrl: adapter.officialUrl,
-        handoffUrl: handoffUrl(adapter.officialUrl, id),
+        officialUrl: eventUrl || adapter.officialUrl,
+        handoffUrl: handoffUrl(eventUrl || adapter.officialUrl, id),
+        eventTitle,
+        eventUrl,
         host: adapter.host,
         kind: adapter.kind,
         engine: adapter.engine,

@@ -2086,6 +2086,15 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
   background: var(--bg-elev); color: var(--text); font-size: 15px;
 }
+.bridge-nights { display: flex; flex-direction: column; gap: 6px; margin: 14px 0; max-width: 520px; }
+.bridge-night {
+  display: grid; grid-template-columns: 72px 1fr; gap: 10px; align-items: center;
+  text-align: left; padding: 10px 12px; border-radius: 12px;
+  border: 1px solid var(--border); background: var(--bg-card); color: var(--text);
+  font-size: 13px; cursor: pointer;
+}
+.bridge-night.on, .bridge-night:hover { border-color: var(--gold); background: var(--gold-dim); }
+.event-book { display: inline-block; margin-top: 4px; font-size: 12px; font-weight: 650; color: var(--gold); }
 .bridge-packet { margin: 16px 0; max-width: 520px; }
 .bridge-pre {
   white-space: pre-wrap; word-break: break-word;

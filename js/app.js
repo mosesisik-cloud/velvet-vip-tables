@@ -1837,6 +1837,7 @@ function eventsSectionHTML(v) {
       <span class="event-body">
         <span class="event-title">${e.url ? `<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.title)} ↗</a>` : esc(e.title)}</span>
         ${e.note ? `<span class="event-note">${esc(e.note)}</span>` : ""}
+        ${e.date ? `<a class="event-book" href="#/book-site/${encodeURIComponent(v.venue_id)}?date=${encodeURIComponent(e.date)}&night=${encodeURIComponent(e.title)}" data-nav>${esc(t("bridgePickNight"))}</a>` : ""}
       </span>
     </li>`).join("");
   const src = rec.source ? ` · <a href="${esc(rec.source)}" target="_blank" rel="noopener">källa ↗</a>` : "";
@@ -4962,6 +4963,17 @@ async function renderBookSite(id) {
   const needCard = live?.error === "card_required" || (me && isIdvOk() && !isCardOk());
   setTitle(`${t("bridgeTitle")} · ${v.name}`);
   const mine = live?.bridges || [];
+  const nights = (adapter.inventory && Array.isArray(adapter.inventory.nights) ? adapter.inventory.nights : eventsFor(v)).slice(0, 24);
+  const q = new URLSearchParams((location.hash.split("?")[1] || ""));
+  const preDate = /^\d{4}-\d{2}-\d{2}$/.test(q.get("date") || "") ? q.get("date") : (nights.find((n) => n.date)?.date || todayISO());
+  const preNight = q.get("night") || "";
+  if (apiBase()) {
+    apiJSON("/events/refresh", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: me, venueId: v.venue_id }),
+    }).catch(() => {});
+  }
   view().innerHTML = `
   <section class="section book-site">
     <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
@@ -4971,18 +4983,28 @@ async function renderBookSite(id) {
         <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)} · ${esc(adapter.host || b.host)}</p>
         <h1>${esc(t("bridgeTitle"))}</h1>
         <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(t("bridgeSub"))}</p>
+        ${adapter.vipHow ? `<p class="events-meta">${esc(t("bridgeReadLive"))}: ${esc(adapter.vipHow)}</p>` : `<p class="events-meta">${esc(t("bridgeReadLive"))}</p>`}
+        ${nights.length ? `
+        <div class="bridge-nights" id="bridge-nights">
+          <h2 class="detail-panel-title">${esc(t("bridgeFromSite"))}</h2>
+          ${nights.map((n) => `
+            <button type="button" class="bridge-night${preNight && n.title === preNight ? " on" : ""}" data-date="${esc(n.date || "")}" data-title="${esc(n.title)}" data-url="${esc(n.url || "")}">
+              <span class="event-when">${esc(n.date ? eventWhen(n) : "—")}</span>
+              <span>${esc(n.title)}${n.note ? ` · ${esc(n.note)}` : ""}</span>
+            </button>`).join("")}
+        </div>` : `<p class="events-meta">${esc(t("bridgeNoNights"))}</p>`}
         ${needLock ? `
           <div style="margin-top:16px">${promoterLockHTML(needCard ? "card" : "idv")}</div>
           <p class="detail-cta-note">${esc(t("bridgeNeed"))}</p>` : `
         <div class="bridge-desk" id="bridge-desk">
           <label>${esc(t("bridgeDate"))}
-            <input type="date" id="br-date" min="${todayISO()}" value="${todayISO()}">
+            <input type="date" id="br-date" min="${todayISO()}" value="${esc(preDate)}">
           </label>
           <label>${esc(t("bridgeParty"))}
             <input type="number" id="br-party" min="1" max="20" value="4" inputmode="numeric">
           </label>
           <label>${esc(t("matchNote"))}
-            <input type="text" id="br-note" maxlength="240" placeholder="${esc(t("bridgeNotePh"))}" autocomplete="off">
+            <input type="text" id="br-note" maxlength="240" placeholder="${esc(t("bridgeNotePh"))}" value="${esc(preNight)}" autocomplete="off">
           </label>
           <button type="button" class="btn btn-gold" id="br-make" style="width:100%">${esc(t("bridgeCta"))}</button>
         </div>
@@ -5031,6 +5053,22 @@ async function renderBookSite(id) {
     });
   };
   if (!needLock && mine[0]) paintPacket(mine[0]);
+  let pickedUrl = "";
+  let pickedTitle = preNight;
+  document.querySelectorAll(".bridge-night").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".bridge-night").forEach((x) => x.classList.remove("on"));
+      btn.classList.add("on");
+      if (btn.dataset.date && $("#br-date")) $("#br-date").value = btn.dataset.date;
+      if ($("#br-note")) $("#br-note").value = btn.dataset.title || "";
+      pickedUrl = btn.dataset.url || "";
+      pickedTitle = btn.dataset.title || "";
+    });
+  });
+  if (preNight) {
+    const hit = [...document.querySelectorAll(".bridge-night")].find((x) => x.dataset.title === preNight);
+    if (hit) { pickedUrl = hit.dataset.url || ""; pickedTitle = hit.dataset.title || ""; }
+  }
   $("#br-make")?.addEventListener("click", async () => {
     const btn = $("#br-make");
     if (btn) btn.disabled = true;
@@ -5044,6 +5082,8 @@ async function renderBookSite(id) {
         party: Number($("#br-party")?.value || 4),
         note: ($("#br-note")?.value || "").trim(),
         package: adapter.label || "",
+        eventTitle: pickedTitle || ($("#br-note")?.value || "").trim(),
+        eventUrl: pickedUrl,
       }),
     });
     if (btn) btn.disabled = false;

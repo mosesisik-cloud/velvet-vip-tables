@@ -17,7 +17,7 @@ const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const UA = "VELVET-daily-events/1.0 (+https://b2b.bakemyday.se/velvet/)";
 const RESELLER = /discotech|clubbookers|ticketsibiza|tasteibiza|nocovernightclubs|lasvegasnightclubs|miamiviptables|clubtickets|viator|getyourguide/i;
 const SKIP_TITLE = /^(home|meny|menu|book now|book a table|vip tables?|contact|kontakt|privacy|cookies?|instagram|facebook|tiktok|newsletter|sign up|log in|follow us)$/i;
-const MAX_FIRECRAWL = Number(process.env.VELVET_FIRECRAWL_MAX || 20);
+const MAX_FIRECRAWL = Number(process.env.VELVET_FIRECRAWL_MAX || 48);
 const FC_URL = "https://api.firecrawl.dev/v2/scrape";
 
 const EVENT_SCHEMA = {
@@ -474,15 +474,24 @@ export async function runCrawl(opts = {}) {
     const hasFc = true; // keyless Firecrawl is allowed; 401 falls back per venue
     saveStatus({ lastRun: started, running: true, reason: opts.reason || "manual", firecrawl: !!firecrawlKey() || hasFc });
 
+    const dests = readJson(path.join(APP_DATA, "destinations.json"), []);
+    const t1 = new Set((Array.isArray(dests) ? dests : []).filter((d) => d.tier === "Tier 1").map((d) => d.code));
     const vip = [];
     const rest = [];
     for (const v of list) {
       const tgt = targetUrl(v, booking);
       const kind = tgt?.kind || "site";
       const already = (prev.venues?.[v.venue_id]?.events || []).length > 0;
-      if (kind === "vip" || kind === "events" || (already && kind !== "social")) vip.push(v);
+      const top = t1.has(v.destination_code);
+      if (kind === "vip" || kind === "events" || top || (already && kind !== "social")) vip.push(v);
       else rest.push(v);
     }
+    vip.sort((a, b) => {
+      const ka = (booking[a.venue_id]?.kind === "vip" ? 0 : booking[a.venue_id]?.kind === "events" ? 1 : 2);
+      const kb = (booking[b.venue_id]?.kind === "vip" ? 0 : booking[b.venue_id]?.kind === "events" ? 1 : 2);
+      if (ka !== kb) return ka - kb;
+      return (Number(b.priority_score) || 0) - (Number(a.priority_score) || 0);
+    });
     const fcTargets = new Set(vip.slice(0, MAX_FIRECRAWL).map((v) => v.venue_id));
 
     let updated = 0;

@@ -382,7 +382,9 @@ async function runApi() {
     const brMeta = await req(base, "GET", "/book/bridge/IBZ-001");
     if (brMeta.status !== 200 || !String(brMeta.json.adapter?.officialUrl || "").includes("hiibiza.com")) {
       fail("bridge-adapter", JSON.stringify(brMeta.json).slice(0, 240));
-    } else ok("bridge-adapter", brMeta.json.adapter.host);
+    } else if (!(brMeta.json.adapter?.inventory?.nights || []).some((n) => n.date && n.title)) {
+      fail("bridge-inventory", JSON.stringify(brMeta.json.adapter?.inventory).slice(0, 240));
+    } else ok("bridge-adapter", brMeta.json.adapter.host + " nights=" + brMeta.json.adapter.inventory.nights.length);
 
     const brNone = await req(base, "GET", "/book/bridge/NOPE-000");
     if (brNone.status !== 404) fail("bridge-missing", "expected 404 got " + brNone.status);
@@ -413,6 +415,23 @@ async function runApi() {
     if (brList.status !== 200 || !(brList.json.bridges || []).some((x) => x.id === br.id)) {
       fail("bridge-list", JSON.stringify(brList.json).slice(0, 240));
     } else ok("bridge-list", "member sees own underlag");
+
+    const night = (brMeta.json.adapter.inventory.nights || []).find((n) => n.date);
+    const brNight = await req(base, "POST", "/book/bridge", {
+      user: host, venueId: "IBZ-001", date: night.date, party: 4,
+      eventTitle: night.title, eventUrl: night.url || "https://www.hiibiza.com/vip-tables",
+    });
+    if (brNight.status !== 201 || !String(brNight.json.bridge?.packet || "").includes(night.title)) {
+      fail("bridge-night", JSON.stringify(brNight.json).slice(0, 280));
+    } else ok("bridge-night", night.date + " " + night.title);
+
+    const brReseller = await req(base, "POST", "/book/bridge", {
+      user: host, venueId: "IBZ-001", date: "2026-08-29", party: 2,
+      eventUrl: "https://www.discotech.com/hi-ibiza",
+    });
+    if (brReseller.status !== 201 || /discotech/i.test(brReseller.json.bridge?.eventUrl || "")) {
+      fail("bridge-reseller", JSON.stringify(brReseller.json.bridge).slice(0, 220));
+    } else ok("bridge-reseller", "reseller event URL dropped");
 
     const got = await req(base, "GET", "/tables/TB-RAILS");
     const members = got.json.table?.members || [];
