@@ -406,12 +406,13 @@ const SOCIALS = [
   { id: "tiktok", label: "TikTok", color: "#111" },
   { id: "snapchat", label: "Snapchat", color: "#FFFC00", dark: true },
 ];
+let userMem = null;
 function loadUser() {
   try {
     const u = JSON.parse(localStorage.getItem(USER_KEY));
-    if (u && u.provider && u.id) return u;
+    if (u && u.provider && u.id) { userMem = u; return u; }
   } catch {}
-  return null;
+  return (userMem && userMem.provider && userMem.id) ? userMem : null;
 }
 function displayName(u) {
   if (!u) return "";
@@ -421,6 +422,7 @@ function displayName(u) {
   return s ? s.label : (u.provider || "");
 }
 function saveUser(u) {
+  userMem = u;
   try { localStorage.setItem(USER_KEY, JSON.stringify(u)); } catch {}
   paintUser();
   registerUser(u);
@@ -443,19 +445,21 @@ function registerUser(u) {
     body: JSON.stringify({ id: u.id, name: u.name || "", handle: u.handle || "", provider: u.provider }),
   });
 }
-async function loginWithSocial(provider) {
-  if (!SOCIALS.some((s) => s.id === provider)) return;
-  const start = await apiJSON(`/auth/start/${encodeURIComponent(provider)}`);
-  if (start?.url) {
-    location.href = start.url;
-    return;
-  }
+function newSocialSid(provider) {
   let sid = "";
   try { sid = localStorage.getItem("velvet_sid_" + provider) || ""; } catch {}
-  if (!sid) {
-    sid = (globalThis.crypto?.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random())).replace(/-/g, "").slice(0, 12);
-    try { localStorage.setItem("velvet_sid_" + provider, sid); } catch {}
-  }
+  if (sid) return sid;
+  sid = (globalThis.crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()).replace(/[^a-zA-Z0-9]/g, "").slice(0, 12);
+  if (!sid) sid = String(Date.now()).slice(-12);
+  try { localStorage.setItem("velvet_sid_" + provider, sid); } catch {}
+  return sid;
+}
+// Ett klick = inne. Vänta aldrig på /auth/start (kan hänga bakom SW/Caddy) och
+// hoppa inte till Facebook/Instagram-OAuth förrän Gabbe har live appar — en
+// trasig url: lämnade appen och användaren kom aldrig tillbaka.
+function loginWithSocial(provider) {
+  if (!SOCIALS.some((s) => s.id === provider)) return false;
+  const sid = newSocialSid(provider);
   saveUser({
     id: `U-${provider}-${sid}`,
     provider,
@@ -464,8 +468,10 @@ async function loginWithSocial(provider) {
     auto: true,
     created: new Date().toISOString(),
   });
+  return !!loadUser();
 }
 function logoutUser() {
+  userMem = null;
   try { localStorage.removeItem(USER_KEY); } catch {}
   paintUser();
 }
@@ -973,7 +979,7 @@ async function renderPromoters() {
         <p style="margin-top:16px"><button class="btn btn-gold" id="pr-login">${esc(t("loginCta"))}</button></p>
       </div>
     </section>`;
-    $("#pr-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+    $("#pr-login")?.addEventListener("click", () => openOnboarding({ dismissable: false, phase: "auth" }));
     return;
   }
   await refreshIdv();
@@ -2043,12 +2049,11 @@ function renderVenueDetail(id) {
 
 // ---------- Booking modal ----------
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const todayISO = () => new Date().toISOString().slice(0, 10);
 
 async function openBookingModal(v) {
   const me0 = loadUser();
   if (!me0) {
-    openOnboarding({ dismissable: false });
+    openOnboarding({ dismissable: false, phase: "auth" });
     return;
   }
   await refreshIdv();
@@ -2604,10 +2609,10 @@ function renderJoin(raw) {
   const joinBtn = $("#join-btn");
   if (joinBtn) {
     joinBtn.addEventListener("click", async () => {
-      if (!loadUser()) { openOnboarding({ dismissable: false }); return; }
+      if (!loadUser()) { openOnboarding({ dismissable: false, phase: "auth" }); return; }
       joinBtn.disabled = true;
       const r = await joinOpenTable(inv.id, inv);
-      if (r.error === "auth") { openOnboarding({ dismissable: false }); return; }
+      if (r.error === "auth") { openOnboarding({ dismissable: false, phase: "auth" }); return; }
       if (r.error === "idv_required") { location.hash = "#/verify"; return; }
       if (r.error === "too_young") { showToast(tooYoungText(r, v)); joinBtn.disabled = false; return; }
       if (!loadBookings().some((b) => b.id === inv.id)) {
@@ -2960,7 +2965,8 @@ function openOnboarding(opts = {}) {
   const dismissable = !!opts.dismissable;
   const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   const langPicked = () => { try { return !!localStorage.getItem("velvet_lang_picked"); } catch { return false; } };
-  let phase = dismissable ? "country" : (!langPicked() ? "lang" : (!loadUser() ? "auth" : "country"));
+  let phase = opts.phase
+    || (dismissable ? "country" : (!langPicked() ? "lang" : (!loadUser() ? "auth" : "country")));
   let step = 1;
   let authProvider = null;
   let country = null;
@@ -3095,7 +3101,16 @@ function openOnboarding(opts = {}) {
     saveHomeChoice({ all: true });
     state.filters.dest = "";
     close(false);
-    if (!location.hash || location.hash === "#/") route();
+    route();
+  };
+  const enterAfterLogin = () => {
+    if (loadHomeChoice()) {
+      close(false);
+      route();
+      return;
+    }
+    phase = "country";
+    render();
   };
 
   // focusSel: valfritt CSS-mål att fokusera efter re-render (annars dialogen) —
@@ -3145,10 +3160,14 @@ function openOnboarding(opts = {}) {
         });
       });
       root.querySelectorAll("[data-soc]").forEach((el) => {
-        el.addEventListener("click", async () => {
+        el.addEventListener("click", () => {
           el.disabled = true;
-          await loginWithSocial(el.dataset.soc);
-          if (loadUser()) { phase = "country"; render(); }
+          try {
+            loginWithSocial(el.dataset.soc);
+          } catch (err) {
+            console.warn("VELVET login", err);
+          }
+          if (loadUser()) enterAfterLogin();
           else el.disabled = false;
         });
       });
@@ -3356,13 +3375,13 @@ async function renderOpenTables() {
         </div>`;
       }).join("")}
   </section>`;
-  $("#open-login")?.addEventListener("click", () => openOnboarding({ dismissable: true }));
+  $("#open-login")?.addEventListener("click", () => openOnboarding({ dismissable: true, phase: "auth" }));
   document.querySelectorAll("[data-join]").forEach((btn) => {
     btn.addEventListener("click", async () => {
-      if (!loadUser()) { openOnboarding({ dismissable: false }); return; }
+      if (!loadUser()) { openOnboarding({ dismissable: false, phase: "auth" }); return; }
       btn.disabled = true;
       const r = await joinOpenTable(btn.dataset.join, tables.find((x) => x.id === btn.dataset.join));
-      if (r.error === "auth") openOnboarding({ dismissable: false });
+      if (r.error === "auth") openOnboarding({ dismissable: false, phase: "auth" });
       else if (r.error === "idv_required") location.hash = "#/verify";
       else if (r.error === "too_young") {
         const tb = tables.find((x) => x.id === btn.dataset.join);
@@ -3433,13 +3452,13 @@ async function renderTable(id) {
       ${tb.venue_id ? `<a class="btn btn-ghost" href="#/venue/${encodeURIComponent(tb.venue_id)}" data-nav>${esc(t("explore"))}</a>` : ""}
     </div>
   </section>`;
-  $("#party-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+  $("#party-login")?.addEventListener("click", () => openOnboarding({ dismissable: false, phase: "auth" }));
   $("#party-join")?.addEventListener("click", async () => {
-    if (!loadUser()) { openOnboarding({ dismissable: false }); return; }
+    if (!loadUser()) { openOnboarding({ dismissable: false, phase: "auth" }); return; }
     const btn = $("#party-join");
     if (btn) btn.disabled = true;
     const r = await joinOpenTable(tb.id, tb);
-    if (r.error === "auth") openOnboarding({ dismissable: false });
+    if (r.error === "auth") openOnboarding({ dismissable: false, phase: "auth" });
     else if (r.error === "idv_required") location.hash = "#/verify";
     else if (r.error === "too_young") { showToast(tooYoungText(r, VENUES.find((x) => x.venue_id === tb.venue_id))); if (btn) btn.disabled = false; }
     else if (r.error === "seat_pref") { showToast(t("seatPref").replace("{who}", openForLabel(r.openFor || tb.openFor).toLowerCase())); if (btn) btn.disabled = false; }
@@ -3475,7 +3494,7 @@ async function renderPay(tableId) {
   const me = loadUser();
   if (!me) {
     view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p><button class="btn btn-gold" id="p-login">${esc(t("loginCta"))}</button></p></div></section>`;
-    $("#p-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+    $("#p-login")?.addEventListener("click", () => openOnboarding({ dismissable: false, phase: "auth" }));
     return;
   }
   await refreshIdv();
@@ -3819,7 +3838,7 @@ async function renderVerify() {
   const u = loadUser();
   if (!u) {
     view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p><button class="btn btn-gold" id="v-login">${esc(t("loginCta"))}</button></p></div></section>`;
-    $("#v-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+    $("#v-login")?.addEventListener("click", () => openOnboarding({ dismissable: false, phase: "auth" }));
     return;
   }
   await refreshIdv();
@@ -4196,7 +4215,7 @@ async function renderCard() {
   const u = loadUser();
   if (!u) {
     view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p><button class="btn btn-gold" id="c-login">${esc(t("loginCta"))}</button></p></div></section>`;
-    $("#c-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+    $("#c-login")?.addEventListener("click", () => openOnboarding({ dismissable: false, phase: "auth" }));
     return;
   }
   await refreshIdv();
@@ -4369,7 +4388,7 @@ async function renderAccount() {
     </div>
   </section>`;
   $("#acc-out")?.addEventListener("click", () => { logoutUser(); renderAccount(); });
-  $("#acc-in")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+  $("#acc-in")?.addEventListener("click", () => openOnboarding({ dismissable: false, phase: "auth" }));
   document.querySelectorAll("[data-lang]").forEach((el) => {
     el.addEventListener("click", () => {
       applyLang(el.dataset.lang);
@@ -4615,7 +4634,7 @@ async function renderPromoterChat(venueId) {
   const me = loadUser();
   if (!me) {
     view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p>${esc(t("verifiedPerkPromoter"))}</p><p style="margin-top:16px"><button class="btn btn-gold" id="ch-login">${esc(t("loginCta"))}</button></p></div></section>`;
-    $("#ch-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+    $("#ch-login")?.addEventListener("click", () => openOnboarding({ dismissable: false, phase: "auth" }));
     return;
   }
   await refreshIdv();
@@ -5415,7 +5434,13 @@ async function init() {
     bootLang();
     paintUser();
     initNavLang();
-    document.getElementById("nav-user")?.addEventListener("click", () => { location.hash = "#/account"; });
+    document.getElementById("nav-user")?.addEventListener("click", () => {
+      if (!loadUser()) {
+        openOnboarding({ dismissable: true, phase: "auth" });
+        return;
+      }
+      location.hash = "#/account";
+    });
     initMobileNav();
     initSkipLink();
     initSearch();
