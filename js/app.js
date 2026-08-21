@@ -300,6 +300,11 @@ function logoutUser() {
   try { localStorage.removeItem(USER_KEY); } catch {}
   paintUser();
 }
+function isOperatorUser(u) {
+  const email = String(u?.email || "").toLowerCase();
+  const handle = String(u?.handle || "").toLowerCase();
+  return email === "gabrielhadodo@gmail.com" || email === "moses.isik@bakemyday.se" || handle === "velvet";
+}
 function paintUser() {
   const u = loadUser();
   const lab = document.getElementById("nav-user-label");
@@ -451,7 +456,7 @@ async function markPaid(tableId, { targetId = "", targetName = "", paid }) {
   saveLocalTables(list);
   return { table: decorateLocalTable(tb) };
 }
-function personRowHTML(p, { me, hostId } = {}) {
+function personRowHTML(p, { me, hostId, tableId } = {}) {
   if (!p) return "";
   const verified = p.idv === "verified";
   const paid = !!p.paid;
@@ -480,7 +485,8 @@ function personRowHTML(p, { me, hostId } = {}) {
       </div>
     </div>
     <div class="person-pay">
-      <span class="pay-pill ${paid ? "yes" : "no"}">${esc(paid ? t("paid") : t("unpaid"))}</span>
+      <span class="pay-pill ${paid ? "yes" : "no"}">${esc(paid ? t("paid") : t("unpaid"))}${paid && p.paidVia ? ` · ${esc(p.paidVia)}` : ""}</span>
+      ${!paid && me && p.id && me.id === p.id && tableId ? `<a class="btn btn-gold btn-sm" href="#/pay/${encodeURIComponent(tableId)}" data-nav>${esc(t("payShare"))}</a>` : ""}
       ${canPay ? `<button type="button" class="btn btn-ghost btn-sm" ${payAttr} data-paid="${paid ? "0" : "1"}">${esc(paid ? t("markUnpaid") : t("markPaid"))}</button>` : ""}
     </div>
   </div>`;
@@ -2682,11 +2688,12 @@ async function renderTable(id) {
     <p class="price-disclaimer">${esc(t("payNote"))}</p>
     <h2 class="detail-panel-title" style="margin-top:8px">${esc(t("roster"))}</h2>
     <div class="person-list" id="party-list">
-      ${members.map((p) => personRowHTML(p, { me, hostId })).join("")}
+      ${members.map((p) => personRowHTML(p, { me, hostId, tableId: tb.id })).join("")}
     </div>
     <div class="book-site-actions" style="margin-top:22px;max-width:420px">
       ${!me ? `<button class="btn btn-gold" id="party-login">${esc(t("loginTitle"))}</button>` : ""}
       ${me && canJoin ? `<button class="btn btn-gold" id="party-join">${esc(t("takeSeat"))}</button>` : ""}
+      ${already && me && members.some((m) => m.id === me.id && !m.paid) ? `<a class="btn btn-gold" href="#/pay/${encodeURIComponent(tb.id)}" data-nav>${esc(t("payShare"))} · ${fmtEUR(tb.per_person)}</a>` : ""}
       ${already ? `<p class="invite-joined">${esc(t("youAreIn"))}</p>` : ""}
       ${tb.venue_id ? `<a class="btn btn-ghost" href="#/venue/${encodeURIComponent(tb.venue_id)}" data-nav>${esc(t("explore"))}</a>` : ""}
     </div>
@@ -2712,6 +2719,180 @@ async function renderTable(id) {
       if (r.table) renderTable(id);
       else btn.disabled = false;
     });
+  });
+}
+
+const PAY_METHODS = [
+  { id: "card", icon: "💳" },
+  { id: "applepay", icon: "" },
+  { id: "googlepay", icon: "G" },
+  { id: "revolut", icon: "R" },
+  { id: "paypal", icon: "P" },
+  { id: "klarna", icon: "K" },
+  { id: "sepa", icon: "EU" },
+  { id: "swift", icon: "SW" },
+];
+
+async function renderPay(tableId) {
+  const me = loadUser();
+  if (!me) {
+    view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p><button class="btn btn-gold" id="p-login">${esc(t("loginCta"))}</button></p></div></section>`;
+    $("#p-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+    return;
+  }
+  const tb = await getTable(tableId);
+  const cfg = await apiJSON("/pay/config") || { methods: [], ready: false, currency: "EUR" };
+  if (!tb) {
+    view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("tableMissing"))}</h3><p style="margin-top:20px"><a class="btn btn-gold" href="#/open" data-nav>${esc(t("navOpen"))}</a></p></div></section>`;
+    return;
+  }
+  const mine = (tb.members || []).find((m) => m.id === me.id);
+  setTitle(`${t("payShare")} · ${tb.venue}`);
+  view().innerHTML = `
+  <section class="section pay-page">
+    <a class="detail-back" href="#/table/${encodeURIComponent(tb.id)}" data-nav>← ${esc(tb.venue)}</a>
+    <p class="detail-kicker">${esc(cfg.destination || "Revolut")} · ${esc(cfg.currency || "EUR")}</p>
+    <h1>${esc(t("payShare"))}</h1>
+    <p class="ob-sub" style="text-align:left">${esc(t("payIntro"))}</p>
+    <div class="split-box" style="margin:18px 0">
+      <div class="split-per">${fmtEUR(tb.per_person)}</div>
+      <div class="split-label">${esc(t("perPerson"))} · ${esc(tb.venue)}</div>
+    </div>
+    ${mine?.paid ? `<p class="invite-joined">✓ ${esc(t("paid"))}${mine.paidVia ? ` · ${esc(mine.paidVia)}` : ""}</p>` : ""}
+    ${!mine ? `<p class="price-disclaimer">${esc(t("payNeedJoin"))}</p>` : ""}
+    <div class="pay-grid" id="pay-grid">
+      ${PAY_METHODS.map((m) => {
+        const spec = (cfg.methods || []).find((x) => x.id === m.id);
+        const on = !!(spec && spec.enabled);
+        return `<button type="button" class="pay-method${on ? "" : " off"}" data-method="${m.id}" ${on && mine && !mine.paid ? "" : "disabled"}>
+          <span class="pay-ico">${m.icon}</span>
+          <b>${esc(t("pay_" + m.id))}</b>
+          <span>${on ? esc(t("payToRevolut")) : esc(t("paySoon"))}</span>
+        </button>`;
+      }).join("")}
+    </div>
+    <div id="pay-bank" class="pay-bank hidden"></div>
+    <div class="field-error hidden" id="pay-err" role="alert"></div>
+    <p class="price-disclaimer">${esc(t("payHonest"))}</p>
+  </section>`;
+  document.querySelectorAll("[data-method]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const err = $("#pay-err");
+      err.classList.add("hidden");
+      btn.disabled = true;
+      const r = await apiJSON("/pay/intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tableId: tb.id, user: me, method: btn.dataset.method }),
+      });
+      btn.disabled = false;
+      if (r?.mode === "redirect" && r.url) {
+        location.href = r.url;
+        return;
+      }
+      if (r?.mode === "bank" && r.bank) {
+        const box = $("#pay-bank");
+        box.classList.remove("hidden");
+        box.innerHTML = `
+          <h2>${esc(t("payBankTitle"))}</h2>
+          <p>${esc(t("payBankHint"))}</p>
+          <div class="pay-iban">
+            <div><span>IBAN</span><b id="iban-val">${esc(r.bank.iban)}</b></div>
+            ${r.bank.bic ? `<div><span>BIC</span><b>${esc(r.bank.bic)}</b></div>` : ""}
+            <div><span>${esc(t("payHolder"))}</span><b>${esc(r.bank.name || "Revolut")}</b></div>
+            <div><span>${esc(t("payRef"))}</span><b id="ref-val">${esc(r.bank.reference)}</b></div>
+            <div><span>${esc(t("payShare"))}</span><b>${fmtEUR(r.bank.amount)}</b></div>
+          </div>
+          ${r.bank.me ? `<p><a class="btn btn-gold" href="https://revolut.me/${esc(r.bank.me)}" target="_blank" rel="noopener">Revolut.me/${esc(r.bank.me)}</a></p>` : ""}
+          <p style="margin-top:12px">
+            <button type="button" class="btn btn-ghost btn-sm" id="copy-iban">${esc(t("copyIban"))}</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="copy-ref">${esc(t("copyRef"))}</button>
+          </p>
+          <p class="stepper-hint">${esc(t("payAfterBank"))}</p>`;
+        $("#copy-iban")?.addEventListener("click", () => copyText(r.bank.iban));
+        $("#copy-ref")?.addEventListener("click", () => copyText(r.bank.reference));
+        return;
+      }
+      err.textContent = r?.message || t("payNoProcessor");
+      err.classList.remove("hidden");
+    });
+  });
+}
+
+async function renderPayReturn() {
+  const me = loadUser();
+  const sid = new URLSearchParams(location.search).get("session_id") || "";
+  view().innerHTML = `
+  <section class="section">
+    <div class="empty-state">
+      <div class="spinner" aria-hidden="true"></div>
+      <h3>${esc(t("payChecking"))}</h3>
+    </div>
+  </section>`;
+  const r = sid ? await apiJSON("/pay/confirm", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user: me, sessionId: sid }),
+  }) : null;
+  if (r?.ok && r.table) {
+    showToast(t("paid"));
+    location.hash = `#/table/${encodeURIComponent(r.table.id)}`;
+    return;
+  }
+  view().innerHTML = `
+  <section class="section">
+    <div class="empty-state">
+      <h3>${esc(t("payPending"))}</h3>
+      <p>${esc(t("payPendingHint"))}</p>
+      <p style="margin-top:20px"><a class="btn btn-gold" href="#/open" data-nav>${esc(t("navOpen"))}</a></p>
+    </div>
+  </section>`;
+}
+
+async function renderPayout() {
+  const me = loadUser();
+  if (!me || !isOperatorUser(me)) {
+    view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("paySetupDenied"))}</h3></div></section>`;
+    return;
+  }
+  const cfg = await apiJSON("/pay/config") || {};
+  view().innerHTML = `
+  <section class="section">
+    <a class="detail-back" href="#/account" data-nav>← ${esc(t("account"))}</a>
+    <h1>${esc(t("paySetup"))}</h1>
+    <p class="ob-sub" style="text-align:left">${esc(t("paySetupSub"))}</p>
+    <form id="pay-form" class="pay-form">
+      <label>Revolut IBAN<input name="revolutIban" autocomplete="off" placeholder="LT12 REVO 0000 0000 0000" value="${esc(cfg.account?.iban || "")}"></label>
+      <label>BIC / SWIFT<input name="revolutBic" autocomplete="off" placeholder="REVOLT21" value="${esc(cfg.account?.bic || "")}"></label>
+      <label>${esc(t("payHolder"))}<input name="revolutName" value="${esc(cfg.account?.name || "")}" placeholder="VELVET / Gabriel"></label>
+      <label>Revolut.me<input name="revolutMe" value="${esc(cfg.account?.me || "")}" placeholder="velvet"></label>
+      <label>Stripe secret (sk_live_… / sk_test_…)<input name="stripeSecret" type="password" placeholder="${cfg.keys?.stripe ? "•••• set" : ""}" autocomplete="off"></label>
+      <label>Stripe webhook secret<input name="stripeWebhook" type="password" placeholder="${cfg.keys?.stripe ? "" : ""}" autocomplete="off"></label>
+      <label>Revolut Merchant secret<input name="revolutMerchantSecret" type="password" placeholder="${cfg.keys?.revolut ? "•••• set" : ""}" autocomplete="off"></label>
+      <label>PayPal client ID<input name="paypalClient" autocomplete="off"></label>
+      <label>PayPal secret<input name="paypalSecret" type="password" autocomplete="off"></label>
+      <p class="stepper-hint">${esc(t("paySetupKeys"))}</p>
+      <div class="field-error hidden" id="pay-setup-err"></div>
+      <button class="btn btn-gold" type="submit">${esc(t("saveSettings"))}</button>
+    </form>
+  </section>`;
+  $("#pay-form")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const body = { user: me };
+    for (const [k, v] of fd.entries()) if (String(v).trim()) body[k] = String(v).trim();
+    const r = await apiJSON("/pay/setup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!r?.ok) {
+      const err = $("#pay-setup-err");
+      if (err) { err.textContent = r?.error || t("paySetupDenied"); err.classList.remove("hidden"); }
+      return;
+    }
+    showToast(t("savedOk"));
+    renderPayout();
   });
 }
 
@@ -2890,6 +3071,7 @@ async function renderAccount() {
         </div>
       </div>
       <p>${starRow(mine.avg)} ${mine.n ? `(${mine.n} ${t("reviews")})` : t("noReviews")}</p>
+      ${isOperatorUser(u) ? `<p style="margin-top:12px"><a class="btn btn-gold btn-sm" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
       <p>${esc(t("loginSub"))}</p>
       <p style="margin-top:16px"><button class="btn btn-gold" id="acc-in">${esc(t("loginTitle"))}</button></p>`}
@@ -3316,6 +3498,8 @@ const routes = {
   "#/open": () => { renderOpenTables(); },
   "#/verify": () => { renderVerify(); },
   "#/account": renderAccount,
+  "#/payout": () => { renderPayout(); },
+  "#/pay-return": () => { renderPayReturn(); },
   "#/favorites": renderFavorites,
   "#/villkor": () => renderLegal("villkor"),
   "#/integritet": () => renderLegal("integritet"),
@@ -3331,6 +3515,7 @@ const paramRoutes = [
   { re: /^#\/promoter\/(.+)$/, fn: renderPromoterChat, nav: "#/venues" },
   { re: /^#\/book-site\/(.+)$/, fn: renderBookSite, nav: "#/venues" },
   { re: /^#\/table\/(.+)$/, fn: renderTable, nav: "#/open" },
+  { re: /^#\/pay\/(.+)$/, fn: renderPay, nav: "#/open" },
 ];
 
 // Trasiga %-sekvenser i hashen får inte krascha routern
@@ -3474,6 +3659,10 @@ async function init() {
   VENUES = v;
   const existing = loadUser();
   if (existing) registerUser(existing);
+  const sid = new URLSearchParams(location.search).get("session_id");
+  if (sid && (!location.hash || location.hash === "#/" || location.hash === "#")) {
+    location.hash = "#/pay-return";
+  }
   if (!uiBound) {
     uiBound = true;
     bootLang();

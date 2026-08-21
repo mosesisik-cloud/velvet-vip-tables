@@ -1,12 +1,15 @@
 import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
+const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);
+const PUBLIC_APP = process.env.PUBLIC_URL || "https://b2b.bakemyday.se/velvet";
 
 fs.mkdirSync(IDV_DIR, { recursive: true });
 
@@ -20,9 +23,10 @@ function load() {
       chats: raw.chats && typeof raw.chats === "object" ? raw.chats : {},
       promoters: raw.promoters && typeof raw.promoters === "object" ? raw.promoters : {},
       users: raw.users && typeof raw.users === "object" ? raw.users : {},
+      payments: Array.isArray(raw.payments) ? raw.payments : [],
     };
   } catch {}
-  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, users: {} };
+  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, users: {}, payments: [] };
 }
 function isPromoter(user, venueId, db) {
   const uid = user?.id || "";
@@ -48,6 +52,19 @@ function send(res, code, obj) {
     "Access-Control-Allow-Headers": "Content-Type",
   });
   res.end(body);
+}
+function readRaw(req, max = 1e6) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let n = 0;
+    req.on("data", (c) => {
+      n += c.length;
+      if (n > max) { req.destroy(); reject(new Error("too large")); }
+      chunks.push(c);
+    });
+    req.on("end", () => resolve(Buffer.concat(chunks)));
+    req.on("error", reject);
+  });
 }
 function readBody(req, max = 12e6) {
   return new Promise((resolve, reject) => {
@@ -116,6 +133,7 @@ function publicPerson(p, db, role) {
     role: role || p.role || "guest",
     paid: !!p.paid,
     paidAt: p.paidAt || null,
+    paidVia: p.paidVia || "",
     idv,
     joined: p.joined || p.created || null,
   };
@@ -170,10 +188,217 @@ function findUser(db, id) {
   }
   return null;
 }
-function setPaidFlag(obj, paid, actorId) {
+function setPaidFlag(obj, paid, actorId, via) {
   obj.paid = !!paid;
   obj.paidAt = paid ? new Date().toISOString() : null;
   obj.paidBy = actorId || "";
+  obj.paidVia = paid ? (via || obj.paidVia || "manual") : "";
+}
+
+function isOperator(user) {
+  const email = String(user?.email || "").toLowerCase();
+  const handle = String(user?.handle || "").toLowerCase();
+  return email === "gabrielhadodo@gmail.com" || email === "moses.isik@bakemyday.se" || handle === "velvet" || user?.role === "operator";
+}
+
+function emptyPay() {
+  return {
+    currency: "EUR",
+    revolut: { iban: "", bic: "", name: "", me: "", merchantSecret: "", sandbox: false },
+    stripe: { secret: "", pub: "", webhook: "" },
+    paypal: { client: "", secret: "", sandbox: false },
+  };
+}
+function loadPay() {
+  try {
+    const raw = JSON.parse(fs.readFileSync(PAY_FILE, "utf8"));
+    const base = emptyPay();
+    return {
+      currency: String(raw.currency || "EUR").toUpperCase().slice(0, 3),
+      revolut: { ...base.revolut, ...(raw.revolut || {}) },
+      stripe: { ...base.stripe, ...(raw.stripe || {}) },
+      paypal: { ...base.paypal, ...(raw.paypal || {}) },
+    };
+  } catch {
+    return emptyPay();
+  }
+}
+function savePay(p) {
+  fs.writeFileSync(PAY_FILE, JSON.stringify(p, null, 2));
+}
+function ibanOk(s) {
+  const v = String(s || "").replace(/\s+/g, "").toUpperCase();
+  return /^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/.test(v) ? v : "";
+}
+function payRef(tableId, userId) {
+  const t = String(tableId || "").replace(/[^A-Z0-9]/gi, "").slice(-8).toUpperCase();
+  const u = String(userId || "").replace(/[^A-Z0-9]/gi, "").slice(-6).toUpperCase();
+  return `VEL-${t}-${u}`.slice(0, 22);
+}
+function publicPayConfig() {
+  const p = loadPay();
+  const iban = ibanOk(p.revolut.iban);
+  const stripeOn = !!(p.stripe.secret && p.stripe.secret.startsWith("sk_"));
+  const revolutOn = !!(p.revolut.merchantSecret);
+  const paypalOn = !!(p.paypal.client && p.paypal.secret);
+  const bankOn = !!iban;
+  const cardOn = stripeOn || revolutOn;
+  return {
+    currency: p.currency || "EUR",
+    destination: "Revolut",
+    holder: p.revolut.name || "",
+    ready: cardOn || bankOn || paypalOn,
+    stripe: stripeOn,
+    revolutMerchant: revolutOn,
+    paypal: paypalOn,
+    bank: bankOn,
+    methods: [
+      { id: "card", group: "card", enabled: cardOn },
+      { id: "applepay", group: "wallet", enabled: cardOn },
+      { id: "googlepay", group: "wallet", enabled: cardOn },
+      { id: "revolut", group: "wallet", enabled: revolutOn || bankOn },
+      { id: "paypal", group: "wallet", enabled: paypalOn },
+      { id: "klarna", group: "bnpl", enabled: stripeOn },
+      { id: "sepa", group: "bank", enabled: bankOn },
+      { id: "swift", group: "bank", enabled: bankOn },
+    ],
+    account: bankOn ? {
+      iban,
+      bic: String(p.revolut.bic || "").replace(/\s+/g, "").toUpperCase(),
+      name: p.revolut.name || "",
+      bank: "Revolut",
+      me: p.revolut.me || "",
+    } : null,
+    keys: {
+      stripe: stripeOn,
+      revolut: revolutOn,
+      paypal: paypalOn,
+      iban: bankOn,
+    },
+  };
+}
+function applyIncomingPayment(db, { tableId, userId, amount, currency, method, provider, providerId }) {
+  const t = db.tables.find((x) => x.id === tableId);
+  if (!t || !userId) return null;
+  let target = t.host?.id === userId ? t.host : (t.joiners || []).find((j) => j.id === userId);
+  if (!target) return null;
+  setPaidFlag(target, true, userId, provider || method);
+  const rec = {
+    id: `PY-${Date.now().toString(36)}`,
+    tableId,
+    userId,
+    amount: Number(amount) || 0,
+    currency: currency || "EUR",
+    method: method || provider || "",
+    provider: provider || "",
+    providerId: providerId || "",
+    status: "paid",
+    created: new Date().toISOString(),
+  };
+  db.payments = [rec, ...(db.payments || [])].slice(0, 500);
+  return rec;
+}
+async function stripeCheckout({ table, user, cents, currency, method }) {
+  const p = loadPay();
+  if (!p.stripe.secret) return null;
+  const params = new URLSearchParams();
+  params.set("mode", "payment");
+  params.set("success_url", `${PUBLIC_APP}/?session_id={CHECKOUT_SESSION_ID}#/pay-return`);
+  params.set("cancel_url", `${PUBLIC_APP}/#/pay/${encodeURIComponent(table.id)}`);
+  params.set("client_reference_id", `${table.id}:${user.id}`);
+  params.set("metadata[tableId]", table.id);
+  params.set("metadata[userId]", user.id);
+  params.set("metadata[method]", method);
+  params.set("line_items[0][quantity]", "1");
+  params.set("line_items[0][price_data][currency]", currency.toLowerCase());
+  params.set("line_items[0][price_data][unit_amount]", String(cents));
+  params.set("line_items[0][price_data][product_data][name]", `VELVET · ${table.venue} · ${table.date || ""}`.slice(0, 120));
+  params.set("automatic_payment_methods[enabled]", "true");
+  const r = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${p.stripe.secret}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: params,
+  });
+  const j = await r.json();
+  if (!j.url) throw new Error(j.error?.message || "stripe");
+  return { url: j.url, id: j.id };
+}
+async function revolutOrder({ table, user, cents, currency }) {
+  const p = loadPay();
+  if (!p.revolut.merchantSecret) return null;
+  const host = p.revolut.sandbox ? "https://sandbox-merchant.revolut.com" : "https://merchant.revolut.com";
+  const r = await fetch(host + "/api/orders", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${p.revolut.merchantSecret}`,
+      "Revolut-Api-Version": "2024-09-01",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      amount: cents,
+      currency,
+      redirect_url: `${PUBLIC_APP}/#/pay-return`,
+      merchant_order_data: { reference: `${table.id}:${user.id}` },
+      description: `VELVET ${table.venue} ${table.date || ""}`.slice(0, 250),
+    }),
+  });
+  const j = await r.json();
+  const url = j.checkout_url || j.token && `${host.replace("merchant.revolut.com", "checkout.revolut.com")}/pay/${j.token}`;
+  if (!j.id) throw new Error(j.message || "revolut");
+  return { url: url || j.checkout_url, id: j.id };
+}
+async function paypalOrder({ table, user, amount, currency }) {
+  const p = loadPay();
+  if (!p.paypal.client || !p.paypal.secret) return null;
+  const api = p.paypal.sandbox ? "https://api-m.sandbox.paypal.com" : "https://api-m.paypal.com";
+  const tok = await fetch(api + "/v1/oauth2/token", {
+    method: "POST",
+    headers: {
+      Authorization: "Basic " + Buffer.from(`${p.paypal.client}:${p.paypal.secret}`).toString("base64"),
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: "grant_type=client_credentials",
+  });
+  const tj = await tok.json();
+  if (!tj.access_token) throw new Error("paypal_auth");
+  const r = await fetch(api + "/v2/checkout/orders", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${tj.access_token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      intent: "CAPTURE",
+      purchase_units: [{
+        custom_id: `${table.id}:${user.id}`,
+        amount: { currency_code: currency, value: Number(amount).toFixed(2) },
+        description: `VELVET ${table.venue}`.slice(0, 120),
+      }],
+      application_context: {
+        return_url: `${PUBLIC_APP}/#/pay-return`,
+        cancel_url: `${PUBLIC_APP}/#/pay/${encodeURIComponent(table.id)}`,
+        brand_name: "VELVET",
+        user_action: "PAY_NOW",
+      },
+    }),
+  });
+  const j = await r.json();
+  const approve = (j.links || []).find((l) => l.rel === "approve");
+  if (!approve?.href) throw new Error(j.message || "paypal");
+  return { url: approve.href, id: j.id };
+}
+function bankDetails(table, user, amount, currency) {
+  const cfg = publicPayConfig();
+  if (!cfg.account) return null;
+  return {
+    ...cfg.account,
+    amount,
+    currency,
+    reference: payRef(table.id, user.id),
+  };
 }
 
 const server = http.createServer(async (req, res) => {
@@ -182,6 +407,185 @@ const server = http.createServer(async (req, res) => {
   try {
     if (req.method === "GET" && (url.pathname === "/health" || url.pathname === "/")) {
       return send(res, 200, { ok: true, service: "velvet-api" });
+    }
+
+    if (req.method === "GET" && url.pathname === "/pay/config") {
+      return send(res, 200, publicPayConfig());
+    }
+    if (req.method === "POST" && url.pathname === "/pay/setup") {
+      const b = await readBody(req, 2e5);
+      if (!isOperator(b.user)) return send(res, 403, { error: "operator" });
+      const cur = loadPay();
+      if (b.currency) cur.currency = String(b.currency).toUpperCase().slice(0, 3);
+      if (b.revolutIban !== undefined) cur.revolut.iban = ibanOk(b.revolutIban) || String(b.revolutIban || "").replace(/\s+/g, "").toUpperCase();
+      if (b.revolutBic !== undefined) cur.revolut.bic = String(b.revolutBic || "").replace(/\s+/g, "").toUpperCase();
+      if (b.revolutName !== undefined) cur.revolut.name = String(b.revolutName || "").slice(0, 80);
+      if (b.revolutMe !== undefined) cur.revolut.me = String(b.revolutMe || "").replace(/^https?:\/\/(www\.)?revolut\.me\//i, "").slice(0, 40);
+      if (b.revolutMerchantSecret) cur.revolut.merchantSecret = String(b.revolutMerchantSecret);
+      if (b.revolutSandbox !== undefined) cur.revolut.sandbox = !!b.revolutSandbox;
+      if (b.stripeSecret) cur.stripe.secret = String(b.stripeSecret);
+      if (b.stripePub) cur.stripe.pub = String(b.stripePub);
+      if (b.stripeWebhook) cur.stripe.webhook = String(b.stripeWebhook);
+      if (b.paypalClient) cur.paypal.client = String(b.paypalClient);
+      if (b.paypalSecret) cur.paypal.secret = String(b.paypalSecret);
+      if (b.paypalSandbox !== undefined) cur.paypal.sandbox = !!b.paypalSandbox;
+      savePay(cur);
+      return send(res, 200, { ok: true, config: publicPayConfig() });
+    }
+    if (req.method === "POST" && url.pathname === "/pay/intent") {
+      const b = await readBody(req, 2e5);
+      const userId = String(b.user?.id || "");
+      if (!userId) return send(res, 401, { error: "auth" });
+      const db = load();
+      const t = db.tables.find((x) => x.id === String(b.tableId || ""));
+      if (!t) return send(res, 404, { error: "not_found" });
+      const member = t.host?.id === userId || (t.joiners || []).some((j) => j.id === userId);
+      if (!member) return send(res, 403, { error: "not_member" });
+      const pub = publicTable(t, db);
+      const amount = Number(pub.per_person) || 0;
+      const cents = Math.max(50, Math.round(amount * 100));
+      const currency = publicPayConfig().currency || "EUR";
+      const method = String(b.method || "card");
+      const table = { id: t.id, venue: t.venue, date: t.date };
+      const user = { id: userId, name: b.user?.name || "", email: b.user?.email || "" };
+      try {
+        if (method === "sepa" || method === "swift" || (method === "revolut" && !loadPay().revolut.merchantSecret)) {
+          const bank = bankDetails(table, user, amount, currency);
+          if (!bank) return send(res, 409, { error: "no_account", message: "Revolut-konto inte kopplat än." });
+          return send(res, 200, { mode: "bank", bank, method });
+        }
+        if (method === "paypal") {
+          const o = await paypalOrder({ table, user, amount, currency });
+          if (!o) return send(res, 409, { error: "paypal_off" });
+          return send(res, 200, { mode: "redirect", url: o.url, id: o.id, provider: "paypal", method });
+        }
+        if (method === "revolut") {
+          const o = await revolutOrder({ table, user, cents, currency });
+          if (o?.url) return send(res, 200, { mode: "redirect", url: o.url, id: o.id, provider: "revolut", method });
+          const bank = bankDetails(table, user, amount, currency);
+          if (!bank) return send(res, 409, { error: "revolut_off" });
+          return send(res, 200, { mode: "bank", bank, method });
+        }
+        // card / applepay / googlepay / klarna → Stripe, else Revolut Merchant
+        const s = await stripeCheckout({ table, user, cents, currency, method });
+        if (s?.url) return send(res, 200, { mode: "redirect", url: s.url, id: s.id, provider: "stripe", method });
+        const o = await revolutOrder({ table, user, cents, currency });
+        if (o?.url) return send(res, 200, { mode: "redirect", url: o.url, id: o.id, provider: "revolut", method });
+        const bank = bankDetails(table, user, amount, currency);
+        if (bank) return send(res, 200, { mode: "bank", bank, method, fallback: true });
+        return send(res, 409, { error: "no_processor" });
+      } catch (e) {
+        return send(res, 502, { error: "provider", message: String(e.message || e) });
+      }
+    }
+    if (req.method === "POST" && url.pathname === "/pay/confirm") {
+      const b = await readBody(req, 2e5);
+      const userId = String(b.user?.id || "");
+      if (!userId) return send(res, 401, { error: "auth" });
+      const db = load();
+      const pay = loadPay();
+      if (b.sessionId && pay.stripe.secret) {
+        const r = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(b.sessionId)}`, {
+          headers: { Authorization: `Bearer ${pay.stripe.secret}` },
+        });
+        const s = await r.json();
+        if (s.payment_status === "paid" || s.status === "complete") {
+          const tableId = s.metadata?.tableId || String(b.tableId || "");
+          const uid = s.metadata?.userId || userId;
+          const rec = applyIncomingPayment(db, {
+            tableId, userId: uid, amount: (s.amount_total || 0) / 100,
+            currency: (s.currency || "eur").toUpperCase(), method: "card", provider: "stripe", providerId: s.id,
+          });
+          if (rec) save(db);
+          const t = db.tables.find((x) => x.id === tableId);
+          return send(res, 200, { ok: !!rec, table: t ? publicTable(t, db) : null });
+        }
+      }
+      if (b.orderId && pay.revolut.merchantSecret) {
+        const host = pay.revolut.sandbox ? "https://sandbox-merchant.revolut.com" : "https://merchant.revolut.com";
+        const r = await fetch(`${host}/api/orders/${encodeURIComponent(b.orderId)}`, {
+          headers: { Authorization: `Bearer ${pay.revolut.merchantSecret}`, "Revolut-Api-Version": "2024-09-01" },
+        });
+        const o = await r.json();
+        if (["completed", "paid", "captured"].includes(String(o.state || o.status || "").toLowerCase())) {
+          const ref = String(o.merchant_order_data?.reference || b.tableId || "");
+          const [tableId, uid] = ref.includes(":") ? ref.split(":") : [b.tableId, userId];
+          const rec = applyIncomingPayment(db, {
+            tableId, userId: uid || userId, amount: (o.amount || 0) / 100,
+            currency: o.currency || "EUR", method: "revolut", provider: "revolut", providerId: o.id,
+          });
+          if (rec) save(db);
+          const t = db.tables.find((x) => x.id === tableId);
+          return send(res, 200, { ok: !!rec, table: t ? publicTable(t, db) : null });
+        }
+      }
+      return send(res, 409, { error: "not_paid" });
+    }
+    if (req.method === "POST" && url.pathname === "/pay/webhook/stripe") {
+      const raw = await readRaw(req);
+      const pay = loadPay();
+      if (pay.stripe.webhook) {
+        const header = String(req.headers["stripe-signature"] || "");
+        const parts = Object.fromEntries(header.split(",").map((x) => {
+          const i = x.indexOf("=");
+          return i > 0 ? [x.slice(0, i).trim(), x.slice(i + 1).trim()] : ["", ""];
+        }).filter((x) => x[0]));
+        const signed = `${parts.t}.${raw.toString("utf8")}`;
+        const digest = crypto.createHmac("sha256", pay.stripe.webhook).update(signed).digest("hex");
+        if (!parts.v1 || digest.length !== parts.v1.length || !crypto.timingSafeEqual(Buffer.from(digest), Buffer.from(parts.v1))) {
+          return send(res, 400, { error: "sig" });
+        }
+      }
+      let ev;
+      try { ev = JSON.parse(raw.toString("utf8")); } catch { return send(res, 400, { error: "json" }); }
+      const s = ev.data?.object || {};
+      if ((ev.type === "checkout.session.completed" || ev.type === "checkout.session.async_payment_succeeded") && (s.payment_status === "paid" || s.status === "complete")) {
+        const db = load();
+        applyIncomingPayment(db, {
+          tableId: s.metadata?.tableId, userId: s.metadata?.userId,
+          amount: (s.amount_total || 0) / 100, currency: (s.currency || "eur").toUpperCase(),
+          method: "card", provider: "stripe", providerId: s.id,
+        });
+        save(db);
+      }
+      return send(res, 200, { ok: true });
+    }
+    if (req.method === "POST" && url.pathname === "/pay/webhook/revolut") {
+      const b = await readBody(req, 2e5);
+      const order = b.order || b.data || b;
+      const state = String(order.state || order.status || b.event || "").toLowerCase();
+      if (state.includes("complet") || state.includes("paid") || b.event === "ORDER_COMPLETED") {
+        const ref = String(order.merchant_order_data?.reference || "");
+        const [tableId, userId] = ref.split(":");
+        if (tableId && userId) {
+          const db = load();
+          applyIncomingPayment(db, {
+            tableId, userId, amount: (order.amount || 0) / 100,
+            currency: order.currency || "EUR", method: "revolut", provider: "revolut", providerId: order.id,
+          });
+          save(db);
+        }
+      }
+      return send(res, 200, { ok: true });
+    }
+    if (req.method === "POST" && url.pathname === "/pay/webhook/paypal") {
+      const b = await readBody(req, 2e5);
+      const ev = String(b.event_type || "");
+      const custom = String(b.resource?.purchase_units?.[0]?.custom_id || b.resource?.custom_id || "");
+      if (ev.includes("PAYMENT") || ev.includes("CHECKOUT.ORDER.APPROVED") || ev.includes("CAPTURE.COMPLETED")) {
+        const [tableId, userId] = custom.split(":");
+        if (tableId && userId) {
+          const db = load();
+          applyIncomingPayment(db, {
+            tableId, userId,
+            amount: Number(b.resource?.amount?.value || b.resource?.purchase_units?.[0]?.amount?.value || 0),
+            currency: b.resource?.amount?.currency_code || "EUR",
+            method: "paypal", provider: "paypal", providerId: b.resource?.id,
+          });
+          save(db);
+        }
+      }
+      return send(res, 200, { ok: true });
     }
 
     if (req.method === "POST" && url.pathname === "/users") {

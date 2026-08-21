@@ -1,0 +1,21 @@
+{
+  "currency": "EUR",
+  "revolut": {
+    "iban": "",
+    "bic": "",
+    "name": "",
+    "me": "",
+    "merchantSecret": "",
+    "sandbox": false
+  },
+  "stripe": {
+    "secret": "",
+    "pub": "",
+    "webhook": ""
+  },
+  "paypal": {
+    "client": "",
+    "secret": "",
+    "sandbox": false
+  }
+}
