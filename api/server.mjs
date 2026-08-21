@@ -128,6 +128,9 @@ async function cloudSendWa(to, text) {
     return false;
   }
 }
+function isVerifiedMember(uid, db) {
+  return !!(uid && db.idv[uid] && db.idv[uid].status === "verified");
+}
 function isPromoter(user, venueId, db) {
   const uid = user?.id || "";
   const email = String(user?.email || "").toLowerCase();
@@ -1487,9 +1490,12 @@ const server = http.createServer(async (req, res) => {
       const venueId = decodeURIComponent(guestWaM[1]);
       const uid = String(b.user?.id || "");
       if (!uid) return send(res, 400, { error: "user" });
+      const db = load();
+      if (!isPromoter(b.user, venueId, db) && !isVerifiedMember(uid, db)) {
+        return send(res, 403, { error: "idv_required" });
+      }
       const phone = waDigits(b.whatsapp);
       if (String(b.whatsapp || "").trim() && !phone) return send(res, 400, { error: "whatsapp" });
-      const db = load();
       upsertUser(db, b.user);
       if (phone) setGuestWa(db, venueId, uid, phone, b.user?.name);
       else if (db.users[uid]) db.users[uid].whatsapp = "";
@@ -1545,6 +1551,9 @@ const server = http.createServer(async (req, res) => {
       const thread = url.searchParams.get("thread") || uid;
       const db = load();
       const promoter = isPromoter({ id: uid }, venueId, db);
+      if (uid && !promoter && !isVerifiedMember(uid, db)) {
+        return send(res, 403, { error: "idv_required" });
+      }
       const venueChats = db.chats[venueId] || {};
       const messages = venueChats[thread] || [];
       return send(res, 200, {
@@ -1564,6 +1573,9 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       upsertUser(db, b.user);
       const promoter = isPromoter(b.user, venueId, db);
+      if (!promoter && !isVerifiedMember(uid, db)) {
+        return send(res, 403, { error: "idv_required" });
+      }
       const threadId = promoter ? String(b.threadId || uid) : uid;
       if (b.whatsapp) setGuestWa(db, venueId, uid, b.whatsapp, b.user?.name);
       const asPromo = promoter && b.asPromoter !== false;

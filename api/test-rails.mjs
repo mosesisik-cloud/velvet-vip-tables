@@ -209,6 +209,36 @@ async function runApi() {
     if (joined.status !== 200 || !joined.json.table) fail("tables-join", JSON.stringify(joined));
     else ok("tables-join", "openLeft=" + joined.json.table.openLeft);
 
+    const plain = { id: "U-plain", name: "Plain Guest", handle: "plain", provider: "tiktok" };
+    const lockedGet = await req(base, "GET", "/chats/IBZ-001?userId=" + encodeURIComponent(plain.id));
+    if (lockedGet.status !== 403 || lockedGet.json.error !== "idv_required") {
+      fail("promo-idv-get", JSON.stringify(lockedGet.json).slice(0, 220));
+    } else ok("promo-idv-get", "unverified guest 403");
+
+    const lockedPost = await req(base, "POST", "/chats/IBZ-001", { user: plain, text: "hej promoter" });
+    if (lockedPost.status !== 403 || lockedPost.json.error !== "idv_required") {
+      fail("promo-idv-post", JSON.stringify(lockedPost.json).slice(0, 220));
+    } else ok("promo-idv-post", "unverified guest 403");
+
+    const lockedWa = await req(base, "POST", "/chats/IBZ-001/guest-wa", {
+      user: plain, whatsapp: "+34 611 11 22 22",
+    });
+    if (lockedWa.status !== 403 || lockedWa.json.error !== "idv_required") {
+      fail("promo-idv-wa", JSON.stringify(lockedWa.json).slice(0, 220));
+    } else ok("promo-idv-wa", "unverified guest-wa 403");
+
+    const hostLocked = await req(base, "GET", "/chats/IBZ-001?userId=" + encodeURIComponent(host.id));
+    if (hostLocked.status !== 403 || hostLocked.json.error !== "idv_required") {
+      fail("promo-host-locked", JSON.stringify(hostLocked.json).slice(0, 220));
+    } else ok("promo-host-locked", "unverified non-promoter 403");
+
+    const hostClaim = await req(base, "POST", "/chats/IBZ-001/claim", { user: host });
+    if (hostClaim.status !== 200) fail("promo-host-claim", JSON.stringify(hostClaim.json).slice(0, 220));
+    const hostOpen = await req(base, "GET", "/chats/IBZ-001?userId=" + encodeURIComponent(host.id));
+    if (hostOpen.status !== 200 || !hostOpen.json.promoter) {
+      fail("promo-host-bypass", JSON.stringify(hostOpen.json).slice(0, 220));
+    } else ok("promo-host-bypass", "promoter access without IDV");
+
     const got = await req(base, "GET", "/tables/TB-RAILS");
     const members = got.json.table?.members || [];
     const ids = members.map((m) => m.id).sort();

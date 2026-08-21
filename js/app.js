@@ -158,13 +158,14 @@ function socialPath(url) {
     return decodeURIComponent(p);
   } catch { return ""; }
 }
-function contactTile(href, title, sub, { gold = false, external = true, id = "", tag = "a" } = {}) {
+function contactTile(href, title, sub, { gold = false, external = true, id = "", tag = "a", locked = false } = {}) {
   const extra = external ? ` target="_blank" rel="noopener"` : "";
   const nav = !external && tag === "a" ? " data-nav" : "";
   const idAttr = id ? ` id="${id}"` : "";
+  const cls = `contact-tile${gold ? " gold" : ""}${locked ? " lock" : ""}`;
   const open = tag === "button"
-    ? `<button type="button" class="contact-tile${gold ? " gold" : ""}"${idAttr}>`
-    : `<a class="contact-tile${gold ? " gold" : ""}" href="${esc(href)}"${extra}${nav}${idAttr}>`;
+    ? `<button type="button" class="${cls}"${idAttr}>`
+    : `<a class="${cls}" href="${esc(href)}"${extra}${nav}${idAttr}>`;
   const close = tag === "button" ? "</button>" : "</a>";
   return `${open}<strong>${esc(title)}</strong><span>${esc(sub)}</span>${close}`;
 }
@@ -224,7 +225,12 @@ function contactPanelHTML(v) {
     v.website_url ? contactTile(v.website_url, t("website"), webHost) : "",
     contactTile("#", t("sharePlace"), v.name, { tag: "button", id: "v-share", external: false }),
     venueWaPhone(v) ? contactTile(waHref(venueWaPhone(v), t("waPrefill").replace("{venue}", v.name)), "WhatsApp", t("waOpen"), { gold: true }) : "",
-    contactTile(`#/promoter/${encodeURIComponent(v.venue_id)}`, t("chatPromoter"), t("promoter"), { external: false }),
+    contactTile(
+      promoterHref(v.venue_id),
+      t("chatPromoter"),
+      isIdvOk() ? t("verifiedMember") : t("promoterNeedVerify"),
+      { gold: isIdvOk(), locked: !isIdvOk(), external: false }
+    ),
   ].filter(Boolean).join("");
   const season = d?.peak_season ? `${t("whenToGo")} ${d.peak_season}` : "";
   const where = [v.destination, d?.country, d?.region].filter(Boolean).join(" · ");
@@ -730,6 +736,21 @@ function idvStatus() {
 }
 function isIdvOk() {
   return idvStatus() === "verified";
+}
+function rememberAfterIdv(hash) {
+  try { sessionStorage.setItem("velvet_after_idv", hash); } catch { /* private mode */ }
+}
+function promoterHref(venueId) {
+  return `#/promoter/${encodeURIComponent(venueId)}`;
+}
+function promoterLockHTML(v) {
+  return `
+    <div class="promo-lock">
+      <p class="idv-badge ok">${esc(t("verifiedMember"))}</p>
+      <h2>${esc(t("verifiedPerkPromoter"))}</h2>
+      <p>${esc(t("promoterLockedBody"))}</p>
+      <a class="btn btn-gold" href="#/verify" data-nav id="ch-verify">${esc(t("verifyCta"))}</a>
+    </div>`;
 }
 async function refreshIdv() {
   const u = loadUser();
@@ -1670,11 +1691,13 @@ function renderVenueDetail(id) {
         ${bookingLinkHTML(v, { gold: true, full: true })}
         <a class="btn btn-ghost" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener" style="width:100%;margin-top:10px">${esc(t("directions"))} ↗</a>
         <button class="btn btn-ghost" id="d-book" style="width:100%;margin-top:10px">${esc(t("sendRequest"))}</button>
-        <a class="btn btn-ghost" id="d-promo" href="#/promoter/${encodeURIComponent(v.venue_id)}" data-nav style="width:100%;margin-top:10px">${esc(t("chatPromoter"))}</a>
+        <a class="btn ${isIdvOk() ? "btn-gold" : "btn-ghost"}" id="d-promo" href="${promoterHref(v.venue_id)}" data-nav style="width:100%;margin-top:10px">${esc(isIdvOk() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>
+        <p class="detail-cta-note">${esc(isIdvOk() ? t("memberAccessOn") : t("memberAccessOff"))}</p>
         <ul class="detail-perks">
           <li>${esc(t("perkSite"))}</li>
           <li>${esc(t("perkConcierge"))}</li>
           <li>${esc(t("perkSplit"))}</li>
+          <li>${esc(t("perkPromoter"))}</li>
         </ul>
       </div>
     </div>
@@ -3425,7 +3448,15 @@ async function renderVerify() {
     <a class="detail-back" href="#/account" data-nav>← ${esc(t("account"))}</a>
     <h1>${esc(t("verifyTitle"))}</h1>
     <p class="ob-sub" style="margin:0 0 18px;text-align:left">${esc(t("verifySub"))}</p>
-    ${st === "verified" ? `<p class="idv-badge ok">✓ ${esc(t("verifyOk"))}</p>${mrzRowsHTML(savedFields)}` : ""}
+    ${st === "verified"
+      ? `<p class="idv-badge ok">✓ ${esc(t("verifyOk"))}</p><p class="member-access on">${esc(t("memberAccessOn"))}</p>${mrzRowsHTML(savedFields)}`
+      : `<div class="verify-perks">
+          <p class="verify-perks-title">${esc(t("verifyPerksTitle"))}</p>
+          <ul>
+            <li>${esc(t("verifyPerkPromoter"))}</li>
+            <li>${esc(t("verifyPerkEvents"))}</li>
+          </ul>
+        </div>`}
     <p class="stepper-hint">${esc(t("verifyHint"))}</p>
     <div class="mrz-cam-wrap" id="mrz-cam-wrap" hidden>
       <video id="mrz-video" playsinline muted autoplay></video>
@@ -3770,6 +3801,7 @@ async function renderAccount() {
               : `<span class="person-handle">@${esc(u.handle)}</span>`) : ""}
             ${st === "verified" ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : `<a class="btn btn-gold btn-sm" href="#/verify" data-nav>${esc(t("verifyTitle"))}</a>`}
           </p>
+          <p class="member-access${st === "verified" ? " on" : ""}">${esc(st === "verified" ? t("memberAccessOn") : t("memberAccessOff"))}</p>
           <p>${starRow(mine.avg)} ${mine.n ? `${esc(t("funScore"))} (${mine.n})` : t("noReviews")}</p>
           <p style="margin-top:10px"><a class="btn btn-ghost btn-sm" href="#/user/${encodeURIComponent(u.id)}" data-nav>${esc(t("openProfile"))}</a></p>
         </div>
@@ -4037,9 +4069,35 @@ async function renderPromoterChat(venueId) {
   if (!v) { render404("#/promoter/" + venueId); return; }
   const me = loadUser();
   if (!me) {
-    view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p>${esc(t("chatPromoter"))}</p><p style="margin-top:16px"><button class="btn btn-gold" id="ch-login">${esc(t("loginCta"))}</button></p></div></section>`;
+    view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p>${esc(t("verifiedPerkPromoter"))}</p><p style="margin-top:16px"><button class="btn btn-gold" id="ch-login">${esc(t("loginCta"))}</button></p></div></section>`;
     $("#ch-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
     return;
+  }
+  await refreshIdv();
+  if (!isIdvOk()) {
+    const peek = await apiJSON(`/chats/${encodeURIComponent(venueId)}?userId=${encodeURIComponent(me.id)}`);
+    const asPromoter = !!(peek && peek.promoter && peek.error !== "idv_required");
+    if (!asPromoter) {
+      rememberAfterIdv(promoterHref(venueId));
+      setTitle(t("promoter") + " · " + v.name);
+      view().innerHTML = `
+      <section class="section chat-page">
+        <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
+        <h1>${esc(t("promoter"))} · ${esc(v.name)}</h1>
+        ${promoterLockHTML(v)}
+        <p style="margin-top:14px"><button class="btn btn-ghost btn-sm" id="claim-promo">${esc(t("iAmPromoter"))}</button></p>
+      </section>`;
+      $("#ch-verify")?.addEventListener("click", () => rememberAfterIdv(promoterHref(venueId)));
+      $("#claim-promo")?.addEventListener("click", async () => {
+        await apiJSON(`/chats/${encodeURIComponent(venueId)}/claim`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user: me }),
+        });
+        renderPromoterChat(venueId);
+      });
+      return;
+    }
   }
   setTitle(t("promoter") + " · " + v.name);
   let threadId = me.id;
@@ -4134,6 +4192,7 @@ async function renderPromoterChat(venueId) {
     <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
     <h1>${esc(t("promoter"))} · ${esc(v.name)}</h1>
     <p class="ob-sub" style="text-align:left;margin:0 0 16px">${esc(t("promoterSub"))}</p>
+    ${!isIdvOk() ? "" : `<p class="member-access on">${esc(t("memberAccessOn"))}</p>`}
     <p class="chat-wa" id="chat-wa" hidden>
       <a class="btn btn-wa" id="wa-open" href="#" target="_blank" rel="noopener">WhatsApp</a>
       <span class="events-meta" id="wa-src"></span>
@@ -4177,6 +4236,11 @@ async function renderPromoterChat(venueId) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user: me, text, threadId, asPromoter: promoter, whatsapp: $("#guest-wa-in")?.value || undefined }),
     });
+    if (data?.error === "idv_required") {
+      rememberAfterIdv(promoterHref(venueId));
+      location.hash = "#/verify";
+      return;
+    }
     if (data?.messages) paint(data.messages);
     if (promoter) loadInbox();
   });
@@ -4271,7 +4335,7 @@ function renderBookSite(id) {
         <div class="book-site-actions">
           <a class="btn btn-gold" id="bs-open" href="${esc(b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))} ↗</a>
           <button class="btn btn-ghost" type="button" id="bs-velvet">${esc(t("sendRequest"))}</button>
-          <a class="btn btn-ghost" href="#/promoter/${encodeURIComponent(v.venue_id)}" data-nav>${esc(t("chatPromoter"))}</a>
+          <a class="btn ${isIdvOk() ? "btn-gold" : "btn-ghost"}" href="${promoterHref(v.venue_id)}" data-nav>${esc(isIdvOk() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>
         </div>
         <p class="book-site-url">${esc(b.host)} · ${esc(b.url)}</p>
         <p class="detail-cta-note" style="margin-bottom:0">${esc(t("bookOnSiteNote"))}</p>
