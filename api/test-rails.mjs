@@ -189,6 +189,37 @@ async function runApi() {
 
     const host = { id: "U-instagram-gabbe", name: "Gabbe", handle: "gabbe", provider: "instagram" };
     const guest = { id: "U-tiktok-dan", name: "Dan Grant", handle: "dan.grant", provider: "tiktok" };
+    const FACE_OK = { passportFace: true, selfieFace: true, liveness: true, matchOk: true, matchDistance: 0.32 };
+    const img = fakeJpeg();
+
+    const unverifiedBook = await req(base, "POST", "/tables", {
+      id: "TB-BLOCK", venue_id: "IBZ-001", venue: "Hï Ibiza", destination: "Ibiza",
+      date: "2026-08-29", package: "VIP-bord", party: 4, openSeats: 2, host: guest,
+    });
+    if (unverifiedBook.status !== 403 || unverifiedBook.json.error !== "idv_required") {
+      fail("book-idv", JSON.stringify(unverifiedBook.json).slice(0, 220));
+    } else ok("book-idv", "unverified host cannot book");
+
+    const hostIdv = await req(base, "POST", "/idv", {
+      userId: host.id, name: "Gabbe", passport: img, selfie: img, mrz: TEST_LIVE, face: FACE_OK, confirmMismatch: true,
+    });
+    if (hostIdv.json.idv?.status !== "verified") fail("book-host-idv", JSON.stringify(hostIdv.json).slice(0, 220));
+    else ok("book-host-idv", hostIdv.json.idv.legalName);
+
+    const hostNoCard = await req(base, "POST", "/tables", {
+      id: "TB-NOCARD", venue_id: "IBZ-001", venue: "Hï Ibiza", destination: "Ibiza",
+      date: "2026-08-29", package: "VIP-bord", party: 4, openSeats: 2, host,
+    });
+    if (hostNoCard.status !== 403 || hostNoCard.json.error !== "card_required") {
+      fail("book-card", JSON.stringify(hostNoCard.json).slice(0, 220));
+    } else ok("book-card", "verified host still needs card");
+
+    const hostCard = await req(base, "POST", "/card", {
+      user: host, last4: "1881", brand: "mastercard", expMonth: 12, expYear: 2099,
+    });
+    if (hostCard.status !== 200) fail("book-host-card", JSON.stringify(hostCard.json).slice(0, 200));
+    else ok("book-host-card", "Mastercard ••1881");
+
     const created = await req(base, "POST", "/tables", {
       id: "TB-RAILS",
       venue_id: "IBZ-001",
@@ -203,7 +234,13 @@ async function runApi() {
     });
     if (created.status !== 201 || created.json.table?.id !== "TB-RAILS") {
       fail("tables-create", JSON.stringify(created));
-    } else ok("tables-create", created.json.table.id);
+    } else if (created.json.table.host?.legalName !== "MOSES ISIK") {
+      fail("tables-dossier-name", JSON.stringify(created.json.table.host).slice(0, 240));
+    } else if (created.json.table.host?.card?.last4 !== "1881" || created.json.table.host?.fields?.documentNumber) {
+      fail("tables-dossier-card", JSON.stringify(created.json.table.host).slice(0, 240));
+    } else if (created.json.table.host?.idv !== "verified" || created.json.table.host?.fields?.documentNumberMasked !== "•••567") {
+      fail("tables-dossier-idv", JSON.stringify(created.json.table.host?.fields).slice(0, 240));
+    } else ok("tables-create", "TB-RAILS · " + created.json.table.host.legalName + " · ••1881");
 
     const joined = await req(base, "POST", "/tables/TB-RAILS/join", { user: guest });
     if (joined.status !== 200 || !joined.json.table) fail("tables-join", JSON.stringify(joined));
@@ -240,10 +277,15 @@ async function runApi() {
       fail("promo-idv-wa", JSON.stringify(lockedWa.json).slice(0, 220));
     } else ok("promo-idv-wa", "unverified guest-wa 403");
 
-    const hostLocked = await req(base, "GET", "/chats/IBZ-001?userId=" + encodeURIComponent(host.id));
-    if (hostLocked.status !== 403 || hostLocked.json.error !== "idv_required") {
-      fail("promo-host-locked", JSON.stringify(hostLocked.json).slice(0, 220));
-    } else ok("promo-host-locked", "unverified non-promoter 403");
+    const guestLocked = await req(base, "GET", "/chats/IBZ-001?userId=" + encodeURIComponent(guest.id));
+    if (guestLocked.status !== 403 || guestLocked.json.error !== "idv_required") {
+      fail("promo-guest-locked", JSON.stringify(guestLocked.json).slice(0, 220));
+    } else ok("promo-guest-locked", "unverified guest 403");
+
+    const hostAsMember = await req(base, "GET", "/chats/IBZ-001?userId=" + encodeURIComponent(host.id));
+    if (hostAsMember.status !== 200 || hostAsMember.json.promoter) {
+      fail("promo-host-member", JSON.stringify(hostAsMember.json).slice(0, 220));
+    } else ok("promo-host-member", "verified paying host can talk to promoter");
 
     const hostClaim = await req(base, "POST", "/chats/IBZ-001/claim", { user: host });
     if (hostClaim.status !== 200) fail("promo-host-claim", JSON.stringify(hostClaim.json).slice(0, 220));
@@ -258,8 +300,9 @@ async function runApi() {
     if (got.status !== 200) fail("tables-get", "HTTP " + got.status);
     else if (ids.join() !== [guest.id, host.id].sort().join()) fail("tables-get", "members " + ids.join());
     else if (members.some((m) => m.paid)) fail("tables-get", "someone already paid");
-    else if (members.some((m) => m.idv === "verified")) fail("tables-get", "idv verified without /idv");
-    else ok("tables-get", members.length + " members unpaid unverified");
+    else if (members.find((m) => m.id === guest.id)?.idv === "verified") fail("tables-get", "guest verified too early");
+    else if (members.find((m) => m.id === host.id)?.idv !== "verified") fail("tables-get", "host should be verified paying");
+    else ok("tables-get", members.length + " members, host verified, guest not");
 
     const paySelf = await req(base, "POST", "/tables/TB-RAILS/pay", {
       user: guest,
@@ -304,8 +347,6 @@ async function runApi() {
     if (places.status !== 200 || !places.json.venues) fail("places", JSON.stringify(places.json).slice(0, 200));
     else ok("places", Object.keys(places.json.venues).length + " cached");
 
-    const img = fakeJpeg();
-    const FACE_OK = { passportFace: true, selfieFace: true, liveness: true, matchOk: true, matchDistance: 0.32 };
     const noMrz = await req(base, "POST", "/idv", {
       userId: guest.id, name: "Moses Isik", passport: img, selfie: img,
     });

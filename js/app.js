@@ -565,6 +565,7 @@ async function publishTable(table) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(table),
   });
+  if (remote?.error) return remote;
   return remote?.table || table;
 }
 async function listOpenTables() {
@@ -704,8 +705,9 @@ function personRowHTML(p, { me, hostId, tableId } = {}) {
           ? `<a class="person-handle" href="${esc(p.socialUrl)}" target="_blank" rel="noopener">${esc(handle)}</a>`
           : `<span class="person-handle">${esc(handle)}</span>`) : ""}
         ${verified
-          ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>`
+          ? `<span class="idv-badge ok">✓ ${esc(p.legalName || t("verifyOk"))}</span>`
           : `<span class="idv-badge no">${esc(t("notVerified"))}</span>`}
+        ${p.card?.last4 ? `<span class="idv-badge ok">💳 ${esc(cardLabel(p.card))}</span>` : ""}
       </div>
     </div>
     <div class="person-pay">
@@ -907,6 +909,10 @@ function inviteTextFor(b) {
 }
 
 function conciergeFields(b) {
+  const f = b.host?.fields || {};
+  const card = b.host?.cardLast4
+    ? `${b.host.cardBrand || "card"} ••${b.host.cardLast4}`
+    : (b.host?.card ? `${b.host.card.brand || "card"} ••${b.host.card.last4}` : "");
   return {
     id: b.id,
     venue: b.venue,
@@ -918,10 +924,17 @@ function conciergeFields(b) {
     total_indicative_eur: b.total,
     per_person_indicative_eur: b.per_person,
     host_name: b.host?.name || "",
+    host_legal_name: b.host?.legalName || "",
     host_email: b.host?.email || "",
     host_phone: b.host?.phone || "",
+    host_social: [b.host?.provider, b.host?.handle ? "@" + b.host.handle : ""].filter(Boolean).join(" "),
+    host_nationality: f.nationality || "",
+    host_birth: f.birthDate || "",
+    host_passport_masked: f.documentNumberMasked || "",
+    host_card: card,
+    host_idv: b.host?.idvStatus || (b.host?.idv === "verified" ? "verified" : ""),
     guests: (b.guests || []).map((g) => `${g.name}${g.email ? ` <${g.email}>` : ""}`).join(", "),
-    note: "Förfrågan från VELVET-appen. INTE en bekräftad bokning — återkoppla till värden.",
+    note: "Förfrågan från VELVET-appen. INTE en bekräftad bokning — återkoppla till värden. Värden är passverifierad betalande kund (kort sista fyra, inget PAN).",
   };
 }
 async function sendConciergeRequest(b) {
@@ -953,8 +966,15 @@ function mailtoFor(b) {
   const subject = encodeURIComponent(`VELVET-förfrågan ${b.id} · ${b.venue}`);
   const body = encodeURIComponent([
     `Värd: ${f.host_name}`,
+    f.host_legal_name ? `Passnamn: ${f.host_legal_name}` : "",
     `E-post: ${f.host_email}`,
     `Telefon: ${f.host_phone}`,
+    f.host_social ? `Profil: ${f.host_social}` : "",
+    f.host_nationality ? `Nationalitet: ${f.host_nationality}` : "",
+    f.host_birth ? `Född: ${f.host_birth}` : "",
+    f.host_passport_masked ? `Pass: ${f.host_passport_masked}` : "",
+    f.host_card ? `Kort: ${f.host_card}` : "",
+    f.host_idv ? `IDV: ${f.host_idv}` : "",
     `Gäster: ${f.guests || "—"}`,
     `venue_id: ${f.venue_id}`,
     `Ställe: ${f.venue} (${f.destination})`,
@@ -966,7 +986,7 @@ function mailtoFor(b) {
       : `Pris: enligt klubben (inget belopp ifyllt)`,
     f.note,
     `id: ${f.id}`,
-  ].join("\n"));
+  ].filter(Boolean).join("\n"));
   return `mailto:${CONCIERGE_MAIL}?subject=${subject}&body=${body}`;
 }
 
@@ -1801,18 +1821,26 @@ function renderVenueDetail(id) {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
-function openBookingModal(v) {
-  if (isSharpVenue(v) && !isIdvOk()) {
+async function openBookingModal(v) {
+  const me0 = loadUser();
+  if (!me0) {
+    openOnboarding({ dismissable: false });
+    return;
+  }
+  await refreshIdv();
+  if (!isPayingMember()) {
     const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    rememberAfterIdv(`#/venue/${encodeURIComponent(v.venue_id)}`);
+    const needCard = isIdvOk();
     const root = document.getElementById("modal-root");
     root.innerHTML = `
     <div class="modal-overlay" id="overlay">
       <div class="modal" role="dialog" aria-modal="true" aria-label="${esc(t("verifyTitle"))}" tabindex="-1">
         <button class="modal-close" id="m-close" aria-label="Stäng">✕</button>
-        <h2>${esc(t("verifyTitle"))}</h2>
-        <p class="modal-sub">${esc(t("sharpEvent"))}</p>
-        <p style="color:var(--text-dim);margin:12px 0 20px">${esc(t("verifyNeed"))}</p>
-        <a class="btn btn-gold" href="#/verify" data-nav id="m-go-verify" style="width:100%">${esc(t("verifyTitle"))}</a>
+        <h2>${esc(needCard ? t("cardTitle") : t("verifyTitle"))}</h2>
+        <p class="modal-sub">${esc(t("bookNeedVerify"))}</p>
+        <p style="color:var(--text-dim);margin:12px 0 20px">${esc(t("bookCredentials"))}</p>
+        <a class="btn btn-gold" href="${needCard ? "#/card" : "#/verify"}" data-nav id="m-go-verify" style="width:100%">${esc(needCard ? t("cardCta") : t("verifyCta"))}</a>
       </div>
     </div>`;
     const close = () => { root.innerHTML = ""; restoreFocus(opener); };
@@ -1842,10 +1870,15 @@ function openBookingModal(v) {
         <div class="req-step on">3 Sällskap</div>
       </div>
       <p class="req-summary" id="m-summary"></p>
+      <div class="verify-perks" style="margin:0 0 16px">
+        <p class="verify-perks-title">${esc(t("bookSentAs"))}</p>
+        <p style="margin:0;color:var(--text)">${esc((loadUser()?.legalName || displayName(loadUser()) || host0.name))}${cardLabel() ? ` · ${esc(cardLabel())}` : ""}${loadUser()?.handle ? ` · @${esc(loadUser().handle)}` : ""}</p>
+        <p class="stepper-hint" style="margin:8px 0 0">${esc(t("bookCredentials"))}</p>
+      </div>
 
       <div class="form-group">
         <label for="m-host">Ditt namn</label>
-        <input type="text" id="m-host" autocomplete="name" value="${esc(host0.name)}" placeholder="Namn på värden">
+        <input type="text" id="m-host" autocomplete="name" value="${esc(loadUser()?.legalName || host0.name)}" placeholder="Namn på värden">
         <div class="field-error hidden" id="err-host" role="alert"></div>
       </div>
       <div class="form-group">
@@ -2075,7 +2108,20 @@ function openBookingModal(v) {
       setErr("err-confirm", t("loginNeedJoin"));
       return;
     }
-    const host = { name: hostName, email: hostEmail, phone: hostPhone, id: me?.id || "", provider: me?.provider || "", handle: me?.handle || "", paid: false };
+    const host = {
+      name: hostName,
+      email: hostEmail,
+      phone: hostPhone,
+      id: me?.id || "",
+      provider: me?.provider || "",
+      handle: me?.handle || "",
+      legalName: me?.legalName || "",
+      idvStatus: me?.idvStatus || "",
+      cardLast4: me?.cardLast4 || "",
+      cardBrand: me?.cardBrand || "",
+      fields: me?.idvFields || null,
+      paid: false,
+    };
     saveHost(host);
     const openOn = !!$("#m-open")?.checked;
     const booking = {
@@ -2098,7 +2144,14 @@ function openBookingModal(v) {
     const sent = await sendConciergeRequest(booking);
     booking.delivery = sent;
     saveBookings([...loadBookings(), booking]);
-    if (openOn) await publishTable(booking);
+    const remote = await publishTable(booking);
+    if (remote?.error === "idv_required" || remote?.error === "card_required") {
+      btn.disabled = false;
+      btn.textContent = t("sendRequest");
+      rememberAfterIdv(`#/venue/${encodeURIComponent(v.venue_id)}`);
+      location.hash = remote.error === "card_required" ? "#/card" : "#/verify";
+      return;
+    }
     cleanup();
     document.body.classList.add("modal-lock");
     showConfirmation(booking, opener);
@@ -2121,6 +2174,7 @@ function showConfirmation(b, opener) {
       <div class="modal-sub">${esc(b.id)} · ${sent ? "till VELVET-teamet" : "sparad på den här enheten"}</div>
       <p style="color:var(--text-dim); margin-bottom:8px">${esc(b.package)} på <b>${esc(b.venue)}</b>, ${esc(b.destination)}</p>
       <p style="color:var(--text-dim)">${esc(b.date)} · ${num(b.party)} personer</p>
+      ${b.host?.legalName || b.host?.cardLast4 ? `<p class="member-access on">${esc(t("bookSentAs"))}: ${esc(b.host.legalName || b.host.name || "")}${b.host.cardLast4 ? ` · ${esc((b.host.cardBrand || "card") + " ••" + b.host.cardLast4)}` : ""}</p>` : ""}
       ${(b.guests || []).length ? `
       <div class="confirm-guests">
         <div class="confirm-guests-title">Sällskap</div>

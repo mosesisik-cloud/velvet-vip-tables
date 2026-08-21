@@ -142,6 +142,23 @@ function memberGate(uid, db) {
   if (!hasCardOnFile(uid, db)) return "card_required";
   return "";
 }
+function dossier(uid, db) {
+  if (!uid) return null;
+  const idv = publicIdv(db.idv[uid]);
+  const u = db.users[uid] || {};
+  const card = publicCard(u.card);
+  return {
+    id: uid,
+    legalName: idv.legalName || u.legalName || "",
+    idv: idv.status || "none",
+    fields: idv.fields || null,
+    card,
+    paying: !!card,
+    provider: u.provider || "",
+    handle: u.handle || "",
+    socialUrl: socialUrl(u.provider, u.handle),
+  };
+}
 function isPromoter(user, venueId, db) {
   const uid = user?.id || "";
   if (!uid) return false;
@@ -314,11 +331,13 @@ function publicPerson(p, db, role) {
   const provider = String(p.provider || stored.provider || "");
   const handle = String(p.handle || stored.handle || "").replace(/^@/, "");
   const name = String(p.name || stored.name || "Gäst").slice(0, 80);
-  const idv = id && db.idv[id]?.status === "verified" ? "verified" : "none";
-  const card = publicCard(db.users[id]?.card);
+  const file = id ? dossier(id, db) : null;
+  const idv = file?.idv === "verified" ? "verified" : "none";
+  const card = file?.card || null;
   return {
     id,
     name,
+    legalName: file?.legalName || "",
     handle,
     provider,
     socialUrl: socialUrl(provider, handle),
@@ -329,6 +348,7 @@ function publicPerson(p, db, role) {
     idv,
     paying: !!card,
     card,
+    fields: file?.fields || null,
     joined: p.joined || p.created || null,
   };
 }
@@ -1188,10 +1208,15 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && url.pathname === "/tables") {
       const b = await readBody(req, 2e6);
       if (!b.venue || !b.host?.name) return send(res, 400, { error: "missing" });
+      const hostId = String(b.host?.id || "");
+      if (!hostId) return send(res, 401, { error: "auth" });
+      const db = load();
+      const gate = memberGate(hostId, db);
+      if (gate) return send(res, 403, { error: gate });
       const party = Math.max(2, Math.min(20, Number(b.party) || 4));
       const openSeats = Math.max(0, Math.min(party - 1, Number(b.openSeats) || 0));
       const host = {
-        id: String(b.host?.id || ""),
+        id: hostId,
         name: String(b.host.name),
         provider: String(b.host?.provider || ""),
         handle: String(b.host?.handle || "").replace(/^@/, ""),
@@ -1223,7 +1248,6 @@ const server = http.createServer(async (req, res) => {
         joiners: [],
         created: new Date().toISOString(),
       };
-      const db = load();
       upsertUser(db, host);
       db.tables.unshift(table);
       db.tables = db.tables.slice(0, 200);
@@ -1639,7 +1663,7 @@ const server = http.createServer(async (req, res) => {
         whatsapp: whatsappForVenue(venueId, db),
         guestWa: guestWaForThread(db, venueId, thread),
         cloud: !!(waCloud().token && waCloud().phoneId),
-        guest: {
+        guest: dossier(guestId, db) || {
           id: guestId,
           idv: db.idv[guestId]?.status === "verified" ? "verified" : "none",
           paying: !!guestCard,
