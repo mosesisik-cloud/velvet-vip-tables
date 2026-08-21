@@ -2947,8 +2947,10 @@ async function renderPromoterChat(venueId) {
   });
 
   await loadThread();
-  await loadInbox();
-  if (promoter) $("#chat-inbox")?.classList.remove("hidden");
+  if (promoter) {
+    $("#chat-inbox")?.classList.remove("hidden");
+    await loadInbox();
+  }
   stopChatPoll();
   chatPoll = setInterval(() => { loadThread(); if (promoter) loadInbox(); }, 4000);
 }
