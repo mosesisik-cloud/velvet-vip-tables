@@ -585,7 +585,7 @@ async function joinOpenTable(id) {
         body: JSON.stringify({ user: u }),
       });
       const data = await r.json().catch(() => ({}));
-      if (r.status === 403) return { error: data.error || "idv_required", openFor: data.openFor };
+      if (r.status === 403) return { error: data.error || "idv_required", openFor: data.openFor, minAge: data.minAge, ageYears: data.ageYears };
       if (r.status === 409) return { error: "full" };
       if (data.table) return { table: data.table, already: data.already };
     } catch {}
@@ -594,6 +594,8 @@ async function joinOpenTable(id) {
   const tb = list.find((x) => x.id === id);
   if (!tb) return { error: "missing" };
   const ven = VENUES.find((x) => x.venue_id === tb.venue_id);
+  const young = venueTooYoung(ven);
+  if (young) return { error: "too_young", minAge: young.min, ageYears: young.age };
   if ((tb.sharp || (ven && isSharpVenue(ven))) && !isIdvOk()) return { error: "idv_required" };
   if (openForOf(tb.openFor) !== "anyone") {
     if (!isIdvOk()) return { error: "idv_required" };
@@ -712,6 +714,7 @@ function personRowHTML(p, { me, hostId, tableId } = {}) {
           ? `<span class="idv-badge ok">✓ ${esc(p.legalName || t("verifyOk"))}</span>`
           : `<span class="idv-badge no">${esc(t("notVerified"))}</span>`}
         ${p.card?.last4 ? `<span class="idv-badge ok">💳 ${esc(cardLabel(p.card))}</span>` : ""}
+        ${p.spend && p.spend.verified ? `<span class="idv-badge ok">${esc(t("verifiedSpend"))} ${esc(spendLabel(p.spend))}</span>` : ""}
       </div>
     </div>
     <div class="person-pay">
@@ -767,6 +770,11 @@ function venueTooYoung(v) {
   const age = myAgeYears();
   return age != null && age < min ? { min, age } : null;
 }
+function tooYoungText(data, v) {
+  const min = data?.minAge != null ? data.minAge : (data?.min != null ? data.min : (v ? venueMinAge(v) : 18));
+  const age = data?.ageYears != null ? data.ageYears : (data?.age != null ? data.age : myAgeYears());
+  return t("venueTooYoung").replace("{min}", String(min || 18)).replace("{age}", age != null && age !== "" ? String(age) : "—");
+}
 function openForOf(v) {
   const s = String(v || "anyone").toLowerCase();
   return s === "women" || s === "men" ? s : "anyone";
@@ -804,6 +812,13 @@ function openSeatsLine(tb) {
   const who = openForOf(tb.openFor);
   if (who === "anyone") return `${n} ${t("seatsOpen")}`;
   return `${n} ${t("seatsOpen")} · ${t("openForLabel").toLowerCase()} ${openForLabel(who)}`;
+}
+function spendLabel(s) {
+  const a = Number(s && s.amount) || 0;
+  const cur = (s && s.currency) || "EUR";
+  const n = Number(s && s.n) || 0;
+  const money = cur === "EUR" ? `€${a % 1 ? a.toFixed(2) : String(a)}` : `${a} ${cur}`;
+  return n ? `${money} · ${t("spendN").replace("{n}", String(n))}` : money;
 }
 function cardLabel(card) {
   const u = loadUser();
@@ -889,6 +904,13 @@ async function fillVenuePromoters(venueId) {
   const el = $("#venue-promoters");
   if (!el) return;
   const me = loadUser();
+  const v = VENUES.find((x) => x.venue_id === venueId);
+  const paintYoung = (data) => {
+    el.innerHTML = `
+      <h2 class="detail-panel-title">${esc(t("promotersTitle"))}</h2>
+      <p class="detail-cta-note">${esc(tooYoungText(data, v))}</p>`;
+  };
+  if (venueTooYoung(v)) { paintYoung(venueTooYoung(v)); return; }
   if (!me || !isPayingMember()) {
     el.innerHTML = `
       <h2 class="detail-panel-title">${esc(t("promotersTitle"))}</h2>
@@ -901,6 +923,7 @@ async function fillVenuePromoters(venueId) {
   }
   const r = await apiJSON(`/promoters/${encodeURIComponent(venueId)}?userId=${encodeURIComponent(me.id)}`);
   if (!el.isConnected) return;
+  if (r?.error === "too_young") { paintYoung(r); return; }
   if (r?.error === "idv_required" || r?.error === "card_required") {
     el.innerHTML = `
       <h2 class="detail-panel-title">${esc(t("promotersTitle"))}</h2>
@@ -2564,6 +2587,7 @@ function renderJoin(raw) {
       const r = await joinOpenTable(inv.id);
       if (r.error === "auth") { openOnboarding({ dismissable: false }); return; }
       if (r.error === "idv_required") { location.hash = "#/verify"; return; }
+      if (r.error === "too_young") { showToast(tooYoungText(r, v)); joinBtn.disabled = false; return; }
       if (!loadBookings().some((b) => b.id === inv.id)) {
         saveBookings([...loadBookings(), { ...inv, guests: [], joined: true, created: new Date().toISOString() }]);
       }
@@ -2889,7 +2913,7 @@ function updateNavDest() {
   const el = document.getElementById("nav-dest-name");
   if (!el) return;
   const d = homeDestination();
-  el.textContent = d ? d.name : "Alla destinationer";
+  el.textContent = d ? d.name : t("allDest");
   // Guldton på väljaren när en hem-destination är vald
   const btn = document.getElementById("nav-dest");
   if (btn) btn.classList.toggle("has-dest", !!d);
@@ -3292,7 +3316,7 @@ async function renderOpenTables() {
         <h3>${esc(t("noOpen"))}</h3>
         <p>${esc(t("noOpenHint"))}</p>
       </div>` : tables.map((tb) => {
-        const per = tb.per_person || Math.ceil((Number(tb.total) || 0) / Math.max(1, Number(tb.party) || 1));
+        const per = Number(tb.per_person) || Math.ceil((Number(tb.total) || 0) / Math.max(1, Number(tb.party) || 1));
         return `
         <div class="booking-card">
           <div class="booking-info">
@@ -3302,7 +3326,8 @@ async function renderOpenTables() {
             ${partyPreviewHTML(tb)}
           </div>
           <div class="booking-price">
-            <div class="per">${esc(moneyOrClub(per))}</div>
+            <div class="per">${esc(t("clubSetsPrice"))}</div>
+            ${per > 0 ? `<div class="booking-meta">${esc(t("guestBudget").replace("{amount}", fmtEUR(per)))}</div>` : ""}
             <a class="btn btn-ghost btn-sm" href="#/table/${encodeURIComponent(tb.id)}" data-nav>${esc(t("viewParty"))}</a>
             ${canTakeOpenSeat(tb) ? `<button class="btn btn-gold btn-sm" data-join="${esc(tb.id)}">${esc(t("takeSeat"))}</button>` : `<p class="stepper-hint">${esc(t("seatPref").replace("{who}", openForLabel(tb.openFor).toLowerCase()))}</p>`}
           </div>
@@ -3317,6 +3342,12 @@ async function renderOpenTables() {
       const r = await joinOpenTable(btn.dataset.join);
       if (r.error === "auth") openOnboarding({ dismissable: false });
       else if (r.error === "idv_required") location.hash = "#/verify";
+      else if (r.error === "too_young") {
+        const tb = tables.find((x) => x.id === btn.dataset.join);
+        const ven = VENUES.find((x) => x.venue_id === tb?.venue_id);
+        showToast(tooYoungText(r, ven));
+        btn.disabled = false;
+      }
       else if (r.error === "seat_pref") { showToast(t("seatPref").replace("{who}", openForLabel(r.openFor).toLowerCase())); btn.disabled = false; }
       else if (r.table) location.hash = `#/table/${encodeURIComponent(r.table.id)}`;
       else renderOpenTables();
@@ -3388,7 +3419,7 @@ async function renderTable(id) {
     const r = await joinOpenTable(tb.id);
     if (r.error === "auth") openOnboarding({ dismissable: false });
     else if (r.error === "idv_required") location.hash = "#/verify";
-    else if (r.error === "too_young") { showToast(t("venueTooYoung").replace("{min}", String(r.minAge || 18)).replace("{age}", r.ageYears != null ? String(r.ageYears) : "—")); if (btn) btn.disabled = false; }
+    else if (r.error === "too_young") { showToast(tooYoungText(r, VENUES.find((x) => x.venue_id === tb.venue_id))); if (btn) btn.disabled = false; }
     else if (r.error === "seat_pref") { showToast(t("seatPref").replace("{who}", openForLabel(r.openFor || tb.openFor).toLowerCase())); if (btn) btn.disabled = false; }
     else renderTable(id);
   });
@@ -3445,7 +3476,7 @@ async function renderPay(tableId) {
   }
   const mine = (tb.members || []).find((m) => m.id === me.id);
   const canPay = !!(mine && !mine.paid);
-  const startAmt = Number(tb.per_person) > 0 ? Number(tb.per_person) : (Number(mine?.paidAmount) || 0);
+  const startAmt = Number(mine?.paidAmount) || 0;
   setTitle(`${t("payShare")} · ${tb.venue}`);
   view().innerHTML = `
   <section class="section pay-page">
@@ -3459,7 +3490,8 @@ async function renderPay(tableId) {
         <span>€</span>
         <input type="number" id="pay-amt" min="1" step="1" inputmode="decimal" value="${startAmt || ""}" placeholder="0">
       </div>
-      <div class="split-label">${Number(tb.per_person) > 0 ? esc(t("perPerson")) : esc(t("payEnterAmount"))}</div>
+      <div class="split-label">${esc(t("payEnterAmount"))}</div>
+      ${Number(tb.per_person) > 0 ? `<p class="price-disclaimer">${esc(t("guestBudget").replace("{amount}", fmtEUR(tb.per_person)))}</p>` : `<p class="price-disclaimer">${esc(t("clubSetsPrice"))}</p>`}
     </div>
     ${mine?.paid ? `<p class="invite-joined">✓ ${esc(t("paid"))}${mine.paidVia ? ` · ${esc(mine.paidVia)}` : ""}</p>` : ""}
     ${mine?.paidPending ? `<p class="invite-joined">${esc(t("payWait"))}</p>` : ""}
@@ -4120,6 +4152,10 @@ async function renderUserProfile(id) {
           ${verified ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : `<span class="idv-badge no">${esc(t("notVerified"))}</span>`}
         </p>
         <p>${starRow(data.avg)} ${data.n ? `${esc(t("funScore"))} (${data.n})` : t("noReviews")}</p>
+        <p class="member-access${data.spend && data.spend.verified ? " on" : ""}">${data.spend && data.spend.verified
+          ? `${esc(t("verifiedSpend"))} · ${esc(spendLabel(data.spend))}`
+          : esc(t("verifiedSpendNone"))}</p>
+        <p class="stepper-hint">${esc(t("verifiedSpendHint"))}</p>
       </div>
     </div>
     ${partiesBlockHTML(data, { mine })}
@@ -4291,6 +4327,10 @@ async function renderAccount() {
               : `<a class="btn btn-ghost btn-sm" href="#/card" data-nav>${esc(t("cardNeed"))}</a>`}
           </p>
           <p>${starRow(mine.avg)} ${mine.n ? `${esc(t("funScore"))} (${mine.n})` : t("noReviews")}</p>
+          <p class="member-access${mine.spend && mine.spend.verified ? " on" : ""}">${mine.spend && mine.spend.verified
+            ? `${esc(t("verifiedSpend"))} · ${esc(spendLabel(mine.spend))}`
+            : esc(t("verifiedSpendNone"))}</p>
+          <p class="stepper-hint">${esc(t("verifiedSpendHint"))}</p>
           <p style="margin-top:10px"><a class="btn btn-ghost btn-sm" href="#/user/${encodeURIComponent(u.id)}" data-nav>${esc(t("openProfile"))}</a>
             ${isPayingMember() ? `<a class="btn btn-gold btn-sm" href="#/promoters" data-nav>${esc(t("promotersSee"))}</a>` : ""}</p>
         </div>
@@ -4404,15 +4444,15 @@ function openSearch() {
   if (opener && opener.id === "nav-search") opener.setAttribute("aria-expanded", "true");
   root.innerHTML = `
     <div class="search-overlay" id="search-overlay">
-      <div class="search-panel" role="dialog" aria-modal="true" aria-label="Sök" tabindex="-1">
+      <div class="search-panel" role="dialog" aria-modal="true" aria-label="${esc(t("navSearch"))}" tabindex="-1">
         <div class="search-head">
-          <input type="search" id="search-q" placeholder="Sök ställe, stad, kategori…" autocomplete="off"
-            role="combobox" aria-autocomplete="list" aria-controls="search-hits" aria-expanded="true" aria-activedescendant="" aria-label="Sök">
-          <button type="button" class="search-close" id="search-close" aria-label="Stäng" title="Stäng">✕</button>
+          <input type="search" id="search-q" placeholder="${esc(t("searchPh"))}" autocomplete="off"
+            role="combobox" aria-autocomplete="list" aria-controls="search-hits" aria-expanded="true" aria-activedescendant="" aria-label="${esc(t("navSearch"))}">
+          <button type="button" class="search-close" id="search-close" aria-label="${esc(t("navMenuClose"))}" title="${esc(t("navMenuClose"))}">✕</button>
         </div>
         <div class="sr-only" id="search-status" role="status" aria-live="polite"></div>
         <div class="search-hits" id="search-hits" role="listbox"></div>
-        <div class="search-empty" id="search-empty">Skriv för att söka</div>
+        <div class="search-empty" id="search-empty">${esc(t("searchEmpty"))}</div>
       </div>
     </div>`;
   const panel = root.querySelector(".search-panel");
@@ -4478,11 +4518,11 @@ function openSearch() {
     if (!hits.length) {
       hitsEl.innerHTML = "";
       emptyEl.hidden = false;
-      emptyEl.textContent = q ? "Inga träffar" : "Skriv för att söka";
-      statusEl.textContent = q ? "Inga träffar" : "";
+      emptyEl.textContent = q ? t("noHits") : t("searchEmpty");
+      statusEl.textContent = q ? t("noHits") : "";
     } else {
       emptyEl.hidden = true;
-      statusEl.textContent = `${hits.length} träffar`;
+      statusEl.textContent = t("searchHitsN").replace("{n}", String(hits.length));
       hitsEl.innerHTML = hits.map((h, i) => `
         <div class="search-hit${i === 0 ? " active" : ""}" id="search-opt-${i}" data-i="${i}" role="option" aria-selected="${i === 0}">
           <div><div>${esc(h.title)}</div><div class="search-hit-k">${esc(h.kind)}</div></div>
@@ -4565,6 +4605,17 @@ async function renderPromoterChat(venueId) {
   await refreshIdv();
   const peek = await apiJSON(`/chats/${encodeURIComponent(venueId)}?userId=${encodeURIComponent(me.id)}`);
   const asPromoter = !!(peek && peek.promoter && !peek.error);
+  const young = venueTooYoung(v);
+  if (!asPromoter && (young || peek?.error === "too_young")) {
+    setTitle(t("promoter") + " · " + v.name);
+    view().innerHTML = `
+    <section class="section chat-page">
+      <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
+      <h1>${esc(t("promoter"))} · ${esc(v.name)}</h1>
+      <p class="ob-sub" style="text-align:left">${esc(tooYoungText(peek?.error === "too_young" ? peek : young, v))}</p>
+    </section>`;
+    return;
+  }
   if (!asPromoter && (peek?.error === "idv_required" || peek?.error === "card_required" || !isPayingMember())) {
     const needCard = peek?.error === "card_required" || (isIdvOk() && peek?.error !== "idv_required");
     rememberAfterIdv(promoterHref(venueId));
@@ -4773,7 +4824,7 @@ async function renderPromoterChat(venueId) {
       return;
     }
     if (data?.error === "too_young") {
-      showToast(t("verifyTooYoung").replace("{age}", data.ageYears != null ? String(data.ageYears) : "—"));
+      showToast(tooYoungText(data, v));
       return;
     }
     if (data?.messages) paint(data.messages);
@@ -4860,7 +4911,7 @@ async function renderPromoterChat(venueId) {
     if (btn) btn.disabled = false;
     if (r?.error === "idv_required") { rememberAfterIdv(promoterHref(venueId) + "?match=1"); location.hash = "#/verify"; return; }
     if (r?.error === "card_required") { rememberAfterIdv(promoterHref(venueId) + "?match=1"); location.hash = "#/card"; return; }
-    if (r?.error === "too_young") { showToast(t("verifyTooYoung").replace("{age}", r.ageYears != null ? String(r.ageYears) : "—")); return; }
+    if (r?.error === "too_young") { showToast(tooYoungText(r, v)); return; }
     if (r?.error === "date") { showToast(t("matchDate")); return; }
     if (r?.match) {
       showToast(t("matchSent"));
@@ -4959,7 +5010,9 @@ async function renderBookSite(id) {
     officialUrl: b.url, host: b.host, kind: b.kind, label: b.label, engine: "official-site", mode: "handoff",
   };
   const kindLabel = adapter.kind === "vip" ? t("bookKindVip") : adapter.kind === "events" ? t("bookKindEvents") : t("bookKindSite");
-  const needLock = !me || live?.error === "idv_required" || live?.error === "card_required" || !isPayingMember();
+  const young = venueTooYoung(v);
+  const tooYoung = live?.error === "too_young" || !!young;
+  const needLock = !me || live?.error === "idv_required" || live?.error === "card_required" || tooYoung || !isPayingMember();
   const needCard = live?.error === "card_required" || (me && isIdvOk() && !isCardOk());
   setTitle(`${t("bridgeTitle")} · ${v.name}`);
   const mine = live?.bridges || [];
@@ -4993,9 +5046,12 @@ async function renderBookSite(id) {
               <span>${esc(n.title)}${n.note ? ` · ${esc(n.note)}` : ""}</span>
             </button>`).join("")}
         </div>` : `<p class="events-meta">${esc(t("bridgeNoNights"))}</p>`}
-        ${needLock ? `
-          <div style="margin-top:16px">${promoterLockHTML(needCard ? "card" : "idv")}</div>
-          <p class="detail-cta-note">${esc(t("bridgeNeed"))}</p>` : `
+        ${needLock ? (
+          tooYoung
+            ? `<p class="detail-cta-note">${esc(tooYoungText(live?.error === "too_young" ? live : young, v))}</p>`
+            : `<div style="margin-top:16px">${promoterLockHTML(needCard ? "card" : "idv")}</div>
+          <p class="detail-cta-note">${esc(t("bridgeNeed"))}</p>`
+        ) : `
         <div class="bridge-desk" id="bridge-desk">
           <label>${esc(t("bridgeDate"))}
             <input type="date" id="br-date" min="${todayISO()}" value="${esc(preDate)}">
@@ -5012,7 +5068,7 @@ async function renderBookSite(id) {
         <div class="book-site-actions">
           <a class="btn btn-ghost" id="bs-open" href="${esc(adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))} ↗</a>
           <button class="btn btn-ghost" type="button" id="bs-velvet">${esc(t("sendRequest"))}</button>
-          <a class="btn ${isPayingMember() ? "btn-gold" : "btn-ghost"}" href="${promoterHref(v.venue_id)}" data-nav>${esc(isPayingMember() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>
+          ${tooYoung ? "" : `<a class="btn ${isPayingMember() ? "btn-gold" : "btn-ghost"}" href="${promoterHref(v.venue_id)}" data-nav>${esc(isPayingMember() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>`}
         </div>
         <p class="book-site-url">${esc(adapter.host || b.host)} · ${esc(adapter.officialUrl || b.url)}</p>
         ${adapter.clubEmail ? `<p class="book-site-url">${esc(t("bridgeClubMail"))}: ${esc(adapter.clubEmail)}</p>` : ""}
@@ -5089,7 +5145,7 @@ async function renderBookSite(id) {
     if (btn) btn.disabled = false;
     if (r?.error === "idv_required") { rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}`); location.hash = "#/verify"; return; }
     if (r?.error === "card_required") { rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}`); location.hash = "#/card"; return; }
-    if (r?.error === "too_young") { showToast(t("verifyTooYoung").replace("{age}", r.ageYears != null ? String(r.ageYears) : "—")); return; }
+    if (r?.error === "too_young") { showToast(tooYoungText(r, v)); return; }
     if (r?.error === "date") { showToast(t("bridgeDate")); return; }
     if (r?.bridge) paintPacket(r.bridge);
   });
@@ -5160,13 +5216,13 @@ function route() {
   const titles = {
     "#/": null,
     "": null,
-    "#/destinations": "Destinationer",
-    "#/venues": "Ställen",
-    "#/map": "Karta",
-    "#/bookings": "Förfrågningar",
-    "#/favorites": "Favoriter",
-    "#/villkor": "Villkor",
-    "#/integritet": "Integritet",
+    "#/destinations": t("navDestinations"),
+    "#/venues": t("navVenues"),
+    "#/map": t("navMap"),
+    "#/bookings": t("navBookings"),
+    "#/favorites": t("navFav"),
+    "#/villkor": t("legalTerms"),
+    "#/integritet": t("legalPrivacy"),
   };
   if (Object.prototype.hasOwnProperty.call(titles, h)) setTitle(titles[h]);
   window.scrollTo(0, 0);
@@ -5180,6 +5236,13 @@ function paintNavLang() {
   document.querySelectorAll("[data-nav-lang]").forEach((el) => {
     el.setAttribute("aria-pressed", String(el.dataset.navLang === cur));
   });
+  updateNavDest();
+  const toggle = document.getElementById("nav-toggle");
+  const links = document.getElementById("nav-links");
+  if (toggle) {
+    const open = !!(links && links.classList.contains("open"));
+    toggle.setAttribute("aria-label", t(open ? "navMenuClose" : "navMenuOpen"));
+  }
 }
 function initNavLang() {
   document.getElementById("nav-links")?.addEventListener("click", (e) => {
@@ -5202,7 +5265,7 @@ function initMobileNav() {
     links.classList.toggle("open", open);
     toggle.classList.toggle("open", open);
     toggle.setAttribute("aria-expanded", String(open));
-    toggle.setAttribute("aria-label", open ? "Stäng meny" : "Öppna meny");
+    toggle.setAttribute("aria-label", t(open ? "navMenuClose" : "navMenuOpen"));
   };
   toggle.addEventListener("click", () => setOpen(!links.classList.contains("open")));
   // Stäng vid länkklick (även samma route, då hashchange inte triggas)

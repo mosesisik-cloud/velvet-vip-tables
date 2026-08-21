@@ -255,15 +255,24 @@ function isVerifiedMember(uid, db) {
 }
 function memberGate(uid, db, venueId) {
   const rec = uid && db.idv[uid];
+  const age = rec ? idvAge(rec) : null;
   if (!rec || rec.status !== "verified") {
-    if (rec && (rec.status === "underage" || idvAge(rec) < MIN_AGE)) return "too_young";
+    if (rec && (rec.status === "underage" || (age != null && age < MIN_AGE))) return "too_young";
     return "idv_required";
   }
-  const age = idvAge(rec);
-  if (age == null || age < MIN_AGE) return "too_young";
+  if (age != null && age < MIN_AGE) return "too_young";
+  if (age == null) return "idv_required";
   if (!hasCardOnFile(uid, db)) return "card_required";
   if (venueId && age < minAgeForVenue(venueId)) return "too_young";
   return "";
+}
+function gatePayload(gate, uid, db, venueId) {
+  if (gate !== "too_young") return { error: gate };
+  return {
+    error: "too_young",
+    ageYears: idvAge(db.idv[uid]),
+    minAge: venueId ? minAgeForVenue(venueId) : MIN_AGE,
+  };
 }
 function parseOpenFor(v) {
   const s = String(v || "anyone").toLowerCase();
@@ -577,6 +586,38 @@ function parseCardBody(b) {
   }
   return { card: { last4, brand, expMonth, expYear, added: new Date().toISOString() } };
 }
+function verifiedSpend(uid, db) {
+  if (!uid) return { amount: 0, currency: "EUR", n: 0, verified: false };
+  const idvOk = isIdvVerified(uid, db);
+  if (!idvOk) return { amount: 0, currency: "EUR", n: 0, verified: false };
+  const seen = new Set();
+  let amount = 0;
+  let n = 0;
+  for (const rec of db.payments || []) {
+    if (rec.userId !== uid || rec.status !== "paid") continue;
+    const a = Number(rec.amount) || 0;
+    if (a <= 0) continue;
+    const k = String(rec.providerId || rec.id || "") || ("P:" + rec.tableId);
+    if (seen.has(k)) continue;
+    seen.add(k);
+    if (rec.tableId) seen.add("T:" + rec.tableId + ":" + uid);
+    amount += a;
+    n += 1;
+  }
+  for (const t of db.tables || []) {
+    const m = t.host?.id === uid ? t.host : (t.joiners || []).find((j) => j.id === uid);
+    if (!m || !m.paid) continue;
+    if (String(m.paidVia || "").startsWith("pending:")) continue;
+    const a = Number(m.paidAmount) || 0;
+    if (a <= 0) continue;
+    const k = "T:" + t.id + ":" + uid;
+    if (seen.has(k)) continue;
+    seen.add(k);
+    amount += a;
+    n += 1;
+  }
+  return { amount: Math.round(amount * 100) / 100, currency: "EUR", n, verified: true };
+}
 function publicPerson(p, db, role) {
   if (!p) return null;
   const id = String(p.id || "");
@@ -600,6 +641,7 @@ function publicPerson(p, db, role) {
     paidVia: p.paidVia || "",
     paidPending: !p.paid && !!p.paidPending,
     paidAmount: Number(p.paidAmount) || 0,
+    spend: verifiedSpend(id, db),
     idv,
     paying: !!card,
     card,
@@ -978,6 +1020,7 @@ function applyIncomingPayment(db, { tableId, userId, amount, currency, method, p
   let target = t.host?.id === userId ? t.host : (t.joiners || []).find((j) => j.id === userId);
   if (!target) return null;
   setPaidFlag(target, true, userId, provider || method);
+  if (Number(amount) > 0) target.paidAmount = Number(amount);
   const rec = {
     id: `PY-${Date.now().toString(36)}`,
     tableId,
@@ -1271,8 +1314,7 @@ const server = http.createServer(async (req, res) => {
       if (!t) return send(res, 404, { error: "not_found" });
       const member = t.host?.id === userId || (t.joiners || []).some((j) => j.id === userId);
       if (!member) return send(res, 403, { error: "not_member" });
-      const pub = publicTable(t, db);
-      const amount = Math.max(0, Number(b.amount) || Number(pub.per_person) || 0);
+      const amount = Math.max(0, Number(b.amount) || 0);
       const currency = publicPayConfig().currency || "EUR";
       const method = String(b.method || "card");
       if (amount < 1) {
@@ -1458,8 +1500,11 @@ const server = http.createServer(async (req, res) => {
       const list = db.reviews.filter((r) => r.to === uid);
       const mine = db.tables.filter((t) => t.host?.id === uid || (t.joiners || []).some((j) => j.id === uid));
       const parties = mine.map((t) => partySummary(t, uid, db)).sort((a, b) => String(b.date).localeCompare(String(a.date)));
+      const person = u ? publicPerson(u, db, "user") : { id: uid, name: uid, handle: "", provider: "", socialUrl: "", idv: db.idv[uid]?.status === "verified" ? "verified" : "none" };
+      const spend = verifiedSpend(uid, db);
       return send(res, 200, {
-        user: u ? publicPerson(u, db, "user") : { id: uid, name: uid, handle: "", provider: "", socialUrl: "", idv: db.idv[uid]?.status === "verified" ? "verified" : "none" },
+        user: person,
+        spend,
         reviews: list,
         ...avgRating(list),
         tables: parties,
@@ -1493,7 +1538,7 @@ const server = http.createServer(async (req, res) => {
       if (!hostId) return send(res, 401, { error: "auth" });
       const db = load();
       const gate = memberGate(hostId, db, String(b.venue_id || ""));
-      if (gate) return send(res, 403, { error: gate });
+      if (gate) return send(res, 403, gatePayload(gate, hostId, db, String(b.venue_id || "")));
       const party = Math.max(2, Math.min(20, Number(b.party) || 4));
       const openSeats = Math.max(0, Math.min(party - 1, Number(b.openSeats) || 0));
       const host = {
@@ -1596,6 +1641,29 @@ const server = http.createServer(async (req, res) => {
         if (g) { setPaidFlag(g, paid, actorId); hit = true; }
       }
       if (!hit) return send(res, 404, { error: "member" });
+      const amount = Math.max(0, Number(b.amount) || 0);
+      const member = t.host?.id === targetId ? t.host : (t.joiners || []).find((x) => x.id === targetId);
+      if (member && paid && amount > 0) {
+        member.paidAmount = amount;
+        if (isIdvVerified(targetId, db)) {
+          const already = (db.payments || []).some((p) => p.userId === targetId && p.tableId === t.id && p.status === "paid");
+          if (!already) {
+            db.payments = [{
+              id: `PY-${Date.now().toString(36)}`,
+              tableId: t.id,
+              userId: targetId,
+              amount,
+              currency: "EUR",
+              method: "manual",
+              provider: "app",
+              providerId: "",
+              status: "paid",
+              created: new Date().toISOString(),
+            }, ...(db.payments || [])].slice(0, 500);
+          }
+        }
+      }
+      if (member && !paid) member.paidAmount = 0;
       save(db);
       return send(res, 200, { table: publicTable(t, db) });
     }
@@ -1886,7 +1954,7 @@ const server = http.createServer(async (req, res) => {
       if (!uid) return send(res, 401, { error: "auth" });
       const db = load();
       const gate = memberGate(uid, db);
-      if (gate) return send(res, 403, { error: gate });
+      if (gate) return send(res, 403, gatePayload(gate, uid, db));
       const mine = (db.bridges || []).filter((x) => x.userId === uid).slice(0, 40);
       return send(res, 200, { bridges: mine.map(publicBridge) });
     }
@@ -1900,7 +1968,7 @@ const server = http.createServer(async (req, res) => {
       const promoter = isPromoter({ id: uid }, venueId, db);
       if (!promoter) {
         const gate = memberGate(uid, db, venueId);
-        if (gate) return send(res, 200, { adapter, error: gate });
+        if (gate) return send(res, 200, { adapter, ...gatePayload(gate, uid, db, venueId) });
       }
       const list = (db.bridges || []).filter((x) => x.venueId === venueId && (promoter || x.userId === uid));
       return send(res, 200, { adapter, bridges: list.map(publicBridge), promoter });
@@ -1916,7 +1984,7 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       if (!isPromoter({ id: uid }, venueId, db)) {
         const gate = memberGate(uid, db, venueId);
-        if (gate) return send(res, 403, { error: gate });
+        if (gate) return send(res, 403, gatePayload(gate, uid, db, venueId));
       }
       const date = String(b.date || "");
       if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return send(res, 400, { error: "date" });
@@ -1986,7 +2054,7 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       if (!isPromoterAnywhere(uid, db)) {
         const gate = memberGate(uid, db);
-        if (gate) return send(res, 403, { error: gate });
+        if (gate) return send(res, 403, gatePayload(gate, uid, db));
       }
       return send(res, 200, { promoters: listVerifiedPromoters(db) });
     }
@@ -1997,7 +2065,7 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       if (!isPromoter({ id: uid }, venueId, db)) {
         const gate = memberGate(uid, db, venueId);
-        if (gate) return send(res, 403, { error: gate });
+        if (gate) return send(res, 403, gatePayload(gate, uid, db, venueId));
       }
       return send(res, 200, { venueId, promoters: listVerifiedPromoters(db, venueId) });
     }
@@ -2012,7 +2080,7 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       if (!isPromoter({ id: uid }, venueId, db)) {
         const gate = memberGate(uid, db, venueId);
-        if (gate) return send(res, 403, { error: gate });
+        if (gate) return send(res, 403, gatePayload(gate, uid, db, venueId));
       }
       const date = String(b.date || "");
       if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return send(res, 400, { error: "date" });
@@ -2081,7 +2149,7 @@ const server = http.createServer(async (req, res) => {
       const promoter = isPromoter({ id: uid }, venueId, db);
       if (!promoter) {
         const gate = memberGate(uid, db, venueId);
-        if (gate) return send(res, 403, { error: gate });
+        if (gate) return send(res, 403, gatePayload(gate, uid, db, venueId));
       }
       const list = (db.matches || []).filter((m) => m.venueId === venueId && (promoter || m.userId === uid));
       return send(res, 200, { matches: list.map((m) => publicMatch(m, db)), promoter });
@@ -2184,7 +2252,7 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       if (!isPromoter({ id: uid }, venueId, db)) {
         const gate = memberGate(uid, db, venueId);
-        if (gate) return send(res, 403, { error: gate });
+        if (gate) return send(res, 403, gatePayload(gate, uid, db, venueId));
       }
       const phone = waDigits(b.whatsapp);
       if (String(b.whatsapp || "").trim() && !phone) return send(res, 400, { error: "whatsapp" });
@@ -2254,7 +2322,7 @@ const server = http.createServer(async (req, res) => {
       const promoter = isPromoter({ id: uid }, venueId, db);
       if (!promoter) {
         const gate = memberGate(uid, db, venueId);
-        if (gate) return send(res, 403, { error: gate });
+        if (gate) return send(res, 403, gatePayload(gate, uid, db, venueId));
       }
       const venueChats = db.chats[venueId] || {};
       const messages = venueChats[thread] || [];
@@ -2285,7 +2353,7 @@ const server = http.createServer(async (req, res) => {
       const promoter = isPromoter({ id: uid }, venueId, db);
       if (!promoter) {
         const gate = memberGate(uid, db, venueId);
-        if (gate) return send(res, 403, { error: gate });
+        if (gate) return send(res, 403, gatePayload(gate, uid, db, venueId));
       }
       upsertUser(db, b.user);
       const threadId = promoter ? String(b.threadId || uid) : uid;

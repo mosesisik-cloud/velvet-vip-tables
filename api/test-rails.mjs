@@ -460,13 +460,19 @@ async function runApi() {
     else if (h?.paid) fail("tables-pay", "host should still be unpaid");
     else ok("tables-pay", "guest paid, host unpaid");
 
+    const guestSpend = await req(base, "GET", "/users/" + encodeURIComponent(guest.id));
+    if (guestSpend.json.spend?.verified || Number(guestSpend.json.spend?.amount) > 0) {
+      fail("spend-unverified", JSON.stringify(guestSpend.json.spend).slice(0, 220));
+    } else ok("spend-unverified", "no verified spend without passport");
+
     const sepa = await req(base, "POST", "/pay/intent", {
       tableId: "TB-RAILS",
       user: guest,
       method: "sepa",
     });
-    if (sepa.status !== 409) fail("pay-intent-no-iban", "expected 409 got " + sepa.status + " " + JSON.stringify(sepa.json));
-    else ok("pay-intent-no-iban", String(sepa.json.error || sepa.json.message || 409));
+    if (sepa.status !== 409 || sepa.json.error !== "no_amount") {
+      fail("pay-intent-no-amount", "expected 409 no_amount got " + sepa.status + " " + JSON.stringify(sepa.json));
+    } else ok("pay-intent-no-amount", "guest per_person is not charged");
 
     fs.writeFileSync(pay, JSON.stringify({
       currency: "EUR",
@@ -491,6 +497,31 @@ async function runApi() {
     const pending = (sent.json.table?.members || []).find((m) => m.id === host.id);
     if (!sent.json.ok || !pending?.paidPending) fail("pay-sent", JSON.stringify(sent.json).slice(0, 240));
     else ok("pay-sent", "host pending bank");
+
+    const pendingSpend = await req(base, "GET", "/users/" + encodeURIComponent(host.id));
+    if (Number(pendingSpend.json.spend?.amount) > 0) {
+      fail("spend-pending", JSON.stringify(pendingSpend.json.spend).slice(0, 220));
+    } else ok("spend-pending", "bank pending is not verified spend");
+
+    const hostPayAmt = await req(base, "POST", "/tables/TB-RAILS/pay", {
+      user: host, targetId: host.id, paid: true, amount: 80,
+    });
+    const hostMem = (hostPayAmt.json.table?.members || []).find((m) => m.id === host.id);
+    const hostProf = await req(base, "GET", "/users/" + encodeURIComponent(host.id));
+    if (hostPayAmt.status !== 200 || !hostMem?.paid) fail("spend-pay", JSON.stringify(hostPayAmt.json).slice(0, 220));
+    else if (!hostProf.json.spend?.verified || hostProf.json.spend.amount !== 80 || hostProf.json.spend.n !== 1) {
+      fail("spend-verified", JSON.stringify(hostProf.json.spend).slice(0, 240));
+    } else if (JSON.stringify(hostProf.json).includes("AB1234567")) {
+      fail("spend-no-pan", "passport number leaked");
+    } else ok("spend-verified", "€80 · 1 payment, public on profile");
+
+    const hostAgain = await req(base, "POST", "/tables/TB-RAILS/pay", {
+      user: host, targetId: host.id, paid: true, amount: 80,
+    });
+    const hostProf2 = await req(base, "GET", "/users/" + encodeURIComponent(host.id));
+    if (hostProf2.json.spend?.amount !== 80 || hostProf2.json.spend?.n !== 1) {
+      fail("spend-dup", JSON.stringify(hostProf2.json.spend).slice(0, 220));
+    } else ok("spend-dup", "same table not double-counted");
 
     const auth = await req(base, "GET", "/auth/start/instagram");
     if (auth.status !== 200 || !(auth.json.local === true || auth.json.url)) fail("auth-start", JSON.stringify(auth));
@@ -520,6 +551,11 @@ async function runApi() {
     if (noMrz.status !== 422 || noMrz.json.error !== "mrz_unreadable") fail("idv-no-mrz", JSON.stringify(noMrz.json).slice(0, 200));
     else ok("idv-no-mrz", "422 without MRZ");
 
+    const unreadChat = await req(base, "GET", "/chats/IBZ-001?userId=" + encodeURIComponent(guest.id));
+    if (unreadChat.status !== 403 || unreadChat.json.error !== "idv_required") {
+      fail("gate-unreadable", JSON.stringify(unreadChat.json).slice(0, 220));
+    } else ok("gate-unreadable", "unreadable passport stays idv_required");
+
     const expired = await req(base, "POST", "/idv", {
       userId: guest.id, name: "Anna Eriksson", passport: img, selfie: img, mrz: ICAO_SAMPLE,
     });
@@ -531,6 +567,13 @@ async function runApi() {
     });
     if (kid.status !== 422 || kid.json.error !== "too_young") fail("idv-too-young", JSON.stringify(kid.json).slice(0, 240));
     else ok("idv-too-young", "age " + kid.json.ageYears);
+
+    const kidChat = await req(base, "GET", "/chats/IBZ-001?userId=U-kid");
+    if (kidChat.status !== 403 || kidChat.json.error !== "too_young") {
+      fail("gate-too-young", JSON.stringify(kidChat.json).slice(0, 220));
+    } else if (kidChat.json.minAge !== 18 || kidChat.json.ageYears == null) {
+      fail("gate-too-young-fields", JSON.stringify(kidChat.json).slice(0, 220));
+    } else ok("gate-too-young", "min " + kidChat.json.minAge + " age " + kidChat.json.ageYears);
 
     const noFace = await req(base, "POST", "/idv", {
       userId: guest.id, name: "Moses Isik", passport: img, selfie: img, mrz: TEST_LIVE,
