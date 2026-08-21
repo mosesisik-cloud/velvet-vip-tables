@@ -2313,9 +2313,14 @@ function renderFavorites() {
 function renderSharedList(raw) {
   let p;
   try { p = b64urlDecode(raw); } catch { p = null; }
-  const ids = p && Array.isArray(p.ids) ? p.ids.filter((id) => typeof id === "string") : [];
+  const valid = p && typeof p === "object" && !Array.isArray(p) && Array.isArray(p.ids);
+  if (!valid) {
+    renderInvalidLink();
+    return;
+  }
+  const ids = p.ids.filter((id) => typeof id === "string");
   const list = ids.map((id) => VENUES.find((v) => v.venue_id === id)).filter(Boolean);
-  const title = (p && typeof p.name === "string" && p.name) ? p.name : "Delad lista";
+  const title = (typeof p.name === "string" && p.name) ? p.name : "Delad lista";
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
@@ -2417,9 +2422,9 @@ function renderLegal(kind) {
     <a class="detail-back" href="#/" data-nav>← Start</a>
     <h1>${villkor ? "Villkor" : "Integritet"}</h1>
     ${villkor ? `
-      <p>VELVET är en concierge-förhandsversion. Ni skickar en <b>förfrågan</b> om VIP-bord, cabana eller daybed. Det är inte en bindande bokning, inte en betalning och inte en reservation hos klubben.</p>
+      <p>VELVET är en oregistrerad concierge-förhandsversion. Ni skickar en <b>förfrågan</b> om VIP-bord, cabana eller daybed. Det är inte en bindande bokning, inte en betalning, inte ett bokningsavtal med klubben och inte en reservation hos klubben.</p>
       <h2>Operatör</h2>
-      <p>Förhandsversionen drivs av VELVET. Kontakt: <a href="mailto:${esc(CONCIERGE_MAIL)}">${esc(CONCIERGE_MAIL)}</a>.</p>
+      <p>Förhandsversionen drivs av Gabriel (VELVET), fysisk person — inte ett registrerat bolag. Kontakt: <a href="mailto:${esc(CONCIERGE_MAIL)}">${esc(CONCIERGE_MAIL)}</a>. Inget organisationsnummer.</p>
       <h2>Vad som händer</h2>
       <ul>
         <li>VELVET-teamet tar förfrågan mot klubben manuellt.</li>
@@ -2428,40 +2433,46 @@ function renderLegal(kind) {
         <li>Inga automatiska avgifter dras i den här versionen.</li>
       </ul>
       <h2>Ansvar</h2>
-      <p>Klubbarna äger sitt inventarie. Klubbens ålders-, ID- och klädregler gäller. VELVET garanterar inte tillgänglighet, minimi-spend eller insläpp. En förfrågan kan avslås.</p>
+      <p>Klubbarna äger sitt inventarie. Klubbens husregler (ålder, ID, klädsel, minimi-spend, insläpp) gäller. VELVET garanterar inte tillgänglighet, minimi-spend eller insläpp. En förfrågan kan avslås.</p>
     ` : `
-      <p>Vi samlar bara det som behövs för att återkoppla på en förfrågan: namn, e-post, valfritt telefonnummer, ställe, datum, sällskapsstorlek och gästlista ni själva fyller i. Gästnamn och gäst-e-post följer med bara om värden har fyllt i dem.</p>
+      <p>Personuppgiftsansvarig är Gabriel (VELVET). Kontakt: <a href="mailto:${esc(CONCIERGE_MAIL)}">${esc(CONCIERGE_MAIL)}</a>.</p>
+      <h2>Rättslig grund</h2>
+      <p>Behandling av förfrågningsuppgifter sker med samtycke (GDPR art. 6.1 a) via kryssrutan i förfrågan. Ni kan återkalla samtycket genom att mejla oss — en redan skickad förfrågan kan redan ha nått oss.</p>
+      <h2>Vad vi samlar in</h2>
+      <p>Namn, e-post, valfritt telefonnummer, ställe, datum, sällskapsstorlek och gästlista ni själva fyller i. Gästnamn och gäst-e-post lämnar enheten bara om värden har fyllt i dem — värden måste ha gästernas tillåtelse att dela uppgifterna med VELVET.</p>
       <h2>Lagring</h2>
       <ul>
-        <li>Förfrågningar och favoriter sparas i er webbläsare (<code>localStorage</code>).</li>
-        <li>När mejlvägen är aktiv skickas förfrågan via FormSubmit till VELVET-teamets Gmail (${esc(CONCIERGE_MAIL)}). FormSubmit vidarebefordrar, Gmail lagrar kopian. FormSubmit och Google/Gmail är tredje parter (personuppgiftsbiträden) utanför VELVET.</li>
+        <li>Förfrågningar: <code>velvet_bookings_v1</code> i localStorage.</li>
+        <li>Favoriter: <code>velvet_favs_v1</code> i localStorage.</li>
+        <li>Värdprofil (namn, e-post, telefon) sparas separat i <code>velvet_host_v1</code> i localStorage och sessionStorage så fälten kan fyllas i nästa gång — inte samma nyckel som förfrågningar eller favoriter.</li>
+        <li>Tills FormSubmit-inkorgen är bekräftad stannar förfrågan på enheten. Ni kan skicka den via «Öppna i Mail». När mejlvägen är aktiv skickas förfrågan via FormSubmit till VELVET-teamets Gmail (${esc(CONCIERGE_MAIL)}). FormSubmit vidarebefordrar, Gmail lagrar kopian. FormSubmit och Google/Gmail är personuppgiftsbiträden utanför EES (USA).</li>
         <li>Positionsdata används bara i sessionen, om ni själva trycker på «Använd min plats».</li>
       </ul>
       <h2>Övriga mottagare</h2>
       <ul>
-        <li>Typsnitt hämtas från Google Fonts — er IP-adress syns hos Google.</li>
+        <li>Typsnitt (Playfair Display, Inter) är självvärdade i appen — ingen IP till Google Fonts.</li>
         <li>Bilder på ställen laddas direkt från klubbarnas sajter (100+ CDN:er via inbäddad <code>&lt;img&gt;</code>). Det är förhandsvisning, inte kommersiell licens — er IP syns där.</li>
         <li>Herovideon kommer från Pexels (<a href="${esc(HERO_VIDEO.credit)}" target="_blank" rel="noopener">Video: Pexels</a>) — er IP syns hos Pexels.</li>
         <li>Kartan använder Leaflet från unpkg och kartplattor från CARTO.</li>
       </ul>
       <h2>Rättigheter</h2>
-      <p>Mejla ${esc(CONCIERGE_MAIL)} för radering. Ni kan rensa webbläsardata när som helst — då försvinner lokala förfrågningar och favoriter.</p>
+      <p>Mejla ${esc(CONCIERGE_MAIL)} för radering. Ni kan rensa webbläsardata när som helst — då försvinner lokala förfrågningar, favoriter och värdprofil.</p>
     `}
   </section>`;
 }
 
 // ---------- Global sök (/) ----------
 function searchHits(q) {
-  const s = q.trim().toLowerCase();
+  const s = fold(q.trim());
   if (s.length < 1) return [];
   const out = [];
   for (const d of DESTINATIONS) {
-    if (`${d.name} ${d.country} ${d.code}`.toLowerCase().includes(s)) {
+    if (fold(`${d.name} ${d.country} ${d.code}`).includes(s)) {
       out.push({ kind: "Destination", title: d.name, meta: d.country, href: `#/destination/${encodeURIComponent(d.code)}` });
     }
   }
   for (const v of VENUES) {
-    if (`${v.name} ${v.destination} ${v.category}`.toLowerCase().includes(s)) {
+    if (fold(`${v.name} ${v.destination} ${v.category}`).includes(s)) {
       out.push({ kind: "Ställe", title: v.name, meta: `${v.destination} · ${v.category}`, href: `#/venue/${encodeURIComponent(v.venue_id)}` });
     }
   }
@@ -2476,7 +2487,6 @@ function openSearch() {
   if (!root) return;
   const opener = document.getElementById("nav-search") || (document.activeElement instanceof HTMLElement ? document.activeElement : null);
   if (opener && opener.id === "nav-search") opener.setAttribute("aria-expanded", "true");
-  const app = document.getElementById("app");
   root.innerHTML = `
     <div class="search-overlay" id="search-overlay">
       <div class="search-panel" role="dialog" aria-modal="true" aria-label="Sök" tabindex="-1">
@@ -2485,31 +2495,46 @@ function openSearch() {
             role="combobox" aria-autocomplete="list" aria-controls="search-hits" aria-expanded="true" aria-activedescendant="" aria-label="Sök">
           <button type="button" class="search-close" id="search-close" aria-label="Stäng" title="Stäng">✕</button>
         </div>
-        <div class="search-hits" id="search-hits" role="listbox" aria-live="polite"></div>
+        <div class="sr-only" id="search-status" role="status" aria-live="polite"></div>
+        <div class="search-hits" id="search-hits" role="listbox"></div>
+        <div class="search-empty" id="search-empty">Skriv för att söka</div>
       </div>
     </div>`;
   const panel = root.querySelector(".search-panel");
+  const overlay = $("#search-overlay");
   const input = $("#search-q");
   const hitsEl = $("#search-hits");
+  const emptyEl = $("#search-empty");
+  const statusEl = $("#search-status");
   let active = 0;
   let hits = [];
   const untrap = trapFocus(panel);
   document.body.classList.add("modal-lock");
-  if (app) {
-    app.setAttribute("aria-hidden", "true");
-    app.inert = true;
-  }
+  setAppInert(true);
+  const vv = window.visualViewport;
+  const fitViewport = () => {
+    if (!vv || !window.matchMedia("(max-width:720px)").matches) {
+      if (overlay) { overlay.style.height = ""; overlay.style.top = ""; }
+      panel.style.height = "";
+      return;
+    }
+    if (document.activeElement === input) {
+      const h = `${Math.round(vv.height)}px`;
+      overlay.style.height = h;
+      overlay.style.top = `${Math.round(vv.offsetTop)}px`;
+      panel.style.height = h;
+    }
+  };
+  if (vv) vv.addEventListener("resize", fitViewport);
   const close = () => {
     if (searchCloser !== close) return;
     searchCloser = null;
     untrap();
     document.removeEventListener("keydown", onDocKey, true);
+    if (vv) vv.removeEventListener("resize", fitViewport);
     root.innerHTML = "";
     document.body.classList.remove("modal-lock");
-    if (app) {
-      app.removeAttribute("aria-hidden");
-      app.inert = false;
-    }
+    setAppInert(false);
     if (opener && opener.id === "nav-search") opener.setAttribute("aria-expanded", "false");
     restoreFocus(opener);
   };
@@ -2534,16 +2559,24 @@ function openSearch() {
   const paint = () => {
     hits = searchHits(input.value);
     active = 0;
-    hitsEl.innerHTML = hits.length
-      ? hits.map((h, i) => `
+    const q = input.value.trim();
+    if (!hits.length) {
+      hitsEl.innerHTML = "";
+      emptyEl.hidden = false;
+      emptyEl.textContent = q ? "Inga träffar" : "Skriv för att söka";
+      statusEl.textContent = q ? "Inga träffar" : "";
+    } else {
+      emptyEl.hidden = true;
+      statusEl.textContent = `${hits.length} träffar`;
+      hitsEl.innerHTML = hits.map((h, i) => `
         <div class="search-hit${i === 0 ? " active" : ""}" id="search-opt-${i}" data-i="${i}" role="option" aria-selected="${i === 0}">
           <div><div>${esc(h.title)}</div><div class="search-hit-k">${esc(h.kind)}</div></div>
           <div class="search-hit-k">${esc(h.meta)}</div>
-        </div>`).join("")
-      : `<div class="search-empty">${input.value.trim() ? "Inga träffar" : "Skriv för att söka"}</div>`;
-    hitsEl.querySelectorAll(".search-hit").forEach((el) => {
-      el.addEventListener("click", () => go(Number(el.dataset.i)));
-    });
+        </div>`).join("");
+      hitsEl.querySelectorAll(".search-hit").forEach((el) => {
+        el.addEventListener("click", () => go(Number(el.dataset.i)));
+      });
+    }
     syncActive();
   };
   const go = (i) => {
@@ -2560,8 +2593,15 @@ function openSearch() {
   });
   $("#search-close").addEventListener("click", close);
   $("#search-overlay").addEventListener("click", (e) => { if (e.target.id === "search-overlay") close(); });
+  input.addEventListener("focus", fitViewport);
+  input.addEventListener("blur", () => {
+    overlay.style.height = "";
+    overlay.style.top = "";
+    panel.style.height = "";
+  });
   paint();
   input.focus();
+  fitViewport();
 }
 
 function initSearch() {
@@ -2625,6 +2665,7 @@ function route() {
   const modalRoot = document.getElementById("modal-root");
   if (modalRoot && modalRoot.innerHTML) modalRoot.innerHTML = "";
   document.body.classList.remove("modal-lock");
+  setAppInert(false);
   if (searchCloser) searchCloser();
   // Riv aktiva Leaflet-kartor innan vyn skrivs över — annars läcker lyssnare
   destroyMaps();

@@ -1,7 +1,7 @@
 {
   "name": "VELVET — VIP-bord. Delad lyx.",
   "short_name": "VELVET",
-  "description": "Boka VIP-bord, cabanas och daybeds på världens främsta klubbar och beach clubs — och dela kostnaden med ditt sällskap.",
+  "description": "Skicka förfrågan om VIP-bord, cabanas och daybeds på världens främsta klubbar och beach clubs. VELVET-teamet tar den mot klubben — ingen automatisk reservation.",
   "lang": "sv",
   "dir": "ltr",
   "start_url": "./index.html#/",

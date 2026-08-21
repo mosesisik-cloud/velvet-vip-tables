@@ -1,6 +1,6 @@
 # VELVET — VIP-bord. Delad lyx. 🥂
 
-**Gabbes app.** Skicka en förfrågan om VIP-bord, cabanas och daybeds på världens främsta klubbar — VELVET-teamet bokar mot klubben, sällskapet delar kostnaden.
+**Gabbes app.** Skicka en förfrågan om VIP-bord, cabanas och daybeds på världens främsta klubbar — VELVET-teamet tar förfrågan mot klubben — sällskapet kan dela kostnaden om bordet blir bekräftat.
 
 Concierge-förhandsversion. Inte en automatisk bokningsmotor. Knappen ljuger inte.
 
