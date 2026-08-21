@@ -1161,7 +1161,8 @@ function renderVenueDetail(id) {
           <span class="from-calc-val" id="from-per">${fmtEUR(Math.ceil(fromPrice / 4))}</span>
         </div>
         <p class="detail-cta-note">VELVET-teamet tar förfrågan mot klubben — ingen reservation förrän återkoppling. Priset är indikativt — klubben sätter det riktiga.</p>
-        <button class="btn btn-gold" id="d-book" style="width:100%">Skicka förfrågan</button>
+        <button class="btn btn-gold" id="d-book" style="width:100%">${esc(t("sendRequest"))}</button>
+        <a class="btn btn-ghost" id="d-promo" href="#/promoter/${encodeURIComponent(v.venue_id)}" data-nav style="width:100%;margin-top:10px">${esc(t("chatPromoter"))}</a>
         <ul class="detail-perks">
           <li>Concierge mot klubben — ingen automatisk bokning</li>
           <li>Delad kostnad när bordet är bekräftat</li>
@@ -2838,6 +2839,120 @@ function render404(hash) {
   </section>`;
 }
 
+let chatPoll = null;
+function stopChatPoll() {
+  if (chatPoll) { clearInterval(chatPoll); chatPoll = null; }
+}
+
+async function renderPromoterChat(venueId) {
+  const v = VENUES.find((x) => x.venue_id === venueId);
+  if (!v) { render404("#/promoter/" + venueId); return; }
+  const me = loadUser();
+  if (!me) {
+    view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p>${esc(t("chatPromoter"))}</p><p style="margin-top:16px"><button class="btn btn-gold" id="ch-login">${esc(t("loginCta"))}</button></p></div></section>`;
+    $("#ch-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+    return;
+  }
+  setTitle(t("promoter") + " · " + v.name);
+  let threadId = me.id;
+  let promoter = false;
+  let threads = [];
+
+  const paint = (messages) => {
+    const box = document.getElementById("chat-log");
+    if (!box) return;
+    if (!messages.length) {
+      box.innerHTML = `<p class="chat-empty">${esc(t("noMsgs"))}</p>`;
+      return;
+    }
+    box.innerHTML = messages.map((m) => `
+      <div class="chat-bubble ${m.role === "promoter" ? "promo" : (m.userId === me.id ? "mine" : "")}">
+        <div class="chat-who">${m.role === "promoter" ? esc(t("promoter")) : esc(m.name || "")}</div>
+        <div class="chat-text">${esc(m.text)}</div>
+      </div>`).join("");
+    box.scrollTop = box.scrollHeight;
+  };
+  const paintInbox = () => {
+    const el = document.getElementById("chat-inbox");
+    if (!el) return;
+    el.innerHTML = threads.map((th) => `
+      <button type="button" class="chat-thread${th.threadId === threadId ? " on" : ""}" data-th="${esc(th.threadId)}">
+        <b>${esc(th.name)}</b>
+        <span>${esc((th.last || "").slice(0, 60))}</span>
+      </button>`).join("");
+    el.querySelectorAll("[data-th]").forEach((b) => b.addEventListener("click", () => {
+      threadId = b.dataset.th;
+      loadThread();
+      paintInbox();
+    }));
+  };
+
+  async function loadThread() {
+    const q = `/chats/${encodeURIComponent(venueId)}?userId=${encodeURIComponent(me.id)}&thread=${encodeURIComponent(threadId)}`;
+    const data = await apiJSON(q);
+    if (data) {
+      promoter = !!data.promoter;
+      paint(data.messages || []);
+      return data.messages || [];
+    }
+    return [];
+  }
+  async function loadInbox() {
+    const data = await apiJSON(`/chats/${encodeURIComponent(venueId)}/inbox?userId=${encodeURIComponent(me.id)}`);
+    if (data?.threads) { promoter = true; threads = data.threads; if (threads[0] && !threads.some((x) => x.threadId === threadId)) threadId = threads[0].threadId; }
+    paintInbox();
+  }
+
+  view().innerHTML = `
+  <section class="section chat-page">
+    <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
+    <h1>${esc(t("promoter"))} · ${esc(v.name)}</h1>
+    <p class="ob-sub" style="text-align:left;margin:0 0 16px">${esc(t("promoterSub"))}</p>
+    <div class="chat-layout">
+      <aside class="chat-inbox hidden" id="chat-inbox"></aside>
+      <div class="chat-main">
+        <div class="chat-log" id="chat-log"></div>
+        <form class="chat-form" id="chat-form">
+          <input type="text" id="chat-in" maxlength="800" placeholder="${esc(t("msgPh"))}" autocomplete="off">
+          <button class="btn btn-gold" type="submit">${esc(t("sendMsg"))}</button>
+        </form>
+      </div>
+    </div>
+    <p style="margin-top:14px"><button class="btn btn-ghost btn-sm" id="claim-promo">${esc(t("iAmPromoter"))}</button></p>
+  </section>`;
+
+  $("#chat-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const input = $("#chat-in");
+    const text = (input.value || "").trim();
+    if (!text) return;
+    input.value = "";
+    const data = await apiJSON(`/chats/${encodeURIComponent(venueId)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: me, text, threadId, asPromoter: promoter }),
+    });
+    if (data?.messages) paint(data.messages);
+    if (promoter) loadInbox();
+  });
+  $("#claim-promo")?.addEventListener("click", async () => {
+    await apiJSON(`/chats/${encodeURIComponent(venueId)}/claim`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: me }),
+    });
+    $("#chat-inbox")?.classList.remove("hidden");
+    await loadInbox();
+    await loadThread();
+  });
+
+  await loadThread();
+  await loadInbox();
+  if (promoter) $("#chat-inbox")?.classList.remove("hidden");
+  stopChatPoll();
+  chatPoll = setInterval(() => { loadThread(); if (promoter) loadInbox(); }, 4000);
+}
+
 // ---------- Router ----------
 const routes = {
   "": renderHome,
@@ -2861,6 +2976,7 @@ const paramRoutes = [
   { re: /^#\/join\/(.+)$/, fn: renderJoin, nav: "" },
   { re: /^#\/list\/(.+)$/, fn: renderSharedList, nav: "#/favorites" },
   { re: /^#\/user\/(.+)$/, fn: renderUserProfile, nav: "#/account" },
+  { re: /^#\/promoter\/(.+)$/, fn: renderPromoterChat, nav: "#/venues" },
 ];
 
 // Trasiga %-sekvenser i hashen får inte krascha routern
@@ -2876,6 +2992,7 @@ function route() {
   if (searchCloser) searchCloser();
   // Riv aktiva Leaflet-kartor innan vyn skrivs över — annars läcker lyssnare
   destroyMaps();
+  stopChatPoll();
   const raw = location.hash || "#/";
   const h = raw.split("?")[0];
   let fn = routes[h];
