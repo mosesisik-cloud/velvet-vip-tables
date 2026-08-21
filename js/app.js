@@ -276,6 +276,25 @@ function loadUser() {
 function saveUser(u) {
   try { localStorage.setItem(USER_KEY, JSON.stringify(u)); } catch {}
   paintUser();
+  registerUser(u);
+}
+function socialUrl(provider, handle) {
+  const h = String(handle || "").replace(/^@/, "").trim();
+  if (!h) return "";
+  const enc = encodeURIComponent(h);
+  if (provider === "instagram") return `https://www.instagram.com/${enc}/`;
+  if (provider === "facebook") return `https://www.facebook.com/${enc}`;
+  if (provider === "tiktok") return `https://www.tiktok.com/@${enc}`;
+  if (provider === "snapchat") return `https://www.snapchat.com/add/${enc}`;
+  return "";
+}
+function registerUser(u) {
+  if (!u?.id || !u.name || !u.provider || !u.handle) return;
+  apiJSON("/users", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: u.id, name: u.name, handle: u.handle, provider: u.provider }),
+  });
 }
 function logoutUser() {
   try { localStorage.removeItem(USER_KEY); } catch {}
@@ -338,6 +357,7 @@ async function joinOpenTable(id) {
       });
       const data = await r.json().catch(() => ({}));
       if (r.status === 403) return { error: "idv_required" };
+      if (r.status === 409) return { error: "full" };
       if (data.table) return { table: data.table, already: data.already };
     } catch {}
   }
@@ -347,12 +367,134 @@ async function joinOpenTable(id) {
   const ven = VENUES.find((x) => x.venue_id === tb.venue_id);
   if ((tb.sharp || (ven && isSharpVenue(ven))) && !isIdvOk()) return { error: "idv_required" };
   if (tb.openLeft < 1) return { error: "full" };
-  if (tb.host?.id === u.id || (tb.joiners || []).some((j) => j.id === u.id)) return { table: tb, already: true };
-  tb.joiners = [...(tb.joiners || []), { id: u.id, name: u.name, provider: u.provider, handle: u.handle, joined: new Date().toISOString() }];
+  if (tb.host?.id === u.id || (tb.joiners || []).some((j) => j.id === u.id)) return { table: decorateLocalTable(tb), already: true };
+  tb.joiners = [...(tb.joiners || []), { id: u.id, name: u.name, provider: u.provider, handle: u.handle, paid: false, joined: new Date().toISOString() }];
   tb.openLeft = Math.max(0, tb.openLeft - 1);
   if (tb.openLeft === 0) tb.status = "full";
   saveLocalTables(list);
-  return { table: tb };
+  return { table: decorateLocalTable(tb) };
+}
+
+function decorateLocalTable(t) {
+  if (!t) return null;
+  const me = loadUser();
+  const asPerson = (p, role) => {
+    if (!p) return null;
+    const id = p.id || "";
+    const handle = String(p.handle || "").replace(/^@/, "");
+    const provider = p.provider || "";
+    const idv = (id && me && id === me.id && isIdvOk()) ? "verified" : (p.idv || "none");
+    return {
+      id,
+      name: p.name || "Gäst",
+      handle,
+      provider,
+      socialUrl: socialUrl(provider, handle),
+      role,
+      paid: !!p.paid,
+      paidAt: p.paidAt || null,
+      idv,
+      joined: p.joined || null,
+    };
+  };
+  const host = asPerson(t.host, "host");
+  const joiners = (t.joiners || []).map((j) => asPerson(j, "guest")).filter(Boolean);
+  const invites = (t.guests || []).map((g) => asPerson({ name: g.name, paid: g.paid }, "invite")).filter(Boolean);
+  const members = [host, ...joiners, ...invites].filter(Boolean);
+  const party = Number(t.party) || Math.max(members.length, 1);
+  return {
+    ...t,
+    host,
+    joiners,
+    guests: invites,
+    members,
+    paidN: members.filter((m) => m.paid).length,
+    dueN: members.length,
+    per_person: t.per_person || Math.ceil((Number(t.total) || 0) / Math.max(1, party)),
+  };
+}
+async function getTable(id) {
+  const remote = await apiJSON(`/tables/${encodeURIComponent(id)}`);
+  if (remote?.table) return remote.table;
+  const local = loadLocalTables().find((x) => x.id === id) || loadBookings().find((x) => x.id === id);
+  return local ? decorateLocalTable(local) : null;
+}
+async function markPaid(tableId, { targetId = "", targetName = "", paid }) {
+  const u = loadUser();
+  if (!u) return { error: "auth" };
+  const remote = await apiJSON(`/tables/${encodeURIComponent(tableId)}/pay`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user: u, targetId, targetName, paid: !!paid }),
+  });
+  if (remote?.table) return { table: remote.table };
+  const list = loadLocalTables();
+  const tb = list.find((x) => x.id === tableId);
+  if (!tb) return { error: "missing" };
+  const isHost = tb.host?.id === u.id;
+  if (tb.host && (tb.host.id === targetId || (!targetId && !targetName && (isHost || tb.host.id === u.id)))) {
+    if (!isHost && tb.host.id !== u.id) return { error: "forbidden" };
+    tb.host.paid = !!paid;
+    tb.host.paidAt = paid ? new Date().toISOString() : null;
+  } else {
+    const j = (tb.joiners || []).find((x) => x.id === targetId);
+    if (j) {
+      if (!isHost && j.id !== u.id) return { error: "forbidden" };
+      j.paid = !!paid;
+      j.paidAt = paid ? new Date().toISOString() : null;
+    } else if (isHost && targetName) {
+      const g = (tb.guests || []).find((x) => x.name === targetName);
+      if (g) { g.paid = !!paid; g.paidAt = paid ? new Date().toISOString() : null; }
+      else return { error: "member" };
+    } else return { error: "member" };
+  }
+  saveLocalTables(list);
+  return { table: decorateLocalTable(tb) };
+}
+function personRowHTML(p, { me, hostId } = {}) {
+  if (!p) return "";
+  const verified = p.idv === "verified";
+  const paid = !!p.paid;
+  const isHostView = !!(me && hostId && me.id === hostId);
+  const canPay = !!(me && (isHostView || (p.id && me.id === p.id)));
+  const payAttr = p.id
+    ? `data-pay="${esc(p.id)}"`
+    : `data-pay-name="${esc(p.name)}"`;
+  const handle = p.handle ? `@${p.handle}` : "";
+  const nameInner = p.id
+    ? `<a href="#/user/${encodeURIComponent(p.id)}" data-nav>${esc(p.name)}</a>`
+    : esc(p.name);
+  return `
+  <div class="person-row">
+    <div class="person-avatar soc-${esc(p.provider || "none")}" aria-hidden="true">${esc((p.name || "?").slice(0, 1).toUpperCase())}</div>
+    <div class="person-info">
+      <div class="person-name">${nameInner}${p.role === "host" ? ` <span class="chip-mini">${esc(t("hostRole"))}</span>` : p.role === "invite" ? ` <span class="chip-mini">${esc(t("inviteRole"))}</span>` : ""}</div>
+      <div class="person-meta">
+        ${p.provider ? `<span class="soc-pill">${esc(p.provider)}</span>` : `<span class="soc-pill dim">${esc(t("noSocial"))}</span>`}
+        ${handle ? (p.socialUrl
+          ? `<a class="person-handle" href="${esc(p.socialUrl)}" target="_blank" rel="noopener">${esc(handle)}</a>`
+          : `<span class="person-handle">${esc(handle)}</span>`) : ""}
+        ${verified
+          ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>`
+          : `<span class="idv-badge no">${esc(t("notVerified"))}</span>`}
+      </div>
+    </div>
+    <div class="person-pay">
+      <span class="pay-pill ${paid ? "yes" : "no"}">${esc(paid ? t("paid") : t("unpaid"))}</span>
+      ${canPay ? `<button type="button" class="btn btn-ghost btn-sm" ${payAttr} data-paid="${paid ? "0" : "1"}">${esc(paid ? t("markUnpaid") : t("markPaid"))}</button>` : ""}
+    </div>
+  </div>`;
+}
+function partyPreviewHTML(tb) {
+  const members = tb.members || [tb.host, ...(tb.joiners || [])].filter(Boolean);
+  const paidN = tb.paidN != null ? tb.paidN : members.filter((m) => m && m.paid).length;
+  const dueN = tb.dueN != null ? tb.dueN : members.length;
+  return `
+    <div class="party-preview">
+      ${members.slice(0, 6).map((m) => `<span class="person-dot soc-${esc((m && m.provider) || "none")}" title="${esc((m && m.name) || "")}">${esc(((m && m.name) || "?").slice(0, 1).toUpperCase())}</span>`).join("")}
+      ${members.length > 6 ? `<span class="person-dot more">+${members.length - 6}</span>` : ""}
+      <span class="party-paid-meta">${num(paidN)}/${num(dueN)} ${esc(t("paid"))}</span>
+    </div>`;
 }
 
 function isSharpVenue(v) {
@@ -1308,9 +1450,9 @@ function openBookingModal(v) {
       </div>
 
       <div class="form-group">
-        <label class="chk-row"><input type="checkbox" id="m-open"> ${t("openSeats")}</label>
+        <label class="chk-row"><input type="checkbox" id="m-open" checked> ${t("openSeats")}</label>
         <p class="stepper-hint">${t("openSeatsHint")}</p>
-        <div class="stepper hidden" id="m-open-row" role="group" aria-label="${t("openSeatsCount")}">
+        <div class="stepper" id="m-open-row" role="group" aria-label="${t("openSeatsCount")}">
           <button type="button" id="m-open-minus" aria-label="−">−</button>
           <span class="stepper-val" id="m-open-val">2</span>
           <button type="button" id="m-open-plus" aria-label="+">+</button>
@@ -1480,7 +1622,12 @@ function openBookingModal(v) {
     if (!$("#m-consent").checked) { setErr("err-confirm", "Bekräfta att vi får skicka uppgifterna till VELVET-teamet."); $("#m-consent").focus(); return; }
 
     const me = loadUser();
-    const host = { name: hostName, email: hostEmail, phone: hostPhone, id: me?.id || "", provider: me?.provider || "", handle: me?.handle || "" };
+    const openOnPreview = !!$("#m-open")?.checked;
+    if (openOnPreview && !me) {
+      setErr("err-confirm", t("loginNeedJoin"));
+      return;
+    }
+    const host = { name: hostName, email: hostEmail, phone: hostPhone, id: me?.id || "", provider: me?.provider || "", handle: me?.handle || "", paid: false };
     saveHost(host);
     const openOn = !!$("#m-open")?.checked;
     const booking = {
@@ -1488,7 +1635,7 @@ function openBookingModal(v) {
       venue_id: v.venue_id, venue: v.name, destination: v.destination,
       date, package: sel.name, total: sel.price,
       party, per_person: Math.ceil(sel.price / party),
-      guests: guests.map((g) => ({ name: g.name, email: g.email })),
+      guests: guests.map((g) => ({ name: g.name, email: g.email, paid: false })),
       openSeats: openOn ? openSeats : 0,
       openLeft: openOn ? openSeats : 0,
       joiners: [],
@@ -1543,8 +1690,9 @@ function showConfirmation(b, opener) {
       <p class="price-disclaimer">${sent
         ? "Vi återkommer till din e-post när klubben svarat. Inget bord är reserverat ännu. Mail-knappen är en extra väg till teamet."
         : "Mejlvägen är inte bekräftad ännu — förfrågan ligger under Förfrågningar. Öppna i Mail för att skicka till VELVET-teamet."}</p>
+      ${b.openSeats ? `<p class="invite-joined" role="status">${esc(t("openPublished"))}</p>` : ""}
       <div class="confirm-actions">
-        <a class="btn btn-gold" href="#/bookings" data-nav id="c-go">Mina förfrågningar</a>
+        ${b.openSeats ? `<a class="btn btn-gold" href="#/table/${encodeURIComponent(b.id)}" data-nav id="c-go">${esc(t("viewParty"))}</a>` : `<a class="btn btn-gold" href="#/bookings" data-nav id="c-go">Mina förfrågningar</a>`}
         <button class="btn btn-ghost" id="c-copy">Kopiera inbjudningstext</button>
         <a class="btn btn-ghost" id="c-ics" download="${esc(b.id)}.ics" href="${icsFor(b)}">Lägg till i kalendern</a>
         <a class="btn btn-ghost" href="${mailtoFor(b)}">Öppna i Mail</a>
@@ -1617,6 +1765,7 @@ function renderBookings() {
             <div class="per">Indikativt ${fmtEUR(b.per_person)} <span style="font-size:12px;color:var(--text-faint)">/person</span></div>
             <div class="total">Indikativt totalt ${fmtEUR(b.total)}</div>
           </div>
+          <a class="btn btn-gold btn-sm" href="#/table/${encodeURIComponent(b.id)}" data-nav>${esc(t("viewParty"))}</a>
           ${b.delivery !== "sent" ? `<a class="btn btn-ghost btn-sm" href="${mailtoFor(b)}">Öppna i Mail</a>` : ""}
           <button class="btn btn-ghost btn-sm btn-share" data-share="${esc(b.id)}">Dela</button>
           <button class="btn btn-ghost btn-sm btn-danger" data-cancel="${esc(b.id)}">Ta bort</button>
@@ -1694,10 +1843,10 @@ function renderJoin(raw) {
         </div>
         <div id="join-cta">
           ${already ? `
-            <p class="invite-joined" role="status">✓ Du är redan med i den här förfrågan.</p>
-            <a class="btn btn-gold" href="#/bookings" data-nav style="width:100%">Mina förfrågningar</a>` : `
-            <button class="btn btn-gold" id="join-btn" style="width:100%">Jag är med 🥂</button>
-            <p class="invite-note">Förfrågan sparas under Förfrågningar på den här enheten. Bordet är inte reserverat förrän VELVET återkommer.</p>`}
+            <p class="invite-joined" role="status">✓ ${esc(t("alreadyIn"))}</p>
+            <a class="btn btn-gold" href="#/table/${encodeURIComponent(inv.id)}" data-nav style="width:100%">${esc(t("viewParty"))}</a>` : `
+            <button class="btn btn-gold" id="join-btn" style="width:100%">${esc(t("imIn"))}</button>
+            <p class="invite-note">${esc(t("joinNote"))}</p>`}
         </div>
         ${v ? `<a class="icon-link invite-venue-link" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>Se stället →</a>` : ""}
       </div>
@@ -1706,12 +1855,16 @@ function renderJoin(raw) {
 
   const joinBtn = $("#join-btn");
   if (joinBtn) {
-    joinBtn.addEventListener("click", () => {
-      if (loadBookings().some((b) => b.id === inv.id)) return; // skydd mot dubbelklick
-      saveBookings([...loadBookings(), { ...inv, guests: [], joined: true, created: new Date().toISOString() }]);
-      $("#join-cta").innerHTML = `
-        <p class="invite-joined" role="status">🥂 Klart — du är med. Förfrågan ligger under Förfrågningar på den här enheten.</p>
-        <a class="btn btn-gold" href="#/bookings" data-nav style="width:100%">Mina förfrågningar</a>`;
+    joinBtn.addEventListener("click", async () => {
+      if (!loadUser()) { openOnboarding({ dismissable: false }); return; }
+      joinBtn.disabled = true;
+      const r = await joinOpenTable(inv.id);
+      if (r.error === "auth") { openOnboarding({ dismissable: false }); return; }
+      if (r.error === "idv_required") { location.hash = "#/verify"; return; }
+      if (!loadBookings().some((b) => b.id === inv.id)) {
+        saveBookings([...loadBookings(), { ...inv, guests: [], joined: true, created: new Date().toISOString() }]);
+      }
+      location.hash = `#/table/${encodeURIComponent(inv.id)}`;
     });
   }
 }
@@ -2449,7 +2602,7 @@ function renderSharedList(raw) {
 }
 
 async function renderOpenTables() {
-  const tables = await listOpenTables();
+  const tables = (await listOpenTables()).map((tb) => tb.members ? tb : decorateLocalTable(tb));
   const u = loadUser();
   view().innerHTML = `
   <section class="section">
@@ -2463,17 +2616,18 @@ async function renderOpenTables() {
         <h3>${esc(t("noOpen"))}</h3>
         <p>${esc(t("noOpenHint"))}</p>
       </div>` : tables.map((tb) => {
-        const filled = 1 + (tb.guests || []).length + (tb.joiners || []).length;
-        const per = Math.ceil((Number(tb.total) || 0) / Math.max(1, Number(tb.party) || filled));
+        const per = tb.per_person || Math.ceil((Number(tb.total) || 0) / Math.max(1, Number(tb.party) || 1));
         return `
         <div class="booking-card">
           <div class="booking-info">
-            <h3>${esc(tb.venue)}</h3>
+            <h3><a href="#/table/${encodeURIComponent(tb.id)}" data-nav>${esc(tb.venue)}</a></h3>
             <div class="booking-meta">${esc(tb.destination)} · ${esc(tb.date)} · ${esc(tb.package)} · ${tb.host?.id ? `<a href="#/user/${encodeURIComponent(tb.host.id)}" data-nav>${esc(tb.host?.name || "")}</a>` : esc(tb.host?.name || "")} ${tb.host?.handle ? "@" + esc(tb.host.handle) : ""}</div>
             <div class="booking-meta">${num(tb.openLeft)} ${esc(t("seatsOpen"))} · ${esc(t("splitOn"))} ${num(tb.party)} ${esc(t("people"))}</div>
+            ${partyPreviewHTML(tb)}
           </div>
           <div class="booking-price">
             <div class="per">${fmtEUR(per)} <span style="font-size:12px;color:var(--text-faint)">/${t("perPerson")}</span></div>
+            <a class="btn btn-ghost btn-sm" href="#/table/${encodeURIComponent(tb.id)}" data-nav>${esc(t("viewParty"))}</a>
             <button class="btn btn-gold btn-sm" data-join="${esc(tb.id)}">${esc(t("takeSeat"))}</button>
           </div>
         </div>`;
@@ -2487,7 +2641,76 @@ async function renderOpenTables() {
       const r = await joinOpenTable(btn.dataset.join);
       if (r.error === "auth") openOnboarding({ dismissable: false });
       else if (r.error === "idv_required") location.hash = "#/verify";
+      else if (r.table) location.hash = `#/table/${encodeURIComponent(r.table.id)}`;
       else renderOpenTables();
+    });
+  });
+}
+
+async function renderTable(id) {
+  const tb = await getTable(id);
+  if (!tb) {
+    view().innerHTML = `
+    <section class="section">
+      <div class="empty-state">
+        <div class="big">🥂</div>
+        <h3>${esc(t("tableMissing"))}</h3>
+        <p>${esc(t("tableMissingHint"))}</p>
+        <p style="margin-top:20px"><a class="btn btn-gold" href="#/open" data-nav>${esc(t("navOpen"))}</a></p>
+      </div>
+    </section>`;
+    return;
+  }
+  const me = loadUser();
+  const members = tb.members || [];
+  const already = !!(me && members.some((m) => m.id && m.id === me.id));
+  const canJoin = Number(tb.openLeft) > 0 && !already;
+  const hostId = tb.host?.id || "";
+  setTitle(`${tb.venue} · ${t("partyTitle")}`);
+  view().innerHTML = `
+  <section class="section party-page">
+    <a class="detail-back" href="#/open" data-nav>← ${esc(t("navOpen"))}</a>
+    <p class="detail-kicker">${esc(tb.destination)} · ${esc(tb.date)} · ${esc(tb.package || "")}</p>
+    <h1>${esc(tb.venue)}</h1>
+    <p class="ob-sub" style="text-align:left;margin:6px 0 18px">${esc(t("partySub"))}</p>
+    <div class="party-stats">
+      <div><b>${fmtEUR(tb.per_person)}</b><span>${esc(t("perPerson"))}</span></div>
+      <div><b>${num(tb.paidN)}/${num(tb.dueN)}</b><span>${esc(t("paid"))}</span></div>
+      <div><b>${num(tb.openLeft)}</b><span>${esc(t("seatsOpen"))}</span></div>
+      <div><b>${num(tb.party)}</b><span>${esc(t("people"))}</span></div>
+    </div>
+    <p class="price-disclaimer">${esc(t("payNote"))}</p>
+    <h2 class="detail-panel-title" style="margin-top:8px">${esc(t("roster"))}</h2>
+    <div class="person-list" id="party-list">
+      ${members.map((p) => personRowHTML(p, { me, hostId })).join("")}
+    </div>
+    <div class="book-site-actions" style="margin-top:22px;max-width:420px">
+      ${!me ? `<button class="btn btn-gold" id="party-login">${esc(t("loginTitle"))}</button>` : ""}
+      ${me && canJoin ? `<button class="btn btn-gold" id="party-join">${esc(t("takeSeat"))}</button>` : ""}
+      ${already ? `<p class="invite-joined">${esc(t("youAreIn"))}</p>` : ""}
+      ${tb.venue_id ? `<a class="btn btn-ghost" href="#/venue/${encodeURIComponent(tb.venue_id)}" data-nav>${esc(t("explore"))}</a>` : ""}
+    </div>
+  </section>`;
+  $("#party-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+  $("#party-join")?.addEventListener("click", async () => {
+    if (!loadUser()) { openOnboarding({ dismissable: false }); return; }
+    const btn = $("#party-join");
+    if (btn) btn.disabled = true;
+    const r = await joinOpenTable(tb.id);
+    if (r.error === "auth") openOnboarding({ dismissable: false });
+    else if (r.error === "idv_required") location.hash = "#/verify";
+    else renderTable(id);
+  });
+  document.querySelectorAll("[data-pay], [data-pay-name]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      const r = await markPaid(tb.id, {
+        targetId: btn.dataset.pay || "",
+        targetName: btn.dataset.payName || "",
+        paid: btn.dataset.paid === "1",
+      });
+      if (r.table) renderTable(id);
+      else btn.disabled = false;
     });
   });
 }
@@ -2581,16 +2804,35 @@ async function renderVerify() {
 }
 
 async function renderUserProfile(id) {
-  const data = await apiJSON(`/reviews/${encodeURIComponent(id)}`) || { reviews: [], avg: 0, n: 0, idv: "none" };
+  const data = await apiJSON(`/users/${encodeURIComponent(id)}`)
+    || await apiJSON(`/reviews/${encodeURIComponent(id)}`)
+    || { reviews: [], avg: 0, n: 0, idv: "none" };
   const me = loadUser();
-  const name = data.reviews[0]?.toName || id;
+  const u = data.user || {};
+  const name = u.name || data.reviews?.[0]?.toName || id;
+  const verified = (u.idv || data.idv) === "verified";
+  const handle = u.handle ? `@${u.handle}` : "";
   view().innerHTML = `
   <section class="section">
     <a class="detail-back" href="#/open" data-nav>← ${esc(t("navOpen"))}</a>
-    <h1>${esc(name)}</h1>
-    <p>${data.idv === "verified" ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : ""} ${starRow(data.avg)} ${data.n ? `(${data.n})` : ""}</p>
+    <div class="profile-head">
+      <div class="person-avatar lg soc-${esc(u.provider || "none")}" aria-hidden="true">${esc((name || "?").slice(0, 1).toUpperCase())}</div>
+      <div>
+        <h1>${esc(name)}</h1>
+        <p class="person-meta">
+          ${u.provider ? `<span class="soc-pill">${esc(u.provider)}</span>` : ""}
+          ${handle && u.socialUrl ? `<a class="person-handle" href="${esc(u.socialUrl)}" target="_blank" rel="noopener">${esc(handle)}</a>` : handle ? `<span class="person-handle">${esc(handle)}</span>` : ""}
+          ${verified ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : `<span class="idv-badge no">${esc(t("notVerified"))}</span>`}
+        </p>
+        <p>${starRow(data.avg)} ${data.n ? `(${data.n})` : t("noReviews")}</p>
+      </div>
+    </div>
+    ${(data.tables || []).length ? `
+      <h2 style="margin:28px 0 12px">${esc(t("roster"))}</h2>
+      ${data.tables.map((tb) => `<p class="booking-meta"><a href="#/table/${encodeURIComponent(tb.id)}" data-nav>${esc(tb.venue)}</a> · ${esc(tb.date || "")} · ${esc(tb.role === "host" ? t("hostRole") : t("guestRole"))}</p>`).join("")}
+    ` : ""}
     <h2 style="margin:28px 0 12px">${esc(t("reviews"))}</h2>
-    ${data.reviews.length ? data.reviews.map((r) => `
+    ${(data.reviews || []).length ? data.reviews.map((r) => `
       <div class="review-card">
         <div>${starRow(r.rating)} <b>${esc(r.fromName || "")}</b></div>
         <p>${esc(r.text)}</p>
@@ -2634,8 +2876,19 @@ async function renderAccount() {
   <section class="section">
     <div class="section-head"><div><h2>${esc(t("account"))}</h2></div></div>
     ${u ? `
-      <p>${esc(t("loggedInAs"))} <b>${esc(u.name)}</b> · ${esc(u.provider)} ${u.handle ? "@" + esc(u.handle) : ""}</p>
-      <p>${st === "verified" ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : `<a class="btn btn-gold btn-sm" href="#/verify" data-nav>${esc(t("verifyTitle"))}</a>`}</p>
+      <div class="profile-head" style="margin-bottom:16px">
+        <div class="person-avatar lg soc-${esc(u.provider || "none")}" aria-hidden="true">${esc((u.name || "?").slice(0, 1).toUpperCase())}</div>
+        <div>
+          <p>${esc(t("loggedInAs"))} <b>${esc(u.name)}</b></p>
+          <p class="person-meta">
+            <span class="soc-pill">${esc(u.provider)}</span>
+            ${u.handle ? (socialUrl(u.provider, u.handle)
+              ? `<a class="person-handle" href="${esc(socialUrl(u.provider, u.handle))}" target="_blank" rel="noopener">@${esc(u.handle)}</a>`
+              : `<span class="person-handle">@${esc(u.handle)}</span>`) : ""}
+            ${st === "verified" ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : `<a class="btn btn-gold btn-sm" href="#/verify" data-nav>${esc(t("verifyTitle"))}</a>`}
+          </p>
+        </div>
+      </div>
       <p>${starRow(mine.avg)} ${mine.n ? `(${mine.n} ${t("reviews")})` : t("noReviews")}</p>
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
       <p>${esc(t("loginSub"))}</p>
@@ -3077,6 +3330,7 @@ const paramRoutes = [
   { re: /^#\/user\/(.+)$/, fn: renderUserProfile, nav: "#/account" },
   { re: /^#\/promoter\/(.+)$/, fn: renderPromoterChat, nav: "#/venues" },
   { re: /^#\/book-site\/(.+)$/, fn: renderBookSite, nav: "#/venues" },
+  { re: /^#\/table\/(.+)$/, fn: renderTable, nav: "#/open" },
 ];
 
 // Trasiga %-sekvenser i hashen får inte krascha routern
@@ -3218,6 +3472,8 @@ async function init() {
   }
   DESTINATIONS = d;
   VENUES = v;
+  const existing = loadUser();
+  if (existing) registerUser(existing);
   if (!uiBound) {
     uiBound = true;
     bootLang();

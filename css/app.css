@@ -1208,6 +1208,75 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .review-card { padding: 12px 0; border-bottom: 1px solid var(--border-soft); }
 .review-card p { color: var(--text-dim); margin-top: 6px; }
 @media (max-width: 720px) { .idv-grid { grid-template-columns: 1fr; } }
+.idv-badge.no {
+  background: transparent; color: var(--text-faint);
+  border: 1px solid var(--border); font-weight: 600;
+}
+.profile-head { display: flex; gap: 16px; align-items: center; margin: 8px 0 20px; }
+.person-list { display: flex; flex-direction: column; gap: 10px; }
+.person-row {
+  display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center;
+  padding: 12px 14px; border: 1px solid var(--border-soft); border-radius: var(--radius);
+  background: var(--bg-card);
+}
+.person-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-weight: 700; font-size: 18px;
+  background: var(--gold-dim); color: var(--gold-bright); border: 1px solid rgba(212,175,95,0.35);
+}
+.person-avatar.lg { width: 64px; height: 64px; font-size: 26px; }
+.person-avatar.soc-instagram { background: rgba(228,64,95,0.18); color: #ff7a96; border-color: rgba(228,64,95,0.4); }
+.person-avatar.soc-facebook { background: rgba(24,119,242,0.18); color: #7db4ff; border-color: rgba(24,119,242,0.4); }
+.person-avatar.soc-tiktok { background: #1a1a1a; color: #fff; border-color: #333; }
+.person-avatar.soc-snapchat { background: rgba(255,252,0,0.16); color: #ffe44d; border-color: rgba(255,252,0,0.4); }
+.person-name { font-weight: 600; }
+.person-name a { color: var(--text); }
+.person-name a:hover { color: var(--gold-bright); }
+.person-meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 4px; font-size: 12.5px; color: var(--text-dim); }
+.soc-pill {
+  text-transform: capitalize; font-size: 11px; font-weight: 700; letter-spacing: 0.4px;
+  padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--text-dim);
+}
+.soc-pill.dim { opacity: 0.7; }
+.person-handle { color: var(--gold); font-weight: 600; }
+.person-handle:hover { color: var(--gold-bright); }
+.person-pay { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.pay-pill {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 999px;
+}
+.pay-pill.yes { background: rgba(111,191,143,0.16); color: var(--green); border: 1px solid rgba(111,191,143,0.45); }
+.pay-pill.no { background: rgba(217,162,75,0.12); color: var(--amber); border: 1px solid rgba(217,162,75,0.4); }
+.chip-mini {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 999px; border: 1px solid rgba(212,175,95,0.4); color: var(--gold);
+  margin-left: 6px;
+}
+.party-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+  margin: 8px 0 14px;
+}
+.party-stats div {
+  background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: 12px;
+  padding: 12px 10px; text-align: center;
+}
+.party-stats b { display: block; font-family: var(--font-display); font-size: 20px; color: var(--gold-bright); }
+.party-stats span { font-size: 11px; color: var(--text-faint); letter-spacing: 0.4px; }
+.party-preview { display: flex; align-items: center; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+.person-dot {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; background: var(--gold-dim); color: var(--gold-bright);
+  border: 1px solid rgba(212,175,95,0.35);
+}
+.person-dot.more { background: var(--bg-elev); color: var(--text-dim); }
+.party-paid-meta { font-size: 12px; color: var(--text-faint); margin-left: 4px; }
+@media (max-width: 720px) {
+  .person-row { grid-template-columns: 44px 1fr; }
+  .person-pay { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; align-items: center; }
+  .party-stats { grid-template-columns: 1fr 1fr; }
+}
 .chat-layout { display: grid; grid-template-columns: 220px 1fr; gap: 16px; min-height: 52vh; }
 .chat-inbox { display: flex; flex-direction: column; gap: 6px; overflow: auto; max-height: 52vh; }
 .chat-inbox.hidden { display: none; }

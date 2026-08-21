@@ -28,6 +28,7 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 - Global snabbsök (`/` eller förstoringsglaset)
 - Venue-detalj med IG-skyltfönster, från-pris-kalkylator och hjärta
 - Direkt till varje ställe egen bokningssajt (`#/book-site/…`) — officiell VIP-path där den finns, annars hemsidan. Inbäddning + ny flik. VELVET tar inte betalt där.
+- Sällskap per bord (`#/table/…`): öppna stolar så andra kan hoppa in. Varje deltagare är en social profil (Facebook/Instagram/TikTok/Snapchat). Passverifierade syns som verified. Betald/ej betald är sällskapets ledger — VELVET drar inga kort.
 
 ### Concierge
 - Förfrågan med värdens namn + e-post (obligatoriskt)
