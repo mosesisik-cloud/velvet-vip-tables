@@ -223,6 +223,10 @@ async function runApi() {
     if (est.status !== 200) fail("events-status", "HTTP " + est.status);
     else ok("events-status", "running=" + !!est.json.running);
 
+    const facts = await req(base, "GET", "/facts");
+    if (facts.status !== 200 || !facts.json.venues) fail("facts", JSON.stringify(facts.json).slice(0, 200));
+    else ok("facts", Object.keys(facts.json.venues).length + " cached");
+
     const places = await req(base, "GET", "/places");
     if (places.status !== 200 || !places.json.venues) fail("places", JSON.stringify(places.json).slice(0, 200));
     else ok("places", Object.keys(places.json.venues).length + " cached");

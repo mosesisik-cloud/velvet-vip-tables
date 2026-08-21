@@ -8,6 +8,7 @@ let VENUE_IMAGES = {}; // venue_id -> bild från ställets egen hemsida (data/ve
 let VENUE_EVENTS = { fetched: null, venues: {} }; // kommande events per venue (data/venue-events.json)
 let BOOKING_URLS = {}; // venue_id -> { url, kind, label } officiell VIP/bokningssida
 let GOOGLE_PLACES = { fetchedAt: null, venues: {} };
+let VENUE_FACTS = { fetchedAt: null, venues: {} };
 const state = {
   filters: { q: "", dest: "", cat: "", status: "", price: "", sort: "priority" },
 };
@@ -195,6 +196,8 @@ function contactPanelHTML(v) {
     v.instagram_url ? contactTile(v.instagram_url, "Instagram", ig || t("instagram")) : "",
     v.tiktok_url ? contactTile(v.tiktok_url, "TikTok", tk.startsWith("@") ? tk : "@" + tk) : "",
     v.facebook_url ? contactTile(v.facebook_url, "Facebook", fb ? "/" + fb : "Facebook") : "",
+    venueFacts(v)?.phone ? contactTile("tel:" + String(venueFacts(v).phone).replace(/\s+/g, ""), t("factPhone"), venueFacts(v).phone, { gold: true, external: false }) : "",
+    venueFacts(v)?.email ? contactTile("mailto:" + venueFacts(v).email, t("factEmail"), venueFacts(v).email, { external: false }) : "",
     v.website_url ? contactTile(v.website_url, t("website"), webHost) : "",
     contactTile("#", t("sharePlace"), v.name, { tag: "button", id: "v-share", external: false }),
     contactTile(`#/promoter/${encodeURIComponent(v.venue_id)}`, t("chatPromoter"), t("promoter"), { external: false }),
@@ -1434,6 +1437,42 @@ function googleRatingHTML(v, { compact = false } = {}) {
   if (compact) return "";
   return "";
 }
+function venueFacts(v) {
+  return (v && VENUE_FACTS.venues && VENUE_FACTS.venues[v.venue_id]) || null;
+}
+function factsPanelHTML(v) {
+  const f = venueFacts(v) || {};
+  const rows = [
+    ["address", t("factAddress")],
+    ["area", t("factArea")],
+    ["phone", t("factPhone")],
+    ["email", t("factEmail")],
+    ["hours", t("factHours")],
+    ["season", t("factSeason")],
+    ["ageLimit", t("factAge")],
+    ["dressCode", t("factDress")],
+    ["doorPolicy", t("factDoor")],
+    ["music", t("factMusic")],
+    ["vipHow", t("factVip")],
+    ["gettingThere", t("factGo")],
+  ].filter(([k]) => f[k]);
+  const highs = Array.isArray(f.highlights) ? f.highlights.filter(Boolean) : [];
+  const src = f.source ? `<a href="${esc(f.source)}" target="_blank" rel="noopener">${esc(t("factSource"))} ↗</a>` : "";
+  return `
+  <div class="detail-panel facts-panel">
+    <h2 class="detail-panel-title">${esc(t("venueFacts"))}</h2>
+    ${f.summary ? `<p class="facts-summary">${esc(f.summary)}</p>` : ""}
+    ${rows.length ? `<div class="detail-facts facts-rows">${rows.map(([k, lab]) => {
+      let val = esc(f[k]);
+      if (k === "phone") val = `<a href="tel:${esc(String(f[k]).replace(/\s+/g, ""))}">${esc(f[k])}</a>`;
+      if (k === "email") val = `<a href="mailto:${esc(f[k])}">${esc(f[k])}</a>`;
+      return `<div class="fact"><span class="fact-label">${esc(lab)}</span><span class="fact-val">${val}</span></div>`;
+    }).join("")}</div>` : `<p class="events-meta">${esc(t("factsEmpty"))}</p>`}
+    ${highs.length ? `<ul class="facts-highs">${highs.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>` : ""}
+    <p class="events-meta">${esc(t("factsHint"))}${src ? " · " + src : ""}</p>
+    ${apiBase() ? `<p class="events-actions"><button type="button" class="btn btn-ghost btn-sm" id="facts-refresh">${esc(t("factsRefresh"))}</button></p>` : ""}
+  </div>`;
+}
 function googleReviewsPanelHTML(v) {
   const g = googlePlace(v);
   const href = googleMapsReviewsUrl(v);
@@ -1572,6 +1611,7 @@ function renderVenueDetail(id) {
 
     <div class="detail-grid">
       ${contactPanelHTML(v)}
+      ${factsPanelHTML(v)}
       ${googleReviewsPanelHTML(v)}
       ${eventsSectionHTML(v)}
       <div class="detail-panel">
@@ -1617,6 +1657,21 @@ function renderVenueDetail(id) {
   $("#dock-share")?.addEventListener("click", () => shareVenue(v));
   bindFavButtons(view());
   $("#ev-refresh")?.addEventListener("click", () => refreshVenueEvents(v));
+  $("#facts-refresh")?.addEventListener("click", async () => {
+    const btn = $("#facts-refresh");
+    if (btn) { btn.disabled = true; btn.textContent = t("factsRefreshing"); }
+    const r = await apiJSON("/facts/refresh", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: loadUser(), venueId: v.venue_id }),
+    });
+    if (r?.venues) VENUE_FACTS = r;
+    else {
+      const live = await apiJSON("/facts");
+      if (live?.venues) VENUE_FACTS = live;
+    }
+    if ((location.hash || "").split("?")[0] === `#/venue/${v.venue_id}`) renderVenueDetail(v.venue_id);
+  });
   setTitle(v.name);
   if (apiBase()) {
     refreshLiveEvents().then((ok) => {
@@ -3985,6 +4040,15 @@ async function init() {
   VENUES = v;
   const livePlaces = await apiJSON("/places");
   if (livePlaces && livePlaces.venues) GOOGLE_PLACES = livePlaces;
+  try {
+    const rf = await fetch("data/venue-facts.json", { cache: "no-store" });
+    if (rf.ok) {
+      const facts = await rf.json();
+      if (facts && facts.venues) VENUE_FACTS = facts;
+    }
+  } catch { /* optional */ }
+  const liveFacts = await apiJSON("/facts");
+  if (liveFacts && liveFacts.venues) VENUE_FACTS = liveFacts;
   const existing = loadUser();
   if (existing) registerUser(existing);
   const authTok = new URLSearchParams(location.search).get("auth");

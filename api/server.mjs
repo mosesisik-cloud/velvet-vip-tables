@@ -5,6 +5,7 @@ import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { loadEventsFile, loadCrawlStatus, runCrawl, getCrawlState, scheduleDailyCrawl } from "./crawl-events.mjs";
 import { loadPlacesFile, runPlacesLookup } from "./google-places.mjs";
+import { loadFactsFile, runFactsCrawl } from "./venue-facts.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
@@ -631,6 +632,27 @@ const server = http.createServer(async (req, res) => {
       const venueId = String(b.venueId || "").replace(/[^A-Z0-9._-]/gi, "").slice(0, 20);
       runPlacesLookup({ venueId, reason: "operator" }).catch((e) => console.error("velvet-places", e));
       return send(res, 202, { running: true, ...loadPlacesFile() });
+    }
+    if (req.method === "GET" && url.pathname === "/facts") {
+      return send(res, 200, loadFactsFile(), { "Cache-Control": "no-store" });
+    }
+    const factOne = url.pathname.match(/^\/facts\/([A-Z0-9._-]+)$/i);
+    if (req.method === "GET" && factOne) {
+      const all = loadFactsFile();
+      return send(res, 200, { venueId: factOne[1], facts: all.venues?.[factOne[1]] || null }, { "Cache-Control": "no-store" });
+    }
+    if (req.method === "POST" && url.pathname === "/facts/refresh") {
+      if (process.env.VELVET_CRAWL === "0") return send(res, 403, { error: "crawl_disabled" });
+      const b = await readBody(req, 2e5);
+      const venueId = String(b.venueId || "").replace(/[^A-Z0-9._-]/gi, "").slice(0, 20);
+      const operator = isOperator(b.user);
+      if (venueId) {
+        const result = await runFactsCrawl({ venueId, reason: operator ? "operator-venue" : "app-venue" });
+        return send(res, 200, { ...(result.payload || loadFactsFile()), status: result }, { "Cache-Control": "no-store" });
+      }
+      if (!operator) return send(res, 403, { error: "operator" });
+      runFactsCrawl({ reason: "operator" }).catch((e) => console.error("velvet-facts", e));
+      return send(res, 202, { running: true, ...loadFactsFile() });
     }
 
     if (req.method === "GET" && url.pathname === "/pay/config") {

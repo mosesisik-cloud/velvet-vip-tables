@@ -1,0 +1,62 @@
+{
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": ["string", "null"],
+      "description": "Short official description of the venue from the site. Null if none. Do not invent."
+    },
+    "address": {
+      "type": ["string", "null"],
+      "description": "Street address as printed. Null if not on the site."
+    },
+    "area": {
+      "type": ["string", "null"],
+      "description": "Neighbourhood or area name if printed, e.g. Playa d'en Bossa."
+    },
+    "phone": {
+      "type": ["string", "null"],
+      "description": "Phone number exactly as printed. Null if missing."
+    },
+    "email": {
+      "type": ["string", "null"],
+      "description": "Public email if printed. Null if missing."
+    },
+    "hours": {
+      "type": ["string", "null"],
+      "description": "Opening hours or door times as printed. Null if missing. Do not invent."
+    },
+    "season": {
+      "type": ["string", "null"],
+      "description": "Season or opening period if printed."
+    },
+    "ageLimit": {
+      "type": ["string", "null"],
+      "description": "Minimum age if printed."
+    },
+    "dressCode": {
+      "type": ["string", "null"],
+      "description": "Dress code if printed."
+    },
+    "doorPolicy": {
+      "type": ["string", "null"],
+      "description": "Door, ID or guest-list policy if printed."
+    },
+    "music": {
+      "type": ["string", "null"],
+      "description": "Music style or residencies if printed."
+    },
+    "vipHow": {
+      "type": ["string", "null"],
+      "description": "How to request VIP/tables according to the official site. No invented prices."
+    },
+    "gettingThere": {
+      "type": ["string", "null"],
+      "description": "How to get there if printed (taxi, bus, boat)."
+    },
+    "highlights": {
+      "type": "array",
+      "description": "Short official facts from the page only.",
+      "items": { "type": "string" }
+    }
+  }
+}

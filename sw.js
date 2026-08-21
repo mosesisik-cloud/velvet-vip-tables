@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-19";
+const VERSION = "v4-real-20";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -146,7 +146,7 @@ self.addEventListener("fetch", (event) => {
 
   if (url.origin === self.location.origin) {
     // Daglig crawl + API: alltid nätet först, cache bara som offline-backup.
-    if (/venue-events\.json(\?|$)/i.test(url.pathname) || /google-places\.json(\?|$)/i.test(url.pathname) || /\/velvet-api\//i.test(url.pathname) || /\/events(\/|$)/i.test(url.pathname) || /\/places(\/|$)/i.test(url.pathname)) {
+    if (/venue-events\.json(\?|$)/i.test(url.pathname) || /google-places\.json(\?|$)/i.test(url.pathname) || /venue-facts\.json(\?|$)/i.test(url.pathname) || /\/velvet-api\//i.test(url.pathname) || /\/events(\/|$)/i.test(url.pathname) || /\/places(\/|$)/i.test(url.pathname) || /\/facts(\/|$)/i.test(url.pathname)) {
       event.respondWith(networkFirst(request));
       return;
     }

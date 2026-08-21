@@ -1616,6 +1616,13 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 }
 
 /* ---------- Kommande events (V3) ---------- */
+.facts-panel { grid-column: 1 / -1; }
+.facts-summary { color: var(--text-dim); margin: 0 0 14px; max-width: 62ch; }
+.facts-rows { margin: 0 0 12px; border-top: 1px solid var(--border-soft); padding-top: 8px; }
+.facts-rows .fact-val { text-align: right; overflow-wrap: anywhere; }
+.facts-rows a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
+.facts-highs { margin: 0 0 12px; padding-left: 18px; color: var(--text-dim); }
+.facts-highs li { margin-bottom: 4px; }
 .google-panel { grid-column: 1 / -1; }
 .g-hero { display: flex; align-items: center; gap: 16px; margin: 0 0 16px; }
 .g-hero-score {
