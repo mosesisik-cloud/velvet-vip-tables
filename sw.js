@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-45";
+const VERSION = "v4-real-46";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -58,24 +58,31 @@ function isRuntimeCdn(hostname) {
 }
 
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(SHELL_CACHE)
-      .then((cache) => cache.addAll(SHELL_ASSETS))
-      .then(() => self.skipWaiting())
-  );
+  event.waitUntil((async () => {
+    const cache = await caches.open(SHELL_CACHE);
+    // addAll avbryter HELA installen vid en enda 404 (typsnitt saknades live
+    // → användare fastnade på kraschat app.js och såg tom katalog).
+    await Promise.all(SHELL_ASSETS.map((url) => cache.add(url).catch(() => undefined)));
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys()
-      .then((keys) => Promise.all(
-        keys
-          .filter((k) => (k.startsWith("velvet-shell-") || k.startsWith("velvet-runtime-")) &&
-                         k !== SHELL_CACHE && k !== RUNTIME_CACHE)
-          .map((k) => caches.delete(k))
-      ))
-      .then(() => self.clients.claim())
-  );
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(
+      keys
+        .filter((k) => (k.startsWith("velvet-shell-") || k.startsWith("velvet-runtime-")) &&
+                       k !== SHELL_CACHE && k !== RUNTIME_CACHE)
+        .map((k) => caches.delete(k))
+    );
+    await self.clients.claim();
+    const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
+    await Promise.all(windows.map((c) => {
+      if (typeof c.navigate === "function") return c.navigate(c.url);
+      return undefined;
+    }));
+  })());
 });
 
 async function networkFirst(request) {

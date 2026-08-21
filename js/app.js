@@ -5472,6 +5472,11 @@ function registerServiceWorker() {
     navigator.serviceWorker
       .register("sw.js")
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (registerServiceWorker._reloaded) return;
+      registerServiceWorker._reloaded = true;
+      location.reload();
+    });
   });
 }
 
