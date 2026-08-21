@@ -2077,6 +2077,23 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   background: #111;
   display: block;
 }
+.bridge-desk {
+  display: flex; flex-direction: column; gap: 10px;
+  margin: 16px 0 8px; max-width: 420px;
+}
+.bridge-desk label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-dim); }
+.bridge-desk input {
+  padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--bg-elev); color: var(--text); font-size: 15px;
+}
+.bridge-packet { margin: 16px 0; max-width: 520px; }
+.bridge-pre {
+  white-space: pre-wrap; word-break: break-word;
+  padding: 14px 16px; border-radius: 12px;
+  border: 1px solid var(--gold); background: var(--gold-dim);
+  color: var(--text); font-size: 13px; line-height: 1.45;
+  margin: 10px 0 0;
+}
 @media (max-width: 720px) {
   .book-site-hero { grid-template-columns: 1fr; }
   .book-site-hero .venue-hero-media { aspect-ratio: 16 / 9; }

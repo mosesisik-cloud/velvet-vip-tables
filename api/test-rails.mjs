@@ -379,6 +379,41 @@ async function runApi() {
       fail("seed-baoli-miami", atMia.join(","));
     } else ok("seed-venues", "JB brand worldwide, Thomas Dubai, Vincenzo Europe, Strebel Sweden");
 
+    const brMeta = await req(base, "GET", "/book/bridge/IBZ-001");
+    if (brMeta.status !== 200 || !String(brMeta.json.adapter?.officialUrl || "").includes("hiibiza.com")) {
+      fail("bridge-adapter", JSON.stringify(brMeta.json).slice(0, 240));
+    } else ok("bridge-adapter", brMeta.json.adapter.host);
+
+    const brNone = await req(base, "GET", "/book/bridge/NOPE-000");
+    if (brNone.status !== 404) fail("bridge-missing", "expected 404 got " + brNone.status);
+    else ok("bridge-missing", "no booking site");
+
+    const brLocked = await req(base, "POST", "/book/bridge", {
+      user: plain, venueId: "IBZ-001", date: "2026-08-29", party: 4,
+    });
+    if (brLocked.status !== 403 || brLocked.json.error !== "idv_required") {
+      fail("bridge-idv", JSON.stringify(brLocked.json).slice(0, 220));
+    } else ok("bridge-idv", "unverified 403");
+
+    const brOk = await req(base, "POST", "/book/bridge", {
+      user: host, venueId: "IBZ-001", date: "2026-08-29", party: 4, note: "VIP bord",
+    });
+    const br = brOk.json.bridge || {};
+    if (brOk.status !== 201 || !String(br.id || "").startsWith("BR-")) {
+      fail("bridge-create", JSON.stringify(brOk.json).slice(0, 280));
+    } else if (!String(br.officialUrl || "").includes("hiibiza.com") || br.status !== "handed_off") {
+      fail("bridge-official", JSON.stringify(br).slice(0, 240));
+    } else if (!String(br.packet || "").includes("MOSES ISIK") || String(br.packet || "").includes("AB1234567")) {
+      fail("bridge-packet", String(br.packet).slice(0, 240));
+    } else if (br.guest?.card?.last4 !== "1881" || br.guest?.documentNumber) {
+      fail("bridge-secrets", JSON.stringify(br.guest).slice(0, 220));
+    } else ok("bridge-create", br.id + " → " + br.host);
+
+    const brList = await req(base, "GET", "/book/bridge/IBZ-001?userId=" + encodeURIComponent(host.id));
+    if (brList.status !== 200 || !(brList.json.bridges || []).some((x) => x.id === br.id)) {
+      fail("bridge-list", JSON.stringify(brList.json).slice(0, 240));
+    } else ok("bridge-list", "member sees own underlag");
+
     const got = await req(base, "GET", "/tables/TB-RAILS");
     const members = got.json.table?.members || [];
     const ids = members.map((m) => m.id).sort();

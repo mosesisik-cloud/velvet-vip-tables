@@ -4629,8 +4629,8 @@ async function renderPromoterChat(venueId) {
       return;
     }
     box.innerHTML = messages.map((m) => `
-      <div class="chat-bubble ${m.role === "promoter" ? "promo" : (m.userId === me.id ? "mine" : "")}${m.kind === "match" || m.kind === "match_done" ? " match" : ""}">
-        <div class="chat-who">${m.kind === "match" || m.kind === "match_done" ? esc(t("matchKind")) : (m.role === "promoter" ? esc(m.name || t("promoter")) + (m.name ? ` · ${esc(t("promoter"))}` : "") : esc(m.name || ""))}${m.via === "whatsapp" ? ` · WhatsApp` : ""}</div>
+      <div class="chat-bubble ${m.role === "promoter" ? "promo" : (m.userId === me.id ? "mine" : "")}${m.kind === "match" || m.kind === "match_done" || m.kind === "bridge" ? " match" : ""}">
+        <div class="chat-who">${m.kind === "bridge" ? esc(t("bridgePacket")) : (m.kind === "match" || m.kind === "match_done" ? esc(t("matchKind")) : (m.role === "promoter" ? esc(m.name || t("promoter")) + (m.name ? ` · ${esc(t("promoter"))}` : "") : esc(m.name || "")))}${m.via === "whatsapp" ? ` · WhatsApp` : ""}</div>
         <div class="chat-text">${esc(m.text)}</div>
         ${m.tableId ? `<a class="chat-table-link" href="#/table/${encodeURIComponent(m.tableId)}" data-nav>${esc(t("viewParty"))}</a>` : ""}
       </div>`).join("");
@@ -4920,7 +4920,7 @@ async function renderPromoterChat(venueId) {
   chatPoll = setInterval(() => { loadThread(); if (promoter) loadInbox(); }, 4000);
 }
 
-function renderBookSite(id) {
+async function renderBookSite(id) {
   const v = VENUES.find((x) => x.venue_id === id);
   if (!v) {
     view().innerHTML = `
@@ -4949,36 +4949,110 @@ function renderBookSite(id) {
     setTitle(v.name);
     return;
   }
-  const kindLabel = b.kind === "vip" ? t("bookKindVip") : b.kind === "events" ? t("bookKindEvents") : t("bookKindSite");
-  setTitle(`${t("bookOnSite")} · ${v.name}`);
+  const me = loadUser();
+  if (me) await refreshIdv();
+  const live = me
+    ? await apiJSON(`/book/bridge/${encodeURIComponent(v.venue_id)}?userId=${encodeURIComponent(me.id)}`)
+    : await apiJSON(`/book/bridge/${encodeURIComponent(v.venue_id)}`);
+  const adapter = live?.adapter || {
+    officialUrl: b.url, host: b.host, kind: b.kind, label: b.label, engine: "official-site", mode: "handoff",
+  };
+  const kindLabel = adapter.kind === "vip" ? t("bookKindVip") : adapter.kind === "events" ? t("bookKindEvents") : t("bookKindSite");
+  const needLock = !me || live?.error === "idv_required" || live?.error === "card_required" || !isPayingMember();
+  const needCard = live?.error === "card_required" || (me && isIdvOk() && !isCardOk());
+  setTitle(`${t("bridgeTitle")} · ${v.name}`);
+  const mine = live?.bridges || [];
   view().innerHTML = `
   <section class="section book-site">
     <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
     <div class="book-site-hero">
       ${venueMediaHTML(v, "venue-hero-media", { eager: true })}
       <div class="book-site-copy">
-        <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)} · ${esc(b.host)}</p>
-        <h1>${esc(t("bookOnSite"))}</h1>
-        <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(t("bookOnSiteLeave"))}</p>
+        <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)} · ${esc(adapter.host || b.host)}</p>
+        <h1>${esc(t("bridgeTitle"))}</h1>
+        <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(t("bridgeSub"))}</p>
+        ${needLock ? `
+          <div style="margin-top:16px">${promoterLockHTML(needCard ? "card" : "idv")}</div>
+          <p class="detail-cta-note">${esc(t("bridgeNeed"))}</p>` : `
+        <div class="bridge-desk" id="bridge-desk">
+          <label>${esc(t("bridgeDate"))}
+            <input type="date" id="br-date" min="${todayISO()}" value="${todayISO()}">
+          </label>
+          <label>${esc(t("bridgeParty"))}
+            <input type="number" id="br-party" min="1" max="20" value="4" inputmode="numeric">
+          </label>
+          <label>${esc(t("matchNote"))}
+            <input type="text" id="br-note" maxlength="240" placeholder="${esc(t("bridgeNotePh"))}" autocomplete="off">
+          </label>
+          <button type="button" class="btn btn-gold" id="br-make" style="width:100%">${esc(t("bridgeCta"))}</button>
+        </div>
+        <div class="bridge-packet hidden" id="bridge-out"></div>`}
         <div class="book-site-actions">
-          <a class="btn btn-gold" id="bs-open" href="${esc(b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))} ↗</a>
+          <a class="btn btn-ghost" id="bs-open" href="${esc(adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))} ↗</a>
           <button class="btn btn-ghost" type="button" id="bs-velvet">${esc(t("sendRequest"))}</button>
           <a class="btn ${isPayingMember() ? "btn-gold" : "btn-ghost"}" href="${promoterHref(v.venue_id)}" data-nav>${esc(isPayingMember() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>
         </div>
-        <p class="book-site-url">${esc(b.host)} · ${esc(b.url)}</p>
-        <p class="detail-cta-note" style="margin-bottom:0">${esc(t("bookOnSiteNote"))}</p>
+        <p class="book-site-url">${esc(adapter.host || b.host)} · ${esc(adapter.officialUrl || b.url)}</p>
+        ${adapter.clubEmail ? `<p class="book-site-url">${esc(t("bridgeClubMail"))}: ${esc(adapter.clubEmail)}</p>` : ""}
+        <p class="detail-cta-note" style="margin-bottom:0">${esc(t("bridgeHonest"))}</p>
       </div>
     </div>
     ${b.social ? "" : `
     <div class="book-site-frame-wrap">
       <div class="book-site-frame-bar">
         <span>${esc(t("bookOnSiteIframe"))}</span>
-        <a class="icon-link" href="${esc(b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))} ↗</a>
+        <a class="icon-link" href="${esc(adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))} ↗</a>
       </div>
-      <iframe class="book-site-frame" src="${esc(b.url)}" title="${esc(v.name)} — ${esc(t("bookOnSite"))}" referrerpolicy="no-referrer-when-downgrade" loading="eager" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"></iframe>
+      <iframe class="book-site-frame" src="${esc(adapter.officialUrl || b.url)}" title="${esc(v.name)} — ${esc(t("bookOnSite"))}" referrerpolicy="no-referrer-when-downgrade" loading="eager" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"></iframe>
     </div>`}
   </section>`;
   $("#bs-velvet")?.addEventListener("click", () => openBookingModal(v));
+  $("#ch-verify")?.addEventListener("click", () => rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}`));
+  $("#ch-card")?.addEventListener("click", () => rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}`));
+  const paintPacket = (bridge) => {
+    const el = $("#bridge-out");
+    if (!el || !bridge) return;
+    el.classList.remove("hidden");
+    const mail = adapter.clubEmail
+      ? `mailto:${encodeURIComponent(adapter.clubEmail)}?subject=${encodeURIComponent("VELVET " + bridge.id + " · " + v.name)}&body=${encodeURIComponent(bridge.packet || "")}`
+      : "";
+    el.innerHTML = `
+      <h2 class="detail-panel-title">${esc(t("bridgePacket"))} · ${esc(bridge.id)}</h2>
+      <p class="idv-badge ok">${esc(t("bridgeStatus"))}</p>
+      <pre class="bridge-pre">${esc(bridge.packet || "")}</pre>
+      <div class="book-site-actions" style="margin-top:12px">
+        <a class="btn btn-gold" href="${esc(bridge.handoffUrl || adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bridgeOpen"))} ↗</a>
+        <button type="button" class="btn btn-ghost" id="br-copy">${esc(t("bridgeCopy"))}</button>
+        ${mail ? `<a class="btn btn-ghost" href="${esc(mail)}">${esc(t("bridgeClubMail"))}</a>` : ""}
+      </div>`;
+    $("#br-copy")?.addEventListener("click", async () => {
+      const ok = await copyText(bridge.packet || "");
+      showToast(ok ? t("bridgeCopied") : t("bridgeCopy"));
+    });
+  };
+  if (!needLock && mine[0]) paintPacket(mine[0]);
+  $("#br-make")?.addEventListener("click", async () => {
+    const btn = $("#br-make");
+    if (btn) btn.disabled = true;
+    const r = await apiJSON("/book/bridge", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user: loadUser(),
+        venueId: v.venue_id,
+        date: $("#br-date")?.value,
+        party: Number($("#br-party")?.value || 4),
+        note: ($("#br-note")?.value || "").trim(),
+        package: adapter.label || "",
+      }),
+    });
+    if (btn) btn.disabled = false;
+    if (r?.error === "idv_required") { rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}`); location.hash = "#/verify"; return; }
+    if (r?.error === "card_required") { rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}`); location.hash = "#/card"; return; }
+    if (r?.error === "too_young") { showToast(t("verifyTooYoung").replace("{age}", r.ageYears != null ? String(r.ageYears) : "—")); return; }
+    if (r?.error === "date") { showToast(t("bridgeDate")); return; }
+    if (r?.bridge) paintPacket(r.bridge);
+  });
 }
 
 // ---------- Router ----------

@@ -7,6 +7,7 @@ import { loadEventsFile, loadCrawlStatus, runCrawl, getCrawlState, scheduleDaily
 import { loadPlacesFile, runPlacesLookup } from "./google-places.mjs";
 import { loadFactsFile, runFactsCrawl } from "./venue-facts.mjs";
 import { parseTd3, extractMrzFromText, nameMatch, publicFields, legalName, ageYears } from "./mrz.mjs";
+import { bookingAdapter, handoffUrl, packetText, publicBridge } from "./book-bridge.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
@@ -18,7 +19,7 @@ const PUBLIC_APP = process.env.PUBLIC_URL || "https://b2b.bakemyday.se/velvet";
 fs.mkdirSync(IDV_DIR, { recursive: true });
 
 function emptyDb() {
-  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {}, matches: [] };
+  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {}, matches: [], bridges: [] };
 }
 function loadJsonRel(name) {
   for (const p of [
@@ -129,6 +130,7 @@ function load() {
       payments: Array.isArray(raw.payments) ? raw.payments : [],
       auth: raw.auth && typeof raw.auth === "object" ? raw.auth : {},
       matches: Array.isArray(raw.matches) ? raw.matches : [],
+      bridges: Array.isArray(raw.bridges) ? raw.bridges : [],
     };
   } catch {}
   return applyPromoterSeed(db);
@@ -1876,6 +1878,101 @@ const server = http.createServer(async (req, res) => {
       }
       save(db);
       return send(res, 200, { ok: true, stored });
+    }
+
+    const bridgeOne = url.pathname.match(/^\/book\/bridge\/([^/]+)$/);
+    if (req.method === "GET" && url.pathname === "/book/bridge") {
+      const uid = url.searchParams.get("userId") || "";
+      if (!uid) return send(res, 401, { error: "auth" });
+      const db = load();
+      const gate = memberGate(uid, db);
+      if (gate) return send(res, 403, { error: gate });
+      const mine = (db.bridges || []).filter((x) => x.userId === uid).slice(0, 40);
+      return send(res, 200, { bridges: mine.map(publicBridge) });
+    }
+    if (req.method === "GET" && bridgeOne) {
+      const venueId = decodeURIComponent(bridgeOne[1]);
+      const adapter = bookingAdapter(venueId);
+      if (!adapter) return send(res, 404, { error: "no_booking_site" });
+      const uid = url.searchParams.get("userId") || "";
+      if (!uid) return send(res, 200, { adapter });
+      const db = load();
+      const promoter = isPromoter({ id: uid }, venueId, db);
+      if (!promoter) {
+        const gate = memberGate(uid, db, venueId);
+        if (gate) return send(res, 200, { adapter, error: gate });
+      }
+      const list = (db.bridges || []).filter((x) => x.venueId === venueId && (promoter || x.userId === uid));
+      return send(res, 200, { adapter, bridges: list.map(publicBridge), promoter });
+    }
+    if (req.method === "POST" && url.pathname === "/book/bridge") {
+      const b = await readBody(req, 2e5);
+      const venueId = String(b.venueId || b.venue_id || "");
+      const uid = String(b.user?.id || "");
+      if (!uid) return send(res, 400, { error: "user" });
+      if (!venueId) return send(res, 400, { error: "venue" });
+      const adapter = bookingAdapter(venueId);
+      if (!adapter) return send(res, 404, { error: "no_booking_site" });
+      const db = load();
+      if (!isPromoter({ id: uid }, venueId, db)) {
+        const gate = memberGate(uid, db, venueId);
+        if (gate) return send(res, 403, { error: gate });
+      }
+      const date = String(b.date || "");
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return send(res, 400, { error: "date" });
+      const party = Math.max(1, Math.min(20, Number(b.party) || 2));
+      upsertUser(db, b.user);
+      const d = dossier(uid, db) || {};
+      const guest = {
+        id: uid,
+        legalName: d.legalName || String(b.user?.name || "").slice(0, 80),
+        nationality: d.fields?.nationality || "",
+        documentMasked: d.fields?.documentNumberMasked || "",
+        ageYears: idvAge(db.idv[uid]),
+        card: d.card || null,
+        email: String(b.email || b.user?.email || db.users[uid]?.email || "").slice(0, 80),
+        phone: String(b.phone || b.user?.phone || db.users[uid]?.whatsapp || "").slice(0, 40),
+        handle: d.handle || "",
+      };
+      const id = `BR-${Date.now().toString(36).toUpperCase()}`;
+      const rec = {
+        id,
+        venueId,
+        venue: adapter.name,
+        destination: adapter.destination,
+        officialUrl: adapter.officialUrl,
+        handoffUrl: handoffUrl(adapter.officialUrl, id),
+        host: adapter.host,
+        kind: adapter.kind,
+        engine: adapter.engine,
+        clubEmail: adapter.clubEmail,
+        date,
+        party,
+        package: String(b.package || adapter.label || "").slice(0, 80),
+        note: String(b.note || "").trim().slice(0, 240),
+        status: "handed_off",
+        userId: uid,
+        guest,
+        created: new Date().toISOString(),
+      };
+      rec.packet = packetText(rec);
+      if (!db.bridges) db.bridges = [];
+      db.bridges.unshift(rec);
+      db.bridges = db.bridges.slice(0, 400);
+      appendChat(db, venueId, uid, {
+        id: `M-${Date.now().toString(36)}`,
+        role: "user",
+        userId: uid,
+        name: guest.legalName || String(b.user?.name || ""),
+        handle: guest.handle || "",
+        text: `Bokningsunderlag ${id} · ${date} · ${party} pers mot ${adapter.host}`,
+        kind: "bridge",
+        bridgeId: id,
+        via: "app",
+        created: rec.created,
+      });
+      save(db);
+      return send(res, 201, { bridge: publicBridge(rec), adapter });
     }
 
     const promoOne = url.pathname.match(/^\/promoters\/([^/]+)$/);
