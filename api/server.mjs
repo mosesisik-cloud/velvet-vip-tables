@@ -587,9 +587,9 @@ function parseCardBody(b) {
   return { card: { last4, brand, expMonth, expYear, added: new Date().toISOString() } };
 }
 function verifiedSpend(uid, db) {
-  if (!uid) return { amount: 0, currency: "EUR", n: 0, verified: false };
+  if (!uid) return { amount: 0, currency: "EUR", n: 0, verified: false, real: false };
   const idvOk = isIdvVerified(uid, db);
-  if (!idvOk) return { amount: 0, currency: "EUR", n: 0, verified: false };
+  if (!idvOk) return { amount: 0, currency: "EUR", n: 0, verified: false, real: false };
   const seen = new Set();
   let amount = 0;
   let n = 0;
@@ -616,7 +616,8 @@ function verifiedSpend(uid, db) {
     amount += a;
     n += 1;
   }
-  return { amount: Math.round(amount * 100) / 100, currency: "EUR", n, verified: true };
+  const total = Math.round(amount * 100) / 100;
+  return { amount: total, currency: "EUR", n, verified: true, real: total > 0 };
 }
 function publicPerson(p, db, role) {
   if (!p) return null;
@@ -2308,6 +2309,7 @@ const server = http.createServer(async (req, res) => {
           idv: db.idv[th.threadId]?.status === "verified" ? "verified" : "none",
           paying: !!card,
           card,
+          spend: verifiedSpend(th.threadId, db),
           match: match ? publicMatch(match, db) : null,
         };
       });
@@ -2335,11 +2337,14 @@ const server = http.createServer(async (req, res) => {
         guestWa: guestWaForThread(db, venueId, thread),
         cloud: !!(waCloud().token && waCloud().phoneId),
         promoters: listVerifiedPromoters(db, venueId),
-        guest: dossier(guestId, db) || {
-          id: guestId,
-          idv: db.idv[guestId]?.status === "verified" ? "verified" : "none",
-          paying: !!guestCard,
-          card: guestCard,
+        guest: {
+          ...(dossier(guestId, db) || {
+            id: guestId,
+            idv: db.idv[guestId]?.status === "verified" ? "verified" : "none",
+            paying: !!guestCard,
+            card: guestCard,
+          }),
+          spend: verifiedSpend(guestId, db),
         },
       });
     }

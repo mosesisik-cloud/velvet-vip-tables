@@ -511,9 +511,11 @@ async function runApi() {
     if (hostPayAmt.status !== 200 || !hostMem?.paid) fail("spend-pay", JSON.stringify(hostPayAmt.json).slice(0, 220));
     else if (!hostProf.json.spend?.verified || hostProf.json.spend.amount !== 80 || hostProf.json.spend.n !== 1) {
       fail("spend-verified", JSON.stringify(hostProf.json.spend).slice(0, 240));
+    } else if (hostProf.json.spend.real !== true || guestSpend.json.spend?.real) {
+      fail("spend-real", JSON.stringify({ host: hostProf.json.spend, guest: guestSpend.json.spend }).slice(0, 240));
     } else if (JSON.stringify(hostProf.json).includes("AB1234567")) {
       fail("spend-no-pan", "passport number leaked");
-    } else ok("spend-verified", "€80 · 1 payment, public on profile");
+    } else ok("spend-verified", "€80 · 1 payment · real=true on public profile");
 
     const hostAgain = await req(base, "POST", "/tables/TB-RAILS/pay", {
       user: host, targetId: host.id, paid: true, amount: 80,

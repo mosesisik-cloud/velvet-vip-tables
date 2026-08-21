@@ -1265,6 +1265,9 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .idv-slot em { color: var(--text-faint); font-size: 12px; }
 .idv-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
 .idv-badge.ok { background: var(--gold-dim); color: var(--gold-bright); border: 1px solid var(--gold); }
+.real-flag { margin: 8px 0 4px; }
+.real-flag.on { color: var(--gold-bright); font-weight: 650; }
+.real-flag.off { color: var(--text-dim); }
 .promo-lock {
   max-width: 480px;
   margin: 8px 0 4px;

@@ -710,11 +710,8 @@ function personRowHTML(p, { me, hostId, tableId } = {}) {
         ${handle ? (p.socialUrl
           ? `<a class="person-handle" href="${esc(p.socialUrl)}" target="_blank" rel="noopener">${esc(handle)}</a>`
           : `<span class="person-handle">${esc(handle)}</span>`) : ""}
-        ${verified
-          ? `<span class="idv-badge ok">✓ ${esc(p.legalName || t("verifyOk"))}</span>`
-          : `<span class="idv-badge no">${esc(t("notVerified"))}</span>`}
+        ${whoIsRealHTML(p.spend, p.idv, { compact: true })}
         ${p.card?.last4 ? `<span class="idv-badge ok">💳 ${esc(cardLabel(p.card))}</span>` : ""}
-        ${p.spend && p.spend.verified ? `<span class="idv-badge ok">${esc(t("verifiedSpend"))} ${esc(spendLabel(p.spend))}</span>` : ""}
       </div>
     </div>
     <div class="person-pay">
@@ -812,6 +809,21 @@ function openSeatsLine(tb) {
   const who = openForOf(tb.openFor);
   if (who === "anyone") return `${n} ${t("seatsOpen")}`;
   return `${n} ${t("seatsOpen")} · ${t("openForLabel").toLowerCase()} ${openForLabel(who)}`;
+}
+function whoIsRealHTML(spend, idv, { compact } = {}) {
+  if (spend && spend.real) {
+    return compact
+      ? `<span class="idv-badge ok">✓ ${esc(t("realGuest"))} · ${esc(spendLabel(spend))}</span>`
+      : `<p class="real-flag on"><span class="idv-badge ok">✓ ${esc(t("realGuest"))}</span> ${esc(t("verifiedSpend"))} ${esc(spendLabel(spend))}</p><p class="stepper-hint">${esc(t("realGuestHint"))}</p>`;
+  }
+  if (idv === "verified" || (spend && spend.verified)) {
+    return compact
+      ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span><span class="idv-badge no">${esc(t("realNoSpend"))}</span>`
+      : `<p class="real-flag"><span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span> ${esc(t("realNoSpend"))}</p><p class="stepper-hint">${esc(t("realGuestHint"))}</p>`;
+  }
+  return compact
+    ? `<span class="idv-badge no">${esc(t("notReal"))}</span>`
+    : `<p class="real-flag off"><span class="idv-badge no">${esc(t("notReal"))}</span></p><p class="stepper-hint">${esc(t("realGuestHint"))}</p>`;
 }
 function spendLabel(s) {
   const a = Number(s && s.amount) || 0;
@@ -4151,11 +4163,8 @@ async function renderUserProfile(id) {
           ${handle && u.socialUrl ? `<a class="person-handle" href="${esc(u.socialUrl)}" target="_blank" rel="noopener">${esc(handle)}</a>` : handle ? `<span class="person-handle">${esc(handle)}</span>` : ""}
           ${verified ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : `<span class="idv-badge no">${esc(t("notVerified"))}</span>`}
         </p>
+        ${whoIsRealHTML(data.spend || u.spend, u.idv || data.idv)}
         <p>${starRow(data.avg)} ${data.n ? `${esc(t("funScore"))} (${data.n})` : t("noReviews")}</p>
-        <p class="member-access${data.spend && data.spend.verified ? " on" : ""}">${data.spend && data.spend.verified
-          ? `${esc(t("verifiedSpend"))} · ${esc(spendLabel(data.spend))}`
-          : esc(t("verifiedSpendNone"))}</p>
-        <p class="stepper-hint">${esc(t("verifiedSpendHint"))}</p>
       </div>
     </div>
     ${partiesBlockHTML(data, { mine })}
@@ -4326,11 +4335,8 @@ async function renderAccount() {
               ? `<span class="idv-badge ok">💳 ${esc(cardLabel())}</span>`
               : `<a class="btn btn-ghost btn-sm" href="#/card" data-nav>${esc(t("cardNeed"))}</a>`}
           </p>
+          ${whoIsRealHTML(mine.spend, st)}
           <p>${starRow(mine.avg)} ${mine.n ? `${esc(t("funScore"))} (${mine.n})` : t("noReviews")}</p>
-          <p class="member-access${mine.spend && mine.spend.verified ? " on" : ""}">${mine.spend && mine.spend.verified
-            ? `${esc(t("verifiedSpend"))} · ${esc(spendLabel(mine.spend))}`
-            : esc(t("verifiedSpendNone"))}</p>
-          <p class="stepper-hint">${esc(t("verifiedSpendHint"))}</p>
           <p style="margin-top:10px"><a class="btn btn-ghost btn-sm" href="#/user/${encodeURIComponent(u.id)}" data-nav>${esc(t("openProfile"))}</a>
             ${isPayingMember() ? `<a class="btn btn-gold btn-sm" href="#/promoters" data-nav>${esc(t("promotersSee"))}</a>` : ""}</p>
         </div>
@@ -4697,7 +4703,7 @@ async function renderPromoterChat(venueId) {
       <div class="chat-thread-row">
         <button type="button" class="chat-thread${th.threadId === threadId ? " on" : ""}" data-th="${esc(th.threadId)}">
           <b>${esc(th.name)}</b>
-          <span class="paying-meta">${th.paying ? esc(t("payingCustomer") + (th.card ? " · " + cardLabel(th.card) : "")) : esc(t("promoterNeedVerify"))}</span>
+          <span class="paying-meta">${th.spend && th.spend.real ? esc(t("realGuest") + " · " + spendLabel(th.spend)) : (th.paying ? esc(t("payingCustomer") + (th.card ? " · " + cardLabel(th.card) : "")) : esc(t("notReal")))}</span>
           ${th.match ? `<span class="paying-meta">${esc(t("matchKind"))} · ${esc(th.match.date)} · ${num(th.match.seats)}</span>` : ""}
           <span>${esc((th.last || "").slice(0, 60))}</span>
         </button>
