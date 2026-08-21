@@ -116,7 +116,11 @@ button { font-family: inherit; cursor: pointer; }
   position: sticky; top: 0; left: 0; right: 0; z-index: 60;
   width: 100%;
   max-width: 100%;
+  overflow-x: clip;
   touch-action: pan-y;
+}
+@supports not (overflow-x: clip) {
+  .site-header { overflow-x: hidden; }
 }
 .nav {
   position: relative; z-index: 50;
@@ -125,10 +129,14 @@ button { font-family: inherit; cursor: pointer; }
   width: 100%;
   max-width: 100%;
   min-width: 0;
+  overflow-x: clip;
   padding: 18px 40px;
   background: rgba(11, 11, 15, 0.85);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-soft);
+}
+@supports not (overflow-x: clip) {
+  .nav { overflow-x: hidden; }
 }
 .nav-logo {
   flex-shrink: 0;
@@ -171,7 +179,7 @@ button { font-family: inherit; cursor: pointer; }
   border-radius: 9px; font-size: 11px; font-weight: 700;
 }
 
-/* Hamburger — endast synlig under 720px */
+/* Hamburger — synlig under 1100px så språken ryms i menyn */
 .nav-toggle {
   display: none;
   width: 44px; height: 44px;
@@ -772,14 +780,9 @@ button { font-family: inherit; cursor: pointer; }
   html { scroll-behavior: auto; }
 }
 
-@media (max-width: 1100px) and (min-width: 721px) {
-  .nav-links { gap: 16px; }
-  .nav-langs { margin-left: 4px; }
-}
-
-/* ---------- Responsive ---------- */
-@media (max-width: 720px) {
-  /* Nav → hamburger + dropdown-panel */
+@media (max-width: 1100px) {
+  /* Nav → hamburger + dropdown-panel (språk i menyn när headern är trång) */
+  .site-header, .nav { overflow: visible; }
   .nav { padding: 10px 14px 10px 20px; }
   .nav-toggle { display: flex; }
   .nav-links {
@@ -813,7 +816,10 @@ button { font-family: inherit; cursor: pointer; }
     border: 1px solid var(--border);
   }
   .nav-lang-name { display: inline; font-weight: 600; letter-spacing: 0; }
+}
 
+/* ---------- Responsive ---------- */
+@media (max-width: 720px) {
   .hero { padding: 70px 20px 60px; }
   .section { padding: 50px 20px; }
   .stats { gap: 32px; padding: 26px 20px; }

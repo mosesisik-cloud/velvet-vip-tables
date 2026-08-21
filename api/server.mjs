@@ -232,11 +232,11 @@ const US21 = new Set(["MIA", "LAS", "NYC", "LAX", "ASP"]);
 function minAgeForVenue(venueId) {
   const facts = loadFactsFile()?.venues?.[venueId];
   const n = parseInt(String(facts?.ageLimit || "").replace(/[^\d]/g, ""), 10);
-  if (n >= 16 && n <= 25) return n;
-  const v = loadVenuesFile().find((x) => x.venue_id === venueId);
+  const fromFacts = (n >= 16 && n <= 25) ? n : null;
+  const v = loadAllVenues().find((x) => x.venue_id === venueId);
   const code = String(v?.destination_code || "").toUpperCase();
-  if (US21.has(code)) return 21;
-  return MIN_AGE;
+  if (US21.has(code)) return Math.max(fromFacts || 0, 21);
+  return fromFacts || MIN_AGE;
 }
 function idvAge(rec) {
   return ageYears(rec?.fieldsPublic?.birthDate || rec?.fields?.birthDate);
@@ -332,21 +332,37 @@ function dossier(uid, db) {
     socialUrl: socialUrl(u.provider, u.handle),
   };
 }
+function operatorUids() {
+  const ids = new Set();
+  for (const s of String(process.env.VELVET_OPERATORS || "").split(/[,;\s]+/)) {
+    const id = s.trim();
+    if (id) ids.add(id);
+  }
+  const payOps = loadPay()?.operators;
+  if (Array.isArray(payOps)) {
+    for (const x of payOps) {
+      const id = String(x || "").trim();
+      if (id) ids.add(id);
+    }
+  }
+  return ids;
+}
+function isOperatorUid(uid) {
+  if (!uid) return false;
+  return operatorUids().has(uid);
+}
 function isPromoter(user, venueId, db) {
   const uid = user?.id || "";
   if (!uid) return false;
-  const stored = db.users[uid] || {};
-  const email = String(stored.email || "").toLowerCase();
-  const handle = String(stored.handle || "").toLowerCase();
-  if (email === "gabrielhadodo@gmail.com" || email === "moses.isik@bakemyday.se") return true;
-  if (handle === "velvet") return true;
+  if (isOperatorUid(uid)) return true;
   const list = db.promoters[venueId] || [];
-  return list.includes(uid);
+  if (!list.includes(uid)) return false;
+  return isVerifiedMember(uid, db);
 }
 function isPromoterAnywhere(uid, db) {
   if (!uid) return false;
-  if (isPromoter({ id: uid }, "", db)) return true;
-  if (db.users[uid]?.seed || isRosterPromoter(uid, db)) return true;
+  if (isOperatorUid(uid)) return true;
+  if (!isVerifiedMember(uid, db)) return false;
   for (const vid of Object.keys(db.promoters || {})) {
     if ((db.promoters[vid] || []).includes(uid)) return true;
   }
@@ -551,6 +567,10 @@ function upsertUser(db, u) {
     handle: handle || prev.handle || "",
     provider: provider || prev.provider || "",
     email: String(u.email || prev.email || "").toLowerCase().slice(0, 80),
+    legalName: prev.legalName || "",
+    promoterScope: prev.promoterScope || "",
+    photo: prev.photo || "",
+    seed: !!prev.seed,
     updated: new Date().toISOString(),
     created: prev.created || new Date().toISOString(),
     whatsapp: prev.whatsapp || "",
@@ -1587,24 +1607,21 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       const t = db.tables.find((x) => x.id === decodeURIComponent(joinM[1]));
       if (!t) return send(res, 404, { error: "not_found" });
-      if (t.sharp) {
-        const idv = db.idv[b.user?.id || ""];
-        if (!idv || idv.status !== "verified") return send(res, 403, { error: "idv_required" });
-      }
+      const uid = String(b.user?.id || "");
+      if (!uid) return send(res, 401, { error: "auth" });
+      const gate = memberGate(uid, db, t.venue_id);
+      if (gate) return send(res, 403, gatePayload(gate, uid, db, t.venue_id));
       if (t.openLeft < 1) return send(res, 409, { error: "full" });
-      const uid = b.user?.id || "";
       const pref = seatPrefError(t, uid, db);
       if (pref) return send(res, 403, { error: pref, openFor: parseOpenFor(t.openFor) });
-      if (uid && db.idv[uid]?.status === "verified") {
-        const years = idvAge(db.idv[uid]);
-        const min = minAgeForVenue(t.venue_id);
-        if (years != null && years < min) return send(res, 403, { error: "too_young", ageYears: years, minAge: min });
-      }
-      if (uid && (t.host?.id === uid || t.joiners.some((j) => j.id === uid))) {
+      const years = idvAge(db.idv[uid]);
+      const min = minAgeForVenue(t.venue_id);
+      if (years != null && years < min) return send(res, 403, { error: "too_young", ageYears: years, minAge: min });
+      if (t.host?.id === uid || t.joiners.some((j) => j.id === uid)) {
         return send(res, 200, { table: publicTable(t, db), already: true });
       }
       const joiner = {
-        id: uid || `U-${Date.now().toString(36)}`,
+        id: uid,
         name: String(b.user?.name || b.user?.provider || "Gäst"),
         provider: String(b.user?.provider || ""),
         handle: String(b.user?.handle || "").replace(/^@/, ""),
@@ -2269,6 +2286,10 @@ const server = http.createServer(async (req, res) => {
       const uid = String(b.user?.id || "");
       if (!uid) return send(res, 400, { error: "user" });
       const db = load();
+      if (!isOperatorUid(uid)) {
+        const gate = memberGate(uid, db, venueId);
+        if (gate) return send(res, 403, gatePayload(gate, uid, db, venueId));
+      }
       const list = db.promoters[venueId] || [];
       if (!list.includes(uid)) list.push(uid);
       db.promoters[venueId] = list;

@@ -41,12 +41,12 @@ function venueVisible(v, q) {
 }
 
 const CATEGORY_GROUPS = [
-  { key: "nightclub", label: "Nattklubb", match: /night|hyperclub|open-air|club\b/i },
-  { key: "beach", label: "Beach club", match: /beach|floating|cliff/i },
-  { key: "day", label: "Day club / Pool", match: /day ?club|pool/i },
-  { key: "rooftop", label: "Rooftop", match: /rooftop/i },
-  { key: "restaurant", label: "Restaurang / Show", match: /restaurant|dinner|show|tavern/i },
-  { key: "apres", label: "Après-ski", match: /après|apres/i },
+  { key: "nightclub", labelKey: "catNightclub", match: /night|hyperclub|open-air|club\b/i },
+  { key: "beach", labelKey: "catBeach", match: /beach|floating|cliff/i },
+  { key: "day", labelKey: "catDay", match: /day ?club|pool/i },
+  { key: "rooftop", labelKey: "catRooftop", match: /rooftop/i },
+  { key: "restaurant", labelKey: "catRestaurant", match: /restaurant|dinner|show|tavern/i },
+  { key: "apres", labelKey: "catApres", match: /après|apres/i },
 ];
 
 function venueGroup(v) {
@@ -573,9 +573,15 @@ async function listOpenTables() {
   if (remote?.tables) return remote.tables;
   return loadLocalTables().filter((t) => t.status === "open" && Number(t.openLeft) > 0);
 }
-async function joinOpenTable(id) {
+async function joinOpenTable(id, hint) {
   const u = loadUser();
   if (!u) return { error: "auth" };
+  const venueId = (hint && hint.venue_id) || loadLocalTables().find((x) => x.id === id)?.venue_id;
+  const ven = VENUES.find((x) => x.venue_id === venueId);
+  const young = venueTooYoung(ven);
+  if (young) return { error: "too_young", minAge: young.min, ageYears: young.age };
+  const age = myAgeYears();
+  if (age != null && age < 18) return { error: "too_young", minAge: 18, ageYears: age };
   const base = apiBase();
   if (base) {
     try {
@@ -593,10 +599,10 @@ async function joinOpenTable(id) {
   const list = loadLocalTables();
   const tb = list.find((x) => x.id === id);
   if (!tb) return { error: "missing" };
-  const ven = VENUES.find((x) => x.venue_id === tb.venue_id);
-  const young = venueTooYoung(ven);
-  if (young) return { error: "too_young", minAge: young.min, ageYears: young.age };
-  if ((tb.sharp || (ven && isSharpVenue(ven))) && !isIdvOk()) return { error: "idv_required" };
+  const localVen = ven || VENUES.find((x) => x.venue_id === tb.venue_id);
+  const localYoung = venueTooYoung(localVen);
+  if (localYoung) return { error: "too_young", minAge: localYoung.min, ageYears: localYoung.age };
+  if ((tb.sharp || (localVen && isSharpVenue(localVen))) && !isIdvOk()) return { error: "idv_required" };
   if (openForOf(tb.openFor) !== "anyone") {
     if (!isIdvOk()) return { error: "idv_required" };
     if (!canTakeOpenSeat(tb)) return { error: "seat_pref", openFor: tb.openFor };
@@ -753,9 +759,11 @@ function isPayingMember() {
 function venueMinAge(v) {
   const raw = String((venueFacts(v) || {}).ageLimit || "");
   const n = parseInt(raw.replace(/[^\d]/g, ""), 10);
-  if (n >= 16 && n <= 25) return n;
-  if (["MIA", "LAS", "NYC", "LAX", "ASP"].includes(String(v?.destination_code || "").toUpperCase())) return 21;
-  return 18;
+  const fromFacts = (n >= 16 && n <= 25) ? n : null;
+  if (["MIA", "LAS", "NYC", "LAX", "ASP"].includes(String(v?.destination_code || "").toUpperCase())) {
+    return Math.max(fromFacts || 0, 21);
+  }
+  return fromFacts || 18;
 }
 function myAgeYears() {
   const u = loadUser();
@@ -787,6 +795,8 @@ function myPassportSex() {
   return String(f.sex || "").toUpperCase();
 }
 function canTakeOpenSeat(tb) {
+  const ven = VENUES.find((x) => x.venue_id === (tb && tb.venue_id));
+  if (venueTooYoung(ven)) return false;
   const want = openForOf(tb && tb.openFor);
   if (want === "anyone") return true;
   if (!isIdvOk()) return false;
@@ -1324,8 +1334,8 @@ function renderHome() {
     <h1>${esc(t("heroTitle1"))}<br><em>${esc(t("heroTitle2"))}</em></h1>
     <p>${esc(t("heroP"))}</p>
     <div class="hero-cta">
-      <a class="btn btn-gold" href="#/venues" data-nav>Utforska ställen</a>
-      <a class="btn btn-ghost" href="#/destinations" data-nav>Se destinationer</a>
+      <a class="btn btn-gold" href="#/venues" data-nav>${esc(t("explore"))}</a>
+      <a class="btn btn-ghost" href="#/destinations" data-nav>${esc(t("seeDest"))}</a>
     </div>
     <p class="hero-credit"><a href="${esc(HERO_VIDEO.credit)}" target="_blank" rel="noopener">Video: Pexels</a></p>
   </section>
@@ -1340,7 +1350,7 @@ function renderHome() {
   <section class="section">
     <div class="section-head">
       <div><h2>Launch-destinationer</h2><div class="sub">Tier 1 — högst densitet av VIP-inventarie</div></div>
-      <a class="link-gold" href="#/destinations" data-nav>Alla destinationer →</a>
+      <a class="link-gold" href="#/destinations" data-nav>${esc(t("allDest"))} →</a>
     </div>
     <div class="dest-grid">${tier1.slice(0, 8).map(destCard).join("")}</div>
   </section>
@@ -1477,7 +1487,7 @@ function renderDestinationDetail(code) {
         <div class="big">🧭</div>
         <h3>Destinationen hittades inte</h3>
         <p>Koden "${esc(code)}" finns inte i katalogen.</p>
-        <p style="margin-top:20px"><a class="btn btn-gold" href="#/destinations" data-nav>Alla destinationer</a></p>
+        <p style="margin-top:20px"><a class="btn btn-gold" href="#/destinations" data-nav>${esc(t("allDest"))}</a></p>
       </div>
     </section>`;
     return;
@@ -1653,27 +1663,27 @@ function renderVenues() {
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
-      <div><h2>Ställen</h2><div class="sub">${esc(t("venuesSub"))}</div></div>
+      <div><h2>${esc(t("navVenues"))}</h2><div class="sub">${esc(t("venuesSub"))}</div></div>
     </div>
     <div class="filters">
-      <input type="search" id="f-q" placeholder="Sök ställe, stad, kategori…" value="${esc(f.q)}" aria-label="Sök">
-      <select id="f-dest" aria-label="Destination">
-        <option value="">Alla destinationer</option>
+      <input type="search" id="f-q" placeholder="${esc(t("searchPh"))}" value="${esc(f.q)}" aria-label="${esc(t("navSearch"))}">
+      <select id="f-dest" aria-label="${esc(t("filterDest"))}">
+        <option value="">${esc(t("allDest"))}</option>
         ${dests.map((d) => `<option ${f.dest === d ? "selected" : ""}>${esc(d)}</option>`).join("")}
       </select>
-      <select id="f-cat" aria-label="Kategori">
-        <option value="">Alla kategorier</option>
-        ${CATEGORY_GROUPS.map((g) => `<option value="${g.key}" ${f.cat === g.key ? "selected" : ""}>${g.label}</option>`).join("")}
+      <select id="f-cat" aria-label="${esc(t("filterCat"))}">
+        <option value="">${esc(t("allCats"))}</option>
+        ${CATEGORY_GROUPS.map((g) => `<option value="${g.key}" ${f.cat === g.key ? "selected" : ""}>${esc(t(g.labelKey))}</option>`).join("")}
       </select>
-      <select id="f-status" aria-label="Verifiering">
-        <option value="">All verifiering</option>
+      <select id="f-status" aria-label="${esc(t("filterStatus"))}">
+        <option value="">${esc(t("allStatus"))}</option>
         <option value="tag-verified" ${f.status === "tag-verified" ? "selected" : ""}>${esc(t("verified"))}</option>
         <option value="tag-unverified" ${f.status === "tag-unverified" ? "selected" : ""}>${esc(t("unverified"))}</option>
       </select>
-      <select id="f-sort" aria-label="Sortering">
-        <option value="priority" ${f.sort === "priority" ? "selected" : ""}>Högst prioritet</option>
-        <option value="luxury" ${f.sort === "luxury" ? "selected" : ""}>Mest lyx</option>
-        <option value="name" ${f.sort === "name" ? "selected" : ""}>A–Ö</option>
+      <select id="f-sort" aria-label="${esc(t("filterSort"))}">
+        <option value="priority" ${f.sort === "priority" ? "selected" : ""}>${esc(t("sortPrio"))}</option>
+        <option value="luxury" ${f.sort === "luxury" ? "selected" : ""}>${esc(t("sortLuxury"))}</option>
+        <option value="name" ${f.sort === "name" ? "selected" : ""}>${esc(t("sortName"))}</option>
       </select>
       <span class="filter-count" id="f-count" role="status" aria-live="polite" aria-atomic="true"></span>
     </div>
@@ -1693,7 +1703,7 @@ function renderVenues() {
       html += `<div class="unlisted-banner" style="grid-column:1/-1"><h3>${esc(t("unverified"))}</h3><p>${esc(t("unlistedHint"))}</p></div>`;
       html += unv.map(venueCard).join("");
     }
-    $("#venue-list").innerHTML = html || `<div class="empty-state" style="grid-column:1/-1"><div class="big">🔍</div><h3>Inga träffar</h3><p>${f.status === "tag-unverified" && !(f.q || "").trim() ? esc(t("unlistedNeedCity")) : "Prova att rensa filtren."}</p></div>`;
+    $("#venue-list").innerHTML = html || `<div class="empty-state" style="grid-column:1/-1"><div class="big">🔍</div><h3>${esc(t("noHits"))}</h3><p>${f.status === "tag-unverified" && !(f.q || "").trim() ? esc(t("unlistedNeedCity")) : esc(t("clearFilters"))}</p></div>`;
     bindVenueCards();
   };
 
@@ -2400,7 +2410,7 @@ async function openBookingModal(v) {
 function showConfirmation(b, opener) {
   const root = document.getElementById("modal-root");
   const sent = b.delivery === "sent";
-  const heading = sent ? "Förfrågan skickad" : "Förfrågan sparad";
+  const heading = sent ? t("confirmSent") : t("confirmSaved");
   root.innerHTML = `
   <div class="modal-overlay" id="overlay">
     <div class="modal" style="text-align:center" role="dialog" aria-modal="true" aria-label="${heading}" tabindex="-1">
@@ -2430,7 +2440,7 @@ function showConfirmation(b, opener) {
         : "Mejlvägen är inte bekräftad ännu — förfrågan ligger under Förfrågningar. Öppna i Mail för att skicka till VELVET-teamet."}</p>
       ${b.openSeats ? `<p class="invite-joined" role="status">${esc(t("openPublished"))}</p>` : ""}
       <div class="confirm-actions">
-        ${b.openSeats ? `<a class="btn btn-gold" href="#/table/${encodeURIComponent(b.id)}" data-nav id="c-go">${esc(t("viewParty"))}</a>` : `<a class="btn btn-gold" href="#/bookings" data-nav id="c-go">Mina förfrågningar</a>`}
+        ${b.openSeats ? `<a class="btn btn-gold" href="#/table/${encodeURIComponent(b.id)}" data-nav id="c-go">${esc(t("viewParty"))}</a>` : `<a class="btn btn-gold" href="#/bookings" data-nav id="c-go">${esc(t("navBookings"))}</a>`}
         <button class="btn btn-ghost" id="c-copy">Kopiera inbjudningstext</button>
         <a class="btn btn-ghost" id="c-ics" download="${esc(b.id)}.ics" href="${icsFor(b)}">Lägg till i kalendern</a>
         <a class="btn btn-ghost" href="${mailtoFor(b)}">Öppna i Mail</a>
@@ -2476,14 +2486,14 @@ function renderBookings() {
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
-      <div><h2>Mina förfrågningar</h2><div class="sub">${bookings.length} ${bookings.length === 1 ? "förfrågan" : "förfrågningar"} · concierge, inte automatisk bokning</div></div>
+      <div><h2>${esc(t("navBookings"))}</h2><div class="sub">${bookings.length} ${bookings.length === 1 ? "förfrågan" : "förfrågningar"} · concierge, inte automatisk bokning</div></div>
     </div>
     ${bookings.length === 0 ? `
       <div class="empty-state">
         <div class="big">🥂</div>
         <h3>Inga förfrågningar ännu</h3>
         <p>Välj ett ställe och skicka en förfrågan — VELVET-teamet tar den mot klubben.</p>
-        <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>Utforska ställen</a></p>
+        <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>${esc(t("explore"))}</a></p>
       </div>` :
       bookings.map((b) => `
       <div class="booking-card">
@@ -2596,7 +2606,7 @@ function renderJoin(raw) {
     joinBtn.addEventListener("click", async () => {
       if (!loadUser()) { openOnboarding({ dismissable: false }); return; }
       joinBtn.disabled = true;
-      const r = await joinOpenTable(inv.id);
+      const r = await joinOpenTable(inv.id, inv);
       if (r.error === "auth") { openOnboarding({ dismissable: false }); return; }
       if (r.error === "idv_required") { location.hash = "#/verify"; return; }
       if (r.error === "too_young") { showToast(tooYoungText(r, v)); joinBtn.disabled = false; return; }
@@ -2772,7 +2782,7 @@ function renderMapView() {
   view().innerHTML = `
   <section class="section map-section">
     <div class="section-head">
-      <div><h2>Karta</h2><div class="sub">${publicDestinations().length} destinationer · ${publicVenues().length} verifierade ställen — klicka på en guldnål</div></div>
+      <div><h2>${esc(t("navMap"))}</h2><div class="sub">${publicDestinations().length} destinationer · ${publicVenues().length} verifierade ställen — klicka på en guldnål</div></div>
       <button class="btn btn-ghost btn-sm map-near-btn" id="map-near" disabled><span aria-hidden="true">🧭</span> Nära mig</button>
     </div>
     <div class="map-shell">
@@ -3254,7 +3264,7 @@ function renderFavorites() {
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
-      <div><h2>Favoriter</h2><div class="sub">${list.length} sparade ställen · dela listan med sällskapet</div></div>
+      <div><h2>${esc(t("navFav"))}</h2><div class="sub">${list.length} sparade ställen · dela listan med sällskapet</div></div>
       ${list.length ? `<button class="btn btn-gold btn-sm" id="fav-share">Dela lista</button>` : ""}
     </div>
     ${list.length === 0 ? `
@@ -3262,7 +3272,7 @@ function renderFavorites() {
         <div class="big">♡</div>
         <h3>Inga favoriter ännu</h3>
         <p>Tryck på hjärtat på ett ställe så landar det här — sen kan du skicka listan till Gabbe, Dan eller gänget.</p>
-        <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>Utforska ställen</a></p>
+        <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>${esc(t("explore"))}</a></p>
       </div>` : `<div class="venue-grid">${list.map(venueCard).join("")}</div>`}
   </section>`;
   bindVenueCards();
@@ -3351,7 +3361,7 @@ async function renderOpenTables() {
     btn.addEventListener("click", async () => {
       if (!loadUser()) { openOnboarding({ dismissable: false }); return; }
       btn.disabled = true;
-      const r = await joinOpenTable(btn.dataset.join);
+      const r = await joinOpenTable(btn.dataset.join, tables.find((x) => x.id === btn.dataset.join));
       if (r.error === "auth") openOnboarding({ dismissable: false });
       else if (r.error === "idv_required") location.hash = "#/verify";
       else if (r.error === "too_young") {
@@ -3428,7 +3438,7 @@ async function renderTable(id) {
     if (!loadUser()) { openOnboarding({ dismissable: false }); return; }
     const btn = $("#party-join");
     if (btn) btn.disabled = true;
-    const r = await joinOpenTable(tb.id);
+    const r = await joinOpenTable(tb.id, tb);
     if (r.error === "auth") openOnboarding({ dismissable: false });
     else if (r.error === "idv_required") location.hash = "#/verify";
     else if (r.error === "too_young") { showToast(tooYoungText(r, VENUES.find((x) => x.venue_id === tb.venue_id))); if (btn) btn.disabled = false; }
@@ -5262,7 +5272,7 @@ function initNavLang() {
   paintNavLang();
 }
 
-// ---------- Mobil nav (hamburger < 720px) ----------
+// ---------- Mobil nav (hamburger < 1100px) ----------
 function initMobileNav() {
   const toggle = document.getElementById("nav-toggle");
   const links = document.getElementById("nav-links");

@@ -65,6 +65,12 @@ function checkMrz() {
   else ok("mrz-name", "match vs mismatch");
 }
 
+/** Born 2007-08-22 — 18 on 2026-08-21, still under US 21. Checksums valid, not expired. */
+const TEST_18 = {
+  line1: "P<SWEUNG<<ADULT<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+  line2: "EF11111116SWE0708225M3203156<<<<<<<<<<<<<<08",
+};
+
 function checkBookingUrls() {
   const venues = loadJson("data/venues.json");
   const booking = loadJson("data/booking-urls.json");
@@ -95,6 +101,12 @@ function checkBookingUrls() {
   }
   if (bad.length) fail("unlisted-catalog", bad.join("; "));
   else ok("unlisted-catalog", unlisted.length + " city-only clubs, " + extraDest.length + " extra cities");
+
+  const publicRoster = path.join(ROOT, "data", "promoters.json");
+  const apiRoster = path.join(ROOT, "api", "promoters.json");
+  if (fs.existsSync(publicRoster)) fail("promoters-not-public", "data/promoters.json still on web root");
+  else if (!fs.existsSync(apiRoster)) fail("promoters-seed-file", "api/promoters.json missing");
+  else ok("promoters-seed-file", "roster off web root");
 
   const official = {
     "IBZ-001": ["hiibiza.com", "/vip-tables"],
@@ -251,8 +263,9 @@ async function runApi() {
     } else ok("tables-create", "TB-RAILS · " + created.json.table.host.legalName + " · ••1881");
 
     const joined = await req(base, "POST", "/tables/TB-RAILS/join", { user: guest });
-    if (joined.status !== 200 || !joined.json.table) fail("tables-join", JSON.stringify(joined));
-    else ok("tables-join", "openLeft=" + joined.json.table.openLeft);
+    if (joined.status !== 403 || joined.json.error !== "idv_required") {
+      fail("tables-join", JSON.stringify(joined.json).slice(0, 220));
+    } else ok("tables-join", "unverified cannot join");
 
     const plain = { id: "U-plain", name: "Plain Guest", handle: "plain", provider: "tiktok" };
     const lockedGet = await req(base, "GET", "/chats/IBZ-001?userId=" + encodeURIComponent(plain.id));
@@ -265,6 +278,16 @@ async function runApi() {
       fail("promo-idv-post", JSON.stringify(lockedPost.json).slice(0, 220));
     } else ok("promo-idv-post", "unverified guest 403");
 
+    const seedGet = await req(base, "GET", "/chats/IBZ-001?userId=P-jb");
+    if (seedGet.status !== 403 || seedGet.json.error !== "idv_required") {
+      fail("seed-id-get", JSON.stringify(seedGet.json).slice(0, 220));
+    } else ok("seed-id-get", "P-jb is not request auth");
+
+    const seedPost = await req(base, "POST", "/chats/IBZ-001", { user: { id: "P-jb", name: "JB" }, text: "hej" });
+    if (seedPost.status !== 403 || seedPost.json.error !== "idv_required") {
+      fail("seed-id-post", JSON.stringify(seedPost.json).slice(0, 220));
+    } else ok("seed-id-post", "P-jb POST 403 idv_required");
+
     const spoof = await req(base, "POST", "/chats/IBZ-001", {
       user: { ...plain, role: "promoter", handle: "velvet" },
       text: "hej som promoter",
@@ -273,6 +296,15 @@ async function runApi() {
     if (spoof.status !== 403 || spoof.json.error !== "idv_required") {
       fail("promo-spoof-role", JSON.stringify(spoof.json).slice(0, 220));
     } else ok("promo-spoof-role", "client role/handle ignored");
+
+    await req(base, "POST", "/users", {
+      id: plain.id, provider: "tiktok", name: "Plain Guest",
+      handle: "velvet", email: "gabrielhadodo@gmail.com",
+    });
+    const spoofStored = await req(base, "GET", "/chats/IBZ-001?userId=" + encodeURIComponent(plain.id));
+    if (spoofStored.status !== 403 || spoofStored.json.error !== "idv_required") {
+      fail("promo-spoof-users", JSON.stringify(spoofStored.json).slice(0, 220));
+    } else ok("promo-spoof-users", "POST /users handle/email is not promoter");
 
     const noUid = await req(base, "GET", "/chats/IBZ-001");
     if (noUid.status !== 401) fail("promo-no-uid", "expected 401 got " + noUid.status);
@@ -317,7 +349,9 @@ async function runApi() {
     } else ok("promoters-venue-locked", "unverified venue list 403");
 
     const unverifiedClaim = await req(base, "POST", "/chats/IBZ-002/claim", { user: plain });
-    if (unverifiedClaim.status !== 200) fail("promo-plain-claim", JSON.stringify(unverifiedClaim.json).slice(0, 220));
+    if (unverifiedClaim.status !== 403 || unverifiedClaim.json.error !== "idv_required") {
+      fail("promo-plain-claim", JSON.stringify(unverifiedClaim.json).slice(0, 220));
+    } else ok("promo-plain-claim", "unverified cannot claim");
 
     const promoHost = await req(base, "GET", "/promoters?userId=" + encodeURIComponent(host.id));
     const listed = promoHost.json.promoters || [];
@@ -441,24 +475,19 @@ async function runApi() {
     const members = got.json.table?.members || [];
     const ids = members.map((m) => m.id).sort();
     if (got.status !== 200) fail("tables-get", "HTTP " + got.status);
-    else if (ids.join() !== [guest.id, host.id].sort().join()) fail("tables-get", "members " + ids.join());
+    else if (ids.join() !== [host.id].sort().join()) fail("tables-get", "members " + ids.join());
     else if (members.some((m) => m.paid)) fail("tables-get", "someone already paid");
-    else if (members.find((m) => m.id === guest.id)?.idv === "verified") fail("tables-get", "guest verified too early");
     else if (members.find((m) => m.id === host.id)?.idv !== "verified") fail("tables-get", "host should be verified paying");
-    else ok("tables-get", members.length + " members, host verified, guest not");
+    else ok("tables-get", members.length + " members, host verified");
 
     const paySelf = await req(base, "POST", "/tables/TB-RAILS/pay", {
       user: guest,
       targetId: guest.id,
       paid: true,
     });
-    const after = paySelf.json.table?.members || [];
-    const g = after.find((m) => m.id === guest.id);
-    const h = after.find((m) => m.id === host.id);
-    if (paySelf.status !== 200) fail("tables-pay", "HTTP " + paySelf.status);
-    else if (!g?.paid) fail("tables-pay", "guest not paid");
-    else if (h?.paid) fail("tables-pay", "host should still be unpaid");
-    else ok("tables-pay", "guest paid, host unpaid");
+    if (paySelf.status !== 403 && paySelf.status !== 404) {
+      fail("tables-pay", "expected 403/404 for non-member got " + paySelf.status + " " + JSON.stringify(paySelf.json).slice(0, 180));
+    } else ok("tables-pay", "non-member cannot mark paid");
 
     const guestSpend = await req(base, "GET", "/users/" + encodeURIComponent(guest.id));
     if (guestSpend.json.spend?.verified || Number(guestSpend.json.spend?.amount) > 0) {
@@ -467,7 +496,7 @@ async function runApi() {
 
     const sepa = await req(base, "POST", "/pay/intent", {
       tableId: "TB-RAILS",
-      user: guest,
+      user: host,
       method: "sepa",
     });
     if (sepa.status !== 409 || sepa.json.error !== "no_amount") {
@@ -577,6 +606,42 @@ async function runApi() {
       fail("gate-too-young-fields", JSON.stringify(kidChat.json).slice(0, 220));
     } else ok("gate-too-young", "min " + kidChat.json.minAge + " age " + kidChat.json.ageYears);
 
+    const kidMia = await req(base, "GET", "/chats/MIA-101?userId=U-kid");
+    if (kidMia.status !== 403 || kidMia.json.error !== "too_young") {
+      fail("gate-us21", JSON.stringify(kidMia.json).slice(0, 220));
+    } else if (kidMia.json.minAge !== 21) {
+      fail("gate-us21-min", JSON.stringify(kidMia.json).slice(0, 220));
+    } else ok("gate-us21", "MIA-101 min " + kidMia.json.minAge);
+
+    const usYoung = { id: "U-us18", name: "Adult Ung", handle: "us18", provider: "tiktok" };
+    const usIdv = await req(base, "POST", "/idv", {
+      userId: usYoung.id, name: usYoung.name, passport: img, selfie: img, mrz: TEST_18, face: FACE_OK,
+    });
+    if (usIdv.json.idv?.status !== "verified" || usIdv.json.idv.ageYears < 18 || usIdv.json.idv.ageYears > 20) {
+      fail("idv-us18", JSON.stringify(usIdv.json).slice(0, 240));
+    } else ok("idv-us18", "age " + usIdv.json.idv.ageYears);
+
+    const usCard = await req(base, "POST", "/card", {
+      user: usYoung, last4: "2222", brand: "visa", expMonth: 12, expYear: 2099,
+    });
+    if (usCard.status !== 200) fail("card-us18", JSON.stringify(usCard.json).slice(0, 200));
+    else ok("card-us18", "Visa ••2222");
+
+    const usClaim = await req(base, "POST", "/chats/MIA-101/claim", { user: usYoung });
+    if (usClaim.status !== 403 || usClaim.json.error !== "too_young" || usClaim.json.minAge !== 21) {
+      fail("claim-us21", JSON.stringify(usClaim.json).slice(0, 220));
+    } else ok("claim-us21", "18-20 cannot claim MIA-101");
+
+    const usMia = await req(base, "GET", "/chats/MIA-101?userId=" + encodeURIComponent(usYoung.id));
+    if (usMia.status !== 403 || usMia.json.error !== "too_young" || usMia.json.minAge !== 21) {
+      fail("chat-us21", JSON.stringify(usMia.json).slice(0, 220));
+    } else ok("chat-us21", "18-20 paying member blocked at 21+ venue");
+
+    const kidJoin = await req(base, "POST", "/tables/TB-RAILS/join", { user: { id: "U-kid", name: "Test Ung" } });
+    if (kidJoin.status !== 403 || kidJoin.json.error !== "too_young") {
+      fail("tables-join-kid", JSON.stringify(kidJoin.json).slice(0, 220));
+    } else ok("tables-join-kid", "underage cannot join TB-RAILS");
+
     const noFace = await req(base, "POST", "/idv", {
       userId: guest.id, name: "Moses Isik", passport: img, selfie: img, mrz: TEST_LIVE,
     });
@@ -623,7 +688,6 @@ async function runApi() {
     });
     if (pastTb.status !== 201) fail("tables-past", JSON.stringify(pastTb.json).slice(0, 200));
     else ok("tables-past", pastTb.json.table.id);
-    await req(base, "POST", "/tables/TB-PAST/join", { user: guest });
 
     const noTid = await req(base, "POST", "/reviews", { from: guest, to: host, rating: 5, text: "x" });
     if (noTid.status !== 400) fail("review-no-table", "expected 400 got " + noTid.status);
@@ -633,30 +697,10 @@ async function runApi() {
       id: "TB-FUTURE", venue_id: "IBZ-001", venue: "Pacha Ibiza", destination: "Ibiza",
       date: "2099-06-01", package: "VIP-bord", total: 1000, party: 4, openSeats: 2, host,
     });
-    await req(base, "POST", "/tables/TB-FUTURE/join", { user: guest });
-    const soon = await req(base, "POST", "/reviews", {
-      from: guest, to: host, tableId: fut.json.table?.id || "TB-FUTURE", rating: 5, text: "tidigt",
-    });
-    if (soon.status !== 403 || soon.json.error !== "too_soon") fail("review-soon", JSON.stringify(soon.json));
-    else ok("review-soon", "after the night only");
-
-    const rev = await req(base, "POST", "/reviews", {
-      from: guest, to: host, tableId: "TB-PAST", rating: 5, text: "kul natt",
-    });
-    if (rev.status !== 201 || !rev.json.review) fail("review-ok", JSON.stringify(rev.json).slice(0, 200));
-    else ok("review-ok", rev.json.review.id);
-
-    const dupRev = await req(base, "POST", "/reviews", {
-      from: guest, to: host, tableId: "TB-PAST", rating: 4, text: "igen",
-    });
-    if (dupRev.status !== 409) fail("review-dup", "expected 409 got " + dupRev.status);
-    else ok("review-dup", "one per night");
-
-    const prof = await req(base, "GET", "/users/" + encodeURIComponent(host.id));
-    const pastIds = (prof.json.parties?.past || []).map((p) => p.id);
-    if (prof.status !== 200 || !pastIds.includes("TB-PAST")) fail("profile-parties", JSON.stringify(prof.json.parties).slice(0, 240));
-    else if (prof.json.n < 1 || !prof.json.reviews?.length) fail("profile-rating", "missing fun score");
-    else ok("profile-parties", "past party + rating");
+    const pastJoinEarly = await req(base, "POST", "/tables/TB-PAST/join", { user: guest });
+    if (pastJoinEarly.status !== 403 || pastJoinEarly.json.error !== "card_required") {
+      fail("tables-join-card", JSON.stringify(pastJoinEarly.json).slice(0, 220));
+    } else ok("tables-join-card", "verified still needs card to join");
 
     const needCard = await req(base, "GET", "/chats/BCN-102?userId=" + encodeURIComponent(guest.id));
     if (needCard.status !== 403 || needCard.json.error !== "card_required") {
@@ -690,6 +734,34 @@ async function runApi() {
     if (cardOk.status !== 200 || cardOk.json.card?.last4 !== "4242" || cardOk.json.card?.number) {
       fail("card-ok", JSON.stringify(cardOk.json).slice(0, 220));
     } else ok("card-ok", "Visa ••4242");
+
+    const pastJoin = await req(base, "POST", "/tables/TB-PAST/join", { user: guest });
+    if (pastJoin.status !== 200) fail("tables-past-join", JSON.stringify(pastJoin.json).slice(0, 220));
+    else ok("tables-past-join", "verified paying guest joined");
+    await req(base, "POST", "/tables/TB-FUTURE/join", { user: guest });
+    const soon = await req(base, "POST", "/reviews", {
+      from: guest, to: host, tableId: "TB-FUTURE", rating: 5, text: "tidigt",
+    });
+    if (soon.status !== 403 || soon.json.error !== "too_soon") fail("review-soon", JSON.stringify(soon.json));
+    else ok("review-soon", "after the night only");
+
+    const rev = await req(base, "POST", "/reviews", {
+      from: guest, to: host, tableId: "TB-PAST", rating: 5, text: "kul natt",
+    });
+    if (rev.status !== 201 || !rev.json.review) fail("review-ok", JSON.stringify(rev.json).slice(0, 200));
+    else ok("review-ok", rev.json.review.id);
+
+    const dupRev = await req(base, "POST", "/reviews", {
+      from: guest, to: host, tableId: "TB-PAST", rating: 4, text: "igen",
+    });
+    if (dupRev.status !== 409) fail("review-dup", "expected 409 got " + dupRev.status);
+    else ok("review-dup", "one per night");
+
+    const prof = await req(base, "GET", "/users/" + encodeURIComponent(host.id));
+    const pastIds = (prof.json.parties?.past || []).map((p) => p.id);
+    if (prof.status !== 200 || !pastIds.includes("TB-PAST")) fail("profile-parties", JSON.stringify(prof.json.parties).slice(0, 240));
+    else if (prof.json.n < 1 || !prof.json.reviews?.length) fail("profile-rating", "missing fun score");
+    else ok("profile-parties", "past party + rating");
 
     const promoGuest = await req(base, "GET", "/promoters?userId=" + encodeURIComponent(guest.id));
     const guestSees = (promoGuest.json.promoters || []).find((p) => p.id === host.id);
