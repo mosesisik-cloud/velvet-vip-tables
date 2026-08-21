@@ -220,6 +220,19 @@ async function runApi() {
       fail("promo-idv-post", JSON.stringify(lockedPost.json).slice(0, 220));
     } else ok("promo-idv-post", "unverified guest 403");
 
+    const spoof = await req(base, "POST", "/chats/IBZ-001", {
+      user: { ...plain, role: "promoter", handle: "velvet" },
+      text: "hej som promoter",
+      asPromoter: true,
+    });
+    if (spoof.status !== 403 || spoof.json.error !== "idv_required") {
+      fail("promo-spoof-role", JSON.stringify(spoof.json).slice(0, 220));
+    } else ok("promo-spoof-role", "client role/handle ignored");
+
+    const noUid = await req(base, "GET", "/chats/IBZ-001");
+    if (noUid.status !== 401) fail("promo-no-uid", "expected 401 got " + noUid.status);
+    else ok("promo-no-uid", "userId required");
+
     const lockedWa = await req(base, "POST", "/chats/IBZ-001/guest-wa", {
       user: plain, whatsapp: "+34 611 11 22 22",
     });

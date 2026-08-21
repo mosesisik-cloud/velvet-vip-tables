@@ -144,10 +144,12 @@ function memberGate(uid, db) {
 }
 function isPromoter(user, venueId, db) {
   const uid = user?.id || "";
-  const email = String(user?.email || "").toLowerCase();
-  const handle = String(user?.handle || "").toLowerCase();
+  if (!uid) return false;
+  const stored = db.users[uid] || {};
+  const email = String(stored.email || "").toLowerCase();
+  const handle = String(stored.handle || "").toLowerCase();
   if (email === "gabrielhadodo@gmail.com" || email === "moses.isik@bakemyday.se") return true;
-  if (handle === "velvet" || user?.role === "promoter") return true;
+  if (handle === "velvet") return true;
   const list = db.promoters[venueId] || [];
   return list.includes(uid);
 }
@@ -269,6 +271,7 @@ function upsertUser(db, u) {
     name: String(u.name || prev.name || "").slice(0, 80),
     handle: handle || prev.handle || "",
     provider: provider || prev.provider || "",
+    email: String(u.email || prev.email || "").toLowerCase().slice(0, 80),
     updated: new Date().toISOString(),
     created: prev.created || new Date().toISOString(),
     whatsapp: prev.whatsapp || "",
@@ -1554,7 +1557,7 @@ const server = http.createServer(async (req, res) => {
       const uid = String(b.user?.id || "");
       if (!uid) return send(res, 400, { error: "user" });
       const db = load();
-      if (!isPromoter(b.user, venueId, db)) {
+      if (!isPromoter({ id: uid }, venueId, db)) {
         const gate = memberGate(uid, db);
         if (gate) return send(res, 403, { error: gate });
       }
@@ -1619,9 +1622,10 @@ const server = http.createServer(async (req, res) => {
       const venueId = decodeURIComponent(chatM[1]);
       const uid = url.searchParams.get("userId") || "";
       const thread = url.searchParams.get("thread") || uid;
+      if (!uid) return send(res, 401, { error: "auth" });
       const db = load();
       const promoter = isPromoter({ id: uid }, venueId, db);
-      if (uid && !promoter) {
+      if (!promoter) {
         const gate = memberGate(uid, db);
         if (gate) return send(res, 403, { error: gate });
       }
@@ -1650,12 +1654,12 @@ const server = http.createServer(async (req, res) => {
       const uid = String(b.user?.id || "");
       if (!uid || !text) return send(res, 400, { error: "missing" });
       const db = load();
-      upsertUser(db, b.user);
-      const promoter = isPromoter(b.user, venueId, db);
+      const promoter = isPromoter({ id: uid }, venueId, db);
       if (!promoter) {
         const gate = memberGate(uid, db);
         if (gate) return send(res, 403, { error: gate });
       }
+      upsertUser(db, b.user);
       const threadId = promoter ? String(b.threadId || uid) : uid;
       if (b.whatsapp) setGuestWa(db, venueId, uid, b.whatsapp, b.user?.name);
       const asPromo = promoter && b.asPromoter !== false;

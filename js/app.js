@@ -4272,7 +4272,7 @@ async function renderPromoterChat(venueId) {
       <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
       <h1>${esc(t("promoter"))} · ${esc(v.name)}</h1>
       ${promoterLockHTML(needCard ? "card" : "idv")}
-      <p style="margin-top:14px"><button class="btn btn-ghost btn-sm" id="claim-promo">${esc(t("iAmPromoter"))}</button></p>
+      ${isOperatorUser(me) ? `<p style="margin-top:14px"><button class="btn btn-ghost btn-sm" id="claim-promo">${esc(t("iAmPromoter"))}</button></p>` : ""}
     </section>`;
     $("#ch-verify")?.addEventListener("click", () => rememberAfterIdv(promoterHref(venueId)));
     $("#ch-card")?.addEventListener("click", () => rememberAfterIdv(promoterHref(venueId)));
@@ -4410,7 +4410,7 @@ async function renderPromoterChat(venueId) {
         </form>
       </div>
     </div>
-    <p style="margin-top:14px"><button class="btn btn-ghost btn-sm" id="claim-promo">${esc(t("iAmPromoter"))}</button></p>
+    ${isOperatorUser(me) || asPromoter ? `<p style="margin-top:14px"><button class="btn btn-ghost btn-sm" id="claim-promo">${esc(t("iAmPromoter"))}</button></p>` : ""}
   </section>`;
 
   $("#chat-form").addEventListener("submit", async (e) => {
