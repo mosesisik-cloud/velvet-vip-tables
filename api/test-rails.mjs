@@ -477,6 +477,42 @@ async function runApi() {
       fail("card-idv-get", JSON.stringify(idvCard.json).slice(0, 220));
     } else ok("card-idv-get", "paying customer");
 
+    const matchBlocked = await req(base, "POST", "/matches/IBZ-001", {
+      user: plain, date: "2026-09-04", seats: 2,
+    });
+    if (matchBlocked.status !== 403 || matchBlocked.json.error !== "idv_required") {
+      fail("match-idv", JSON.stringify(matchBlocked.json).slice(0, 200));
+    } else ok("match-idv", "unverified cannot ask");
+
+    const matchBad = await req(base, "POST", "/matches/IBZ-001", { user: guest, date: "narsom", seats: 2 });
+    if (matchBad.status !== 400) fail("match-date", "expected 400 got " + matchBad.status);
+    else ok("match-date", "need a real date");
+
+    const matchAsk = await req(base, "POST", "/matches/IBZ-001", {
+      user: guest, date: "2026-09-04", seats: 2, note: "vill dela VIP-bord",
+    });
+    if (matchAsk.status !== 200 || matchAsk.json.match?.seats !== 2 || matchAsk.json.match?.status !== "open") {
+      fail("match-ask", JSON.stringify(matchAsk.json).slice(0, 240));
+    } else ok("match-ask", matchAsk.json.match.id);
+
+    const matchList = await req(base, "GET", "/matches/IBZ-001?userId=" + encodeURIComponent(host.id));
+    const waiting = (matchList.json.matches || []).find((m) => m.userId === guest.id && m.status === "open");
+    if (!matchList.json.promoter || !waiting) fail("match-queue", JSON.stringify(matchList.json).slice(0, 240));
+    else ok("match-queue", waiting.id);
+
+    const composed = await req(base, "POST", "/matches/IBZ-001/compose", {
+      user: host, matchIds: [waiting.id], venue: "Hi Ibiza", destination: "Ibiza", openSeats: 2, party: 4,
+    });
+    const grouped = composed.json.table;
+    if (composed.status !== 201 || grouped?.host?.id !== guest.id || grouped.openLeft !== 2) {
+      fail("match-compose", JSON.stringify(composed.json).slice(0, 240));
+    } else ok("match-compose", grouped.id + " openLeft=" + grouped.openLeft);
+
+    const afterCompose = await req(base, "GET", "/matches/IBZ-001?userId=" + encodeURIComponent(guest.id));
+    const mine = (afterCompose.json.matches || []).find((m) => m.id === waiting.id);
+    if (mine?.status !== "grouped" || mine?.tableId !== grouped.id) fail("match-grouped", JSON.stringify(mine));
+    else ok("match-grouped", "guest sees grouped table");
+
     const waFacts = await req(base, "GET", "/chats/BCN-102?userId=" + encodeURIComponent(guest.id));
     if (waFacts.status !== 200 || !String(waFacts.json.whatsapp?.phone || "").includes("34669")) {
       fail("wa-venue", JSON.stringify(waFacts.json).slice(0, 220));

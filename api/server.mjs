@@ -32,9 +32,10 @@ function load() {
       users: raw.users && typeof raw.users === "object" ? raw.users : {},
       payments: Array.isArray(raw.payments) ? raw.payments : [],
       auth: raw.auth && typeof raw.auth === "object" ? raw.auth : {},
+      matches: Array.isArray(raw.matches) ? raw.matches : [],
     };
   } catch {}
-  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {} };
+  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {}, matches: [] };
 }
 function waDigits(raw) {
   let s = String(raw || "").trim();
@@ -141,6 +142,27 @@ function memberGate(uid, db) {
   if (!isIdvVerified(uid, db)) return "idv_required";
   if (!hasCardOnFile(uid, db)) return "card_required";
   return "";
+}
+function publicMatch(m, db) {
+  if (!m) return null;
+  const d = dossier(m.userId, db) || {};
+  return {
+    id: m.id,
+    venueId: m.venueId,
+    date: m.date,
+    seats: Number(m.seats) || 1,
+    note: String(m.note || "").slice(0, 240),
+    status: m.status || "open",
+    tableId: m.tableId || "",
+    created: m.created,
+    userId: m.userId,
+    name: m.name || d.legalName || "",
+    legalName: d.legalName || "",
+    paying: !!d.paying,
+    card: d.card || null,
+    handle: d.handle || "",
+    provider: d.provider || "",
+  };
 }
 function dossier(uid, db) {
   if (!uid) return null;
@@ -1571,6 +1593,166 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true, stored });
     }
 
+    const matchComposeM = url.pathname.match(/^\/matches\/([^/]+)\/compose$/);
+    const matchM = url.pathname.match(/^\/matches\/([^/]+)$/);
+    if (req.method === "POST" && matchM) {
+      const b = await readBody(req, 2e5);
+      const venueId = decodeURIComponent(matchM[1]);
+      const uid = String(b.user?.id || "");
+      if (!uid) return send(res, 400, { error: "user" });
+      const db = load();
+      if (!isPromoter({ id: uid }, venueId, db)) {
+        const gate = memberGate(uid, db);
+        if (gate) return send(res, 403, { error: gate });
+      }
+      const date = String(b.date || "");
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return send(res, 400, { error: "date" });
+      const seats = Math.max(1, Math.min(8, Number(b.seats) || 1));
+      const note = String(b.note || "").trim().slice(0, 240);
+      upsertUser(db, b.user);
+      if (!db.matches) db.matches = [];
+      let rec = db.matches.find((m) => m.venueId === venueId && m.userId === uid && m.date === date && m.status === "open");
+      let already = false;
+      if (!rec) {
+        rec = {
+          id: `MX-${Date.now().toString(36).toUpperCase()}`,
+          venueId,
+          userId: uid,
+          name: String(b.user?.name || "").slice(0, 80),
+          date,
+          seats,
+          note,
+          status: "open",
+          tableId: "",
+          created: new Date().toISOString(),
+        };
+        db.matches.unshift(rec);
+        db.matches = db.matches.slice(0, 400);
+      } else {
+        already = true;
+        rec.seats = seats;
+        rec.note = note;
+        rec.name = String(b.user?.name || rec.name || "").slice(0, 80);
+      }
+      const text = `Vill bli sammansatt till ett bord · ${date} · ${seats} pers${note ? ` · ${note}` : ""}`;
+      const msg = {
+        id: `M-${Date.now().toString(36)}`,
+        role: "user",
+        userId: uid,
+        name: String(b.user?.name || ""),
+        handle: String(b.user?.handle || ""),
+        text,
+        kind: "match",
+        matchId: rec.id,
+        via: "app",
+        created: new Date().toISOString(),
+      };
+      appendChat(db, venueId, uid, msg);
+      if (!db.promoterContact[venueId]) db.promoterContact[venueId] = {};
+      db.promoterContact[venueId].lastThreadId = uid;
+      const promo = whatsappForVenue(venueId, db);
+      if (promo?.phone) {
+        cloudSendWa(promo.phone, `${msg.name || "Gäst"} · VELVET · ${venueId}\n${text}`).catch(() => {});
+      }
+      save(db);
+      return send(res, 200, { match: publicMatch(rec, db), already });
+    }
+    if (req.method === "GET" && matchM) {
+      const venueId = decodeURIComponent(matchM[1]);
+      const uid = url.searchParams.get("userId") || "";
+      if (!uid) return send(res, 401, { error: "auth" });
+      const db = load();
+      const promoter = isPromoter({ id: uid }, venueId, db);
+      if (!promoter) {
+        const gate = memberGate(uid, db);
+        if (gate) return send(res, 403, { error: gate });
+      }
+      const list = (db.matches || []).filter((m) => m.venueId === venueId && (promoter || m.userId === uid));
+      return send(res, 200, { matches: list.map((m) => publicMatch(m, db)), promoter });
+    }
+    if (req.method === "POST" && matchComposeM) {
+      const b = await readBody(req, 2e5);
+      const venueId = decodeURIComponent(matchComposeM[1]);
+      const uid = String(b.user?.id || "");
+      if (!uid) return send(res, 400, { error: "user" });
+      const db = load();
+      if (!isPromoter({ id: uid }, venueId, db)) return send(res, 403, { error: "not_promoter" });
+      const ids = Array.isArray(b.matchIds) ? b.matchIds.map(String) : [];
+      const picked = (db.matches || []).filter((m) => m.venueId === venueId && m.status === "open" && ids.includes(m.id));
+      if (!picked.length) return send(res, 400, { error: "matches" });
+      const date = String(b.date || picked[0].date);
+      const seatsN = picked.reduce((n, m) => n + (Number(m.seats) || 1), 0);
+      const party = Math.max(2, Math.min(20, Number(b.party) || seatsN));
+      const openDefault = Math.max(0, party - seatsN);
+      const openSeats = Math.max(0, Math.min(party - 1, b.openSeats == null || b.openSeats === "" ? openDefault : Number(b.openSeats) || 0));
+      const hostUser = db.users[picked[0].userId] || { id: picked[0].userId, name: picked[0].name };
+      const joiners = picked.slice(1).map((m) => {
+        const u = db.users[m.userId] || { id: m.userId, name: m.name };
+        return {
+          id: u.id,
+          name: String(u.name || m.name || "").slice(0, 80),
+          provider: String(u.provider || ""),
+          handle: String(u.handle || "").replace(/^@/, ""),
+          paid: false,
+          joined: new Date().toISOString(),
+        };
+      });
+      const table = {
+        id: `TB-${Date.now().toString(36).toUpperCase()}`,
+        venue_id: venueId,
+        venue: String(b.venue || venueId),
+        destination: String(b.destination || ""),
+        date,
+        package: String(b.package || "VIP-bord"),
+        total: 0,
+        party,
+        openSeats,
+        openLeft: openSeats,
+        split: true,
+        sharp: false,
+        status: openSeats > 0 ? "open" : "closed",
+        host: {
+          id: hostUser.id,
+          name: String(hostUser.name || picked[0].name || "").slice(0, 80),
+          provider: String(hostUser.provider || ""),
+          handle: String(hostUser.handle || "").replace(/^@/, ""),
+          paid: false,
+          joined: new Date().toISOString(),
+        },
+        guests: [],
+        joiners,
+        created: new Date().toISOString(),
+      };
+      db.tables.unshift(table);
+      db.tables = db.tables.slice(0, 200);
+      const link = `${PUBLIC_APP}/#/table/${encodeURIComponent(table.id)}`;
+      const text = `Sammansatta till ett bord · ${date} · ${party} pers${openSeats ? ` · ${openSeats} öppna stolar` : ""} · ${link}`;
+      for (const m of picked) {
+        m.status = "grouped";
+        m.tableId = table.id;
+        appendChat(db, venueId, m.userId, {
+          id: `M-${Date.now().toString(36)}${m.userId.slice(-3)}`,
+          role: "promoter",
+          userId: uid,
+          name: String(b.user?.name || "Promoter"),
+          handle: String(b.user?.handle || ""),
+          text,
+          kind: "match_done",
+          matchId: m.id,
+          tableId: table.id,
+          via: "app",
+          created: new Date().toISOString(),
+        });
+        const phone = guestWaForThread(db, venueId, m.userId);
+        if (phone) cloudSendWa(phone, text).catch(() => {});
+      }
+      save(db);
+      return send(res, 201, {
+        table: publicTable(table, db),
+        matches: picked.map((m) => publicMatch(m, db)),
+      });
+    }
+
     const claimM = url.pathname.match(/^\/chats\/([^/]+)\/claim$/);
     const guestWaM = url.pathname.match(/^\/chats\/([^/]+)\/guest-wa$/);
     const inboxM = url.pathname.match(/^\/chats\/([^/]+)\/inbox$/);
@@ -1632,12 +1814,14 @@ const server = http.createServer(async (req, res) => {
       }).sort((a, b) => String(b.at).localeCompare(String(a.at)));
       const withWa = threads.map((th) => {
         const card = publicCard(db.users[th.threadId]?.card);
+        const match = (db.matches || []).find((m) => m.venueId === venueId && m.userId === th.threadId && m.status === "open");
         return {
           ...th,
           guestWa: guestWaForThread(db, venueId, th.threadId),
           idv: db.idv[th.threadId]?.status === "verified" ? "verified" : "none",
           paying: !!card,
           card,
+          match: match ? publicMatch(match, db) : null,
         };
       });
       return send(res, 200, { threads: withWa, promoter: true });

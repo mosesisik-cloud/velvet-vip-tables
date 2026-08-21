@@ -1766,6 +1766,7 @@ function renderVenueDetail(id) {
         <a class="btn btn-ghost" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener" style="width:100%;margin-top:10px">${esc(t("directions"))} ↗</a>
         <button class="btn btn-ghost" id="d-book" style="width:100%;margin-top:10px">${esc(t("sendRequest"))}</button>
         <a class="btn ${isPayingMember() ? "btn-gold" : "btn-ghost"}" id="d-promo" href="${promoterHref(v.venue_id)}" data-nav style="width:100%;margin-top:10px">${esc(isPayingMember() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>
+        <a class="btn btn-ghost" href="${promoterHref(v.venue_id)}?match=1" data-nav style="width:100%;margin-top:10px">${esc(t("matchAsk"))}</a>
         <p class="detail-cta-note">${esc(isPayingMember() ? t("memberAccessOn") : t("memberAccessOff"))}</p>
         <ul class="detail-perks">
           <li>${esc(t("perkSite"))}</li>
@@ -4382,9 +4383,10 @@ async function renderPromoterChat(venueId) {
       return;
     }
     box.innerHTML = messages.map((m) => `
-      <div class="chat-bubble ${m.role === "promoter" ? "promo" : (m.userId === me.id ? "mine" : "")}">
-        <div class="chat-who">${m.role === "promoter" ? esc(t("promoter")) : esc(m.name || "")}${m.via === "whatsapp" ? ` · WhatsApp` : ""}</div>
+      <div class="chat-bubble ${m.role === "promoter" ? "promo" : (m.userId === me.id ? "mine" : "")}${m.kind === "match" || m.kind === "match_done" ? " match" : ""}">
+        <div class="chat-who">${m.kind === "match" || m.kind === "match_done" ? esc(t("matchKind")) : (m.role === "promoter" ? esc(t("promoter")) : esc(m.name || ""))}${m.via === "whatsapp" ? ` · WhatsApp` : ""}</div>
         <div class="chat-text">${esc(m.text)}</div>
+        ${m.tableId ? `<a class="chat-table-link" href="#/table/${encodeURIComponent(m.tableId)}" data-nav>${esc(t("viewParty"))}</a>` : ""}
       </div>`).join("");
     box.scrollTop = box.scrollHeight;
   };
@@ -4398,6 +4400,7 @@ async function renderPromoterChat(venueId) {
         <button type="button" class="chat-thread${th.threadId === threadId ? " on" : ""}" data-th="${esc(th.threadId)}">
           <b>${esc(th.name)}</b>
           <span class="paying-meta">${th.paying ? esc(t("payingCustomer") + (th.card ? " · " + cardLabel(th.card) : "")) : esc(t("promoterNeedVerify"))}</span>
+          ${th.match ? `<span class="paying-meta">${esc(t("matchKind"))} · ${esc(th.match.date)} · ${num(th.match.seats)}</span>` : ""}
           <span>${esc((th.last || "").slice(0, 60))}</span>
         </button>
         ${href ? `<a class="btn btn-wa btn-sm" href="${esc(href)}" target="_blank" rel="noopener" data-wa-guest>${esc(t("waReply"))}</a>` : ""}
@@ -4435,6 +4438,24 @@ async function renderPromoterChat(venueId) {
     <h1>${esc(t("promoter"))} · ${esc(v.name)}</h1>
     <p class="ob-sub" style="text-align:left;margin:0 0 16px">${esc(t("promoterSub"))}</p>
     ${isPayingMember() ? `<p class="member-access on">${esc(t("memberAccessOn"))}${cardLabel() ? ` · ${esc(cardLabel())}` : ""}</p>` : ""}
+    <div class="match-ask" id="match-ask" ${asPromoter ? "hidden" : ""}>
+      <h2 class="detail-panel-title">${esc(t("matchAsk"))}</h2>
+      <p class="stepper-hint">${esc(t("matchAskSub"))}</p>
+      <div class="match-ask-row">
+        <label>${esc(t("matchDate"))}
+          <input type="date" id="match-date" min="${todayISO()}" value="${todayISO()}">
+        </label>
+        <label>${esc(t("matchSeats"))}
+          <input type="number" id="match-seats" min="1" max="8" value="1" inputmode="numeric">
+        </label>
+      </div>
+      <label>${esc(t("matchNote"))}
+        <input type="text" id="match-note" maxlength="240" placeholder="${esc(t("matchNotePh"))}" autocomplete="off">
+      </label>
+      <p class="member-access on hidden" id="match-mine"></p>
+      <button type="button" class="btn btn-gold" id="match-send" style="width:100%;margin-top:10px">${esc(t("matchSend"))}</button>
+    </div>
+    <div class="match-queue hidden" id="match-queue"></div>
     <p class="chat-wa" id="chat-wa" hidden>
       <a class="btn btn-wa" id="wa-open" href="#" target="_blank" rel="noopener">WhatsApp</a>
       <span class="events-meta" id="wa-src"></span>
@@ -4491,6 +4512,91 @@ async function renderPromoterChat(venueId) {
     if (data?.messages) paint(data.messages);
     if (promoter) loadInbox();
   });
+  const paintMatchQueue = (list) => {
+    const el = $("#match-queue");
+    if (!el) return;
+    const open = (list || []).filter((m) => m.status === "open");
+    if (!promoter) {
+      el.classList.add("hidden");
+      const mine = open.find((m) => m.userId === me.id);
+      const lab = $("#match-mine");
+      if (lab) {
+        lab.textContent = mine ? `${t("matchMine")} · ${mine.date} · ${mine.seats}` : "";
+        lab.classList.toggle("hidden", !mine);
+      }
+      return;
+    }
+    $("#match-ask")?.setAttribute("hidden", "");
+    el.classList.remove("hidden");
+    if (!open.length) {
+      el.innerHTML = `<h2 class="detail-panel-title">${esc(t("matchQueue"))}</h2><p class="stepper-hint">${esc(t("matchEmpty"))}</p>`;
+      return;
+    }
+    el.innerHTML = `
+      <h2 class="detail-panel-title">${esc(t("matchQueue"))}</h2>
+      <p class="stepper-hint">${esc(t("matchNeedTwo"))}</p>
+      ${open.map((m) => `
+        <label class="match-pick">
+          <input type="checkbox" data-mx="${esc(m.id)}" checked>
+          <span><b>${esc(m.legalName || m.name)}</b> · ${esc(m.date)} · ${num(m.seats)} pers${m.card ? ` · ${esc(cardLabel(m.card))}` : ""}${m.note ? ` · ${esc(m.note)}` : ""}</span>
+        </label>`).join("")}
+      <label>${esc(t("matchOpenLeave"))}
+        <input type="number" id="match-open" min="0" max="12" value="0" inputmode="numeric">
+      </label>
+      <button type="button" class="btn btn-gold" id="match-compose" style="width:100%;margin-top:10px">${esc(t("matchCompose"))}</button>`;
+    $("#match-compose")?.addEventListener("click", async () => {
+      const matchIds = [...el.querySelectorAll("[data-mx]:checked")].map((x) => x.dataset.mx);
+      if (!matchIds.length) { showToast(t("matchNeedTwo")); return; }
+      const first = open.find((m) => m.id === matchIds[0]);
+      const r = await apiJSON(`/matches/${encodeURIComponent(venueId)}/compose`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user: me,
+          matchIds,
+          date: first?.date,
+          venue: v.name,
+          destination: v.destination,
+          openSeats: Number($("#match-open")?.value || 0),
+        }),
+      });
+      if (r?.table) {
+        showToast(t("matchDone"));
+        location.hash = `#/table/${encodeURIComponent(r.table.id)}`;
+        return;
+      }
+      if (r?.error === "not_promoter") showToast(t("iAmPromoter"));
+    });
+  };
+  async function loadMatches() {
+    const data = await apiJSON(`/matches/${encodeURIComponent(venueId)}?userId=${encodeURIComponent(me.id)}`);
+    if (data?.promoter) promoter = true;
+    paintMatchQueue(data?.matches || []);
+  }
+  $("#match-send")?.addEventListener("click", async () => {
+    const date = $("#match-date")?.value;
+    const seats = Number($("#match-seats")?.value || 1);
+    const note = ($("#match-note")?.value || "").trim();
+    const btn = $("#match-send");
+    if (btn) btn.disabled = true;
+    const r = await apiJSON(`/matches/${encodeURIComponent(venueId)}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: me, date, seats, note }),
+    });
+    if (btn) btn.disabled = false;
+    if (r?.error === "idv_required") { rememberAfterIdv(promoterHref(venueId) + "?match=1"); location.hash = "#/verify"; return; }
+    if (r?.error === "card_required") { rememberAfterIdv(promoterHref(venueId) + "?match=1"); location.hash = "#/card"; return; }
+    if (r?.error === "date") { showToast(t("matchDate")); return; }
+    if (r?.match) {
+      showToast(t("matchSent"));
+      await loadThread();
+      await loadMatches();
+    }
+  });
+  if ((location.hash || "").includes("match=1")) {
+    $("#match-ask")?.scrollIntoView({ block: "start" });
+  }
   $("#claim-promo")?.addEventListener("click", async () => {
     await apiJSON(`/chats/${encodeURIComponent(venueId)}/claim`, {
       method: "POST",
@@ -4502,6 +4608,7 @@ async function renderPromoterChat(venueId) {
     paintWa();
     await loadInbox();
     await loadThread();
+    await loadMatches();
   });
   $("#guest-wa-save")?.addEventListener("click", async () => {
     const r = await apiJSON(`/chats/${encodeURIComponent(venueId)}/guest-wa`, {
@@ -4531,6 +4638,7 @@ async function renderPromoterChat(venueId) {
 
   paintWa();
   await loadThread();
+  await loadMatches();
   if (promoter) {
     $("#chat-inbox")?.classList.remove("hidden");
     await loadInbox();
