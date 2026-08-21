@@ -262,6 +262,7 @@ async function runApi() {
     else ok("places", Object.keys(places.json.venues).length + " cached");
 
     const img = fakeJpeg();
+    const FACE_OK = { passportFace: true, selfieFace: true, liveness: true, matchOk: true, matchDistance: 0.32 };
     const noMrz = await req(base, "POST", "/idv", {
       userId: guest.id, name: "Moses Isik", passport: img, selfie: img,
     });
@@ -274,15 +275,35 @@ async function runApi() {
     if (expired.status !== 422 || expired.json.error !== "mrz_expired") fail("idv-expired", JSON.stringify(expired.json).slice(0, 200));
     else ok("idv-expired", "rejected");
 
+    const noFace = await req(base, "POST", "/idv", {
+      userId: guest.id, name: "Moses Isik", passport: img, selfie: img, mrz: TEST_LIVE,
+    });
+    if (noFace.status !== 422 || noFace.json.error !== "face_passport") fail("idv-no-face", JSON.stringify(noFace.json).slice(0, 200));
+    else ok("idv-no-face", "422 without face");
+
+    const badMatch = await req(base, "POST", "/idv", {
+      userId: guest.id, name: "Moses Isik", passport: img, selfie: img, mrz: TEST_LIVE,
+      face: { passportFace: true, selfieFace: true, liveness: true, matchOk: false, matchDistance: 0.91 },
+    });
+    if (badMatch.status !== 422 || badMatch.json.error !== "face_mismatch") fail("idv-face-mismatch", JSON.stringify(badMatch.json).slice(0, 200));
+    else ok("idv-face-mismatch", "rejected");
+
+    const noBlink = await req(base, "POST", "/idv", {
+      userId: guest.id, name: "Moses Isik", passport: img, selfie: img, mrz: TEST_LIVE,
+      face: { passportFace: true, selfieFace: true, liveness: false, matchOk: true, matchDistance: 0.3 },
+    });
+    if (noBlink.status !== 422 || noBlink.json.error !== "face_liveness") fail("idv-no-blink", JSON.stringify(noBlink.json).slice(0, 200));
+    else ok("idv-no-blink", "rejected");
+
     const mismatch = await req(base, "POST", "/idv", {
-      userId: guest.id, name: "Gabbe Velvet", passport: img, selfie: img, mrz: TEST_LIVE,
+      userId: guest.id, name: "Gabbe Velvet", passport: img, selfie: img, mrz: TEST_LIVE, face: FACE_OK,
     });
     if (mismatch.json?.idv?.status !== "mismatch" || mismatch.json.idv.fields?.documentNumber) {
       fail("idv-mismatch", JSON.stringify(mismatch.json).slice(0, 240));
     } else ok("idv-mismatch", mismatch.json.idv.legalName);
 
     const good = await req(base, "POST", "/idv", {
-      userId: guest.id, name: "Moses Isik", passport: img, selfie: img, mrz: TEST_LIVE,
+      userId: guest.id, name: "Moses Isik", passport: img, selfie: img, mrz: TEST_LIVE, face: FACE_OK,
     });
     if (good.status !== 200 || good.json.idv?.status !== "verified") fail("idv-ok", JSON.stringify(good.json).slice(0, 240));
     else if (good.json.idv.fields?.documentNumber) fail("idv-ok", "leaked full passport number");

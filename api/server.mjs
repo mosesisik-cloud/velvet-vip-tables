@@ -100,6 +100,30 @@ function publicIdv(rec) {
     fields: rec.fieldsPublic || null,
     legalName: rec.legalName || "",
     nameMatch: rec.nameMatch || null,
+    face: rec.facePublic || null,
+  };
+}
+function readFace(b) {
+  const f = b && b.face && typeof b.face === "object" ? b.face : {};
+  const dist = Number(f.matchDistance);
+  const distOk = Number.isFinite(dist) && dist >= 0 && dist <= 0.58;
+  const passportFace = f.passportFace === true;
+  const selfieFace = f.selfieFace === true;
+  const liveness = f.liveness === true;
+  const matchOk = f.matchOk === true && distOk;
+  let error = "";
+  if (!passportFace) error = "face_passport";
+  else if (!selfieFace) error = "face_selfie";
+  else if (!liveness) error = "face_liveness";
+  else if (!matchOk) error = "face_mismatch";
+  return {
+    passportFace,
+    selfieFace,
+    liveness,
+    matchOk,
+    matchDistance: distOk ? Math.round(dist * 1000) / 1000 : null,
+    ok: passportFace && selfieFace && liveness && matchOk,
+    error,
   };
 }
 function readMrzBody(b) {
@@ -1100,6 +1124,28 @@ const server = http.createServer(async (req, res) => {
         save(db);
         return send(res, 422, { error: "mrz_expired", idv: publicIdv(db.idv[b.userId]) });
       }
+      const face = readFace(b);
+      if (!face.ok) {
+        db.idv[b.userId] = {
+          userId: String(b.userId),
+          name: claimed,
+          status: face.error === "face_mismatch" ? "face_mismatch" : "face_required",
+          submitted: now,
+          reasons: [face.error || "face_required"],
+          fields: parsed.fields,
+          fieldsPublic: publicFields(parsed.fields),
+          legalName: legalName(parsed.fields),
+          facePublic: {
+            passportFace: face.passportFace,
+            selfieFace: face.selfieFace,
+            liveness: face.liveness,
+            matchOk: face.matchOk,
+            matchDistance: face.matchDistance,
+          },
+        };
+        save(db);
+        return send(res, 422, { error: face.error || "face_required", idv: publicIdv(db.idv[b.userId]) });
+      }
       const nm = nameMatch(parsed.fields.firstName, parsed.fields.lastName, claimed);
       let status = "verified";
       if (!nm.ok && !b.confirmMismatch) status = "mismatch";
@@ -1114,6 +1160,13 @@ const server = http.createServer(async (req, res) => {
         fieldsPublic: publicFields(parsed.fields),
         legalName: legalName(parsed.fields),
         mrz: { line1: parsed.line1, line2: parsed.line2 },
+        facePublic: {
+          passportFace: true,
+          selfieFace: true,
+          liveness: true,
+          matchOk: true,
+          matchDistance: face.matchDistance,
+        },
       };
       if (status === "verified" && db.users[b.userId]) {
         db.users[b.userId].legalName = legalName(parsed.fields);

@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-21";
+const VERSION = "v4-real-22";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -25,6 +25,7 @@ const SHELL_ASSETS = [
   "./js/i18n.js",
   "./js/mrz.js",
   "./js/passport-ocr.js",
+  "./js/face-idv.js",
   "./fonts/inter-latin.woff2",
   "./fonts/playfair-display-latin.woff2",
   "./data/destinations.json",

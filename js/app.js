@@ -2,6 +2,7 @@
 import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js";
 import { publicFields as mrzPublic, nameMatch } from "./mrz.js";
 import { readPassportMrz, jpegFromFile, snapshotVideo, startCamera, stopCamera } from "./passport-ocr.js";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, matchFaces, facePayload } from "./face-idv.js";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -3263,6 +3264,17 @@ function starRow(n) {
   return `<span class="stars" aria-label="${v}/5">${"★".repeat(Math.round(v))}${"☆".repeat(5 - Math.round(v))}</span>`;
 }
 
+function faceChecksHTML(passOk, liveOk, match) {
+  const row = (ok, label) =>
+    `<div class="face-check ${ok ? "ok" : "no"}">${ok ? "✓" : "○"} ${esc(label)}</div>`;
+  const matchOn = !!(match && match.matchOk);
+  return `<div class="face-checks" id="face-checks">
+    ${row(!!passOk, t("verifyFacePass"))}
+    ${row(!!liveOk, t("verifyFaceLive"))}
+    ${row(matchOn, t("verifyFaceMatch"))}
+  </div>`;
+}
+
 function mrzRowsHTML(fields) {
   if (!fields) return "";
   const sexKey = fields.sex === "F" ? "mrzSexF" : fields.sex === "M" ? "mrzSexM" : fields.sex === "X" ? "mrzSexX" : "";
@@ -3297,6 +3309,9 @@ async function renderVerify() {
   let selfJpeg = "";
   let mrz = null;
   let confirmMismatch = false;
+  let passFace = null;
+  let liveFace = null;
+  let faceMatch = null;
   view().innerHTML = `
   <section class="section verify-page">
     <a class="detail-back" href="#/account" data-nav>← ${esc(t("account"))}</a>
@@ -3306,10 +3321,11 @@ async function renderVerify() {
     <p class="stepper-hint">${esc(t("verifyHint"))}</p>
     <div class="mrz-cam-wrap" id="mrz-cam-wrap" hidden>
       <video id="mrz-video" playsinline muted autoplay></video>
-      <div class="mrz-guide" aria-hidden="true"><span>${esc(t("verifyMrzGuide"))}</span></div>
+      <div class="mrz-guide" id="mrz-guide" aria-hidden="true"><span>${esc(t("verifyMrzGuide"))}</span></div>
     </div>
     <p class="mrz-status" id="mrz-status" hidden></p>
     <div id="mrz-fields"></div>
+    <div id="face-box">${faceChecksHTML(false, false, null)}</div>
     <div class="idv-grid">
       <label class="idv-slot">
         <span>${esc(t("verifyPassport"))}</span>
@@ -3319,14 +3335,14 @@ async function renderVerify() {
       </label>
       <label class="idv-slot">
         <span>${esc(t("verifySelfie"))}</span>
-        <input type="file" id="idv-self" accept="image/*" capture="user">
         <img id="idv-self-prev" alt="" hidden>
-        <em>${esc(t("pickPhoto"))}</em>
+        <em>${esc(t("verifyBlink"))}</em>
       </label>
     </div>
     <p class="idv-actions">
       <button type="button" class="btn btn-ghost" id="idv-cam">${esc(t("verifyCam"))}</button>
       <button type="button" class="btn btn-ghost hidden" id="idv-snap">${esc(t("verifySnap"))}</button>
+      <button type="button" class="btn btn-gold" id="idv-live">${esc(t("verifyLive"))}</button>
     </p>
     <p class="price-disclaimer">${esc(t("verifyStored"))}</p>
     <div class="field-error hidden" id="idv-err" role="alert"></div>
@@ -3349,6 +3365,10 @@ async function renderVerify() {
     el.textContent = msg || "";
     el.hidden = !show;
   };
+  const paintFace = () => {
+    const box = $("#face-box");
+    if (box) box.innerHTML = faceChecksHTML(passFace && passFace.ok, liveFace && liveFace.ok, faceMatch);
+  };
   const showMrz = (rec) => {
     mrz = rec;
     const fields = rec && rec.fields ? mrzPublic(rec.fields) : null;
@@ -3362,6 +3382,10 @@ async function renderVerify() {
   };
   const readShot = async (data) => {
     passJpeg = data;
+    passFace = null;
+    liveFace = null;
+    faceMatch = null;
+    paintFace();
     const img = $("#idv-pass-prev");
     if (img) { img.src = data; img.hidden = false; img.dataset.data = data; }
     setStatus(t("verifyReading"), true);
@@ -3380,8 +3404,13 @@ async function renderVerify() {
         showMrz(null);
         return;
       }
-      setStatus("", false);
+      setStatus(t("verifyFaceLoad"), true);
       showMrz(rec);
+      try { await loadFaceApi(); } catch { setStatus("", false); setErr(t("verifyFaceLoadFail")); return; }
+      passFace = await detectPassportFace(data);
+      setStatus("", false);
+      paintFace();
+      if (!passFace.ok) setErr(t("verifyNoFacePass"));
     } catch {
       setStatus("", false);
       setErr(t("verifyReadFail"));
@@ -3394,22 +3423,14 @@ async function renderVerify() {
     try { await readShot(await jpegFromFile(f, 2000, 0.9)); }
     catch { setErr(t("verifyReadFail")); }
   });
-  $("#idv-self")?.addEventListener("change", async (e) => {
-    const f = e.target.files && e.target.files[0];
-    if (!f) return;
-    try {
-      selfJpeg = await jpegFromFile(f, 1400, 0.84);
-      const img = $("#idv-self-prev");
-      if (img) { img.src = selfJpeg; img.hidden = false; }
-    } catch { setErr(t("verifyReadFail")); }
-  });
   const camBtn = $("#idv-cam");
   if (camBtn) {
     camBtn.onclick = async () => {
       if (camBtn.dataset.open === "1") {
+        stopLiveness();
         stopCamera();
         const wrap = $("#mrz-cam-wrap");
-        if (wrap) wrap.hidden = true;
+        if (wrap) { wrap.hidden = true; wrap.classList.remove("selfie"); }
         $("#idv-snap")?.classList.add("hidden");
         camBtn.dataset.open = "";
         camBtn.textContent = t("verifyCam");
@@ -3419,7 +3440,9 @@ async function renderVerify() {
       const video = $("#mrz-video");
       try {
         await startCamera(video, "environment");
-        if (wrap) wrap.hidden = false;
+        if (wrap) { wrap.hidden = false; wrap.classList.remove("selfie"); }
+        const guide = $("#mrz-guide");
+        if (guide) guide.innerHTML = `<span>${esc(t("verifyMrzGuide"))}</span>`;
         $("#idv-snap")?.classList.remove("hidden");
         camBtn.dataset.open = "1";
         camBtn.textContent = t("verifyCamStop");
@@ -3433,12 +3456,66 @@ async function renderVerify() {
     const video = $("#mrz-video");
     if (!video || !video.videoWidth) return;
     const data = snapshotVideo(video, 2000, 0.9);
+    stopLiveness();
     stopCamera();
     const wrap = $("#mrz-cam-wrap");
     if (wrap) wrap.hidden = true;
+    wrap?.classList.remove("selfie");
     $("#idv-snap")?.classList.add("hidden");
     if (camBtn) { camBtn.dataset.open = ""; camBtn.textContent = t("verifyCam"); }
     await readShot(data);
+  });
+  $("#idv-live")?.addEventListener("click", async () => {
+    if (!passFace || !passFace.ok) {
+      setErr(t("verifyNoFacePass"));
+      return;
+    }
+    const wrap = $("#mrz-cam-wrap");
+    const video = $("#mrz-video");
+    const guide = $("#mrz-guide");
+    setErr("");
+    setStatus(t("verifyFaceLoad"), true);
+    try { await loadFaceApi(); }
+    catch { setStatus("", false); setErr(t("verifyFaceLoadFail")); return; }
+    try {
+      await startCamera(video, "user");
+      if (wrap) { wrap.hidden = false; wrap.classList.add("selfie"); }
+      if (guide) guide.innerHTML = `<span>${esc(t("verifyBlink"))}</span>`;
+      if (camBtn) { camBtn.dataset.open = "1"; camBtn.textContent = t("verifyCamStop"); }
+      setStatus(t("verifyBlink"), true);
+      const live = await watchBlink(video, (st) => {
+        if (st === "no_face") setStatus(t("verifyNoFaceSelf"), true);
+        else if (st === "blink" || st === "look") setStatus(t("verifyBlink"), true);
+        else if (st === "closed") setStatus(t("verifyBlinkNow"), true);
+        else if (st === "ok") setStatus(t("verifyFaceOk"), true);
+      });
+      const shot = snapshotVideo(video, 1400, 0.88);
+      stopLiveness();
+      stopCamera();
+      if (wrap) { wrap.hidden = true; wrap.classList.remove("selfie"); }
+      if (camBtn) { camBtn.dataset.open = ""; camBtn.textContent = t("verifyCam"); }
+      if (!live.ok) {
+        liveFace = null;
+        faceMatch = null;
+        paintFace();
+        setStatus("", false);
+        setErr(live.reason === "timeout" ? t("verifyNoBlink") : t("verifyNoFaceSelf"));
+        return;
+      }
+      selfJpeg = shot;
+      const img = $("#idv-self-prev");
+      if (img) { img.src = shot; img.hidden = false; }
+      liveFace = live;
+      faceMatch = matchFaces(passFace.descriptor, live.descriptor);
+      paintFace();
+      setStatus("", false);
+      if (!faceMatch.matchOk) setErr(t("verifyFaceMismatch"));
+    } catch {
+      stopLiveness();
+      stopCamera();
+      setStatus("", false);
+      setErr(t("verifyCamFail"));
+    }
   });
   $("#idv-confirm")?.addEventListener("change", (e) => {
     confirmMismatch = !!e.target.checked;
@@ -3450,6 +3527,10 @@ async function renderVerify() {
       return;
     }
     if (mrz.expired) { setErr(t("verifyExpired")); return; }
+    const face = facePayload(passFace, liveFace, faceMatch);
+    if (!face.passportFace) { setErr(t("verifyNoFacePass")); return; }
+    if (!face.selfieFace || !face.liveness) { setErr(t("verifyNoBlink")); return; }
+    if (!face.matchOk) { setErr(t("verifyFaceMismatch")); return; }
     const btn = $("#idv-go");
     btn.disabled = true;
     btn.textContent = "…";
@@ -3463,6 +3544,7 @@ async function renderVerify() {
         selfie: selfJpeg,
         mrz: { line1: mrz.line1, line2: mrz.line2 },
         confirmMismatch,
+        face,
       }),
     });
     if (r?.idv?.status === "verified") {
@@ -3492,6 +3574,9 @@ async function renderVerify() {
       btn.textContent = t("verifyCta");
       return;
     }
+    if (r?.error === "face_passport") { setErr(t("verifyNoFacePass")); btn.disabled = false; btn.textContent = t("verifyCta"); return; }
+    if (r?.error === "face_selfie" || r?.error === "face_liveness") { setErr(t("verifyNoBlink")); btn.disabled = false; btn.textContent = t("verifyCta"); return; }
+    if (r?.error === "face_mismatch") { setErr(t("verifyFaceMismatch")); btn.disabled = false; btn.textContent = t("verifyCta"); return; }
     saveUser({ ...loadUser(), idvStatus: "pending" });
     setErr(r?.error === "mrz_unreadable" ? t("verifyReadFail") : t("verifyPending"));
     btn.disabled = false;
@@ -4054,7 +4139,7 @@ function route() {
   // Riv aktiva Leaflet-kartor innan vyn skrivs över — annars läcker lyssnare
   destroyMaps();
   stopChatPoll();
-  if ((location.hash || "").split("?")[0] !== "#/verify") stopCamera();
+  if ((location.hash || "").split("?")[0] !== "#/verify") { stopLiveness(); stopCamera(); }
   const raw = location.hash || "#/";
   const h = raw.split("?")[0];
   let fn = routes[h];

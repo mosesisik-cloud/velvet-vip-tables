@@ -1244,9 +1244,22 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 }
 .mrz-card-kicker { font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--gold-bright); margin: 0 0 10px; }
 #idv-confirm-row { margin: 12px 0; font-size: 15px; }
+.mrz-cam-wrap.selfie video { transform: scaleX(-1); }
+.mrz-cam-wrap.selfie .mrz-guide {
+  inset: 12% 14% 22%;
+  border-radius: 50%;
+  border-style: solid;
+}
+.face-checks { display: grid; gap: 8px; margin: 12px 0 4px; }
+.face-check {
+  padding: 10px 12px; border-radius: 10px; font-size: 14px; font-weight: 600;
+  border: 1px solid var(--border); color: var(--text-faint);
+}
+.face-check.ok { border-color: var(--gold); color: var(--gold-bright); background: var(--gold-dim); }
+.face-check.no { opacity: 0.85; }
 @media (max-width: 719px) {
   .mrz-cam-wrap { aspect-ratio: 3 / 4; }
-  .idv-actions .btn { flex: 1; }
+  .idv-actions .btn { flex: 1; min-width: calc(50% - 8px); }
 }
 .profile-head { display: flex; gap: 16px; align-items: center; margin: 8px 0 20px; }
 .person-list { display: flex; flex-direction: column; gap: 10px; }
