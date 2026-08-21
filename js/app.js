@@ -585,7 +585,7 @@ async function joinOpenTable(id) {
         body: JSON.stringify({ user: u }),
       });
       const data = await r.json().catch(() => ({}));
-      if (r.status === 403) return { error: "idv_required" };
+      if (r.status === 403) return { error: data.error || "idv_required", openFor: data.openFor };
       if (r.status === 409) return { error: "full" };
       if (data.table) return { table: data.table, already: data.already };
     } catch {}
@@ -595,6 +595,10 @@ async function joinOpenTable(id) {
   if (!tb) return { error: "missing" };
   const ven = VENUES.find((x) => x.venue_id === tb.venue_id);
   if ((tb.sharp || (ven && isSharpVenue(ven))) && !isIdvOk()) return { error: "idv_required" };
+  if (openForOf(tb.openFor) !== "anyone") {
+    if (!isIdvOk()) return { error: "idv_required" };
+    if (!canTakeOpenSeat(tb)) return { error: "seat_pref", openFor: tb.openFor };
+  }
   if (tb.openLeft < 1) return { error: "full" };
   if (tb.host?.id === u.id || (tb.joiners || []).some((j) => j.id === u.id)) return { table: decorateLocalTable(tb), already: true };
   tb.joiners = [...(tb.joiners || []), { id: u.id, name: u.name, provider: u.provider, handle: u.handle, paid: false, joined: new Date().toISOString() }];
@@ -745,6 +749,44 @@ function isCardOk() {
 }
 function isPayingMember() {
   return isIdvOk() && isCardOk();
+}
+function openForOf(v) {
+  const s = String(v || "anyone").toLowerCase();
+  return s === "women" || s === "men" ? s : "anyone";
+}
+function openForLabel(v) {
+  const k = openForOf(v);
+  if (k === "women") return t("openForWomen");
+  if (k === "men") return t("openForMen");
+  return t("openForAnyone");
+}
+function myPassportSex() {
+  const f = (loadUser() && loadUser().idvFields) || {};
+  return String(f.sex || "").toUpperCase();
+}
+function canTakeOpenSeat(tb) {
+  const want = openForOf(tb && tb.openFor);
+  if (want === "anyone") return true;
+  if (!isIdvOk()) return false;
+  const sex = myPassportSex();
+  if (want === "women") return sex === "F";
+  if (want === "men") return sex === "M";
+  return true;
+}
+function openForSelectHTML(id, selected) {
+  const cur = openForOf(selected);
+  return `<select id="${id}">
+    <option value="anyone"${cur === "anyone" ? " selected" : ""}>${esc(t("openForAnyone"))}</option>
+    <option value="women"${cur === "women" ? " selected" : ""}>${esc(t("openForWomen"))}</option>
+    <option value="men"${cur === "men" ? " selected" : ""}>${esc(t("openForMen"))}</option>
+  </select>`;
+}
+function openSeatsLine(tb) {
+  const n = Number(tb.openLeft != null ? tb.openLeft : tb.openSeats) || 0;
+  if (n < 1) return "";
+  const who = openForOf(tb.openFor);
+  if (who === "anyone") return `${n} ${t("seatsOpen")}`;
+  return `${n} ${t("seatsOpen")} · ${t("openForLabel").toLowerCase()} ${openForLabel(who)}`;
 }
 function cardLabel(card) {
   const u = loadUser();
@@ -1927,6 +1969,10 @@ async function openBookingModal(v) {
           <span class="stepper-val" id="m-open-val">2</span>
           <button type="button" id="m-open-plus" aria-label="+">+</button>
         </div>
+        <label class="stepper-hint" style="display:block;margin-top:10px">${esc(t("openForLabel"))}
+          ${openForSelectHTML("m-open-for", "women")}
+        </label>
+        <p class="stepper-hint">${esc(t("openForHint"))}</p>
       </div>
 
       <div class="form-group">
@@ -2133,6 +2179,7 @@ async function openBookingModal(v) {
       guests: guests.map((g) => ({ name: g.name, email: g.email, paid: false })),
       openSeats: openOn ? openSeats : 0,
       openLeft: openOn ? openSeats : 0,
+      openFor: openOn ? ($("#m-open-for")?.value || "anyone") : "anyone",
       joiners: [],
       host,
       status: openOn ? "open" : "requested",
@@ -3098,13 +3145,13 @@ async function renderOpenTables() {
           <div class="booking-info">
             <h3><a href="#/table/${encodeURIComponent(tb.id)}" data-nav>${esc(tb.venue)}</a></h3>
             <div class="booking-meta">${esc(tb.destination)} · ${esc(tb.date)} · ${esc(tb.package)} · ${tb.host?.id ? `<a href="#/user/${encodeURIComponent(tb.host.id)}" data-nav>${esc(tb.host?.name || "")}</a>` : esc(tb.host?.name || "")} ${tb.host?.handle ? "@" + esc(tb.host.handle) : ""}</div>
-            <div class="booking-meta">${num(tb.openLeft)} ${esc(t("seatsOpen"))} · ${esc(t("splitOn"))} ${num(tb.party)} ${esc(t("people"))}</div>
+            <div class="booking-meta">${esc(openSeatsLine(tb) || `${num(tb.openLeft)} ${t("seatsOpen")}`)} · ${esc(t("splitOn"))} ${num(tb.party)} ${esc(t("people"))}</div>
             ${partyPreviewHTML(tb)}
           </div>
           <div class="booking-price">
             <div class="per">${esc(moneyOrClub(per))}</div>
             <a class="btn btn-ghost btn-sm" href="#/table/${encodeURIComponent(tb.id)}" data-nav>${esc(t("viewParty"))}</a>
-            <button class="btn btn-gold btn-sm" data-join="${esc(tb.id)}">${esc(t("takeSeat"))}</button>
+            ${canTakeOpenSeat(tb) ? `<button class="btn btn-gold btn-sm" data-join="${esc(tb.id)}">${esc(t("takeSeat"))}</button>` : `<p class="stepper-hint">${esc(t("seatPref").replace("{who}", openForLabel(tb.openFor).toLowerCase()))}</p>`}
           </div>
         </div>`;
       }).join("")}
@@ -3117,6 +3164,7 @@ async function renderOpenTables() {
       const r = await joinOpenTable(btn.dataset.join);
       if (r.error === "auth") openOnboarding({ dismissable: false });
       else if (r.error === "idv_required") location.hash = "#/verify";
+      else if (r.error === "seat_pref") { showToast(t("seatPref").replace("{who}", openForLabel(r.openFor).toLowerCase())); btn.disabled = false; }
       else if (r.table) location.hash = `#/table/${encodeURIComponent(r.table.id)}`;
       else renderOpenTables();
     });
@@ -3140,7 +3188,8 @@ async function renderTable(id) {
   const me = loadUser();
   const members = tb.members || [];
   const already = !!(me && members.some((m) => m.id && m.id === me.id));
-  const canJoin = Number(tb.openLeft) > 0 && !already;
+  const canJoin = Number(tb.openLeft) > 0 && !already && canTakeOpenSeat(tb);
+  const seatBlocked = Number(tb.openLeft) > 0 && !already && !canTakeOpenSeat(tb);
   const hostId = tb.host?.id || "";
   const over = !!(tb.past || partyOver(tb));
   const reviews = Array.isArray(tb.reviews) ? tb.reviews : [];
@@ -3155,7 +3204,7 @@ async function renderTable(id) {
     <div class="party-stats">
       <div><b>${esc(moneyOrClub(tb.per_person))}</b><span>${esc(t("perPerson"))}</span></div>
       <div><b>${num(tb.paidN)}/${num(tb.dueN)}</b><span>${esc(t("paid"))}</span></div>
-      <div><b>${num(tb.openLeft)}</b><span>${esc(t("seatsOpen"))}</span></div>
+      <div><b>${num(tb.openLeft)}</b><span>${esc(openSeatsLine(tb) || t("seatsOpen"))}</span></div>
       <div><b>${num(tb.party)}</b><span>${esc(t("people"))}</span></div>
     </div>
     ${over ? "" : `<p class="price-disclaimer">${esc(t("payNote"))}</p>`}
@@ -3172,6 +3221,7 @@ async function renderTable(id) {
     <div class="book-site-actions" style="margin-top:22px;max-width:420px">
       ${!me ? `<button class="btn btn-gold" id="party-login">${esc(t("loginTitle"))}</button>` : ""}
       ${me && canJoin && !over ? `<button class="btn btn-gold" id="party-join">${esc(t("takeSeat"))}</button>` : ""}
+      ${me && seatBlocked && !over ? `<p class="price-disclaimer">${esc(t("seatPref").replace("{who}", openForLabel(tb.openFor).toLowerCase()))}</p>` : ""}
       ${already && me && !over && members.some((m) => m.id === me.id && !m.paid) ? `<a class="btn btn-gold" href="#/pay/${encodeURIComponent(tb.id)}" data-nav>${esc(t("payShare"))}</a>` : ""}
       ${already ? `<p class="invite-joined">${esc(t("youAreIn"))}</p>` : ""}
       ${tb.venue_id ? `<a class="btn btn-ghost" href="#/venue/${encodeURIComponent(tb.venue_id)}" data-nav>${esc(t("explore"))}</a>` : ""}
@@ -3185,6 +3235,7 @@ async function renderTable(id) {
     const r = await joinOpenTable(tb.id);
     if (r.error === "auth") openOnboarding({ dismissable: false });
     else if (r.error === "idv_required") location.hash = "#/verify";
+    else if (r.error === "seat_pref") { showToast(t("seatPref").replace("{who}", openForLabel(r.openFor || tb.openFor).toLowerCase())); if (btn) btn.disabled = false; }
     else renderTable(id);
   });
   document.querySelectorAll("[data-pay], [data-pay-name]").forEach((btn) => {
@@ -4449,6 +4500,15 @@ async function renderPromoterChat(venueId) {
           <input type="number" id="match-seats" min="1" max="8" value="1" inputmode="numeric">
         </label>
       </div>
+      <div class="match-ask-row">
+        <label>${esc(t("matchOpenLeave"))}
+          <input type="number" id="match-leave" min="0" max="8" value="2" inputmode="numeric">
+        </label>
+        <label>${esc(t("openForLabel"))}
+          ${openForSelectHTML("match-for", "women")}
+        </label>
+      </div>
+      <p class="stepper-hint">${esc(t("openForHint"))}</p>
       <label>${esc(t("matchNote"))}
         <input type="text" id="match-note" maxlength="240" placeholder="${esc(t("matchNotePh"))}" autocomplete="off">
       </label>
@@ -4541,7 +4601,10 @@ async function renderPromoterChat(venueId) {
           <span><b>${esc(m.legalName || m.name)}</b> · ${esc(m.date)} · ${num(m.seats)} pers${m.card ? ` · ${esc(cardLabel(m.card))}` : ""}${m.note ? ` · ${esc(m.note)}` : ""}</span>
         </label>`).join("")}
       <label>${esc(t("matchOpenLeave"))}
-        <input type="number" id="match-open" min="0" max="12" value="0" inputmode="numeric">
+        <input type="number" id="match-open" min="0" max="12" value="${num(Math.max(...open.map((m) => Number(m.openSeats) || 0), 2))}" inputmode="numeric">
+      </label>
+      <label>${esc(t("openForLabel"))}
+        ${openForSelectHTML("match-compose-for", open.find((m) => m.openFor && m.openFor !== "anyone")?.openFor || "women")}
       </label>
       <button type="button" class="btn btn-gold" id="match-compose" style="width:100%;margin-top:10px">${esc(t("matchCompose"))}</button>`;
     $("#match-compose")?.addEventListener("click", async () => {
@@ -4558,6 +4621,7 @@ async function renderPromoterChat(venueId) {
           venue: v.name,
           destination: v.destination,
           openSeats: Number($("#match-open")?.value || 0),
+          openFor: $("#match-compose-for")?.value || "anyone",
         }),
       });
       if (r?.table) {
@@ -4577,12 +4641,14 @@ async function renderPromoterChat(venueId) {
     const date = $("#match-date")?.value;
     const seats = Number($("#match-seats")?.value || 1);
     const note = ($("#match-note")?.value || "").trim();
+    const openSeats = Number($("#match-leave")?.value || 0);
+    const openFor = $("#match-for")?.value || "anyone";
     const btn = $("#match-send");
     if (btn) btn.disabled = true;
     const r = await apiJSON(`/matches/${encodeURIComponent(venueId)}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user: me, date, seats, note }),
+      body: JSON.stringify({ user: me, date, seats, note, openSeats, openFor }),
     });
     if (btn) btn.disabled = false;
     if (r?.error === "idv_required") { rememberAfterIdv(promoterHref(venueId) + "?match=1"); location.hash = "#/verify"; return; }

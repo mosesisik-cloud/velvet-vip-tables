@@ -1525,7 +1525,7 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   display: flex; flex-direction: column; gap: 6px;
   font-size: 13px; color: var(--text-dim); margin-top: 8px;
 }
-.match-ask input, .match-queue input[type="number"] {
+.match-ask input, .match-queue input[type="number"], .match-ask select, .match-queue select, #m-open-for {
   padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border);
   background: var(--bg-elev); color: var(--text); font-size: 16px;
 }

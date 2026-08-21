@@ -143,6 +143,24 @@ function memberGate(uid, db) {
   if (!hasCardOnFile(uid, db)) return "card_required";
   return "";
 }
+function parseOpenFor(v) {
+  const s = String(v || "anyone").toLowerCase();
+  return s === "women" || s === "men" ? s : "anyone";
+}
+function personSex(uid, db) {
+  const rec = db.idv[uid];
+  const s = String(rec?.fieldsPublic?.sex || rec?.fields?.sex || "").toUpperCase();
+  return s === "F" || s === "M" || s === "X" ? s : "";
+}
+function seatPrefError(table, uid, db) {
+  const want = parseOpenFor(table.openFor);
+  if (want === "anyone") return "";
+  if (!isIdvVerified(uid, db)) return "idv_required";
+  const sex = personSex(uid, db);
+  if (want === "women" && sex !== "F") return "seat_pref";
+  if (want === "men" && sex !== "M") return "seat_pref";
+  return "";
+}
 function publicMatch(m, db) {
   if (!m) return null;
   const d = dossier(m.userId, db) || {};
@@ -152,6 +170,8 @@ function publicMatch(m, db) {
     date: m.date,
     seats: Number(m.seats) || 1,
     note: String(m.note || "").slice(0, 240),
+    openFor: parseOpenFor(m.openFor),
+    openSeats: Number(m.openSeats) || 0,
     status: m.status || "open",
     tableId: m.tableId || "",
     created: m.created,
@@ -453,6 +473,7 @@ function publicTable(t, db) {
     party,
     openSeats: Number(t.openSeats) || 0,
     openLeft: Number(t.openLeft) || 0,
+    openFor: parseOpenFor(t.openFor),
     status: t.status,
     sharp: !!t.sharp,
     created: t.created,
@@ -1258,6 +1279,7 @@ const server = http.createServer(async (req, res) => {
         party,
         openSeats,
         openLeft: openSeats,
+        openFor: parseOpenFor(b.openFor),
         split: true,
         sharp: !!b.sharp,
         status: openSeats > 0 ? "open" : "closed",
@@ -1287,6 +1309,8 @@ const server = http.createServer(async (req, res) => {
       }
       if (t.openLeft < 1) return send(res, 409, { error: "full" });
       const uid = b.user?.id || "";
+      const pref = seatPrefError(t, uid, db);
+      if (pref) return send(res, 403, { error: pref, openFor: parseOpenFor(t.openFor) });
       if (uid && (t.host?.id === uid || t.joiners.some((j) => j.id === uid))) {
         return send(res, 200, { table: publicTable(t, db), already: true });
       }
@@ -1609,6 +1633,8 @@ const server = http.createServer(async (req, res) => {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return send(res, 400, { error: "date" });
       const seats = Math.max(1, Math.min(8, Number(b.seats) || 1));
       const note = String(b.note || "").trim().slice(0, 240);
+      const openFor = parseOpenFor(b.openFor);
+      const wantOpen = Math.max(0, Math.min(12, Number(b.openSeats) || 0));
       upsertUser(db, b.user);
       if (!db.matches) db.matches = [];
       let rec = db.matches.find((m) => m.venueId === venueId && m.userId === uid && m.date === date && m.status === "open");
@@ -1622,6 +1648,8 @@ const server = http.createServer(async (req, res) => {
           date,
           seats,
           note,
+          openFor,
+          openSeats: wantOpen,
           status: "open",
           tableId: "",
           created: new Date().toISOString(),
@@ -1632,9 +1660,12 @@ const server = http.createServer(async (req, res) => {
         already = true;
         rec.seats = seats;
         rec.note = note;
+        rec.openFor = openFor;
+        rec.openSeats = wantOpen;
         rec.name = String(b.user?.name || rec.name || "").slice(0, 80);
       }
-      const text = `Vill bli sammansatt till ett bord · ${date} · ${seats} pers${note ? ` · ${note}` : ""}`;
+      const who = openFor === "women" ? "kvinnor" : openFor === "men" ? "män" : "alla";
+      const text = `Vill bli sammansatt till ett bord · ${date} · ${seats} pers${wantOpen ? ` · lämna ${wantOpen} stolar till ${who}` : ""}${note ? ` · ${note}` : ""}`;
       const msg = {
         id: `M-${Date.now().toString(36)}`,
         role: "user",
@@ -1685,6 +1716,7 @@ const server = http.createServer(async (req, res) => {
       const party = Math.max(2, Math.min(20, Number(b.party) || seatsN));
       const openDefault = Math.max(0, party - seatsN);
       const openSeats = Math.max(0, Math.min(party - 1, b.openSeats == null || b.openSeats === "" ? openDefault : Number(b.openSeats) || 0));
+      const openFor = parseOpenFor(b.openFor || picked.find((m) => m.openFor && m.openFor !== "anyone")?.openFor);
       const hostUser = db.users[picked[0].userId] || { id: picked[0].userId, name: picked[0].name };
       const joiners = picked.slice(1).map((m) => {
         const u = db.users[m.userId] || { id: m.userId, name: m.name };
@@ -1708,6 +1740,7 @@ const server = http.createServer(async (req, res) => {
         party,
         openSeats,
         openLeft: openSeats,
+        openFor,
         split: true,
         sharp: false,
         status: openSeats > 0 ? "open" : "closed",
@@ -1726,7 +1759,8 @@ const server = http.createServer(async (req, res) => {
       db.tables.unshift(table);
       db.tables = db.tables.slice(0, 200);
       const link = `${PUBLIC_APP}/#/table/${encodeURIComponent(table.id)}`;
-      const text = `Sammansatta till ett bord · ${date} · ${party} pers${openSeats ? ` · ${openSeats} öppna stolar` : ""} · ${link}`;
+      const who = openFor === "women" ? "kvinnor" : openFor === "men" ? "män" : "alla";
+      const text = `Sammansatta till ett bord · ${date} · ${party} pers${openSeats ? ` · ${openSeats} öppna stolar till ${who}` : ""} · ${link}`;
       for (const m of picked) {
         m.status = "grouped";
         m.tableId = table.id;

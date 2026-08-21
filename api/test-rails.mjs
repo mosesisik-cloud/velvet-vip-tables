@@ -489,7 +489,7 @@ async function runApi() {
     else ok("match-date", "need a real date");
 
     const matchAsk = await req(base, "POST", "/matches/IBZ-001", {
-      user: guest, date: "2026-09-04", seats: 2, note: "vill dela VIP-bord",
+      user: guest, date: "2026-09-04", seats: 2, note: "vill dela VIP-bord", openSeats: 2, openFor: "women",
     });
     if (matchAsk.status !== 200 || matchAsk.json.match?.seats !== 2 || matchAsk.json.match?.status !== "open") {
       fail("match-ask", JSON.stringify(matchAsk.json).slice(0, 240));
@@ -501,12 +501,22 @@ async function runApi() {
     else ok("match-queue", waiting.id);
 
     const composed = await req(base, "POST", "/matches/IBZ-001/compose", {
-      user: host, matchIds: [waiting.id], venue: "Hi Ibiza", destination: "Ibiza", openSeats: 2, party: 4,
+      user: host, matchIds: [waiting.id], venue: "Hi Ibiza", destination: "Ibiza", openSeats: 2, party: 4, openFor: "women",
     });
     const grouped = composed.json.table;
-    if (composed.status !== 201 || grouped?.host?.id !== guest.id || grouped.openLeft !== 2) {
+    if (composed.status !== 201 || grouped?.host?.id !== guest.id || grouped.openLeft !== 2 || grouped.openFor !== "women") {
       fail("match-compose", JSON.stringify(composed.json).slice(0, 240));
-    } else ok("match-compose", grouped.id + " openLeft=" + grouped.openLeft);
+    } else ok("match-compose", grouped.id + " openLeft=" + grouped.openLeft + " for women");
+
+    const joinWomenHost = await req(base, "POST", "/tables/" + encodeURIComponent(grouped.id) + "/join", { user: host });
+    if (joinWomenHost.status !== 403 || joinWomenHost.json.error !== "seat_pref") {
+      fail("seat-pref-men", JSON.stringify(joinWomenHost.json).slice(0, 200));
+    } else ok("seat-pref-men", "passport sex blocks men from women-only seats");
+
+    const joinWomenPlain = await req(base, "POST", "/tables/" + encodeURIComponent(grouped.id) + "/join", { user: plain });
+    if (joinWomenPlain.status !== 403 || joinWomenPlain.json.error !== "idv_required") {
+      fail("seat-pref-idv", JSON.stringify(joinWomenPlain.json).slice(0, 200));
+    } else ok("seat-pref-idv", "gendered seats need passport");
 
     const afterCompose = await req(base, "GET", "/matches/IBZ-001?userId=" + encodeURIComponent(guest.id));
     const mine = (afterCompose.json.matches || []).find((m) => m.id === waiting.id);
