@@ -1,5 +1,6 @@
 {
   "currency": "EUR",
+  "firecrawlKey": "",
   "revolut": {
     "iban": "",
     "bic": "",

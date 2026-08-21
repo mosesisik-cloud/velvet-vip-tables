@@ -2,6 +2,7 @@
  * Strategi:
  *  - App-skalet (html/css/js/json + ikoner): cache-first, förcachat vid install.
  *    OBS: bumpa VERSION vid varje deploy som ändrar skalet — annars serveras gammal version.
+ *  - venue-events.json och /velvet-api/events: network-first (daglig crawl).
  *  - Google Fonts + Leaflet (unpkg) + CARTO-tiles: stale-while-revalidate i runtime-cache.
  *  - Venue-foton och Pexels (hero) cachas INTE — <img>/<video> går mot nätet
  *    så PWA:n inte lagrar tredjepartsbilder utan licens.
@@ -10,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-13";
+const VERSION = "v4-real-14";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -27,7 +28,6 @@ const SHELL_ASSETS = [
   "./data/destinations.json",
   "./data/venues.json",
   "./data/venue-images.json",
-  "./data/venue-events.json",
   "./data/booking-urls.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
@@ -70,6 +70,21 @@ self.addEventListener("activate", (event) => {
       .then(() => self.clients.claim())
   );
 });
+
+async function networkFirst(request) {
+  try {
+    const response = await fetch(request, { cache: "no-store" });
+    if (response && response.ok) {
+      const cache = await caches.open(RUNTIME_CACHE);
+      cache.put(request, response.clone());
+    }
+    return response;
+  } catch (err) {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+    throw err;
+  }
+}
 
 // Cache-first: skalet ändras bara vid deploy (då bumpas VERSION).
 async function cacheFirst(request) {
@@ -128,6 +143,11 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.origin === self.location.origin) {
+    // Daglig crawl + API: alltid nätet först, cache bara som offline-backup.
+    if (/venue-events\.json(\?|$)/i.test(url.pathname) || /\/velvet-api\//i.test(url.pathname) || /\/events(\/|$)/i.test(url.pathname)) {
+      event.respondWith(networkFirst(request));
+      return;
+    }
     // App-skal: html/css/js/json + ikoner → cache-first
     if (/\.(html|css|js|json|png|svg|webmanifest)(\?|$)/i.test(url.pathname)) {
       event.respondWith(cacheFirst(request));

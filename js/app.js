@@ -336,10 +336,63 @@ async function apiJSON(path, opts) {
   const base = apiBase();
   if (!base) return null;
   try {
-    const r = await fetch(base + path, opts);
-    if (!r.ok) return null;
-    return await r.json();
+    const headers = { ...(opts && opts.headers) };
+    const r = await fetch(base + path, { cache: "no-store", ...opts, headers });
+    const json = await r.json().catch(() => null);
+    if (!r.ok) return json || null;
+    return json;
   } catch { return null; }
+}
+
+async function loadVenueEvents() {
+  try {
+    const re = await fetch("data/venue-events.json", { cache: "no-store" });
+    if (re.ok) {
+      const d = await re.json();
+      if (d && d.venues) VENUE_EVENTS = d;
+    }
+  } catch { /* keep previous */ }
+  await refreshLiveEvents();
+}
+
+async function refreshLiveEvents() {
+  const live = await apiJSON("/events");
+  if (live && live.venues) {
+    VENUE_EVENTS = live;
+    return true;
+  }
+  return false;
+}
+
+async function pollEventsUntilIdle(ms = 120000) {
+  const t0 = Date.now();
+  while (Date.now() - t0 < ms) {
+    const st = await apiJSON("/events/status");
+    if (!st?.running) {
+      await refreshLiveEvents();
+      return true;
+    }
+    await new Promise((r) => setTimeout(r, 2500));
+  }
+  return false;
+}
+
+async function refreshVenueEvents(v) {
+  const btn = $("#ev-refresh");
+  if (btn) { btn.disabled = true; btn.textContent = t("eventsRefreshing"); }
+  const r = await apiJSON("/events/refresh", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ user: loadUser(), venueId: v.venue_id }),
+  });
+  if (r?.venues) VENUE_EVENTS = r;
+  else if (r?.running) {
+    showToast(t("eventsCrawlBusy"));
+    await pollEventsUntilIdle();
+  } else {
+    await refreshLiveEvents();
+  }
+  if ((location.hash || "").split("?")[0] === `#/venue/${v.venue_id}`) renderVenueDetail(v.venue_id);
 }
 const TABLES_KEY = "velvet_tables_v1";
 function loadLocalTables() {
@@ -1246,8 +1299,8 @@ function eventWhen(e) {
 }
 function eventsSectionHTML(v) {
   const evs = eventsFor(v);
-  if (!evs.length) return "";
   const rec = VENUE_EVENTS.venues[v.venue_id] || {};
+  if (!evs.length && !apiBase()) return "";
   const rows = evs.map((e) => `
     <li class="event-row">
       <span class="event-when">${esc(eventWhen(e))}</span>
@@ -1257,11 +1310,14 @@ function eventsSectionHTML(v) {
       </span>
     </li>`).join("");
   const src = rec.source ? ` · <a href="${esc(rec.source)}" target="_blank" rel="noopener">källa ↗</a>` : "";
+  const fetched = (VENUE_EVENTS.fetchedAt || VENUE_EVENTS.fetched || "").slice(0, 10);
+  const canRefresh = !!apiBase();
   return `
   <div class="detail-panel events-panel">
     <h2 class="detail-panel-title">🎟 ${esc(t("events"))} <span class="idv-badge ok">${esc(t("sharpEvent"))}</span></h2>
-    <ul class="event-list">${rows}</ul>
-    <p class="events-meta">Hämtat ${esc(VENUE_EVENTS.fetched || "")} från ställets officiella kanaler${src} — dubbelkolla alltid innan du bokar resan.</p>
+    ${rows ? `<ul class="event-list">${rows}</ul>` : ""}
+    <p class="events-meta">${esc(t("eventsDaily"))}${fetched ? ` · ${esc(fetched)}` : ""}${src}</p>
+    ${canRefresh ? `<p class="events-actions"><button type="button" class="btn btn-ghost btn-sm" id="ev-refresh">${esc(t("eventsRefresh"))}</button></p>` : ""}
   </div>`;
 }
 
@@ -1361,7 +1417,22 @@ function renderVenueDetail(id) {
 
   $("#d-book").addEventListener("click", () => openBookingModal(v));
   bindFavButtons(view());
+  $("#ev-refresh")?.addEventListener("click", () => refreshVenueEvents(v));
   setTitle(v.name);
+  if (apiBase()) {
+    refreshLiveEvents().then((ok) => {
+      if (!ok) return;
+      if ((location.hash || "").split("?")[0] !== `#/venue/${v.venue_id}`) return;
+      const panel = document.querySelector(".events-panel");
+      const fresh = eventsSectionHTML(v);
+      if (panel && fresh) {
+        panel.outerHTML = fresh;
+        $("#ev-refresh")?.addEventListener("click", () => refreshVenueEvents(v));
+      } else if (!panel && fresh) {
+        renderVenueDetail(id);
+      }
+    });
+  }
 }
 
 // ---------- Booking modal ----------
@@ -2867,10 +2938,14 @@ async function renderPayout() {
       <label>TikTok secret<input name="tiktokSecret" type="password" autocomplete="off"></label>
       <label>Snapchat client ID<input name="snapchatId" autocomplete="off"></label>
       <label>Snapchat secret<input name="snapchatSecret" type="password" autocomplete="off"></label>
+      <label>${esc(t("crawlKey"))}<input name="firecrawlKey" type="password" placeholder="${cfg.keys?.firecrawl ? "•••• set" : "fc-…"}" autocomplete="off"></label>
+      <p class="stepper-hint">${esc(t("crawlKeyHint"))}</p>
       <p class="stepper-hint">${esc(t("paySetupKeys"))}</p>
       <div class="field-error hidden" id="pay-setup-err"></div>
       <button class="btn btn-gold" type="submit">${esc(t("saveSettings"))}</button>
     </form>
+    <p class="events-meta" id="crawl-status" style="margin-top:18px"></p>
+    <p style="margin-top:8px"><button type="button" class="btn btn-ghost" id="crawl-now">${esc(t("crawlNow"))}</button></p>
   </section>`;
   $("#pay-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -2889,6 +2964,30 @@ async function renderPayout() {
     }
     showToast(t("savedOk"));
     renderPayout();
+  });
+  const stEl = $("#crawl-status");
+  const paintCrawl = async () => {
+    const st = await apiJSON("/events/status");
+    if (!stEl || !st) return;
+    const when = (st.lastOk || st.lastRun || "").replace("T", " ").slice(0, 16);
+    stEl.textContent = st.running
+      ? t("eventsRefreshing")
+      : `${t("eventsDaily")}${when ? " · " + when : ""}${st.engine ? " · " + st.engine : ""}`;
+  };
+  paintCrawl();
+  $("#crawl-now")?.addEventListener("click", async () => {
+    const btn = $("#crawl-now");
+    if (btn) { btn.disabled = true; btn.textContent = t("eventsRefreshing"); }
+    const r = await apiJSON("/events/refresh", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: me }),
+    });
+    if (r?.running) await pollEventsUntilIdle(180000);
+    else if (r?.venues) VENUE_EVENTS = r;
+    showToast(t("eventsCrawlOk"));
+    if (btn) { btn.disabled = false; btn.textContent = t("crawlNow"); }
+    paintCrawl();
   });
 }
 
@@ -3639,11 +3738,8 @@ async function init() {
       const r = await fetch("data/venue-images.json");
       if (r.ok) VENUE_IMAGES = await r.json() || {};
     } catch (_) { VENUE_IMAGES = {}; }
-    // Kommande events (crawlade från ställenas officiella kanaler) — saknas filen visas inget
-    try {
-      const re = await fetch("data/venue-events.json");
-      if (re.ok) { const d = await re.json(); if (d && d.venues) VENUE_EVENTS = d; }
-    } catch (_) { /* behåll tom */ }
+    // Kommande events: statisk JSON som fallback, sedan live API (daglig Firecrawl)
+    await loadVenueEvents();
     try {
       const rb = await fetch("data/booking-urls.json");
       if (rb.ok) BOOKING_URLS = await rb.json() || {};

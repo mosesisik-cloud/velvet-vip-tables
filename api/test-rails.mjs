@@ -108,7 +108,7 @@ async function runApi() {
   fs.writeFileSync(pay, "{}");
   const port = 18787;
   const child = spawn(process.execPath, [SERVER], {
-    env: { ...process.env, PORT: String(port), VELVET_DATA: data, VELVET_PAY: pay },
+    env: { ...process.env, PORT: String(port), VELVET_DATA: data, VELVET_PAY: pay, VELVET_CRAWL: "0" },
     cwd: __dir,
     stdio: ["ignore", "pipe", "pipe"],
   });
@@ -193,6 +193,20 @@ async function runApi() {
     const auth = await req(base, "GET", "/auth/start/instagram");
     if (auth.status !== 200 || !(auth.json.local === true || auth.json.url)) fail("auth-start", JSON.stringify(auth));
     else ok("auth-start", auth.json.local ? "one-tap local" : "oauth url");
+
+    const events = await req(base, "GET", "/events");
+    const evn = events.json?.venues || {};
+    if (events.status !== 200) fail("events", "HTTP " + events.status);
+    else if (!evn["IBZ-001"]?.events?.length) fail("events", "missing IBZ-001 lineup");
+    else ok("events", Object.keys(evn).length + " venues, fetched " + (events.json.fetched || ""));
+
+    const est = await req(base, "GET", "/events/status");
+    if (est.status !== 200) fail("events-status", "HTTP " + est.status);
+    else ok("events-status", "running=" + !!est.json.running);
+
+    const blocked = await req(base, "POST", "/events/refresh", { user: { id: "U-x" } });
+    if (blocked.status !== 403) fail("events-refresh-off", "expected 403 got " + blocked.status);
+    else ok("events-refresh-off", "VELVET_CRAWL=0");
 
     return { cfg: cfg.json, table: paySelf.json.table };
   } finally {

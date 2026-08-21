@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { loadEventsFile, loadCrawlStatus, runCrawl, getCrawlState, scheduleDailyCrawl } from "./crawl-events.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
@@ -44,13 +45,14 @@ function save(db) {
 function safeId(id) {
   return String(id || "").replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 80) || "unknown";
 }
-function send(res, code, obj) {
+function send(res, code, obj, extra = {}) {
   const body = JSON.stringify(obj);
   res.writeHead(code, {
     "Content-Type": "application/json; charset=utf-8",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
+    ...extra,
   });
   res.end(body);
 }
@@ -205,6 +207,7 @@ function isOperator(user) {
 function emptyPay() {
   return {
     currency: "EUR",
+    firecrawlKey: "",
     revolut: { iban: "", bic: "", name: "", me: "", merchantSecret: "", sandbox: false },
     stripe: { secret: "", pub: "", webhook: "" },
     paypal: { client: "", secret: "", sandbox: false },
@@ -222,6 +225,7 @@ function loadPay() {
     const base = emptyPay();
     return {
       currency: String(raw.currency || "EUR").toUpperCase().slice(0, 3),
+      firecrawlKey: String(raw.firecrawlKey || ""),
       revolut: { ...base.revolut, ...(raw.revolut || {}) },
       stripe: { ...base.stripe, ...(raw.stripe || {}) },
       paypal: { ...base.paypal, ...(raw.paypal || {}) },
@@ -287,6 +291,7 @@ function publicPayConfig() {
       revolut: revolutOn,
       paypal: paypalOn,
       iban: bankOn,
+      firecrawl: !!p.firecrawlKey,
     },
     oauth: oauthFlags(p),
   };
@@ -568,6 +573,44 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && (url.pathname === "/health" || url.pathname === "/")) {
       return send(res, 200, { ok: true, service: "velvet-api" });
     }
+    if (req.method === "GET" && url.pathname === "/events") {
+      const data = loadEventsFile();
+      const st = loadCrawlStatus();
+      return send(res, 200, {
+        ...data,
+        crawl: {
+          lastRun: st.lastOk || st.lastRun,
+          running: !!st.running,
+          engine: st.engine,
+          venuesUpdated: st.venuesUpdated,
+          events: st.events,
+        },
+      }, { "Cache-Control": "no-store" });
+    }
+    if (req.method === "GET" && url.pathname === "/events/status") {
+      return send(res, 200, loadCrawlStatus(), { "Cache-Control": "no-store" });
+    }
+    if (req.method === "POST" && url.pathname === "/events/refresh") {
+      if (process.env.VELVET_CRAWL === "0") return send(res, 403, { error: "crawl_disabled" });
+      const b = await readBody(req, 2e5);
+      const venueId = String(b.venueId || "").replace(/[^A-Z0-9._-]/gi, "").slice(0, 20);
+      const operator = isOperator(b.user);
+      const live = getCrawlState();
+      if (live.running) {
+        return send(res, 202, { running: true, status: live.status, ...loadEventsFile() });
+      }
+      const last = Date.parse(live.status.lastOk || live.status.lastRun || 0);
+      const coolMs = venueId ? 20 * 60 * 1000 : 4 * 3600 * 1000;
+      if (!operator && Number.isFinite(last) && Date.now() - last < coolMs && !venueId) {
+        return send(res, 429, { error: "cooldown", status: live.status, ...loadEventsFile() });
+      }
+      if (venueId) {
+        const result = await runCrawl({ venueId, reason: operator ? "operator-venue" : "app-venue" });
+        return send(res, 200, { ...(result.payload || loadEventsFile()), status: result, running: false }, { "Cache-Control": "no-store" });
+      }
+      runCrawl({ reason: operator ? "operator" : "app" }).catch((e) => console.error("velvet-crawl", e));
+      return send(res, 202, { running: true, status: loadCrawlStatus(), ...loadEventsFile() });
+    }
 
     if (req.method === "GET" && url.pathname === "/pay/config") {
       return send(res, 200, publicPayConfig());
@@ -646,6 +689,7 @@ const server = http.createServer(async (req, res) => {
       if (b.tiktokSecret) cur.oauth.tiktok.secret = String(b.tiktokSecret);
       if (b.snapchatId) cur.oauth.snapchat.id = String(b.snapchatId);
       if (b.snapchatSecret) cur.oauth.snapchat.secret = String(b.snapchatSecret);
+      if (b.firecrawlKey) cur.firecrawlKey = String(b.firecrawlKey).trim();
       savePay(cur);
       return send(res, 200, { ok: true, config: publicPayConfig() });
     }
@@ -1106,4 +1150,5 @@ const server = http.createServer(async (req, res) => {
 
 server.listen(PORT, "0.0.0.0", () => {
   console.log("velvet-api " + PORT);
+  scheduleDailyCrawl();
 });

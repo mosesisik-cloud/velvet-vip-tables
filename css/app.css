@@ -1626,6 +1626,7 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .event-note { font-size: 13px; color: var(--text-dim); }
 .events-meta { font-size: 12px; color: var(--text-faint); margin: 0; }
 .events-meta a { color: var(--text-dim); text-decoration: underline; }
+.events-actions { margin: 10px 0 0; }
 .tag-events { color: var(--gold-bright); border-color: rgba(212,175,95,0.45); }
 @media (max-width: 719px) {
   .event-row { flex-direction: column; gap: 2px; }

@@ -14,6 +14,7 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 
 - **Förfrågan, inte fake-bokning.** Ni fyller i värd, datum, paket och sällskap. Förfrågan går till VELVET-teamet (Gabbe) via e-post. Bekräftelsen säger *förfrågan skickad* — aldrig att bordet är reserverat.
 - **Inga påhittade paketpriser.** Appen visar inte fejkade EUR-paket. Pris kommer från klubbens sajt eller deras svar. Evenemang hämtas från officiella kalendrar.
+- **Daglig Firecrawl.** `velvet-api` kollar ställenas sajter en gång per dygn (VIP-kalendrar via Firecrawl, övriga via JSON-LD/HTML). Appen hämtar `/velvet-api/events` live — ingen omdeploy. Gabbe/Moses kan klistra in `FIRECRAWL_API_KEY` under Konto och köra crawl nu.
 - **Katalog.** 120 webbverifierade ställen, 103 äkta venue-bilder från deras egna sajter, IG/TikTok/FB live-kollade.
 - **PWA.** Installerbar från Chrome, offline-skal, VELVET-offline-sida.
 - **Delning.** Inbjudningslänk, kopiera chatt-text, `.ics` till kalendern, favoritlista som länk.
@@ -47,6 +48,8 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 ```bash
 npx serve -l 4173 .
 node api/test-rails.mjs
+# daglig crawl (samma jobb som på servern)
+node api/crawl-events.mjs
 ```
 
 Öppna `http://localhost:4173`. `file://` fungerar inte (JSON via `fetch`).
