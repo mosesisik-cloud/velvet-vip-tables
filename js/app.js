@@ -219,7 +219,7 @@ function venueDockHTML(v) {
   const q = placeQuery(v);
   return `
   <nav class="venue-dock" aria-label="${esc(t("contactTitle"))}">
-    ${book ? `<a class="btn btn-gold btn-sm" href="#/book-site/${encodeURIComponent(v.venue_id)}" data-nav>${esc(t("bookOnSiteShort"))}</a>` : `<button type="button" class="btn btn-gold btn-sm" id="dock-book">${esc(t("sendRequest"))}</button>`}
+    ${book ? `<a class="btn btn-gold btn-sm" href="#/book-site/${encodeURIComponent(v.venue_id)}" data-nav>${esc(t("dockBook"))}</a>` : `<button type="button" class="btn btn-gold btn-sm" id="dock-book">${esc(t("dockBook"))}</button>`}
     <a class="btn btn-ghost btn-sm" href="${esc(mapsGoogleQuery(q))}" target="_blank" rel="noopener">${esc(t("openMaps"))}</a>
     ${v.instagram_url ? `<a class="btn btn-ghost btn-sm" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">IG</a>` : ""}
     <button type="button" class="btn btn-ghost btn-sm" id="dock-share">${esc(t("sharePlace"))}</button>
@@ -1609,6 +1609,7 @@ function renderVenueDetail(id) {
     </div>
     ${venueDockHTML(v)}
   </section>`;
+  document.body.classList.add("has-dock");
 
   $("#d-book").addEventListener("click", () => openBookingModal(v));
   $("#dock-book")?.addEventListener("click", () => openBookingModal(v));
@@ -3827,6 +3828,7 @@ const paramRoutes = [
 const safeDecode = (s) => { try { return decodeURIComponent(s); } catch { return s; } };
 
 function route() {
+  document.body.classList.remove("has-dock");
   // Stäng ev. öppen modal vid ruttbyte (t.ex. bakåtknapp med öppen modal)
   if (modalTeardown) modalTeardown();
   const modalRoot = document.getElementById("modal-root");

@@ -1661,18 +1661,92 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 }
 .venue-dock { display: none; }
 @media (max-width: 719px) {
+  html, body, #app { overflow-x: hidden; }
+  input, select, textarea { font-size: 16px; }
+  a, button {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(212, 175, 95, 0.18);
+  }
+  .btn:hover, .btn-gold:hover, .dest-card:hover, .venue-card:hover .venue-media img {
+    transform: none;
+  }
+
+  .hero h1 { font-size: clamp(30px, 8.4vw, 40px); }
+  .hero-cta { flex-direction: column; align-items: stretch; }
+  .hero-cta .btn { width: 100%; justify-content: center; min-height: 48px; }
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 12px; }
+  .dest-grid { grid-template-columns: 1fr; }
+
+  .filters {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    gap: 8px;
+  }
+  .filters input[type="search"] {
+    flex: 1 1 100%;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+  }
+  .filters select {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 0;
+    max-width: 100%;
+  }
+  .filter-count { flex: 1 1 100%; margin-left: 0; }
+
+  .venue-actions {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .venue-actions .btn,
+  .venue-actions .icon-link {
+    flex: 1 1 calc(50% - 8px);
+    justify-content: center;
+    min-width: 0;
+    text-align: center;
+  }
+
+  .detail-links { gap: 8px; }
+  .detail-links .icon-link, .detail-links .btn { justify-content: center; }
+  .follow-ig .btn { width: 100%; justify-content: center; }
+  .contact-grid { grid-template-columns: 1fr 1fr; }
+  .contact-tile { min-height: 68px; padding: 12px; }
+  .g-hero-score { font-size: 32px; }
+  .g-review p { overflow-wrap: anywhere; }
+
   .venue-dock {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-    gap: 8px;
-    position: sticky; bottom: 0; z-index: 30;
-    margin: 18px -20px -8px;
-    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
-    background: linear-gradient(180deg, transparent, var(--bg) 28%);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 45;
+    margin: 0;
+    padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+    background: rgba(11, 11, 15, 0.94);
+    backdrop-filter: blur(16px);
     border-top: 1px solid var(--border-soft);
   }
-  .venue-dock .btn { width: 100%; padding: 10px 8px; font-size: 12.5px; }
-  .toast { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
+  .venue-dock .btn {
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    justify-content: center;
+  }
+  body.has-dock {
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+  }
+  body.has-dock .toast { bottom: calc(80px + env(safe-area-inset-bottom, 0px)); }
+  body.has-dock .footer { padding-bottom: 12px; }
+
+  .book-site-actions .btn { min-height: 48px; }
+  .pay-form input { font-size: 16px; }
+  .chat-form input { font-size: 16px; }
 }
 .events-panel { grid-column: 1 / -1; }
 .event-list { list-style: none; margin: 4px 0 10px; padding: 0; }
