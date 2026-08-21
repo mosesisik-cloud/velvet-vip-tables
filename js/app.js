@@ -2989,28 +2989,37 @@ async function renderTable(id) {
   const already = !!(me && members.some((m) => m.id && m.id === me.id));
   const canJoin = Number(tb.openLeft) > 0 && !already;
   const hostId = tb.host?.id || "";
+  const over = !!(tb.past || partyOver(tb));
+  const reviews = Array.isArray(tb.reviews) ? tb.reviews : [];
+  const others = members.filter((p) => p.id && me && p.id !== me.id);
   setTitle(`${tb.venue} · ${t("partyTitle")}`);
   view().innerHTML = `
   <section class="section party-page">
     <a class="detail-back" href="#/open" data-nav>← ${esc(t("navOpen"))}</a>
-    <p class="detail-kicker">${esc(tb.destination)} · ${esc(tb.date)} · ${esc(tb.package || "")}</p>
+    <p class="detail-kicker">${esc(tb.destination)} · ${esc(tb.date)} · ${esc(tb.package || "")}${over ? ` · ${esc(t("pastParties"))}` : ""}</p>
     <h1>${esc(tb.venue)}</h1>
-    <p class="ob-sub" style="text-align:left;margin:6px 0 18px">${esc(t("partySub"))}</p>
+    <p class="ob-sub" style="text-align:left;margin:6px 0 18px">${esc(over ? t("partyOverTitle") : t("partySub"))}</p>
     <div class="party-stats">
       <div><b>${esc(moneyOrClub(tb.per_person))}</b><span>${esc(t("perPerson"))}</span></div>
       <div><b>${num(tb.paidN)}/${num(tb.dueN)}</b><span>${esc(t("paid"))}</span></div>
       <div><b>${num(tb.openLeft)}</b><span>${esc(t("seatsOpen"))}</span></div>
       <div><b>${num(tb.party)}</b><span>${esc(t("people"))}</span></div>
     </div>
-    <p class="price-disclaimer">${esc(t("payNote"))}</p>
+    ${over ? "" : `<p class="price-disclaimer">${esc(t("payNote"))}</p>`}
     <h2 class="detail-panel-title" style="margin-top:8px">${esc(t("roster"))}</h2>
     <div class="person-list" id="party-list">
       ${members.map((p) => personRowHTML(p, { me, hostId, tableId: tb.id })).join("")}
     </div>
+    ${already && over && others.length ? `
+      <h2 class="detail-panel-title" style="margin-top:28px">${esc(t("rateTogether"))}</h2>
+      <p class="stepper-hint">${esc(t("rateTogetherHint"))}</p>
+      <div class="rate-list" id="rate-list">
+        ${others.map((p) => rateRowHTML(p, tb.id, reviews.find((r) => r.from === me.id && r.to === p.id))).join("")}
+      </div>` : ""}
     <div class="book-site-actions" style="margin-top:22px;max-width:420px">
       ${!me ? `<button class="btn btn-gold" id="party-login">${esc(t("loginTitle"))}</button>` : ""}
-      ${me && canJoin ? `<button class="btn btn-gold" id="party-join">${esc(t("takeSeat"))}</button>` : ""}
-      ${already && me && members.some((m) => m.id === me.id && !m.paid) ? `<a class="btn btn-gold" href="#/pay/${encodeURIComponent(tb.id)}" data-nav>${esc(t("payShare"))}</a>` : ""}
+      ${me && canJoin && !over ? `<button class="btn btn-gold" id="party-join">${esc(t("takeSeat"))}</button>` : ""}
+      ${already && me && !over && members.some((m) => m.id === me.id && !m.paid) ? `<a class="btn btn-gold" href="#/pay/${encodeURIComponent(tb.id)}" data-nav>${esc(t("payShare"))}</a>` : ""}
       ${already ? `<p class="invite-joined">${esc(t("youAreIn"))}</p>` : ""}
       ${tb.venue_id ? `<a class="btn btn-ghost" href="#/venue/${encodeURIComponent(tb.venue_id)}" data-nav>${esc(t("explore"))}</a>` : ""}
     </div>
@@ -3037,6 +3046,7 @@ async function renderTable(id) {
       else btn.disabled = false;
     });
   });
+  if (me) bindRateRows(document.getElementById("rate-list") || view(), me, () => renderTable(id));
 }
 
 const PAY_METHODS = [
@@ -3263,6 +3273,82 @@ async function renderPayout() {
 function starRow(n) {
   const v = Math.max(0, Math.min(5, Number(n) || 0));
   return `<span class="stars" aria-label="${v}/5">${"★".repeat(Math.round(v))}${"☆".repeat(5 - Math.round(v))}</span>`;
+}
+function todayISO() {
+  const n = new Date();
+  return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
+}
+function partyOver(tb) {
+  const d = String((tb && tb.date) || "");
+  return /^\d{4}-\d{2}-\d{2}$/.test(d) && d <= todayISO();
+}
+function partyCardHTML(p, { mine } = {}) {
+  if (!p) return "";
+  const mates = Array.isArray(p.mates) ? p.mates : [];
+  const names = mates.map((m) => m.name || "").filter(Boolean).slice(0, 4).join(", ");
+  const extra = mates.length > 4 ? ` +${mates.length - 4}` : "";
+  const role = p.role === "host" ? t("hostRole") : t("guestRole");
+  return `
+  <a class="party-card" href="#/table/${encodeURIComponent(p.id)}" data-nav>
+    <div class="party-card-top">
+      <b>${esc(p.venue || "")}</b>
+      <span class="chip-mini">${esc(role)}</span>
+    </div>
+    <p class="booking-meta">${esc(p.destination || "")} · ${esc(p.date || "")}${p.package ? ` · ${esc(p.package)}` : ""}</p>
+    ${mates.length ? `<p class="party-card-crew">${esc(t("withCrew"))} ${esc(names)}${esc(extra)}</p>` : ""}
+    ${mine && p.past && mates.length ? `<p class="party-card-rate">${mates.filter((m) => (p.ratedIds || []).includes(m.id)).length}/${mates.length} ${esc(t("reviews"))}</p>` : ""}
+  </a>`;
+}
+function rateRowHTML(person, tableId, existing) {
+  if (!person || !person.id) return "";
+  if (existing) {
+    return `<div class="rate-row done">
+      <div><b>${esc(person.name || "")}</b> · ${starRow(existing.rating)}${existing.text ? `<p>${esc(existing.text)}</p>` : ""}</div>
+      <span class="events-meta">${esc(t("alreadyRated"))}</span>
+    </div>`;
+  }
+  return `<div class="rate-row" data-rate-to="${esc(person.id)}" data-rate-name="${esc(person.name || "")}" data-rate-table="${esc(tableId)}">
+    <div>
+      <p class="rate-who"><b>${esc(person.name || "")}</b> — ${esc(t("rateTogether"))}</p>
+      <div class="star-pick">${[1,2,3,4,5].map((n) => `<button type="button" data-star="${n}" aria-label="${n}">★</button>`).join("")}</div>
+      <textarea rows="2" maxlength="280" placeholder="${esc(t("optional"))}"></textarea>
+    </div>
+    <button type="button" class="btn btn-gold btn-sm" data-rate-go>${esc(t("rateSend"))}</button>
+  </div>`;
+}
+function bindRateRows(root, me, onDone) {
+  root.querySelectorAll(".rate-row[data-rate-to]").forEach((row) => {
+    let stars = 5;
+    const paint = () => {
+      row.querySelectorAll("[data-star]").forEach((b) => {
+        b.textContent = Number(b.dataset.star) <= stars ? "★" : "☆";
+      });
+    };
+    paint();
+    row.querySelectorAll("[data-star]").forEach((b) => b.addEventListener("click", () => { stars = Number(b.dataset.star); paint(); }));
+    row.querySelector("[data-rate-go]")?.addEventListener("click", async () => {
+      const btn = row.querySelector("[data-rate-go]");
+      if (btn) btn.disabled = true;
+      const r = await apiJSON("/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          from: me,
+          to: { id: row.dataset.rateTo, name: row.dataset.rateName },
+          tableId: row.dataset.rateTable,
+          rating: stars,
+          text: row.querySelector("textarea")?.value || "",
+        }),
+      });
+      if (r?.review) {
+        showToast(t("ratedOk"));
+        if (onDone) onDone();
+        return;
+      }
+      if (btn) btn.disabled = false;
+      showToast(r?.error === "too_soon" ? t("rateTogetherHint") : r?.error === "dup" ? t("alreadyRated") : t("reviewHint"));
+    });
+  });
 }
 
 function faceChecksHTML(passOk, liveOk, match) {
@@ -3585,18 +3671,36 @@ async function renderVerify() {
   });
 }
 
+function partiesBlockHTML(data, { mine } = {}) {
+  const past = (data.parties && data.parties.past) || (data.tables || []).filter((p) => p.past);
+  const upcoming = (data.parties && data.parties.upcoming) || (data.tables || []).filter((p) => !p.past);
+  const pastTitle = mine ? t("pastParties") : t("theirParties");
+  return `
+    ${upcoming.length ? `<h2 class="detail-panel-title" style="margin-top:28px">${esc(t("upcomingParties"))}</h2>
+      <div class="party-card-list">${upcoming.map((p) => partyCardHTML(p, { mine })).join("")}</div>` : ""}
+    <h2 class="detail-panel-title" style="margin-top:28px">${esc(pastTitle)}</h2>
+    ${past.length
+      ? `<div class="party-card-list">${past.map((p) => partyCardHTML(p, { mine })).join("")}</div>`
+      : `<p class="price-disclaimer">${esc(t("noParties"))}</p>`}`;
+}
+
 async function renderUserProfile(id) {
   const data = await apiJSON(`/users/${encodeURIComponent(id)}`)
     || await apiJSON(`/reviews/${encodeURIComponent(id)}`)
-    || { reviews: [], avg: 0, n: 0, idv: "none" };
+    || { reviews: [], avg: 0, n: 0, idv: "none", parties: { past: [], upcoming: [] } };
   const me = loadUser();
   const u = data.user || {};
   const name = u.name || data.reviews?.[0]?.toName || id;
   const verified = (u.idv || data.idv) === "verified";
   const handle = u.handle ? `@${u.handle}` : "";
+  const mine = !!(me && me.id === id);
+  const sharedPast = (!mine && me) ? ((data.parties && data.parties.past) || []).filter((p) =>
+    (p.mates || []).some((m) => m.id === me.id)
+  ) : [];
+  const rateParty = sharedPast.find((p) => !(data.reviews || []).some((r) => r.from === me.id && r.tableId === p.id)) || null;
   view().innerHTML = `
-  <section class="section">
-    <a class="detail-back" href="#/open" data-nav>← ${esc(t("navOpen"))}</a>
+  <section class="section profile-page">
+    <a class="detail-back" href="${mine ? "#/account" : "#/open"}" data-nav>← ${esc(mine ? t("account") : t("navOpen"))}</a>
     <div class="profile-head">
       <div class="person-avatar lg soc-${esc(u.provider || "none")}" aria-hidden="true">${esc((name || "?").slice(0, 1).toUpperCase())}</div>
       <div>
@@ -3606,54 +3710,30 @@ async function renderUserProfile(id) {
           ${handle && u.socialUrl ? `<a class="person-handle" href="${esc(u.socialUrl)}" target="_blank" rel="noopener">${esc(handle)}</a>` : handle ? `<span class="person-handle">${esc(handle)}</span>` : ""}
           ${verified ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : `<span class="idv-badge no">${esc(t("notVerified"))}</span>`}
         </p>
-        <p>${starRow(data.avg)} ${data.n ? `(${data.n})` : t("noReviews")}</p>
+        <p>${starRow(data.avg)} ${data.n ? `${esc(t("funScore"))} (${data.n})` : t("noReviews")}</p>
       </div>
     </div>
-    ${(data.tables || []).length ? `
-      <h2 style="margin:28px 0 12px">${esc(t("roster"))}</h2>
-      ${data.tables.map((tb) => `<p class="booking-meta"><a href="#/table/${encodeURIComponent(tb.id)}" data-nav>${esc(tb.venue)}</a> · ${esc(tb.date || "")} · ${esc(tb.role === "host" ? t("hostRole") : t("guestRole"))}</p>`).join("")}
-    ` : ""}
-    <h2 style="margin:28px 0 12px">${esc(t("reviews"))}</h2>
+    ${partiesBlockHTML(data, { mine })}
+    <h2 class="detail-panel-title" style="margin-top:28px">${esc(t("funScore"))}</h2>
     ${(data.reviews || []).length ? data.reviews.map((r) => `
       <div class="review-card">
-        <div>${starRow(r.rating)} <b>${esc(r.fromName || "")}</b></div>
-        <p>${esc(r.text)}</p>
+        <div>${starRow(r.rating)} <b>${esc(r.fromName || "")}</b>${r.tableId ? ` · <a href="#/table/${encodeURIComponent(r.tableId)}" data-nav>${esc(t("viewParty"))}</a>` : ""}</div>
+        ${r.text ? `<p>${esc(r.text)}</p>` : ""}
       </div>`).join("") : `<p class="price-disclaimer">${esc(t("noReviews"))}</p>`}
-    ${me && me.id !== id ? `
-      <h2 style="margin:28px 0 12px">${esc(t("writeReview"))}</h2>
-      <p class="stepper-hint">${esc(t("reviewHint"))}</p>
-      <div class="star-pick" id="rv-stars">${[1,2,3,4,5].map((n) => `<button type="button" data-star="${n}">☆</button>`).join("")}</div>
-      <textarea id="rv-text" rows="3" maxlength="500" style="width:100%;margin:12px 0"></textarea>
-      <div class="field-error hidden" id="rv-err"></div>
-      <button class="btn btn-gold" id="rv-go">${esc(t("writeReview"))}</button>` : ""}
+    ${me && !mine && rateParty ? `
+      <h2 class="detail-panel-title" style="margin-top:28px">${esc(t("rateTogether"))}</h2>
+      <p class="stepper-hint">${esc(rateParty.venue)} · ${esc(rateParty.date)} — ${esc(t("rateTogetherHint"))}</p>
+      <div class="rate-list">${rateRowHTML({ id, name }, rateParty.id, null)}</div>` : ""}
   </section>`;
-  let stars = 5;
-  const paintStars = () => {
-    document.querySelectorAll("[data-star]").forEach((b) => { b.textContent = Number(b.dataset.star) <= stars ? "★" : "☆"; });
-  };
-  paintStars();
-  document.querySelectorAll("[data-star]").forEach((b) => b.addEventListener("click", () => { stars = Number(b.dataset.star); paintStars(); }));
-  $("#rv-go")?.addEventListener("click", async () => {
-    const r = await apiJSON("/reviews", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ from: me, to: { id, name }, rating: stars, text: $("#rv-text")?.value || "", tableId: "" }),
-    });
-    if (!r?.review) {
-      const err = $("#rv-err");
-      if (err) { err.textContent = t("reviewHint"); err.classList.remove("hidden"); }
-      return;
-    }
-    renderUserProfile(id);
-  });
+  if (me && rateParty) bindRateRows(view(), me, () => renderUserProfile(id));
 }
 
 async function renderAccount() {
   const u = loadUser();
   if (u) await refreshIdv();
   const st = idvStatus();
-  let mine = { reviews: [], avg: 0, n: 0 };
-  if (u) mine = await apiJSON(`/reviews/${encodeURIComponent(u.id)}`) || mine;
+  let mine = { reviews: [], avg: 0, n: 0, parties: { past: [], upcoming: [] }, tables: [] };
+  if (u) mine = await apiJSON(`/users/${encodeURIComponent(u.id)}`) || await apiJSON(`/reviews/${encodeURIComponent(u.id)}`) || mine;
   view().innerHTML = `
   <section class="section">
     <div class="section-head"><div><h2>${esc(t("account"))}</h2></div></div>
@@ -3669,10 +3749,19 @@ async function renderAccount() {
               : `<span class="person-handle">@${esc(u.handle)}</span>`) : ""}
             ${st === "verified" ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : `<a class="btn btn-gold btn-sm" href="#/verify" data-nav>${esc(t("verifyTitle"))}</a>`}
           </p>
+          <p>${starRow(mine.avg)} ${mine.n ? `${esc(t("funScore"))} (${mine.n})` : t("noReviews")}</p>
+          <p style="margin-top:10px"><a class="btn btn-ghost btn-sm" href="#/user/${encodeURIComponent(u.id)}" data-nav>${esc(t("openProfile"))}</a></p>
         </div>
       </div>
-      <p>${starRow(mine.avg)} ${mine.n ? `(${mine.n} ${t("reviews")})` : t("noReviews")}</p>
-      ${isOperatorUser(u) ? `<p style="margin-top:12px"><a class="btn btn-gold btn-sm" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
+      ${partiesBlockHTML(mine, { mine: true })}
+      ${(mine.reviews || []).length ? `
+        <h2 class="detail-panel-title" style="margin-top:28px">${esc(t("funScore"))}</h2>
+        ${mine.reviews.map((r) => `
+          <div class="review-card">
+            <div>${starRow(r.rating)} <b>${esc(r.fromName || "")}</b>${r.tableId ? ` · <a href="#/table/${encodeURIComponent(r.tableId)}" data-nav>${esc(t("viewParty"))}</a>` : ""}</div>
+            ${r.text ? `<p>${esc(r.text)}</p>` : ""}
+          </div>`).join("")}` : ""}
+      ${isOperatorUser(u) ? `<p style="margin-top:16px"><a class="btn btn-gold btn-sm" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
       <p>${esc(t("loginSub"))}</p>
       <p style="margin-top:16px"><button class="btn btn-gold" id="acc-in">${esc(t("loginTitle"))}</button></p>`}

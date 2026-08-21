@@ -186,6 +186,56 @@ function publicPerson(p, db, role) {
     joined: p.joined || p.created || null,
   };
 }
+function todayISO() {
+  return new Date().toISOString().slice(0, 10);
+}
+function tableMemberIds(t) {
+  return [t.host?.id, ...((t.joiners || []).map((j) => j.id))].filter(Boolean);
+}
+function isPartyOver(t) {
+  const d = String(t.date || "");
+  return /^\d{4}-\d{2}-\d{2}$/.test(d) && d <= todayISO();
+}
+function partySummary(t, uid, db) {
+  const mates = tableMemberIds(t)
+    .filter((id) => id !== uid)
+    .map((id) => {
+      const p = t.host?.id === id ? t.host : (t.joiners || []).find((j) => j.id === id);
+      return {
+        id,
+        name: String(p?.name || "").slice(0, 80),
+        provider: String(p?.provider || ""),
+        handle: String(p?.handle || "").replace(/^@/, ""),
+      };
+    });
+  const given = (db.reviews || []).filter((r) => r.tableId === t.id && r.from === uid);
+  return {
+    id: t.id,
+    venue_id: t.venue_id || "",
+    venue: t.venue,
+    destination: t.destination || "",
+    date: t.date || "",
+    package: t.package || "",
+    role: t.host?.id === uid ? "host" : "guest",
+    past: isPartyOver(t),
+    mates,
+    ratedIds: given.map((r) => r.to),
+  };
+}
+function tableReviews(t, db) {
+  return (db.reviews || [])
+    .filter((r) => r.tableId === t.id)
+    .map((r) => ({
+      id: r.id,
+      from: r.from,
+      fromName: r.fromName,
+      to: r.to,
+      toName: r.toName,
+      rating: r.rating,
+      text: r.text,
+      created: r.created,
+    }));
+}
 function publicTable(t, db) {
   const host = publicPerson(t.host, db, "host");
   const joiners = (t.joiners || []).map((j) => publicPerson(j, db, "guest")).filter(Boolean);
@@ -225,6 +275,8 @@ function publicTable(t, db) {
     paidN,
     dueN: members.length,
     per_person: Math.ceil((Number(t.total) || 0) / Math.max(1, party)),
+    past: isPartyOver(t),
+    reviews: tableReviews(t, db),
   };
 }
 function findUser(db, id) {
@@ -954,15 +1006,17 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       const u = findUser(db, uid);
       const list = db.reviews.filter((r) => r.to === uid);
-      const tables = db.tables
-        .filter((t) => t.host?.id === uid || (t.joiners || []).some((j) => j.id === uid))
-        .slice(0, 20)
-        .map((t) => ({ id: t.id, venue: t.venue, date: t.date, role: t.host?.id === uid ? "host" : "guest" }));
+      const mine = db.tables.filter((t) => t.host?.id === uid || (t.joiners || []).some((j) => j.id === uid));
+      const parties = mine.map((t) => partySummary(t, uid, db)).sort((a, b) => String(b.date).localeCompare(String(a.date)));
       return send(res, 200, {
         user: u ? publicPerson(u, db, "user") : { id: uid, name: uid, handle: "", provider: "", socialUrl: "", idv: db.idv[uid]?.status === "verified" ? "verified" : "none" },
         reviews: list,
         ...avgRating(list),
-        tables,
+        tables: parties,
+        parties: {
+          past: parties.filter((p) => p.past).slice(0, 40),
+          upcoming: parties.filter((p) => !p.past).slice(0, 20),
+        },
       });
     }
 
@@ -1188,16 +1242,18 @@ const server = http.createServer(async (req, res) => {
       const b = await readBody(req, 2e5);
       const from = String(b.from?.id || "");
       const to = String(b.to?.id || "");
+      const tableId = String(b.tableId || "");
       const rating = Number(b.rating);
       if (!from || !to || from === to) return send(res, 400, { error: "who" });
+      if (!tableId) return send(res, 400, { error: "table" });
       if (!Number.isInteger(rating) || rating < 1 || rating > 5) return send(res, 400, { error: "rating" });
       const db = load();
-      const shared = db.tables.some((t) => {
-        const ids = [t.host?.id, ...(t.joiners || []).map((j) => j.id)].filter(Boolean);
-        return ids.includes(from) && ids.includes(to);
-      });
-      if (!shared) return send(res, 403, { error: "not_shared" });
-      if (db.reviews.some((r) => r.from === from && r.to === to && r.tableId === String(b.tableId || ""))) {
+      const t = db.tables.find((x) => x.id === tableId);
+      if (!t) return send(res, 404, { error: "table" });
+      const ids = tableMemberIds(t);
+      if (!ids.includes(from) || !ids.includes(to)) return send(res, 403, { error: "not_shared" });
+      if (!isPartyOver(t)) return send(res, 403, { error: "too_soon" });
+      if (db.reviews.some((r) => r.from === from && r.to === to && r.tableId === tableId)) {
         return send(res, 409, { error: "dup" });
       }
       const rec = {

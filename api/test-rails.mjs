@@ -314,6 +314,47 @@ async function runApi() {
     if (gotIdv.json.idv?.status !== "verified") fail("idv-get", JSON.stringify(gotIdv.json));
     else ok("idv-get", "verified");
 
+    const pastTb = await req(base, "POST", "/tables", {
+      id: "TB-PAST", venue_id: "IBZ-001", venue: "Hï Ibiza", destination: "Ibiza",
+      date: "2020-08-01", package: "VIP-bord", total: 1000, party: 4, openSeats: 2, host,
+    });
+    if (pastTb.status !== 201) fail("tables-past", JSON.stringify(pastTb.json).slice(0, 200));
+    else ok("tables-past", pastTb.json.table.id);
+    await req(base, "POST", "/tables/TB-PAST/join", { user: guest });
+
+    const noTid = await req(base, "POST", "/reviews", { from: guest, to: host, rating: 5, text: "x" });
+    if (noTid.status !== 400) fail("review-no-table", "expected 400 got " + noTid.status);
+    else ok("review-no-table", "need tableId");
+
+    const fut = await req(base, "POST", "/tables", {
+      id: "TB-FUTURE", venue_id: "IBZ-001", venue: "Pacha Ibiza", destination: "Ibiza",
+      date: "2099-06-01", package: "VIP-bord", total: 1000, party: 4, openSeats: 2, host,
+    });
+    await req(base, "POST", "/tables/TB-FUTURE/join", { user: guest });
+    const soon = await req(base, "POST", "/reviews", {
+      from: guest, to: host, tableId: fut.json.table?.id || "TB-FUTURE", rating: 5, text: "tidigt",
+    });
+    if (soon.status !== 403 || soon.json.error !== "too_soon") fail("review-soon", JSON.stringify(soon.json));
+    else ok("review-soon", "after the night only");
+
+    const rev = await req(base, "POST", "/reviews", {
+      from: guest, to: host, tableId: "TB-PAST", rating: 5, text: "kul natt",
+    });
+    if (rev.status !== 201 || !rev.json.review) fail("review-ok", JSON.stringify(rev.json).slice(0, 200));
+    else ok("review-ok", rev.json.review.id);
+
+    const dupRev = await req(base, "POST", "/reviews", {
+      from: guest, to: host, tableId: "TB-PAST", rating: 4, text: "igen",
+    });
+    if (dupRev.status !== 409) fail("review-dup", "expected 409 got " + dupRev.status);
+    else ok("review-dup", "one per night");
+
+    const prof = await req(base, "GET", "/users/" + encodeURIComponent(host.id));
+    const pastIds = (prof.json.parties?.past || []).map((p) => p.id);
+    if (prof.status !== 200 || !pastIds.includes("TB-PAST")) fail("profile-parties", JSON.stringify(prof.json.parties).slice(0, 240));
+    else if (prof.json.n < 1 || !prof.json.reviews?.length) fail("profile-rating", "missing fun score");
+    else ok("profile-parties", "past party + rating");
+
     const blocked = await req(base, "POST", "/events/refresh", { user: { id: "U-x" } });
     if (blocked.status !== 403) fail("events-refresh-off", "expected 403 got " + blocked.status);
     else ok("events-refresh-off", "VELVET_CRAWL=0");

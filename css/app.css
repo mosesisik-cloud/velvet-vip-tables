@@ -1244,6 +1244,30 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .star-pick button { background: none; border: 0; font-size: 22px; color: var(--gold); padding: 4px; }
 .review-card { padding: 12px 0; border-bottom: 1px solid var(--border-soft); }
 .review-card p { color: var(--text-dim); margin-top: 6px; }
+.party-card-list { display: grid; gap: 10px; }
+.party-card {
+  display: block; padding: 14px 16px;
+  border: 1px solid var(--border-soft); border-radius: var(--radius);
+  background: var(--bg-card); color: inherit; text-decoration: none;
+}
+.party-card:hover { border-color: var(--gold); }
+.party-card-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.party-card-crew, .party-card-rate { font-size: 13px; color: var(--text-dim); margin-top: 6px; }
+.rate-list { display: grid; gap: 12px; margin: 14px 0 8px; }
+.rate-row {
+  display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start;
+  padding: 14px; border: 1px solid var(--border-soft); border-radius: 14px; background: var(--bg-card);
+}
+.rate-row.done { opacity: 0.9; }
+.rate-who { margin: 0 0 8px; }
+.rate-row textarea {
+  width: 100%; margin-top: 8px; font-size: 16px;
+  background: var(--bg); color: var(--text); border: 1px solid var(--border); border-radius: 10px; padding: 10px;
+}
+@media (max-width: 719px) {
+  .rate-row { grid-template-columns: 1fr; }
+  .rate-row .btn { min-height: 44px; width: 100%; }
+}
 @media (max-width: 720px) { .idv-grid { grid-template-columns: 1fr; } }
 .idv-badge.no {
   background: transparent; color: var(--text-faint);
