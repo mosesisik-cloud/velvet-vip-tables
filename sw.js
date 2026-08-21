@@ -10,7 +10,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-3";
+const VERSION = "v4-real-5";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -21,6 +21,9 @@ const SHELL_ASSETS = [
   "./manifest.json",
   "./css/app.css",
   "./js/app.js",
+  "./js/i18n.js",
+  "./fonts/inter-latin.woff2",
+  "./fonts/playfair-display-latin.woff2",
   "./data/destinations.json",
   "./data/venues.json",
   "./data/venue-images.json",

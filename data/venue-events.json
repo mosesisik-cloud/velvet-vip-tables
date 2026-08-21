@@ -1,4 +1,39 @@
 {
-  "fetched": null,
-  "venues": {}
+  "fetched": "2026-08-21",
+  "venues": {
+    "IBZ-001": {
+      "source": "https://www.hiibiza.com/",
+      "events": [
+        { "title": "Closing Party 2026", "date": "2026-10-09", "url": "https://www.hiibiza.com/events/2026/hi-ibiza-closing-party", "note": "Special event" },
+        { "title": "HUGEL Presents Make The Girls Dance", "recurring": "Torsdagar", "url": "https://www.hiibiza.com/events/2026/hugel" },
+        { "title": "Dom Dolla", "recurring": "Fredagar", "url": "https://www.hiibiza.com/events/2026/dom-dolla" },
+        { "title": "CamelPhat Present Summer of Love", "recurring": "Fredagar", "url": "https://www.hiibiza.com/events/2026/camelphat" },
+        { "title": "Black Coffee", "recurring": "Lördagar", "url": "https://www.hiibiza.com/events/2026/black-coffee" },
+        { "title": "Beatport Wild Corner Takeover", "recurring": "Söndagar", "url": "https://www.hiibiza.com/events/2026/beatport-wild-corner-takeover" }
+      ]
+    },
+    "IBZ-003": {
+      "source": "https://www.unvrs.com/",
+      "events": [
+        { "title": "[UNVRS] Closing 2026", "date": "2026-10-10", "url": "https://www.unvrs.com/events-calendar", "note": "From 23:00" },
+        { "title": "Adriatique Present X", "recurring": "2 datum", "url": "https://www.unvrs.com/events-calendar", "note": "From 23:30" },
+        { "title": "Black Coffee", "recurring": "2 datum", "url": "https://www.unvrs.com/events-calendar", "note": "From 23:30" },
+        { "title": "No Art", "date": "2026-09-29", "url": "https://www.unvrs.com/events-calendar", "note": "From 23:30" },
+        { "title": "Indira Paganotto Presents Artcore", "date": "2026-10-08", "url": "https://www.unvrs.com/events-calendar", "note": "From 23:30" }
+      ]
+    },
+    "IBZ-004": {
+      "source": "https://pacha.com/",
+      "events": [
+        { "title": "Purple Disco Machine | Pure Pacha", "date": "2026-08-20", "url": "https://pacha.com/event/purple-disco-machine--pure-pacha-20-08-2026", "note": "VIP from €200" },
+        { "title": "Marco Carola presents Music On", "date": "2026-08-21", "url": "https://pacha.com/event/marco-carola-presents-music-on-21-08-2026", "note": "VIP from €700" },
+        { "title": "Roger Sanchez | Flower Power", "date": "2026-08-22", "url": "https://pacha.com/event/roger-sanchez--flower-power-22-08-2026" },
+        { "title": "Solomun+1", "date": "2026-08-23", "url": "https://pacha.com/event/solomun1-23-08-2026" },
+        { "title": "Sonny Fodera", "date": "2026-08-24", "url": "https://pacha.com/event/sonny-fodera-24-08-20261" },
+        { "title": "GORDO | Taraka", "date": "2026-08-25", "url": "https://pacha.com/event/gordo--taraka-25-08-2026" },
+        { "title": "Mau P | Baddest Behaviour", "date": "2026-08-26", "url": "https://pacha.com/event/mau-p--baddest-behaviour-26-08-2026" },
+        { "title": "Flower Power Closing Party", "date": "2026-08-29", "url": "https://pacha.com/event/roger-sanchez--flower-power---closing-party-29-08-2026" }
+      ]
+    }
+  }
 }
