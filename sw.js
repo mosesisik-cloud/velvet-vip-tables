@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-15";
+const VERSION = "v4-real-16";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -27,6 +27,8 @@ const SHELL_ASSETS = [
   "./fonts/playfair-display-latin.woff2",
   "./data/destinations.json",
   "./data/venues.json",
+  "./data/extra-destinations.json",
+  "./data/unlisted-venues.json",
   "./data/venue-images.json",
   "./data/booking-urls.json",
   "./icons/icon-192.png",

@@ -11,6 +11,16 @@ const state = {
   filters: { q: "", dest: "", cat: "", status: "", price: "", sort: "priority" },
 };
 
+function isPublicVenue(v) { return v && v.listed !== false; }
+function isPublicDest(d) { return d && d.listed !== false; }
+function publicVenues() { return VENUES.filter(isPublicVenue); }
+function publicDestinations() { return DESTINATIONS.filter(isPublicDest); }
+function cityUnlocked() { return !!(state.filters.dest); }
+function venueVisible(v) {
+  if (isPublicVenue(v)) return true;
+  return cityUnlocked() && v.destination === state.filters.dest;
+}
+
 const CATEGORY_GROUPS = [
   { key: "nightclub", label: "Nattklubb", match: /night|hyperclub|open-air|club\b/i },
   { key: "beach", label: "Beach club", match: /beach|floating|cliff/i },
@@ -37,7 +47,7 @@ function venuePhoto(v) {
 function coverVenueForDest(d) {
   if (!d) return null;
   const list = VENUES
-    .filter((v) => v.destination_code === d.code || v.destination === d.name)
+    .filter((v) => isPublicVenue(v) && (v.destination_code === d.code || v.destination === d.name))
     .sort((a, b) => num(b.priority_score) - num(a.priority_score));
   for (const v of list) {
     const url = venuePhoto(v);
@@ -210,9 +220,10 @@ function photoAttrHTML(v) {
 }
 
 function statusInfo(s) {
-  const t = (s || "").toLowerCase();
-  if (t.includes("verified") || t.includes("web")) return { cls: "tag-verified", label: "Verifierad" };
-  if (t.includes("check")) return { cls: "tag-check", label: "Kontrollera status" };
+  const x = (s || "").toLowerCase();
+  if (x.includes("unverified") || x.includes("unlisted")) return { cls: "tag-unverified", label: t("unverified") };
+  if (x.includes("verified") || x.includes("web")) return { cls: "tag-verified", label: t("verified") };
+  if (x.includes("check")) return { cls: "tag-check", label: "Kontrollera status" };
   return { cls: "tag-research", label: "Research" };
 }
 
@@ -947,8 +958,10 @@ function pips(n) {
 
 // ---------- Views ----------
 function renderHome() {
-  const tier1 = DESTINATIONS.filter((d) => d.tier === "Tier 1");
-  const top = [...VENUES].sort((a, b) => b.priority_score - a.priority_score).slice(0, 6);
+  const pubD = publicDestinations();
+  const pubV = publicVenues();
+  const tier1 = pubD.filter((d) => d.tier === "Tier 1");
+  const top = [...pubV].sort((a, b) => b.priority_score - a.priority_score).slice(0, 6);
   view().innerHTML = `
   <section class="hero">
     <div class="hero-media" id="hero-media" aria-hidden="true"></div>
@@ -963,10 +976,10 @@ function renderHome() {
   </section>
 
   <div class="stats">
-    <div class="stat"><div class="stat-num">${DESTINATIONS.length}</div><div class="stat-label">Destinationer</div></div>
-    <div class="stat"><div class="stat-num">${VENUES.length}</div><div class="stat-label">Lyxställen</div></div>
-    <div class="stat"><div class="stat-num">${VENUES.filter((v) => v.priority_score >= 90).length}</div><div class="stat-label">Prio 90+</div></div>
-    <div class="stat"><div class="stat-num">${VENUES.filter((v) => statusInfo(v.research_status).cls === "tag-verified").length}</div><div class="stat-label">Verifierade</div></div>
+    <div class="stat"><div class="stat-num">${pubD.length}</div><div class="stat-label">Destinationer</div></div>
+    <div class="stat"><div class="stat-num">${pubV.length}</div><div class="stat-label">Verifierade ställen</div></div>
+    <div class="stat"><div class="stat-num">${pubV.filter((v) => v.priority_score >= 90).length}</div><div class="stat-label">Prio 90+</div></div>
+    <div class="stat"><div class="stat-num">${pubV.filter((v) => statusInfo(v.research_status).cls === "tag-verified").length}</div><div class="stat-label">${esc(t("verified"))}</div></div>
   </div>
 
   <section class="section">
@@ -980,7 +993,7 @@ function renderHome() {
   <section class="section">
     <div class="section-head">
       <div><h2>Högst prioriterade ställen</h2><div class="sub">Priority score 100 — launch-klara</div></div>
-      <a class="link-gold" href="#/venues" data-nav>Alla ${VENUES.length} ställen →</a>
+      <a class="link-gold" href="#/venues" data-nav>Alla ${pubV.length} verifierade →</a>
     </div>
     <div class="venue-grid">${top.map((v) => venueCard(v, { eager: true })).join("")}</div>
   </section>`;
@@ -1082,10 +1095,10 @@ function renderDestinations() {
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
-      <div><h2>Destinationer</h2><div class="sub">${DESTINATIONS.length} marknader · sorterade efter tier och lyxnivå</div></div>
+      <div><h2>Destinationer</h2><div class="sub">${publicDestinations().length} publika marknader · fler städer är sökbara när du valt stad</div></div>
     </div>
     <div class="dest-grid">
-      ${[...DESTINATIONS].sort((a, b) => (a.tier === b.tier ? b.luxury - a.luxury : a.tier.localeCompare(b.tier))).map(destCard).join("")}
+      ${[...publicDestinations()].sort((a, b) => (a.tier === b.tier ? b.luxury - a.luxury : a.tier.localeCompare(b.tier))).map(destCard).join("")}
     </div>
   </section>`;
   bindDestCards();
@@ -1115,8 +1128,10 @@ function renderDestinationDetail(code) {
     return;
   }
   setTitle(d.name);
-  const venues = VENUES.filter((v) => v.destination === d.name)
-    .sort((a, b) => b.priority_score - a.priority_score || a.name.localeCompare(b.name));
+  const venues = VENUES.filter((v) => v.destination === d.name || v.destination_code === d.code)
+    .sort((a, b) => Number(isPublicVenue(b)) - Number(isPublicVenue(a)) || b.priority_score - a.priority_score || a.name.localeCompare(b.name));
+  const verified = venues.filter(isPublicVenue);
+  const unverified = venues.filter((v) => !isPublicVenue(v));
   const useCases = String(d.use_cases || "").split(",").map((s) => s.trim()).filter(Boolean);
 
   view().innerHTML = `
@@ -1157,7 +1172,8 @@ function renderDestinationDetail(code) {
           <div class="fact"><span class="fact-label">Region</span><span class="fact-val">${esc(d.region)}</span></div>
           <div class="fact"><span class="fact-label">Tier</span><span class="fact-val"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span></span></div>
           <div class="fact"><span class="fact-label">Högsäsong</span><span class="fact-val">${esc(d.peak_season)}</span></div>
-          <div class="fact"><span class="fact-label">Ställen i katalogen</span><span class="fact-val">${venues.length}</span></div>
+          <div class="fact"><span class="fact-label">${esc(t("verified"))}</span><span class="fact-val">${verified.length}</span></div>
+          <div class="fact"><span class="fact-label">${esc(t("unverified"))}</span><span class="fact-val">${unverified.length}</span></div>
           ${(() => { const km = distanceToDest(d); return km != null ? `<div class="fact"><span class="fact-label">Avstånd från dig</span><span class="fact-val">~${fmtKm(km)} km</span></div>` : ""; })()}
         </div>
       </div>
@@ -1173,13 +1189,17 @@ function renderDestinationDetail(code) {
       <p class="map-note">Ungefärliga positioner — ställena grupperas kring ${esc(d.name)}. <a class="link-gold" href="#/map" data-nav>Hela kartan →</a></p>
     </div>` : ""}
 
+    ${verified.length ? `
     <div class="section-head" style="margin-top:44px">
-      <div><h2>Ställen i ${esc(d.name)}</h2><div class="sub">${venues.length} ${venues.length === 1 ? "ställe" : "ställen"} · sorterade efter prioritet</div></div>
+      <div><h2>${esc(t("verified"))} i ${esc(d.name)}</h2><div class="sub">${verified.length} i den publika katalogen</div></div>
       <a class="link-gold" href="#/venues" id="dd-list-2">Visa i listan →</a>
     </div>
-    ${venues.length
-      ? `<div class="venue-grid">${venues.map(venueCard).join("")}</div>`
-      : `<div class="empty-state"><div class="big">🥂</div><h3>Inga ställen ännu</h3><p>Katalogen för ${esc(d.name)} är under uppbyggnad.</p></div>`}
+    <div class="venue-grid">${verified.map(venueCard).join("")}</div>` : ""}
+    ${unverified.length ? `
+    <div class="section-head" style="margin-top:44px">
+      <div><h2>${esc(t("unverified"))} i ${esc(d.name)}</h2><div class="sub">${esc(t("unlistedHint"))}</div></div>
+    </div>
+    <div class="venue-grid">${unverified.map(venueCard).join("")}</div>` : ""}
   </section>`;
 
   // "Visa i listan" — förifiltrera venue-listan på destinationen
@@ -1247,7 +1267,8 @@ function venueCard(v, { eager = false } = {}) {
 function applyFilters() {
   const f = state.filters;
   let list = VENUES.filter((v) => {
-    if (f.dest && v.destination !== f.dest) return false;
+    if (!venueVisible(v)) return false;
+    if (f.dest && v.destination !== f.dest && v.destination_code !== f.dest) return false;
     if (f.cat && venueGroup(v) !== f.cat) return false;
     if (f.status && statusInfo(v.research_status).cls !== f.status) return false;
     if (f.price) return false;
@@ -1257,10 +1278,11 @@ function applyFilters() {
     }
     return true;
   });
-  if (f.sort === "priority") list.sort((a, b) => b.priority_score - a.priority_score || a.name.localeCompare(b.name));
-  else if (f.sort === "name") list.sort((a, b) => a.name.localeCompare(b.name));
-  else if (f.sort === "luxury") list.sort((a, b) => b.luxury_score - a.luxury_score || b.priority_score - a.priority_score);
-  else if (f.sort === "price") list.sort((a, b) => a.name.localeCompare(b.name));
+  const vis = (a, b) => Number(isPublicVenue(b)) - Number(isPublicVenue(a));
+  if (f.sort === "priority") list.sort((a, b) => vis(a, b) || b.priority_score - a.priority_score || a.name.localeCompare(b.name));
+  else if (f.sort === "name") list.sort((a, b) => vis(a, b) || a.name.localeCompare(b.name));
+  else if (f.sort === "luxury") list.sort((a, b) => vis(a, b) || b.luxury_score - a.luxury_score || b.priority_score - a.priority_score);
+  else if (f.sort === "price") list.sort((a, b) => vis(a, b) || a.name.localeCompare(b.name));
   return list;
 }
 
@@ -1279,11 +1301,11 @@ function parseVenueQuery() {
 function renderVenues() {
   parseVenueQuery();
   const f = state.filters;
-  const dests = [...new Set(VENUES.map((v) => v.destination))].sort();
+  const dests = [...new Set(DESTINATIONS.map((d) => d.name))].sort();
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
-      <div><h2>Ställen</h2><div class="sub">Filtrera katalogen och skicka en förfrågan — VELVET-teamet tar den mot klubben</div></div>
+      <div><h2>Ställen</h2><div class="sub">${esc(t("venuesSub"))}</div></div>
     </div>
     <div class="filters">
       <input type="search" id="f-q" placeholder="Sök ställe, stad, kategori…" value="${esc(f.q)}" aria-label="Sök">
@@ -1297,9 +1319,8 @@ function renderVenues() {
       </select>
       <select id="f-status" aria-label="Verifiering">
         <option value="">All verifiering</option>
-        <option value="tag-verified" ${f.status === "tag-verified" ? "selected" : ""}>Verifierad</option>
-        <option value="tag-research" ${f.status === "tag-research" ? "selected" : ""}>Research</option>
-        <option value="tag-check" ${f.status === "tag-check" ? "selected" : ""}>Kontrollera status</option>
+        <option value="tag-verified" ${f.status === "tag-verified" ? "selected" : ""}>${esc(t("verified"))}</option>
+        <option value="tag-unverified" ${f.status === "tag-unverified" ? "selected" : ""}>${esc(t("unverified"))}</option>
       </select>
       <select id="f-sort" aria-label="Sortering">
         <option value="priority" ${f.sort === "priority" ? "selected" : ""}>Högst prioritet</option>
@@ -1313,10 +1334,18 @@ function renderVenues() {
 
   const renderList = () => {
     const list = applyFilters();
-    $("#f-count").textContent = `${list.length} av ${VENUES.length}`;
-    $("#venue-list").innerHTML = list.length
-      ? list.map(venueCard).join("")
-      : `<div class="empty-state" style="grid-column:1/-1"><div class="big">🔍</div><h3>Inga träffar</h3><p>Prova att rensa filtren.</p></div>`;
+    const ver = list.filter(isPublicVenue);
+    const unv = list.filter((v) => !isPublicVenue(v));
+    $("#f-count").textContent = f.dest
+      ? `${list.length} i ${f.dest} · ${ver.length} ${t("verified").toLowerCase()} · ${unv.length} ${t("unverified").toLowerCase()}`
+      : `${list.length} ${t("verified").toLowerCase()}`;
+    let html = "";
+    if (ver.length) html += ver.map(venueCard).join("");
+    if (unv.length) {
+      html += `<div class="unlisted-banner" style="grid-column:1/-1"><h3>${esc(t("unverified"))}</h3><p>${esc(t("unlistedHint"))}</p></div>`;
+      html += unv.map(venueCard).join("");
+    }
+    $("#venue-list").innerHTML = html || `<div class="empty-state" style="grid-column:1/-1"><div class="big">🔍</div><h3>Inga träffar</h3><p>${f.status === "tag-unverified" && !f.dest ? esc(t("unlistedNeedCity")) : "Prova att rensa filtren."}</p></div>`;
     bindVenueCards();
   };
 
@@ -2221,7 +2250,7 @@ function renderMapView() {
   view().innerHTML = `
   <section class="section map-section">
     <div class="section-head">
-      <div><h2>Karta</h2><div class="sub">${DESTINATIONS.length} destinationer · ${VENUES.length} ställen — klicka på en guldnål</div></div>
+      <div><h2>Karta</h2><div class="sub">${publicDestinations().length} destinationer · ${publicVenues().length} verifierade ställen — klicka på en guldnål</div></div>
       <button class="btn btn-ghost btn-sm map-near-btn" id="map-near" disabled><span aria-hidden="true">🧭</span> Nära mig</button>
     </div>
     <div class="map-shell">
@@ -2241,10 +2270,10 @@ function renderMapView() {
       darkTileLayer(L).addTo(map);
 
       const pts = [];
-      DESTINATIONS.forEach((d) => {
+      publicDestinations().forEach((d) => {
         if (!Number.isFinite(d.lat) || !Number.isFinite(d.lng)) return;
         pts.push([d.lat, d.lng]);
-        const count = VENUES.filter((v) => v.destination === d.name).length;
+        const count = publicVenues().filter((v) => v.destination === d.name).length;
         L.marker([d.lat, d.lng], { icon: goldPin(L), title: d.name, alt: d.name })
           .addTo(map)
           .bindPopup(`
@@ -3350,7 +3379,7 @@ function searchHits(q) {
       out.push({ kind: "Destination", title: d.name, meta: d.country, href: `#/destination/${encodeURIComponent(d.code)}` });
     }
   }
-  for (const v of VENUES) {
+  for (const v of publicVenues()) {
     if (fold(`${v.name} ${v.destination} ${v.category}`).includes(s)) {
       out.push({ kind: "Ställe", title: v.name, meta: `${v.destination} · ${v.category}`, href: `#/venue/${encodeURIComponent(v.venue_id)}` });
     }
@@ -3854,6 +3883,20 @@ async function init() {
     renderLoadError();
     return;
   }
+  try {
+    const rx = await fetch("data/extra-destinations.json");
+    if (rx.ok) {
+      const extraD = await rx.json();
+      if (Array.isArray(extraD)) d = d.concat(extraD);
+    }
+  } catch { /* optional */ }
+  try {
+    const ru = await fetch("data/unlisted-venues.json");
+    if (ru.ok) {
+      const extraV = await ru.json();
+      if (Array.isArray(extraV)) v = v.concat(extraV);
+    }
+  } catch { /* optional */ }
   DESTINATIONS = d;
   VENUES = v;
   const existing = loadUser();

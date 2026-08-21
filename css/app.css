@@ -432,7 +432,15 @@ button { font-family: inherit; cursor: pointer; }
   background: rgba(150,150,170,0.1); color: var(--text-dim);
 }
 .tag-verified { background: rgba(111,191,143,0.12); color: var(--green); }
+.tag-unverified { background: rgba(168,164,155,0.14); color: var(--text-dim); border: 1px solid var(--border); }
 .tag-research { background: rgba(217,162,75,0.12); color: var(--amber); }
+.unlisted-banner {
+  margin: 8px 0 4px; padding: 16px 18px;
+  border: 1px dashed rgba(212,175,95,0.35); border-radius: var(--radius);
+  background: var(--bg-elev);
+}
+.unlisted-banner h3 { font-family: var(--font-display); font-size: 20px; margin: 0 0 6px; }
+.unlisted-banner p { margin: 0; font-size: 13px; color: var(--text-dim); }
 .tag-check { background: rgba(207,111,111,0.12); color: var(--red); }
 .venue-note { font-size: 13px; line-height: 1.6; color: var(--text-dim); flex: 1; }
 .venue-actions { display: flex; gap: 9px; align-items: center; margin-top: 4px; }

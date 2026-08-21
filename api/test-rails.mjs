@@ -39,6 +39,25 @@ function checkBookingUrls() {
   if (missing.length) fail("booking-coverage", "no https url: " + missing.join(","));
   else ok("booking-coverage", venues.length + " venues");
 
+  const unlisted = loadJson("data/unlisted-venues.json");
+  const extraDest = loadJson("data/extra-destinations.json");
+  const ids = new Set(venues.map((x) => x.venue_id));
+  const bad = [];
+  for (const x of unlisted) {
+    if (ids.has(x.venue_id)) bad.push("dup " + x.venue_id);
+    if (x.listed !== false) bad.push("listed " + x.venue_id);
+    if (x.research_status !== "Unverified") bad.push("status " + x.venue_id);
+    if (!/^https:\/\//i.test(x.website_url || "")) bad.push("url " + x.venue_id);
+    if (x.instagram_url) bad.push("ig " + x.venue_id);
+    ids.add(x.venue_id);
+  }
+  const destCodes = new Set([...loadJson("data/destinations.json"), ...extraDest].map((d) => d.code));
+  for (const x of unlisted) {
+    if (!destCodes.has(x.destination_code)) bad.push("dest " + x.venue_id);
+  }
+  if (bad.length) fail("unlisted-catalog", bad.join("; "));
+  else ok("unlisted-catalog", unlisted.length + " city-only clubs, " + extraDest.length + " extra cities");
+
   const official = {
     "IBZ-001": ["hiibiza.com", "/vip-tables"],
     "IBZ-002": ["theushuaiaexperience.com", "/vip-tables"],
