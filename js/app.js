@@ -284,7 +284,7 @@ function packagesFor(v) {
     pkgs.push({ id: "daybed", name: "Daybed / sunbed", desc: t("clubSetsPrice") });
     pkgs.push({ id: "cabana", name: "Cabana", desc: t("clubSetsPrice") });
   }
-  pkgs.push({ id: "table", name: "VIP-bord", desc: t("clubSetsPrice") });
+  pkgs.push({ id: "table", name: t("pkgTable"), desc: t("clubSetsPrice") });
   return pkgs;
 }
 
@@ -320,7 +320,7 @@ const saveBookings = (b) => {
   try { localStorage.setItem(BOOKINGS_KEY, JSON.stringify(b)); }
   catch {
     // Quota full eller lagring blockerad — appen ska inte krascha, men säg till.
-    showToast("Kunde inte spara — lagringsutrymmet är fullt eller blockerat.");
+    showToast(t("storageFull"));
   }
   updateBookingBadge();
 };
@@ -359,7 +359,7 @@ const loadFavs = () => {
 };
 const saveFavs = (ids) => {
   try { localStorage.setItem(FAVS_KEY, JSON.stringify([...new Set(ids)])); }
-  catch { showToast("Kunde inte spara favoriter — lagringsutrymmet är fullt eller blockerat."); }
+  catch { showToast(t("favStorageFull")); }
   updateFavBadge();
 };
 const isFav = (id) => loadFavs().includes(id);
@@ -1104,11 +1104,11 @@ const saveHost = (h) => {
 function icsFor(b) {
   const ymd = String(b.date || "").replace(/-/g, "");
   const uid = `${b.id}@velvet.app`;
-  const summary = `VELVET-förfrågan · ${b.venue} (ej reserverat)`;
+  const summary = t("icsSummary").replace("{venue}", b.venue);
   const desc = [
-    `Förfrågan ${b.id} (ej bekräftad bokning).`,
-    `${b.package} · ${b.party} personer · ${b.per_person ? fmtEUR(b.per_person) + "/person (gästens budget, inte klubbens pris)" : "pris enligt klubben"}.`,
-    `Länk: ${shareLinkFor(b)}`,
+    t("icsDesc").replace("{id}", b.id),
+    `${b.package} · ${b.party} ${t("people")} · ${b.per_person ? t("guestBudget").replace("{amount}", fmtEUR(b.per_person)) : t("clubSetsPrice")}.`,
+    t("inviteJoin").replace("{link}", shareLinkFor(b)),
   ].join("\\n");
   const ics = [
     "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//VELVET//Concierge//SV", "CALSCALE:GREGORIAN",
@@ -1126,11 +1126,13 @@ function icsFor(b) {
 }
 function inviteTextFor(b) {
   return [
-    `Du är bjuden till ${b.venue} (${b.destination}).`,
-    `${b.date} · ${b.package} · ${b.party} personer.`,
-    b.total > 0 ? `Gästens budget: ${fmtEUR(b.total)} totalt (${fmtEUR(b.per_person)}/person) — klubben sätter det riktiga priset.` : `Pris enligt klubben — inget belopp påhittat i appen.`,
-    `VELVET-teamet tar förfrågan mot klubben — ingen reservation förrän återkoppling.`,
-    `Gå med: ${shareLinkFor(b)}`,
+    t("inviteLine1").replace("{venue}", b.venue).replace("{dest}", b.destination),
+    t("inviteLine2").replace("{date}", b.date).replace("{pkg}", b.package).replace("{n}", String(b.party)),
+    b.total > 0
+      ? t("inviteBudget").replace("{total}", fmtEUR(b.total)).replace("{per}", fmtEUR(b.per_person))
+      : t("inviteClubPrice"),
+    t("ribbon"),
+    t("inviteJoin").replace("{link}", shareLinkFor(b)),
   ].join("\n");
 }
 
@@ -1517,7 +1519,7 @@ function renderDestinationDetail(code) {
         </div>
         ${d.note ? `<p class="detail-notes"><span class="dest-note-label">Strategisk not</span> ${esc(d.note)}</p>` : ""}
         <div class="detail-links">
-          <a class="icon-link" href="#/venues" id="dd-list">Visa i listan →</a>
+          <a class="icon-link" href="#/venues" id="dd-list">${esc(t("seeInList"))}</a>
           <a class="icon-link" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
           <a class="icon-link" href="${esc(mapsAppleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("mapsApple"))} ↗</a>
         </div>
@@ -1552,15 +1554,15 @@ function renderDestinationDetail(code) {
       <h2 class="detail-panel-title">På kartan</h2>
       <div class="map-shell map-shell-mini">
         <div id="map-dest" class="map-canvas map-canvas-mini" role="application" aria-label="Karta över ${esc(d.name)} och dess ställen"></div>
-        <div class="map-loading" id="dest-map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> Laddar kartan …</div>
+        <div class="map-loading" id="dest-map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("loadingMap"))}</div>
       </div>
-      <p class="map-note">Ungefärliga positioner — ställena grupperas kring ${esc(d.name)}. <a class="link-gold" href="#/map" data-nav>Hela kartan →</a></p>
+      <p class="map-note">${esc(t("mapNoteApprox").replace("{name}", d.name))} <a class="link-gold" href="#/map" data-nav>${esc(t("wholeMap"))}</a></p>
     </div>` : ""}
 
     ${verified.length ? `
     <div class="section-head" style="margin-top:44px">
-      <div><h2>${esc(t("verified"))} i ${esc(d.name)}</h2><div class="sub">${verified.length} i den publika katalogen</div></div>
-      <a class="link-gold" href="#/venues" id="dd-list-2">Visa i listan →</a>
+      <div><h2>${esc(t("verifiedIn").replace("{status}", t("verified")).replace("{name}", d.name))}</h2><div class="sub">${esc(t("inPublicCatalog").replace("{n}", String(verified.length)))}</div></div>
+      <a class="link-gold" href="#/venues" id="dd-list-2">${esc(t("seeInList"))}</a>
     </div>
     <div class="venue-grid">${verified.map(venueCard).join("")}</div>` : `
     <p class="events-meta" style="margin-top:28px">${esc(t("unlistedNeedCity"))}</p>`}
@@ -1985,7 +1987,7 @@ function renderVenueDetail(id) {
       </div>
 
       <div class="detail-panel detail-cta">
-        <h2 class="detail-panel-title">Förfrågan &amp; delad kostnad</h2>
+        <h2 class="detail-panel-title">${esc(t("requestShareTitle"))}</h2>
         <p class="detail-cta-sub">${esc(t("clubSetsPrice"))}</p>
         <div class="detail-price" id="from-price">${esc(t("clubSetsPrice"))}</div>
         <p class="detail-cta-note">${esc(t("priceHonest"))}</p>
@@ -2106,14 +2108,14 @@ async function openBookingModal(v) {
   const root = document.getElementById("modal-root");
   root.innerHTML = `
   <div class="modal-overlay" id="overlay">
-    <div class="modal" role="dialog" aria-modal="true" aria-label="Förfrågan ${esc(v.name)}" tabindex="-1">
-      <button class="modal-close" id="m-close" aria-label="Stäng">✕</button>
+    <div class="modal" role="dialog" aria-modal="true" aria-label="${esc(t("requestAria").replace("{name}", v.name))}" tabindex="-1">
+      <button class="modal-close" id="m-close" aria-label="${esc(t("close"))}">✕</button>
       <h2>${esc(v.name)}</h2>
       <div class="modal-sub">${esc(v.destination)} · ${esc(v.category)}</div>
       <div class="req-steps" aria-hidden="true">
-        <div class="req-step on">1 Datum</div>
-        <div class="req-step on">2 Paket</div>
-        <div class="req-step on">3 Sällskap</div>
+        <div class="req-step on">${esc(t("stepDate"))}</div>
+        <div class="req-step on">${esc(t("stepPkg"))}</div>
+        <div class="req-step on">${esc(t("stepParty"))}</div>
       </div>
       <p class="req-summary" id="m-summary"></p>
       <div class="verify-perks" style="margin:0 0 16px">
@@ -2123,28 +2125,28 @@ async function openBookingModal(v) {
       </div>
 
       <div class="form-group">
-        <label for="m-host">Ditt namn</label>
-        <input type="text" id="m-host" autocomplete="name" value="${esc(loadUser()?.legalName || host0.name)}" placeholder="Namn på värden">
+        <label for="m-host">${esc(t("yourName"))}</label>
+        <input type="text" id="m-host" autocomplete="name" value="${esc(loadUser()?.legalName || host0.name)}" placeholder="${esc(t("hostPh"))}">
         <div class="field-error hidden" id="err-host" role="alert"></div>
       </div>
       <div class="form-group">
-        <label for="m-email">E-post</label>
+        <label for="m-email">${esc(t("emailPh"))}</label>
         <input type="email" id="m-email" autocomplete="email" value="${esc(host0.email)}" placeholder="sarah.b@example.net">
         <div class="field-error hidden" id="err-email" role="alert"></div>
       </div>
       <div class="form-group">
-        <label for="m-phone">Mobil <span class="label-optional">(valfritt)</span></label>
+        <label for="m-phone">${esc(t("mobileLabel"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
         <input type="tel" id="m-phone" autocomplete="tel" value="${esc(host0.phone)}" placeholder="+46 …">
       </div>
 
       <div class="form-group">
-        <label for="m-date">Datum</label>
+        <label for="m-date">${esc(t("dateLabel"))}</label>
         <input type="date" id="m-date" min="${todayISO()}" value="${new Date(Date.now() + 14 * 864e5).toISOString().slice(0, 10)}">
         <div class="field-error hidden" id="err-date" role="alert"></div>
       </div>
 
       <div class="form-group">
-        <label id="lbl-pkgs">Välj paket</label>
+        <label id="lbl-pkgs">${esc(t("pickPackage"))}</label>
         <div class="package-list" id="m-pkgs" role="radiogroup" aria-labelledby="lbl-pkgs">
           ${pkgs.map((p, i) => `
             <div class="package ${i === 0 ? "selected" : ""}" data-pkg="${esc(p.id)}" role="radio" aria-checked="${i === 0}" tabindex="0">
@@ -2155,11 +2157,11 @@ async function openBookingModal(v) {
       </div>
 
       <div class="form-group">
-        <label id="lbl-party">Antal i sällskapet</label>
+        <label id="lbl-party">${esc(t("partyCount"))}</label>
         <div class="stepper" role="group" aria-labelledby="lbl-party">
-          <button id="m-minus" aria-label="Färre personer">−</button>
+          <button id="m-minus" aria-label="${esc(t("fewerPeople"))}">−</button>
           <span class="stepper-val" id="m-party" aria-live="polite" aria-atomic="true">4</span>
-          <button id="m-plus" aria-label="Fler personer">+</button>
+          <button id="m-plus" aria-label="${esc(t("morePeople"))}">+</button>
         </div>
         <div class="stepper-hint" id="m-party-hint"></div>
       </div>
@@ -2179,11 +2181,11 @@ async function openBookingModal(v) {
       </div>
 
       <div class="form-group">
-        <label for="g-name">Bjud in sällskapet <span class="label-optional">(valfritt · namn och e-post följer med i mejlet till teamet, VELVET mejlar inte gästerna)</span></label>
+        <label for="g-name">${esc(t("inviteGuests"))} <span class="label-optional">(${esc(t("inviteGuestsHint"))})</span></label>
         <div class="guest-row">
-          <input type="text" id="g-name" placeholder="Namn" autocomplete="off">
-          <input type="email" id="g-email" placeholder="E-post" autocomplete="off">
-          <button class="btn btn-ghost btn-sm" id="g-add" type="button">Lägg till</button>
+          <input type="text" id="g-name" placeholder="${esc(t("namePh"))}" autocomplete="off">
+          <input type="email" id="g-email" placeholder="${esc(t("emailPh"))}" autocomplete="off">
+          <button class="btn btn-ghost btn-sm" id="g-add" type="button">${esc(t("addGuest"))}</button>
         </div>
         <div class="field-error hidden" id="err-guest" role="alert"></div>
         <div class="chip-list" id="g-chips" aria-live="polite"></div>
@@ -2202,17 +2204,17 @@ async function openBookingModal(v) {
       </div>
 
       <p class="price-disclaimer">${esc(t("priceHonest"))}</p>
-      <p class="price-disclaimer">Värd- och gästnamn/e-post ingår i mejlet till VELVET-teamet (FormSubmit → Gmail). VELVET mejlar inte gästerna. Ingen reservation förrän återkoppling.</p>
+      <p class="price-disclaimer">${esc(t("requestMailNote"))}</p>
       <label class="consent-row" for="m-consent">
         <span class="consent-box"><input type="checkbox" id="m-consent" required></span>
-        <span class="consent-text">Jag godkänner att uppgifterna (inkl. ifyllda gäster) går till VELVET via FormSubmit/Gmail eller Öppna i Mail. Ingen reservation. Se <a href="#/integritet" id="m-privacy">integritetspolicyn</a>.</span>
+        <span class="consent-text">${esc(t("consentBefore"))}<a href="#/integritet" id="m-privacy">${esc(t("consentPrivacy"))}</a>${esc(t("consentAfter"))}</span>
       </label>
       <details class="privacy-inline" id="m-privacy-details">
-        <summary>Kort om hur uppgifterna hanteras</summary>
-        <p>Personuppgiftsansvarig: Gabriel (VELVET), ${esc(CONCIERGE_MAIL)}. Rättslig grund: samtycke via kryssrutan. FormSubmit/Google kan ta emot uppgifter utanför EES när mejlvägen är aktiv. Gästuppgifter skickas bara om du har deras tillåtelse. Ingen reservation.</p>
+        <summary>${esc(t("privacySummary"))}</summary>
+        <p>${esc(t("privacyInline").replace("{mail}", CONCIERGE_MAIL))}</p>
       </details>
       <div class="field-error hidden" id="err-confirm" role="alert"></div>
-      <button class="btn btn-gold" id="m-confirm" style="width:100%">Skicka förfrågan</button>
+      <button class="btn btn-gold" id="m-confirm" style="width:100%">${esc(t("sendRequest"))}</button>
     </div>
   </div>`;
 
@@ -2225,10 +2227,10 @@ async function openBookingModal(v) {
 
   const renderChips = () => {
     $("#g-chips").innerHTML = [
-      `<span class="chip chip-self">Du <em>värd</em></span>`,
+      `<span class="chip chip-self">${esc(t("youWord"))} <em>${esc(t("youHostEm"))}</em></span>`,
       ...guests.map((g, i) => `
         <span class="chip">${esc(g.name)}${g.email ? ` <em>${esc(g.email)}</em>` : ""}
-          <button type="button" class="chip-x" data-rm="${i}" aria-label="Ta bort ${esc(g.name)}">✕</button>
+          <button type="button" class="chip-x" data-rm="${i}" aria-label="${esc(t("removeNamed").replace("{name}", g.name))}">✕</button>
         </span>`),
     ].join("");
     $("#g-chips").querySelectorAll("[data-rm]").forEach((b) => {
@@ -2250,19 +2252,20 @@ async function openBookingModal(v) {
       ? `${fmtEUR(budget)} · ${t("splitOn")} ${party} ${t("people")}`
       : t("clubSetsPrice");
     const dateEl = $("#m-date");
-    const dateTxt = dateEl && dateEl.value ? dateEl.value : "datum";
-    $("#m-summary").innerHTML = `<strong>${esc(sel.name)}</strong> · ${esc(dateTxt)} · ${party} pers · ${esc(moneyOrClub(per))}`;
+    const dateTxt = dateEl && dateEl.value ? dateEl.value : t("dateLabel").toLowerCase();
+    $("#m-summary").innerHTML = `<strong>${esc(sel.name)}</strong> · ${esc(dateTxt)} · ${party} ${esc(t("persShort"))} · ${esc(moneyOrClub(per))}`;
     $("#m-party-hint").textContent = guests.length
-      ? `Du + ${guests.length} ${guests.length === 1 ? "inbjuden gäst" : "inbjudna gäster"}${party > minParty() ? ` + ${party - minParty()} utan namn` : ""}`
+      ? t("guestsPlus").replace("{n}", String(guests.length)).replace("{word}", guests.length === 1 ? t("guestOne") : t("guestMany"))
+        + (party > minParty() ? t("unnamedExtra").replace("{n}", String(party - minParty())) : "")
       : "";
   };
 
   const addGuest = () => {
     const name = $("#g-name").value.trim();
     const email = $("#g-email").value.trim();
-    if (!name) { setErr("err-guest", "Ange ett namn på gästen."); $("#g-name").focus(); return; }
-    if (email && !EMAIL_RE.test(email)) { setErr("err-guest", "E-postadressen ser inte giltig ut."); $("#g-email").focus(); return; }
-    if (1 + guests.length + 1 > 20) { setErr("err-guest", "Max 20 personer per förfrågan."); return; }
+    if (!name) { setErr("err-guest", t("errGuestName")); $("#g-name").focus(); return; }
+    if (email && !EMAIL_RE.test(email)) { setErr("err-guest", t("errGuestEmail")); $("#g-email").focus(); return; }
+    if (1 + guests.length + 1 > 20) { setErr("err-guest", t("errGuestMax")); return; }
     setErr("err-guest", "");
     guests.push({ name, email });
     party = Math.max(party, minParty()); // synka antal med gästlistan
@@ -2345,12 +2348,12 @@ async function openBookingModal(v) {
     const hostEmail = $("#m-email").value.trim();
     const hostPhone = $("#m-phone").value.trim();
     setErr("err-date", ""); setErr("err-confirm", ""); setErr("err-host", ""); setErr("err-email", "");
-    if (!hostName) { setErr("err-host", "Ange ditt namn så vi kan återkoppla."); $("#m-host").focus(); return; }
-    if (!hostEmail || !EMAIL_RE.test(hostEmail)) { setErr("err-email", "Ange en giltig e-post."); $("#m-email").focus(); return; }
-    if (!date) { setErr("err-date", "Välj ett datum."); $("#m-date").focus(); return; }
-    if (date < todayISO()) { setErr("err-date", "Datumet kan inte vara i det förflutna."); $("#m-date").focus(); return; }
-    if (!Number.isInteger(party) || party < 1) { setErr("err-confirm", "Sällskapet måste vara minst 1 person."); return; }
-    if (!$("#m-consent").checked) { setErr("err-confirm", "Bekräfta att vi får skicka uppgifterna till VELVET-teamet."); $("#m-consent").focus(); return; }
+    if (!hostName) { setErr("err-host", t("errHost")); $("#m-host").focus(); return; }
+    if (!hostEmail || !EMAIL_RE.test(hostEmail)) { setErr("err-email", t("errEmail")); $("#m-email").focus(); return; }
+    if (!date) { setErr("err-date", t("errDate")); $("#m-date").focus(); return; }
+    if (date < todayISO()) { setErr("err-date", t("errDatePast")); $("#m-date").focus(); return; }
+    if (!Number.isInteger(party) || party < 1) { setErr("err-confirm", t("errParty")); return; }
+    if (!$("#m-consent").checked) { setErr("err-confirm", t("errConsent")); $("#m-consent").focus(); return; }
 
     const me = loadUser();
     const openOnPreview = !!$("#m-open")?.checked;
@@ -2391,7 +2394,7 @@ async function openBookingModal(v) {
     };
     const btn = $("#m-confirm");
     btn.disabled = true;
-    btn.textContent = "Skickar …";
+    btn.textContent = t("sending");
     const sent = await sendConciergeRequest(booking);
     booking.delivery = sent;
     saveBookings([...loadBookings(), booking]);
@@ -2419,37 +2422,35 @@ function showConfirmation(b, opener) {
   root.innerHTML = `
   <div class="modal-overlay" id="overlay">
     <div class="modal" style="text-align:center" role="dialog" aria-modal="true" aria-label="${heading}" tabindex="-1">
-      <button class="modal-close" id="m-close" aria-label="Stäng">✕</button>
+      <button class="modal-close" id="m-close" aria-label="${esc(t("close"))}">✕</button>
       <div class="confirm-check">✓</div>
       <h2>${heading}</h2>
-      <div class="modal-sub">${esc(b.id)} · ${sent ? "till VELVET-teamet" : "sparad på den här enheten"}</div>
-      <p style="color:var(--text-dim); margin-bottom:8px">${esc(b.package)} på <b>${esc(b.venue)}</b>, ${esc(b.destination)}</p>
-      <p style="color:var(--text-dim)">${esc(b.date)} · ${num(b.party)} personer</p>
+      <div class="modal-sub">${esc(b.id)} · ${esc(sent ? t("confirmToTeam") : t("confirmLocal"))}</div>
+      <p style="color:var(--text-dim); margin-bottom:8px">${esc(b.package)} · <b>${esc(b.venue)}</b>, ${esc(b.destination)}</p>
+      <p style="color:var(--text-dim)">${esc(b.date)} · ${num(b.party)} ${esc(t("people"))}</p>
       ${b.host?.legalName || b.host?.cardLast4 ? `<p class="member-access on">${esc(t("bookSentAs"))}: ${esc(b.host.legalName || b.host.name || "")}${b.host.cardLast4 ? ` · ${esc((b.host.cardBrand || "card") + " ••" + b.host.cardLast4)}` : ""}</p>` : ""}
       ${(b.guests || []).length ? `
       <div class="confirm-guests">
-        <div class="confirm-guests-title">Sällskap</div>
+        <div class="confirm-guests-title">${esc(t("partyTitle"))}</div>
         <div class="chip-list" style="justify-content:center">
-          <span class="chip chip-self">Du <em>värd</em></span>
+          <span class="chip chip-self">${esc(t("youWord"))} <em>${esc(t("youHostEm"))}</em></span>
           ${b.guests.map((g) => `<span class="chip">${esc(g.name)}${g.email ? ` <em>${esc(g.email)}</em>` : ""}</span>`).join("")}
         </div>
-        <div class="confirm-guests-note">Gästlistan följer med förfrågan till VELVET-teamet. VELVET mejlar inte gästerna.</div>
+        <div class="confirm-guests-note">${esc(t("guestsFollow"))}</div>
       </div>` : ""}
       <div class="split-box">
         <div class="split-per">${esc(moneyOrClub(b.per_person))}</div>
         <div class="split-label">${esc(t("perPerson"))}</div>
         <div class="split-total">${esc(moneyOrClub(b.total))}</div>
       </div>
-      <p class="price-disclaimer">${sent
-        ? "Vi återkommer till din e-post när klubben svarat. Inget bord är reserverat ännu. Mail-knappen är en extra väg till teamet."
-        : "Mejlvägen är inte bekräftad ännu — förfrågan ligger under Förfrågningar. Öppna i Mail för att skicka till VELVET-teamet."}</p>
+      <p class="price-disclaimer">${esc(sent ? t("confirmSentHint") : t("confirmSavedHint"))}</p>
       ${b.openSeats ? `<p class="invite-joined" role="status">${esc(t("openPublished"))}</p>` : ""}
       <div class="confirm-actions">
         ${b.openSeats ? `<a class="btn btn-gold" href="#/table/${encodeURIComponent(b.id)}" data-nav id="c-go">${esc(t("viewParty"))}</a>` : `<a class="btn btn-gold" href="#/bookings" data-nav id="c-go">${esc(t("navBookings"))}</a>`}
-        <button class="btn btn-ghost" id="c-copy">Kopiera inbjudningstext</button>
-        <a class="btn btn-ghost" id="c-ics" download="${esc(b.id)}.ics" href="${icsFor(b)}">Lägg till i kalendern</a>
-        <a class="btn btn-ghost" href="${mailtoFor(b)}">Öppna i Mail</a>
-        <button class="btn btn-ghost" id="c-close">Fortsätt utforska</button>
+        <button class="btn btn-ghost" id="c-copy">${esc(t("copyInvite"))}</button>
+        <a class="btn btn-ghost" id="c-ics" download="${esc(b.id)}.ics" href="${icsFor(b)}">${esc(t("addToCal"))}</a>
+        <a class="btn btn-ghost" href="${mailtoFor(b)}">${esc(t("openMail"))}</a>
+        <button class="btn btn-ghost" id="c-close">${esc(t("keepExploring"))}</button>
       </div>
     </div>
   </div>`;
@@ -2479,7 +2480,7 @@ function showConfirmation(b, opener) {
   if (copyBtn) {
     copyBtn.addEventListener("click", async () => {
       const ok = await copyText(inviteTextFor(b));
-      copyBtn.textContent = ok ? "Kopierad ✓" : "Kunde inte kopiera";
+      copyBtn.textContent = ok ? t("copiedOk") : t("copyFail");
     });
   }
   $("#overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });
@@ -2491,25 +2492,25 @@ function renderBookings() {
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
-      <div><h2>${esc(t("navBookings"))}</h2><div class="sub">${bookings.length} ${bookings.length === 1 ? "förfrågan" : "förfrågningar"} · concierge, inte automatisk bokning</div></div>
+      <div><h2>${esc(t("navBookings"))}</h2><div class="sub">${esc(t("bookingsSub").replace("{n}", String(bookings.length)))}</div></div>
     </div>
     ${bookings.length === 0 ? `
       <div class="empty-state">
         <div class="big">🥂</div>
-        <h3>Inga förfrågningar ännu</h3>
-        <p>Välj ett ställe och skicka en förfrågan — VELVET-teamet tar den mot klubben.</p>
+        <h3>${esc(t("noBookings"))}</h3>
+        <p>${esc(t("noBookingsHint"))}</p>
         <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>${esc(t("explore"))}</a></p>
       </div>` :
       bookings.map((b) => `
       <div class="booking-card">
         <div class="booking-info">
           <h3>${esc(b.venue)}</h3>
-          <div class="booking-meta">${esc(b.destination)} · ${esc(b.date)} · ${esc(b.package)} · ${num(b.party)} personer · ${esc(b.id)}</div>
-          <div class="booking-status">Förfrågan · inte reserverat</div>
-          <div class="booking-delivery">${b.delivery === "sent" ? "Skickad till VELVET-teamet" : "Sparad lokalt"}</div>
+          <div class="booking-meta">${esc(b.destination)} · ${esc(b.date)} · ${esc(b.package)} · ${num(b.party)} ${esc(t("people"))} · ${esc(b.id)}</div>
+          <div class="booking-status">${esc(t("requestNotReserved"))}</div>
+          <div class="booking-delivery">${esc(b.delivery === "sent" ? t("deliverySent") : t("deliveryLocal"))}</div>
           ${(b.guests || []).length ? `
           <div class="chip-list booking-guests">
-            <span class="chip chip-self">Du</span>
+            <span class="chip chip-self">${esc(t("youWord"))}</span>
             ${b.guests.map((g) => `<span class="chip">${esc(g.name)}</span>`).join("")}
           </div>` : ""}
         </div>
@@ -2519,9 +2520,9 @@ function renderBookings() {
             <div class="total">${esc(moneyOrClub(b.total))}</div>
           </div>
           <a class="btn btn-gold btn-sm" href="#/table/${encodeURIComponent(b.id)}" data-nav>${esc(t("viewParty"))}</a>
-          ${b.delivery !== "sent" ? `<a class="btn btn-ghost btn-sm" href="${mailtoFor(b)}">Öppna i Mail</a>` : ""}
-          <button class="btn btn-ghost btn-sm btn-share" data-share="${esc(b.id)}">Dela</button>
-          <button class="btn btn-ghost btn-sm btn-danger" data-cancel="${esc(b.id)}">Ta bort</button>
+          ${b.delivery !== "sent" ? `<a class="btn btn-ghost btn-sm" href="${mailtoFor(b)}">${esc(t("openMail"))}</a>` : ""}
+          <button class="btn btn-ghost btn-sm btn-share" data-share="${esc(b.id)}">${esc(t("sharePlace"))}</button>
+          <button class="btn btn-ghost btn-sm btn-danger" data-cancel="${esc(b.id)}">${esc(t("remove"))}</button>
         </div>
       </div>`).join("")}
   </section>`;
@@ -2541,7 +2542,7 @@ function renderBookings() {
       btn.disabled = true; // direkt — annars kan snabba dubbelklick passera innan await:en är klar
       const orig = btn.textContent;
       const ok = await copyText(shareLinkFor(b));
-      btn.textContent = ok ? "Länk kopierad ✓" : "Kunde inte kopiera";
+      btn.textContent = ok ? t("linkCopied") : t("copyFail");
       btn.classList.toggle("copied", ok);
       setTimeout(() => {
         btn.textContent = orig;
@@ -2706,7 +2707,7 @@ function ensureLeaflet() {
       if (window.L && typeof window.L.map === "function") resolve(window.L);
       else fail("Leaflet laddades men initierades inte");
     };
-    s.onerror = () => { clearTimeout(guard); link.remove(); s.remove(); fail("Kunde inte nå Leaflet-CDN"); };
+    s.onerror = () => { clearTimeout(guard); link.remove(); s.remove(); fail(t("leafletFail")); };
     document.head.appendChild(s);
   });
   return leafletPromise;
@@ -2787,12 +2788,12 @@ function renderMapView() {
   view().innerHTML = `
   <section class="section map-section">
     <div class="section-head">
-      <div><h2>${esc(t("navMap"))}</h2><div class="sub">${publicDestinations().length} destinationer · ${publicVenues().length} verifierade ställen — klicka på en guldnål</div></div>
-      <button class="btn btn-ghost btn-sm map-near-btn" id="map-near" disabled><span aria-hidden="true">🧭</span> Nära mig</button>
+      <div><h2>${esc(t("navMap"))}</h2><div class="sub">${esc(t("mapSub").replace("{dests}", String(publicDestinations().length)).replace("{venues}", String(publicVenues().length)))}</div></div>
+      <button class="btn btn-ghost btn-sm map-near-btn" id="map-near" disabled><span aria-hidden="true">🧭</span> ${esc(t("nearMe"))}</button>
     </div>
     <div class="map-shell">
-      <div id="map-all" class="map-canvas" role="application" aria-label="Interaktiv karta över alla destinationer"></div>
-      <div class="map-loading" id="map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> Laddar kartan …</div>
+      <div id="map-all" class="map-canvas" role="application" aria-label="${esc(t("mapAria"))}"></div>
+      <div class="map-loading" id="map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("loadingMap"))}</div>
     </div>
   </section>`;
 
@@ -2843,7 +2844,7 @@ function renderMapView() {
             else userMarker.setLatLng([g.lat, g.lng]);
             map.flyTo([g.lat, g.lng], 7, { duration: 1.2 });
           },
-          () => { done(); showToast("Kunde inte hämta din plats — tillåt platsåtkomst och försök igen."); }
+          () => { done(); showToast(t("geoMapError")); }
         );
       });
     }).catch(() => {
@@ -2906,8 +2907,8 @@ function mountDestMap(d, venues) {
     const btn = document.getElementById("dest-map-retry");
     if (btn) btn.addEventListener("click", () => {
       shell.innerHTML = `
-        <div id="map-dest" class="map-canvas map-canvas-mini" role="application" aria-label="Karta över ${esc(d.name)}"></div>
-        <div class="map-loading" id="dest-map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> Laddar kartan …</div>`;
+        <div id="map-dest" class="map-canvas map-canvas-mini" role="application" aria-label="${esc(t("mapAria"))}"></div>
+        <div class="map-loading" id="dest-map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("loadingMap"))}</div>`;
       mountDestMap(d, venues);
     });
   });
@@ -3018,18 +3019,17 @@ function openOnboarding(opts = {}) {
   // Nekad permission, timeout eller saknat stöd → felmeddelande + manuellt val, aldrig krasch.
   // Varje tillståndsbyte annonseras i live-regionen och fokus flyttas till den
   // mest relevanta knappen så tangentbords-/skärmläsaranvändare inte tappas bort.
-  const GEO_ERROR_MSG = "Kunde inte hämta din plats — välj destination manuellt nedan.";
   const requestGeo = () => {
-    if (!geoSupported) { geoState = "error"; announce(GEO_ERROR_MSG); render("#ob-geo-retry"); return; }
+    if (!geoSupported) { geoState = "error"; announce(t("geoError")); render("#ob-geo-retry"); return; }
     geoState = "loading";
-    announce("Hämtar din plats …");
+    announce(t("geoLoading"));
     render();
     let done = false;
     const fail = () => {
       if (done || closed) return;
       done = true;
       geoState = "error";
-      announce(GEO_ERROR_MSG);
+      announce(t("geoError"));
       render("#ob-geo-retry");
     };
     const guard = setTimeout(fail, 10000); // fallback om webbläsaren aldrig svarar
@@ -3043,10 +3043,10 @@ function openOnboarding(opts = {}) {
           nearest = nearestDestination(pos.coords.latitude, pos.coords.longitude);
           geoState = nearest ? "found" : "error";
           if (nearest) {
-            announce(`Närmast dig: ${nearest.d.name}, cirka ${fmtKm(nearest.km)} kilometer bort.`);
+            announce(t("geoAnnounce").replace("{name}", nearest.d.name).replace("{km}", fmtKm(nearest.km)));
             render("#ob-geo-choose");
           } else {
-            announce(GEO_ERROR_MSG);
+            announce(t("geoError"));
             render("#ob-geo-retry");
           }
         },
@@ -3059,29 +3059,29 @@ function openOnboarding(opts = {}) {
   const geoPanel = () => {
     if (!geoSupported && geoState !== "error") return "";
     if (geoState === "loading") {
-      return `<div class="ob-geo" role="status"><span class="ob-geo-spin" aria-hidden="true"></span> Hämtar din plats …</div>`;
+      return `<div class="ob-geo" role="status"><span class="ob-geo-spin" aria-hidden="true"></span> ${esc(t("geoLoading"))}</div>`;
     }
     if (geoState === "found" && nearest) {
       return `
       <div class="ob-geo ob-geo-found" role="status">
-        <div class="ob-geo-text">Närmast dig: <b>${esc(nearest.d.name)}</b> <span class="ob-geo-km">(${fmtKm(nearest.km)} km)</span></div>
+        <div class="ob-geo-text">${esc(t("geoNearest"))} <b>${esc(nearest.d.name)}</b> <span class="ob-geo-km">(${fmtKm(nearest.km)} km)</span></div>
         <div class="ob-geo-actions">
-          <button class="btn btn-gold btn-sm" id="ob-geo-choose">Välj ${esc(nearest.d.name)}</button>
-          <button class="btn btn-ghost btn-sm" id="ob-geo-dismiss">Välj manuellt</button>
+          <button class="btn btn-gold btn-sm" id="ob-geo-choose">${esc(t("chooseX").replace("{name}", nearest.d.name))}</button>
+          <button class="btn btn-ghost btn-sm" id="ob-geo-dismiss">${esc(t("geoManual"))}</button>
         </div>
       </div>`;
     }
     if (geoState === "error") {
       return `
       <div class="ob-geo ob-geo-error" role="status">
-        Kunde inte hämta din plats — välj manuellt nedan.
-        ${geoSupported ? `<button class="btn btn-ghost btn-sm" id="ob-geo-retry">Försök igen</button>` : ""}
+        ${esc(t("geoError"))}
+        ${geoSupported ? `<button class="btn btn-ghost btn-sm" id="ob-geo-retry">${esc(t("geoRetry"))}</button>` : ""}
       </div>`;
     }
     return `
     <div class="ob-geo">
-      <button class="btn btn-ghost btn-sm" id="ob-geo-btn" aria-describedby="ob-geo-hint"><span aria-hidden="true">🧭</span> Använd min plats</button>
-      <span class="ob-geo-hint" id="ob-geo-hint">hittar närmaste destination</span>
+      <button class="btn btn-ghost btn-sm" id="ob-geo-btn" aria-describedby="ob-geo-hint"><span aria-hidden="true">🧭</span> ${esc(t("geoUse"))}</button>
+      <span class="ob-geo-hint" id="ob-geo-hint">${esc(t("geoHint"))}</span>
     </div>`;
   };
   // Direktlänkar/bakåtknapp får aldrig blockeras — ruttbyte stänger onboardingen
@@ -3179,8 +3179,8 @@ function openOnboarding(opts = {}) {
     const inCountry = country ? countries.find((c) => c.country === country) : null;
     const dests = inCountry ? inCountry.dests : [];
     const dlgLabel = step === 1
-      ? "Välj din destination — steg 1 av 2, välj land"
-      : `Välj din destination — steg 2 av 2, ${country}`;
+      ? t("obStepCountry")
+      : t("obStepDest").replace("{country}", country);
 
     const entryCover = coverVenueForDest(DESTINATIONS.find((d) => d.code === "IBZ"))
       || coverVenueForDest(DESTINATIONS[0]) || null;
@@ -3189,54 +3189,55 @@ function openOnboarding(opts = {}) {
       <div class="ob-overlay-media" aria-hidden="true">${coverImgHTML(entryCover && entryCover.url)}</div>
       ${entryCover && entryCover.v ? `<div class="ob-overlay-credit">${photoAttrHTML(entryCover.v)}</div>` : ""}
       <div class="ob" role="dialog" aria-modal="true" aria-label="${esc(dlgLabel)}" tabindex="-1">
-        ${dismissable ? `<button class="modal-close ob-close" id="ob-close" aria-label="Stäng">✕</button>` : ""}
+        ${dismissable ? `<button class="modal-close ob-close" id="ob-close" aria-label="${esc(t("close"))}">✕</button>` : ""}
         <div class="ob-brand" aria-hidden="true">VELVET<span class="logo-dot">.</span></div>
         <div class="ob-brand-rule" aria-hidden="true"></div>
-        <div class="ob-kicker">VIP-bord · Delad lyx</div>
+        <div class="ob-kicker">${esc(t("tagline"))}</div>
         ${step === 1 ? `
-        <h1 class="ob-title">Var vill du <em>fira</em>?</h1>
-        <p class="ob-sub">Välj land och destination så skräddarsyr vi utbudet. Du kan byta när som helst via väljaren uppe till höger.</p>
-        <div class="ob-step">Steg 1 av 2 · Välj land</div>
+        <h1 class="ob-title">${esc(t("obCelebrate1"))} <em>${esc(t("obCelebrate2"))}</em>?</h1>
+        <p class="ob-sub">${esc(t("obCelebrateSub"))}</p>
+        <div class="ob-step">${esc(t("obStepCountry"))}</div>
         ${geoPanel()}
         <div class="ob-grid">
           ${countries.map((c, i) => {
             const cover = coverVenueForCountry(c.country);
+            const word = c.dests.length === 1 ? t("destOne") : t("destMany");
             return `
-          <div class="ob-card" style="animation-delay:${(0.42 + Math.min(i, 14) * 0.045).toFixed(2)}s" data-country="${esc(c.country)}" role="button" tabindex="0" aria-label="Välj ${esc(c.country)}">
+          <div class="ob-card" style="animation-delay:${(0.42 + Math.min(i, 14) * 0.045).toFixed(2)}s" data-country="${esc(c.country)}" role="button" tabindex="0" aria-label="${esc(t("chooseX").replace("{name}", c.country))}">
             <div class="ob-cover${cover ? "" : " img-fail"}">
               ${coverImgHTML(cover && cover.url)}
               <div class="dest-emblem ob-emblem" style="--h:${destHue(c.country)}" aria-hidden="true">${esc(c.country.slice(0, 2).toUpperCase())}</div>
             </div>
             ${cover && cover.v ? photoAttrHTML(cover.v) : ""}
             <h3>${esc(c.country)}</h3>
-            <div class="ob-meta">${c.dests.length} ${c.dests.length === 1 ? "destination" : "destinationer"}</div>
+            <div class="ob-meta">${c.dests.length} ${esc(word)}</div>
             <div class="ob-names">${c.dests.slice(0, 3).map((d) => esc(d.name)).join(" · ")}${c.dests.length > 3 ? " …" : ""}</div>
           </div>`;
           }).join("")}
         </div>` : `
-        <h1 class="ob-title">Välj din <em>destination</em></h1>
-        <p class="ob-sub">${dests.length} ${dests.length === 1 ? "destination" : "destinationer"} i ${esc(country)}.</p>
-        <div class="ob-step">Steg 2 av 2 · ${esc(country)}</div>
+        <h1 class="ob-title">${esc(t("obDest1"))} <em>${esc(t("obDest2"))}</em></h1>
+        <p class="ob-sub">${esc(t("destInCountry").replace("{n}", String(dests.length)).replace("{word}", dests.length === 1 ? t("destOne") : t("destMany")).replace("{country}", country))}</p>
+        <div class="ob-step">${esc(t("obStepDest").replace("{country}", country))}</div>
         <div class="ob-grid">
           ${dests.map((d, i) => {
             const km = distanceToDest(d);
             const cover = coverVenueForDest(d);
             return `
-          <div class="ob-card" style="animation-delay:${(0.42 + Math.min(i, 14) * 0.045).toFixed(2)}s" data-dest="${esc(d.code)}" role="button" tabindex="0" aria-label="Välj ${esc(d.name)}">
+          <div class="ob-card" style="animation-delay:${(0.42 + Math.min(i, 14) * 0.045).toFixed(2)}s" data-dest="${esc(d.code)}" role="button" tabindex="0" aria-label="${esc(t("chooseX").replace("{name}", d.name))}">
             <div class="ob-cover${cover ? "" : " img-fail"}">
               ${coverImgHTML(cover && cover.url)}
               <div class="dest-emblem ob-emblem" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
             </div>
             ${cover && cover.v ? photoAttrHTML(cover.v) : ""}
             <h3>${esc(d.name)}</h3>
-            <div class="ob-meta"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span> · Säsong ${esc(d.peak_season)}${km != null ? ` · ~${fmtKm(km)} km` : ""}</div>
+            <div class="ob-meta"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span> · ${esc(t("seasonShort"))} ${esc(d.peak_season)}${km != null ? ` · ~${fmtKm(km)} km` : ""}</div>
             ${pips(d.luxury)}
           </div>`;
           }).join("")}
         </div>`}
         <div class="ob-actions">
-          ${step === 2 ? `<button class="btn btn-ghost" id="ob-back">← Byt land</button>` : ""}
-          <button class="btn btn-ghost" id="ob-skip">Visa allt</button>
+          ${step === 2 ? `<button class="btn btn-ghost" id="ob-back">← ${esc(t("changeCountry"))}</button>` : ""}
+          <button class="btn btn-ghost" id="ob-skip">${esc(t("showAll"))}</button>
         </div>
       </div>
     </div>`;
@@ -3283,14 +3284,14 @@ function renderFavorites() {
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
-      <div><h2>${esc(t("navFav"))}</h2><div class="sub">${list.length} sparade ställen · dela listan med sällskapet</div></div>
-      ${list.length ? `<button class="btn btn-gold btn-sm" id="fav-share">Dela lista</button>` : ""}
+      <div><h2>${esc(t("navFav"))}</h2><div class="sub">${esc(t("favSub").replace("{n}", String(list.length)))}</div></div>
+      ${list.length ? `<button class="btn btn-gold btn-sm" id="fav-share">${esc(t("shareList"))}</button>` : ""}
     </div>
     ${list.length === 0 ? `
       <div class="empty-state">
         <div class="big">♡</div>
-        <h3>Inga favoriter ännu</h3>
-        <p>Tryck på hjärtat på ett ställe så landar det här — sen kan du skicka listan till Gabbe, Dan eller gänget.</p>
+        <h3>${esc(t("noFav"))}</h3>
+        <p>${esc(t("noFavHint"))}</p>
         <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>${esc(t("explore"))}</a></p>
       </div>` : `<div class="venue-grid">${list.map(venueCard).join("")}</div>`}
   </section>`;
@@ -3301,8 +3302,8 @@ function renderFavorites() {
       const payload = { name: "VELVET-lista", ids: loadFavs() };
       const url = `${location.origin}${location.pathname}#/list/${b64urlEncode(payload)}`;
       const ok = await copyText(url);
-      share.textContent = ok ? "Länk kopierad ✓" : "Kunde inte kopiera";
-      setTimeout(() => { share.textContent = "Dela lista"; }, 1800);
+      share.textContent = ok ? t("linkCopied") : t("copyFail");
+      setTimeout(() => { share.textContent = t("shareList"); }, 1800);
     });
   }
 }
@@ -5330,7 +5331,7 @@ function renderLoading() {
   view().innerHTML = `
   <div class="load-state" role="status" aria-live="polite">
     <div class="spinner" aria-hidden="true"></div>
-    <p class="load-label">Laddar VELVET…</p>
+    <p class="load-label">${esc(t("loadingApp"))}</p>
   </div>`;
 }
 
@@ -5339,9 +5340,9 @@ function renderLoadError() {
   <section class="section">
     <div class="empty-state load-error" role="alert">
       <div class="big">⚠️</div>
-      <h3>Kunde inte ladda katalogen</h3>
-      <p>Något gick fel när destinationer och ställen skulle hämtas.<br>Kontrollera anslutningen och försök igen.</p>
-      <p style="margin-top:20px"><button class="btn btn-gold" id="retry-btn">Försök igen</button></p>
+      <h3>${esc(t("catalogFail"))}</h3>
+      <p>${esc(t("catalogFailHint"))}</p>
+      <p style="margin-top:20px"><button class="btn btn-gold" id="retry-btn">${esc(t("geoRetry"))}</button></p>
     </div>
   </section>`;
   $("#retry-btn").addEventListener("click", () => init());
