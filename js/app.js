@@ -15,10 +15,24 @@ function isPublicVenue(v) { return v && v.listed !== false; }
 function isPublicDest(d) { return d && d.listed !== false; }
 function publicVenues() { return VENUES.filter(isPublicVenue); }
 function publicDestinations() { return DESTINATIONS.filter(isPublicDest); }
-function cityUnlocked() { return !!(state.filters.dest); }
-function venueVisible(v) {
+function queryMentionsCity(q, v) {
+  const s = fold(q).replace(/[^a-z0-9]+/g, " ").trim();
+  if (s.length < 3) return false;
+  const d = destForVenue(v);
+  const keys = [v.destination, v.destination_code, d?.name, d?.code]
+    .filter(Boolean)
+    .map((k) => fold(k).trim());
+  for (const k of keys) {
+    if (!k) continue;
+    if (s === k || s.split(/\s+/).includes(k)) return true;
+    if (k.length >= 4 && s.includes(k)) return true;
+    if (s.length >= 4 && k.includes(s)) return true;
+  }
+  return false;
+}
+function venueVisible(v, q) {
   if (isPublicVenue(v)) return true;
-  return cityUnlocked() && v.destination === state.filters.dest;
+  return queryMentionsCity(q != null ? q : state.filters.q, v);
 }
 
 const CATEGORY_GROUPS = [
@@ -1128,10 +1142,8 @@ function renderDestinationDetail(code) {
     return;
   }
   setTitle(d.name);
-  const venues = VENUES.filter((v) => v.destination === d.name || v.destination_code === d.code)
-    .sort((a, b) => Number(isPublicVenue(b)) - Number(isPublicVenue(a)) || b.priority_score - a.priority_score || a.name.localeCompare(b.name));
-  const verified = venues.filter(isPublicVenue);
-  const unverified = venues.filter((v) => !isPublicVenue(v));
+  const verified = VENUES.filter((v) => isPublicVenue(v) && (v.destination === d.name || v.destination_code === d.code))
+    .sort((a, b) => b.priority_score - a.priority_score || a.name.localeCompare(b.name));
   const useCases = String(d.use_cases || "").split(",").map((s) => s.trim()).filter(Boolean);
 
   view().innerHTML = `
@@ -1173,7 +1185,6 @@ function renderDestinationDetail(code) {
           <div class="fact"><span class="fact-label">Tier</span><span class="fact-val"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span></span></div>
           <div class="fact"><span class="fact-label">Högsäsong</span><span class="fact-val">${esc(d.peak_season)}</span></div>
           <div class="fact"><span class="fact-label">${esc(t("verified"))}</span><span class="fact-val">${verified.length}</span></div>
-          <div class="fact"><span class="fact-label">${esc(t("unverified"))}</span><span class="fact-val">${unverified.length}</span></div>
           ${(() => { const km = distanceToDest(d); return km != null ? `<div class="fact"><span class="fact-label">Avstånd från dig</span><span class="fact-val">~${fmtKm(km)} km</span></div>` : ""; })()}
         </div>
       </div>
@@ -1194,12 +1205,8 @@ function renderDestinationDetail(code) {
       <div><h2>${esc(t("verified"))} i ${esc(d.name)}</h2><div class="sub">${verified.length} i den publika katalogen</div></div>
       <a class="link-gold" href="#/venues" id="dd-list-2">Visa i listan →</a>
     </div>
-    <div class="venue-grid">${verified.map(venueCard).join("")}</div>` : ""}
-    ${unverified.length ? `
-    <div class="section-head" style="margin-top:44px">
-      <div><h2>${esc(t("unverified"))} i ${esc(d.name)}</h2><div class="sub">${esc(t("unlistedHint"))}</div></div>
-    </div>
-    <div class="venue-grid">${unverified.map(venueCard).join("")}</div>` : ""}
+    <div class="venue-grid">${verified.map(venueCard).join("")}</div>` : `
+    <p class="events-meta" style="margin-top:28px">${esc(t("unlistedNeedCity"))}</p>`}
   </section>`;
 
   // "Visa i listan" — förifiltrera venue-listan på destinationen
@@ -1212,7 +1219,7 @@ function renderDestinationDetail(code) {
   const l2 = $("#dd-list-2");
   if (l2) l2.addEventListener("click", goList);
   bindVenueCards();
-  mountDestMap(d, venues);
+  mountDestMap(d, verified);
 }
 
 // ---------- Sociala länkar ----------
@@ -1267,7 +1274,7 @@ function venueCard(v, { eager = false } = {}) {
 function applyFilters() {
   const f = state.filters;
   let list = VENUES.filter((v) => {
-    if (!venueVisible(v)) return false;
+    if (!venueVisible(v, f.q)) return false;
     if (f.dest && v.destination !== f.dest && v.destination_code !== f.dest) return false;
     if (f.cat && venueGroup(v) !== f.cat) return false;
     if (f.status && statusInfo(v.research_status).cls !== f.status) return false;
@@ -1301,7 +1308,7 @@ function parseVenueQuery() {
 function renderVenues() {
   parseVenueQuery();
   const f = state.filters;
-  const dests = [...new Set(DESTINATIONS.map((d) => d.name))].sort();
+  const dests = [...new Set(publicDestinations().map((d) => d.name))].sort();
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
@@ -1345,7 +1352,7 @@ function renderVenues() {
       html += `<div class="unlisted-banner" style="grid-column:1/-1"><h3>${esc(t("unverified"))}</h3><p>${esc(t("unlistedHint"))}</p></div>`;
       html += unv.map(venueCard).join("");
     }
-    $("#venue-list").innerHTML = html || `<div class="empty-state" style="grid-column:1/-1"><div class="big">🔍</div><h3>Inga träffar</h3><p>${f.status === "tag-unverified" && !f.dest ? esc(t("unlistedNeedCity")) : "Prova att rensa filtren."}</p></div>`;
+    $("#venue-list").innerHTML = html || `<div class="empty-state" style="grid-column:1/-1"><div class="big">🔍</div><h3>Inga träffar</h3><p>${f.status === "tag-unverified" && !(f.q || "").trim() ? esc(t("unlistedNeedCity")) : "Prova att rensa filtren."}</p></div>`;
     bindVenueCards();
   };
 
@@ -3379,9 +3386,15 @@ function searchHits(q) {
       out.push({ kind: "Destination", title: d.name, meta: d.country, href: `#/destination/${encodeURIComponent(d.code)}` });
     }
   }
-  for (const v of publicVenues()) {
-    if (fold(`${v.name} ${v.destination} ${v.category}`).includes(s)) {
-      out.push({ kind: "Ställe", title: v.name, meta: `${v.destination} · ${v.category}`, href: `#/venue/${encodeURIComponent(v.venue_id)}` });
+  for (const v of VENUES) {
+    if (!venueVisible(v, q)) continue;
+    if (fold(`${v.name} ${v.destination} ${v.category}`).includes(s) || !isPublicVenue(v)) {
+      out.push({
+        kind: isPublicVenue(v) ? "Ställe" : t("unverified"),
+        title: v.name,
+        meta: `${v.destination} · ${v.category}`,
+        href: `#/venue/${encodeURIComponent(v.venue_id)}`,
+      });
     }
   }
   return out.slice(0, 12);
