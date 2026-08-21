@@ -295,22 +295,68 @@ async function listOpenTables() {
 async function joinOpenTable(id) {
   const u = loadUser();
   if (!u) return { error: "auth" };
-  const remote = await apiJSON(`/tables/${encodeURIComponent(id)}/join`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ user: u }),
-  });
-  if (remote?.table) return { table: remote.table };
+  const base = apiBase();
+  if (base) {
+    try {
+      const r = await fetch(`${base}/tables/${encodeURIComponent(id)}/join`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user: u }),
+      });
+      const data = await r.json().catch(() => ({}));
+      if (r.status === 403) return { error: "idv_required" };
+      if (data.table) return { table: data.table, already: data.already };
+    } catch {}
+  }
   const list = loadLocalTables();
-  const t = list.find((x) => x.id === id);
-  if (!t) return { error: "missing" };
-  if (t.openLeft < 1) return { error: "full" };
-  if (t.host?.id === u.id || (t.joiners || []).some((j) => j.id === u.id)) return { table: t, already: true };
-  t.joiners = [...(t.joiners || []), { id: u.id, name: u.name, provider: u.provider, handle: u.handle, joined: new Date().toISOString() }];
-  t.openLeft = Math.max(0, t.openLeft - 1);
-  if (t.openLeft === 0) t.status = "full";
+  const tb = list.find((x) => x.id === id);
+  if (!tb) return { error: "missing" };
+  const ven = VENUES.find((x) => x.venue_id === tb.venue_id);
+  if ((tb.sharp || (ven && isSharpVenue(ven))) && !isIdvOk()) return { error: "idv_required" };
+  if (tb.openLeft < 1) return { error: "full" };
+  if (tb.host?.id === u.id || (tb.joiners || []).some((j) => j.id === u.id)) return { table: tb, already: true };
+  tb.joiners = [...(tb.joiners || []), { id: u.id, name: u.name, provider: u.provider, handle: u.handle, joined: new Date().toISOString() }];
+  tb.openLeft = Math.max(0, tb.openLeft - 1);
+  if (tb.openLeft === 0) tb.status = "full";
   saveLocalTables(list);
-  return { table: t };
+  return { table: tb };
+}
+
+function isSharpVenue(v) {
+  return eventsFor(v).length > 0;
+}
+function idvStatus() {
+  const u = loadUser();
+  return (u && u.idvStatus) || "none";
+}
+function isIdvOk() {
+  return idvStatus() === "verified";
+}
+async function refreshIdv() {
+  const u = loadUser();
+  if (!u) return "none";
+  const r = await apiJSON(`/idv/${encodeURIComponent(u.id)}`);
+  const st = r?.idv?.status || "none";
+  saveUser({ ...u, idvStatus: st, idvSubmitted: r?.idv?.submitted || u.idvSubmitted });
+  return st;
+}
+function fileToJpeg(file) {
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type.startsWith("image/")) return reject(new Error("image"));
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const s = Math.min(1, 1280 / Math.max(img.width, img.height));
+      const c = document.createElement("canvas");
+      c.width = Math.max(1, Math.round(img.width * s));
+      c.height = Math.max(1, Math.round(img.height * s));
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      resolve(c.toDataURL("image/jpeg", 0.72));
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); reject(new Error("decode")); };
+    img.src = url;
+  });
 }
 
 function bindFavButtons(root = document) {
@@ -1017,7 +1063,7 @@ function eventsSectionHTML(v) {
   const src = rec.source ? ` · <a href="${esc(rec.source)}" target="_blank" rel="noopener">källa ↗</a>` : "";
   return `
   <div class="detail-panel events-panel">
-    <h2 class="detail-panel-title">🎟 Kommande</h2>
+    <h2 class="detail-panel-title">🎟 ${esc(t("events"))} <span class="idv-badge ok">${esc(t("sharpEvent"))}</span></h2>
     <ul class="event-list">${rows}</ul>
     <p class="events-meta">Hämtat ${esc(VENUE_EVENTS.fetched || "")} från ställets officiella kanaler${src} — dubbelkolla alltid innan du bokar resan.</p>
   </div>`;
@@ -1142,6 +1188,25 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
 function openBookingModal(v) {
+  if (isSharpVenue(v) && !isIdvOk()) {
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const root = document.getElementById("modal-root");
+    root.innerHTML = `
+    <div class="modal-overlay" id="overlay">
+      <div class="modal" role="dialog" aria-modal="true" aria-label="${esc(t("verifyTitle"))}" tabindex="-1">
+        <button class="modal-close" id="m-close" aria-label="Stäng">✕</button>
+        <h2>${esc(t("verifyTitle"))}</h2>
+        <p class="modal-sub">${esc(t("sharpEvent"))}</p>
+        <p style="color:var(--text-dim);margin:12px 0 20px">${esc(t("verifyNeed"))}</p>
+        <a class="btn btn-gold" href="#/verify" data-nav id="m-go-verify" style="width:100%">${esc(t("verifyTitle"))}</a>
+      </div>
+    </div>`;
+    const close = () => { root.innerHTML = ""; restoreFocus(opener); };
+    $("#m-close")?.addEventListener("click", close);
+    $("#overlay")?.addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });
+    $("#m-go-verify")?.addEventListener("click", close);
+    return;
+  }
   const pkgs = packagesFor(v);
   let sel = pkgs[0];
   let party = 4;
@@ -1393,6 +1458,7 @@ function openBookingModal(v) {
       joiners: [],
       host,
       status: openOn ? "open" : "requested",
+      sharp: isSharpVenue(v),
       created: new Date().toISOString(),
     };
     const btn = $("#m-confirm");
@@ -2366,7 +2432,7 @@ async function renderOpenTables() {
         <div class="booking-card">
           <div class="booking-info">
             <h3>${esc(tb.venue)}</h3>
-            <div class="booking-meta">${esc(tb.destination)} · ${esc(tb.date)} · ${esc(tb.package)} · ${esc(tb.host?.name || "")} ${tb.host?.handle ? "@" + esc(tb.host.handle) : ""}</div>
+            <div class="booking-meta">${esc(tb.destination)} · ${esc(tb.date)} · ${esc(tb.package)} · ${tb.host?.id ? `<a href="#/user/${encodeURIComponent(tb.host.id)}" data-nav>${esc(tb.host?.name || "")}</a>` : esc(tb.host?.name || "")} ${tb.host?.handle ? "@" + esc(tb.host.handle) : ""}</div>
             <div class="booking-meta">${num(tb.openLeft)} ${esc(t("seatsOpen"))} · ${esc(t("splitOn"))} ${num(tb.party)} ${esc(t("people"))}</div>
           </div>
           <div class="booking-price">
@@ -2383,18 +2449,157 @@ async function renderOpenTables() {
       btn.disabled = true;
       const r = await joinOpenTable(btn.dataset.join);
       if (r.error === "auth") openOnboarding({ dismissable: false });
+      else if (r.error === "idv_required") location.hash = "#/verify";
       else renderOpenTables();
     });
   });
 }
 
-function renderAccount() {
+function starRow(n) {
+  const v = Math.max(0, Math.min(5, Number(n) || 0));
+  return `<span class="stars" aria-label="${v}/5">${"★".repeat(Math.round(v))}${"☆".repeat(5 - Math.round(v))}</span>`;
+}
+
+async function renderVerify() {
   const u = loadUser();
+  if (!u) {
+    view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p><button class="btn btn-gold" id="v-login">${esc(t("loginCta"))}</button></p></div></section>`;
+    $("#v-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+    return;
+  }
+  await refreshIdv();
+  const st = idvStatus();
+  view().innerHTML = `
+  <section class="section verify-page">
+    <a class="detail-back" href="#/account" data-nav>← ${esc(t("account"))}</a>
+    <h1>${esc(t("verifyTitle"))}</h1>
+    <p class="ob-sub" style="margin:0 0 22px;text-align:left">${esc(t("verifySub"))}</p>
+    ${st === "verified" ? `<p class="idv-badge ok">✓ ${esc(t("verifyOk"))}</p>` : ""}
+    <p class="stepper-hint">${esc(t("verifyHint"))}</p>
+    <div class="idv-grid">
+      <label class="idv-slot">
+        <span>${esc(t("verifyPassport"))}</span>
+        <input type="file" id="idv-pass" accept="image/*" capture="environment">
+        <img id="idv-pass-prev" alt="" hidden>
+        <em>${esc(t("pickPhoto"))}</em>
+      </label>
+      <label class="idv-slot">
+        <span>${esc(t("verifySelfie"))}</span>
+        <input type="file" id="idv-self" accept="image/*" capture="user">
+        <img id="idv-self-prev" alt="" hidden>
+        <em>${esc(t("pickPhoto"))}</em>
+      </label>
+    </div>
+    <p class="price-disclaimer">${esc(t("verifyStored"))}</p>
+    <div class="field-error hidden" id="idv-err" role="alert"></div>
+    <button class="btn btn-gold" id="idv-go" style="width:100%;margin-top:12px">${esc(t("verifyCta"))}</button>
+  </section>`;
+  const bindPrev = (inputId, imgId) => {
+    $(inputId)?.addEventListener("change", async (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      try {
+        const data = await fileToJpeg(f);
+        const img = $(imgId);
+        img.src = data;
+        img.hidden = false;
+        img.dataset.data = data;
+      } catch {
+        showToast("Kunde inte läsa bilden.");
+      }
+    });
+  };
+  bindPrev("#idv-pass", "#idv-pass-prev");
+  bindPrev("#idv-self", "#idv-self-prev");
+  $("#idv-go")?.addEventListener("click", async () => {
+    const pass = $("#idv-pass-prev")?.dataset.data;
+    const self = $("#idv-self-prev")?.dataset.data;
+    const err = $("#idv-err");
+    if (!pass || !self) {
+      err.textContent = t("verifyHint");
+      err.classList.remove("hidden");
+      return;
+    }
+    const btn = $("#idv-go");
+    btn.disabled = true;
+    btn.textContent = "…";
+    const r = await apiJSON("/idv", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: u.id, name: u.name, passport: pass, selfie: self }),
+    });
+    if (r?.idv?.status === "verified") {
+      saveUser({ ...loadUser(), idvStatus: "verified", idvSubmitted: r.idv.submitted });
+      showToast(t("verifyOk"));
+      renderVerify();
+      return;
+    }
+    // Local fallback if API is down: mark pending only — never store passport in localStorage.
+    saveUser({ ...loadUser(), idvStatus: "pending" });
+    err.textContent = t("verifyPending");
+    err.classList.remove("hidden");
+    btn.disabled = false;
+    btn.textContent = t("verifyCta");
+  });
+}
+
+async function renderUserProfile(id) {
+  const data = await apiJSON(`/reviews/${encodeURIComponent(id)}`) || { reviews: [], avg: 0, n: 0, idv: "none" };
+  const me = loadUser();
+  const name = data.reviews[0]?.toName || id;
+  view().innerHTML = `
+  <section class="section">
+    <a class="detail-back" href="#/open" data-nav>← ${esc(t("navOpen"))}</a>
+    <h1>${esc(name)}</h1>
+    <p>${data.idv === "verified" ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : ""} ${starRow(data.avg)} ${data.n ? `(${data.n})` : ""}</p>
+    <h2 style="margin:28px 0 12px">${esc(t("reviews"))}</h2>
+    ${data.reviews.length ? data.reviews.map((r) => `
+      <div class="review-card">
+        <div>${starRow(r.rating)} <b>${esc(r.fromName || "")}</b></div>
+        <p>${esc(r.text)}</p>
+      </div>`).join("") : `<p class="price-disclaimer">${esc(t("noReviews"))}</p>`}
+    ${me && me.id !== id ? `
+      <h2 style="margin:28px 0 12px">${esc(t("writeReview"))}</h2>
+      <p class="stepper-hint">${esc(t("reviewHint"))}</p>
+      <div class="star-pick" id="rv-stars">${[1,2,3,4,5].map((n) => `<button type="button" data-star="${n}">☆</button>`).join("")}</div>
+      <textarea id="rv-text" rows="3" maxlength="500" style="width:100%;margin:12px 0"></textarea>
+      <div class="field-error hidden" id="rv-err"></div>
+      <button class="btn btn-gold" id="rv-go">${esc(t("writeReview"))}</button>` : ""}
+  </section>`;
+  let stars = 5;
+  const paintStars = () => {
+    document.querySelectorAll("[data-star]").forEach((b) => { b.textContent = Number(b.dataset.star) <= stars ? "★" : "☆"; });
+  };
+  paintStars();
+  document.querySelectorAll("[data-star]").forEach((b) => b.addEventListener("click", () => { stars = Number(b.dataset.star); paintStars(); }));
+  $("#rv-go")?.addEventListener("click", async () => {
+    const r = await apiJSON("/reviews", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ from: me, to: { id, name }, rating: stars, text: $("#rv-text")?.value || "", tableId: "" }),
+    });
+    if (!r?.review) {
+      const err = $("#rv-err");
+      if (err) { err.textContent = t("reviewHint"); err.classList.remove("hidden"); }
+      return;
+    }
+    renderUserProfile(id);
+  });
+}
+
+async function renderAccount() {
+  const u = loadUser();
+  if (u) await refreshIdv();
+  const st = idvStatus();
+  let mine = { reviews: [], avg: 0, n: 0 };
+  if (u) mine = await apiJSON(`/reviews/${encodeURIComponent(u.id)}`) || mine;
   view().innerHTML = `
   <section class="section">
     <div class="section-head"><div><h2>${esc(t("account"))}</h2></div></div>
     ${u ? `
       <p>${esc(t("loggedInAs"))} <b>${esc(u.name)}</b> · ${esc(u.provider)} ${u.handle ? "@" + esc(u.handle) : ""}</p>
+      <p>${st === "verified" ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : `<a class="btn btn-gold btn-sm" href="#/verify" data-nav>${esc(t("verifyTitle"))}</a>`}</p>
+      <p>${starRow(mine.avg)} ${mine.n ? `(${mine.n} ${t("reviews")})` : t("noReviews")}</p>
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
       <p>${esc(t("loginSub"))}</p>
       <p style="margin-top:16px"><button class="btn btn-gold" id="acc-in">${esc(t("loginTitle"))}</button></p>`}
@@ -2642,6 +2847,7 @@ const routes = {
   "#/map": renderMapView,
   "#/bookings": renderBookings,
   "#/open": () => { renderOpenTables(); },
+  "#/verify": () => { renderVerify(); },
   "#/account": renderAccount,
   "#/favorites": renderFavorites,
   "#/villkor": () => renderLegal("villkor"),
@@ -2654,6 +2860,7 @@ const paramRoutes = [
   { re: /^#\/destination\/(.+)$/, fn: renderDestinationDetail, nav: "#/destinations" },
   { re: /^#\/join\/(.+)$/, fn: renderJoin, nav: "" },
   { re: /^#\/list\/(.+)$/, fn: renderSharedList, nav: "#/favorites" },
+  { re: /^#\/user\/(.+)$/, fn: renderUserProfile, nav: "#/account" },
 ];
 
 // Trasiga %-sekvenser i hashen får inte krascha routern

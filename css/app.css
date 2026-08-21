@@ -1192,6 +1192,22 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   font-weight: 700; background: var(--soc, var(--gold));
 }
 .chk-row { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+.idv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+.idv-slot {
+  display: flex; flex-direction: column; gap: 8px;
+  min-height: 180px; padding: 14px; border: 1px dashed var(--gold);
+  border-radius: 14px; background: var(--bg-card); cursor: pointer; text-align: center;
+}
+.idv-slot input { position: absolute; opacity: 0; width: 0; height: 0; }
+.idv-slot img { width: 100%; max-height: 160px; object-fit: cover; border-radius: 10px; }
+.idv-slot em { color: var(--text-faint); font-size: 12px; }
+.idv-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+.idv-badge.ok { background: var(--gold-dim); color: var(--gold-bright); border: 1px solid var(--gold); }
+.stars { color: var(--gold-bright); letter-spacing: 1px; }
+.star-pick button { background: none; border: 0; font-size: 22px; color: var(--gold); padding: 4px; }
+.review-card { padding: 12px 0; border-bottom: 1px solid var(--border-soft); }
+.review-card p { color: var(--text-dim); margin-top: 6px; }
+@media (max-width: 720px) { .idv-grid { grid-template-columns: 1fr; } }
 .nav-search {
   width: 40px; height: 40px;
   display: grid; place-items: center;
