@@ -168,6 +168,26 @@ function contactTile(href, title, sub, { gold = false, external = true, id = "",
   const close = tag === "button" ? "</button>" : "</a>";
   return `${open}<strong>${esc(title)}</strong><span>${esc(sub)}</span>${close}`;
 }
+function waDigits(raw) {
+  let s = String(raw || "").trim();
+  if (s.startsWith("00")) s = s.slice(2);
+  const d = s.replace(/\D/g, "");
+  if (d.length < 8 || d.length > 15) return "";
+  return d;
+}
+function waHref(phone, text) {
+  const d = waDigits(phone);
+  if (!d) return "";
+  return "https://wa.me/" + d + (text ? "?text=" + encodeURIComponent(text) : "");
+}
+function venueWaPhone(v) {
+  const f = venueFacts(v) || {};
+  const vip = String(f.vipHow || "");
+  const hit = vip.match(/wa\.me\/(\+?\d{8,15})/i) || vip.match(/phone=(\+?\d{8,15})/i);
+  if (hit) return waDigits(hit[1]);
+  if (/whatsapp|wa\.me/i.test(vip) && f.phone) return waDigits(f.phone);
+  return "";
+}
 function venueShareUrl(v) {
   const u = new URL(location.href);
   u.search = "";
@@ -203,6 +223,7 @@ function contactPanelHTML(v) {
     venueFacts(v)?.email ? contactTile("mailto:" + venueFacts(v).email, t("factEmail"), venueFacts(v).email, { external: false }) : "",
     v.website_url ? contactTile(v.website_url, t("website"), webHost) : "",
     contactTile("#", t("sharePlace"), v.name, { tag: "button", id: "v-share", external: false }),
+    venueWaPhone(v) ? contactTile(waHref(venueWaPhone(v), t("waPrefill").replace("{venue}", v.name)), "WhatsApp", t("waOpen"), { gold: true }) : "",
     contactTile(`#/promoter/${encodeURIComponent(v.venue_id)}`, t("chatPromoter"), t("promoter"), { external: false }),
   ].filter(Boolean).join("");
   const season = d?.peak_season ? `${t("whenToGo")} ${d.peak_season}` : "";
@@ -4024,6 +4045,26 @@ async function renderPromoterChat(venueId) {
   let threadId = me.id;
   let promoter = false;
   let threads = [];
+  let wa = venueWaPhone(v) ? { phone: venueWaPhone(v), source: "venue" } : null;
+  const waText = () => t("waPrefill").replace("{venue}", v.name);
+  const paintWa = () => {
+    const wrap = $("#chat-wa");
+    const a = $("#wa-open");
+    const src = $("#wa-src");
+    const href = wa && wa.phone ? waHref(wa.phone, waText()) : "";
+    if (wrap && a) {
+      if (href) {
+        a.href = href;
+        wrap.hidden = false;
+        if (src) src.textContent = wa.source === "promoter" ? t("waFromPromoter") : t("waFromVenue");
+      } else {
+        wrap.hidden = true;
+      }
+    }
+    $("#wa-edit")?.classList.toggle("hidden", !promoter);
+    const inp = $("#wa-in");
+    if (promoter && inp && wa && wa.source === "promoter" && !inp.value) inp.value = "+" + wa.phone;
+  };
 
   const paint = (messages) => {
     const box = document.getElementById("chat-log");
@@ -4059,7 +4100,9 @@ async function renderPromoterChat(venueId) {
     const data = await apiJSON(q);
     if (data) {
       promoter = !!data.promoter;
+      if (data.whatsapp && data.whatsapp.phone) wa = data.whatsapp;
       paint(data.messages || []);
+      paintWa();
       return data.messages || [];
     }
     return [];
@@ -4075,6 +4118,16 @@ async function renderPromoterChat(venueId) {
     <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
     <h1>${esc(t("promoter"))} · ${esc(v.name)}</h1>
     <p class="ob-sub" style="text-align:left;margin:0 0 16px">${esc(t("promoterSub"))}</p>
+    <p class="chat-wa" id="chat-wa" hidden>
+      <a class="btn btn-wa" id="wa-open" href="#" target="_blank" rel="noopener">WhatsApp</a>
+      <span class="events-meta" id="wa-src"></span>
+    </p>
+    <div class="chat-wa-edit hidden" id="wa-edit">
+      <label>${esc(t("waYourNumber"))}
+        <input type="tel" id="wa-in" inputmode="tel" autocomplete="tel" placeholder="+34 6…" maxlength="20">
+      </label>
+      <button type="button" class="btn btn-ghost btn-sm" id="wa-save">${esc(t("waSave"))}</button>
+    </div>
     <div class="chat-layout">
       <aside class="chat-inbox hidden" id="chat-inbox"></aside>
       <div class="chat-main">
@@ -4106,13 +4159,31 @@ async function renderPromoterChat(venueId) {
     await apiJSON(`/chats/${encodeURIComponent(venueId)}/claim`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user: me }),
+      body: JSON.stringify({ user: me, whatsapp: $("#wa-in")?.value || undefined }),
     });
     $("#chat-inbox")?.classList.remove("hidden");
+    promoter = true;
+    paintWa();
     await loadInbox();
     await loadThread();
   });
+  $("#wa-save")?.addEventListener("click", async () => {
+    const r = await apiJSON(`/chats/${encodeURIComponent(venueId)}/claim`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: me, whatsapp: $("#wa-in")?.value || "" }),
+    });
+    if (r?.error === "whatsapp") {
+      showToast(t("waBad"));
+      return;
+    }
+    if (r?.whatsapp) wa = r.whatsapp;
+    else if (r && !r.whatsapp) wa = venueWaPhone(v) ? { phone: venueWaPhone(v), source: "venue" } : null;
+    paintWa();
+    showToast(t("waSaved"));
+  });
 
+  paintWa();
   await loadThread();
   if (promoter) {
     $("#chat-inbox")?.classList.remove("hidden");

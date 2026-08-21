@@ -26,12 +26,41 @@ function load() {
       reviews: Array.isArray(raw.reviews) ? raw.reviews : [],
       chats: raw.chats && typeof raw.chats === "object" ? raw.chats : {},
       promoters: raw.promoters && typeof raw.promoters === "object" ? raw.promoters : {},
+      promoterContact: raw.promoterContact && typeof raw.promoterContact === "object" ? raw.promoterContact : {},
       users: raw.users && typeof raw.users === "object" ? raw.users : {},
       payments: Array.isArray(raw.payments) ? raw.payments : [],
       auth: raw.auth && typeof raw.auth === "object" ? raw.auth : {},
     };
   } catch {}
-  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, users: {}, payments: [], auth: {} };
+  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, users: {}, payments: [], auth: {} };
+}
+function waDigits(raw) {
+  let s = String(raw || "").trim();
+  if (s.startsWith("00")) s = s.slice(2);
+  const d = s.replace(/\D/g, "");
+  if (d.length < 8 || d.length > 15) return "";
+  return d;
+}
+function extractWa(str) {
+  const s = String(str || "");
+  const m = s.match(/wa\.me\/(\+?\d{8,15})/i)
+    || s.match(/whatsapp\.com\/send\?[^"'<\s]*phone=(\+?\d{8,15})/i);
+  return m ? waDigits(m[1]) : "";
+}
+function venueWaFromFacts(venueId) {
+  const f = loadFactsFile().venues[venueId];
+  if (!f) return "";
+  if (extractWa(f.vipHow)) return extractWa(f.vipHow);
+  if (/whatsapp|wa\.me/i.test(String(f.vipHow || "")) && f.phone) return waDigits(f.phone);
+  return extractWa(JSON.stringify(f));
+}
+function whatsappForVenue(venueId, db) {
+  const saved = db.promoterContact && db.promoterContact[venueId];
+  const promo = saved ? waDigits(saved.whatsapp) : "";
+  if (promo) return { phone: promo, source: "promoter" };
+  const venue = venueWaFromFacts(venueId);
+  if (venue) return { phone: venue, source: "venue" };
+  return null;
 }
 function isPromoter(user, venueId, db) {
   const uid = user?.id || "";
@@ -1298,8 +1327,15 @@ const server = http.createServer(async (req, res) => {
       const list = db.promoters[venueId] || [];
       if (!list.includes(uid)) list.push(uid);
       db.promoters[venueId] = list;
+      if (Object.prototype.hasOwnProperty.call(b, "whatsapp")) {
+        const phone = waDigits(b.whatsapp);
+        if (String(b.whatsapp || "").trim() && !phone) return send(res, 400, { error: "whatsapp" });
+        if (!db.promoterContact) db.promoterContact = {};
+        if (phone) db.promoterContact[venueId] = { userId: uid, whatsapp: phone };
+        else delete db.promoterContact[venueId];
+      }
       save(db);
-      return send(res, 200, { ok: true, promoter: true });
+      return send(res, 200, { ok: true, promoter: true, whatsapp: whatsappForVenue(venueId, db) });
     }
     if (req.method === "GET" && inboxM) {
       const venueId = decodeURIComponent(inboxM[1]);
@@ -1327,7 +1363,7 @@ const server = http.createServer(async (req, res) => {
       const promoter = isPromoter({ id: uid }, venueId, db);
       const venueChats = db.chats[venueId] || {};
       const messages = venueChats[thread] || [];
-      return send(res, 200, { messages, promoter });
+      return send(res, 200, { messages, promoter, whatsapp: whatsappForVenue(venueId, db) });
     }
     if (req.method === "POST" && chatM) {
       const b = await readBody(req, 2e5);

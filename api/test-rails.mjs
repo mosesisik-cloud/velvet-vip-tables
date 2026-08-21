@@ -355,6 +355,24 @@ async function runApi() {
     else if (prof.json.n < 1 || !prof.json.reviews?.length) fail("profile-rating", "missing fun score");
     else ok("profile-parties", "past party + rating");
 
+    const waFacts = await req(base, "GET", "/chats/BCN-102?userId=" + encodeURIComponent(guest.id));
+    if (waFacts.status !== 200 || !String(waFacts.json.whatsapp?.phone || "").includes("34669")) {
+      fail("wa-venue", JSON.stringify(waFacts.json).slice(0, 220));
+    } else ok("wa-venue", "Otto Zutz official WhatsApp");
+
+    const waClaim = await req(base, "POST", "/chats/IBZ-001/claim", {
+      user: host, whatsapp: "+46 70 123 45 67",
+    });
+    if (waClaim.status !== 200 || waClaim.json.whatsapp?.phone !== "46701234567") {
+      fail("wa-claim", JSON.stringify(waClaim.json).slice(0, 220));
+    } else ok("wa-claim", waClaim.json.whatsapp.phone);
+
+    const waBad = await req(base, "POST", "/chats/IBZ-001/claim", {
+      user: host, whatsapp: "abc",
+    });
+    if (waBad.status !== 400) fail("wa-bad", "expected 400 got " + waBad.status);
+    else ok("wa-bad", "invalid number");
+
     const blocked = await req(base, "POST", "/events/refresh", { user: { id: "U-x" } });
     if (blocked.status !== 403) fail("events-refresh-off", "expected 403 got " + blocked.status);
     else ok("events-refresh-off", "VELVET_CRAWL=0");
