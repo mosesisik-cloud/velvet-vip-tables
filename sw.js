@@ -2,14 +2,15 @@
  * Strategi:
  *  - App-skalet (html/css/js/json + ikoner): cache-first, förcachat vid install.
  *    OBS: bumpa VERSION vid varje deploy som ändrar skalet — annars serveras gammal version.
- *  - Bilder (venue-foton från ställenas egna sajter, Google Fonts, Leaflet-CDN):
- *    stale-while-revalidate i separat runtime-cache.
+ *  - Google Fonts + Leaflet (unpkg) + CARTO-tiles: stale-while-revalidate i runtime-cache.
+ *  - Venue-foton och Pexels (hero) cachas INTE — <img>/<video> går mot nätet
+ *    så PWA:n inte lagrar tredjepartsbilder utan licens.
  *  - Navigationer utan cache och utan nät → offline.html i VELVET-stil.
  *  - Video (hero) och range-requests cachas ALDRIG (206:or kraschar Cache API och fyller kvoten).
  */
 "use strict";
 
-const VERSION = "v4-real-1";
+const VERSION = "v4-real-3";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -29,6 +30,21 @@ const SHELL_ASSETS = [
   "./icons/icon-maskable-512.png",
   "./icons/apple-touch-icon.png",
 ];
+
+// Cross-origin som får ligga i runtime-cachen. Inte klubbfoton, inte Pexels.
+function isRuntimeCdn(hostname) {
+  return (
+    hostname === "fonts.googleapis.com" ||
+    hostname === "fonts.gstatic.com" ||
+    hostname.endsWith(".gstatic.com") ||
+    hostname === "unpkg.com" ||
+    hostname.endsWith(".unpkg.com") ||
+    hostname === "basemaps.cartocdn.com" ||
+    hostname.endsWith(".basemaps.cartocdn.com") ||
+    hostname === "cartocdn.com" ||
+    hostname.endsWith(".cartocdn.com")
+  );
+}
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -64,7 +80,6 @@ async function cacheFirst(request) {
 }
 
 // Stale-while-revalidate: svara direkt från cache, uppdatera i bakgrunden.
-// Opaque-svar (no-cors mot ställenas sajter) cachas också — de är precis vad <img> behöver.
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(RUNTIME_CACHE);
   const cached = await cache.match(request);
@@ -119,6 +134,8 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Cross-origin: venue-bilder, Google Fonts, Leaflet (unpkg), Carto-tiles → SWR
-  event.respondWith(staleWhileRevalidate(request));
+  // Cross-origin: bara typsnitt, Leaflet och kartplattor. Klubbfoton och Pexels går mot nätet.
+  if (isRuntimeCdn(url.hostname)) {
+    event.respondWith(staleWhileRevalidate(request));
+  }
 });
