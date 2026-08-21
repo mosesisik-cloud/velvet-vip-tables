@@ -130,6 +130,18 @@ button { font-family: inherit; cursor: pointer; }
 }
 .nav-links a:hover, .nav-links a.active { color: var(--gold-bright); }
 .nav-links a.active::after { transform: scaleX(1); }
+.nav-langs { display: flex; align-items: center; gap: 2px; margin-left: 8px; }
+.nav-lang-opt {
+  min-height: 32px; min-width: 36px; padding: 0 8px;
+  border: 1px solid transparent; border-radius: 999px;
+  background: transparent; color: var(--text-dim);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+}
+.nav-lang-opt:hover { color: var(--gold-bright); }
+.nav-lang-opt[aria-pressed="true"] {
+  border-color: var(--gold); color: var(--gold-bright); background: var(--gold-dim);
+}
+.nav-lang-name { display: none; }
 .badge {
   display: inline-flex; align-items: center; justify-content: center;
   min-width: 18px; height: 18px; padding: 0 5px;
@@ -738,6 +750,11 @@ button { font-family: inherit; cursor: pointer; }
   html { scroll-behavior: auto; }
 }
 
+@media (max-width: 1100px) and (min-width: 721px) {
+  .nav-links { gap: 16px; }
+  .nav-langs { margin-left: 4px; }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 720px) {
   /* Nav → hamburger + dropdown-panel */
@@ -760,8 +777,20 @@ button { font-family: inherit; cursor: pointer; }
     font-size: 15px;
     border-bottom: 1px solid var(--border-soft);
   }
-  .nav-links a:last-child { border-bottom: none; }
+  .nav-links a:last-of-type { border-bottom: none; }
   .nav-links a::after { display: none; }
+  .nav-langs {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    margin: 8px 0 4px; padding-top: 10px;
+    border-top: 1px solid var(--border-soft);
+  }
+  .nav-lang-opt {
+    display: flex; align-items: center; justify-content: flex-start; gap: 8px;
+    min-height: 44px; padding: 0 12px;
+    font-size: 14px; letter-spacing: 0.2px;
+    border: 1px solid var(--border);
+  }
+  .nav-lang-name { display: inline; font-weight: 600; letter-spacing: 0; }
 
   .hero { padding: 70px 20px 60px; }
   .section { padding: 50px 20px; }
@@ -1179,7 +1208,7 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 }
 
 /* Search button in nav */
-.nav-lang, .nav-user {
+.nav-user {
   height: 40px; min-width: 40px; padding: 0 10px;
   display: grid; place-items: center;
   background: transparent; border: 1px solid var(--border); border-radius: 999px;

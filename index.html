@@ -33,9 +33,14 @@
       <a href="#/open" data-nav data-i18n="navOpen">Öppna stolar</a>
       <a href="#/favorites" data-nav><span data-i18n="navFav">Favoriter</span> <span id="fav-count" class="badge hidden"></span></a>
       <a href="#/bookings" data-nav><span data-i18n="navBookings">Förfrågningar</span> <span id="booking-count" class="badge hidden"></span></a>
+      <div class="nav-langs" role="group" aria-label="Språk" data-i18n-attr="aria-label:chooseLang">
+        <button type="button" class="nav-lang-opt" data-nav-lang="sv" aria-pressed="false">SV<span class="nav-lang-name"> Svenska</span></button>
+        <button type="button" class="nav-lang-opt" data-nav-lang="en" aria-pressed="false">EN<span class="nav-lang-name"> English</span></button>
+        <button type="button" class="nav-lang-opt" data-nav-lang="es" aria-pressed="false">ES<span class="nav-lang-name"> Español</span></button>
+        <button type="button" class="nav-lang-opt" data-nav-lang="fr" aria-pressed="false">FR<span class="nav-lang-name"> Français</span></button>
+      </div>
     </div>
     <div class="nav-side">
-      <button class="nav-lang" id="nav-lang" aria-haspopup="listbox" aria-label="Language">EN</button>
       <button class="nav-user" id="nav-user" aria-label="Konto" data-i18n-attr="aria-label:account">
         <span id="nav-user-label">In</span>
       </button>

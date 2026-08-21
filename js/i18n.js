@@ -46,7 +46,7 @@ const D = {
     allDest: "Alla destinationer",
     tagline: "VIP-bord. Delad lyx.",
     chooseLang: "Välj språk",
-    langSub: "Du kan byta när som helst uppe i menyn.",
+    langSub: "Du kan byta när som helst i menyn.",
     continue: "Fortsätt",
     loginTitle: "Logga in",
     loginSub: "Ett klick. Vi tar din Facebook-, Instagram-, TikTok- eller Snapchat-profil — du fyller inget förrän det är dags att betala.",

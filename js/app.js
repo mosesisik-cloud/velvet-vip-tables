@@ -2740,6 +2740,7 @@ function openOnboarding(opts = {}) {
         el.addEventListener("click", () => {
           applyLang(el.dataset.lang);
           try { localStorage.setItem("velvet_lang_picked", "1"); } catch {}
+          paintNavLang();
           phase = loadUser() ? "country" : "auth";
           render();
         });
@@ -3686,7 +3687,7 @@ async function renderAccount() {
     el.addEventListener("click", () => {
       applyLang(el.dataset.lang);
       try { localStorage.setItem("velvet_lang_picked", "1"); } catch {}
-      document.getElementById("nav-lang").textContent = currentLang().toUpperCase();
+      paintNavLang();
       renderAccount();
     });
   });
@@ -4171,6 +4172,24 @@ function route() {
   });
 }
 
+function paintNavLang() {
+  const cur = currentLang();
+  document.querySelectorAll("[data-nav-lang]").forEach((el) => {
+    el.setAttribute("aria-pressed", String(el.dataset.navLang === cur));
+  });
+}
+function initNavLang() {
+  document.getElementById("nav-links")?.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-nav-lang]");
+    if (!btn) return;
+    applyLang(btn.dataset.navLang);
+    try { localStorage.setItem("velvet_lang_picked", "1"); } catch {}
+    paintNavLang();
+    route();
+  });
+  paintNavLang();
+}
+
 // ---------- Mobil nav (hamburger < 720px) ----------
 function initMobileNav() {
   const toggle = document.getElementById("nav-toggle");
@@ -4184,7 +4203,9 @@ function initMobileNav() {
   };
   toggle.addEventListener("click", () => setOpen(!links.classList.contains("open")));
   // Stäng vid länkklick (även samma route, då hashchange inte triggas)
-  links.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
+  links.addEventListener("click", (e) => {
+    if (e.target.closest("a") || e.target.closest("[data-nav-lang]")) setOpen(false);
+  });
   window.addEventListener("hashchange", () => setOpen(false));
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && links.classList.contains("open")) setOpen(false);
@@ -4311,18 +4332,7 @@ async function init() {
     uiBound = true;
     bootLang();
     paintUser();
-    const langBtn = document.getElementById("nav-lang");
-    if (langBtn) {
-      langBtn.textContent = currentLang().toUpperCase();
-      langBtn.addEventListener("click", () => {
-        const ids = LANGS.map((l) => l.id);
-        const i = ids.indexOf(currentLang());
-        applyLang(ids[(i + 1) % ids.length]);
-        try { localStorage.setItem("velvet_lang_picked", "1"); } catch {}
-        langBtn.textContent = currentLang().toUpperCase();
-        route();
-      });
-    }
+    initNavLang();
     document.getElementById("nav-user")?.addEventListener("click", () => { location.hash = "#/account"; });
     initMobileNav();
     initSkipLink();
