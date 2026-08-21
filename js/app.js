@@ -263,9 +263,9 @@ function photoAttrHTML(v) {
   if (!venuePhoto(v)) return "";
   const href = v.website_url || v.source_url || "";
   const credit = href
-    ? `<a href="${esc(href)}" target="_blank" rel="noopener">Bild: ${esc(v.name)}</a>`
-    : `Bild: ${esc(v.name)}`;
-  return `<p class="photo-attr">${credit} · förhandsvisning, inte kommersiell licens</p>`;
+    ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(t("photoCredit").replace("{name}", v.name))}</a>`
+    : esc(t("photoCredit").replace("{name}", v.name));
+  return `<p class="photo-attr">${credit} · ${esc(t("photoPreview"))}</p>`;
 }
 
 function statusInfo(s) {
@@ -1349,19 +1349,19 @@ function renderHome() {
       <a class="btn btn-gold" href="#/venues" data-nav>${esc(t("explore"))}</a>
       <a class="btn btn-ghost" href="#/destinations" data-nav>${esc(t("seeDest"))}</a>
     </div>
-    <p class="hero-credit"><a href="${esc(HERO_VIDEO.credit)}" target="_blank" rel="noopener">Video: Pexels</a></p>
+    <p class="hero-credit"><a href="${esc(HERO_VIDEO.credit)}" target="_blank" rel="noopener">${esc(t("videoPexels"))}</a></p>
   </section>
 
   <div class="stats">
-    <div class="stat"><div class="stat-num">${pubD.length}</div><div class="stat-label">Destinationer</div></div>
-    <div class="stat"><div class="stat-num">${pubV.length}</div><div class="stat-label">Verifierade ställen</div></div>
-    <div class="stat"><div class="stat-num">${pubV.filter((v) => v.priority_score >= 90).length}</div><div class="stat-label">Prio 90+</div></div>
+    <div class="stat"><div class="stat-num">${pubD.length}</div><div class="stat-label">${esc(t("statDests"))}</div></div>
+    <div class="stat"><div class="stat-num">${pubV.length}</div><div class="stat-label">${esc(t("statVenues"))}</div></div>
+    <div class="stat"><div class="stat-num">${pubV.filter((v) => v.priority_score >= 90).length}</div><div class="stat-label">${esc(t("statPrio"))}</div></div>
     <div class="stat"><div class="stat-num">${pubV.filter((v) => statusInfo(v.research_status).cls === "tag-verified").length}</div><div class="stat-label">${esc(t("verified"))}</div></div>
   </div>
 
   <section class="section">
     <div class="section-head">
-      <div><h2>Launch-destinationer</h2><div class="sub">Tier 1 — högst densitet av VIP-inventarie</div></div>
+      <div><h2>${esc(t("launchDests"))}</h2><div class="sub">${esc(t("launchDestsSub"))}</div></div>
       <a class="link-gold" href="#/destinations" data-nav>${esc(t("allDest"))} →</a>
     </div>
     <div class="dest-grid">${tier1.slice(0, 8).map(destCard).join("")}</div>
@@ -1369,8 +1369,8 @@ function renderHome() {
 
   <section class="section">
     <div class="section-head">
-      <div><h2>Högst prioriterade ställen</h2><div class="sub">Priority score 100 — launch-klara</div></div>
-      <a class="link-gold" href="#/venues" data-nav>Alla ${pubV.length} verifierade →</a>
+      <div><h2>${esc(t("topVenues"))}</h2><div class="sub">${esc(t("topVenuesSub"))}</div></div>
+      <a class="link-gold" href="#/venues" data-nav>${esc(t("allVerifiedN").replace("{n}", String(pubV.length)))}</a>
     </div>
     <div class="venue-grid">${top.map((v) => venueCard(v, { eager: true })).join("")}</div>
   </section>`;
@@ -1472,7 +1472,7 @@ function renderDestinations() {
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
-      <div><h2>Destinationer</h2><div class="sub">${publicDestinations().length} publika marknader · fler städer är sökbara när du valt stad</div></div>
+      <div><h2>${esc(t("navDestinations"))}</h2><div class="sub">${esc(t("destListSub").replace("{n}", String(publicDestinations().length)))}</div></div>
     </div>
     <div class="dest-grid">
       ${[...publicDestinations()].sort((a, b) => (a.tier === b.tier ? b.luxury - a.luxury : a.tier.localeCompare(b.tier))).map(destCard).join("")}
@@ -1497,8 +1497,8 @@ function renderDestinationDetail(code) {
     <section class="section">
       <div class="empty-state">
         <div class="big">🧭</div>
-        <h3>Destinationen hittades inte</h3>
-        <p>Koden "${esc(code)}" finns inte i katalogen.</p>
+        <h3>${esc(t("destMissing"))}</h3>
+        <p>${esc(t("destMissingHint").replace("{code}", code))}</p>
         <p style="margin-top:20px"><a class="btn btn-gold" href="#/destinations" data-nav>${esc(t("allDest"))}</a></p>
       </div>
     </section>`;
@@ -1511,17 +1511,17 @@ function renderDestinationDetail(code) {
 
   view().innerHTML = `
   <section class="section detail">
-    <a class="detail-back" href="#/destinations" data-nav>← Alla destinationer</a>
+    <a class="detail-back" href="#/destinations" data-nav>← ${esc(t("allDest"))}</a>
 
     <div class="detail-hero">
       <div class="detail-hero-main">
-        <div class="detail-kicker">${esc(d.country)} · ${esc(d.region)} · Säsong ${esc(d.peak_season)}</div>
+        <div class="detail-kicker">${esc(d.country)} · ${esc(d.region)} · ${esc(t("seasonShort"))} ${esc(d.peak_season)}</div>
         <h1 class="detail-name">${esc(d.name)}</h1>
         <div class="venue-tags detail-tags">
           <span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span>
           ${useCases.map((u) => `<span class="tag">${esc(u)}</span>`).join("")}
         </div>
-        ${d.note ? `<p class="detail-notes"><span class="dest-note-label">Strategisk not</span> ${esc(d.note)}</p>` : ""}
+        ${d.note ? `<p class="detail-notes"><span class="dest-note-label">${esc(t("strategicNote"))}</span> ${esc(d.note)}</p>` : ""}
         <div class="detail-links">
           <a class="icon-link" href="#/venues" id="dd-list">${esc(t("seeInList"))}</a>
           <a class="icon-link" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
@@ -1533,31 +1533,31 @@ function renderDestinationDetail(code) {
 
     <div class="detail-grid dest-detail-grid">
       <div class="detail-panel">
-        <h2 class="detail-panel-title">Betyg</h2>
+        <h2 class="detail-panel-title">${esc(t("ratings"))}</h2>
         <div class="meters">
-          ${scoreMeter("Lyx", d.luxury)}
-          ${scoreMeter("Party", d.party)}
-          ${scoreMeter("Delbarhet", d.shareability)}
+          ${scoreMeter(t("scoreLuxury"), d.luxury)}
+          ${scoreMeter(t("scoreParty"), d.party)}
+          ${scoreMeter(t("scoreShare"), d.shareability)}
         </div>
       </div>
       <div class="detail-panel">
-        <h2 class="detail-panel-title">Fakta</h2>
+        <h2 class="detail-panel-title">${esc(t("destFacts"))}</h2>
         <div class="detail-facts" style="margin-top:0; border-top:none; padding-top:0">
-          <div class="fact"><span class="fact-label">Land</span><span class="fact-val">${esc(d.country)}</span></div>
-          <div class="fact"><span class="fact-label">Region</span><span class="fact-val">${esc(d.region)}</span></div>
+          <div class="fact"><span class="fact-label">${esc(t("countryLabel"))}</span><span class="fact-val">${esc(d.country)}</span></div>
+          <div class="fact"><span class="fact-label">${esc(t("regionLabel"))}</span><span class="fact-val">${esc(d.region)}</span></div>
           <div class="fact"><span class="fact-label">Tier</span><span class="fact-val"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span></span></div>
-          <div class="fact"><span class="fact-label">Högsäsong</span><span class="fact-val">${esc(d.peak_season)}</span></div>
+          <div class="fact"><span class="fact-label">${esc(t("peakSeason"))}</span><span class="fact-val">${esc(d.peak_season)}</span></div>
           <div class="fact"><span class="fact-label">${esc(t("verified"))}</span><span class="fact-val">${verified.length}</span></div>
-          ${(() => { const km = distanceToDest(d); return km != null ? `<div class="fact"><span class="fact-label">Avstånd från dig</span><span class="fact-val">~${fmtKm(km)} km</span></div>` : ""; })()}
+          ${(() => { const km = distanceToDest(d); return km != null ? `<div class="fact"><span class="fact-label">${esc(t("distanceFromYou"))}</span><span class="fact-val">~${fmtKm(km)} km</span></div>` : ""; })()}
         </div>
       </div>
     </div>
 
     ${Number.isFinite(d.lat) && Number.isFinite(d.lng) ? `
     <div class="detail-panel dest-map-panel">
-      <h2 class="detail-panel-title">På kartan</h2>
+      <h2 class="detail-panel-title">${esc(t("onMap"))}</h2>
       <div class="map-shell map-shell-mini">
-        <div id="map-dest" class="map-canvas map-canvas-mini" role="application" aria-label="Karta över ${esc(d.name)} och dess ställen"></div>
+        <div id="map-dest" class="map-canvas map-canvas-mini" role="application" aria-label="${esc(t("mapOf").replace("{name}", d.name))}"></div>
         <div class="map-loading" id="dest-map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("loadingMap"))}</div>
       </div>
       <p class="map-note">${esc(t("mapNoteApprox").replace("{name}", d.name))} <a class="link-gold" href="#/map" data-nav>${esc(t("wholeMap"))}</a></p>
@@ -1607,7 +1607,7 @@ function venueCard(v, { eager = false } = {}) {
   return `
   <div class="venue-card">
     ${favBtnHTML(v.venue_id, v.name)}
-    <div class="venue-card-link" data-id="${esc(v.venue_id)}" role="link" tabindex="0" aria-label="Visa detaljer för ${esc(v.name)}">
+    <div class="venue-card-link" data-id="${esc(v.venue_id)}" role="link" tabindex="0" aria-label="${esc(t("viewDetails").replace("{name}", v.name))}">
       ${venueMediaHTML(v, "venue-media", { eager })}
       <div class="venue-top">
         <div>
@@ -1619,8 +1619,8 @@ function venueCard(v, { eager = false } = {}) {
       <div class="venue-tags">
         <span class="tag">${esc(v.category)}</span>
         <span class="tag ${st.cls}">${st.label}</span>
-        ${v.shareable_format ? '<span class="tag tag-verified">Delbar kostnad</span>' : ""}
-        ${eventsFor(v).length ? `<span class="tag tag-events">🎟 ${eventsFor(v).length} kommande</span>` : ""}
+        ${v.shareable_format ? `<span class="tag tag-verified">${esc(t("shareableCost"))}</span>` : ""}
+        ${eventsFor(v).length ? `<span class="tag tag-events">🎟 ${esc(t("comingN").replace("{n}", String(eventsFor(v).length)))}</span>` : ""}
       </div>
       ${publicNote(v) ? `<div class="venue-note">${esc(publicNote(v))}</div>` : ""}
       <div class="venue-actions">
@@ -1786,7 +1786,7 @@ function googleRatingHTML(v, { compact = false } = {}) {
   const g = googlePlace(v);
   const href = googleMapsReviewsUrl(v);
   if (g && g.matched && Number(g.rating) > 0) {
-    const n = g.reviewCount != null ? Number(g.reviewCount).toLocaleString("sv-SE") : "";
+    const n = g.reviewCount != null ? Number(g.reviewCount).toLocaleString(currentLang()) : "";
     if (compact) {
       return `<a class="g-rate" href="${esc(href)}" target="_blank" rel="noopener" title="Google"><span class="g-rate-num">${esc(String(g.rating))}</span><span class="g-rate-stars">${esc(googleStars(g.rating))}</span>${n ? `<span class="g-rate-n">(${esc(n)})</span>` : ""}</a>`;
     }
@@ -1844,7 +1844,7 @@ function googleReviewsPanelHTML(v) {
         <div class="g-hero-score">${esc(String(g.rating))}</div>
         <div>
           <div class="g-hero-stars" aria-label="${esc(String(g.rating))} / 5">${esc(googleStars(g.rating))}</div>
-          <p class="events-meta">${g.reviewCount != null ? `${esc(Number(g.reviewCount).toLocaleString("sv-SE"))} ${esc(t("googleCount"))}` : esc(t("googleChannel"))}${g.placeName ? ` · ${esc(g.placeName)}` : ""}</p>
+          <p class="events-meta">${g.reviewCount != null ? `${esc(Number(g.reviewCount).toLocaleString(currentLang()))} ${esc(t("googleCount"))}` : esc(t("googleChannel"))}${g.placeName ? ` · ${esc(g.placeName)}` : ""}</p>
         </div>
       </div>
       ${rows.length ? `<ul class="g-review-list">${rows.map((r) => `
@@ -1861,7 +1861,7 @@ function scoreMeter(label, val) {
   const n = Math.max(0, Math.min(5, Number(val) || 0));
   const pct = (n / 5) * 100;
   return `
-  <div class="meter" role="img" aria-label="${esc(label)}: ${n} av 5">
+  <div class="meter" role="img" aria-label="${esc(label)}: ${n}/5">
     <div class="meter-head">
       <span class="meter-label">${esc(label)}</span>
       <span class="meter-val">${n}<span class="meter-max">/5</span></span>
@@ -1870,7 +1870,6 @@ function scoreMeter(label, val) {
   </div>`;
 }
 
-const SV_MONTHS = ["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"];
 function eventsFor(v) {
   const rec = VENUE_EVENTS.venues[v.venue_id];
   const list = rec && Array.isArray(rec.events) ? rec.events : [];
@@ -1880,7 +1879,9 @@ function eventsFor(v) {
 function eventWhen(e) {
   if (e.date && /^\d{4}-\d{2}-\d{2}$/.test(e.date)) {
     const [y, m, d] = e.date.split("-").map(Number);
-    return `${d} ${SV_MONTHS[m - 1]}`;
+    try {
+      return new Date(y, m - 1, d).toLocaleDateString(currentLang(), { day: "numeric", month: "short" });
+    } catch { return e.date; }
   }
   return e.recurring || "";
 }
@@ -1897,7 +1898,7 @@ function eventsSectionHTML(v) {
         ${e.date ? `<a class="event-book" href="#/book-site/${encodeURIComponent(v.venue_id)}?date=${encodeURIComponent(e.date)}&night=${encodeURIComponent(e.title)}" data-nav>${esc(t("bridgePickNight"))}</a>` : ""}
       </span>
     </li>`).join("");
-  const src = rec.source ? ` · <a href="${esc(rec.source)}" target="_blank" rel="noopener">källa ↗</a>` : "";
+  const src = rec.source ? ` · <a href="${esc(rec.source)}" target="_blank" rel="noopener">${esc(t("factSource"))} ↗</a>` : "";
   const fetched = (VENUE_EVENTS.fetchedAt || VENUE_EVENTS.fetched || "").slice(0, 10);
   const canRefresh = !!apiBase();
   return `
@@ -1916,9 +1917,9 @@ function renderVenueDetail(id) {
     <section class="section">
       <div class="empty-state">
         <div class="big">🥂</div>
-        <h3>Stället hittades inte</h3>
-        <p>Det kan ha tagits bort ur katalogen.</p>
-        <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>Alla ställen</a></p>
+        <h3>${esc(t("venueMissing"))}</h3>
+        <p>${esc(t("venueGone"))}</p>
+        <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>${esc(t("allVenues"))}</a></p>
       </div>
     </section>`;
     return;
@@ -1927,7 +1928,7 @@ function renderVenueDetail(id) {
   const dest = DESTINATIONS.find((d) => d.name === v.destination);
   view().innerHTML = `
   <section class="section detail">
-    <a class="detail-back" href="#/venues" data-nav>← Alla ställen</a>
+    <a class="detail-back" href="#/venues" data-nav>← ${esc(t("allVenues"))}</a>
 
     ${venueMediaHTML(v, "venue-hero-media", { eager: true, extra: favBtnHTML(v.venue_id, v.name) })}
     ${photoAttrHTML(v)}
@@ -1938,19 +1939,19 @@ function renderVenueDetail(id) {
         <h1 class="detail-name">${esc(v.name)}</h1>
         <div class="venue-tags detail-tags">
           <span class="tag ${st.cls}">${st.label}</span>
-          ${v.shareable_format ? '<span class="tag tag-verified">Delbar kostnad</span>' : ""}
-          ${v.vip_table_potential ? '<span class="tag">VIP-bord</span>' : ""}
-          ${dest ? `<span class="tag">Säsong ${esc(dest.peak_season)}</span>` : ""}
+          ${v.shareable_format ? `<span class="tag tag-verified">${esc(t("shareableCost"))}</span>` : ""}
+          ${v.vip_table_potential ? `<span class="tag">${esc(t("pkgTable"))}</span>` : ""}
+          ${dest ? `<span class="tag">${esc(t("seasonShort"))} ${esc(dest.peak_season)}</span>` : ""}
         </div>
         ${publicNote(v) ? `<p class="detail-notes">${esc(publicNote(v))}</p>` : ""}
         <div class="follow-block">
           ${v.instagram_url ? `
           <div class="follow-ig">
             <div>
-              <div class="soc-handle">${esc(igHandle(v.instagram_url) || "Instagram")}</div>
-              <p>Följ &amp; inspireras — ställets skyltfönster</p>
+              <div class="soc-handle">${esc(igHandle(v.instagram_url) || t("instagram"))}</div>
+              <p>${esc(t("followIg"))}</p>
             </div>
-            <a class="btn btn-gold btn-sm" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">Instagram ↗</a>
+            <a class="btn btn-gold btn-sm" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">${esc(t("instagram"))} ↗</a>
           </div>` : ""}
           <div class="detail-links">
             ${bookingLinkHTML(v)}
@@ -1977,16 +1978,16 @@ function renderVenueDetail(id) {
         <h2 class="detail-panel-title">${esc(t("velvetScore"))}</h2>
         <p class="events-meta">${esc(t("velvetScoreHint"))}</p>
         <div class="meters">
-          ${scoreMeter("Lyx", v.luxury_score)}
-          ${scoreMeter("Party", v.party_score)}
-          ${scoreMeter("Delbarhet", v.shareability_score)}
-          ${scoreMeter("Bokningsbarhet", v.booking_potential)}
+          ${scoreMeter(t("scoreLuxury"), v.luxury_score)}
+          ${scoreMeter(t("scoreParty"), v.party_score)}
+          ${scoreMeter(t("scoreShare"), v.shareability_score)}
+          ${scoreMeter(t("scoreBook"), v.booking_potential)}
         </div>
         <div class="detail-facts">
-          <div class="fact"><span class="fact-label">Verifiering</span><span class="fact-val"><span class="tag ${st.cls}">${st.label}</span></span></div>
-          <div class="fact"><span class="fact-label">Kategori</span><span class="fact-val">${esc(v.category)}</span></div>
+          <div class="fact"><span class="fact-label">${esc(t("verification"))}</span><span class="fact-val"><span class="tag ${st.cls}">${st.label}</span></span></div>
+          <div class="fact"><span class="fact-label">${esc(t("categoryLabel"))}</span><span class="fact-val">${esc(v.category)}</span></div>
           <div class="fact"><span class="fact-label">Venue-ID</span><span class="fact-val">${esc(v.venue_id)}</span></div>
-          ${dest ? `<div class="fact"><span class="fact-label">Region</span><span class="fact-val">${esc(dest.region)}</span></div>` : ""}
+          ${dest ? `<div class="fact"><span class="fact-label">${esc(t("regionLabel"))}</span><span class="fact-val">${esc(dest.region)}</span></div>` : ""}
         </div>
       </div>
 
@@ -2562,9 +2563,9 @@ function renderInvalidLink() {
     <section class="section">
       <div class="empty-state">
         <div class="big">🔗</div>
-        <h3>Ogiltig inbjudningslänk</h3>
-        <p>Länken verkar vara trasig eller ofullständig. Be värden dela en ny länk.</p>
-        <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>Utforska ställen</a></p>
+        <h3>${esc(t("invalidInvite"))}</h3>
+        <p>${esc(t("invalidInviteHint"))}</p>
+        <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>${esc(t("explore"))}</a></p>
       </div>
     </section>`;
 }
@@ -2585,14 +2586,14 @@ function renderJoin(raw) {
   <section class="section">
     <div class="invite">
       <div class="invite-card">
-        <div class="invite-kicker">Inbjudan · VELVET</div>
+        <div class="invite-kicker">${esc(t("inviteKicker"))}</div>
         <div class="invite-glass" aria-hidden="true">🥂</div>
-        <h1 class="invite-title">Du är bjuden till<br><em>${esc(inv.venue)}</em></h1>
+        <h1 class="invite-title">${esc(t("inviteTitle"))}<br><em>${esc(inv.venue)}</em></h1>
         ${meta ? `<div class="invite-meta">${esc(meta)}</div>` : ""}
         <div class="invite-facts">
-          ${inv.date ? `<div class="invite-fact"><span class="k">Datum</span><span class="v">${esc(inv.date)}</span></div>` : ""}
-          ${inv.package ? `<div class="invite-fact"><span class="k">Paket</span><span class="v">${esc(inv.package)}</span></div>` : ""}
-          <div class="invite-fact"><span class="k">Sällskap</span><span class="v">${inv.party} personer</span></div>
+          ${inv.date ? `<div class="invite-fact"><span class="k">${esc(t("dateLabel"))}</span><span class="v">${esc(inv.date)}</span></div>` : ""}
+          ${inv.package ? `<div class="invite-fact"><span class="k">${esc(t("pkgLabel"))}</span><span class="v">${esc(inv.package)}</span></div>` : ""}
+          <div class="invite-fact"><span class="k">${esc(t("partyTitle"))}</span><span class="v">${esc(t("peopleN").replace("{n}", String(inv.party)))}</span></div>
         </div>
         <div class="split-box">
           <div class="split-per">${esc(moneyOrClub(inv.per_person))}</div>
@@ -2606,7 +2607,7 @@ function renderJoin(raw) {
             <button class="btn btn-gold" id="join-btn" style="width:100%">${esc(t("imIn"))}</button>
             <p class="invite-note">${esc(t("joinNote"))}</p>`}
         </div>
-        ${v ? `<a class="icon-link invite-venue-link" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>Se stället →</a>` : ""}
+        ${v ? `<a class="icon-link invite-venue-link" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>${esc(t("seeVenue"))}</a>` : ""}
       </div>
     </div>
   </section>`;
@@ -2644,7 +2645,10 @@ function haversineKm(lat1, lng1, lat2, lng2) {
 
 // "8,4 km" under en mil, annars heltal med svensk tusentalsavgränsning
 function fmtKm(km) {
-  return km < 10 ? km.toFixed(1).replace(".", ",") : Math.round(km).toLocaleString("sv-SE");
+  const loc = currentLang();
+  return km < 10
+    ? km.toLocaleString(loc, { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+    : Math.round(km).toLocaleString(loc);
 }
 
 function loadGeo() {
@@ -2781,9 +2785,9 @@ function mapFallbackHTML(id) {
   return `
   <div class="map-fallback" role="alert">
     <div class="big" aria-hidden="true">🗺️</div>
-    <h3>Kartan kunde inte laddas</h3>
-    <p>Kartbiblioteket hämtas från nätet och verkar inte kunna nås just nu.<br>Kontrollera anslutningen och försök igen.</p>
-    <button class="btn btn-gold btn-sm" id="${id}">Försök igen</button>
+    <h3>${esc(t("mapLoadFail"))}</h3>
+    <p>${esc(t("mapLoadFailHint"))}</p>
+    <button class="btn btn-gold btn-sm" id="${id}">${esc(t("geoRetry"))}</button>
   </div>`;
 }
 
@@ -2823,7 +2827,7 @@ function renderMapView() {
               <div class="map-pop-kicker">${esc(d.country)} · ${esc(d.tier)}</div>
               <div class="map-pop-name">${esc(d.name)}</div>
               <div class="map-pop-meta">${count} ${count === 1 ? "ställe" : "ställen"} · Säsong ${esc(d.peak_season)}</div>
-              <a class="map-pop-link" href="#/destination/${encodeURIComponent(d.code)}">Visa destination →</a>
+              <a class="map-pop-link" href="#/destination/${encodeURIComponent(d.code)}">${esc(t("viewDest"))}</a>
               <a class="map-pop-link" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
             </div>`);
       });
@@ -2897,7 +2901,7 @@ function mountDestMap(d, venues) {
           <div class="map-pop-kicker">${esc(v.category)}</div>
           <div class="map-pop-name">${esc(v.name)}</div>
           <div class="map-pop-meta">${esc(t("clubSetsPrice"))}</div>
-          <a class="map-pop-link" href="#/venue/${encodeURIComponent(v.venue_id)}">Se stället →</a>
+          <a class="map-pop-link" href="#/venue/${encodeURIComponent(v.venue_id)}">${esc(t("seeVenue"))}</a>
           ${bookingUrlFor(v) ? `<br><a class="map-pop-link" href="#/book-site/${encodeURIComponent(v.venue_id)}">${esc(t("bookOnSiteShort"))} ↗</a>` : ""}
           <br><a class="map-pop-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
           ${v.instagram_url ? `<br><a class="map-pop-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">${esc(igHandle(v.instagram_url) || "Instagram")} ↗</a>` : ""}
@@ -3322,18 +3326,18 @@ function renderSharedList(raw) {
   }
   const ids = p.ids.filter((id) => typeof id === "string");
   const list = ids.map((id) => VENUES.find((v) => v.venue_id === id)).filter(Boolean);
-  const title = (typeof p.name === "string" && p.name) ? p.name : "Delad lista";
+  const title = (typeof p.name === "string" && p.name) ? p.name : t("sharedListName");
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
-      <div><h2>${esc(title)}</h2><div class="sub">${list.length} ställen · delad VELVET-lista</div></div>
-      ${list.length ? `<button class="btn btn-ghost btn-sm" id="list-save">Spara alla som favoriter</button>` : ""}
+      <div><h2>${esc(title)}</h2><div class="sub">${esc(t("sharedListSub").replace("{n}", String(list.length)))}</div></div>
+      ${list.length ? `<button class="btn btn-ghost btn-sm" id="list-save">${esc(t("saveAllFavs"))}</button>` : ""}
     </div>
     ${list.length === 0 ? `
       <div class="empty-state">
         <div class="big">🔗</div>
-        <h3>Listan är tom</h3>
-        <p>Länken saknar ställen, eller så har katalogen ändrats.</p>
+        <h3>${esc(t("listEmpty"))}</h3>
+        <p>${esc(t("listEmptyHint"))}</p>
       </div>` : `<div class="venue-grid">${list.map(venueCard).join("")}</div>`}
   </section>`;
   bindVenueCards();
@@ -4404,48 +4408,55 @@ async function renderAccount() {
   });
 }
 
+function legalFill(key) {
+  const mail = `<a href="mailto:${esc(CONCIERGE_MAIL)}">${esc(CONCIERGE_MAIL)}</a>`;
+  return esc(t(key))
+    .replace(/\{mail\}/g, mail)
+    .replace(/\{openMail\}/g, esc(t("openMail")))
+    .replace(/\{geo\}/g, esc(t("geoUse")));
+}
 function renderLegal(kind) {
   const villkor = kind === "villkor";
   view().innerHTML = `
   <section class="section legal">
-    <a class="detail-back" href="#/" data-nav>← Start</a>
-    <h1>${villkor ? "Villkor" : "Integritet"}</h1>
+    <a class="detail-back" href="#/" data-nav>${esc(t("legalHome"))}</a>
+    <h1>${esc(villkor ? t("legalTerms") : t("legalPrivacy"))}</h1>
     ${villkor ? `
-      <p>VELVET är en oregistrerad concierge-förhandsversion. Ni skickar en <b>förfrågan</b> om VIP-bord, cabana eller daybed. Det är inte en bindande bokning, inte en betalning, inte ett bokningsavtal med klubben och inte en reservation hos klubben.</p>
-      <h2>Operatör</h2>
-      <p>Förhandsversionen drivs av Gabriel (VELVET), fysisk person — inte ett registrerat bolag. Kontakt: <a href="mailto:${esc(CONCIERGE_MAIL)}">${esc(CONCIERGE_MAIL)}</a>. Inget organisationsnummer.</p>
-      <h2>Vad som händer</h2>
+      <p>${legalFill("legalTermsLead")}</p>
+      <h2>${esc(t("legalOpTitle"))}</h2>
+      <p>${legalFill("legalOpBody")}</p>
+      <h2>${esc(t("legalWhatTitle"))}</h2>
       <ul>
-        <li>VELVET-teamet tar förfrågan mot klubben manuellt.</li>
-        <li>Priser i appen är indikativa mockar beräknade från research-scores — klubben sätter det riktiga priset.</li>
-        <li>Bilder tillhör respektive ställe/fotograf och används som förhandsvisning, inte i kommersiell drift utan licens.</li>
-        <li>Inga automatiska avgifter dras i den här versionen.</li>
+        <li>${legalFill("legalWhat1")}</li>
+        <li>${legalFill("legalWhat2")}</li>
+        <li>${legalFill("legalWhat3")}</li>
+        <li>${legalFill("legalWhat4")}</li>
       </ul>
-      <h2>Ansvar</h2>
-      <p>Klubbarna äger sitt inventarie. Klubbens husregler (ålder, ID, klädsel, minimi-spend, insläpp) gäller. VELVET garanterar inte tillgänglighet, minimi-spend eller insläpp. En förfrågan kan avslås.</p>
+      <h2>${esc(t("legalLiabilityTitle"))}</h2>
+      <p>${legalFill("legalLiabilityBody")}</p>
     ` : `
-      <p>Personuppgiftsansvarig är Gabriel (VELVET). Kontakt: <a href="mailto:${esc(CONCIERGE_MAIL)}">${esc(CONCIERGE_MAIL)}</a>.</p>
-      <h2>Rättslig grund</h2>
-      <p>Behandling av förfrågningsuppgifter sker med samtycke (GDPR art. 6.1 a) via kryssrutan i förfrågan. Ni kan återkalla samtycket genom att mejla oss — en redan skickad förfrågan kan redan ha nått oss.</p>
-      <h2>Vad vi samlar in</h2>
-      <p>Namn, e-post, valfritt telefonnummer, ställe, datum, sällskapsstorlek och gästlista ni själva fyller i. Gästnamn och gäst-e-post lämnar enheten bara om värden har fyllt i dem — värden måste ha gästernas tillåtelse att dela uppgifterna med VELVET.</p>
-      <h2>Lagring</h2>
+      <p>${legalFill("legalPrivacyLead")}</p>
+      <h2>${esc(t("legalBasisTitle"))}</h2>
+      <p>${legalFill("legalBasisBody")}</p>
+      <h2>${esc(t("legalCollectTitle"))}</h2>
+      <p>${legalFill("legalCollectBody")}</p>
+      <h2>${esc(t("legalStoreTitle"))}</h2>
       <ul>
-        <li>Förfrågningar: <code>velvet_bookings_v1</code> i localStorage.</li>
-        <li>Favoriter: <code>velvet_favs_v1</code> i localStorage.</li>
-        <li>Värdprofil (namn, e-post, telefon) sparas separat i <code>velvet_host_v1</code> i localStorage och sessionStorage så fälten kan fyllas i nästa gång — inte samma nyckel som förfrågningar eller favoriter.</li>
-        <li>Tills FormSubmit-inkorgen är bekräftad stannar förfrågan på enheten. Ni kan skicka den via «Öppna i Mail». När mejlvägen är aktiv skickas förfrågan via FormSubmit till VELVET-teamets Gmail (${esc(CONCIERGE_MAIL)}). FormSubmit vidarebefordrar, Gmail lagrar kopian. FormSubmit och Google/Gmail är personuppgiftsbiträden utanför EES (USA).</li>
-        <li>Positionsdata används bara i sessionen, om ni själva trycker på «Använd min plats».</li>
+        <li>${legalFill("legalStore1")}</li>
+        <li>${legalFill("legalStore2")}</li>
+        <li>${legalFill("legalStore3")}</li>
+        <li>${legalFill("legalStore4")}</li>
+        <li>${legalFill("legalStore5")}</li>
       </ul>
-      <h2>Övriga mottagare</h2>
+      <h2>${esc(t("legalRecipientsTitle"))}</h2>
       <ul>
-        <li>Typsnitt (Playfair Display, Inter) är självvärdade i appen — ingen IP till Google Fonts.</li>
-        <li>Bilder på ställen laddas direkt från klubbarnas sajter (100+ CDN:er via inbäddad <code>&lt;img&gt;</code>). Det är förhandsvisning, inte kommersiell licens — er IP syns där.</li>
-        <li>Herovideon kommer från Pexels (<a href="${esc(HERO_VIDEO.credit)}" target="_blank" rel="noopener">Video: Pexels</a>) — er IP syns hos Pexels.</li>
-        <li>Kartan använder Leaflet från unpkg och kartplattor från CARTO.</li>
+        <li>${legalFill("legalRec1")}</li>
+        <li>${legalFill("legalRec2")}</li>
+        <li>${legalFill("legalRec3")} (<a href="${esc(HERO_VIDEO.credit)}" target="_blank" rel="noopener">${esc(t("videoPexels"))}</a>)</li>
+        <li>${legalFill("legalRec4")}</li>
       </ul>
-      <h2>Rättigheter</h2>
-      <p>Mejla ${esc(CONCIERGE_MAIL)} för radering. Ni kan rensa webbläsardata när som helst — då försvinner lokala förfrågningar, favoriter och värdprofil.</p>
+      <h2>${esc(t("legalRightsTitle"))}</h2>
+      <p>${legalFill("legalRightsBody")}</p>
     `}
   </section>`;
 }
@@ -4457,14 +4468,14 @@ function searchHits(q) {
   const out = [];
   for (const d of DESTINATIONS) {
     if (fold(`${d.name} ${d.country} ${d.code}`).includes(s)) {
-      out.push({ kind: "Destination", title: d.name, meta: d.country, href: `#/destination/${encodeURIComponent(d.code)}` });
+      out.push({ kind: t("searchKindDest"), title: d.name, meta: d.country, href: `#/destination/${encodeURIComponent(d.code)}` });
     }
   }
   for (const v of VENUES) {
     if (!venueVisible(v, q)) continue;
     if (fold(`${v.name} ${v.destination} ${v.category}`).includes(s) || !isPublicVenue(v)) {
       out.push({
-        kind: isPublicVenue(v) ? "Ställe" : t("unverified"),
+        kind: isPublicVenue(v) ? t("searchKindVenue") : t("unverified"),
         title: v.name,
         meta: `${v.destination} · ${v.category}`,
         href: `#/venue/${encodeURIComponent(v.venue_id)}`,
@@ -4618,11 +4629,11 @@ function render404(hash) {
   <section class="section">
     <div class="empty-state">
       <div class="big">🚪</div>
-      <h3>Sidan hittades inte</h3>
-      <p>Rutten <code class="route-code">${esc(hash)}</code> finns inte. Kanske en gammal eller felskriven länk?</p>
+      <h3>${esc(t("pageMissing"))}</h3>
+      <p>${(() => { const p = t("pageMissingHint").split("{hash}"); return `${esc(p[0] || "")}<code class="route-code">${esc(hash)}</code>${esc(p[1] || "")}`; })()}</p>
       <p style="margin-top:20px">
-        <a class="btn btn-gold" href="#/" data-nav>Till startsidan</a>
-        <a class="btn btn-ghost" href="#/venues" data-nav>Utforska ställen</a>
+        <a class="btn btn-gold" href="#/" data-nav>${esc(t("pageMissingHome"))}</a>
+        <a class="btn btn-ghost" href="#/venues" data-nav>${esc(t("explore"))}</a>
       </p>
     </div>
   </section>`;
