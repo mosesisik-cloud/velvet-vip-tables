@@ -3661,10 +3661,10 @@ async function renderPayout() {
     <h1>${esc(t("paySetup"))}</h1>
     <p class="ob-sub" style="text-align:left">${esc(t("paySetupSub"))}</p>
     <form id="pay-form" class="pay-form">
-      <label>Revolut IBAN<input name="revolutIban" autocomplete="off" placeholder="IBAN från Revolut Business" value="${esc(cfg.account?.iban || "")}"></label>
-      <label>BIC / SWIFT<input name="revolutBic" autocomplete="off" placeholder="BIC från Revolut" value="${esc(cfg.account?.bic || "")}"></label>
-      <label>${esc(t("payHolder"))}<input name="revolutName" value="${esc(cfg.account?.name || "")}" placeholder="Namn på Revolut-kontot"></label>
-      <label>Revolut.me<input name="revolutMe" value="${esc(cfg.account?.me || "")}" placeholder="användarnamn"></label>
+      <label>Revolut IBAN<input name="revolutIban" autocomplete="off" placeholder="${esc(t("ibanPh"))}" value="${esc(cfg.account?.iban || "")}"></label>
+      <label>BIC / SWIFT<input name="revolutBic" autocomplete="off" placeholder="${esc(t("bicPh"))}" value="${esc(cfg.account?.bic || "")}"></label>
+      <label>${esc(t("payHolder"))}<input name="revolutName" value="${esc(cfg.account?.name || "")}" placeholder="${esc(t("holderPh"))}"></label>
+      <label>Revolut.me<input name="revolutMe" value="${esc(cfg.account?.me || "")}" placeholder="${esc(t("usernamePh"))}"></label>
       <label>Stripe secret (sk_live_… / sk_test_…)<input name="stripeSecret" type="password" placeholder="${cfg.keys?.stripe ? "•••• set" : ""}" autocomplete="off"></label>
       <label>Stripe webhook secret<input name="stripeWebhook" type="password" placeholder="${cfg.keys?.stripe ? "" : ""}" autocomplete="off"></label>
       <label>Revolut Merchant secret<input name="revolutMerchantSecret" type="password" placeholder="${cfg.keys?.revolut ? "•••• set" : ""}" autocomplete="off"></label>
@@ -4245,7 +4245,7 @@ async function renderCard() {
       <div class="card-face-num" id="card-face-num">•••• •••• •••• ••••</div>
       <div class="card-face-row">
         <span id="card-face-name">${esc(displayName(u) || "—")}</span>
-        <span id="card-face-exp">MM/ÅÅ</span>
+        <span id="card-face-exp">${esc(t("cardExpPh"))}</span>
       </div>
     </div>
     <form class="pay-form" id="card-form">
@@ -4257,7 +4257,7 @@ async function renderCard() {
       </label>
       <div class="card-row">
         <label>${esc(t("cardExp"))}
-          <input type="text" id="card-exp" inputmode="numeric" autocomplete="cc-exp" maxlength="5" placeholder="MM/ÅÅ">
+          <input type="text" id="card-exp" inputmode="numeric" autocomplete="cc-exp" maxlength="5" placeholder="${esc(t("cardExpPh"))}">
         </label>
         <label>${esc(t("cardCvc"))}
           <input type="text" id="card-cvc" inputmode="numeric" autocomplete="cc-csc" maxlength="4" placeholder="•••">
@@ -4285,7 +4285,7 @@ async function renderCard() {
     const nm = $("#card-face-name");
     if (lab) lab.textContent = brand === "card" ? "VELVET" : brand.toUpperCase();
     if (num) num.textContent = pretty;
-    if (exp) exp.textContent = ($("#card-exp")?.value || "MM/ÅÅ");
+    if (exp) exp.textContent = ($("#card-exp")?.value || t("cardExpPh"));
     if (nm) nm.textContent = ($("#card-name")?.value || displayName(u) || "—").slice(0, 28);
   };
   $("#card-num")?.addEventListener("input", (e) => {

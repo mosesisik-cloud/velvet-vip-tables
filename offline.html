@@ -70,13 +70,38 @@
 <main class="card">
   <div class="monogram" aria-hidden="true">V</div>
   <div class="brand">VELVET<span class="dot">.</span></div>
-  <div class="tag">VIP-bord. Delad lyx.</div>
-  <h1>Du är offline</h1>
-  <p>Vi når inte nätet just nu. Dina sparade förfrågningar finns kvar på den här enheten — anslut igen för att bläddra bland ställen och skicka en förfrågan.</p>
-  <button class="retry" onclick="location.replace('./index.html#/')">Försök igen</button>
-  <p class="hint">Sidan laddas om automatiskt när anslutningen är tillbaka.</p>
+  <div class="tag" id="off-tag">VIP-bord. Delad lyx.</div>
+  <h1 id="off-title">Du är offline</h1>
+  <p id="off-body">Vi når inte nätet just nu. Dina sparade förfrågningar finns kvar på den här enheten — anslut igen för att bläddra bland ställen och skicka en förfrågan.</p>
+  <button class="retry" id="off-retry" onclick="location.replace('./index.html#/')">Försök igen</button>
+  <p class="hint" id="off-hint">Sidan laddas om automatiskt när anslutningen är tillbaka.</p>
 </main>
 <script>
+  (function () {
+    var packs = {
+      sv: { tag: "VIP-bord. Delad lyx.", title: "Du är offline", body: "Vi når inte nätet just nu. Dina sparade förfrågningar finns kvar på den här enheten — anslut igen för att bläddra bland ställen och skicka en förfrågan.", retry: "Försök igen", hint: "Sidan laddas om automatiskt när anslutningen är tillbaka." },
+      en: { tag: "VIP tables. Shared luxury.", title: "You are offline", body: "We cannot reach the network right now. Your saved requests stay on this device — reconnect to browse venues and send a request.", retry: "Try again", hint: "The page reloads automatically when you are back online." },
+      es: { tag: "Mesas VIP. Lujo compartido.", title: "Estás sin conexión", body: "Ahora no hay red. Tus solicitudes guardadas siguen en este dispositivo — conéctate de nuevo para ver locales y enviar una solicitud.", retry: "Reintentar", hint: "La página se recarga sola cuando vuelva la conexión." },
+      fr: { tag: "Tables VIP. Luxe partagé.", title: "Vous êtes hors ligne", body: "Pas de réseau pour l’instant. Vos demandes restent sur cet appareil — reconnectez-vous pour parcourir les lieux et envoyer une demande.", retry: "Réessayer", hint: "La page se recharge toute seule dès que la connexion revient." }
+    };
+    var lang = "sv";
+    try {
+      var s = localStorage.getItem("velvet_lang");
+      if (s && packs[s]) lang = s;
+      else {
+        var n = (navigator.language || "sv").slice(0, 2).toLowerCase();
+        if (packs[n]) lang = n;
+      }
+    } catch (e) {}
+    document.documentElement.lang = lang;
+    var p = packs[lang];
+    document.getElementById("off-tag").textContent = p.tag;
+    document.getElementById("off-title").textContent = p.title;
+    document.getElementById("off-body").textContent = p.body;
+    document.getElementById("off-retry").textContent = p.retry;
+    document.getElementById("off-hint").textContent = p.hint;
+    document.title = "VELVET — " + p.title;
+  })();
   window.addEventListener("online", function () { location.replace("./index.html#/"); });
 </script>
 </body>
