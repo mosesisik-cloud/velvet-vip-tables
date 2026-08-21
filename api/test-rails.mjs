@@ -385,6 +385,44 @@ async function runApi() {
     else if (prof.json.n < 1 || !prof.json.reviews?.length) fail("profile-rating", "missing fun score");
     else ok("profile-parties", "past party + rating");
 
+    const needCard = await req(base, "GET", "/chats/BCN-102?userId=" + encodeURIComponent(guest.id));
+    if (needCard.status !== 403 || needCard.json.error !== "card_required") {
+      fail("promo-card-get", JSON.stringify(needCard.json).slice(0, 220));
+    } else ok("promo-card-get", "verified without card 403");
+
+    const pan = await req(base, "POST", "/card", {
+      user: guest, last4: "1111", brand: "visa", expMonth: 12, expYear: 2099,
+      number: "4111111111111111", cvc: "123",
+    });
+    if (pan.status !== 400 || pan.json.error !== "no_pan") fail("card-no-pan", JSON.stringify(pan.json).slice(0, 200));
+    else ok("card-no-pan", "PAN rejected");
+
+    const beforeIdv = await req(base, "POST", "/card", {
+      user: plain, last4: "4242", brand: "visa", expMonth: 12, expYear: 2099,
+    });
+    if (beforeIdv.status !== 403 || beforeIdv.json.error !== "idv_required") {
+      fail("card-need-idv", JSON.stringify(beforeIdv.json).slice(0, 200));
+    } else ok("card-need-idv", "passport first");
+
+    const expiredCard = await req(base, "POST", "/card", {
+      user: guest, last4: "4242", brand: "visa", expMonth: 1, expYear: 2020,
+    });
+    if (expiredCard.status !== 400 || expiredCard.json.error !== "expired") {
+      fail("card-expired", JSON.stringify(expiredCard.json).slice(0, 200));
+    } else ok("card-expired", "rejected");
+
+    const cardOk = await req(base, "POST", "/card", {
+      user: guest, last4: "4242", brand: "visa", expMonth: 12, expYear: 2099,
+    });
+    if (cardOk.status !== 200 || cardOk.json.card?.last4 !== "4242" || cardOk.json.card?.number) {
+      fail("card-ok", JSON.stringify(cardOk.json).slice(0, 220));
+    } else ok("card-ok", "Visa ••4242");
+
+    const idvCard = await req(base, "GET", "/idv/" + encodeURIComponent(guest.id));
+    if (!idvCard.json.paying || idvCard.json.card?.last4 !== "4242") {
+      fail("card-idv-get", JSON.stringify(idvCard.json).slice(0, 220));
+    } else ok("card-idv-get", "paying customer");
+
     const waFacts = await req(base, "GET", "/chats/BCN-102?userId=" + encodeURIComponent(guest.id));
     if (waFacts.status !== 200 || !String(waFacts.json.whatsapp?.phone || "").includes("34669")) {
       fail("wa-venue", JSON.stringify(waFacts.json).slice(0, 220));
@@ -413,7 +451,8 @@ async function runApi() {
     const inbox = await req(base, "GET", "/chats/IBZ-001/inbox?userId=" + encodeURIComponent(host.id));
     const gth = (inbox.json.threads || []).find((th) => th.threadId === guest.id);
     if (inbox.status !== 200 || gth?.guestWa !== "34611112222") fail("wa-inbox", JSON.stringify(inbox.json).slice(0, 240));
-    else ok("wa-inbox", "promoter can reply on WhatsApp");
+    else if (!gth.paying || gth.card?.last4 !== "4242") fail("wa-inbox-paying", JSON.stringify(gth).slice(0, 220));
+    else ok("wa-inbox", "promoter sees paying customer + WhatsApp");
 
     const hook = await req(base, "POST", "/wa/webhook", {
       entry: [{ changes: [{ value: { messages: [{

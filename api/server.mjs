@@ -128,8 +128,19 @@ async function cloudSendWa(to, text) {
     return false;
   }
 }
-function isVerifiedMember(uid, db) {
+function isIdvVerified(uid, db) {
   return !!(uid && db.idv[uid] && db.idv[uid].status === "verified");
+}
+function hasCardOnFile(uid, db) {
+  return !!publicCard(db.users[uid]?.card);
+}
+function isVerifiedMember(uid, db) {
+  return isIdvVerified(uid, db) && hasCardOnFile(uid, db);
+}
+function memberGate(uid, db) {
+  if (!isIdvVerified(uid, db)) return "idv_required";
+  if (!hasCardOnFile(uid, db)) return "card_required";
+  return "";
 }
 function isPromoter(user, venueId, db) {
   const uid = user?.id || "";
@@ -255,12 +266,43 @@ function upsertUser(db, u) {
   const prev = db.users[u.id] || {};
   db.users[u.id] = {
     id: String(u.id).slice(0, 80),
-    name: String(u.name).slice(0, 80),
-    handle,
-    provider,
+    name: String(u.name || prev.name || "").slice(0, 80),
+    handle: handle || prev.handle || "",
+    provider: provider || prev.provider || "",
     updated: new Date().toISOString(),
     created: prev.created || new Date().toISOString(),
+    whatsapp: prev.whatsapp || "",
+    card: prev.card || null,
   };
+}
+function publicCard(c) {
+  if (!c || !c.last4) return null;
+  const last4 = String(c.last4).replace(/\D/g, "").slice(-4);
+  if (last4.length !== 4) return null;
+  return {
+    last4,
+    brand: String(c.brand || "card").toLowerCase().replace(/[^a-z]/g, "").slice(0, 16) || "card",
+    expMonth: Number(c.expMonth) || 0,
+    expYear: Number(c.expYear) || 0,
+  };
+}
+function parseCardBody(b) {
+  if (b.number || b.pan || b.cardNumber || b.cvc || b.cvv || b.securityCode) {
+    return { error: "no_pan" };
+  }
+  const last4 = String(b.last4 || "").replace(/\D/g, "").slice(-4);
+  if (last4.length !== 4) return { error: "last4" };
+  const brandRaw = String(b.brand || "card").toLowerCase().replace(/[^a-z]/g, "").slice(0, 16);
+  const brand = ["visa", "mastercard", "amex", "maestro", "card"].includes(brandRaw) ? brandRaw : "card";
+  const expMonth = Number(b.expMonth);
+  let expYear = Number(b.expYear);
+  if (expMonth < 1 || expMonth > 12 || !expYear) return { error: "exp" };
+  if (expYear < 100) expYear += 2000;
+  const now = new Date();
+  if (expYear < now.getFullYear() || (expYear === now.getFullYear() && expMonth < now.getMonth() + 1)) {
+    return { error: "expired" };
+  }
+  return { card: { last4, brand, expMonth, expYear, added: new Date().toISOString() } };
 }
 function publicPerson(p, db, role) {
   if (!p) return null;
@@ -270,6 +312,7 @@ function publicPerson(p, db, role) {
   const handle = String(p.handle || stored.handle || "").replace(/^@/, "");
   const name = String(p.name || stored.name || "Gäst").slice(0, 80);
   const idv = id && db.idv[id]?.status === "verified" ? "verified" : "none";
+  const card = publicCard(db.users[id]?.card);
   return {
     id,
     name,
@@ -281,6 +324,8 @@ function publicPerson(p, db, role) {
     paidAt: p.paidAt || null,
     paidVia: p.paidVia || "",
     idv,
+    paying: !!card,
+    card,
     joined: p.joined || p.created || null,
   };
 }
@@ -1336,7 +1381,25 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && idvM) {
       const db = load();
       const rec = db.idv[decodeURIComponent(idvM[1])];
-      return send(res, 200, { idv: publicIdv(rec) });
+      const uid = decodeURIComponent(idvM[1]);
+      return send(res, 200, {
+        idv: publicIdv(rec),
+        card: publicCard(db.users[uid]?.card),
+        paying: hasCardOnFile(uid, db),
+      });
+    }
+    if (req.method === "POST" && url.pathname === "/card") {
+      const b = await readBody(req, 2e5);
+      const uid = String(b.user?.id || b.userId || "");
+      if (!uid) return send(res, 400, { error: "user" });
+      const db = load();
+      upsertUser(db, b.user || { id: uid });
+      if (!isIdvVerified(uid, db)) return send(res, 403, { error: "idv_required" });
+      const parsed = parseCardBody(b);
+      if (parsed.error) return send(res, 400, { error: parsed.error });
+      db.users[uid].card = parsed.card;
+      save(db);
+      return send(res, 200, { ok: true, card: publicCard(parsed.card), paying: true });
     }
 
     if (req.method === "POST" && url.pathname === "/reviews") {
@@ -1491,8 +1554,9 @@ const server = http.createServer(async (req, res) => {
       const uid = String(b.user?.id || "");
       if (!uid) return send(res, 400, { error: "user" });
       const db = load();
-      if (!isPromoter(b.user, venueId, db) && !isVerifiedMember(uid, db)) {
-        return send(res, 403, { error: "idv_required" });
+      if (!isPromoter(b.user, venueId, db)) {
+        const gate = memberGate(uid, db);
+        if (gate) return send(res, 403, { error: gate });
       }
       const phone = waDigits(b.whatsapp);
       if (String(b.whatsapp || "").trim() && !phone) return send(res, 400, { error: "whatsapp" });
@@ -1539,10 +1603,16 @@ const server = http.createServer(async (req, res) => {
           n: msgs.length,
         };
       }).sort((a, b) => String(b.at).localeCompare(String(a.at)));
-      const withWa = threads.map((th) => ({
-        ...th,
-        guestWa: guestWaForThread(db, venueId, th.threadId),
-      }));
+      const withWa = threads.map((th) => {
+        const card = publicCard(db.users[th.threadId]?.card);
+        return {
+          ...th,
+          guestWa: guestWaForThread(db, venueId, th.threadId),
+          idv: db.idv[th.threadId]?.status === "verified" ? "verified" : "none",
+          paying: !!card,
+          card,
+        };
+      });
       return send(res, 200, { threads: withWa, promoter: true });
     }
     if (req.method === "GET" && chatM) {
@@ -1551,17 +1621,26 @@ const server = http.createServer(async (req, res) => {
       const thread = url.searchParams.get("thread") || uid;
       const db = load();
       const promoter = isPromoter({ id: uid }, venueId, db);
-      if (uid && !promoter && !isVerifiedMember(uid, db)) {
-        return send(res, 403, { error: "idv_required" });
+      if (uid && !promoter) {
+        const gate = memberGate(uid, db);
+        if (gate) return send(res, 403, { error: gate });
       }
       const venueChats = db.chats[venueId] || {};
       const messages = venueChats[thread] || [];
+      const guestId = promoter ? thread : uid;
+      const guestCard = publicCard(db.users[guestId]?.card);
       return send(res, 200, {
         messages,
         promoter,
         whatsapp: whatsappForVenue(venueId, db),
         guestWa: guestWaForThread(db, venueId, thread),
         cloud: !!(waCloud().token && waCloud().phoneId),
+        guest: {
+          id: guestId,
+          idv: db.idv[guestId]?.status === "verified" ? "verified" : "none",
+          paying: !!guestCard,
+          card: guestCard,
+        },
       });
     }
     if (req.method === "POST" && chatM) {
@@ -1573,8 +1652,9 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       upsertUser(db, b.user);
       const promoter = isPromoter(b.user, venueId, db);
-      if (!promoter && !isVerifiedMember(uid, db)) {
-        return send(res, 403, { error: "idv_required" });
+      if (!promoter) {
+        const gate = memberGate(uid, db);
+        if (gate) return send(res, 403, { error: gate });
       }
       const threadId = promoter ? String(b.threadId || uid) : uid;
       if (b.whatsapp) setGuestWa(db, venueId, uid, b.whatsapp, b.user?.name);

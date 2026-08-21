@@ -1296,6 +1296,28 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .member-access { margin: 8px 0 0; font-size: 13px; color: var(--text-dim); }
 .member-access.on { color: var(--gold-bright); font-weight: 650; }
 .contact-tile.lock { border-style: dashed; }
+.card-face {
+  margin: 16px 0 20px;
+  padding: 22px 22px 18px;
+  max-width: 420px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #2a2418 0%, #12110e 55%, #1a1610 100%);
+  border: 1px solid var(--gold);
+  color: var(--gold-bright);
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.35);
+}
+.card-face-brand { font-size: 12px; letter-spacing: 2px; font-weight: 700; opacity: 0.85; }
+.card-face-num { font-family: ui-monospace, monospace; font-size: 18px; letter-spacing: 2px; margin: 18px 0; }
+.card-face-row { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; }
+.card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.paying-meta { display: block; color: var(--gold-bright); font-size: 12px; font-weight: 650; margin: 2px 0 4px; }
+@media (max-width: 719px) {
+  .card-row { grid-template-columns: 1fr; }
+}
 .stars { color: var(--gold-bright); letter-spacing: 1px; }
 .star-pick button { background: none; border: 0; font-size: 22px; color: var(--gold); padding: 4px; }
 .review-card { padding: 12px 0; border-bottom: 1px solid var(--border-soft); }

@@ -228,8 +228,8 @@ function contactPanelHTML(v) {
     contactTile(
       promoterHref(v.venue_id),
       t("chatPromoter"),
-      isIdvOk() ? t("verifiedMember") : t("promoterNeedVerify"),
-      { gold: isIdvOk(), locked: !isIdvOk(), external: false }
+      isPayingMember() ? t("payingCustomer") : t("promoterNeedVerify"),
+      { gold: isPayingMember(), locked: !isPayingMember(), external: false }
     ),
   ].filter(Boolean).join("");
   const season = d?.peak_season ? `${t("whenToGo")} ${d.peak_season}` : "";
@@ -737,13 +737,65 @@ function idvStatus() {
 function isIdvOk() {
   return idvStatus() === "verified";
 }
+function isCardOk() {
+  const u = loadUser();
+  return !!(u && String(u.cardLast4 || "").replace(/\D/g, "").length === 4);
+}
+function isPayingMember() {
+  return isIdvOk() && isCardOk();
+}
+function cardLabel(card) {
+  const u = loadUser();
+  const c = card || (u && u.cardLast4 ? { last4: u.cardLast4, brand: u.cardBrand } : null);
+  if (!c || !c.last4) return "";
+  const brand = String(c.brand || "card");
+  const pretty = brand === "visa" ? "Visa" : brand === "mastercard" ? "Mastercard" : brand === "amex" ? "Amex" : t("cardOk");
+  return `${pretty} ••${c.last4}`;
+}
+function luhnOk(num) {
+  const s = String(num || "").replace(/\D/g, "");
+  if (s.length < 13 || s.length > 19) return false;
+  let sum = 0;
+  let alt = false;
+  for (let i = s.length - 1; i >= 0; i--) {
+    let n = Number(s[i]);
+    if (alt) { n *= 2; if (n > 9) n -= 9; }
+    sum += n;
+    alt = !alt;
+  }
+  return sum % 10 === 0;
+}
+function cardBrandOf(num) {
+  const n = String(num || "").replace(/\D/g, "");
+  if (/^4/.test(n)) return "visa";
+  if (/^3[47]/.test(n)) return "amex";
+  if (/^5[1-5]/.test(n) || /^2[2-7]/.test(n)) return "mastercard";
+  if (/^(50|5[6-9]|6)/.test(n)) return "maestro";
+  return "card";
+}
 function rememberAfterIdv(hash) {
   try { sessionStorage.setItem("velvet_after_idv", hash); } catch { /* private mode */ }
+}
+function consumeAfterIdv() {
+  try {
+    const n = sessionStorage.getItem("velvet_after_idv") || "";
+    sessionStorage.removeItem("velvet_after_idv");
+    return n;
+  } catch { return ""; }
 }
 function promoterHref(venueId) {
   return `#/promoter/${encodeURIComponent(venueId)}`;
 }
-function promoterLockHTML(v) {
+function promoterLockHTML(kind) {
+  if (kind === "card") {
+    return `
+    <div class="promo-lock">
+      <p class="idv-badge ok">${esc(t("payingCustomer"))}</p>
+      <h2>${esc(t("cardTitle"))}</h2>
+      <p>${esc(t("cardLockedBody"))}</p>
+      <a class="btn btn-gold" href="#/card" data-nav id="ch-card">${esc(t("cardCta"))}</a>
+    </div>`;
+  }
   return `
     <div class="promo-lock">
       <p class="idv-badge ok">${esc(t("verifiedMember"))}</p>
@@ -763,6 +815,8 @@ async function refreshIdv() {
     idvSubmitted: r?.idv?.submitted || u.idvSubmitted,
     legalName: r?.idv?.legalName || u.legalName || "",
     idvFields: r?.idv?.fields || u.idvFields || null,
+    cardLast4: r?.card?.last4 || u.cardLast4 || "",
+    cardBrand: r?.card?.brand || u.cardBrand || "",
   });
   return st;
 }
@@ -1691,8 +1745,8 @@ function renderVenueDetail(id) {
         ${bookingLinkHTML(v, { gold: true, full: true })}
         <a class="btn btn-ghost" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener" style="width:100%;margin-top:10px">${esc(t("directions"))} ↗</a>
         <button class="btn btn-ghost" id="d-book" style="width:100%;margin-top:10px">${esc(t("sendRequest"))}</button>
-        <a class="btn ${isIdvOk() ? "btn-gold" : "btn-ghost"}" id="d-promo" href="${promoterHref(v.venue_id)}" data-nav style="width:100%;margin-top:10px">${esc(isIdvOk() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>
-        <p class="detail-cta-note">${esc(isIdvOk() ? t("memberAccessOn") : t("memberAccessOff"))}</p>
+        <a class="btn ${isPayingMember() ? "btn-gold" : "btn-ghost"}" id="d-promo" href="${promoterHref(v.venue_id)}" data-nav style="width:100%;margin-top:10px">${esc(isPayingMember() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>
+        <p class="detail-cta-note">${esc(isPayingMember() ? t("memberAccessOn") : t("memberAccessOff"))}</p>
         <ul class="detail-perks">
           <li>${esc(t("perkSite"))}</li>
           <li>${esc(t("perkConcierge"))}</li>
@@ -3449,11 +3503,12 @@ async function renderVerify() {
     <h1>${esc(t("verifyTitle"))}</h1>
     <p class="ob-sub" style="margin:0 0 18px;text-align:left">${esc(t("verifySub"))}</p>
     ${st === "verified"
-      ? `<p class="idv-badge ok">✓ ${esc(t("verifyOk"))}</p><p class="member-access on">${esc(t("memberAccessOn"))}</p>${mrzRowsHTML(savedFields)}`
+      ? `<p class="idv-badge ok">✓ ${esc(t("verifyOk"))}</p><p class="member-access${isPayingMember() ? " on" : ""}">${esc(isPayingMember() ? t("memberAccessOn") : t("cardNeed"))}</p>${mrzRowsHTML(savedFields)}`
       : `<div class="verify-perks">
           <p class="verify-perks-title">${esc(t("verifyPerksTitle"))}</p>
           <ul>
             <li>${esc(t("verifyPerkPromoter"))}</li>
+            <li>${esc(t("verifyPerkCard"))}</li>
             <li>${esc(t("verifyPerkEvents"))}</li>
           </ul>
         </div>`}
@@ -3687,7 +3742,6 @@ async function renderVerify() {
       }),
     });
     if (r?.idv?.status === "verified") {
-      const next = (() => { try { const n = sessionStorage.getItem("velvet_after_idv") || ""; sessionStorage.removeItem("velvet_after_idv"); return n; } catch { return ""; } })();
       saveUser({
         ...loadUser(),
         legalName: r.idv.legalName || "",
@@ -3696,6 +3750,8 @@ async function renderVerify() {
         idvFields: r.idv.fields || null,
       });
       showToast(t("verifyOk"));
+      if (!isCardOk()) { location.hash = "#/card"; return; }
+      const next = consumeAfterIdv();
       if (next) { location.hash = next; return; }
       renderVerify();
       return;
@@ -3780,6 +3836,132 @@ async function renderUserProfile(id) {
   if (me && rateParty) bindRateRows(view(), me, () => renderUserProfile(id));
 }
 
+async function renderCard() {
+  const u = loadUser();
+  if (!u) {
+    view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p><button class="btn btn-gold" id="c-login">${esc(t("loginCta"))}</button></p></div></section>`;
+    $("#c-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+    return;
+  }
+  await refreshIdv();
+  if (!isIdvOk()) {
+    rememberAfterIdv("#/card");
+    location.hash = "#/verify";
+    return;
+  }
+  setTitle(t("cardTitle"));
+  view().innerHTML = `
+  <section class="section card-page">
+    <a class="detail-back" href="#/account" data-nav>← ${esc(t("account"))}</a>
+    <h1>${esc(t("cardTitle"))}</h1>
+    <p class="ob-sub" style="margin:0 0 16px;text-align:left">${esc(t("cardSub"))}</p>
+    ${isCardOk() ? `<p class="idv-badge ok">💳 ${esc(cardLabel())} · ${esc(t("payingCustomer"))}</p>` : `<p class="idv-badge no">${esc(t("cardNeed"))}</p>`}
+    <div class="card-face" aria-hidden="true">
+      <span class="card-face-brand" id="card-brand-lab">VELVET</span>
+      <div class="card-face-num" id="card-face-num">•••• •••• •••• ••••</div>
+      <div class="card-face-row">
+        <span id="card-face-name">${esc(displayName(u) || "—")}</span>
+        <span id="card-face-exp">MM/ÅÅ</span>
+      </div>
+    </div>
+    <form class="pay-form" id="card-form">
+      <label>${esc(t("cardName"))}
+        <input type="text" id="card-name" autocomplete="cc-name" maxlength="48" value="${esc(displayName(u))}">
+      </label>
+      <label>${esc(t("cardNumber"))}
+        <input type="text" id="card-num" inputmode="numeric" autocomplete="cc-number" maxlength="23" placeholder="•••• •••• •••• ••••">
+      </label>
+      <div class="card-row">
+        <label>${esc(t("cardExp"))}
+          <input type="text" id="card-exp" inputmode="numeric" autocomplete="cc-exp" maxlength="5" placeholder="MM/ÅÅ">
+        </label>
+        <label>${esc(t("cardCvc"))}
+          <input type="text" id="card-cvc" inputmode="numeric" autocomplete="cc-csc" maxlength="4" placeholder="•••">
+        </label>
+      </div>
+      <div class="field-error hidden" id="card-err" role="alert"></div>
+      <button class="btn btn-gold" type="submit" style="width:100%">${esc(t("cardCta"))}</button>
+    </form>
+  </section>`;
+  const setErr = (msg) => {
+    const err = $("#card-err");
+    if (!err) return;
+    if (!msg) { err.classList.add("hidden"); err.textContent = ""; return; }
+    err.textContent = msg;
+    err.classList.remove("hidden");
+  };
+  const digits = (el) => String(el?.value || "").replace(/\D/g, "");
+  const paintFace = () => {
+    const n = digits($("#card-num"));
+    const brand = cardBrandOf(n);
+    const pretty = n.replace(/(\d{4})(?=\d)/g, "$1 ").trim() || "•••• •••• •••• ••••";
+    const lab = $("#card-brand-lab");
+    const num = $("#card-face-num");
+    const exp = $("#card-face-exp");
+    const nm = $("#card-face-name");
+    if (lab) lab.textContent = brand === "card" ? "VELVET" : brand.toUpperCase();
+    if (num) num.textContent = pretty;
+    if (exp) exp.textContent = ($("#card-exp")?.value || "MM/ÅÅ");
+    if (nm) nm.textContent = ($("#card-name")?.value || displayName(u) || "—").slice(0, 28);
+  };
+  $("#card-num")?.addEventListener("input", (e) => {
+    const d = digits(e.target).slice(0, 19);
+    e.target.value = d.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+    paintFace();
+  });
+  $("#card-exp")?.addEventListener("input", (e) => {
+    let d = digits(e.target).slice(0, 4);
+    if (d.length >= 3) d = d.slice(0, 2) + "/" + d.slice(2);
+    e.target.value = d;
+    paintFace();
+  });
+  $("#card-cvc")?.addEventListener("input", (e) => { e.target.value = digits(e.target).slice(0, 4); });
+  $("#card-name")?.addEventListener("input", paintFace);
+  $("#card-form")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    setErr("");
+    const num = digits($("#card-num"));
+    const exp = digits($("#card-exp"));
+    const cvc = digits($("#card-cvc"));
+    if (!luhnOk(num)) { setErr(t("cardBad")); return; }
+    if (exp.length !== 4) { setErr(t("cardExpired")); return; }
+    const expMonth = Number(exp.slice(0, 2));
+    const expYear = 2000 + Number(exp.slice(2));
+    const now = new Date();
+    if (expMonth < 1 || expMonth > 12 || expYear < now.getFullYear() || (expYear === now.getFullYear() && expMonth < now.getMonth() + 1)) {
+      setErr(t("cardExpired"));
+      return;
+    }
+    if (cvc.length < 3) { setErr(t("cardBad")); return; }
+    const btn = $("#card-form button[type=submit]");
+    if (btn) { btn.disabled = true; btn.textContent = "…"; }
+    const r = await apiJSON("/card", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user: u,
+        last4: num.slice(-4),
+        brand: cardBrandOf(num),
+        expMonth,
+        expYear,
+      }),
+    });
+    $("#card-num").value = "";
+    $("#card-cvc").value = "";
+    if (r?.error === "idv_required") { location.hash = "#/verify"; return; }
+    if (r?.error === "no_pan") { setErr(t("cardSub")); if (btn) { btn.disabled = false; btn.textContent = t("cardCta"); } return; }
+    if (r?.error || !r?.card) {
+      setErr(r?.error === "expired" ? t("cardExpired") : t("cardBad"));
+      if (btn) { btn.disabled = false; btn.textContent = t("cardCta"); }
+      return;
+    }
+    saveUser({ ...loadUser(), cardLast4: r.card.last4, cardBrand: r.card.brand });
+    showToast(t("payingCustomer"));
+    const next = consumeAfterIdv();
+    location.hash = next || "#/account";
+  });
+}
+
 async function renderAccount() {
   const u = loadUser();
   if (u) await refreshIdv();
@@ -3801,7 +3983,12 @@ async function renderAccount() {
               : `<span class="person-handle">@${esc(u.handle)}</span>`) : ""}
             ${st === "verified" ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : `<a class="btn btn-gold btn-sm" href="#/verify" data-nav>${esc(t("verifyTitle"))}</a>`}
           </p>
-          <p class="member-access${st === "verified" ? " on" : ""}">${esc(st === "verified" ? t("memberAccessOn") : t("memberAccessOff"))}</p>
+          <p class="member-access${isPayingMember() ? " on" : ""}">${esc(isPayingMember() ? t("memberAccessOn") : t("memberAccessOff"))}</p>
+          <p class="person-meta" style="margin-top:6px">
+            ${isCardOk()
+              ? `<span class="idv-badge ok">💳 ${esc(cardLabel())}</span>`
+              : `<a class="btn btn-ghost btn-sm" href="#/card" data-nav>${esc(t("cardNeed"))}</a>`}
+          </p>
           <p>${starRow(mine.avg)} ${mine.n ? `${esc(t("funScore"))} (${mine.n})` : t("noReviews")}</p>
           <p style="margin-top:10px"><a class="btn btn-ghost btn-sm" href="#/user/${encodeURIComponent(u.id)}" data-nav>${esc(t("openProfile"))}</a></p>
         </div>
@@ -4074,30 +4261,30 @@ async function renderPromoterChat(venueId) {
     return;
   }
   await refreshIdv();
-  if (!isIdvOk()) {
-    const peek = await apiJSON(`/chats/${encodeURIComponent(venueId)}?userId=${encodeURIComponent(me.id)}`);
-    const asPromoter = !!(peek && peek.promoter && peek.error !== "idv_required");
-    if (!asPromoter) {
-      rememberAfterIdv(promoterHref(venueId));
-      setTitle(t("promoter") + " · " + v.name);
-      view().innerHTML = `
-      <section class="section chat-page">
-        <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
-        <h1>${esc(t("promoter"))} · ${esc(v.name)}</h1>
-        ${promoterLockHTML(v)}
-        <p style="margin-top:14px"><button class="btn btn-ghost btn-sm" id="claim-promo">${esc(t("iAmPromoter"))}</button></p>
-      </section>`;
-      $("#ch-verify")?.addEventListener("click", () => rememberAfterIdv(promoterHref(venueId)));
-      $("#claim-promo")?.addEventListener("click", async () => {
-        await apiJSON(`/chats/${encodeURIComponent(venueId)}/claim`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ user: me }),
-        });
-        renderPromoterChat(venueId);
+  const peek = await apiJSON(`/chats/${encodeURIComponent(venueId)}?userId=${encodeURIComponent(me.id)}`);
+  const asPromoter = !!(peek && peek.promoter && !peek.error);
+  if (!asPromoter && (peek?.error === "idv_required" || peek?.error === "card_required" || !isPayingMember())) {
+    const needCard = peek?.error === "card_required" || (isIdvOk() && peek?.error !== "idv_required");
+    rememberAfterIdv(promoterHref(venueId));
+    setTitle(t("promoter") + " · " + v.name);
+    view().innerHTML = `
+    <section class="section chat-page">
+      <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
+      <h1>${esc(t("promoter"))} · ${esc(v.name)}</h1>
+      ${promoterLockHTML(needCard ? "card" : "idv")}
+      <p style="margin-top:14px"><button class="btn btn-ghost btn-sm" id="claim-promo">${esc(t("iAmPromoter"))}</button></p>
+    </section>`;
+    $("#ch-verify")?.addEventListener("click", () => rememberAfterIdv(promoterHref(venueId)));
+    $("#ch-card")?.addEventListener("click", () => rememberAfterIdv(promoterHref(venueId)));
+    $("#claim-promo")?.addEventListener("click", async () => {
+      await apiJSON(`/chats/${encodeURIComponent(venueId)}/claim`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user: me }),
       });
-      return;
-    }
+      renderPromoterChat(venueId);
+    });
+    return;
   }
   setTitle(t("promoter") + " · " + v.name);
   let threadId = me.id;
@@ -4156,6 +4343,7 @@ async function renderPromoterChat(venueId) {
       <div class="chat-thread-row">
         <button type="button" class="chat-thread${th.threadId === threadId ? " on" : ""}" data-th="${esc(th.threadId)}">
           <b>${esc(th.name)}</b>
+          <span class="paying-meta">${th.paying ? esc(t("payingCustomer") + (th.card ? " · " + cardLabel(th.card) : "")) : esc(t("promoterNeedVerify"))}</span>
           <span>${esc((th.last || "").slice(0, 60))}</span>
         </button>
         ${href ? `<a class="btn btn-wa btn-sm" href="${esc(href)}" target="_blank" rel="noopener" data-wa-guest>${esc(t("waReply"))}</a>` : ""}
@@ -4192,7 +4380,7 @@ async function renderPromoterChat(venueId) {
     <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
     <h1>${esc(t("promoter"))} · ${esc(v.name)}</h1>
     <p class="ob-sub" style="text-align:left;margin:0 0 16px">${esc(t("promoterSub"))}</p>
-    ${!isIdvOk() ? "" : `<p class="member-access on">${esc(t("memberAccessOn"))}</p>`}
+    ${isPayingMember() ? `<p class="member-access on">${esc(t("memberAccessOn"))}${cardLabel() ? ` · ${esc(cardLabel())}` : ""}</p>` : ""}
     <p class="chat-wa" id="chat-wa" hidden>
       <a class="btn btn-wa" id="wa-open" href="#" target="_blank" rel="noopener">WhatsApp</a>
       <span class="events-meta" id="wa-src"></span>
@@ -4239,6 +4427,11 @@ async function renderPromoterChat(venueId) {
     if (data?.error === "idv_required") {
       rememberAfterIdv(promoterHref(venueId));
       location.hash = "#/verify";
+      return;
+    }
+    if (data?.error === "card_required") {
+      rememberAfterIdv(promoterHref(venueId));
+      location.hash = "#/card";
       return;
     }
     if (data?.messages) paint(data.messages);
@@ -4335,7 +4528,7 @@ function renderBookSite(id) {
         <div class="book-site-actions">
           <a class="btn btn-gold" id="bs-open" href="${esc(b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))} ↗</a>
           <button class="btn btn-ghost" type="button" id="bs-velvet">${esc(t("sendRequest"))}</button>
-          <a class="btn ${isIdvOk() ? "btn-gold" : "btn-ghost"}" href="${promoterHref(v.venue_id)}" data-nav>${esc(isIdvOk() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>
+          <a class="btn ${isPayingMember() ? "btn-gold" : "btn-ghost"}" href="${promoterHref(v.venue_id)}" data-nav>${esc(isPayingMember() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>
         </div>
         <p class="book-site-url">${esc(b.host)} · ${esc(b.url)}</p>
         <p class="detail-cta-note" style="margin-bottom:0">${esc(t("bookOnSiteNote"))}</p>
@@ -4363,6 +4556,7 @@ const routes = {
   "#/bookings": renderBookings,
   "#/open": () => { renderOpenTables(); },
   "#/verify": () => { renderVerify(); },
+  "#/card": () => { renderCard(); },
   "#/account": renderAccount,
   "#/payout": () => { renderPayout(); },
   "#/pay-return": () => { renderPayReturn(); },
