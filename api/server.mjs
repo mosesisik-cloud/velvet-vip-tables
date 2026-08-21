@@ -86,6 +86,7 @@ function applyPromoterSeed(db) {
       email: String(prev.email || "").toLowerCase().slice(0, 80),
       legalName: String(p.legalName || p.name || prev.legalName || "").slice(0, 80),
       promoterScope: String(p.scope || prev.promoterScope || ""),
+      photo: publicPhoto(p.photo || prev.photo),
       seed: true,
       whatsapp: prev.whatsapp || "",
       card: prev.card || null,
@@ -365,6 +366,11 @@ function venueLabel(venueId) {
     destination: String(v?.destination || ""),
   };
 }
+function publicPhoto(raw) {
+  const s = String(raw || "").replace(/\\/g, "/");
+  if (/^media\/promoters\/[a-z0-9._-]+\.(gif|jpg|jpeg|png|webp)$/i.test(s)) return s;
+  return "";
+}
 function isRosterPromoter(uid, db) {
   const rec = uid && db.idv[uid];
   return !!(rec && rec.status === "verified" && rec.source === "seed");
@@ -393,6 +399,7 @@ function publicPromoter(uid, db, venueId) {
     idv: passport ? "verified" : "listed",
     operator: !!operator,
     scope: String(u.promoterScope || ""),
+    photo: publicPhoto(u.photo),
     venueCount: claimed.length,
     venues: venueIds.map(venueLabel),
   };

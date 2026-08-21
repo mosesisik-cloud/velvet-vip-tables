@@ -352,6 +352,8 @@ async function runApi() {
       fail("seed-vincenzo", JSON.stringify(vincenzo).slice(0, 280));
     } else if (!strebel || strebel.legalName !== "Fredrik Strebel" || strebel.scope !== "Sverige" || strebel.idv !== "listed") {
       fail("seed-strebel", JSON.stringify(strebel).slice(0, 280));
+    } else if (!jb.photo || !String(jb.photo).endsWith(".gif") || !strebel.photo || strebel.handle !== "fredrikstrebel") {
+      fail("seed-photos", JSON.stringify({ jb: jb.photo, strebel: strebel.photo, handle: strebel.handle }));
     } else ok("seed-roster", "JB + Thomas + Vincenzo + Strebel listed, no passport/card");
 
     const idsAt = (arr) => (arr || []).map((p) => p.id);

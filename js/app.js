@@ -856,9 +856,14 @@ function promoterCardHTML(p, opts = {}) {
     || (venues.length ? venues.slice(0, 4).join(" · ") + (venues.length > 4 ? " +" + (venues.length - 4) : "") : "")
     || (p.venueCount ? t("promoterVenuesN").replace("{n}", String(p.venueCount)) : "");
   const badge = p.idv === "verified" ? t("verifyOk") : t("promoterListed");
+  const pic = String(p.photo || "").replace(/\\/g, "/");
+  const picOk = /^media\/promoters\/[a-z0-9._-]+\.(gif|jpg|jpeg|png|webp)$/i.test(pic);
+  const avatar = picOk
+    ? `<div class="person-avatar has-photo" aria-hidden="true"><img src="${esc(pic)}" alt="" width="56" height="56"></div>`
+    : `<div class="person-avatar soc-${esc(p.provider || "none")}" aria-hidden="true">${esc(name.slice(0, 1).toUpperCase())}</div>`;
   return `
   <div class="person-row">
-    <div class="person-avatar soc-${esc(p.provider || "none")}" aria-hidden="true">${esc(name.slice(0, 1).toUpperCase())}</div>
+    ${avatar}
     <div class="person-info">
       <div class="person-name">${esc(name)} <span class="chip-mini">${esc(t("promoterVerified"))}</span></div>
       <div class="person-meta">

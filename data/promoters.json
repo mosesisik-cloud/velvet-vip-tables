@@ -5,28 +5,34 @@
       "name": "JB",
       "legalName": "JB",
       "brands": ["Bagatelle", "Baoli"],
-      "scope": "Bagatelle · Baoli · världen"
+      "scope": "Bagatelle · Baoli · världen",
+      "photo": "media/promoters/jb.gif"
     },
     {
       "id": "P-thomas",
       "name": "Thomas",
       "legalName": "Thomas",
       "destinations": ["DXB"],
-      "scope": "Dubai"
+      "scope": "Dubai",
+      "photo": "media/promoters/thomas.gif"
     },
     {
       "id": "P-vincenzo",
       "name": "Vincenzo",
       "legalName": "Vincenzo",
       "regions": ["Europe"],
-      "scope": "Europa"
+      "scope": "Europa",
+      "photo": "media/promoters/vincenzo.gif"
     },
     {
       "id": "P-strebel",
       "name": "Fredrik Strebel",
       "legalName": "Fredrik Strebel",
       "countries": ["Sweden"],
-      "scope": "Sverige"
+      "scope": "Sverige",
+      "photo": "media/promoters/strebel.gif",
+      "handle": "fredrikstrebel",
+      "provider": "instagram"
     }
   ]
 }
