@@ -490,7 +490,9 @@ function paintUser() {
 }
 function apiBase() {
   if (location.hostname === "b2b.bakemyday.se") return `${location.origin}/velvet-api`;
-  return "";
+  // GitHub Pages och andra origins: API:t är CORS-öppet (Access-Control-Allow-Origin: *),
+  // så livesajten får samma backend-funktioner som b2b.bakemyday.se/velvet/.
+  return "https://b2b.bakemyday.se/velvet-api";
 }
 async function apiJSON(path, opts) {
   const base = apiBase();
@@ -1084,8 +1086,10 @@ function bindFavButtons(root = document) {
 
 // ---------- Concierge: förfrågan (inte fake-bokning) ----------
 const CONCIERGE_MAIL = "gabrielhadodo@gmail.com";
-// FormSubmit vidarebefordrar inte förrän Gabbe bekräftat inkorgen (README).
-const FORMSUBMIT_INBOX_CONFIRMED = false;
+// Första POST:en triggar FormSubmits aktiveringsmejl till Gabbe. Tills han klickat
+// bekräftelsen svarar FormSubmit utan success → koden faller tillbaka på "local" + mailto,
+// så inget tappas bort. När inkorgen är bekräftad flyter förfrågningarna direkt.
+const FORMSUBMIT_INBOX_CONFIRMED = true;
 const HOST_KEY = "velvet_host_v1";
 const loadHost = () => {
   try {
