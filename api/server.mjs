@@ -245,6 +245,75 @@ function isPromoter(user, venueId, db) {
   const list = db.promoters[venueId] || [];
   return list.includes(uid);
 }
+function isPromoterAnywhere(uid, db) {
+  if (!uid) return false;
+  if (isPromoter({ id: uid }, "", db)) return true;
+  for (const vid of Object.keys(db.promoters || {})) {
+    if ((db.promoters[vid] || []).includes(uid)) return true;
+  }
+  return false;
+}
+function claimedVenueIds(uid, db) {
+  const out = [];
+  for (const [venueId, list] of Object.entries(db.promoters || {})) {
+    if ((list || []).includes(uid)) out.push(venueId);
+  }
+  return out;
+}
+function allPromoterUids(db) {
+  const set = new Set();
+  for (const list of Object.values(db.promoters || {})) {
+    for (const id of list || []) if (id) set.add(String(id));
+  }
+  for (const uid of Object.keys(db.users || {})) {
+    if (isPromoter({ id: uid }, "", db)) set.add(uid);
+  }
+  return [...set];
+}
+function venueLabel(venueId) {
+  const v = loadVenuesFile().find((x) => x.venue_id === venueId);
+  return {
+    id: venueId,
+    name: String(v?.name || venueId),
+    destination: String(v?.destination || ""),
+  };
+}
+function publicPromoter(uid, db, venueId) {
+  if (!uid || !isIdvVerified(uid, db)) return null;
+  const claimed = claimedVenueIds(uid, db);
+  const operator = isPromoter({ id: uid }, "", db);
+  if (venueId) {
+    if (!claimed.includes(venueId)) return null;
+  } else if (!operator && !claimed.length) {
+    return null;
+  }
+  const d = dossier(uid, db) || {};
+  const u = db.users[uid] || {};
+  const venueIds = venueId ? [venueId] : claimed;
+  return {
+    id: uid,
+    legalName: d.legalName || "",
+    name: String(u.name || d.legalName || "").slice(0, 80),
+    handle: String(d.handle || u.handle || "").replace(/^@/, ""),
+    provider: d.provider || u.provider || "",
+    socialUrl: socialUrl(d.provider || u.provider, d.handle || u.handle),
+    idv: "verified",
+    operator: !!operator,
+    venues: venueIds.map(venueLabel),
+  };
+}
+function listVerifiedPromoters(db, venueId) {
+  const ids = new Set();
+  if (venueId) {
+    for (const id of db.promoters[venueId] || []) if (id) ids.add(String(id));
+  } else {
+    for (const id of allPromoterUids(db)) ids.add(id);
+  }
+  return [...ids]
+    .map((id) => publicPromoter(id, db, venueId || ""))
+    .filter(Boolean)
+    .sort((a, b) => String(a.legalName || a.name).localeCompare(String(b.legalName || b.name)));
+}
 function save(db) {
   fs.writeFileSync(DATA, JSON.stringify(db, null, 2));
 }
@@ -1707,6 +1776,29 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true, stored });
     }
 
+    const promoOne = url.pathname.match(/^\/promoters\/([^/]+)$/);
+    if (req.method === "GET" && url.pathname === "/promoters") {
+      const uid = url.searchParams.get("userId") || "";
+      if (!uid) return send(res, 401, { error: "auth" });
+      const db = load();
+      if (!isPromoterAnywhere(uid, db)) {
+        const gate = memberGate(uid, db);
+        if (gate) return send(res, 403, { error: gate });
+      }
+      return send(res, 200, { promoters: listVerifiedPromoters(db) });
+    }
+    if (req.method === "GET" && promoOne) {
+      const venueId = decodeURIComponent(promoOne[1]);
+      const uid = url.searchParams.get("userId") || "";
+      if (!uid) return send(res, 401, { error: "auth" });
+      const db = load();
+      if (!isPromoter({ id: uid }, venueId, db)) {
+        const gate = memberGate(uid, db, venueId);
+        if (gate) return send(res, 403, { error: gate });
+      }
+      return send(res, 200, { venueId, promoters: listVerifiedPromoters(db, venueId) });
+    }
+
     const matchComposeM = url.pathname.match(/^\/matches\/([^/]+)\/compose$/);
     const matchM = url.pathname.match(/^\/matches\/([^/]+)$/);
     if (req.method === "POST" && matchM) {
@@ -1971,6 +2063,7 @@ const server = http.createServer(async (req, res) => {
         whatsapp: whatsappForVenue(venueId, db),
         guestWa: guestWaForThread(db, venueId, thread),
         cloud: !!(waCloud().token && waCloud().phoneId),
+        promoters: listVerifiedPromoters(db, venueId),
         guest: dossier(guestId, db) || {
           id: guestId,
           idv: db.idv[guestId]?.status === "verified" ? "verified" : "none",
@@ -1995,12 +2088,13 @@ const server = http.createServer(async (req, res) => {
       const threadId = promoter ? String(b.threadId || uid) : uid;
       if (b.whatsapp) setGuestWa(db, venueId, uid, b.whatsapp, b.user?.name);
       const asPromo = promoter && b.asPromoter !== false;
+      const doss = dossier(uid, db);
       const msg = {
         id: `M-${Date.now().toString(36)}`,
         role: asPromo ? "promoter" : "user",
         userId: uid,
-        name: String(b.user?.name || ""),
-        handle: String(b.user?.handle || ""),
+        name: String((asPromo ? (doss?.legalName || b.user?.name || "Promoter") : (b.user?.name || ""))).slice(0, 80),
+        handle: String(b.user?.handle || doss?.handle || ""),
         text,
         via: "app",
         created: new Date().toISOString(),

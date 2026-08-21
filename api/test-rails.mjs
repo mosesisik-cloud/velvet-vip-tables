@@ -302,6 +302,43 @@ async function runApi() {
       fail("promo-host-bypass", JSON.stringify(hostOpen.json).slice(0, 220));
     } else ok("promo-host-bypass", "promoter access without IDV");
 
+    const promoNoUid = await req(base, "GET", "/promoters");
+    if (promoNoUid.status !== 401) fail("promoters-no-uid", "expected 401 got " + promoNoUid.status);
+    else ok("promoters-no-uid", "userId required");
+
+    const promoLocked = await req(base, "GET", "/promoters?userId=" + encodeURIComponent(plain.id));
+    if (promoLocked.status !== 403 || promoLocked.json.error !== "idv_required") {
+      fail("promoters-locked", JSON.stringify(promoLocked.json).slice(0, 220));
+    } else ok("promoters-locked", "unverified member 403");
+
+    const promoVenueLocked = await req(base, "GET", "/promoters/IBZ-001?userId=" + encodeURIComponent(plain.id));
+    if (promoVenueLocked.status !== 403 || promoVenueLocked.json.error !== "idv_required") {
+      fail("promoters-venue-locked", JSON.stringify(promoVenueLocked.json).slice(0, 220));
+    } else ok("promoters-venue-locked", "unverified venue list 403");
+
+    const unverifiedClaim = await req(base, "POST", "/chats/IBZ-002/claim", { user: plain });
+    if (unverifiedClaim.status !== 200) fail("promo-plain-claim", JSON.stringify(unverifiedClaim.json).slice(0, 220));
+
+    const promoHost = await req(base, "GET", "/promoters?userId=" + encodeURIComponent(host.id));
+    const listed = promoHost.json.promoters || [];
+    const self = listed.find((p) => p.id === host.id);
+    const leaked = listed.some((p) => p.card || p.fields || p.documentNumber);
+    if (promoHost.status !== 200 || !self || self.idv !== "verified" || self.legalName !== "MOSES ISIK") {
+      fail("promoters-host", JSON.stringify(promoHost.json).slice(0, 280));
+    } else if (listed.some((p) => p.id === plain.id)) {
+      fail("promoters-unverified-hidden", "plain claimer listed");
+    } else if (leaked) {
+      fail("promoters-no-secrets", JSON.stringify(listed.find((p) => p.card || p.fields)).slice(0, 220));
+    } else ok("promoters-host", "verified promoter listed, unverified hidden");
+
+    const promoVenue = await req(base, "GET", "/promoters/IBZ-001?userId=" + encodeURIComponent(host.id));
+    const atVenue = (promoVenue.json.promoters || []).find((p) => p.id === host.id);
+    if (promoVenue.status !== 200 || !atVenue || atVenue.legalName !== "MOSES ISIK") {
+      fail("promoters-venue", JSON.stringify(promoVenue.json).slice(0, 280));
+    } else if (!(hostOpen.json.promoters || []).some((p) => p.id === host.id && p.idv === "verified")) {
+      fail("promoters-in-chat", JSON.stringify(hostOpen.json.promoters).slice(0, 220));
+    } else ok("promoters-venue", "Hï Ibiza roster + chat roster");
+
     const got = await req(base, "GET", "/tables/TB-RAILS");
     const members = got.json.table?.members || [];
     const ids = members.map((m) => m.id).sort();
@@ -510,6 +547,12 @@ async function runApi() {
     if (cardOk.status !== 200 || cardOk.json.card?.last4 !== "4242" || cardOk.json.card?.number) {
       fail("card-ok", JSON.stringify(cardOk.json).slice(0, 220));
     } else ok("card-ok", "Visa ••4242");
+
+    const promoGuest = await req(base, "GET", "/promoters?userId=" + encodeURIComponent(guest.id));
+    const guestSees = (promoGuest.json.promoters || []).find((p) => p.id === host.id);
+    if (promoGuest.status !== 200 || !guestSees || guestSees.idv !== "verified" || guestSees.legalName !== "MOSES ISIK") {
+      fail("promoters-guest-sees", JSON.stringify(promoGuest.json).slice(0, 280));
+    } else ok("promoters-guest-sees", "verified paying guest sees verified promoter");
 
     const idvCard = await req(base, "GET", "/idv/" + encodeURIComponent(guest.id));
     if (!idvCard.json.paying || idvCard.json.card?.last4 !== "4242") {

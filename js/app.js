@@ -847,6 +847,112 @@ function consumeAfterIdv() {
 function promoterHref(venueId) {
   return `#/promoter/${encodeURIComponent(venueId)}`;
 }
+function promoterCardHTML(p, opts = {}) {
+  const name = p.legalName || p.name || t("promoter");
+  const handle = p.handle ? "@" + String(p.handle).replace(/^@/, "") : "";
+  const venues = (p.venues || []).map((x) => x.name || x.id).filter(Boolean);
+  const chatId = opts.chatVenue || (p.venues && p.venues[0] && p.venues[0].id);
+  return `
+  <div class="person-row">
+    <div class="person-avatar soc-${esc(p.provider || "none")}" aria-hidden="true">${esc(name.slice(0, 1).toUpperCase())}</div>
+    <div class="person-info">
+      <div class="person-name">${esc(name)} <span class="chip-mini">${esc(t("promoterVerified"))}</span></div>
+      <div class="person-meta">
+        ${p.provider ? `<span class="soc-pill">${esc(p.provider)}</span>` : ""}
+        ${handle ? (p.socialUrl
+          ? `<a class="person-handle" href="${esc(p.socialUrl)}" target="_blank" rel="noopener">${esc(handle)}</a>`
+          : `<span class="person-handle">${esc(handle)}</span>`) : ""}
+        <span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>
+        ${venues.length ? `<span>${esc(venues.slice(0, 4).join(" · "))}${venues.length > 4 ? " +" + (venues.length - 4) : ""}</span>` : ""}
+      </div>
+    </div>
+    ${opts.compact || !chatId ? "" : `<div class="person-pay"><a class="btn btn-gold btn-sm" href="${promoterHref(chatId)}" data-nav>${esc(t("chatPromoter"))}</a></div>`}
+  </div>`;
+}
+function venuePromotersPanelHTML() {
+  return `
+      <div class="detail-panel" id="venue-promoters">
+        <h2 class="detail-panel-title">${esc(t("promotersTitle"))}</h2>
+        <p class="events-meta">${esc(isPayingMember() ? t("promotersLoading") : t("promotersLocked"))}</p>
+      </div>`;
+}
+async function fillVenuePromoters(venueId) {
+  const el = $("#venue-promoters");
+  if (!el) return;
+  const me = loadUser();
+  if (!me || !isPayingMember()) {
+    el.innerHTML = `
+      <h2 class="detail-panel-title">${esc(t("promotersTitle"))}</h2>
+      <p class="detail-cta-note">${esc(t("promotersLocked"))}</p>
+      ${promoterLockHTML(me && isIdvOk() ? "card" : "idv")}`;
+    rememberAfterIdv(promoterHref(venueId));
+    $("#ch-verify")?.addEventListener("click", () => rememberAfterIdv("#/promoters"));
+    $("#ch-card")?.addEventListener("click", () => rememberAfterIdv("#/promoters"));
+    return;
+  }
+  const r = await apiJSON(`/promoters/${encodeURIComponent(venueId)}?userId=${encodeURIComponent(me.id)}`);
+  if (!el.isConnected) return;
+  if (r?.error === "idv_required" || r?.error === "card_required") {
+    el.innerHTML = `
+      <h2 class="detail-panel-title">${esc(t("promotersTitle"))}</h2>
+      ${promoterLockHTML(r.error === "card_required" ? "card" : "idv")}`;
+    return;
+  }
+  const list = r?.promoters || [];
+  el.innerHTML = `
+    <h2 class="detail-panel-title">${esc(t("promotersTitle"))}</h2>
+    <p class="events-meta">${esc(t("promotersSub"))}</p>
+    ${list.length
+      ? `<div class="person-list">${list.map((p) => promoterCardHTML(p, { chatVenue: venueId })).join("")}</div>`
+      : `<p class="price-disclaimer">${esc(t("promotersEmpty"))}</p>`}
+    <p style="margin-top:12px"><a class="btn btn-ghost btn-sm" href="#/promoters" data-nav>${esc(t("promotersSee"))}</a></p>`;
+}
+async function renderPromoters() {
+  const me = loadUser();
+  setTitle(t("promotersTitle"));
+  if (!me) {
+    view().innerHTML = `
+    <section class="section">
+      <div class="empty-state">
+        <h3>${esc(t("promotersTitle"))}</h3>
+        <p>${esc(t("promotersLocked"))}</p>
+        <p style="margin-top:16px"><button class="btn btn-gold" id="pr-login">${esc(t("loginCta"))}</button></p>
+      </div>
+    </section>`;
+    $("#pr-login")?.addEventListener("click", () => openOnboarding({ dismissable: false }));
+    return;
+  }
+  await refreshIdv();
+  if (!isPayingMember()) {
+    rememberAfterIdv("#/promoters");
+    view().innerHTML = `
+    <section class="section">
+      <h1>${esc(t("promotersTitle"))}</h1>
+      <p class="ob-sub" style="text-align:left;margin:0 0 16px">${esc(t("promotersLocked"))}</p>
+      ${promoterLockHTML(isIdvOk() ? "card" : "idv")}
+    </section>`;
+    return;
+  }
+  view().innerHTML = `
+  <section class="section">
+    <div class="section-head"><div><h2>${esc(t("promotersTitle"))}</h2></div></div>
+    <p class="ob-sub" style="text-align:left;margin:0 0 12px">${esc(t("promotersSub"))}</p>
+    <p class="member-access on">${esc(t("memberAccessOn"))}${cardLabel() ? ` · ${esc(cardLabel())}` : ""}</p>
+    <div id="promo-list"><p class="events-meta">${esc(t("promotersLoading"))}</p></div>
+  </section>`;
+  const r = await apiJSON(`/promoters?userId=${encodeURIComponent(me.id)}`);
+  const el = $("#promo-list");
+  if (!el) return;
+  if (r?.error === "idv_required" || r?.error === "card_required") {
+    rememberAfterIdv("#/promoters");
+    location.hash = r.error === "card_required" ? "#/card" : "#/verify";
+    return;
+  }
+  const list = r?.promoters || [];
+  el.innerHTML = list.length
+    ? `<div class="person-list">${list.map((p) => promoterCardHTML(p)).join("")}</div>`
+    : `<p class="price-disclaimer">${esc(t("promotersEmpty"))}</p>`;
+}
 function promoterLockHTML(kind) {
   if (kind === "card") {
     return `
@@ -1835,11 +1941,13 @@ function renderVenueDetail(id) {
           <li>${esc(t("perkPromoter"))}</li>
         </ul>
       </div>
+      ${venuePromotersPanelHTML()}
     </div>
     ${venueDockHTML(v)}
   </section>`;
   document.body.classList.add("has-dock");
 
+  fillVenuePromoters(v.venue_id);
   $("#d-book").addEventListener("click", () => openBookingModal(v));
   $("#dock-book")?.addEventListener("click", () => openBookingModal(v));
   $("#v-share")?.addEventListener("click", () => shareVenue(v));
@@ -3671,6 +3779,7 @@ async function renderVerify() {
           <p class="verify-perks-title">${esc(t("verifyPerksTitle"))}</p>
           <ul>
             <li>${esc(t("verifyPerkPromoter"))}</li>
+            <li>${esc(t("verifyPerkSee"))}</li>
             <li>${esc(t("verifyPerkCard"))}</li>
             <li>${esc(t("verifyPerkEvents"))}</li>
           </ul>
@@ -4172,7 +4281,8 @@ async function renderAccount() {
               : `<a class="btn btn-ghost btn-sm" href="#/card" data-nav>${esc(t("cardNeed"))}</a>`}
           </p>
           <p>${starRow(mine.avg)} ${mine.n ? `${esc(t("funScore"))} (${mine.n})` : t("noReviews")}</p>
-          <p style="margin-top:10px"><a class="btn btn-ghost btn-sm" href="#/user/${encodeURIComponent(u.id)}" data-nav>${esc(t("openProfile"))}</a></p>
+          <p style="margin-top:10px"><a class="btn btn-ghost btn-sm" href="#/user/${encodeURIComponent(u.id)}" data-nav>${esc(t("openProfile"))}</a>
+            ${isPayingMember() ? `<a class="btn btn-gold btn-sm" href="#/promoters" data-nav>${esc(t("promotersSee"))}</a>` : ""}</p>
         </div>
       </div>
       ${partiesBlockHTML(mine, { mine: true })}
@@ -4511,7 +4621,7 @@ async function renderPromoterChat(venueId) {
     }
     box.innerHTML = messages.map((m) => `
       <div class="chat-bubble ${m.role === "promoter" ? "promo" : (m.userId === me.id ? "mine" : "")}${m.kind === "match" || m.kind === "match_done" ? " match" : ""}">
-        <div class="chat-who">${m.kind === "match" || m.kind === "match_done" ? esc(t("matchKind")) : (m.role === "promoter" ? esc(t("promoter")) : esc(m.name || ""))}${m.via === "whatsapp" ? ` · WhatsApp` : ""}</div>
+        <div class="chat-who">${m.kind === "match" || m.kind === "match_done" ? esc(t("matchKind")) : (m.role === "promoter" ? esc(m.name || t("promoter")) + (m.name ? ` · ${esc(t("promoter"))}` : "") : esc(m.name || ""))}${m.via === "whatsapp" ? ` · WhatsApp` : ""}</div>
         <div class="chat-text">${esc(m.text)}</div>
         ${m.tableId ? `<a class="chat-table-link" href="#/table/${encodeURIComponent(m.tableId)}" data-nav>${esc(t("viewParty"))}</a>` : ""}
       </div>`).join("");
@@ -4547,6 +4657,12 @@ async function renderPromoterChat(venueId) {
       promoter = !!data.promoter;
       if (data.whatsapp && data.whatsapp.phone) wa = data.whatsapp;
       if (Object.prototype.hasOwnProperty.call(data, "guestWa")) guestWa = data.guestWa || "";
+      const roster = document.getElementById("chat-promoters");
+      if (roster && Array.isArray(data.promoters)) {
+        roster.innerHTML = data.promoters.length
+          ? data.promoters.map((p) => promoterCardHTML(p, { chatVenue: venueId, compact: true })).join("")
+          : "";
+      }
       paint(data.messages || []);
       paintWa();
       return data.messages || [];
@@ -4565,6 +4681,7 @@ async function renderPromoterChat(venueId) {
     <h1>${esc(t("promoter"))} · ${esc(v.name)}</h1>
     <p class="ob-sub" style="text-align:left;margin:0 0 16px">${esc(t("promoterSub"))}</p>
     ${isPayingMember() ? `<p class="member-access on">${esc(t("memberAccessOn"))}${cardLabel() ? ` · ${esc(cardLabel())}` : ""}</p>` : ""}
+    <div class="person-list" id="chat-promoters" style="margin:12px 0 16px"></div>
     <div class="match-ask" id="match-ask" ${asPromoter ? "hidden" : ""}>
       <h2 class="detail-panel-title">${esc(t("matchAsk"))}</h2>
       <p class="stepper-hint">${esc(t("matchAskSub"))}</p>
@@ -4867,6 +4984,7 @@ const routes = {
   "#/verify": () => { renderVerify(); },
   "#/card": () => { renderCard(); },
   "#/account": renderAccount,
+  "#/promoters": () => { renderPromoters(); },
   "#/payout": () => { renderPayout(); },
   "#/pay-return": () => { renderPayReturn(); },
   "#/favorites": renderFavorites,
