@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { loadEventsFile, loadCrawlStatus, runCrawl, getCrawlState, scheduleDailyCrawl } from "./crawl-events.mjs";
 import { loadPlacesFile, runPlacesLookup } from "./google-places.mjs";
 import { loadFactsFile, runFactsCrawl } from "./venue-facts.mjs";
-import { parseTd3, extractMrzFromText, nameMatch, publicFields, legalName } from "./mrz.mjs";
+import { parseTd3, extractMrzFromText, nameMatch, publicFields, legalName, ageYears } from "./mrz.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
@@ -129,8 +129,34 @@ async function cloudSendWa(to, text) {
     return false;
   }
 }
+const MIN_AGE = 18;
+const US21 = new Set(["MIA", "LAS", "NYC", "LAX", "ASP"]);
+function loadVenuesFile() {
+  for (const p of [
+    path.join(__dir, "public-data", "venues.json"),
+    path.join(__dir, "..", "data", "venues.json"),
+  ]) {
+    try { return JSON.parse(fs.readFileSync(p, "utf8")); } catch { /* next */ }
+  }
+  return [];
+}
+function minAgeForVenue(venueId) {
+  const facts = loadFactsFile()?.venues?.[venueId];
+  const n = parseInt(String(facts?.ageLimit || "").replace(/[^\d]/g, ""), 10);
+  if (n >= 16 && n <= 25) return n;
+  const v = loadVenuesFile().find((x) => x.venue_id === venueId);
+  const code = String(v?.destination_code || "").toUpperCase();
+  if (US21.has(code)) return 21;
+  return MIN_AGE;
+}
+function idvAge(rec) {
+  return ageYears(rec?.fieldsPublic?.birthDate || rec?.fields?.birthDate);
+}
 function isIdvVerified(uid, db) {
-  return !!(uid && db.idv[uid] && db.idv[uid].status === "verified");
+  const rec = uid && db.idv[uid];
+  if (!rec || rec.status !== "verified") return false;
+  const age = idvAge(rec);
+  return age == null ? false : age >= MIN_AGE;
 }
 function hasCardOnFile(uid, db) {
   return !!publicCard(db.users[uid]?.card);
@@ -138,9 +164,16 @@ function hasCardOnFile(uid, db) {
 function isVerifiedMember(uid, db) {
   return isIdvVerified(uid, db) && hasCardOnFile(uid, db);
 }
-function memberGate(uid, db) {
-  if (!isIdvVerified(uid, db)) return "idv_required";
+function memberGate(uid, db, venueId) {
+  const rec = uid && db.idv[uid];
+  if (!rec || rec.status !== "verified") {
+    if (rec && (rec.status === "underage" || idvAge(rec) < MIN_AGE)) return "too_young";
+    return "idv_required";
+  }
+  const age = idvAge(rec);
+  if (age == null || age < MIN_AGE) return "too_young";
   if (!hasCardOnFile(uid, db)) return "card_required";
+  if (venueId && age < minAgeForVenue(venueId)) return "too_young";
   return "";
 }
 function parseOpenFor(v) {
@@ -263,14 +296,19 @@ function decodeDataUrl(dataUrl) {
 }
 function publicIdv(rec) {
   if (!rec) return { status: "none" };
+  const fields = rec.fieldsPublic || null;
+  const age = idvAge(rec);
   return {
     status: rec.status || "none",
     submitted: rec.submitted || null,
     reasons: rec.reasons || [],
-    fields: rec.fieldsPublic || null,
+    fields,
     legalName: rec.legalName || "",
     nameMatch: rec.nameMatch || null,
     face: rec.facePublic || null,
+    ageYears: age,
+    adult: age != null && age >= MIN_AGE,
+    minAge: MIN_AGE,
   };
 }
 function readFace(b) {
@@ -1281,7 +1319,7 @@ const server = http.createServer(async (req, res) => {
       const hostId = String(b.host?.id || "");
       if (!hostId) return send(res, 401, { error: "auth" });
       const db = load();
-      const gate = memberGate(hostId, db);
+      const gate = memberGate(hostId, db, String(b.venue_id || ""));
       if (gate) return send(res, 403, { error: gate });
       const party = Math.max(2, Math.min(20, Number(b.party) || 4));
       const openSeats = Math.max(0, Math.min(party - 1, Number(b.openSeats) || 0));
@@ -1338,6 +1376,11 @@ const server = http.createServer(async (req, res) => {
       const uid = b.user?.id || "";
       const pref = seatPrefError(t, uid, db);
       if (pref) return send(res, 403, { error: pref, openFor: parseOpenFor(t.openFor) });
+      if (uid && db.idv[uid]?.status === "verified") {
+        const years = idvAge(db.idv[uid]);
+        const min = minAgeForVenue(t.venue_id);
+        if (years != null && years < min) return send(res, 403, { error: "too_young", ageYears: years, minAge: min });
+      }
       if (uid && (t.host?.id === uid || t.joiners.some((j) => j.id === uid))) {
         return send(res, 200, { table: publicTable(t, db), already: true });
       }
@@ -1423,6 +1466,26 @@ const server = http.createServer(async (req, res) => {
         };
         save(db);
         return send(res, 422, { error: "mrz_expired", idv: publicIdv(db.idv[b.userId]) });
+      }
+      const years = ageYears(parsed.fields.birthDate);
+      if (years == null || years < MIN_AGE) {
+        db.idv[b.userId] = {
+          userId: String(b.userId),
+          name: claimed,
+          status: "underage",
+          submitted: now,
+          reasons: ["too_young"],
+          fields: parsed.fields,
+          fieldsPublic: publicFields(parsed.fields),
+          legalName: legalName(parsed.fields),
+        };
+        save(db);
+        return send(res, 422, {
+          error: "too_young",
+          ageYears: years,
+          minAge: MIN_AGE,
+          idv: publicIdv(db.idv[b.userId]),
+        });
       }
       const face = readFace(b);
       if (!face.ok) {
@@ -1653,7 +1716,7 @@ const server = http.createServer(async (req, res) => {
       if (!uid) return send(res, 400, { error: "user" });
       const db = load();
       if (!isPromoter({ id: uid }, venueId, db)) {
-        const gate = memberGate(uid, db);
+        const gate = memberGate(uid, db, venueId);
         if (gate) return send(res, 403, { error: gate });
       }
       const date = String(b.date || "");
@@ -1722,7 +1785,7 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       const promoter = isPromoter({ id: uid }, venueId, db);
       if (!promoter) {
-        const gate = memberGate(uid, db);
+        const gate = memberGate(uid, db, venueId);
         if (gate) return send(res, 403, { error: gate });
       }
       const list = (db.matches || []).filter((m) => m.venueId === venueId && (promoter || m.userId === uid));
@@ -1825,7 +1888,7 @@ const server = http.createServer(async (req, res) => {
       if (!uid) return send(res, 400, { error: "user" });
       const db = load();
       if (!isPromoter({ id: uid }, venueId, db)) {
-        const gate = memberGate(uid, db);
+        const gate = memberGate(uid, db, venueId);
         if (gate) return send(res, 403, { error: gate });
       }
       const phone = waDigits(b.whatsapp);
@@ -1895,7 +1958,7 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       const promoter = isPromoter({ id: uid }, venueId, db);
       if (!promoter) {
-        const gate = memberGate(uid, db);
+        const gate = memberGate(uid, db, venueId);
         if (gate) return send(res, 403, { error: gate });
       }
       const venueChats = db.chats[venueId] || {};
@@ -1925,7 +1988,7 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       const promoter = isPromoter({ id: uid }, venueId, db);
       if (!promoter) {
-        const gate = memberGate(uid, db);
+        const gate = memberGate(uid, db, venueId);
         if (gate) return send(res, 403, { error: gate });
       }
       upsertUser(db, b.user);

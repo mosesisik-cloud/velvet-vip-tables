@@ -12,6 +12,10 @@ export const TEST_LIVE = {
   line1: "P<SWEISIK<<MOSES<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
   line2: "AB12345671SWE9003152M3203156<<<<<<<<<<<<<<04",
 };
+export const TEST_YOUNG = {
+  line1: "P<SWEUNG<<TEST<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<",
+  line2: "CD99999990SWE0908221M3203156<<<<<<<<<<<<<<00",
+};
 
 function mrzVal(ch) {
   const c = String(ch || "<").toUpperCase();
@@ -201,15 +205,27 @@ export function nameMatch(firstName, lastName, claimed) {
   return { ok: score >= 0.5, score, reason: score >= 0.5 ? "overlap" : "mismatch" };
 }
 
+export function ageYears(birthDate, on = new Date()) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(birthDate || ""))) return null;
+  const [y, m, d] = String(birthDate).split("-").map(Number);
+  let age = on.getUTCFullYear() - y;
+  const mm = on.getUTCMonth() + 1;
+  const dd = on.getUTCDate();
+  if (mm < m || (mm === m && dd < d)) age -= 1;
+  return age;
+}
+
 export function publicFields(fields) {
   if (!fields) return null;
   const num = String(fields.documentNumber || "");
+  const birthDate = fields.birthDate || "";
   return {
     lastName: fields.lastName || "",
     firstName: fields.firstName || "",
     nationality: fields.nationality || "",
     issuingState: fields.issuingState || "",
-    birthDate: fields.birthDate || "",
+    birthDate,
+    ageYears: ageYears(birthDate),
     expirationDate: fields.expirationDate || "",
     sex: fields.sex || "",
     documentCode: fields.documentCode || "P",

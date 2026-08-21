@@ -7,7 +7,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
-import { parseTd3, extractMrzFromText, nameMatch, ICAO_SAMPLE, TEST_LIVE } from "./mrz.mjs";
+import { parseTd3, extractMrzFromText, nameMatch, ageYears, ICAO_SAMPLE, TEST_LIVE, TEST_YOUNG } from "./mrz.mjs";
 import { fileURLToPath } from "node:url";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
@@ -46,6 +46,14 @@ function checkMrz() {
   if (!live.valid || live.fields.lastName !== "ISIK" || live.fields.documentNumber !== "AB1234567") {
     fail("mrz-live", JSON.stringify(live));
   } else ok("mrz-live", live.fields.firstName + " " + live.fields.lastName);
+  const liveAge = ageYears(live.fields.birthDate);
+  if (liveAge == null || liveAge < 18) fail("mrz-age-adult", String(liveAge));
+  else ok("mrz-age-adult", liveAge + " from MRZ");
+
+  const young = parseTd3(TEST_YOUNG.line1, TEST_YOUNG.line2);
+  if (!young.checksumsOk || young.expired) fail("mrz-young", JSON.stringify(young.reasons));
+  else if (ageYears(young.fields.birthDate) >= 18) fail("mrz-young-age", ageYears(young.fields.birthDate));
+  else ok("mrz-young", young.fields.birthDate + " age " + ageYears(young.fields.birthDate));
 
   const extracted = extractMrzFromText("header\n" + TEST_LIVE.line1 + "\n" + TEST_LIVE.line2 + "\nfooter");
   if (!extracted?.valid) fail("mrz-extract", JSON.stringify(extracted && extracted.reasons));
@@ -383,6 +391,12 @@ async function runApi() {
     if (expired.status !== 422 || expired.json.error !== "mrz_expired") fail("idv-expired", JSON.stringify(expired.json).slice(0, 200));
     else ok("idv-expired", "rejected");
 
+    const kid = await req(base, "POST", "/idv", {
+      userId: "U-kid", name: "Test Ung", passport: img, selfie: img, mrz: TEST_YOUNG,
+    });
+    if (kid.status !== 422 || kid.json.error !== "too_young") fail("idv-too-young", JSON.stringify(kid.json).slice(0, 240));
+    else ok("idv-too-young", "age " + kid.json.ageYears);
+
     const noFace = await req(base, "POST", "/idv", {
       userId: guest.id, name: "Moses Isik", passport: img, selfie: img, mrz: TEST_LIVE,
     });
@@ -416,7 +430,8 @@ async function runApi() {
     if (good.status !== 200 || good.json.idv?.status !== "verified") fail("idv-ok", JSON.stringify(good.json).slice(0, 240));
     else if (good.json.idv.fields?.documentNumber) fail("idv-ok", "leaked full passport number");
     else if (good.json.idv.fields?.documentNumberMasked !== "•••567") fail("idv-ok", "mask " + good.json.idv.fields?.documentNumberMasked);
-    else ok("idv-ok", good.json.idv.legalName);
+    else if (!good.json.idv.adult || good.json.idv.ageYears < 18) fail("idv-ok-age", JSON.stringify({ age: good.json.idv.ageYears, adult: good.json.idv.adult }));
+    else ok("idv-ok", good.json.idv.legalName + " age " + good.json.idv.ageYears);
 
     const gotIdv = await req(base, "GET", "/idv/" + encodeURIComponent(guest.id));
     if (gotIdv.json.idv?.status !== "verified") fail("idv-get", JSON.stringify(gotIdv.json));

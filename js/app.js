@@ -1,6 +1,6 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
 import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js";
-import { publicFields as mrzPublic, nameMatch } from "./mrz.js";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js";
 import { readPassportMrz, jpegFromFile, snapshotVideo, startCamera, stopCamera } from "./passport-ocr.js";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, matchFaces, facePayload } from "./face-idv.js";
 
@@ -750,6 +750,23 @@ function isCardOk() {
 function isPayingMember() {
   return isIdvOk() && isCardOk();
 }
+function venueMinAge(v) {
+  const raw = String((venueFacts(v) || {}).ageLimit || "");
+  const n = parseInt(raw.replace(/[^\d]/g, ""), 10);
+  if (n >= 16 && n <= 25) return n;
+  if (["MIA", "LAS", "NYC", "LAX", "ASP"].includes(String(v?.destination_code || "").toUpperCase())) return 21;
+  return 18;
+}
+function myAgeYears() {
+  const u = loadUser();
+  if (u?.ageYears != null) return Number(u.ageYears);
+  return ageYears(u?.idvFields?.birthDate);
+}
+function venueTooYoung(v) {
+  const min = venueMinAge(v);
+  const age = myAgeYears();
+  return age != null && age < min ? { min, age } : null;
+}
 function openForOf(v) {
   const s = String(v || "anyone").toLowerCase();
   return s === "women" || s === "men" ? s : "anyone";
@@ -859,6 +876,7 @@ async function refreshIdv() {
     idvSubmitted: r?.idv?.submitted || u.idvSubmitted,
     legalName: r?.idv?.legalName || u.legalName || "",
     idvFields: r?.idv?.fields || u.idvFields || null,
+    ageYears: r?.idv?.ageYears != null ? r.idv.ageYears : u.ageYears,
     cardLast4: r?.card?.last4 || u.cardLast4 || "",
     cardBrand: r?.card?.brand || u.cardBrand || "",
   });
@@ -1890,6 +1908,23 @@ async function openBookingModal(v) {
     $("#m-close")?.addEventListener("click", close);
     $("#overlay")?.addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });
     $("#m-go-verify")?.addEventListener("click", close);
+    return;
+  }
+  const tooYoung = venueTooYoung(v);
+  if (tooYoung) {
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const root = document.getElementById("modal-root");
+    root.innerHTML = `
+    <div class="modal-overlay" id="overlay">
+      <div class="modal" role="dialog" aria-modal="true" aria-label="${esc(t("verifyAge"))}" tabindex="-1">
+        <button class="modal-close" id="m-close" aria-label="Stäng">✕</button>
+        <h2>${esc(t("verifyAge"))}</h2>
+        <p class="modal-sub">${esc(t("venueTooYoung").replace("{min}", String(tooYoung.min)).replace("{age}", String(tooYoung.age)))}</p>
+      </div>
+    </div>`;
+    const close = () => { root.innerHTML = ""; restoreFocus(opener); };
+    $("#m-close")?.addEventListener("click", close);
+    $("#overlay")?.addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });
     return;
   }
   const pkgs = packagesFor(v);
@@ -3235,6 +3270,7 @@ async function renderTable(id) {
     const r = await joinOpenTable(tb.id);
     if (r.error === "auth") openOnboarding({ dismissable: false });
     else if (r.error === "idv_required") location.hash = "#/verify";
+    else if (r.error === "too_young") { showToast(t("venueTooYoung").replace("{min}", String(r.minAge || 18)).replace("{age}", r.ageYears != null ? String(r.ageYears) : "—")); if (btn) btn.disabled = false; }
     else if (r.error === "seat_pref") { showToast(t("seatPref").replace("{who}", openForLabel(r.openFor || tb.openFor).toLowerCase())); if (btn) btn.disabled = false; }
     else renderTable(id);
   });
@@ -3592,6 +3628,7 @@ function mrzRowsHTML(fields) {
   const rows = [
     [t("mrzName"), [fields.firstName, fields.lastName].filter(Boolean).join(" ")],
     [t("mrzDob"), fields.birthDate],
+    [t("verifyAge"), fields.ageYears != null ? String(fields.ageYears) : (ageYears(fields.birthDate) != null ? String(ageYears(fields.birthDate)) : "")],
     [t("mrzSex"), sexKey ? t(sexKey) : fields.sex],
     [t("mrzNat"), fields.nationality],
     [t("mrzState"), fields.issuingState],
@@ -3724,6 +3761,13 @@ async function renderVerify() {
         showMrz(null);
         return;
       }
+      const years = ageYears(rec.fields?.birthDate);
+      if (years == null || years < 18) {
+        setStatus("", false);
+        setErr(t("verifyTooYoung").replace("{age}", years == null ? "—" : String(years)));
+        showMrz(rec);
+        return;
+      }
       setStatus(t("verifyFaceLoad"), true);
       showMrz(rec);
       try { await loadFaceApi(); } catch { setStatus("", false); setErr(t("verifyFaceLoadFail")); return; }
@@ -3847,6 +3891,11 @@ async function renderVerify() {
       return;
     }
     if (mrz.expired) { setErr(t("verifyExpired")); return; }
+    const years = ageYears(mrz.fields?.birthDate || mrz.birthDate);
+    if (years == null || years < 18) {
+      setErr(t("verifyTooYoung").replace("{age}", years == null ? "—" : String(years)));
+      return;
+    }
     const face = facePayload(passFace, liveFace, faceMatch);
     if (!face.passportFace) { setErr(t("verifyNoFacePass")); return; }
     if (!face.selfieFace || !face.liveness) { setErr(t("verifyNoBlink")); return; }
@@ -3874,6 +3923,7 @@ async function renderVerify() {
         idvStatus: "verified",
         idvSubmitted: r.idv.submitted,
         idvFields: r.idv.fields || null,
+        ageYears: r.idv.ageYears,
       });
       showToast(t("verifyOk"));
       if (!isCardOk()) { location.hash = "#/card"; return; }
@@ -3891,6 +3941,12 @@ async function renderVerify() {
     }
     if (r?.error === "mrz_expired") {
       setErr(t("verifyExpired"));
+      btn.disabled = false;
+      btn.textContent = t("verifyCta");
+      return;
+    }
+    if (r?.error === "too_young") {
+      setErr(t("verifyTooYoung").replace("{age}", r.ageYears == null ? "—" : String(r.ageYears)));
       btn.disabled = false;
       btn.textContent = t("verifyCta");
       return;
@@ -4589,6 +4645,10 @@ async function renderPromoterChat(venueId) {
       location.hash = "#/card";
       return;
     }
+    if (data?.error === "too_young") {
+      showToast(t("verifyTooYoung").replace("{age}", data.ageYears != null ? String(data.ageYears) : "—"));
+      return;
+    }
     if (data?.messages) paint(data.messages);
     if (promoter) loadInbox();
   });
@@ -4673,6 +4733,7 @@ async function renderPromoterChat(venueId) {
     if (btn) btn.disabled = false;
     if (r?.error === "idv_required") { rememberAfterIdv(promoterHref(venueId) + "?match=1"); location.hash = "#/verify"; return; }
     if (r?.error === "card_required") { rememberAfterIdv(promoterHref(venueId) + "?match=1"); location.hash = "#/card"; return; }
+    if (r?.error === "too_young") { showToast(t("verifyTooYoung").replace("{age}", r.ageYears != null ? String(r.ageYears) : "—")); return; }
     if (r?.error === "date") { showToast(t("matchDate")); return; }
     if (r?.match) {
       showToast(t("matchSent"));
