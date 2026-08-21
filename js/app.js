@@ -107,6 +107,99 @@ function bookingLinkHTML(v, { gold = false, sm = false, full = false } = {}) {
   return `<a class="${cls}" href="#/book-site/${encodeURIComponent(v.venue_id)}" data-nav${style}>${esc(gold ? t("bookOnSite") : t("bookOnSiteShort"))} ↗</a>`;
 }
 
+function destForVenue(v) {
+  return DESTINATIONS.find((d) => d.code === v.destination_code || d.name === v.destination) || null;
+}
+function placeQuery(v) {
+  const d = destForVenue(v);
+  return [v.name, v.destination, d?.country].filter(Boolean).join(", ");
+}
+function destQuery(d) {
+  return [d.name, d.country].filter(Boolean).join(", ");
+}
+function mapsGoogleQuery(q) {
+  return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
+}
+function mapsAppleQuery(q) {
+  return "https://maps.apple.com/?q=" + encodeURIComponent(q);
+}
+function socialPath(url) {
+  try {
+    const p = new URL(url).pathname.replace(/\/+$/, "").split("/").filter(Boolean).pop() || "";
+    return decodeURIComponent(p);
+  } catch { return ""; }
+}
+function contactTile(href, title, sub, { gold = false, external = true, id = "", tag = "a" } = {}) {
+  const extra = external ? ` target="_blank" rel="noopener"` : "";
+  const nav = !external && tag === "a" ? " data-nav" : "";
+  const idAttr = id ? ` id="${id}"` : "";
+  const open = tag === "button"
+    ? `<button type="button" class="contact-tile${gold ? " gold" : ""}"${idAttr}>`
+    : `<a class="contact-tile${gold ? " gold" : ""}" href="${esc(href)}"${extra}${nav}${idAttr}>`;
+  const close = tag === "button" ? "</button>" : "</a>";
+  return `${open}<strong>${esc(title)}</strong><span>${esc(sub)}</span>${close}`;
+}
+function venueShareUrl(v) {
+  const u = new URL(location.href);
+  u.search = "";
+  u.hash = "#/venue/" + encodeURIComponent(v.venue_id);
+  return u.toString();
+}
+async function shareVenue(v) {
+  const url = venueShareUrl(v);
+  const title = `${v.name} — ${v.destination}`;
+  if (navigator.share) {
+    try { await navigator.share({ title, text: title, url }); return; } catch { /* fall through */ }
+  }
+  const ok = await copyText(url);
+  showToast(ok ? t("copied") : t("sharePlace"));
+}
+function contactPanelHTML(v) {
+  const d = destForVenue(v);
+  const book = bookingUrlFor(v);
+  const q = placeQuery(v);
+  const ig = igHandle(v.instagram_url);
+  const tk = v.tiktok_url ? socialPath(v.tiktok_url) : "";
+  const fb = v.facebook_url ? socialPath(v.facebook_url) : "";
+  const webHost = urlHost(v.website_url || "");
+  const tiles = [
+    book ? contactTile(`#/book-site/${encodeURIComponent(v.venue_id)}`, t("bookOnSiteShort"), book.host || book.label || t("bookKindSite"), { gold: true, external: false }) : "",
+    contactTile(mapsGoogleQuery(q), t("mapsGoogle"), q, { gold: true }),
+    contactTile(mapsAppleQuery(q), t("mapsApple"), t("directions")),
+    v.instagram_url ? contactTile(v.instagram_url, "Instagram", ig || t("instagram")) : "",
+    v.tiktok_url ? contactTile(v.tiktok_url, "TikTok", tk.startsWith("@") ? tk : "@" + tk) : "",
+    v.facebook_url ? contactTile(v.facebook_url, "Facebook", fb ? "/" + fb : "Facebook") : "",
+    v.website_url ? contactTile(v.website_url, t("website"), webHost) : "",
+    contactTile("#", t("sharePlace"), v.name, { tag: "button", id: "v-share", external: false }),
+    contactTile(`#/promoter/${encodeURIComponent(v.venue_id)}`, t("chatPromoter"), t("promoter"), { external: false }),
+  ].filter(Boolean).join("");
+  const season = d?.peak_season ? `${t("whenToGo")} ${d.peak_season}` : "";
+  const where = [v.destination, d?.country, d?.region].filter(Boolean).join(" · ");
+  return `
+  <div class="detail-panel contact-panel">
+    <h2 class="detail-panel-title">${esc(t("contactTitle"))}</h2>
+    <p class="events-meta">${esc(t("contactHint"))}</p>
+    <div class="contact-grid">${tiles}</div>
+    <p class="events-meta" style="margin-top:12px">${esc(t("noPhone"))}</p>
+    <div class="contact-meta">
+      ${where ? `<span>${esc(where)}</span>` : ""}
+      ${season ? `<span>${esc(season)}</span>` : ""}
+      ${v.category ? `<span>${esc(v.category)}</span>` : ""}
+    </div>
+  </div>`;
+}
+function venueDockHTML(v) {
+  const book = bookingUrlFor(v);
+  const q = placeQuery(v);
+  return `
+  <nav class="venue-dock" aria-label="${esc(t("contactTitle"))}">
+    ${book ? `<a class="btn btn-gold btn-sm" href="#/book-site/${encodeURIComponent(v.venue_id)}" data-nav>${esc(t("bookOnSiteShort"))}</a>` : `<button type="button" class="btn btn-gold btn-sm" id="dock-book">${esc(t("sendRequest"))}</button>`}
+    <a class="btn btn-ghost btn-sm" href="${esc(mapsGoogleQuery(q))}" target="_blank" rel="noopener">${esc(t("openMaps"))}</a>
+    ${v.instagram_url ? `<a class="btn btn-ghost btn-sm" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">IG</a>` : ""}
+    <button type="button" class="btn btn-ghost btn-sm" id="dock-share">${esc(t("sharePlace"))}</button>
+  </nav>`;
+}
+
 function photoAttrHTML(v) {
   if (!venuePhoto(v)) return "";
   const href = v.website_url || v.source_url || "";
@@ -1041,6 +1134,8 @@ function renderDestinationDetail(code) {
         ${d.note ? `<p class="detail-notes"><span class="dest-note-label">Strategisk not</span> ${esc(d.note)}</p>` : ""}
         <div class="detail-links">
           <a class="icon-link" href="#/venues" id="dd-list">Visa i listan →</a>
+          <a class="icon-link" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
+          <a class="icon-link" href="${esc(mapsAppleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("mapsApple"))} ↗</a>
         </div>
       </div>
       <div class="dest-emblem dest-emblem-lg" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
@@ -1141,6 +1236,7 @@ function venueCard(v, { eager = false } = {}) {
       <div class="venue-actions">
         <button class="btn btn-gold btn-sm" data-book="${esc(v.venue_id)}">${esc(t("sendRequest"))}</button>
         ${bookingLinkHTML(v)}
+        <a class="icon-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("openMaps"))} ↗</a>
         ${igLinkHTML(v)}
       </div>
     </div>
@@ -1157,7 +1253,7 @@ function applyFilters() {
     if (f.price) return false;
     if (f.q) {
       const q = f.q.toLowerCase();
-      if (!`${v.name} ${v.destination} ${v.category} ${v.notes}`.toLowerCase().includes(q)) return false;
+      if (!`${v.name} ${v.destination} ${v.category} ${v.notes} ${v.instagram_url || ""} ${v.tiktok_url || ""} ${v.facebook_url || ""} ${v.website_url || ""}`.toLowerCase().includes(q)) return false;
     }
     return true;
   });
@@ -1362,14 +1458,14 @@ function renderVenueDetail(id) {
               <div class="soc-handle">${esc(igHandle(v.instagram_url) || "Instagram")}</div>
               <p>Följ &amp; inspireras — ställets skyltfönster</p>
             </div>
-            <a class="btn btn-gold btn-sm" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">Öppna Instagram</a>
+            <a class="btn btn-gold btn-sm" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">Instagram ↗</a>
           </div>` : ""}
           <div class="detail-links">
             ${bookingLinkHTML(v)}
+            <a class="icon-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
             ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">${esc(t("website"))} ↗</a>` : ""}
             ${v.tiktok_url ? `<a class="icon-link" href="${esc(v.tiktok_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på TikTok">${TIKTOK_ICON}<span>TikTok</span> ↗</a>` : ""}
             ${v.facebook_url ? `<a class="icon-link" href="${esc(v.facebook_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på Facebook">${FB_ICON}<span>Facebook</span> ↗</a>` : ""}
-            ${v.source_url ? `<a class="icon-link" href="${esc(v.source_url)}" target="_blank" rel="noopener">Källa ↗</a>` : ""}
           </div>
         </div>
       </div>
@@ -1380,6 +1476,7 @@ function renderVenueDetail(id) {
     </div>
 
     <div class="detail-grid">
+      ${contactPanelHTML(v)}
       ${eventsSectionHTML(v)}
       <div class="detail-panel">
         <h2 class="detail-panel-title">${esc(t("velvetScore"))}</h2>
@@ -1404,6 +1501,7 @@ function renderVenueDetail(id) {
         <div class="detail-price" id="from-price">${esc(t("clubSetsPrice"))}</div>
         <p class="detail-cta-note">${esc(t("priceHonest"))}</p>
         ${bookingLinkHTML(v, { gold: true, full: true })}
+        <a class="btn btn-ghost" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener" style="width:100%;margin-top:10px">${esc(t("directions"))} ↗</a>
         <button class="btn btn-ghost" id="d-book" style="width:100%;margin-top:10px">${esc(t("sendRequest"))}</button>
         <a class="btn btn-ghost" id="d-promo" href="#/promoter/${encodeURIComponent(v.venue_id)}" data-nav style="width:100%;margin-top:10px">${esc(t("chatPromoter"))}</a>
         <ul class="detail-perks">
@@ -1413,9 +1511,13 @@ function renderVenueDetail(id) {
         </ul>
       </div>
     </div>
+    ${venueDockHTML(v)}
   </section>`;
 
   $("#d-book").addEventListener("click", () => openBookingModal(v));
+  $("#dock-book")?.addEventListener("click", () => openBookingModal(v));
+  $("#v-share")?.addEventListener("click", () => shareVenue(v));
+  $("#dock-share")?.addEventListener("click", () => shareVenue(v));
   bindFavButtons(view());
   $("#ev-refresh")?.addEventListener("click", () => refreshVenueEvents(v));
   setTitle(v.name);
@@ -2151,6 +2253,7 @@ function renderMapView() {
               <div class="map-pop-name">${esc(d.name)}</div>
               <div class="map-pop-meta">${count} ${count === 1 ? "ställe" : "ställen"} · Säsong ${esc(d.peak_season)}</div>
               <a class="map-pop-link" href="#/destination/${encodeURIComponent(d.code)}">Visa destination →</a>
+              <a class="map-pop-link" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
             </div>`);
       });
       if (pts.length) map.fitBounds(pts, { padding: [36, 36] });
@@ -2225,6 +2328,8 @@ function mountDestMap(d, venues) {
           <div class="map-pop-meta">${esc(t("clubSetsPrice"))}</div>
           <a class="map-pop-link" href="#/venue/${encodeURIComponent(v.venue_id)}">Se stället →</a>
           ${bookingUrlFor(v) ? `<br><a class="map-pop-link" href="#/book-site/${encodeURIComponent(v.venue_id)}">${esc(t("bookOnSiteShort"))} ↗</a>` : ""}
+          <br><a class="map-pop-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
+          ${v.instagram_url ? `<br><a class="map-pop-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">${esc(igHandle(v.instagram_url) || "Instagram")} ↗</a>` : ""}
         </div>`);
     });
     map.fitBounds(pts, { padding: [30, 30], maxZoom: 13 });
