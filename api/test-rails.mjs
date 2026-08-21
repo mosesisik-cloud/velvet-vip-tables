@@ -405,11 +405,15 @@ async function runApi() {
       fail("bridge-create", JSON.stringify(brOk.json).slice(0, 280));
     } else if (!String(br.officialUrl || "").includes("hiibiza.com") || br.status !== "handed_off") {
       fail("bridge-official", JSON.stringify(br).slice(0, 240));
-    } else if (!String(br.packet || "").includes("MOSES ISIK") || String(br.packet || "").includes("AB1234567")) {
-      fail("bridge-packet", String(br.packet).slice(0, 240));
-    } else if (br.guest?.card?.last4 !== "1881" || br.guest?.documentNumber) {
-      fail("bridge-secrets", JSON.stringify(br.guest).slice(0, 220));
-    } else ok("bridge-create", br.id + " → " + br.host);
+    } else {
+      ok("bridge-create", br.id + " → " + br.host);
+      if (!String(br.packet || "").includes("MOSES ISIK") || String(br.packet || "").includes("AB1234567")) {
+        fail("bridge-packet", String(br.packet).slice(0, 240));
+      } else ok("bridge-packet", "legal name, no full passport");
+      if (br.guest?.card?.last4 !== "1881" || br.guest?.documentNumber) {
+        fail("bridge-secrets", JSON.stringify(br.guest).slice(0, 220));
+      } else ok("bridge-secrets", "last4 only");
+    }
 
     const brList = await req(base, "GET", "/book/bridge/IBZ-001?userId=" + encodeURIComponent(host.id));
     if (brList.status !== 200 || !(brList.json.bridges || []).some((x) => x.id === br.id)) {
