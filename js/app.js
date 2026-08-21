@@ -1454,7 +1454,7 @@ function destHue(code) {
 function destCard(d) {
   const cover = coverVenueForDest(d);
   return `
-  <div class="dest-card" data-code="${esc(d.code)}" role="link" tabindex="0" aria-label="Visa destinationen ${esc(d.name)}">
+  <div class="dest-card" data-code="${esc(d.code)}" role="link" tabindex="0" aria-label="${esc(t("destCardAria").replace("{name}", d.name))}">
     <span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span>
     <div class="dest-cover${cover ? "" : " img-fail"}">
       ${coverImgHTML(cover && cover.url)}
@@ -1463,7 +1463,7 @@ function destCard(d) {
     ${cover && cover.v ? photoAttrHTML(cover.v) : ""}
     <h3>${esc(d.name)}</h3>
     <div class="dest-country">${esc(d.country)} · ${esc(d.region)}</div>
-    <div class="dest-meta"><span>Säsong <b>${esc(d.peak_season)}</b></span>${(() => { const km = distanceToDest(d); return km != null ? `<span class="dest-km">~${fmtKm(km)} km</span>` : ""; })()}</div>
+    <div class="dest-meta"><span>${esc(t("seasonShort"))} <b>${esc(d.peak_season)}</b></span>${(() => { const km = distanceToDest(d); return km != null ? `<span class="dest-km">~${fmtKm(km)} km</span>` : ""; })()}</div>
     ${pips(d.luxury)}
   </div>`;
 }
@@ -2072,7 +2072,7 @@ async function openBookingModal(v) {
     root.innerHTML = `
     <div class="modal-overlay" id="overlay">
       <div class="modal" role="dialog" aria-modal="true" aria-label="${esc(t("verifyTitle"))}" tabindex="-1">
-        <button class="modal-close" id="m-close" aria-label="Stäng">✕</button>
+        <button class="modal-close" id="m-close" aria-label="${esc(t("close"))}">✕</button>
         <h2>${esc(needCard ? t("cardTitle") : t("verifyTitle"))}</h2>
         <p class="modal-sub">${esc(t("bookNeedVerify"))}</p>
         <p style="color:var(--text-dim);margin:12px 0 20px">${esc(t("bookCredentials"))}</p>
@@ -2092,7 +2092,7 @@ async function openBookingModal(v) {
     root.innerHTML = `
     <div class="modal-overlay" id="overlay">
       <div class="modal" role="dialog" aria-modal="true" aria-label="${esc(t("verifyAge"))}" tabindex="-1">
-        <button class="modal-close" id="m-close" aria-label="Stäng">✕</button>
+        <button class="modal-close" id="m-close" aria-label="${esc(t("close"))}">✕</button>
         <h2>${esc(t("verifyAge"))}</h2>
         <p class="modal-sub">${esc(t("venueTooYoung").replace("{min}", String(tooYoung.min)).replace("{age}", String(tooYoung.age)))}</p>
       </div>
@@ -2826,7 +2826,7 @@ function renderMapView() {
             <div class="map-pop">
               <div class="map-pop-kicker">${esc(d.country)} · ${esc(d.tier)}</div>
               <div class="map-pop-name">${esc(d.name)}</div>
-              <div class="map-pop-meta">${count} ${count === 1 ? "ställe" : "ställen"} · Säsong ${esc(d.peak_season)}</div>
+              <div class="map-pop-meta">${count} ${esc(count === 1 ? t("venueOne") : t("venueMany"))} · ${esc(t("seasonShort"))} ${esc(d.peak_season)}</div>
               <a class="map-pop-link" href="#/destination/${encodeURIComponent(d.code)}">${esc(t("viewDest"))}</a>
               <a class="map-pop-link" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
             </div>`);

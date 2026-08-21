@@ -612,6 +612,9 @@ const D = {
     pageMissing: "Sidan hittades inte",
     pageMissingHint: "Rutten {hash} finns inte. Kanske en gammal eller felskriven länk?",
     pageMissingHome: "Till startsidan",
+    destCardAria: "Visa destinationen {name}",
+    venueOne: "ställe",
+    venueMany: "ställen",
   },
   en: {
     skip: "Skip to main content",
@@ -1192,6 +1195,9 @@ const D = {
     pageMissing: "Page not found",
     pageMissingHint: "The route {hash} does not exist. Maybe an old or mistyped link?",
     pageMissingHome: "Go to the home page",
+    destCardAria: "See destination {name}",
+    venueOne: "venue",
+    venueMany: "venues",
   },
   es: {
     skip: "Saltar al contenido",
@@ -1772,6 +1778,9 @@ const D = {
     pageMissing: "Página no encontrada",
     pageMissingHint: "La ruta {hash} no existe. ¿Enlace antiguo o mal escrito?",
     pageMissingHome: "Ir al inicio",
+    destCardAria: "Ver destino {name}",
+    venueOne: "local",
+    venueMany: "locales",
   },
   fr: {
     skip: "Aller au contenu",
@@ -2352,6 +2361,9 @@ const D = {
     pageMissing: "Page introuvable",
     pageMissingHint: "La route {hash} n’existe pas. Lien ancien ou mal saisi ?",
     pageMissingHome: "Aller à l’accueil",
+    destCardAria: "Voir la destination {name}",
+    venueOne: "lieu",
+    venueMany: "lieux",
   },
 };
 
