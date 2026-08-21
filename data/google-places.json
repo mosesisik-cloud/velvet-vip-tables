@@ -1,0 +1,36 @@
+{
+  "fetchedAt": "2026-08-21",
+  "venues": {
+    "IBZ-001": {
+      "matched": true,
+      "channel": "google",
+      "query": "Hï Ibiza, Ibiza",
+      "placeName": "Hï Ibiza",
+      "placeId": "ChIJDTHUUc1FmRIRq2wP7bvzi-o",
+      "rating": 3.7,
+      "reviewCount": 7515,
+      "mapsUrl": "https://www.google.com/maps/search/?api=1&query=H%C3%AF%20Ibiza&query_place_id=ChIJDTHUUc1FmRIRq2wP7bvzi-o",
+      "engine": "google-maps",
+      "reviews": [
+        {
+          "author": "Viola Marqeni",
+          "rating": 5,
+          "text": "Hï Ibiza is much more than just a disco: it is a total sensory experience, a temple of electronic music that has redefined the concept of nightlife.",
+          "relativeTime": "2 weeks ago"
+        },
+        {
+          "author": "Zlatko Mahic",
+          "rating": 3,
+          "text": "HI IBIZA: A Great Club, But Prepare for Crowds and High Prices. Top-notch production and an incredible atmosphere — staff and security were a perfect 10/10.",
+          "relativeTime": "5 months ago"
+        },
+        {
+          "author": "Kirk Grimsley",
+          "rating": 5,
+          "text": "Hi has amazing positive energy all over. You can move from room to room to experience different DJs, each room having its own vibe.",
+          "relativeTime": "6 months ago"
+        }
+      ]
+    }
+  }
+}

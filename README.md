@@ -14,6 +14,7 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 
 - **Förfrågan, inte fake-bokning.** Ni fyller i värd, datum, paket och sällskap. Förfrågan går till VELVET-teamet (Gabbe) via e-post. Bekräftelsen säger *förfrågan skickad* — aldrig att bordet är reserverat.
 - **Inga påhittade paketpriser.** Appen visar inte fejkade EUR-paket. Pris kommer från klubbens sajt eller deras svar. Evenemang hämtas från officiella kalendrar.
+- **Google-recensioner.** Betyget på stället är Google (stjärnor + antal) när profilen är matchad. Recensionerna öppnas på Google Maps — vi visar inte en siffra om kanalen inte stämmer. VELVET-research är intern och märkt som inte Google.
 - **Daglig Firecrawl.** `velvet-api` kollar ställenas sajter en gång per dygn (VIP-kalendrar via Firecrawl, övriga via JSON-LD/HTML). Appen hämtar `/velvet-api/events` live — ingen omdeploy. Gabbe/Moses kan klistra in `FIRECRAWL_API_KEY` under Konto och köra crawl nu.
 - **Katalog.** 120 webbverifierade ställen i den publika listan. Ytterligare klubbar per stad (Amnesia, Berghain, Hakkasan …) är **ej verifierade** och syns bara när du söker på staden. Inga påhittade IG-konton på dem.
 - **PWA.** Installerbar från Chrome, offline-skal, VELVET-offline-sida.

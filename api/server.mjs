@@ -4,6 +4,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { loadEventsFile, loadCrawlStatus, runCrawl, getCrawlState, scheduleDailyCrawl } from "./crawl-events.mjs";
+import { loadPlacesFile, runPlacesLookup } from "./google-places.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
@@ -208,6 +209,7 @@ function emptyPay() {
   return {
     currency: "EUR",
     firecrawlKey: "",
+    googlePlacesKey: "",
     revolut: { iban: "", bic: "", name: "", me: "", merchantSecret: "", sandbox: false },
     stripe: { secret: "", pub: "", webhook: "" },
     paypal: { client: "", secret: "", sandbox: false },
@@ -226,6 +228,7 @@ function loadPay() {
     return {
       currency: String(raw.currency || "EUR").toUpperCase().slice(0, 3),
       firecrawlKey: String(raw.firecrawlKey || ""),
+      googlePlacesKey: String(raw.googlePlacesKey || ""),
       revolut: { ...base.revolut, ...(raw.revolut || {}) },
       stripe: { ...base.stripe, ...(raw.stripe || {}) },
       paypal: { ...base.paypal, ...(raw.paypal || {}) },
@@ -292,6 +295,7 @@ function publicPayConfig() {
       paypal: paypalOn,
       iban: bankOn,
       firecrawl: !!p.firecrawlKey,
+      googlePlaces: !!p.googlePlacesKey,
     },
     oauth: oauthFlags(p),
   };
@@ -611,6 +615,23 @@ const server = http.createServer(async (req, res) => {
       runCrawl({ reason: operator ? "operator" : "app" }).catch((e) => console.error("velvet-crawl", e));
       return send(res, 202, { running: true, status: loadCrawlStatus(), ...loadEventsFile() });
     }
+    if (req.method === "GET" && url.pathname === "/places") {
+      return send(res, 200, loadPlacesFile(), { "Cache-Control": "no-store" });
+    }
+    const placeOne = url.pathname.match(/^\/places\/([A-Z0-9._-]+)$/i);
+    if (req.method === "GET" && placeOne) {
+      const all = loadPlacesFile();
+      const rec = all.venues?.[placeOne[1]] || null;
+      return send(res, 200, { venueId: placeOne[1], place: rec }, { "Cache-Control": "no-store" });
+    }
+    if (req.method === "POST" && url.pathname === "/places/refresh") {
+      if (process.env.VELVET_CRAWL === "0") return send(res, 403, { error: "crawl_disabled" });
+      const b = await readBody(req, 2e5);
+      if (!isOperator(b.user)) return send(res, 403, { error: "operator" });
+      const venueId = String(b.venueId || "").replace(/[^A-Z0-9._-]/gi, "").slice(0, 20);
+      runPlacesLookup({ venueId, reason: "operator" }).catch((e) => console.error("velvet-places", e));
+      return send(res, 202, { running: true, ...loadPlacesFile() });
+    }
 
     if (req.method === "GET" && url.pathname === "/pay/config") {
       return send(res, 200, publicPayConfig());
@@ -690,6 +711,7 @@ const server = http.createServer(async (req, res) => {
       if (b.snapchatId) cur.oauth.snapchat.id = String(b.snapchatId);
       if (b.snapchatSecret) cur.oauth.snapchat.secret = String(b.snapchatSecret);
       if (b.firecrawlKey) cur.firecrawlKey = String(b.firecrawlKey).trim();
+      if (b.googlePlacesKey) cur.googlePlacesKey = String(b.googlePlacesKey).trim();
       savePay(cur);
       return send(res, 200, { ok: true, config: publicPayConfig() });
     }

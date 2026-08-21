@@ -7,6 +7,7 @@ let VENUES = [];
 let VENUE_IMAGES = {}; // venue_id -> bild från ställets egen hemsida (data/venue-images.json)
 let VENUE_EVENTS = { fetched: null, venues: {} }; // kommande events per venue (data/venue-events.json)
 let BOOKING_URLS = {}; // venue_id -> { url, kind, label } officiell VIP/bokningssida
+let GOOGLE_PLACES = { fetchedAt: null, venues: {} };
 const state = {
   filters: { q: "", dest: "", cat: "", status: "", price: "", sort: "priority" },
 };
@@ -189,6 +190,7 @@ function contactPanelHTML(v) {
   const tiles = [
     book ? contactTile(`#/book-site/${encodeURIComponent(v.venue_id)}`, t("bookOnSiteShort"), book.host || book.label || t("bookKindSite"), { gold: true, external: false }) : "",
     contactTile(mapsGoogleQuery(q), t("mapsGoogle"), q, { gold: true }),
+    contactTile(googleMapsReviewsUrl(v), t("googleOpen"), googlePlace(v)?.matched ? `${googlePlace(v).rating} · Google` : t("googleChannel")),
     contactTile(mapsAppleQuery(q), t("mapsApple"), t("directions")),
     v.instagram_url ? contactTile(v.instagram_url, "Instagram", ig || t("instagram")) : "",
     v.tiktok_url ? contactTile(v.tiktok_url, "TikTok", tk.startsWith("@") ? tk : "@" + tk) : "",
@@ -1251,7 +1253,7 @@ function venueCard(v, { eager = false } = {}) {
           <div class="venue-name">${esc(v.name)}</div>
           <div class="venue-loc">${esc(v.destination)}</div>
         </div>
-        <div class="prio"><span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">Prio</span></div>
+        <div class="prio">${googleRatingHTML(v, { compact: true }) || `<span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">Prio</span>`}</div>
       </div>
       <div class="venue-tags">
         <span class="tag">${esc(v.category)}</span>
@@ -1402,6 +1404,62 @@ function bindVenueCards() {
 }
 
 // ---------- Venue detail ----------
+function googlePlace(v) {
+  return (v && GOOGLE_PLACES.venues && GOOGLE_PLACES.venues[v.venue_id]) || null;
+}
+function googleMapsReviewsUrl(v) {
+  const g = googlePlace(v);
+  if (g && g.mapsUrl) return g.mapsUrl;
+  return mapsGoogleQuery(placeQuery(v));
+}
+function googleStars(rating) {
+  const n = Math.max(0, Math.min(5, Number(rating) || 0));
+  const full = Math.floor(n);
+  const half = n - full >= 0.4 && n - full < 0.9;
+  let s = "★".repeat(full);
+  if (half) s += "½";
+  s += "☆".repeat(Math.max(0, 5 - full - (half ? 1 : 0)));
+  return s;
+}
+function googleRatingHTML(v, { compact = false } = {}) {
+  const g = googlePlace(v);
+  const href = googleMapsReviewsUrl(v);
+  if (g && g.matched && Number(g.rating) > 0) {
+    const n = g.reviewCount != null ? Number(g.reviewCount).toLocaleString("sv-SE") : "";
+    if (compact) {
+      return `<a class="g-rate" href="${esc(href)}" target="_blank" rel="noopener" title="Google"><span class="g-rate-num">${esc(String(g.rating))}</span><span class="g-rate-stars">${esc(googleStars(g.rating))}</span>${n ? `<span class="g-rate-n">(${esc(n)})</span>` : ""}</a>`;
+    }
+    return "";
+  }
+  if (compact) return "";
+  return "";
+}
+function googleReviewsPanelHTML(v) {
+  const g = googlePlace(v);
+  const href = googleMapsReviewsUrl(v);
+  const matched = !!(g && g.matched && Number(g.rating) > 0);
+  const rows = matched && Array.isArray(g.reviews) ? g.reviews.filter((r) => r && r.text).slice(0, 5) : [];
+  return `
+  <div class="detail-panel google-panel">
+    <h2 class="detail-panel-title">${esc(t("googleReviews"))}</h2>
+    ${matched ? `
+      <div class="g-hero">
+        <div class="g-hero-score">${esc(String(g.rating))}</div>
+        <div>
+          <div class="g-hero-stars" aria-label="${esc(String(g.rating))} / 5">${esc(googleStars(g.rating))}</div>
+          <p class="events-meta">${g.reviewCount != null ? `${esc(Number(g.reviewCount).toLocaleString("sv-SE"))} ${esc(t("googleCount"))}` : esc(t("googleChannel"))}${g.placeName ? ` · ${esc(g.placeName)}` : ""}</p>
+        </div>
+      </div>
+      ${rows.length ? `<ul class="g-review-list">${rows.map((r) => `
+        <li class="g-review">
+          <div class="g-review-head">${r.rating ? `<span class="g-rate-stars">${esc(googleStars(r.rating))}</span>` : ""} <b>${esc(r.author || "")}</b>${r.relativeTime ? ` · ${esc(r.relativeTime)}` : ""}</div>
+          <p>${esc(r.text)}</p>
+        </li>`).join("")}</ul>` : ""}
+    ` : `<p class="events-meta">${esc(t("googleNeedMatch"))}</p>`}
+    <p class="events-actions"><a class="btn btn-gold btn-sm" href="${esc(href)}" target="_blank" rel="noopener">${esc(t("googleOpen"))} ↗</a></p>
+    <p class="events-meta">${esc(t("googleHint"))}</p>
+  </div>`;
+}
 function scoreMeter(label, val) {
   const n = Math.max(0, Math.min(5, Number(val) || 0));
   const pct = (n / 5) * 100;
@@ -1505,14 +1563,16 @@ function renderVenueDetail(id) {
           </div>
         </div>
       </div>
-      <div class="prio prio-lg" title="Priority score">
-        <span class="prio-num">${num(v.priority_score)}</span>
-        <span class="prio-label">VELVET-prio</span>
+      <div class="prio prio-lg">
+        ${googlePlace(v)?.matched
+          ? `<span class="prio-num">${esc(String(googlePlace(v).rating))}</span><span class="prio-label">Google</span>`
+          : `<span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">VELVET-prio</span>`}
       </div>
     </div>
 
     <div class="detail-grid">
       ${contactPanelHTML(v)}
+      ${googleReviewsPanelHTML(v)}
       ${eventsSectionHTML(v)}
       <div class="detail-panel">
         <h2 class="detail-panel-title">${esc(t("velvetScore"))}</h2>
@@ -3080,6 +3140,7 @@ async function renderPayout() {
       <label>Snapchat client ID<input name="snapchatId" autocomplete="off"></label>
       <label>Snapchat secret<input name="snapchatSecret" type="password" autocomplete="off"></label>
       <label>${esc(t("crawlKey"))}<input name="firecrawlKey" type="password" placeholder="${cfg.keys?.firecrawl ? "•••• set" : "fc-…"}" autocomplete="off"></label>
+      <label>${esc(t("googlePlacesKey"))}<input name="googlePlacesKey" type="password" placeholder="${cfg.keys?.googlePlaces ? "•••• set" : "AIza…"}" autocomplete="off"></label>
       <p class="stepper-hint">${esc(t("crawlKeyHint"))}</p>
       <p class="stepper-hint">${esc(t("paySetupKeys"))}</p>
       <div class="field-error hidden" id="pay-setup-err"></div>
@@ -3891,6 +3952,14 @@ async function init() {
       const rb = await fetch("data/booking-urls.json");
       if (rb.ok) BOOKING_URLS = await rb.json() || {};
     } catch (_) { BOOKING_URLS = {}; }
+    try {
+      const rg = await fetch("data/google-places.json", { cache: "no-store" });
+      if (rg.ok) {
+        const g = await rg.json();
+        if (g && g.venues) GOOGLE_PLACES = g;
+        else if (g && typeof g === "object") GOOGLE_PLACES = { fetchedAt: null, venues: g };
+      }
+    } catch { /* optional */ }
   } catch (err) {
     console.error("VELVET: datainläsning misslyckades", err);
     renderLoadError();
@@ -3912,6 +3981,8 @@ async function init() {
   } catch { /* optional */ }
   DESTINATIONS = d;
   VENUES = v;
+  const livePlaces = await apiJSON("/places");
+  if (livePlaces && livePlaces.venues) GOOGLE_PLACES = livePlaces;
   const existing = loadUser();
   if (existing) registerUser(existing);
   const authTok = new URLSearchParams(location.search).get("auth");

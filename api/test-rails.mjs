@@ -223,6 +223,10 @@ async function runApi() {
     if (est.status !== 200) fail("events-status", "HTTP " + est.status);
     else ok("events-status", "running=" + !!est.json.running);
 
+    const places = await req(base, "GET", "/places");
+    if (places.status !== 200 || !places.json.venues) fail("places", JSON.stringify(places.json).slice(0, 200));
+    else ok("places", Object.keys(places.json.venues).length + " cached");
+
     const blocked = await req(base, "POST", "/events/refresh", { user: { id: "U-x" } });
     if (blocked.status !== 403) fail("events-refresh-off", "expected 403 got " + blocked.status);
     else ok("events-refresh-off", "VELVET_CRAWL=0");
