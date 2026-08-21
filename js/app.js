@@ -4046,6 +4046,7 @@ async function renderPromoterChat(venueId) {
   let promoter = false;
   let threads = [];
   let wa = venueWaPhone(v) ? { phone: venueWaPhone(v), source: "venue" } : null;
+  let guestWa = "";
   const waText = () => t("waPrefill").replace("{venue}", v.name);
   const paintWa = () => {
     const wrap = $("#chat-wa");
@@ -4053,7 +4054,7 @@ async function renderPromoterChat(venueId) {
     const src = $("#wa-src");
     const href = wa && wa.phone ? waHref(wa.phone, waText()) : "";
     if (wrap && a) {
-      if (href) {
+      if (href && !promoter) {
         a.href = href;
         wrap.hidden = false;
         if (src) src.textContent = wa.source === "promoter" ? t("waFromPromoter") : t("waFromVenue");
@@ -4062,8 +4063,16 @@ async function renderPromoterChat(venueId) {
       }
     }
     $("#wa-edit")?.classList.toggle("hidden", !promoter);
+    $("#guest-wa-box")?.classList.toggle("hidden", !!promoter);
     const inp = $("#wa-in");
     if (promoter && inp && wa && wa.source === "promoter" && !inp.value) inp.value = "+" + wa.phone;
+    const reply = $("#wa-reply");
+    if (reply) {
+      if (promoter && guestWa) {
+        reply.href = waHref(guestWa, t("waReplyPrefill").replace("{venue}", v.name));
+        reply.hidden = false;
+      } else reply.hidden = true;
+    }
   };
 
   const paint = (messages) => {
@@ -4075,7 +4084,7 @@ async function renderPromoterChat(venueId) {
     }
     box.innerHTML = messages.map((m) => `
       <div class="chat-bubble ${m.role === "promoter" ? "promo" : (m.userId === me.id ? "mine" : "")}">
-        <div class="chat-who">${m.role === "promoter" ? esc(t("promoter")) : esc(m.name || "")}</div>
+        <div class="chat-who">${m.role === "promoter" ? esc(t("promoter")) : esc(m.name || "")}${m.via === "whatsapp" ? ` · WhatsApp` : ""}</div>
         <div class="chat-text">${esc(m.text)}</div>
       </div>`).join("");
     box.scrollTop = box.scrollHeight;
@@ -4083,11 +4092,17 @@ async function renderPromoterChat(venueId) {
   const paintInbox = () => {
     const el = document.getElementById("chat-inbox");
     if (!el) return;
-    el.innerHTML = threads.map((th) => `
-      <button type="button" class="chat-thread${th.threadId === threadId ? " on" : ""}" data-th="${esc(th.threadId)}">
-        <b>${esc(th.name)}</b>
-        <span>${esc((th.last || "").slice(0, 60))}</span>
-      </button>`).join("");
+    el.innerHTML = threads.map((th) => {
+      const href = th.guestWa ? waHref(th.guestWa, t("waReplyPrefill").replace("{venue}", v.name).replace("{name}", th.name || "")) : "";
+      return `
+      <div class="chat-thread-row">
+        <button type="button" class="chat-thread${th.threadId === threadId ? " on" : ""}" data-th="${esc(th.threadId)}">
+          <b>${esc(th.name)}</b>
+          <span>${esc((th.last || "").slice(0, 60))}</span>
+        </button>
+        ${href ? `<a class="btn btn-wa btn-sm" href="${esc(href)}" target="_blank" rel="noopener" data-wa-guest>${esc(t("waReply"))}</a>` : ""}
+      </div>`;
+    }).join("");
     el.querySelectorAll("[data-th]").forEach((b) => b.addEventListener("click", () => {
       threadId = b.dataset.th;
       loadThread();
@@ -4101,6 +4116,7 @@ async function renderPromoterChat(venueId) {
     if (data) {
       promoter = !!data.promoter;
       if (data.whatsapp && data.whatsapp.phone) wa = data.whatsapp;
+      if (Object.prototype.hasOwnProperty.call(data, "guestWa")) guestWa = data.guestWa || "";
       paint(data.messages || []);
       paintWa();
       return data.messages || [];
@@ -4122,6 +4138,15 @@ async function renderPromoterChat(venueId) {
       <a class="btn btn-wa" id="wa-open" href="#" target="_blank" rel="noopener">WhatsApp</a>
       <span class="events-meta" id="wa-src"></span>
     </p>
+    <p class="chat-wa" id="wa-reply-wrap">
+      <a class="btn btn-wa" id="wa-reply" href="#" target="_blank" rel="noopener" hidden>${esc(t("waReply"))}</a>
+    </p>
+    <div class="chat-wa-edit hidden" id="guest-wa-box">
+      <label>${esc(t("waGuestNumber"))}
+        <input type="tel" id="guest-wa-in" inputmode="tel" autocomplete="tel" placeholder="+46 70…" maxlength="20">
+      </label>
+      <button type="button" class="btn btn-ghost btn-sm" id="guest-wa-save">${esc(t("waSave"))}</button>
+    </div>
     <div class="chat-wa-edit hidden" id="wa-edit">
       <label>${esc(t("waYourNumber"))}
         <input type="tel" id="wa-in" inputmode="tel" autocomplete="tel" placeholder="+34 6…" maxlength="20">
@@ -4150,7 +4175,7 @@ async function renderPromoterChat(venueId) {
     const data = await apiJSON(`/chats/${encodeURIComponent(venueId)}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user: me, text, threadId, asPromoter: promoter }),
+      body: JSON.stringify({ user: me, text, threadId, asPromoter: promoter, whatsapp: $("#guest-wa-in")?.value || undefined }),
     });
     if (data?.messages) paint(data.messages);
     if (promoter) loadInbox();
@@ -4166,6 +4191,16 @@ async function renderPromoterChat(venueId) {
     paintWa();
     await loadInbox();
     await loadThread();
+  });
+  $("#guest-wa-save")?.addEventListener("click", async () => {
+    const r = await apiJSON(`/chats/${encodeURIComponent(venueId)}/guest-wa`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: me, whatsapp: $("#guest-wa-in")?.value || "" }),
+    });
+    if (r?.error === "whatsapp") { showToast(t("waBad")); return; }
+    guestWa = r?.guestWa || "";
+    showToast(t("waSaved"));
   });
   $("#wa-save")?.addEventListener("click", async () => {
     const r = await apiJSON(`/chats/${encodeURIComponent(venueId)}/claim`, {

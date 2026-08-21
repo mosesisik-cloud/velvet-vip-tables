@@ -373,6 +373,31 @@ async function runApi() {
     if (waBad.status !== 400) fail("wa-bad", "expected 400 got " + waBad.status);
     else ok("wa-bad", "invalid number");
 
+    const gwa = await req(base, "POST", "/chats/IBZ-001/guest-wa", {
+      user: guest, whatsapp: "+34 611 11 22 22",
+    });
+    if (gwa.status !== 200 || gwa.json.guestWa !== "34611112222") fail("wa-guest", JSON.stringify(gwa.json));
+    else ok("wa-guest", gwa.json.guestWa);
+
+    await req(base, "POST", "/chats/IBZ-001", { user: guest, text: "hej, bord ikväll?" });
+    const inbox = await req(base, "GET", "/chats/IBZ-001/inbox?userId=" + encodeURIComponent(host.id));
+    const gth = (inbox.json.threads || []).find((th) => th.threadId === guest.id);
+    if (inbox.status !== 200 || gth?.guestWa !== "34611112222") fail("wa-inbox", JSON.stringify(inbox.json).slice(0, 240));
+    else ok("wa-inbox", "promoter can reply on WhatsApp");
+
+    const hook = await req(base, "POST", "/wa/webhook", {
+      entry: [{ changes: [{ value: { messages: [{
+        from: "46701234567", id: "wamid.rails1", text: { body: "ses 23:30 vid dörren" },
+      }] } }] }],
+    });
+    if (hook.status !== 200 || !hook.json.stored) fail("wa-hook", JSON.stringify(hook.json));
+    else ok("wa-hook", "promoter reply from WhatsApp");
+
+    const th = await req(base, "GET", "/chats/IBZ-001?userId=" + encodeURIComponent(guest.id));
+    const fromWa = (th.json.messages || []).some((m) => m.via === "whatsapp" && m.role === "promoter" && /23:30/.test(m.text));
+    if (!fromWa) fail("wa-thread", JSON.stringify(th.json.messages).slice(0, 240));
+    else ok("wa-thread", "guest sees WhatsApp reply");
+
     const blocked = await req(base, "POST", "/events/refresh", { user: { id: "U-x" } });
     if (blocked.status !== 403) fail("events-refresh-off", "expected 403 got " + blocked.status);
     else ok("events-refresh-off", "VELVET_CRAWL=0");

@@ -27,12 +27,14 @@ function load() {
       chats: raw.chats && typeof raw.chats === "object" ? raw.chats : {},
       promoters: raw.promoters && typeof raw.promoters === "object" ? raw.promoters : {},
       promoterContact: raw.promoterContact && typeof raw.promoterContact === "object" ? raw.promoterContact : {},
+      chatsMeta: raw.chatsMeta && typeof raw.chatsMeta === "object" ? raw.chatsMeta : {},
+      waSeen: raw.waSeen && typeof raw.waSeen === "object" ? raw.waSeen : {},
       users: raw.users && typeof raw.users === "object" ? raw.users : {},
       payments: Array.isArray(raw.payments) ? raw.payments : [],
       auth: raw.auth && typeof raw.auth === "object" ? raw.auth : {},
     };
   } catch {}
-  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, users: {}, payments: [], auth: {} };
+  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {} };
 }
 function waDigits(raw) {
   let s = String(raw || "").trim();
@@ -61,6 +63,70 @@ function whatsappForVenue(venueId, db) {
   const venue = venueWaFromFacts(venueId);
   if (venue) return { phone: venue, source: "venue" };
   return null;
+}
+function waCloud() {
+  const p = loadPay();
+  return {
+    token: String(process.env.WHATSAPP_TOKEN || p.whatsapp?.token || "").trim(),
+    phoneId: String(process.env.WHATSAPP_PHONE_ID || p.whatsapp?.phoneId || "").trim(),
+    verify: String(process.env.WHATSAPP_VERIFY || p.whatsapp?.verify || "").trim(),
+  };
+}
+function guestWaForThread(db, venueId, threadId) {
+  const u = db.users[threadId];
+  const meta = db.chatsMeta?.[venueId]?.[threadId];
+  return waDigits((u && u.whatsapp) || (meta && meta.guestWa) || "");
+}
+function setGuestWa(db, venueId, threadId, phone, name) {
+  const d = waDigits(phone);
+  if (!d) return "";
+  if (db.users[threadId]) db.users[threadId].whatsapp = d;
+  if (!db.chatsMeta) db.chatsMeta = {};
+  if (!db.chatsMeta[venueId]) db.chatsMeta[venueId] = {};
+  db.chatsMeta[venueId][threadId] = {
+    ...(db.chatsMeta[venueId][threadId] || {}),
+    guestWa: d,
+    guestName: name || db.chatsMeta[venueId][threadId]?.guestName || "",
+  };
+  return d;
+}
+function appendChat(db, venueId, threadId, msg) {
+  if (!db.chats[venueId]) db.chats[venueId] = {};
+  if (!db.chats[venueId][threadId]) db.chats[venueId][threadId] = [];
+  db.chats[venueId][threadId].push(msg);
+  db.chats[venueId][threadId] = db.chats[venueId][threadId].slice(-200);
+  return db.chats[venueId][threadId];
+}
+function markWaSeen(db, id) {
+  if (!id) return false;
+  if (!db.waSeen) db.waSeen = {};
+  if (db.waSeen[id]) return true;
+  db.waSeen[id] = Date.now();
+  const keys = Object.keys(db.waSeen);
+  if (keys.length > 400) {
+    for (const k of keys.slice(0, keys.length - 300)) delete db.waSeen[k];
+  }
+  return false;
+}
+async function cloudSendWa(to, text) {
+  const c = waCloud();
+  if (!c.token || !c.phoneId || !to) return false;
+  try {
+    const r = await fetch("https://graph.facebook.com/v21.0/" + encodeURIComponent(c.phoneId) + "/messages", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + c.token, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messaging_product: "whatsapp",
+        to,
+        type: "text",
+        text: { body: String(text || "").slice(0, 4000) },
+      }),
+      signal: AbortSignal.timeout(12000),
+    });
+    return r.ok;
+  } catch {
+    return false;
+  }
 }
 function isPromoter(user, venueId, db) {
   const uid = user?.id || "";
@@ -338,6 +404,7 @@ function emptyPay() {
     revolut: { iban: "", bic: "", name: "", me: "", merchantSecret: "", sandbox: false },
     stripe: { secret: "", pub: "", webhook: "" },
     paypal: { client: "", secret: "", sandbox: false },
+    whatsapp: { token: "", phoneId: "", verify: "" },
     oauth: {
       facebook: { id: "", secret: "" },
       instagram: { id: "", secret: "" },
@@ -357,6 +424,7 @@ function loadPay() {
       revolut: { ...base.revolut, ...(raw.revolut || {}) },
       stripe: { ...base.stripe, ...(raw.stripe || {}) },
       paypal: { ...base.paypal, ...(raw.paypal || {}) },
+      whatsapp: { ...base.whatsapp, ...(raw.whatsapp || {}) },
       oauth: {
         facebook: { ...base.oauth.facebook, ...(raw.oauth?.facebook || {}) },
         instagram: { ...base.oauth.instagram, ...(raw.oauth?.instagram || {}) },
@@ -421,6 +489,7 @@ function publicPayConfig() {
       iban: bankOn,
       firecrawl: !!p.firecrawlKey,
       googlePlaces: !!p.googlePlacesKey,
+      whatsapp: !!(p.whatsapp?.token && p.whatsapp?.phoneId),
     },
     oauth: oauthFlags(p),
   };
@@ -1315,9 +1384,118 @@ const server = http.createServer(async (req, res) => {
       });
     }
 
+    if (req.method === "GET" && url.pathname === "/wa/webhook") {
+      const cloud = waCloud();
+      const mode = url.searchParams.get("hub.mode");
+      const token = url.searchParams.get("hub.verify_token");
+      const challenge = url.searchParams.get("hub.challenge");
+      if (mode === "subscribe" && cloud.verify && token === cloud.verify) {
+        res.writeHead(200, { "Content-Type": "text/plain" });
+        res.end(challenge || "");
+        return;
+      }
+      return send(res, 403, { error: "verify" });
+    }
+    if (req.method === "POST" && url.pathname === "/wa/webhook") {
+      const b = await readBody(req, 1e6);
+      const db = load();
+      const entries = Array.isArray(b.entry) ? b.entry : [];
+      let stored = 0;
+      for (const entry of entries) {
+        const changes = Array.isArray(entry.changes) ? entry.changes : [];
+        for (const ch of changes) {
+          const msgs = ch.value?.messages || [];
+          for (const m of msgs) {
+            const from = waDigits(m.from);
+            const text = String(m.text?.body || m.button?.text || "").trim().slice(0, 800);
+            const mid = String(m.id || "");
+            if (!from || !text) continue;
+            if (markWaSeen(db, mid)) continue;
+            let venueId = "";
+            let threadId = "";
+            let role = "user";
+            for (const [vid, rec] of Object.entries(db.promoterContact || {})) {
+              if (waDigits(rec.whatsapp) === from) {
+                venueId = vid;
+                threadId = rec.lastThreadId || "";
+                role = "promoter";
+                break;
+              }
+            }
+            if (!venueId) {
+              for (const [vid, threads] of Object.entries(db.chatsMeta || {})) {
+                for (const [tid, meta] of Object.entries(threads || {})) {
+                  if (waDigits(meta.guestWa) === from) {
+                    venueId = vid;
+                    threadId = tid;
+                    role = "user";
+                    break;
+                  }
+                }
+                if (venueId) break;
+              }
+            }
+            if (!venueId) {
+              for (const [uid, u] of Object.entries(db.users || {})) {
+                if (waDigits(u.whatsapp) === from) {
+                  for (const [vid, rec] of Object.entries(db.chats || {})) {
+                    if (rec[uid]) { venueId = vid; threadId = uid; role = "user"; break; }
+                  }
+                  break;
+                }
+              }
+            }
+            if (!venueId || !threadId) continue;
+            const who = role === "promoter"
+              ? (findUser(db, db.promoterContact[venueId]?.userId) || { name: "Promoter" })
+              : (db.users[threadId] || { name: "Gäst" });
+            appendChat(db, venueId, threadId, {
+              id: `M-wa-${Date.now().toString(36)}`,
+              role,
+              userId: role === "promoter" ? (db.promoterContact[venueId]?.userId || "promoter") : threadId,
+              name: String(who.name || ""),
+              handle: String(who.handle || ""),
+              text,
+              via: "whatsapp",
+              created: new Date().toISOString(),
+            });
+            stored += 1;
+            if (role === "promoter") {
+              const guestPhone = guestWaForThread(db, venueId, threadId);
+              if (guestPhone) cloudSendWa(guestPhone, text).catch(() => {});
+            } else {
+              const promo = whatsappForVenue(venueId, db);
+              if (promo?.phone) {
+                if (!db.promoterContact[venueId]) db.promoterContact[venueId] = { whatsapp: promo.phone };
+                db.promoterContact[venueId].lastThreadId = threadId;
+                cloudSendWa(promo.phone, `${who.name || "Gäst"} · VELVET\n${text}`).catch(() => {});
+              }
+            }
+          }
+        }
+      }
+      save(db);
+      return send(res, 200, { ok: true, stored });
+    }
+
     const claimM = url.pathname.match(/^\/chats\/([^/]+)\/claim$/);
+    const guestWaM = url.pathname.match(/^\/chats\/([^/]+)\/guest-wa$/);
     const inboxM = url.pathname.match(/^\/chats\/([^/]+)\/inbox$/);
     const chatM = url.pathname.match(/^\/chats\/([^/]+)$/);
+    if (req.method === "POST" && guestWaM) {
+      const b = await readBody(req, 2e5);
+      const venueId = decodeURIComponent(guestWaM[1]);
+      const uid = String(b.user?.id || "");
+      if (!uid) return send(res, 400, { error: "user" });
+      const phone = waDigits(b.whatsapp);
+      if (String(b.whatsapp || "").trim() && !phone) return send(res, 400, { error: "whatsapp" });
+      const db = load();
+      upsertUser(db, b.user);
+      if (phone) setGuestWa(db, venueId, uid, phone, b.user?.name);
+      else if (db.users[uid]) db.users[uid].whatsapp = "";
+      save(db);
+      return send(res, 200, { ok: true, guestWa: phone || "" });
+    }
     if (req.method === "POST" && claimM) {
       const b = await readBody(req, 2e5);
       const venueId = decodeURIComponent(claimM[1]);
@@ -1331,8 +1509,10 @@ const server = http.createServer(async (req, res) => {
         const phone = waDigits(b.whatsapp);
         if (String(b.whatsapp || "").trim() && !phone) return send(res, 400, { error: "whatsapp" });
         if (!db.promoterContact) db.promoterContact = {};
-        if (phone) db.promoterContact[venueId] = { userId: uid, whatsapp: phone };
-        else delete db.promoterContact[venueId];
+        if (phone) {
+          const prev = db.promoterContact[venueId] || {};
+          db.promoterContact[venueId] = { ...prev, userId: uid, whatsapp: phone };
+        } else delete db.promoterContact[venueId];
       }
       save(db);
       return send(res, 200, { ok: true, promoter: true, whatsapp: whatsappForVenue(venueId, db) });
@@ -1353,7 +1533,11 @@ const server = http.createServer(async (req, res) => {
           n: msgs.length,
         };
       }).sort((a, b) => String(b.at).localeCompare(String(a.at)));
-      return send(res, 200, { threads, promoter: true });
+      const withWa = threads.map((th) => ({
+        ...th,
+        guestWa: guestWaForThread(db, venueId, th.threadId),
+      }));
+      return send(res, 200, { threads: withWa, promoter: true });
     }
     if (req.method === "GET" && chatM) {
       const venueId = decodeURIComponent(chatM[1]);
@@ -1363,7 +1547,13 @@ const server = http.createServer(async (req, res) => {
       const promoter = isPromoter({ id: uid }, venueId, db);
       const venueChats = db.chats[venueId] || {};
       const messages = venueChats[thread] || [];
-      return send(res, 200, { messages, promoter, whatsapp: whatsappForVenue(venueId, db) });
+      return send(res, 200, {
+        messages,
+        promoter,
+        whatsapp: whatsappForVenue(venueId, db),
+        guestWa: guestWaForThread(db, venueId, thread),
+        cloud: !!(waCloud().token && waCloud().phoneId),
+      });
     }
     if (req.method === "POST" && chatM) {
       const b = await readBody(req, 2e5);
@@ -1372,23 +1562,35 @@ const server = http.createServer(async (req, res) => {
       const uid = String(b.user?.id || "");
       if (!uid || !text) return send(res, 400, { error: "missing" });
       const db = load();
+      upsertUser(db, b.user);
       const promoter = isPromoter(b.user, venueId, db);
       const threadId = promoter ? String(b.threadId || uid) : uid;
-      if (!db.chats[venueId]) db.chats[venueId] = {};
-      if (!db.chats[venueId][threadId]) db.chats[venueId][threadId] = [];
+      if (b.whatsapp) setGuestWa(db, venueId, uid, b.whatsapp, b.user?.name);
+      const asPromo = promoter && b.asPromoter !== false;
       const msg = {
         id: `M-${Date.now().toString(36)}`,
-        role: promoter && b.asPromoter !== false ? "promoter" : "user",
+        role: asPromo ? "promoter" : "user",
         userId: uid,
         name: String(b.user?.name || ""),
         handle: String(b.user?.handle || ""),
         text,
+        via: "app",
         created: new Date().toISOString(),
       };
-      db.chats[venueId][threadId].push(msg);
-      db.chats[venueId][threadId] = db.chats[venueId][threadId].slice(-200);
+      const messages = appendChat(db, venueId, threadId, msg);
+      if (!asPromo) {
+        if (!db.promoterContact[venueId]) db.promoterContact[venueId] = {};
+        db.promoterContact[venueId].lastThreadId = threadId;
+        const promo = whatsappForVenue(venueId, db);
+        if (promo?.phone) {
+          cloudSendWa(promo.phone, `${msg.name || "Gäst"} · VELVET · ${venueId}\n${text}\n\nSvara i WhatsApp — det går till gästen.`).catch(() => {});
+        }
+      } else {
+        const guestPhone = guestWaForThread(db, venueId, threadId);
+        if (guestPhone) cloudSendWa(guestPhone, text).catch(() => {});
+      }
       save(db);
-      return send(res, 201, { message: msg, messages: db.chats[venueId][threadId], promoter });
+      return send(res, 201, { message: msg, messages, promoter, guestWa: guestWaForThread(db, venueId, threadId) });
     }
 
     send(res, 404, { error: "nope" });
