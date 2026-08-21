@@ -95,8 +95,11 @@ function cleanStr(s, max) {
     .replace(/<[^>]+>/g, "")
     .replace(/&amp;/g, "&")
     .replace(/&nbsp;/g, " ")
-    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&#x27;|&#039;|&apos;/g, "'")
+    .replace(/&#8217;|&rsquo;/g, "'")
+    .replace(/&#8211;|&ndash;/g, "–")
     .replace(/&quot;/g, '"')
+    .replace(/&hellip;/g, "...")
     .replace(/\s+/g, " ")
     .trim();
   if (!t || t.length < 3) return "";
@@ -118,9 +121,13 @@ function cleanFacts(raw, source) {
     if (k === "vipHow") {
       v = v.replace(/(https?:\/\/[^\s)]+)\?[^\s)]*(external_id|utm_|fbclid|gclid|mc_cid)[^\s)]*/gi, "$1");
     }
-    if (k === "summary" && (v.length < 40 || /\[[A-Z0-9]{2,}\]/.test(v) || / is the world$/i.test(v))) v = "";
-    if (k === "season" && /select event|choose an? event|dropdown/i.test(v)) v = "";
-    if (k === "dressCode" && /^(etiquette|dress code|code)$/i.test(v)) v = "";
+    if (k === "summary" && (v.length < 40 || /\[[A-Z0-9]{2,}\]/.test(v) || / is the world$/i.test(v) || /create an account or log in to instagram/i.test(v) || /academy for salon professionals/i.test(v) || /mahiki racing/i.test(v))) v = "";
+    if (k === "season" && /select event|choose an? event|dropdown|with us!|in the St\b|^changes$|^en /i.test(v)) v = "";
+    if (k === "dressCode" && /^(etiquette|dress code|code)$/i.test(v) || /^(to |at |reply to )/i.test(v)) v = "";
+    if (k === "hours" && /bottom of page|primarily a private|cookie|javascript/i.test(v)) v = "";
+    if (k === "address" && /tokyo, nevada/i.test(v)) v = "";
+    if (k === "area" && /tokyo boulevard/i.test(v)) v = "";
+    if (k === "phone") v = v.replace(/^\/+/, "").replace(/INFO&RESERVATIONS/i, "");
     if (v) { out[k] = v; n += 1; }
   }
   const highs = Array.isArray(raw.highlights) ? raw.highlights : [];
@@ -455,8 +462,15 @@ async function mapPool(items, n, fn) {
 function persist(venues) {
   for (const id of Object.keys(venues)) {
     const rec = venues[id];
-    if (!rec) continue;
-    venues[id] = cleanFacts(rec, rec.source || "") || rec;
+    if (!rec) { delete venues[id]; continue; }
+    const src = String(rec.source || "");
+    if (/academyla\.com|mahiki\.com\/?$/i.test(src) && /salon professionals|mahiki racing/i.test(JSON.stringify(rec))) {
+      delete venues[id];
+      continue;
+    }
+    const cleaned = cleanFacts(rec, src);
+    if (cleaned) venues[id] = cleaned;
+    else delete venues[id];
   }
   const payload = { fetchedAt: new Date().toISOString(), venues };
   writeJsonAtomic(FACTS_FILE, payload);

@@ -1,5 +1,5 @@
 {
-  "fetchedAt": "2026-08-21T03:35:51.273Z",
+  "fetchedAt": "2026-08-21T03:37:52.219Z",
   "venues": {
     "IBZ-001": {
       "source": "https://www.hiibiza.com/vip-tables",
@@ -20,7 +20,7 @@
         "Weekly themed events",
         "Unique artistic performances"
       ],
-      "fetchedAt": "2026-08-21T03:35:51.263Z"
+      "fetchedAt": "2026-08-21T03:37:52.207Z"
     },
     "IBZ-002": {
       "source": "https://www.theushuaiaexperience.com/club/en",
@@ -31,7 +31,7 @@
       "email": "reservations@ushuaiabeachhotel.com",
       "vipHow": "VIP / tables: https://www.theushuaiaexperience.com/club/en/vip-tables",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.264Z"
+      "fetchedAt": "2026-08-21T03:37:52.208Z"
     },
     "IBZ-003": {
       "source": "https://www.unvrs.com/",
@@ -40,7 +40,7 @@
       "area": "San Rafael",
       "vipHow": "VIP / tables: https://www.unvrs.com/vip-tables/request",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.208Z"
     },
     "MYK-001": {
       "source": "https://scorpios.com/mykonos",
@@ -48,7 +48,7 @@
       "summary": "Scorpios Mykonos is a gathering place where music, art and celebration come together against a backdrop of stunning sunsets.",
       "email": "info.mykonos@scorpios.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.208Z"
     },
     "IBZ-005": {
       "source": "https://obeachibiza.com/",
@@ -57,7 +57,7 @@
       "phone": "+34 930347472",
       "email": "reservations@obeachibiza.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.209Z"
     },
     "IBZ-004": {
       "source": "https://pacha.com/",
@@ -67,7 +67,7 @@
       "email": "tickets.pacha@fourvenues.com",
       "vipHow": "VIP / tables: https://vip.pacha.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.209Z"
     },
     "MYK-004": {
       "source": "https://www.cavoparadiso.gr/",
@@ -76,7 +76,7 @@
       "address": "Paradise beach, Mykonos 846 00, GR",
       "area": "Paradise beach, Mykonos 846 00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.209Z"
     },
     "MYK-002": {
       "source": "https://www.nammos.com/mykonos",
@@ -86,7 +86,7 @@
       "email": "press@nammos.com",
       "hours": "Beach: 11",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.209Z"
     },
     "DXB-001": {
       "source": "https://nikkibeach.com/dubai/",
@@ -95,14 +95,14 @@
       "phone": "+97143766000",
       "email": "restaurantreservation.dubai@nikkibeachhotels.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.209Z"
     },
     "MYK-005": {
       "source": "https://alemagou.gr/contact/",
       "engine": "html",
       "phone": "302289071339",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.209Z"
     },
     "DXB-003": {
       "source": "https://blabladubai.ae/",
@@ -110,14 +110,14 @@
       "phone": "04 584 4111",
       "email": "reserve@blabladubai.ae",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.209Z"
     },
     "DXB-002": {
       "source": "https://obeachdubai.com/",
       "engine": "html",
       "email": "reservations@obeachdubai.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.209Z"
     },
     "MRB-001": {
       "source": "https://nikkibeach.com/marbella/",
@@ -129,7 +129,7 @@
       "email": "reservations.marbella@nikkibeach.com",
       "hours": "Mo-Su 12:00-19:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.209Z"
     },
     "MYK-003": {
       "source": "https://www.santannamykonos.com/",
@@ -137,7 +137,7 @@
       "summary": "Welcome to SantAnna Mykonos all-day Beach Club, a place where you can truly be yourself. Book your spot and enjoy premium services and great vibes.",
       "vipHow": "VIP / tables: https://www.santannamykonos.com/precious-light/the-vip-area/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.209Z"
     },
     "MRB-002": {
       "source": "https://oceanclub.es/",
@@ -146,7 +146,7 @@
       "phone": "+34952908137",
       "email": "reservations@oceanclub.es",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.210Z"
     },
     "DXB-005": {
       "source": "https://surfclubdubai.com/",
@@ -156,18 +156,16 @@
       "area": "Palm Jumeirah",
       "phone": "+971 4 589 5444",
       "email": "reservations@surfclubdubai.com",
-      "hours": "4PM to 1AM bottom of page",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.265Z"
+      "fetchedAt": "2026-08-21T03:37:52.210Z"
     },
     "MRB-004": {
       "source": "https://oliviavalere.com/",
       "engine": "html",
       "summary": "Night Club, Marbella, discoteca, discotheque, the best experience in Marbella, Dj show, Dinner show at Lov restaurant",
-      "phone": "//+34 613588046",
-      "dressCode": "Reply to email or phone from 11 a",
+      "phone": "+34 613588046",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.266Z"
+      "fetchedAt": "2026-08-21T03:37:52.210Z"
     },
     "STT-001": {
       "source": "https://nikkibeach.com/saint-tropez/",
@@ -179,7 +177,7 @@
       "email": "reservations.sttropez@nikkibeach.com",
       "hours": "Mo-Su 00:00-20:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.266Z"
+      "fetchedAt": "2026-08-21T03:37:52.211Z"
     },
     "STT-002": {
       "source": "https://www.club55.fr/",
@@ -189,7 +187,7 @@
       "area": "Ramatuelle",
       "phone": "0494555555",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.266Z"
+      "fetchedAt": "2026-08-21T03:37:52.211Z"
     },
     "MRB-005": {
       "source": "https://mamzelmarbella.com/",
@@ -201,7 +199,7 @@
       "email": "reservations@mamzelmarbella.com",
       "hours": "Monday, Wednesday, Thursday, Friday, Saturday, Sunday 20:30–02:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.266Z"
+      "fetchedAt": "2026-08-21T03:37:52.211Z"
     },
     "STT-004": {
       "source": "https://verde-beach.com/",
@@ -211,14 +209,14 @@
       "email": "contact@verde-beach.com",
       "hours": "Everyday : From 11am To 8pm Kitchen Closes At 5",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.266Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "MRB-003": {
       "source": "https://momentomarbella.com/",
       "engine": "html-jsonld",
       "summary": "Momento Marbella, el night club in Marbella donde la música, el lujo y el ambiente premium crean noches únicas e inolvidables en la Costa del Sol.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.266Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "STT-003": {
       "source": "https://gigi-restaurant.com/ramatuelle/",
@@ -229,21 +227,21 @@
       "email": "contact@gigi-ramatuelle.com",
       "hours": "Tuesday, Thursday, Friday, Saturday, Sunday, Monday 12:00–18:00; Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday 20:00–01:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.266Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "MCO-001": {
       "source": "https://www.montecarlosbm.com/en/nightlife/jimmyz-monte-carlo",
       "engine": "html",
-      "summary": "For over 50 years, Jimmy&#x27;z Monte-Carlo has ruled the most exclusive nights on the Riviera. This legendary venue, where the turntables have been caressed by some of the world&#x27;s greatest DJs, including Robin Schulz, Lost Frequencies, Martin Solveig, Bob Sinclar and Fatboy Slim, is reinventing itself in 2025 to offer an even more immersive and daring experience.",
+      "summary": "For over 50 years, Jimmy'z Monte-Carlo has ruled the most exclusive nights on the Riviera. This legendary venue, where the turntables have been caressed by some of the world's greatest DJs, including Robin Schulz, Lost Frequencies, Martin Solveig, Bob Sinclar and Fatboy Slim, is reinventing itself in 2025 to offer an even more immersive and daring experience.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.266Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "MCO-003": {
       "source": "https://www.montecarlosbm.com/en/nightlife/la-rascasse",
       "engine": "html",
       "summary": "Have an unfogettable night in La Rascasse in Monaco. Located in Monaco Harbour, right in the legendary corner of the Formula One Grand Prix. La Rascasse remains a major night club withe live music.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.267Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "MCO-005": {
       "source": "https://nikkibeach.com/monte-carlo/",
@@ -254,9 +252,8 @@
       "phone": "+377 93 300 700",
       "email": "reservations.montecarlo@nikkibeach.com",
       "hours": "Mo-Su 11:00-20:00",
-      "season": "with us! We&#8217;re now open, reserve your table online",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.267Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "MCO-004": {
       "source": "https://www.amazonicorestaurant.com/monte-carlo/",
@@ -264,17 +261,17 @@
       "summary": "Discover Amazónico Monaco: exotic Latin American cuisine, handcrafted cocktails, and extensive wine list in Monte Carlo",
       "phone": "+37798061414",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.267Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "MCO-002": {
       "source": "https://twigaworld.com/montecarlo/",
       "engine": "html-jsonld",
-      "summary": "MONTECARLO 10 Avenue Princesse Grace, Grimaldi Forum &#8211; 2nd floor, 98000 Monaco DINNER & CLUB Wednesday to Sunday venue A unique experience in the Heart of Monaco Inside Twiga, in the heart of the Principality of Monaco, Vesta Monte Carlo brings the same identity that has guided us from the very beginning. A culinary vision rooted in the sea, built [&hellip;]",
+      "summary": "MONTECARLO 10 Avenue Princesse Grace, Grimaldi Forum – 2nd floor, 98000 Monaco DINNER & CLUB Wednesday to Sunday venue A unique experience in the Heart of Monaco Inside Twiga, in the heart of the Principality of Monaco, Vesta Monte Carlo brings the same identity that has guided us from the very beginning. A culinary vision rooted in the sea, built [...]",
       "phone": "+37799992550",
       "email": "info@vestamontecarlo.com",
       "hours": "Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday 09:00-17:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "CNS-001": {
       "source": "https://lamomecannes.com/",
@@ -283,7 +280,7 @@
       "phone": "+33 4 93 38 60 95",
       "email": "lamomecannes@lamomegroupe.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "CNS-004": {
       "source": "https://carltoncannes.com/restaurants-bars/carlton-beach-club/",
@@ -291,7 +288,7 @@
       "phone": "+33493064006",
       "email": "carltonbeachclub@ihg.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "CNS-002": {
       "source": "https://www.baolicannes.com/",
@@ -300,16 +297,15 @@
       "phone": "+33493430343",
       "email": "reservations@baolicannes.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "BDR-002": {
       "source": "https://xuma.com.tr/en/",
       "engine": "html",
       "phone": "+902523854775",
       "email": "info@xuma.com.tr",
-      "season": "changes",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "BDR-001": {
       "source": "https://scorpios.com/bodrum",
@@ -317,7 +313,7 @@
       "summary": "Scorpios Bodrum is our new location for experiences of shared celebration, soulful dining and wellbeing. Book here.",
       "email": "info.mykonos@scorpios.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "BDR-004": {
       "source": "https://www.macakizi.com/",
@@ -326,7 +322,7 @@
       "phone": "902523112400",
       "email": "macakizi@macakizi.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "HKT-001": {
       "source": "https://phuket.cafedelmar.com/",
@@ -338,7 +334,7 @@
       "email": "reservations@cafedelmar-phuket.com",
       "hours": "Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday 11:00–23:30",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.212Z"
     },
     "HKT-003": {
       "source": "https://www.catchbeachclub.com/",
@@ -346,7 +342,7 @@
       "summary": "A globally coveted beachfront destination beckoning you to create lasting memories.Nestled on the pristine shores of the West Coast of Phuket, our renowned beach club invites you to catch the moment, where timeless days seamlessly melt into warm tropical nights.",
       "email": "book@catchbeachclub.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "HKT-002": {
       "source": "https://yonabeach.com/",
@@ -354,19 +350,19 @@
       "summary": "Phuket’s luxury floating beach club. Ocean views, dining, pool, daybeds & parties at sea. Book your YONA Beach Club experience today!",
       "phone": "+66 2 430 4400",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "HKT-005": {
       "source": "https://www.illuzionphuket.com/",
       "engine": "html-jsonld",
-      "summary": "Illuzion Club Phuket, Asia&#039;s top nightclub in Thailand, offers an unforgettable nightlife experience in Patong Beach. Book VIP table for tonight!",
+      "summary": "Illuzion Club Phuket, Asia's top nightclub in Thailand, offers an unforgettable nightlife experience in Patong Beach. Book VIP table for tonight!",
       "address": "Bangla Road, Patong, 83150, Thailand",
       "area": "Patong",
       "phone": "+66 64 454 4985",
       "hours": "Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday 0:00-03:00; Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday 20:30-0:00",
       "vipHow": "VIP / tables: https://www.illuzionphuket.com/vip-table-booking/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "BKK-002": {
       "source": "https://singsingtheater.com/",
@@ -377,7 +373,7 @@
       "hours": "Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday 21:00–03:00",
       "dressCode": "no open-toe shoes, sandals, singlets or sports shorts",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "BKK-005": {
       "source": "https://pastelbangkok.com/",
@@ -388,7 +384,7 @@
       "phone": "0957035679",
       "hours": "Monday 17:00–01:00; Tuesday 17:00–01:00; Wednesday 17:00–01:00; Thursday 17:00–01:00; Friday 17:00–01:00; Saturday 17:00–01:00; Sunday 17:00–01:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "BAL-001": {
       "source": "https://finnsbeachclub.com/",
@@ -398,7 +394,7 @@
       "phone": "+623618446327",
       "vipHow": "VIP / tables: https://finnsbeachclub.com/venue/vip/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "BDR-003": {
       "source": "https://www.luccastyle.com/",
@@ -409,7 +405,7 @@
       "email": "hello@luccastyle.com",
       "hours": "Monday, Tuesday, Wednesday, Thursday, Friday 12:00–23:00; Saturday, Sunday 10:00–23:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "BKK-004": {
       "source": "https://lebua.com/restaurants/sky/",
@@ -421,21 +417,21 @@
       "email": "dome@lebua.com",
       "hours": "Mo 16:00-01:00, Tu 16:00-01:00, We 16:00-01:00, Th 16:00-01:00, Fr 16:00-01:00, Sa 16:00-01:00, Su 16:00-01:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "BAL-002": {
       "source": "https://savaya.com/",
       "engine": "html",
       "summary": "Savaya is nestled between the wild paradise of the jungle and soaring limestone cliffs upon a breathtaking natural wonder 100 meters above the Indian Ocean.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "BAL-003": {
       "source": "https://seminyak.potatohead.co/",
       "engine": "html-jsonld",
       "summary": "Indonesian-founded hospitality and lifestyle company behind Desa Potato Head Bali, Potato Head Singapore, and Potato Head Hong Kong. Indonesia's first carbon-neutral hospitality brand (2018, UNFCCC Climate Neutral Now) and a Certified B Impact Corporation since 2023.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "MIA-002": {
       "source": "https://www.e11evenmiami.com/",
@@ -445,9 +441,8 @@
       "area": "Miami",
       "phone": "+1 (305) 829-2911",
       "hours": "Wednesday, Thursday, Friday, Saturday, Sunday, Monday 00:00–23:59",
-      "dressCode": "at E11EVEN Miami? Upscale and stylish nightlife fashion wear",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "BAL-005": {
       "source": "https://www.kudeta.com/",
@@ -457,7 +452,7 @@
       "hours": "Daily | 8 AM - LATE +62 361 73 69 69 reservations@kudeta",
       "vipHow": "VIP / tables: https://kudeta.com/promotion/vip-daybed-experience/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "BAL-004": {
       "source": "https://atlasbeachfest.com/",
@@ -465,7 +460,7 @@
       "summary": "One Destination For Everyone at Atlas Beach Club Canggu Bali - For Best Activities Beach Spot, 16+ Adults Fun Day and Endless Party Vibes!",
       "email": "cs@atlasbeachfest.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.213Z"
     },
     "MIA-003": {
       "source": "https://mila-miami.com/",
@@ -476,16 +471,15 @@
       "phone": "+17867060744",
       "hours": "Monday, Tuesday, Wednesday 18:00–01:30; Thursday 18:00–02:00; Friday, Saturday 17:30–02:30; Sunday 11:30–14:30; Sunday 18:00–01:30",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.268Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "MIA-005": {
       "source": "https://baolimiami.com/",
       "engine": "html-jsonld",
       "summary": "Experience our Asian fine dining & vibrant nightclub scene! The premier restaurant for an unforgettable nightlife experience in Miami Beach, FL. Reserve now!",
       "email": "reservations@baolimiami.com",
-      "dressCode": "at all times at our venue",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "LAS-002": {
       "source": "https://taogroup.com/venues/omnia-nightclub-las-vegas/",
@@ -497,7 +491,7 @@
       "email": "Contact@taogroup.com",
       "vipHow": "VIP / tables: https://taogroup.com/venues/omnia-nightclub-las-vegas/vip/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "MIA-004": {
       "source": "https://joiabeachmiami.com/",
@@ -507,9 +501,8 @@
       "phone": "3054007280",
       "email": "reservations@joiabeachclub.com",
       "hours": "Monday, Tuesday 00:00–00:00; Wednesday, Thursday 16:00–23:00; Friday, Saturday 12:00–00:00; Sunday 12:00–23:00",
-      "dressCode": "to maintain the elevated experience our guests expect",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "LAS-001": {
       "source": "https://www.wynnlasvegas.com/nightlife/xs-nightclub",
@@ -521,7 +514,7 @@
       "email": "nightlife@wynnlasvegas.com",
       "vipHow": "VIP / tables: https://www.wynnsocial.com/vip-tables/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "LAS-003": {
       "source": "https://taogroup.com/venues/marquee-nightclub-las-vegas/",
@@ -533,14 +526,14 @@
       "email": "Contact@taogroup.com",
       "vipHow": "VIP / tables: https://taogroup.com/venues/jewel-nightclub-las-vegas/vip/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "TUL-002": {
       "source": "https://www.vagalumetulum.com/",
       "engine": "html",
       "summary": "Vagalume Tulum — beach club and night sanctuary. Curated events, cuisine, sound, and reservations on the Caribbean coast.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "LAS-004": {
       "source": "https://www.wynnlasvegas.com/nightlife/encore-beach-club",
@@ -552,7 +545,7 @@
       "email": "nightlife@wynnlasvegas.com",
       "vipHow": "VIP / tables: https://www.wynnsocial.com/vip-tables/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "TUL-001": {
       "source": "https://www.papayaplayaproject.com/",
@@ -560,16 +553,16 @@
       "summary": "PPP Tulum Hotel together with Design Hotels, we have set out to discover a new form of hospitality, merging local culture, and sustainability to set the stage for original and aspirational hospitality experiences.",
       "email": "info@papayaplayaproject.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "BCN-002": {
       "source": "https://shoko.biz/",
       "engine": "html-jsonld",
       "summary": "Shôko Barcelona is a beachfront Restaurant & Lounge Club, where all indoor and outdoor areas offer Mediterranean views.",
-      "phone": "INFO&RESERVATIONS932259200695875082",
+      "phone": "932259200695875082",
       "email": "shoko@shoko.biz",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "TUL-003": {
       "source": "https://gitano.com/",
@@ -577,14 +570,14 @@
       "summary": "Grupo Gitano is a Global Hospitality & Lifestyle Brand with venues in Tulum, New York City and Dubai.",
       "email": "info@gitano.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "BCN-003": {
       "source": "https://www.thesuttonclub.com/",
       "engine": "html-jsonld",
       "summary": "Descubre el precio de la discoteca Sutton Barcelona. Cuanto cuesta entrar por lista, entrada normal o reservar una mesa VIP.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "BCN-005": {
       "source": "https://www.marriott.com/en-us/hotels/bcnwh-w-barcelona/dining/",
@@ -592,7 +585,7 @@
       "summary": "Savor refined cuisine from on-site restaurants to acclaimed local dining, all awaiting your discovery at W Barcelona.",
       "phone": "+34 93-295-2800",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "CER-001": {
       "source": "https://billionairesociety.com/",
@@ -600,7 +593,7 @@
       "summary": "Billionaire is a nocturnal adventure offering a luxury dining concept paired with nightlife, consisting of special shows and spectacular entertainment.",
       "email": "beatrice.reda@majestas.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.214Z"
     },
     "BCN-004": {
       "source": "https://cdlcbarcelona.com/",
@@ -609,7 +602,7 @@
       "phone": "+34932240470",
       "email": "info@cdlcbarcelona.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "CER-003": {
       "source": "https://nikkibeach.com/costa-smeralda/",
@@ -621,7 +614,7 @@
       "email": "reservations.sardinia@nikkibeach.com",
       "hours": "Mo-Su 11:00-19:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "BCN-001": {
       "source": "https://opiumbarcelona.com/",
@@ -629,10 +622,9 @@
       "summary": "Descubre Opium Barcelona, la discoteca internacional de referencia en el mundo del entretenimiento. Una parada obligatoria para aquellos que visitan Barcelona y desean conocer su vida nocturna.",
       "phone": "+34 655576998",
       "email": "info@opiumbarcelona.com",
-      "season": "en Opium Barcelona",
       "vipHow": "VIP / tables: https://opiumbarcelona.com/vip/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "CER-002": {
       "source": "https://phibeach.com/",
@@ -641,14 +633,14 @@
       "phone": "390789955012",
       "email": "info@phibeach.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "HVA-001": {
       "source": "https://beach.cdhvar.com/",
       "engine": "html",
       "email": "beach@cdhvar.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "HVA-002": {
       "source": "https://www.hulahulahvar.com/",
@@ -657,21 +649,14 @@
       "phone": "+385 99 2130 516",
       "email": "info@hulahulahvar.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.269Z"
-    },
-    "HVA-003": {
-      "source": "https://cdhvar.com/",
-      "engine": "html",
-      "summary": "Your summer destination in Hvar",
-      "highlights": [],
-      "fetchedAt": "2026-08-21T03:34:43.156Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "IST-001": {
       "source": "https://www.sortie.com.tr/",
       "engine": "html-jsonld",
-      "summary": "Sortie Club & Dining İstanbul | Eşsiz manzarası ile Boğaz&#039;da Kuruçeşme&#039;de Sortie’yi yarattık. Sortie&#039;yi yakından tanıyın.",
+      "summary": "Sortie Club & Dining İstanbul | Eşsiz manzarası ile Boğaz'da Kuruçeşme'de Sortie’yi yarattık. Sortie'yi yakından tanıyın.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "ATH-003": {
       "source": "https://momentumgroup.gr/akanthus-summer-athens-riviera/",
@@ -679,14 +664,7 @@
       "hours": "from Wednesday to Sunday where many popular parties take place until the dawn",
       "season": "from the beginning of May to the end of September",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
-    },
-    "ATH-002": {
-      "source": "https://www.bolivar.gr/",
-      "engine": "html-jsonld",
-      "summary": "Bolivar Beach Club",
-      "highlights": [],
-      "fetchedAt": "2026-08-21T03:34:43.156Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "CAP-001": {
       "source": "https://www.fontelina-capri.com/",
@@ -694,7 +672,7 @@
       "summary": "Stenditi al sole di fronte ai Faraglioni, tuffati dove l",
       "email": "fontelinacapri@gmail.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "CAP-002": {
       "source": "https://www.lacanzonedelmare.com/",
@@ -702,7 +680,7 @@
       "summary": "La Canzone del Mare - lo stabilimento balneare e il ristorante a Capri ai piedi dei Faraglioni dove respirare ancora l",
       "phone": "+39 081 8370104",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "AMF-001": {
       "source": "https://www.onefirebeach.com/",
@@ -713,7 +691,7 @@
       "email": "onefirebeach@gmail.com",
       "hours": "Mo 10:00-20:00, Tu 10:00-20:00, We 10:00-20:00, Th 10:00-20:00, Fr 10:00-20:00, Sa 10:00-20:00, Su 10:00-20:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "AMF-002": {
       "source": "https://musicontherocks.it/",
@@ -721,7 +699,7 @@
       "summary": "Music on the Rocks — eventi, musica e notti a Positano.",
       "phone": "+3908987587",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "AMF-003": {
       "source": "https://lascoglierapositano.com/",
@@ -731,14 +709,14 @@
       "email": "info@lascoglierapositano.com",
       "hours": "Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday 09:00-17:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "LON-001": {
       "source": "https://annabels.co.uk/",
       "engine": "html",
       "summary": "One of the most elegant clubs in the world, Annabel’s has a global reputation founded on superb service, first-class cuisine and unparalleled entertainment.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "LON-003": {
       "source": "https://www.tapelondon.com/",
@@ -748,23 +726,22 @@
       "area": "London",
       "phone": "02076599080",
       "email": "Reservations@tapelondon.com",
-      "hours": "CONTACT US Tape London is primarily a private members&rsquo; club",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "LON-002": {
       "source": "https://theboxsoho.com/",
       "engine": "html-jsonld",
       "email": "hello@theboxsoho.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.216Z"
     },
     "PAR-001": {
       "source": "https://larc-paris.com/",
       "engine": "html",
       "summary": "Discover our parties, from Thursday to Saturday !",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "PAR-003": {
       "source": "https://matignon-paris.com/",
@@ -773,7 +750,7 @@
       "phone": "+33182820089",
       "email": "contact@beaumarly.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "SIN-001": {
       "source": "https://marqueesingapore.com/",
@@ -785,7 +762,7 @@
       "email": "Contact@taogroup.com",
       "vipHow": "VIP / tables: https://taogroup.com/venues/marquee-singapore/vip/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "PAR-002": {
       "source": "https://raspoutine.com/",
@@ -793,7 +770,7 @@
       "summary": "Discover Raspoutine—an exclusive club and restaurant brand. Explore Raspoutine Dubai, Raspoutine Paris, and Raspoutine Los Angeles for unforgettable nights.",
       "email": "contact@raspoutine.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "SIN-002": {
       "source": "https://www.celavi.com/en/singapore/",
@@ -802,7 +779,7 @@
       "phone": "+6565082188",
       "hours": "restaurant Daily FROM: 12pm - 12",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "SIN-003": {
       "source": "https://www.tanjongbeachclub.com/",
@@ -814,7 +791,7 @@
       "email": "book@tanjongbeachclub.com",
       "hours": "Mo,Tu,We,Th,Fr 11:00-22:00 Sat,Sun 09:00-22:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.270Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "LAX-002": {
       "source": "https://hwoodgroup.com/venues/poppy/",
@@ -823,7 +800,7 @@
       "phone": "+1 (310) 855-7185",
       "email": "bootsysofistadium@hwoodgroup.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "LAX-001": {
       "source": "https://hwoodgroup.com/portfolio/delilah/",
@@ -832,7 +809,7 @@
       "phone": "+1 (323) 745-0600",
       "email": "bootsysofistadium@hwoodgroup.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "NYC-001": {
       "source": "https://theboxnyc.com/",
@@ -844,7 +821,7 @@
       "email": "info@theboxnyc.com",
       "hours": "Wednesday 23:00–04:00; Thursday 23:00–04:00; Friday 23:00–04:00; Saturday 23:00–04:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "CAP-003": {
       "source": "https://www.anemaecore.com/",
@@ -854,7 +831,7 @@
       "email": "info@anemaecore.com",
       "vipHow": "VIP / tables: https://anemaecore.com/portfolio-category/vip/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "NYC-002": {
       "source": "https://nebulanewyork.com/",
@@ -867,7 +844,7 @@
       "hours": "Tuesday, Friday, Saturday 23:00–04:00",
       "vipHow": "VIP / tables: https://www.nebulanewyork.com/special-events/nebula-birthday-vip-packages",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "NYC-003": {
       "source": "https://somewherenowherenyc.com/",
@@ -876,7 +853,7 @@
       "phone": "212-404-7969",
       "email": "info@elgruposn.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "LAX-003": {
       "source": "https://hwoodgroup.com/venues/bootsy-bellows/",
@@ -884,7 +861,7 @@
       "summary": "Many years ago, I worked for my parents who own a video production company. Because it is a family business, you inevitably end up wearing many hats and being the czar of many different jobs. I mainly managed projects and worked as a video editor. On production, there were times that I was called on to work as an audio tech and was made to wear headphones on long production days. In those days, ha",
       "email": "bootsysofistadium@hwoodgroup.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "CRV-001": {
       "source": "https://www.lafoliedouce.com/",
@@ -892,16 +869,15 @@
       "summary": "La recette du succès de La Folie Douce repose sur le subtil mélange d’une cuisine locale audacieuse et conviviale et de l’amour du spectacle. L’authenticité, la bienveillance, le vivre ensemble, la famille et le partage sont des valeurs qui vibrent au rythme de la musique. Perchée depuis 1969, La Folie Douce rassemble petits et grands pour une expérience unique en altitude.",
       "email": "camille@lafoliedouce.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "ASP-002": {
       "source": "https://thesnowlodge.com/",
       "engine": "html-jsonld",
       "phone": "+13322100493",
       "email": "info@thesnowlodge.com",
-      "season": "in the St",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "ASP-003": {
       "source": "https://bellyupaspen.com/",
@@ -909,7 +885,7 @@
       "phone": "19705449800",
       "email": "erin@bellyupaspen.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "SBH-001": {
       "source": "https://nikkibeach.com/saint-barth/",
@@ -921,7 +897,7 @@
       "email": "bookings.stbarth@nikkibeach.com",
       "hours": "Mo-Su 10:30-19:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "CRV-003": {
       "source": "https://www.lescavesdecourchevel.com/",
@@ -930,7 +906,7 @@
       "phone": "+33479081274",
       "email": "contact@lescavesdecourchevel.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "PDE-001": {
       "source": "https://www.lasusana.com/",
@@ -938,7 +914,7 @@
       "summary": "La Susana | La Susana Beach Restaurant | with a priviledged location in the Playa Mansa of Jose Ignacio with unique views of the most amazing sunsets in the world",
       "email": "info@lasusana.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "SBH-002": {
       "source": "https://www.gypsea-stbarth.com/",
@@ -947,7 +923,7 @@
       "phone": "+590590775252",
       "email": "book@gypsea-stbarth.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "IBZ-101": {
       "source": "https://www.amnesia.es/",
@@ -956,7 +932,7 @@
       "address": "Amnesia Ibiza: Carretera Ibiza a San Antonio Km5 San Rafael 07816 (Ibiza) España",
       "email": "vip@amnesia.es",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "PDE-002": {
       "source": "https://mobydick.com.uy/",
@@ -964,7 +940,7 @@
       "summary": "Enclavado frente al playón del puerto y con vista a la bahía y su borneo, ambientado al mejor estilo de los pubs, ha adquirido la calificación de clásico por",
       "email": "info@mobydick.com.uy",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "IBZ-102": {
       "source": "https://www.dc10ibiza.com/",
@@ -973,7 +949,7 @@
       "phone": "871751650",
       "email": "info@dc10ibiza.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "MYK-102": {
       "source": "https://principote.com/",
@@ -981,16 +957,16 @@
       "summary": "Principote beach club at Panormos, Mykonos, is a luxurious venue, perfect for parties, events or laid back opulent summer beach living",
       "phone": "+30 2289 077184",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "MYK-103": {
       "source": "https://jackieomykonos.com/",
       "engine": "html",
-      "summary": "Welcome to JackieO&#039; Mykonos. Feel the Unusual. Discover the Unknown. Experience the Unexpected. Discover Mykonos through JackieO&#039; Beach Club, JackieO&#039; Boutique, JackieO&#039; Town Bar, JackieO&#039; Restaurant and JackieO&#039; Events.",
+      "summary": "Welcome to JackieO' Mykonos. Feel the Unusual. Discover the Unknown. Experience the Unexpected. Discover Mykonos through JackieO' Beach Club, JackieO' Boutique, JackieO' Town Bar, JackieO' Restaurant and JackieO' Events.",
       "phone": "302289077298",
       "email": "reservations@jackieomykonos.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.217Z"
     },
     "IBZ-106": {
       "source": "https://lioibiza.com/",
@@ -1001,21 +977,14 @@
       "phone": "+34 971 310 022",
       "email": "info@lioibiza.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
-    },
-    "DXB-101": {
-      "source": "https://www.whitedubai.com/",
-      "engine": "html",
-      "summary": "Create an account or log in to Instagram - Share what you&#039;re into with the people who get you.",
-      "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "MIA-101": {
       "source": "https://www.clubspace.com/",
       "engine": "html",
       "email": "info@clubspace.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "IBZ-103": {
       "source": "https://www.esparadis.com/",
@@ -1023,7 +992,7 @@
       "email": "support@xceed.me",
       "hours": "dependiendo del evento",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "LAS-101": {
       "source": "https://hakkasannightclub.com/",
@@ -1035,7 +1004,7 @@
       "email": "Contact@taogroup.com",
       "vipHow": "VIP / tables: https://taogroup.com/venues/hakkasan-nightclub-las-vegas/vip/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "LAS-102": {
       "source": "https://taolasvegas.com/",
@@ -1046,7 +1015,7 @@
       "phone": "702.388.8588",
       "email": "Contact@taogroup.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "LAS-103": {
       "source": "https://wetrepublic.com/",
@@ -1058,7 +1027,7 @@
       "email": "Contact@taogroup.com",
       "vipHow": "VIP / tables: https://taogroup.com/venues/palm-tree-beach-club-las-vegas/vip/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "LAS-104": {
       "source": "https://jewelnightclub.com/",
@@ -1070,7 +1039,7 @@
       "email": "Contact@taogroup.com",
       "vipHow": "VIP / tables: https://taogroup.com/venues/jewel-nightclub-las-vegas/vip/",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "TUL-101": {
       "source": "https://arcatulum.com/",
@@ -1082,7 +1051,7 @@
       "email": "contact@arcatulum.com",
       "hours": "Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday 17:30–23:00",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "BCN-102": {
       "source": "https://www.ottozutz.com/",
@@ -1094,7 +1063,7 @@
       "email": "info@ottozutz.com",
       "vipHow": "VIP / tables: https://api.whatsapp.com/send?phone=+34669266410&text=I%20want%20more%20information%20about%20VIP%20TABLES",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.272Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "NYC-101": {
       "source": "https://marqueeny.com/",
@@ -1105,18 +1074,7 @@
       "phone": "646.473.0202",
       "email": "Contact@taogroup.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
-    },
-    "LAX-101": {
-      "source": "https://www.academyla.com/",
-      "engine": "html-jsonld",
-      "summary": "Academy for Salon Professionals is a Los Angeles beauty school with hands-on cosmetology & esthetics training, financial aid, and small class sizes. Book a free tour.",
-      "address": "19520 Nordhoff Street, Northridge, 91324, California, US",
-      "area": "Northridge",
-      "phone": "8187015799",
-      "hours": "Monday, Tuesday, Wednesday, Thursday 09:00–21:00; Friday 09:00–17:00",
-      "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "CNS-101": {
       "source": "https://www.palmbeach-cannes.com/",
@@ -1124,15 +1082,7 @@
       "summary": "An iconic hot spot, in Cannes The Palm Beach is the voluptuous pleasure of living freely day and night, in the splendor of the sky and the warmth of the water.",
       "email": "contact@palmbeach-cannes.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
-    },
-    "LON-101": {
-      "source": "https://mahiki.com/",
-      "engine": "html-jsonld",
-      "summary": "Mahiki Racing are a competitive race team based in the UK, competing in some of the most popular racing series around the world.",
-      "phone": "+441782393843",
-      "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "BER-101": {
       "source": "https://www.berghain.berlin/",
@@ -1140,44 +1090,42 @@
       "summary": "Am Wriezener Bahnhof | D-10243 Berlin | S-Ostbahnhof",
       "email": "support@berghain.de",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "PAR-101": {
       "source": "https://buddhabar.com/",
       "engine": "html",
       "summary": "Depuis sa création en 1996, le Buddha-Bar s’inscrit comme précurseur d’un véritable concept d’Art de vivre, aux influences convergentes du mouvement Pacific Rim.Né de l’imagination visionnaire de son fondateur Raymond Visan, alors propriétaire à Paris du célèbre Barfly et en perpétuelle recherche de nouveautés à travers ses nombreux voyages notamment en Californie, ce restaurant-bar-lounge du très",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "BER-102": {
       "source": "https://tresorberlin.com/",
       "engine": "html",
       "summary": "Legendary techno label and nightclub from Berlin. Tresor Shop sells music and Tresor branded merchandise.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "SIN-101": {
       "source": "https://zoukclub.com/",
       "engine": "html-jsonld",
-      "address": "3555 S Tokyo Blvd, Tokyo Boulevard, 89109, Tokyo, Nevada",
-      "area": "Tokyo Boulevard",
       "phone": "(+65) 697 2888",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.218Z"
     },
     "BAL-101": {
       "source": "https://cafedelmarbali.id/",
       "engine": "html",
       "summary": "Experience the ultimate Mediterranean lifestyle in Canggu. Infinity pool, world-class DJs, and the best sunset in Bali.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.219Z"
     },
     "LIS-101": {
       "source": "https://luxfragil.com/",
       "engine": "html",
       "summary": "The time we spend together on a dance floor matters.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.219Z"
     },
     "AMS-101": {
       "source": "https://jimmywoo.com/",
@@ -1185,7 +1133,7 @@
       "summary": "Since opening its doors in December 2003, this luxurious night club has captivated audiences globally with its stringent door policy and an illustrious list of celebrated guests. Boasting a mesmerizing ceiling with over 12,000 radiant light bulbs, this exclusive establishment has solidified its status as a beacon of extravagance.",
       "email": "info@jimmywoo.com",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.219Z"
     },
     "TYO-101": {
       "source": "https://www.womb.co.jp/",
@@ -1193,21 +1141,21 @@
       "address": "円山町2-6, 渋谷区, 150-0044, 東京都, JP",
       "area": "渋谷区",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.219Z"
     },
     "ROM-101": {
       "source": "https://www.goaclub.com/",
       "engine": "html",
       "summary": "Goa Club is the temple of electronic music in Rome. Since 1996.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.219Z"
     },
     "CAB-101": {
       "source": "https://www.mandalanightclub.com/",
       "engine": "html-jsonld",
       "summary": "Experience the ultimate nightlife at Mandala Nightclub. Locations in Cancun, Playa del Carmen, Los Cabos & Puerto Vallarta. World-class DJs, unforgettable parties.",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.219Z"
     },
     "MAD-101": {
       "source": "https://www.teatrokapital.com/",
@@ -1216,7 +1164,7 @@
       "phone": "+34 626 82 85 34 / 914 202 906",
       "hours": "Wed-Sun: 23",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.219Z"
     },
     "AMS-102": {
       "source": "https://shelteramsterdam.nl/",
@@ -1224,7 +1172,7 @@
       "summary": "Underground Amsterdam nightclub in the A’DAM Tower with a Funktion-One sound system, 24/7 party permit & top DJs from around the world.",
       "email": "info@shelteramsterdam.nl",
       "highlights": [],
-      "fetchedAt": "2026-08-21T03:35:51.273Z"
+      "fetchedAt": "2026-08-21T03:37:52.219Z"
     }
   }
 }
