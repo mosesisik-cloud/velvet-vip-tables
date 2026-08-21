@@ -325,6 +325,30 @@ async function runApi() {
     if (sepa.status !== 409) fail("pay-intent-no-iban", "expected 409 got " + sepa.status + " " + JSON.stringify(sepa.json));
     else ok("pay-intent-no-iban", String(sepa.json.error || sepa.json.message || 409));
 
+    fs.writeFileSync(pay, JSON.stringify({
+      currency: "EUR",
+      revolut: { iban: "DE89370400440532013000", bic: "COBADEFFXXX", name: "VELVET", me: "velvet" },
+    }));
+    const cfgOn = await req(base, "GET", "/pay/config");
+    const sepaOn = (cfgOn.json.methods || []).find((m) => m.id === "sepa");
+    if (!cfgOn.json.ready || !sepaOn?.enabled) fail("pay-ready", JSON.stringify(cfgOn.json.keys) + " sepa=" + !!sepaOn?.enabled);
+    else ok("pay-ready", "IBAN on, SEPA enabled");
+
+    const sepaOk = await req(base, "POST", "/pay/intent", {
+      tableId: "TB-RAILS", user: host, method: "sepa", amount: 80,
+    });
+    if (sepaOk.status !== 200 || sepaOk.json.mode !== "bank" || !String(sepaOk.json.bank?.iban || "").includes("DE89")) {
+      fail("pay-sepa", JSON.stringify(sepaOk.json).slice(0, 240));
+    } else ok("pay-sepa", sepaOk.json.bank.reference);
+
+    const sent = await req(base, "POST", "/pay/sent", {
+      tableId: "TB-RAILS", user: host, amount: 80, method: "sepa",
+      reference: sepaOk.json.bank.reference,
+    });
+    const pending = (sent.json.table?.members || []).find((m) => m.id === host.id);
+    if (!sent.json.ok || !pending?.paidPending) fail("pay-sent", JSON.stringify(sent.json).slice(0, 240));
+    else ok("pay-sent", "host pending bank");
+
     const auth = await req(base, "GET", "/auth/start/instagram");
     if (auth.status !== 200 || !(auth.json.local === true || auth.json.url)) fail("auth-start", JSON.stringify(auth));
     else ok("auth-start", auth.json.local ? "one-tap local" : "oauth url");

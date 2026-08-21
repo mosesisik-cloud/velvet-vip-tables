@@ -387,6 +387,8 @@ function publicPerson(p, db, role) {
     paid: !!p.paid,
     paidAt: p.paidAt || null,
     paidVia: p.paidVia || "",
+    paidPending: !p.paid && !!p.paidPending,
+    paidAmount: Number(p.paidAmount) || 0,
     idv,
     paying: !!card,
     card,
@@ -502,12 +504,13 @@ function setPaidFlag(obj, paid, actorId, via) {
   obj.paidAt = paid ? new Date().toISOString() : null;
   obj.paidBy = actorId || "";
   obj.paidVia = paid ? (via || obj.paidVia || "manual") : "";
+  if (paid) obj.paidPending = false;
 }
 
 function isOperator(user) {
   const email = String(user?.email || "").toLowerCase();
   const handle = String(user?.handle || "").toLowerCase();
-  return email === "gabrielhadodo@gmail.com" || email === "moses.isik@bakemyday.se" || handle === "velvet" || user?.role === "operator";
+  return email === "gabrielhadodo@gmail.com" || email === "moses.isik@bakemyday.se" || handle === "velvet" || handle === "gabbe" || user?.role === "operator";
 }
 
 function emptyPay() {
@@ -529,6 +532,9 @@ function emptyPay() {
 }
 function loadPay() {
   try {
+    if (!fs.existsSync(PAY_FILE)) {
+      fs.writeFileSync(PAY_FILE, JSON.stringify(emptyPay(), null, 2));
+    }
     const raw = JSON.parse(fs.readFileSync(PAY_FILE, "utf8"));
     const base = emptyPay();
     return {
@@ -568,7 +574,8 @@ function publicPayConfig() {
   const stripeOn = !!(p.stripe.secret && p.stripe.secret.startsWith("sk_"));
   const revolutOn = !!(p.revolut.merchantSecret);
   const paypalOn = !!(p.paypal.client && p.paypal.secret);
-  const bankOn = !!iban;
+  const meOn = !!(p.revolut.me && String(p.revolut.me).trim());
+  const bankOn = !!iban || meOn;
   const cardOn = stripeOn || revolutOn;
   return {
     currency: p.currency || "EUR",
@@ -586,15 +593,15 @@ function publicPayConfig() {
       { id: "revolut", group: "wallet", enabled: revolutOn || bankOn },
       { id: "paypal", group: "wallet", enabled: paypalOn },
       { id: "klarna", group: "bnpl", enabled: stripeOn },
-      { id: "sepa", group: "bank", enabled: bankOn },
-      { id: "swift", group: "bank", enabled: bankOn },
+      { id: "sepa", group: "bank", enabled: !!iban },
+      { id: "swift", group: "bank", enabled: !!iban },
     ],
     account: bankOn ? {
-      iban,
+      iban: iban || "",
       bic: String(p.revolut.bic || "").replace(/\s+/g, "").toUpperCase(),
       name: p.revolut.name || "",
       bank: "Revolut",
-      me: p.revolut.me || "",
+      me: String(p.revolut.me || "").trim(),
     } : null,
     keys: {
       stripe: stripeOn,
@@ -1054,12 +1061,11 @@ const server = http.createServer(async (req, res) => {
       const member = t.host?.id === userId || (t.joiners || []).some((j) => j.id === userId);
       if (!member) return send(res, 403, { error: "not_member" });
       const pub = publicTable(t, db);
-      const amount = Number(pub.per_person) || 0;
+      const amount = Math.max(0, Number(b.amount) || Number(pub.per_person) || 0);
       const currency = publicPayConfig().currency || "EUR";
       const method = String(b.method || "card");
-      const cardLike = ["card", "applepay", "googlepay", "klarna", "paypal"].includes(method);
-      if (cardLike && amount < 1) {
-        return send(res, 409, { error: "no_amount", message: "Inget belopp — klubben sätter priset. Fyll en budget i förfrågan först." });
+      if (amount < 1) {
+        return send(res, 409, { error: "no_amount", message: "Ange beloppet i euro — klubben sätter priset, du betalar din del." });
       }
       const cents = Math.max(100, Math.round(amount * 100));
       const table = { id: t.id, venue: t.venue, date: t.date };
@@ -1068,6 +1074,9 @@ const server = http.createServer(async (req, res) => {
         if (method === "sepa" || method === "swift" || (method === "revolut" && !loadPay().revolut.merchantSecret)) {
           const bank = bankDetails(table, user, amount, currency);
           if (!bank) return send(res, 409, { error: "no_account", message: "Revolut-konto inte kopplat än." });
+          if ((method === "sepa" || method === "swift") && !bank.iban) {
+            return send(res, 409, { error: "no_account", message: "IBAN saknas — använd Revolut.me." });
+          }
           return send(res, 200, { mode: "bank", bank, method });
         }
         if (method === "paypal") {
@@ -1093,6 +1102,24 @@ const server = http.createServer(async (req, res) => {
       } catch (e) {
         return send(res, 502, { error: "provider", message: String(e.message || e) });
       }
+    }
+    if (req.method === "POST" && url.pathname === "/pay/sent") {
+      const b = await readBody(req, 2e5);
+      const userId = String(b.user?.id || "");
+      if (!userId) return send(res, 401, { error: "auth" });
+      const db = load();
+      const t = db.tables.find((x) => x.id === String(b.tableId || ""));
+      if (!t) return send(res, 404, { error: "not_found" });
+      const target = t.host?.id === userId ? t.host : (t.joiners || []).find((j) => j.id === userId);
+      if (!target) return send(res, 403, { error: "not_member" });
+      if (target.paid) return send(res, 200, { ok: true, table: publicTable(t, db), already: true });
+      const amount = Math.max(0, Number(b.amount) || 0);
+      target.paidPending = true;
+      target.paidAmount = amount;
+      target.paidVia = "pending:" + String(b.method || "bank").slice(0, 20);
+      target.paidRef = String(b.reference || payRef(t.id, userId));
+      save(db);
+      return send(res, 200, { ok: true, table: publicTable(t, db) });
     }
     if (req.method === "POST" && url.pathname === "/pay/confirm") {
       const b = await readBody(req, 2e5);

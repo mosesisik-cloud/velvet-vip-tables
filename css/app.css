@@ -1428,6 +1428,16 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 }
 .pay-pill.yes { background: rgba(111,191,143,0.16); color: var(--green); border: 1px solid rgba(111,191,143,0.45); }
 .pay-pill.no { background: rgba(217,162,75,0.12); color: var(--amber); border: 1px solid rgba(217,162,75,0.4); }
+.pay-pill.wait { background: var(--gold-dim); color: var(--gold-bright); border: 1px solid var(--gold); }
+.pay-amt-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 28px; font-weight: 700; color: var(--gold-bright);
+}
+.pay-amt-row input {
+  flex: 1; min-width: 0; font-size: 28px; font-weight: 700;
+  padding: 8px 12px; border-radius: 12px; border: 1px solid var(--gold);
+  background: var(--bg-elev); color: var(--text);
+}
 .chip-mini {
   font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase;
   padding: 2px 7px; border-radius: 999px; border: 1px solid rgba(212,175,95,0.4); color: var(--gold);

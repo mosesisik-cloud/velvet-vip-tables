@@ -472,7 +472,7 @@ function logoutUser() {
 function isOperatorUser(u) {
   const email = String(u?.email || "").toLowerCase();
   const handle = String(u?.handle || "").toLowerCase();
-  return email === "gabrielhadodo@gmail.com" || email === "moses.isik@bakemyday.se" || handle === "velvet";
+  return email === "gabrielhadodo@gmail.com" || email === "moses.isik@bakemyday.se" || handle === "velvet" || handle === "gabbe";
 }
 function paintUser() {
   const u = loadUser();
@@ -715,7 +715,7 @@ function personRowHTML(p, { me, hostId, tableId } = {}) {
       </div>
     </div>
     <div class="person-pay">
-      <span class="pay-pill ${paid ? "yes" : "no"}">${esc(paid ? t("paid") : t("unpaid"))}${paid && p.paidVia ? ` · ${esc(p.paidVia)}` : ""}</span>
+      <span class="pay-pill ${paid ? "yes" : (p.paidPending ? "wait" : "no")}">${esc(paid ? t("paid") : (p.paidPending ? t("payWait") : t("unpaid")))}${paid && p.paidVia ? ` · ${esc(p.paidVia)}` : ""}</span>
       ${!paid && me && p.id && me.id === p.id && tableId ? `<a class="btn btn-gold btn-sm" href="#/pay/${encodeURIComponent(tableId)}" data-nav>${esc(t("payShare"))}</a>` : ""}
       ${canPay ? `<button type="button" class="btn btn-ghost btn-sm" ${payAttr} data-paid="${paid ? "0" : "1"}">${esc(paid ? t("markUnpaid") : t("markPaid"))}</button>` : ""}
     </div>
@@ -3290,24 +3290,32 @@ async function renderPay(tableId) {
     return;
   }
   const mine = (tb.members || []).find((m) => m.id === me.id);
+  const canPay = !!(mine && !mine.paid);
+  const startAmt = Number(tb.per_person) > 0 ? Number(tb.per_person) : (Number(mine?.paidAmount) || 0);
   setTitle(`${t("payShare")} · ${tb.venue}`);
   view().innerHTML = `
   <section class="section pay-page">
     <a class="detail-back" href="#/table/${encodeURIComponent(tb.id)}" data-nav>← ${esc(tb.venue)}</a>
-    <p class="detail-kicker">${esc(cfg.destination || "Revolut")} · ${esc(cfg.currency || "EUR")}</p>
+    <p class="detail-kicker">${esc(cfg.destination || "Revolut")} · ${esc(cfg.currency || "EUR")}${cfg.ready ? "" : ` · ${esc(t("paySoon"))}`}</p>
     <h1>${esc(t("payShare"))}</h1>
     <p class="ob-sub" style="text-align:left">${esc(t("payIntro"))}</p>
     <div class="split-box" style="margin:18px 0">
-      <div class="split-per">${esc(moneyOrClub(tb.per_person))}</div>
-      <div class="split-label">${esc(t("perPerson"))} · ${esc(tb.venue)}</div>
+      <label class="split-label" for="pay-amt">${esc(t("payAmount"))} · ${esc(tb.venue)}</label>
+      <div class="pay-amt-row">
+        <span>€</span>
+        <input type="number" id="pay-amt" min="1" step="1" inputmode="decimal" value="${startAmt || ""}" placeholder="0">
+      </div>
+      <div class="split-label">${Number(tb.per_person) > 0 ? esc(t("perPerson")) : esc(t("payEnterAmount"))}</div>
     </div>
     ${mine?.paid ? `<p class="invite-joined">✓ ${esc(t("paid"))}${mine.paidVia ? ` · ${esc(mine.paidVia)}` : ""}</p>` : ""}
+    ${mine?.paidPending ? `<p class="invite-joined">${esc(t("payWait"))}</p>` : ""}
     ${!mine ? `<p class="price-disclaimer">${esc(t("payNeedJoin"))}</p>` : ""}
+    ${!cfg.ready && isOperatorUser(me) ? `<p style="margin:0 0 14px"><a class="btn btn-gold" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
     <div class="pay-grid" id="pay-grid">
       ${PAY_METHODS.map((m) => {
         const spec = (cfg.methods || []).find((x) => x.id === m.id);
         const on = !!(spec && spec.enabled);
-        return `<button type="button" class="pay-method${on ? "" : " off"}" data-method="${m.id}" ${on && mine && !mine.paid ? "" : "disabled"}>
+        return `<button type="button" class="pay-method${on ? "" : " off"}" data-method="${m.id}" ${on && canPay ? "" : "disabled"}>
           <span class="pay-ico">${m.id === "applepay" ? "Pay" : m.icon}</span>
           <b>${esc(t("pay_" + m.id))}</b>
           <span>${on ? esc(t("payToRevolut")) : esc(t("paySoon"))}</span>
@@ -3318,15 +3326,18 @@ async function renderPay(tableId) {
     <div class="field-error hidden" id="pay-err" role="alert"></div>
     <p class="price-disclaimer">${esc(t("payHonest"))}</p>
   </section>`;
+  const payAmount = () => Math.max(0, Number($("#pay-amt")?.value || 0));
   document.querySelectorAll("[data-method]").forEach((btn) => {
     btn.addEventListener("click", async () => {
       const err = $("#pay-err");
       err.classList.add("hidden");
+      const amount = payAmount();
+      if (amount < 1) { err.textContent = t("payEnterAmount"); err.classList.remove("hidden"); return; }
       btn.disabled = true;
       const r = await apiJSON("/pay/intent", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tableId: tb.id, user: me, method: btn.dataset.method }),
+        body: JSON.stringify({ tableId: tb.id, user: me, method: btn.dataset.method, amount }),
       });
       btn.disabled = false;
       if (r?.mode === "redirect" && r.url) {
@@ -3351,9 +3362,18 @@ async function renderPay(tableId) {
             <button type="button" class="btn btn-ghost btn-sm" id="copy-iban">${esc(t("copyIban"))}</button>
             <button type="button" class="btn btn-ghost btn-sm" id="copy-ref">${esc(t("copyRef"))}</button>
           </p>
+          <p style="margin-top:12px"><button type="button" class="btn btn-gold" id="pay-sent">${esc(t("payISent"))}</button></p>
           <p class="stepper-hint">${esc(t("payAfterBank"))}</p>`;
         $("#copy-iban")?.addEventListener("click", () => copyText(r.bank.iban));
         $("#copy-ref")?.addEventListener("click", () => copyText(r.bank.reference));
+        $("#pay-sent")?.addEventListener("click", async () => {
+          const s = await apiJSON("/pay/sent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tableId: tb.id, user: me, amount, method: btn.dataset.method, reference: r.bank.reference }),
+          });
+          if (s?.ok) { showToast(t("payWait")); location.hash = `#/table/${encodeURIComponent(tb.id)}`; }
+        });
         return;
       }
       err.textContent = r?.message || t("payNoProcessor");
