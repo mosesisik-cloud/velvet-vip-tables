@@ -123,46 +123,33 @@ function statusInfo(s) {
   return { cls: "tag-research", label: "Research" };
 }
 
-// Deterministic mock pricing from scores (EUR)
+// Request types only — no invented EUR. Club publishes min-spend on their own site.
 function packagesFor(v) {
-  const base = 200 + v.luxury_score * 260 + v.booking_potential * 90;
   const grp = venueGroup(v);
-  const isBeachy = grp === "beach" || grp === "day";
   const pkgs = [];
-  if (isBeachy) {
-    pkgs.push({ id: "daybed", name: "Premium daybed", desc: "2–4 personer · min-spend ingår", price: Math.round(base * 0.6 / 50) * 50 });
-    pkgs.push({ id: "cabana", name: "VIP-cabana", desc: "4–8 personer · service & host", price: Math.round(base * 1.2 / 50) * 50 });
+  if (grp === "beach" || grp === "day") {
+    pkgs.push({ id: "daybed", name: "Daybed / sunbed", desc: t("clubSetsPrice") });
+    pkgs.push({ id: "cabana", name: "Cabana", desc: t("clubSetsPrice") });
   }
-  pkgs.push({ id: "table", name: "VIP-bord", desc: "6–10 personer · dedikerad service", price: Math.round(base * 1.5 / 50) * 50 });
-  if (v.luxury_score >= 5) {
-    pkgs.push({ id: "front", name: "Front row / Owner's table", desc: "8–12 personer · bästa placering", price: Math.round(base * 2.6 / 50) * 50 });
-  }
+  pkgs.push({ id: "table", name: "VIP-bord", desc: t("clubSetsPrice") });
   return pkgs;
 }
 
 // Defensiv: icke-numeriskt in (t.ex. manipulerad localStorage) → 0 € i stället för "NaN"
 const fmtEUR = (n) => new Intl.NumberFormat("sv-SE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(Number.isFinite(Number(n)) ? Number(n) : 0);
 
-// ---------- Prisklass (€–€€€€) ----------
-// Härleds deterministiskt ur billigaste paketets pris. Trösklarna är kalibrerade
-// mot faktiska datat (från-pris 950–2950 €) så att alla fyra klasser förekommer:
-// € <2500 (44 st) · €€ 2500–2799 (11) · €€€ 2800–2949 (20) · €€€€ ≥2950 (45).
-const PRICE_TIERS = [
-  { n: 1, max: 2500, label: "Under 2 500 €" },
-  { n: 2, max: 2800, label: "2 500–2 799 €" },
-  { n: 3, max: 2950, label: "2 800–2 949 €" },
-  { n: 4, max: Infinity, label: "Från 2 950 €" },
-];
-const fromPriceFor = (v) => Math.min(...packagesFor(v).map((p) => p.price));
-function priceTier(v) {
-  const from = fromPriceFor(v);
-  const t = PRICE_TIERS.find((x) => from < x.max) || PRICE_TIERS[PRICE_TIERS.length - 1];
-  return { n: t.n, sym: "€".repeat(t.n), from };
+function fromPriceFor() { return null; }
+function priceTierHTML() { return ""; }
+function moneyOrClub(n) {
+  const x = Number(n);
+  if (!Number.isFinite(x) || x <= 0) return t("clubSetsPrice");
+  return fmtEUR(x);
 }
-// Guldfärgade €-tecken: aktiva i guld, resten dimmade upp till fyra
-function priceTierHTML(v, extraClass = "") {
-  const t = priceTier(v);
-  return `<span class="price-tier${extraClass ? ` ${extraClass}` : ""}" title="Prisklass ${t.sym} · paket från ${fmtEUR(t.from)}" role="img" aria-label="Prisklass ${t.n} av 4, paket från ${fmtEUR(t.from)}">${t.sym}<span class="price-tier-off" aria-hidden="true">${"€".repeat(4 - t.n)}</span></span>`;
+function publicNote(v) {
+  const n = (v.notes || "").trim();
+  if (!n) return "";
+  if (/tier\s*2|v1 candidate|ig live-verifierad|handle corrected|ig handle/i.test(n)) return "";
+  return n;
 }
 
 // ---------- Bookings (localStorage) ----------
@@ -580,7 +567,7 @@ function icsFor(b) {
   const summary = `VELVET-förfrågan · ${b.venue} (ej reserverat)`;
   const desc = [
     `Förfrågan ${b.id} (ej bekräftad bokning).`,
-    `${b.package} · ${b.party} personer · indikativt ${fmtEUR(b.per_person)}/person.`,
+    `${b.package} · ${b.party} personer · ${b.per_person ? fmtEUR(b.per_person) + "/person (gästens budget, inte klubbens pris)" : "pris enligt klubben"}.`,
     `Länk: ${shareLinkFor(b)}`,
   ].join("\\n");
   const ics = [
@@ -601,7 +588,7 @@ function inviteTextFor(b) {
   return [
     `Du är bjuden till ${b.venue} (${b.destination}).`,
     `${b.date} · ${b.package} · ${b.party} personer.`,
-    `Indikativ andel: ${fmtEUR(b.per_person)} per person (totalt ${fmtEUR(b.total)}).`,
+    b.total > 0 ? `Gästens budget: ${fmtEUR(b.total)} totalt (${fmtEUR(b.per_person)}/person) — klubben sätter det riktiga priset.` : `Pris enligt klubben — inget belopp påhittat i appen.`,
     `VELVET-teamet tar förfrågan mot klubben — ingen reservation förrän återkoppling.`,
     `Gå med: ${shareLinkFor(b)}`,
   ].join("\n");
@@ -662,7 +649,9 @@ function mailtoFor(b) {
     `Paket: ${f.package}`,
     `Datum: ${f.date}`,
     `Sällskap: ${f.party} personer`,
-    `Indikativt pris: ${fmtEUR(f.total_indicative_eur)} totalt · ${fmtEUR(f.per_person_indicative_eur)}/person`,
+    f.total_indicative_eur > 0
+      ? `Gästens budget: ${fmtEUR(f.total_indicative_eur)} totalt · ${fmtEUR(f.per_person_indicative_eur)}/person (inte klubbens pris)`
+      : `Pris: enligt klubben (inget belopp ifyllt)`,
     f.note,
     `id: ${f.id}`,
   ].join("\n"));
@@ -1055,7 +1044,7 @@ function venueCard(v, { eager = false } = {}) {
       <div class="venue-top">
         <div>
           <div class="venue-name">${esc(v.name)}</div>
-          <div class="venue-loc">${esc(v.destination)} ${priceTierHTML(v)}</div>
+          <div class="venue-loc">${esc(v.destination)}</div>
         </div>
         <div class="prio"><span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">Prio</span></div>
       </div>
@@ -1065,7 +1054,7 @@ function venueCard(v, { eager = false } = {}) {
         ${v.shareable_format ? '<span class="tag tag-verified">Delbar kostnad</span>' : ""}
         ${eventsFor(v).length ? `<span class="tag tag-events">🎟 ${eventsFor(v).length} kommande</span>` : ""}
       </div>
-      <div class="venue-note">${esc(v.notes || "")}</div>
+      ${publicNote(v) ? `<div class="venue-note">${esc(publicNote(v))}</div>` : ""}
       <div class="venue-actions">
         <button class="btn btn-gold btn-sm" data-book="${esc(v.venue_id)}">${esc(t("sendRequest"))}</button>
         ${bookingLinkHTML(v)}
@@ -1082,7 +1071,7 @@ function applyFilters() {
     if (f.dest && v.destination !== f.dest) return false;
     if (f.cat && venueGroup(v) !== f.cat) return false;
     if (f.status && statusInfo(v.research_status).cls !== f.status) return false;
-    if (f.price && priceTier(v).n !== Number(f.price)) return false;
+    if (f.price) return false;
     if (f.q) {
       const q = f.q.toLowerCase();
       if (!`${v.name} ${v.destination} ${v.category} ${v.notes}`.toLowerCase().includes(q)) return false;
@@ -1092,7 +1081,7 @@ function applyFilters() {
   if (f.sort === "priority") list.sort((a, b) => b.priority_score - a.priority_score || a.name.localeCompare(b.name));
   else if (f.sort === "name") list.sort((a, b) => a.name.localeCompare(b.name));
   else if (f.sort === "luxury") list.sort((a, b) => b.luxury_score - a.luxury_score || b.priority_score - a.priority_score);
-  else if (f.sort === "price") list.sort((a, b) => fromPriceFor(a) - fromPriceFor(b) || b.priority_score - a.priority_score || a.name.localeCompare(b.name));
+  else if (f.sort === "price") list.sort((a, b) => a.name.localeCompare(b.name));
   return list;
 }
 
@@ -1133,14 +1122,9 @@ function renderVenues() {
         <option value="tag-research" ${f.status === "tag-research" ? "selected" : ""}>Research</option>
         <option value="tag-check" ${f.status === "tag-check" ? "selected" : ""}>Kontrollera status</option>
       </select>
-      <select id="f-price" aria-label="Prisklass">
-        <option value="">Alla prisklasser</option>
-        ${PRICE_TIERS.map((t) => `<option value="${t.n}" ${f.price === String(t.n) ? "selected" : ""}>${"€".repeat(t.n)} · ${t.label}</option>`).join("")}
-      </select>
       <select id="f-sort" aria-label="Sortering">
         <option value="priority" ${f.sort === "priority" ? "selected" : ""}>Högst prioritet</option>
         <option value="luxury" ${f.sort === "luxury" ? "selected" : ""}>Mest lyx</option>
-        <option value="price" ${f.sort === "price" ? "selected" : ""}>Lägst från-pris</option>
         <option value="name" ${f.sort === "name" ? "selected" : ""}>A–Ö</option>
       </select>
       <span class="filter-count" id="f-count" role="status" aria-live="polite" aria-atomic="true"></span>
@@ -1175,7 +1159,6 @@ function renderVenues() {
   $("#f-dest").addEventListener("change", (e) => { state.filters.dest = e.target.value; renderList(); syncHash(); });
   $("#f-cat").addEventListener("change", (e) => { state.filters.cat = e.target.value; renderList(); syncHash(); });
   $("#f-status").addEventListener("change", (e) => { state.filters.status = e.target.value; renderList(); syncHash(); });
-  $("#f-price").addEventListener("change", (e) => { state.filters.price = e.target.value; renderList(); syncHash(); });
   $("#f-sort").addEventListener("change", (e) => { state.filters.sort = e.target.value; renderList(); syncHash(); });
   renderList();
 }
@@ -1220,7 +1203,9 @@ function scoreMeter(label, val) {
 const SV_MONTHS = ["jan","feb","mar","apr","maj","jun","jul","aug","sep","okt","nov","dec"];
 function eventsFor(v) {
   const rec = VENUE_EVENTS.venues[v.venue_id];
-  return rec && Array.isArray(rec.events) ? rec.events : [];
+  const list = rec && Array.isArray(rec.events) ? rec.events : [];
+  const today = todayISO();
+  return list.filter((e) => !e.date || e.date >= today);
 }
 function eventWhen(e) {
   if (e.date && /^\d{4}-\d{2}-\d{2}$/.test(e.date)) {
@@ -1266,9 +1251,6 @@ function renderVenueDetail(id) {
   }
   const st = statusInfo(v.research_status);
   const dest = DESTINATIONS.find((d) => d.name === v.destination);
-  const pkgs = packagesFor(v);
-  const fromPrice = Math.min(...pkgs.map((p) => p.price));
-
   view().innerHTML = `
   <section class="section detail">
     <a class="detail-back" href="#/venues" data-nav>← Alla ställen</a>
@@ -1278,7 +1260,7 @@ function renderVenueDetail(id) {
 
     <div class="detail-hero">
       <div class="detail-hero-main">
-        <div class="detail-kicker">${esc(v.destination)}${dest ? ` · ${esc(dest.country)}` : ""} · ${esc(v.category)} · ${priceTierHTML(v)}</div>
+        <div class="detail-kicker">${esc(v.destination)}${dest ? ` · ${esc(dest.country)}` : ""} · ${esc(v.category)}</div>
         <h1 class="detail-name">${esc(v.name)}</h1>
         <div class="venue-tags detail-tags">
           <span class="tag ${st.cls}">${st.label}</span>
@@ -1286,7 +1268,7 @@ function renderVenueDetail(id) {
           ${v.vip_table_potential ? '<span class="tag">VIP-bord</span>' : ""}
           ${dest ? `<span class="tag">Säsong ${esc(dest.peak_season)}</span>` : ""}
         </div>
-        ${v.notes ? `<p class="detail-notes">${esc(v.notes)}</p>` : ""}
+        ${publicNote(v) ? `<p class="detail-notes">${esc(publicNote(v))}</p>` : ""}
         <div class="follow-block">
           ${v.instagram_url ? `
           <div class="follow-ig">
@@ -1307,14 +1289,15 @@ function renderVenueDetail(id) {
       </div>
       <div class="prio prio-lg" title="Priority score">
         <span class="prio-num">${num(v.priority_score)}</span>
-        <span class="prio-label">Priority score</span>
+        <span class="prio-label">VELVET-prio</span>
       </div>
     </div>
 
     <div class="detail-grid">
       ${eventsSectionHTML(v)}
       <div class="detail-panel">
-        <h2 class="detail-panel-title">Betyg</h2>
+        <h2 class="detail-panel-title">${esc(t("velvetScore"))}</h2>
+        <p class="events-meta">${esc(t("velvetScoreHint"))}</p>
         <div class="meters">
           ${scoreMeter("Lyx", v.luxury_score)}
           ${scoreMeter("Party", v.party_score)}
@@ -1331,18 +1314,9 @@ function renderVenueDetail(id) {
 
       <div class="detail-panel detail-cta">
         <h2 class="detail-panel-title">Förfrågan &amp; delad kostnad</h2>
-        <p class="detail-cta-sub">Indikativt från ${priceTierHTML(v)}</p>
-        <div class="detail-price" id="from-price">${fmtEUR(fromPrice)}</div>
-        <div class="from-calc">
-          <span class="from-calc-label">Per person vid</span>
-          <div class="stepper" role="group" aria-label="Sällskapsstorlek för från-pris">
-            <button type="button" id="from-minus" aria-label="Färre">−</button>
-            <span class="stepper-val" id="from-party">4</span>
-            <button type="button" id="from-plus" aria-label="Fler">+</button>
-          </div>
-          <span class="from-calc-val" id="from-per">${fmtEUR(Math.ceil(fromPrice / 4))}</span>
-        </div>
-        <p class="detail-cta-note">${esc(t("bookOnSiteCtaNote"))}</p>
+        <p class="detail-cta-sub">${esc(t("clubSetsPrice"))}</p>
+        <div class="detail-price" id="from-price">${esc(t("clubSetsPrice"))}</div>
+        <p class="detail-cta-note">${esc(t("priceHonest"))}</p>
         ${bookingLinkHTML(v, { gold: true, full: true })}
         <button class="btn btn-ghost" id="d-book" style="width:100%;margin-top:10px">${esc(t("sendRequest"))}</button>
         <a class="btn btn-ghost" id="d-promo" href="#/promoter/${encodeURIComponent(v.venue_id)}" data-nav style="width:100%;margin-top:10px">${esc(t("chatPromoter"))}</a>
@@ -1358,13 +1332,6 @@ function renderVenueDetail(id) {
   $("#d-book").addEventListener("click", () => openBookingModal(v));
   bindFavButtons(view());
   setTitle(v.name);
-  let fromParty = 4;
-  const paintFrom = () => {
-    $("#from-party").textContent = fromParty;
-    $("#from-per").textContent = fmtEUR(Math.ceil(fromPrice / fromParty));
-  };
-  $("#from-minus").addEventListener("click", () => { fromParty = Math.max(1, fromParty - 1); paintFrom(); });
-  $("#from-plus").addEventListener("click", () => { fromParty = Math.min(20, fromParty + 1); paintFrom(); });
 }
 
 // ---------- Booking modal ----------
@@ -1405,7 +1372,7 @@ function openBookingModal(v) {
     <div class="modal" role="dialog" aria-modal="true" aria-label="Förfrågan ${esc(v.name)}" tabindex="-1">
       <button class="modal-close" id="m-close" aria-label="Stäng">✕</button>
       <h2>${esc(v.name)}</h2>
-      <div class="modal-sub">${esc(v.destination)} · ${esc(v.category)} · ${priceTierHTML(v)}</div>
+      <div class="modal-sub">${esc(v.destination)} · ${esc(v.category)}</div>
       <div class="req-steps" aria-hidden="true">
         <div class="req-step on">1 Datum</div>
         <div class="req-step on">2 Paket</div>
@@ -1440,7 +1407,7 @@ function openBookingModal(v) {
           ${pkgs.map((p, i) => `
             <div class="package ${i === 0 ? "selected" : ""}" data-pkg="${esc(p.id)}" role="radio" aria-checked="${i === 0}" tabindex="0">
               <div><div class="package-name">${esc(p.name)}</div><div class="package-desc">${esc(p.desc)}</div></div>
-              <div class="package-price">${fmtEUR(p.price)}</div>
+              <div class="package-price">${esc(t("clubSetsPrice"))}</div>
             </div>`).join("")}
         </div>
       </div>
@@ -1476,13 +1443,19 @@ function openBookingModal(v) {
         <div class="chip-list" id="g-chips" aria-live="polite"></div>
       </div>
 
+      <div class="form-group">
+        <label for="m-budget">${esc(t("optionalBudget"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
+        <input type="number" id="m-budget" min="0" step="50" inputmode="numeric" placeholder="${esc(t("budgetPh"))}">
+        <p class="stepper-hint">${esc(t("budgetHint"))}</p>
+      </div>
+
       <div class="split-box">
         <div class="split-per" id="m-per"></div>
-        <div class="split-label">Indikativt per person</div>
+        <div class="split-label">${esc(t("perPerson"))}</div>
         <div class="split-total" id="m-total"></div>
       </div>
 
-      <p class="price-disclaimer">Indikativt från-pris — klubben sätter det riktiga. Ingen bokning sker förrän VELVET återkommer.</p>
+      <p class="price-disclaimer">${esc(t("priceHonest"))}</p>
       <p class="price-disclaimer">Värd- och gästnamn/e-post ingår i mejlet till VELVET-teamet (FormSubmit → Gmail). VELVET mejlar inte gästerna. Ingen reservation förrän återkoppling.</p>
       <label class="consent-row" for="m-consent">
         <span class="consent-box"><input type="checkbox" id="m-consent" required></span>
@@ -1521,13 +1494,18 @@ function openBookingModal(v) {
     });
   };
 
+  const budgetVal = () => Math.max(0, Number($("#m-budget")?.value || 0));
   const update = () => {
     $("#m-party").textContent = party;
-    $("#m-per").textContent = fmtEUR(Math.ceil(sel.price / party));
-    $("#m-total").textContent = `Indikativt ${fmtEUR(sel.price)} · delas på ${party} personer`;
+    const budget = budgetVal();
+    const per = budget > 0 ? Math.ceil(budget / party) : 0;
+    $("#m-per").textContent = moneyOrClub(per);
+    $("#m-total").textContent = budget > 0
+      ? `${fmtEUR(budget)} · ${t("splitOn")} ${party} ${t("people")}`
+      : t("clubSetsPrice");
     const dateEl = $("#m-date");
     const dateTxt = dateEl && dateEl.value ? dateEl.value : "datum";
-    $("#m-summary").innerHTML = `<strong>${esc(sel.name)}</strong> · ${esc(dateTxt)} · ${party} pers · ${fmtEUR(Math.ceil(sel.price / party))}/person`;
+    $("#m-summary").innerHTML = `<strong>${esc(sel.name)}</strong> · ${esc(dateTxt)} · ${party} pers · ${esc(moneyOrClub(per))}`;
     $("#m-party-hint").textContent = guests.length
       ? `Du + ${guests.length} ${guests.length === 1 ? "inbjuden gäst" : "inbjudna gäster"}${party > minParty() ? ` + ${party - minParty()} utan namn` : ""}`
       : "";
@@ -1568,6 +1546,7 @@ function openBookingModal(v) {
   $("#m-minus").addEventListener("click", () => { party = Math.max(minParty(), party - 1); openSeats = Math.min(openSeats, Math.max(0, party - minParty())); update(); });
   $("#m-plus").addEventListener("click", () => { party = Math.min(20, party + 1); update(); });
   $("#m-date").addEventListener("change", update);
+  $("#m-budget")?.addEventListener("input", update);
   const openRow = $("#m-open-row");
   const syncOpen = () => {
     const on = $("#m-open")?.checked;
@@ -1639,8 +1618,8 @@ function openBookingModal(v) {
     const booking = {
       id: `RQ-${Date.now().toString(36).toUpperCase()}`,
       venue_id: v.venue_id, venue: v.name, destination: v.destination,
-      date, package: sel.name, total: sel.price,
-      party, per_person: Math.ceil(sel.price / party),
+      date, package: sel.name, total: budgetVal(),
+      party, per_person: budgetVal() > 0 ? Math.ceil(budgetVal() / party) : 0,
       guests: guests.map((g) => ({ name: g.name, email: g.email, paid: false })),
       openSeats: openOn ? openSeats : 0,
       openLeft: openOn ? openSeats : 0,
@@ -1689,9 +1668,9 @@ function showConfirmation(b, opener) {
         <div class="confirm-guests-note">Gästlistan följer med förfrågan till VELVET-teamet. VELVET mejlar inte gästerna.</div>
       </div>` : ""}
       <div class="split-box">
-        <div class="split-per">${fmtEUR(b.per_person)}</div>
-        <div class="split-label">Indikativt per person</div>
-        <div class="split-total">Indikativt totalt ${fmtEUR(b.total)} · klubben sätter priset</div>
+        <div class="split-per">${esc(moneyOrClub(b.per_person))}</div>
+        <div class="split-label">${esc(t("perPerson"))}</div>
+        <div class="split-total">${esc(moneyOrClub(b.total))}</div>
       </div>
       <p class="price-disclaimer">${sent
         ? "Vi återkommer till din e-post när klubben svarat. Inget bord är reserverat ännu. Mail-knappen är en extra väg till teamet."
@@ -1762,14 +1741,14 @@ function renderBookings() {
           <div class="booking-delivery">${b.delivery === "sent" ? "Skickad till VELVET-teamet" : "Sparad lokalt"}</div>
           ${(b.guests || []).length ? `
           <div class="chip-list booking-guests">
-            <span class="chip chip-self">Du <em>indikativt ${fmtEUR(b.per_person)}</em></span>
-            ${b.guests.map((g) => `<span class="chip">${esc(g.name)} <em>indikativt ${fmtEUR(b.per_person)}</em></span>`).join("")}
+            <span class="chip chip-self">Du</span>
+            ${b.guests.map((g) => `<span class="chip">${esc(g.name)}</span>`).join("")}
           </div>` : ""}
         </div>
         <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap">
           <div class="booking-price">
-            <div class="per">Indikativt ${fmtEUR(b.per_person)} <span style="font-size:12px;color:var(--text-faint)">/person</span></div>
-            <div class="total">Indikativt totalt ${fmtEUR(b.total)}</div>
+            <div class="per">${esc(moneyOrClub(b.per_person))}</div>
+            <div class="total">${esc(moneyOrClub(b.total))}</div>
           </div>
           <a class="btn btn-gold btn-sm" href="#/table/${encodeURIComponent(b.id)}" data-nav>${esc(t("viewParty"))}</a>
           ${b.delivery !== "sent" ? `<a class="btn btn-ghost btn-sm" href="${mailtoFor(b)}">Öppna i Mail</a>` : ""}
@@ -1843,9 +1822,9 @@ function renderJoin(raw) {
           <div class="invite-fact"><span class="k">Sällskap</span><span class="v">${inv.party} personer</span></div>
         </div>
         <div class="split-box">
-          <div class="split-per">${fmtEUR(inv.per_person)}</div>
-          <div class="split-label">Indikativt per person</div>
-          <div class="split-total">Indikativt totalt ${fmtEUR(inv.total)} · delas på ${inv.party} personer · klubben sätter priset</div>
+          <div class="split-per">${esc(moneyOrClub(inv.per_person))}</div>
+          <div class="split-label">${esc(t("perPerson"))}</div>
+          <div class="split-total">${esc(moneyOrClub(inv.total))}</div>
         </div>
         <div id="join-cta">
           ${already ? `
@@ -2142,7 +2121,7 @@ function mountDestMap(d, venues) {
         <div class="map-pop">
           <div class="map-pop-kicker">${esc(v.category)}</div>
           <div class="map-pop-name">${esc(v.name)}</div>
-          <div class="map-pop-meta">Indikativt paket från ${fmtEUR(fromPriceFor(v))} · klubben sätter priset</div>
+          <div class="map-pop-meta">${esc(t("clubSetsPrice"))}</div>
           <a class="map-pop-link" href="#/venue/${encodeURIComponent(v.venue_id)}">Se stället →</a>
           ${bookingUrlFor(v) ? `<br><a class="map-pop-link" href="#/book-site/${encodeURIComponent(v.venue_id)}">${esc(t("bookOnSiteShort"))} ↗</a>` : ""}
         </div>`);
@@ -2632,7 +2611,7 @@ async function renderOpenTables() {
             ${partyPreviewHTML(tb)}
           </div>
           <div class="booking-price">
-            <div class="per">${fmtEUR(per)} <span style="font-size:12px;color:var(--text-faint)">/${t("perPerson")}</span></div>
+            <div class="per">${esc(moneyOrClub(per))}</div>
             <a class="btn btn-ghost btn-sm" href="#/table/${encodeURIComponent(tb.id)}" data-nav>${esc(t("viewParty"))}</a>
             <button class="btn btn-gold btn-sm" data-join="${esc(tb.id)}">${esc(t("takeSeat"))}</button>
           </div>
@@ -2680,7 +2659,7 @@ async function renderTable(id) {
     <h1>${esc(tb.venue)}</h1>
     <p class="ob-sub" style="text-align:left;margin:6px 0 18px">${esc(t("partySub"))}</p>
     <div class="party-stats">
-      <div><b>${fmtEUR(tb.per_person)}</b><span>${esc(t("perPerson"))}</span></div>
+      <div><b>${esc(moneyOrClub(tb.per_person))}</b><span>${esc(t("perPerson"))}</span></div>
       <div><b>${num(tb.paidN)}/${num(tb.dueN)}</b><span>${esc(t("paid"))}</span></div>
       <div><b>${num(tb.openLeft)}</b><span>${esc(t("seatsOpen"))}</span></div>
       <div><b>${num(tb.party)}</b><span>${esc(t("people"))}</span></div>
@@ -2693,7 +2672,7 @@ async function renderTable(id) {
     <div class="book-site-actions" style="margin-top:22px;max-width:420px">
       ${!me ? `<button class="btn btn-gold" id="party-login">${esc(t("loginTitle"))}</button>` : ""}
       ${me && canJoin ? `<button class="btn btn-gold" id="party-join">${esc(t("takeSeat"))}</button>` : ""}
-      ${already && me && members.some((m) => m.id === me.id && !m.paid) ? `<a class="btn btn-gold" href="#/pay/${encodeURIComponent(tb.id)}" data-nav>${esc(t("payShare"))} · ${fmtEUR(tb.per_person)}</a>` : ""}
+      ${already && me && members.some((m) => m.id === me.id && !m.paid) ? `<a class="btn btn-gold" href="#/pay/${encodeURIComponent(tb.id)}" data-nav>${esc(t("payShare"))}</a>` : ""}
       ${already ? `<p class="invite-joined">${esc(t("youAreIn"))}</p>` : ""}
       ${tb.venue_id ? `<a class="btn btn-ghost" href="#/venue/${encodeURIComponent(tb.venue_id)}" data-nav>${esc(t("explore"))}</a>` : ""}
     </div>
@@ -2755,7 +2734,7 @@ async function renderPay(tableId) {
     <h1>${esc(t("payShare"))}</h1>
     <p class="ob-sub" style="text-align:left">${esc(t("payIntro"))}</p>
     <div class="split-box" style="margin:18px 0">
-      <div class="split-per">${fmtEUR(tb.per_person)}</div>
+      <div class="split-per">${esc(moneyOrClub(tb.per_person))}</div>
       <div class="split-label">${esc(t("perPerson"))} · ${esc(tb.venue)}</div>
     </div>
     ${mine?.paid ? `<p class="invite-joined">✓ ${esc(t("paid"))}${mine.paidVia ? ` · ${esc(mine.paidVia)}` : ""}</p>` : ""}

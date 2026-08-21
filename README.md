@@ -13,7 +13,7 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 ## Vad som är på riktigt i V4
 
 - **Förfrågan, inte fake-bokning.** Ni fyller i värd, datum, paket och sällskap. Förfrågan går till VELVET-teamet (Gabbe) via e-post. Bekräftelsen säger *förfrågan skickad* — aldrig att bordet är reserverat.
-- **Indikativa priser.** Paketpriser är research-mockar från venue-scores. Klubben sätter det riktiga priset.
+- **Inga påhittade paketpriser.** Appen visar inte fejkade EUR-paket. Pris kommer från klubbens sajt eller deras svar. Evenemang hämtas från officiella kalendrar.
 - **Katalog.** 120 webbverifierade ställen, 103 äkta venue-bilder från deras egna sajter, IG/TikTok/FB live-kollade.
 - **PWA.** Installerbar från Chrome, offline-skal, VELVET-offline-sida.
 - **Delning.** Inbjudningslänk, kopiera chatt-text, `.ics` till kalendern, favoritlista som länk.

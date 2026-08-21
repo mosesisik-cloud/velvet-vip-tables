@@ -2,37 +2,296 @@
   "fetched": "2026-08-21",
   "venues": {
     "IBZ-001": {
-      "source": "https://www.hiibiza.com/",
+      "source": "https://www.hiibiza.com/vip-tables",
       "events": [
-        { "title": "Closing Party 2026", "date": "2026-10-09", "url": "https://www.hiibiza.com/events/2026/hi-ibiza-closing-party", "note": "Special event" },
-        { "title": "HUGEL Presents Make The Girls Dance", "recurring": "Torsdagar", "url": "https://www.hiibiza.com/events/2026/hugel" },
-        { "title": "Dom Dolla", "recurring": "Fredagar", "url": "https://www.hiibiza.com/events/2026/dom-dolla" },
-        { "title": "CamelPhat Present Summer of Love", "recurring": "Fredagar", "url": "https://www.hiibiza.com/events/2026/camelphat" },
-        { "title": "Black Coffee", "recurring": "Lördagar", "url": "https://www.hiibiza.com/events/2026/black-coffee" },
-        { "title": "Beatport Wild Corner Takeover", "recurring": "Söndagar", "url": "https://www.hiibiza.com/events/2026/beatport-wild-corner-takeover" }
+        {
+          "title": "Dom Dolla",
+          "date": "2026-08-21",
+          "url": "https://www.hiibiza.com/vip-tables",
+          "note": "Theatre 23:30 · VIP via vip.hiibiza.com"
+        },
+        {
+          "title": "Black Coffee",
+          "date": "2026-08-22",
+          "url": "https://www.hiibiza.com/vip-tables",
+          "note": "Theatre 23:30"
+        },
+        {
+          "title": "CamelPhat Present Summer of Love",
+          "date": "2026-08-23",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "Francis Mercier Presents Solèy",
+          "date": "2026-08-24",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "East End Dubs presents Eastenderz",
+          "date": "2026-08-25",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "MEDUZA & James Hype present Our House",
+          "date": "2026-08-26",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "HUGEL Presents Make The Girls Dance",
+          "date": "2026-08-27",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "Dom Dolla — Closing Party",
+          "date": "2026-08-28",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "Black Coffee",
+          "date": "2026-08-29",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "CamelPhat Present Summer of Love",
+          "date": "2026-08-30",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "Francis Mercier Presents Solèy",
+          "date": "2026-08-31",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "East End Dubs presents Eastenderz",
+          "date": "2026-09-01",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "MEDUZA & James Hype present Our House",
+          "date": "2026-09-02",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "HUGEL Presents Make The Girls Dance",
+          "date": "2026-09-03",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "CamelPhat Present Summer of Love",
+          "date": "2026-09-04",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "Black Coffee",
+          "date": "2026-09-05",
+          "url": "https://www.hiibiza.com/vip-tables"
+        },
+        {
+          "title": "Closing Party 2026",
+          "date": "2026-10-09",
+          "url": "https://www.hiibiza.com/events/2026/hi-ibiza-closing-party",
+          "note": "Special event"
+        }
+      ]
+    },
+    "IBZ-002": {
+      "source": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+      "events": [
+        {
+          "title": "Calvin Harris",
+          "date": "2026-08-21",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+          "note": "From 17:00 · VIP via vip.theushuaiaexperience.com"
+        },
+        {
+          "title": "Nic Fanciulli B2B Hot Since 82",
+          "date": "2026-08-22",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+          "note": "From 17:00"
+        },
+        {
+          "title": "Swedish House Mafia",
+          "date": "2026-08-23",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+          "note": "From 17:00"
+        },
+        {
+          "title": "David Guetta",
+          "date": "2026-08-24",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+          "note": "From 17:00"
+        },
+        {
+          "title": "Calvin Harris — Closing Party",
+          "date": "2026-08-25",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+          "note": "From 17:00"
+        },
+        {
+          "title": "Dimitri Vegas / Steve Aoki",
+          "date": "2026-08-26",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+          "note": "From 17:00"
+        },
+        {
+          "title": "Martin Garrix",
+          "date": "2026-08-27",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+          "note": "From 17:00"
+        },
+        {
+          "title": "Calvin Harris",
+          "date": "2026-08-28",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+          "note": "From 17:00"
+        },
+        {
+          "title": "Kölsch / Gorgon City / Paco Osuna",
+          "date": "2026-08-29",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+          "note": "From 17:00"
+        },
+        {
+          "title": "Swedish House Mafia",
+          "date": "2026-08-30",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+          "note": "From 17:00"
+        },
+        {
+          "title": "David Guetta / Alesso",
+          "date": "2026-08-31",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+          "note": "From 17:00"
+        },
+        {
+          "title": "ANTS Closing — Vintage Culture B2B Loco Dice",
+          "date": "2026-10-10",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+          "note": "From 13:00"
+        }
       ]
     },
     "IBZ-003": {
-      "source": "https://www.unvrs.com/",
+      "source": "https://www.unvrs.com/vip-tables",
       "events": [
-        { "title": "[UNVRS] Closing 2026", "date": "2026-10-10", "url": "https://www.unvrs.com/events-calendar", "note": "From 23:00" },
-        { "title": "Adriatique Present X", "recurring": "2 datum", "url": "https://www.unvrs.com/events-calendar", "note": "From 23:30" },
-        { "title": "Black Coffee", "recurring": "2 datum", "url": "https://www.unvrs.com/events-calendar", "note": "From 23:30" },
-        { "title": "No Art", "date": "2026-09-29", "url": "https://www.unvrs.com/events-calendar", "note": "From 23:30" },
-        { "title": "Indira Paganotto Presents Artcore", "date": "2026-10-08", "url": "https://www.unvrs.com/events-calendar", "note": "From 23:30" }
+        {
+          "title": "FISHER",
+          "date": "2026-08-21",
+          "url": "https://www.unvrs.com/vip-tables",
+          "note": "VIP via vip.unvrs.com — 20 Aug also listed; showing from 21 Aug"
+        },
+        {
+          "title": "David Guetta Presents Galactic Circus",
+          "date": "2026-08-21",
+          "url": "https://www.unvrs.com/vip-tables",
+          "note": "Main Room · David Guetta, MEDUZA"
+        },
+        {
+          "title": "elrow Ibiza",
+          "date": "2026-08-22",
+          "url": "https://www.unvrs.com/vip-tables"
+        },
+        {
+          "title": "Carl Cox",
+          "date": "2026-08-23",
+          "url": "https://www.unvrs.com/vip-tables"
+        },
+        {
+          "title": "Tiësto",
+          "date": "2026-08-24",
+          "url": "https://www.unvrs.com/vip-tables"
+        },
+        {
+          "title": "ANYMA",
+          "date": "2026-08-25",
+          "url": "https://www.unvrs.com/vip-tables"
+        },
+        {
+          "title": "Jamie Jones Presents Paradise",
+          "date": "2026-08-26",
+          "url": "https://www.unvrs.com/vip-tables"
+        },
+        {
+          "title": "FISHER",
+          "date": "2026-08-27",
+          "url": "https://www.unvrs.com/vip-tables"
+        },
+        {
+          "title": "David Guetta Presents Galactic Circus",
+          "date": "2026-08-28",
+          "url": "https://www.unvrs.com/vip-tables"
+        },
+        {
+          "title": "elrow Ibiza",
+          "date": "2026-08-29",
+          "url": "https://www.unvrs.com/vip-tables"
+        },
+        {
+          "title": "Carl Cox",
+          "date": "2026-08-30",
+          "url": "https://www.unvrs.com/vip-tables"
+        },
+        {
+          "title": "Tiësto — Closing Party",
+          "date": "2026-08-31",
+          "url": "https://www.unvrs.com/vip-tables"
+        },
+        {
+          "title": "No Art",
+          "date": "2026-09-29",
+          "url": "https://www.unvrs.com/vip-tables"
+        },
+        {
+          "title": "Indira Paganotto Presents Artcore",
+          "date": "2026-10-08",
+          "url": "https://www.unvrs.com/vip-tables"
+        },
+        {
+          "title": "[UNVRS] Closing 2026",
+          "date": "2026-10-10",
+          "url": "https://www.unvrs.com/vip-tables",
+          "note": "From 23:00"
+        }
       ]
     },
     "IBZ-004": {
-      "source": "https://pacha.com/",
+      "source": "https://pacha.com/vip-events",
       "events": [
-        { "title": "Purple Disco Machine | Pure Pacha", "date": "2026-08-20", "url": "https://pacha.com/event/purple-disco-machine--pure-pacha-20-08-2026", "note": "VIP from €200" },
-        { "title": "Marco Carola presents Music On", "date": "2026-08-21", "url": "https://pacha.com/event/marco-carola-presents-music-on-21-08-2026", "note": "VIP from €700" },
-        { "title": "Roger Sanchez | Flower Power", "date": "2026-08-22", "url": "https://pacha.com/event/roger-sanchez--flower-power-22-08-2026" },
-        { "title": "Solomun+1", "date": "2026-08-23", "url": "https://pacha.com/event/solomun1-23-08-2026" },
-        { "title": "Sonny Fodera", "date": "2026-08-24", "url": "https://pacha.com/event/sonny-fodera-24-08-20261" },
-        { "title": "GORDO | Taraka", "date": "2026-08-25", "url": "https://pacha.com/event/gordo--taraka-25-08-2026" },
-        { "title": "Mau P | Baddest Behaviour", "date": "2026-08-26", "url": "https://pacha.com/event/mau-p--baddest-behaviour-26-08-2026" },
-        { "title": "Flower Power Closing Party", "date": "2026-08-29", "url": "https://pacha.com/event/roger-sanchez--flower-power---closing-party-29-08-2026" }
+        {
+          "title": "Marco Carola presents Music On",
+          "date": "2026-08-21",
+          "url": "https://pacha.com/event/marco-carola-presents-music-on-21-08-2026"
+        },
+        {
+          "title": "Roger Sanchez | Flower Power",
+          "date": "2026-08-22",
+          "url": "https://pacha.com/event/roger-sanchez--flower-power-22-08-2026"
+        },
+        {
+          "title": "Solomun+1",
+          "date": "2026-08-23",
+          "url": "https://pacha.com/event/solomun1-23-08-2026"
+        },
+        {
+          "title": "Sonny Fodera",
+          "date": "2026-08-24",
+          "url": "https://pacha.com/event/sonny-fodera-24-08-20261"
+        },
+        {
+          "title": "GORDO | Taraka",
+          "date": "2026-08-25",
+          "url": "https://pacha.com/event/gordo--taraka-25-08-2026"
+        },
+        {
+          "title": "Mau P | Baddest Behaviour",
+          "date": "2026-08-26",
+          "url": "https://pacha.com/event/mau-p--baddest-behaviour-26-08-2026"
+        },
+        {
+          "title": "Flower Power Closing Party",
+          "date": "2026-08-29",
+          "url": "https://pacha.com/event/roger-sanchez--flower-power---closing-party-29-08-2026"
+        }
       ]
     }
   }

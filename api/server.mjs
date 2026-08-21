@@ -443,9 +443,13 @@ const server = http.createServer(async (req, res) => {
       if (!member) return send(res, 403, { error: "not_member" });
       const pub = publicTable(t, db);
       const amount = Number(pub.per_person) || 0;
-      const cents = Math.max(50, Math.round(amount * 100));
       const currency = publicPayConfig().currency || "EUR";
       const method = String(b.method || "card");
+      const cardLike = ["card", "applepay", "googlepay", "klarna", "paypal"].includes(method);
+      if (cardLike && amount < 1) {
+        return send(res, 409, { error: "no_amount", message: "Inget belopp — klubben sätter priset. Fyll en budget i förfrågan först." });
+      }
+      const cents = Math.max(100, Math.round(amount * 100));
       const table = { id: t.id, venue: t.venue, date: t.date };
       const user = { id: userId, name: b.user?.name || "", email: b.user?.email || "" };
       try {

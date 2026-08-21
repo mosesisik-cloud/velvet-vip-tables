@@ -56,6 +56,14 @@ function checkBookingUrls() {
     } else if (reseller.test(url)) fail("official-" + id, "reseller " + url);
     else ok("official-" + id, url);
   }
+  const events = loadJson("data/venue-events.json");
+  const ibz = ["IBZ-001", "IBZ-002", "IBZ-003", "IBZ-004"];
+  for (const id of ibz) {
+    const evs = events.venues?.[id]?.events || [];
+    if (!evs.length) fail("events-" + id, "no official events");
+    else if (evs.some((e) => e.url && reseller.test(e.url))) fail("events-" + id, "reseller event url");
+    else ok("events-" + id, evs.length + " official dated/lineup rows");
+  }
   return { count: venues.length, missing: missing.length, lines };
 }
 

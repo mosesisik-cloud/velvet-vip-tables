@@ -461,7 +461,7 @@
   "destination_code": "STT",
   "name": "Shellona Saint-Tropez",
   "category": "Beach club / Restaurant",
-  "website_url": "https://shellona.com/saint-tropez/",
+  "website_url": "https://shellona.com/en/home-st-tropez/",
   "instagram_url": "https://www.instagram.com/shellona_sttropez/",
   "vip_table_potential": true,
   "shareable_format": true,
@@ -471,7 +471,7 @@
   "booking_potential": 4,
   "research_status": "Web-verified",
   "notes": "Beach dining and music; IG handle corrected from @shellona.sttropez to @shellona_sttropez",
-  "source_url": "https://shellona.com/saint-tropez/",
+  "source_url": "https://shellona.com/en/home-st-tropez/",
   "priority_score": 85
  },
  {
@@ -537,7 +537,7 @@
   "destination_code": "MCO",
   "name": "Amazonico Monte-Carlo",
   "category": "Restaurant / Club",
-  "website_url": "https://www.montecarlosbm.com/en/restaurant-monaco/amazonico",
+  "website_url": "https://www.amazonicorestaurant.com/monte-carlo/",
   "instagram_url": "https://www.instagram.com/amazonico_montecarlo/",
   "vip_table_potential": true,
   "shareable_format": true,
@@ -547,7 +547,7 @@
   "booking_potential": 5,
   "research_status": "Web-verified",
   "notes": "Premium dining/nightlife; IG handle corrected from @amazonico_restaurant to @amazonico_montecarlo",
-  "source_url": "https://www.montecarlosbm.com/en/restaurant-monaco/amazonico",
+  "source_url": "https://www.amazonicorestaurant.com/monte-carlo/",
   "priority_score": 88
  },
  {
@@ -689,7 +689,7 @@
   "destination_code": "BDR",
   "name": "Xuma Village",
   "category": "Beach club",
-  "website_url": "https://xumavillage.com/",
+  "website_url": "https://xuma.com.tr/en/",
   "instagram_url": "https://www.instagram.com/xumavillage/",
   "vip_table_potential": true,
   "shareable_format": true,
@@ -699,7 +699,7 @@
   "booking_potential": 5,
   "research_status": "Web-verified",
   "notes": "Yalıkavak premium beach",
-  "source_url": "https://xumavillage.com/",
+  "source_url": "https://xuma.com.tr/en/",
   "priority_score": 95
  },
  {
@@ -879,7 +879,7 @@
   "destination_code": "BKK",
   "name": "Sing Sing Theater",
   "category": "Nightclub",
-  "website_url": "https://www.singsingbangkok.com/",
+  "website_url": "https://singsingtheater.com/",
   "instagram_url": "https://www.instagram.com/singsingtheater.bangkok/",
   "vip_table_potential": true,
   "shareable_format": true,
@@ -889,7 +889,7 @@
   "booking_potential": 4,
   "research_status": "Web-verified",
   "notes": "Premium themed nightlife; IG handle corrected from @singsingtheater to @singsingtheater.bangkok",
-  "source_url": "https://www.singsingbangkok.com/",
+  "source_url": "https://singsingtheater.com/",
   "priority_score": 85
  },
  {

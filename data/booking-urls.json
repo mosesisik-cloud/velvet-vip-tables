@@ -144,7 +144,7 @@
     "name": "Verde Beach"
   },
   "STT-005": {
-    "url": "https://shellona.com/saint-tropez/",
+    "url": "https://shellona.com/en/home-st-tropez/",
     "kind": "site",
     "label": "Official site",
     "name": "Shellona Saint-Tropez"
@@ -168,7 +168,7 @@
     "name": "La Rascasse"
   },
   "MCO-004": {
-    "url": "https://www.montecarlosbm.com/en/restaurant-monaco/amazonico",
+    "url": "https://www.amazonicorestaurant.com/monte-carlo/",
     "kind": "site",
     "label": "Official site",
     "name": "Amazonico Monte-Carlo"
@@ -216,7 +216,7 @@
     "name": "Scorpios Bodrum"
   },
   "BDR-002": {
-    "url": "https://xumavillage.com/",
+    "url": "https://xuma.com.tr/en/",
     "kind": "site",
     "label": "Official site",
     "name": "Xuma Village"
@@ -276,7 +276,7 @@
     "name": "ONYX Bangkok"
   },
   "BKK-002": {
-    "url": "https://www.singsingbangkok.com/",
+    "url": "https://singsingtheater.com/",
     "kind": "site",
     "label": "Official site",
     "name": "Sing Sing Theater"
