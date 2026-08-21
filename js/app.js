@@ -2765,7 +2765,7 @@ async function renderPay(tableId) {
         const spec = (cfg.methods || []).find((x) => x.id === m.id);
         const on = !!(spec && spec.enabled);
         return `<button type="button" class="pay-method${on ? "" : " off"}" data-method="${m.id}" ${on && mine && !mine.paid ? "" : "disabled"}>
-          <span class="pay-ico">${m.icon}</span>
+          <span class="pay-ico">${m.id === "applepay" ? "Pay" : m.icon}</span>
           <b>${esc(t("pay_" + m.id))}</b>
           <span>${on ? esc(t("payToRevolut")) : esc(t("paySoon"))}</span>
         </button>`;
@@ -2862,10 +2862,10 @@ async function renderPayout() {
     <h1>${esc(t("paySetup"))}</h1>
     <p class="ob-sub" style="text-align:left">${esc(t("paySetupSub"))}</p>
     <form id="pay-form" class="pay-form">
-      <label>Revolut IBAN<input name="revolutIban" autocomplete="off" placeholder="LT12 REVO 0000 0000 0000" value="${esc(cfg.account?.iban || "")}"></label>
-      <label>BIC / SWIFT<input name="revolutBic" autocomplete="off" placeholder="REVOLT21" value="${esc(cfg.account?.bic || "")}"></label>
-      <label>${esc(t("payHolder"))}<input name="revolutName" value="${esc(cfg.account?.name || "")}" placeholder="VELVET / Gabriel"></label>
-      <label>Revolut.me<input name="revolutMe" value="${esc(cfg.account?.me || "")}" placeholder="velvet"></label>
+      <label>Revolut IBAN<input name="revolutIban" autocomplete="off" placeholder="IBAN från Revolut Business" value="${esc(cfg.account?.iban || "")}"></label>
+      <label>BIC / SWIFT<input name="revolutBic" autocomplete="off" placeholder="BIC från Revolut" value="${esc(cfg.account?.bic || "")}"></label>
+      <label>${esc(t("payHolder"))}<input name="revolutName" value="${esc(cfg.account?.name || "")}" placeholder="Namn på Revolut-kontot"></label>
+      <label>Revolut.me<input name="revolutMe" value="${esc(cfg.account?.me || "")}" placeholder="användarnamn"></label>
       <label>Stripe secret (sk_live_… / sk_test_…)<input name="stripeSecret" type="password" placeholder="${cfg.keys?.stripe ? "•••• set" : ""}" autocomplete="off"></label>
       <label>Stripe webhook secret<input name="stripeWebhook" type="password" placeholder="${cfg.keys?.stripe ? "" : ""}" autocomplete="off"></label>
       <label>Revolut Merchant secret<input name="revolutMerchantSecret" type="password" placeholder="${cfg.keys?.revolut ? "•••• set" : ""}" autocomplete="off"></label>
