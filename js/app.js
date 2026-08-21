@@ -851,7 +851,11 @@ function promoterCardHTML(p, opts = {}) {
   const name = p.legalName || p.name || t("promoter");
   const handle = p.handle ? "@" + String(p.handle).replace(/^@/, "") : "";
   const venues = (p.venues || []).map((x) => x.name || x.id).filter(Boolean);
-  const chatId = opts.chatVenue || (p.venues && p.venues[0] && p.venues[0].id);
+  const chatId = opts.chatVenue || "";
+  const where = p.scope
+    || (venues.length ? venues.slice(0, 4).join(" · ") + (venues.length > 4 ? " +" + (venues.length - 4) : "") : "")
+    || (p.venueCount ? t("promoterVenuesN").replace("{n}", String(p.venueCount)) : "");
+  const badge = p.idv === "verified" ? t("verifyOk") : t("promoterListed");
   return `
   <div class="person-row">
     <div class="person-avatar soc-${esc(p.provider || "none")}" aria-hidden="true">${esc(name.slice(0, 1).toUpperCase())}</div>
@@ -862,8 +866,8 @@ function promoterCardHTML(p, opts = {}) {
         ${handle ? (p.socialUrl
           ? `<a class="person-handle" href="${esc(p.socialUrl)}" target="_blank" rel="noopener">${esc(handle)}</a>`
           : `<span class="person-handle">${esc(handle)}</span>`) : ""}
-        <span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>
-        ${venues.length ? `<span>${esc(venues.slice(0, 4).join(" · "))}${venues.length > 4 ? " +" + (venues.length - 4) : ""}</span>` : ""}
+        <span class="idv-badge ok">✓ ${esc(badge)}</span>
+        ${where ? `<span>${esc(where)}</span>` : ""}
       </div>
     </div>
     ${opts.compact || !chatId ? "" : `<div class="person-pay"><a class="btn btn-gold btn-sm" href="${promoterHref(chatId)}" data-nav>${esc(t("chatPromoter"))}</a></div>`}

@@ -17,10 +17,100 @@ const PUBLIC_APP = process.env.PUBLIC_URL || "https://b2b.bakemyday.se/velvet";
 
 fs.mkdirSync(IDV_DIR, { recursive: true });
 
+function emptyDb() {
+  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {}, matches: [] };
+}
+function loadJsonRel(name) {
+  for (const p of [
+    path.join(__dir, "public-data", name),
+    path.join(__dir, "..", "data", name),
+    path.join(__dir, name),
+  ]) {
+    try { return JSON.parse(fs.readFileSync(p, "utf8")); } catch { /* next */ }
+  }
+  return null;
+}
+function loadVenuesFile() {
+  const v = loadJsonRel("venues.json");
+  return Array.isArray(v) ? v : [];
+}
+function loadAllVenues() {
+  const unlisted = loadJsonRel("unlisted-venues.json");
+  return [...loadVenuesFile(), ...(Array.isArray(unlisted) ? unlisted : [])];
+}
+function loadDestMap() {
+  const map = {};
+  for (const list of [loadJsonRel("destinations.json"), loadJsonRel("extra-destinations.json")]) {
+    if (!Array.isArray(list)) continue;
+    for (const d of list) if (d && d.code) map[d.code] = d;
+  }
+  return map;
+}
+function loadPromoterSeed() {
+  const raw = loadJsonRel("promoters.json");
+  return Array.isArray(raw?.promoters) ? raw.promoters : [];
+}
+function venueMatchesSeed(p, v, dests) {
+  const name = String(v?.name || "");
+  for (const brand of p.brands || []) {
+    const b = String(brand || "").trim();
+    if (b && name.toLowerCase().includes(b.toLowerCase())) return true;
+  }
+  const destsWant = (p.destinations || []).map((c) => String(c).toUpperCase());
+  if (destsWant.includes(String(v?.destination_code || "").toUpperCase())) return true;
+  const region = String(dests[v?.destination_code]?.region || "");
+  for (const r of p.regions || []) {
+    if (region === r) return true;
+  }
+  return false;
+}
+function applyPromoterSeed(db) {
+  const seed = loadPromoterSeed();
+  if (!seed.length) return db;
+  const venues = loadAllVenues();
+  const dests = loadDestMap();
+  for (const p of seed) {
+    const uid = String(p.id || "").slice(0, 80);
+    if (!uid) continue;
+    const prev = db.users[uid] || {};
+    db.users[uid] = {
+      id: uid,
+      name: String(p.name || prev.name || "").slice(0, 80),
+      handle: String(prev.handle || p.handle || "").replace(/^@/, "").slice(0, 40),
+      provider: String(prev.provider || p.provider || ""),
+      email: String(prev.email || "").toLowerCase().slice(0, 80),
+      legalName: String(p.legalName || p.name || prev.legalName || "").slice(0, 80),
+      promoterScope: String(p.scope || prev.promoterScope || ""),
+      seed: true,
+      whatsapp: prev.whatsapp || "",
+      card: prev.card || null,
+      updated: prev.updated || new Date().toISOString(),
+      created: prev.created || new Date().toISOString(),
+    };
+    const idvPrev = db.idv[uid];
+    if (!idvPrev || idvPrev.source === "seed") {
+      db.idv[uid] = {
+        status: "verified",
+        source: "seed",
+        legalName: String(p.legalName || p.name || "").slice(0, 80),
+        submitted: idvPrev?.submitted || new Date().toISOString(),
+        fieldsPublic: null,
+      };
+    }
+    for (const v of venues) {
+      if (!v?.venue_id || !venueMatchesSeed(p, v, dests)) continue;
+      const list = db.promoters[v.venue_id] || [];
+      if (!list.includes(uid)) list.push(uid);
+      db.promoters[v.venue_id] = list;
+    }
+  }
+  return db;
+}
 function load() {
+  let db = emptyDb();
   try {
     const raw = JSON.parse(fs.readFileSync(DATA, "utf8"));
-    return {
+    db = {
       tables: Array.isArray(raw.tables) ? raw.tables : [],
       idv: raw.idv && typeof raw.idv === "object" ? raw.idv : {},
       reviews: Array.isArray(raw.reviews) ? raw.reviews : [],
@@ -35,7 +125,7 @@ function load() {
       matches: Array.isArray(raw.matches) ? raw.matches : [],
     };
   } catch {}
-  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {}, matches: [] };
+  return applyPromoterSeed(db);
 }
 function waDigits(raw) {
   let s = String(raw || "").trim();
@@ -131,15 +221,6 @@ async function cloudSendWa(to, text) {
 }
 const MIN_AGE = 18;
 const US21 = new Set(["MIA", "LAS", "NYC", "LAX", "ASP"]);
-function loadVenuesFile() {
-  for (const p of [
-    path.join(__dir, "public-data", "venues.json"),
-    path.join(__dir, "..", "data", "venues.json"),
-  ]) {
-    try { return JSON.parse(fs.readFileSync(p, "utf8")); } catch { /* next */ }
-  }
-  return [];
-}
 function minAgeForVenue(venueId) {
   const facts = loadFactsFile()?.venues?.[venueId];
   const n = parseInt(String(facts?.ageLimit || "").replace(/[^\d]/g, ""), 10);
@@ -271,15 +352,21 @@ function allPromoterUids(db) {
   return [...set];
 }
 function venueLabel(venueId) {
-  const v = loadVenuesFile().find((x) => x.venue_id === venueId);
+  const v = loadAllVenues().find((x) => x.venue_id === venueId);
   return {
     id: venueId,
     name: String(v?.name || venueId),
     destination: String(v?.destination || ""),
   };
 }
+function isRosterPromoter(uid, db) {
+  const rec = uid && db.idv[uid];
+  return !!(rec && rec.status === "verified" && rec.source === "seed");
+}
 function publicPromoter(uid, db, venueId) {
-  if (!uid || !isIdvVerified(uid, db)) return null;
+  const passport = isIdvVerified(uid, db);
+  const roster = isRosterPromoter(uid, db);
+  if (!uid || (!passport && !roster)) return null;
   const claimed = claimedVenueIds(uid, db);
   const operator = isPromoter({ id: uid }, "", db);
   if (venueId) {
@@ -289,16 +376,18 @@ function publicPromoter(uid, db, venueId) {
   }
   const d = dossier(uid, db) || {};
   const u = db.users[uid] || {};
-  const venueIds = venueId ? [venueId] : claimed;
+  const venueIds = venueId ? [venueId] : (claimed.length <= 8 ? claimed : []);
   return {
     id: uid,
-    legalName: d.legalName || "",
+    legalName: d.legalName || u.legalName || "",
     name: String(u.name || d.legalName || "").slice(0, 80),
     handle: String(d.handle || u.handle || "").replace(/^@/, ""),
     provider: d.provider || u.provider || "",
     socialUrl: socialUrl(d.provider || u.provider, d.handle || u.handle),
-    idv: "verified",
+    idv: passport ? "verified" : "listed",
     operator: !!operator,
+    scope: String(u.promoterScope || ""),
+    venueCount: claimed.length,
     venues: venueIds.map(venueLabel),
   };
 }

@@ -1,0 +1,25 @@
+{
+  "promoters": [
+    {
+      "id": "P-jb",
+      "name": "JB",
+      "legalName": "JB",
+      "brands": ["Bagatelle", "Baoli"],
+      "scope": "Bagatelle · Baoli · världen"
+    },
+    {
+      "id": "P-thomas",
+      "name": "Thomas",
+      "legalName": "Thomas",
+      "destinations": ["DXB"],
+      "scope": "Dubai"
+    },
+    {
+      "id": "P-vincenzo",
+      "name": "Vincenzo",
+      "legalName": "Vincenzo",
+      "regions": ["Europe"],
+      "scope": "Europa"
+    }
+  ]
+}

@@ -339,6 +339,41 @@ async function runApi() {
       fail("promoters-in-chat", JSON.stringify(hostOpen.json.promoters).slice(0, 220));
     } else ok("promoters-venue", "Hï Ibiza roster + chat roster");
 
+    const roster = listed;
+    const jb = roster.find((p) => p.id === "P-jb");
+    const thomas = roster.find((p) => p.id === "P-thomas");
+    const vincenzo = roster.find((p) => p.id === "P-vincenzo");
+    if (!jb || jb.legalName !== "JB" || jb.idv !== "listed" || jb.card || jb.fields) {
+      fail("seed-jb", JSON.stringify(jb).slice(0, 280));
+    } else if (!thomas || thomas.legalName !== "Thomas" || thomas.idv !== "listed") {
+      fail("seed-thomas", JSON.stringify(thomas).slice(0, 280));
+    } else if (!vincenzo || vincenzo.legalName !== "Vincenzo" || vincenzo.idv !== "listed") {
+      fail("seed-vincenzo", JSON.stringify(vincenzo).slice(0, 280));
+    } else ok("seed-roster", "JB + Thomas + Vincenzo listed, no passport/card");
+
+    const idsAt = (arr) => (arr || []).map((p) => p.id);
+    const baoli = await req(base, "GET", "/promoters/CNS-002?userId=" + encodeURIComponent(host.id));
+    const bagTulum = await req(base, "GET", "/promoters/TUL-004?userId=" + encodeURIComponent(host.id));
+    const dubai = await req(base, "GET", "/promoters/DXB-001?userId=" + encodeURIComponent(host.id));
+    const ibz = await req(base, "GET", "/promoters/IBZ-001?userId=" + encodeURIComponent(host.id));
+    const miamiBaoli = await req(base, "GET", "/promoters/MIA-005?userId=" + encodeURIComponent(host.id));
+    const jbCannes = idsAt(baoli.json.promoters);
+    const jbTulum = idsAt(bagTulum.json.promoters);
+    const atDxb = idsAt(dubai.json.promoters);
+    const atIbz = idsAt(ibz.json.promoters);
+    const atMia = idsAt(miamiBaoli.json.promoters);
+    if (!jbCannes.includes("P-jb") || !jbCannes.includes("P-vincenzo") || jbCannes.includes("P-thomas")) {
+      fail("seed-baoli-cannes", jbCannes.join(","));
+    } else if (!jbTulum.includes("P-jb") || jbTulum.includes("P-vincenzo")) {
+      fail("seed-bagatelle-tulum", jbTulum.join(","));
+    } else if (!atDxb.includes("P-thomas") || atDxb.includes("P-vincenzo") || atDxb.includes("P-jb")) {
+      fail("seed-dubai", atDxb.join(","));
+    } else if (!atIbz.includes("P-vincenzo") || atIbz.includes("P-jb") || atIbz.includes("P-thomas")) {
+      fail("seed-ibiza", atIbz.join(","));
+    } else if (!atMia.includes("P-jb") || atMia.includes("P-vincenzo")) {
+      fail("seed-baoli-miami", atMia.join(","));
+    } else ok("seed-venues", "JB brand worldwide, Thomas Dubai, Vincenzo Europe");
+
     const got = await req(base, "GET", "/tables/TB-RAILS");
     const members = got.json.table?.members || [];
     const ids = members.map((m) => m.id).sort();
