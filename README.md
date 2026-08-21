@@ -55,7 +55,7 @@ npx serve -l 4173 .
 |---|---|---|
 | Gabriel (Gabbe) | Produktägare | [gabrielhadodo9602](https://github.com/gabrielhadodo9602) (write) |
 | Moses | Bygg | [mosesisik-cloud](https://github.com/mosesisik-cloud) (admin) |
-| Dan Grant | Inbjuden | *GitHub-konto saknas för `dan.grant@appliedinvest.com` — skicka username så läggs write på direkt* |
+| Dan Grant | Inbjuden | [dangrant29](https://github.com/dangrant29) — inbjudan skickad 2026-08-21, väntar på svar |
 
 ## Datamodell
 
