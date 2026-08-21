@@ -6,6 +6,7 @@ let DESTINATIONS = [];
 let VENUES = [];
 let VENUE_IMAGES = {}; // venue_id -> bild från ställets egen hemsida (data/venue-images.json)
 let VENUE_EVENTS = { fetched: null, venues: {} }; // kommande events per venue (data/venue-events.json)
+let BOOKING_URLS = {}; // venue_id -> { url, kind, label } officiell VIP/bokningssida
 const state = {
   filters: { q: "", dest: "", cat: "", status: "", price: "", sort: "priority" },
 };
@@ -72,6 +73,38 @@ function venueMediaHTML(v, cls, { eager = false, extra = "" } = {}) {
     <div class="dest-emblem venue-media-emblem" aria-hidden="true" style="--h:${destHue(v.destination_code)}">${esc(v.destination_code || "")}</div>${img}
     ${extra}
   </div>`;
+}
+
+function urlHost(url) {
+  try { return new URL(url).hostname.replace(/^www\./i, ""); }
+  catch { return ""; }
+}
+function isSocialUrl(url) {
+  return /(?:instagram|facebook|tiktok|snapchat)\.com/i.test(url || "");
+}
+/** Officiell bokning: VIP-path i booking-urls.json, annars ställets hemsida. */
+function bookingUrlFor(v) {
+  if (!v) return null;
+  const o = BOOKING_URLS[v.venue_id];
+  let url = "";
+  let kind = "site";
+  let label = "";
+  if (o && typeof o.url === "string" && /^https?:\/\//i.test(o.url)) {
+    url = o.url;
+    kind = o.kind || "vip";
+    label = o.label || "";
+  } else {
+    url = v.website_url || v.source_url || "";
+  }
+  if (!url || !/^https?:\/\//i.test(url)) return null;
+  url = url.replace(/^http:\/\//i, "https://");
+  return { url, kind, label, host: urlHost(url), social: isSocialUrl(url) };
+}
+function bookingLinkHTML(v, { gold = false, sm = false, full = false } = {}) {
+  if (!bookingUrlFor(v)) return "";
+  const cls = gold ? `btn btn-gold${sm ? " btn-sm" : ""}` : "icon-link";
+  const style = full ? ` style="width:100%"` : "";
+  return `<a class="${cls}" href="#/book-site/${encodeURIComponent(v.venue_id)}" data-nav${style}>${esc(gold ? t("bookOnSite") : t("bookOnSiteShort"))} ↗</a>`;
 }
 
 function photoAttrHTML(v) {
@@ -886,8 +919,8 @@ function venueCard(v, { eager = false } = {}) {
       </div>
       <div class="venue-note">${esc(v.notes || "")}</div>
       <div class="venue-actions">
-        <button class="btn btn-gold btn-sm" data-book="${esc(v.venue_id)}">Skicka förfrågan</button>
-        ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">Hemsida</a>` : ""}
+        <button class="btn btn-gold btn-sm" data-book="${esc(v.venue_id)}">${esc(t("sendRequest"))}</button>
+        ${bookingLinkHTML(v)}
         ${igLinkHTML(v)}
       </div>
     </div>
@@ -1116,7 +1149,8 @@ function renderVenueDetail(id) {
             <a class="btn btn-gold btn-sm" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">Öppna Instagram</a>
           </div>` : ""}
           <div class="detail-links">
-            ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}
+            ${bookingLinkHTML(v)}
+            ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">${esc(t("website"))} ↗</a>` : ""}
             ${v.tiktok_url ? `<a class="icon-link" href="${esc(v.tiktok_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på TikTok">${TIKTOK_ICON}<span>TikTok</span> ↗</a>` : ""}
             ${v.facebook_url ? `<a class="icon-link" href="${esc(v.facebook_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på Facebook">${FB_ICON}<span>Facebook</span> ↗</a>` : ""}
             ${v.source_url ? `<a class="icon-link" href="${esc(v.source_url)}" target="_blank" rel="noopener">Källa ↗</a>` : ""}
@@ -1160,13 +1194,14 @@ function renderVenueDetail(id) {
           </div>
           <span class="from-calc-val" id="from-per">${fmtEUR(Math.ceil(fromPrice / 4))}</span>
         </div>
-        <p class="detail-cta-note">VELVET-teamet tar förfrågan mot klubben — ingen reservation förrän återkoppling. Priset är indikativt — klubben sätter det riktiga.</p>
-        <button class="btn btn-gold" id="d-book" style="width:100%">${esc(t("sendRequest"))}</button>
+        <p class="detail-cta-note">${esc(t("bookOnSiteCtaNote"))}</p>
+        ${bookingLinkHTML(v, { gold: true, full: true })}
+        <button class="btn btn-ghost" id="d-book" style="width:100%;margin-top:10px">${esc(t("sendRequest"))}</button>
         <a class="btn btn-ghost" id="d-promo" href="#/promoter/${encodeURIComponent(v.venue_id)}" data-nav style="width:100%;margin-top:10px">${esc(t("chatPromoter"))}</a>
         <ul class="detail-perks">
-          <li>Concierge mot klubben — ingen automatisk bokning</li>
-          <li>Delad kostnad när bordet är bekräftat</li>
-          <li>Inga dragningar i förhandsversionen</li>
+          <li>${esc(t("perkSite"))}</li>
+          <li>${esc(t("perkConcierge"))}</li>
+          <li>${esc(t("perkSplit"))}</li>
         </ul>
       </div>
     </div>
@@ -1950,6 +1985,7 @@ function mountDestMap(d, venues) {
           <div class="map-pop-name">${esc(v.name)}</div>
           <div class="map-pop-meta">Indikativt paket från ${fmtEUR(fromPriceFor(v))} · klubben sätter priset</div>
           <a class="map-pop-link" href="#/venue/${encodeURIComponent(v.venue_id)}">Se stället →</a>
+          ${bookingUrlFor(v) ? `<br><a class="map-pop-link" href="#/book-site/${encodeURIComponent(v.venue_id)}">${esc(t("bookOnSiteShort"))} ↗</a>` : ""}
         </div>`);
     });
     map.fitBounds(pts, { padding: [30, 30], maxZoom: 13 });
@@ -2955,6 +2991,67 @@ async function renderPromoterChat(venueId) {
   chatPoll = setInterval(() => { loadThread(); if (promoter) loadInbox(); }, 4000);
 }
 
+function renderBookSite(id) {
+  const v = VENUES.find((x) => x.venue_id === id);
+  if (!v) {
+    view().innerHTML = `
+    <section class="section">
+      <div class="empty-state">
+        <div class="big">🥂</div>
+        <h3>${esc(t("venueMissing"))}</h3>
+        <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>${esc(t("explore"))}</a></p>
+      </div>
+    </section>`;
+    return;
+  }
+  const b = bookingUrlFor(v);
+  if (!b) {
+    view().innerHTML = `
+    <section class="section">
+      <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
+      <div class="empty-state">
+        <div class="big">🌐</div>
+        <h3>${esc(t("bookOnSiteNone"))}</h3>
+        <p>${esc(t("bookOnSiteNoneHint"))}</p>
+        <p style="margin-top:20px"><button class="btn btn-gold" id="bs-velvet">${esc(t("sendRequest"))}</button></p>
+      </div>
+    </section>`;
+    $("#bs-velvet")?.addEventListener("click", () => openBookingModal(v));
+    setTitle(v.name);
+    return;
+  }
+  const kindLabel = b.kind === "vip" ? t("bookKindVip") : b.kind === "events" ? t("bookKindEvents") : t("bookKindSite");
+  setTitle(`${t("bookOnSite")} · ${v.name}`);
+  view().innerHTML = `
+  <section class="section book-site">
+    <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
+    <div class="book-site-hero">
+      ${venueMediaHTML(v, "venue-hero-media", { eager: true })}
+      <div class="book-site-copy">
+        <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)} · ${esc(b.host)}</p>
+        <h1>${esc(t("bookOnSite"))}</h1>
+        <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(t("bookOnSiteLeave"))}</p>
+        <div class="book-site-actions">
+          <a class="btn btn-gold" id="bs-open" href="${esc(b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))} ↗</a>
+          <button class="btn btn-ghost" type="button" id="bs-velvet">${esc(t("sendRequest"))}</button>
+          <a class="btn btn-ghost" href="#/promoter/${encodeURIComponent(v.venue_id)}" data-nav>${esc(t("chatPromoter"))}</a>
+        </div>
+        <p class="book-site-url">${esc(b.host)} · ${esc(b.url)}</p>
+        <p class="detail-cta-note" style="margin-bottom:0">${esc(t("bookOnSiteNote"))}</p>
+      </div>
+    </div>
+    ${b.social ? "" : `
+    <div class="book-site-frame-wrap">
+      <div class="book-site-frame-bar">
+        <span>${esc(t("bookOnSiteIframe"))}</span>
+        <a class="icon-link" href="${esc(b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))} ↗</a>
+      </div>
+      <iframe class="book-site-frame" src="${esc(b.url)}" title="${esc(v.name)} — ${esc(t("bookOnSite"))}" referrerpolicy="no-referrer-when-downgrade" loading="eager" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"></iframe>
+    </div>`}
+  </section>`;
+  $("#bs-velvet")?.addEventListener("click", () => openBookingModal(v));
+}
+
 // ---------- Router ----------
 const routes = {
   "": renderHome,
@@ -2979,6 +3076,7 @@ const paramRoutes = [
   { re: /^#\/list\/(.+)$/, fn: renderSharedList, nav: "#/favorites" },
   { re: /^#\/user\/(.+)$/, fn: renderUserProfile, nav: "#/account" },
   { re: /^#\/promoter\/(.+)$/, fn: renderPromoterChat, nav: "#/venues" },
+  { re: /^#\/book-site\/(.+)$/, fn: renderBookSite, nav: "#/venues" },
 ];
 
 // Trasiga %-sekvenser i hashen får inte krascha routern
@@ -3109,6 +3207,10 @@ async function init() {
       const re = await fetch("data/venue-events.json");
       if (re.ok) { const d = await re.json(); if (d && d.venues) VENUE_EVENTS = d; }
     } catch (_) { /* behåll tom */ }
+    try {
+      const rb = await fetch("data/booking-urls.json");
+      if (rb.ok) BOOKING_URLS = await rb.json() || {};
+    } catch (_) { BOOKING_URLS = {}; }
   } catch (err) {
     console.error("VELVET: datainläsning misslyckades", err);
     renderLoadError();

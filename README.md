@@ -27,6 +27,7 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 - Ställe-browser med sök, filter, prisklasser och delbar hash (`#/venues?dest=Ibiza`)
 - Global snabbsök (`/` eller förstoringsglaset)
 - Venue-detalj med IG-skyltfönster, från-pris-kalkylator och hjärta
+- Direkt till varje ställe egen bokningssajt (`#/book-site/…`) — officiell VIP-path där den finns, annars hemsidan. Inbäddning + ny flik. VELVET tar inte betalt där.
 
 ### Concierge
 - Förfrågan med värdens namn + e-post (obligatoriskt)

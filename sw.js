@@ -10,7 +10,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-7";
+const VERSION = "v4-real-8";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -28,6 +28,7 @@ const SHELL_ASSETS = [
   "./data/venues.json",
   "./data/venue-images.json",
   "./data/venue-events.json",
+  "./data/booking-urls.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/icon-maskable-512.png",

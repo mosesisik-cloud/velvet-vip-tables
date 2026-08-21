@@ -1,0 +1,722 @@
+{
+  "IBZ-001": {
+    "url": "https://www.hiibiza.com/vip-tables",
+    "kind": "vip",
+    "label": "VIP Tables",
+    "name": "Hï Ibiza"
+  },
+  "IBZ-002": {
+    "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+    "kind": "vip",
+    "label": "VIP Tables",
+    "name": "Ushuaïa Ibiza"
+  },
+  "IBZ-003": {
+    "url": "https://www.unvrs.com/vip-tables/request",
+    "kind": "vip",
+    "label": "VIP Tables",
+    "name": "UNVRS"
+  },
+  "IBZ-004": {
+    "url": "https://pacha.com/vip-events",
+    "kind": "vip",
+    "label": "VIP Zone",
+    "name": "Pacha Ibiza"
+  },
+  "IBZ-005": {
+    "url": "https://obeachibiza.com/events-calendar/",
+    "kind": "events",
+    "label": "Book a bed",
+    "name": "O Beach Ibiza"
+  },
+  "MYK-001": {
+    "url": "https://scorpios.com/mykonos",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Scorpios Mykonos"
+  },
+  "MYK-002": {
+    "url": "https://www.nammos.com/mykonos",
+    "kind": "site",
+    "label": "Official site",
+    "name": "NAMMOS Mykonos"
+  },
+  "MYK-003": {
+    "url": "https://www.santannamykonos.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "SantAnna Mykonos"
+  },
+  "MYK-004": {
+    "url": "https://www.cavoparadiso.gr/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Cavo Paradiso"
+  },
+  "MYK-005": {
+    "url": "https://alemagou.gr/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Alemagou"
+  },
+  "DXB-001": {
+    "url": "https://nikkibeach.com/dubai/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Nikki Beach Dubai"
+  },
+  "DXB-002": {
+    "url": "https://obeachdubai.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "O Beach Dubai"
+  },
+  "DXB-003": {
+    "url": "https://blabladubai.ae/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Bla Bla Dubai"
+  },
+  "DXB-004": {
+    "url": "https://0-gravity.ae/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Zero Gravity"
+  },
+  "DXB-005": {
+    "url": "https://surfclubdubai.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Surf Club Dubai"
+  },
+  "MRB-001": {
+    "url": "https://nikkibeach.com/marbella/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Nikki Beach Marbella"
+  },
+  "MRB-002": {
+    "url": "https://oceanclub.es/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Ocean Club Marbella"
+  },
+  "MRB-003": {
+    "url": "https://momentomarbella.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Momento Marbella"
+  },
+  "MRB-004": {
+    "url": "https://oliviavalere.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Olivia Valere"
+  },
+  "MRB-005": {
+    "url": "https://mamzelmarbella.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Mamzel Marbella"
+  },
+  "STT-001": {
+    "url": "https://nikkibeach.com/saint-tropez/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Nikki Beach Saint-Tropez"
+  },
+  "STT-002": {
+    "url": "https://www.club55.fr/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Club 55"
+  },
+  "STT-003": {
+    "url": "https://gigi-restaurant.com/ramatuelle/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Gigi Ramatuelle"
+  },
+  "STT-004": {
+    "url": "https://verde-beach.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Verde Beach"
+  },
+  "STT-005": {
+    "url": "https://shellona.com/saint-tropez/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Shellona Saint-Tropez"
+  },
+  "MCO-001": {
+    "url": "https://www.montecarlosbm.com/en/nightlife/jimmyz-monte-carlo",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Jimmy'z Monte-Carlo"
+  },
+  "MCO-002": {
+    "url": "https://twigaworld.com/montecarlo/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Twiga Monte Carlo"
+  },
+  "MCO-003": {
+    "url": "https://www.montecarlosbm.com/en/nightlife/la-rascasse",
+    "kind": "site",
+    "label": "Official site",
+    "name": "La Rascasse"
+  },
+  "MCO-004": {
+    "url": "https://www.montecarlosbm.com/en/restaurant-monaco/amazonico",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Amazonico Monte-Carlo"
+  },
+  "MCO-005": {
+    "url": "https://nikkibeach.com/monte-carlo/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Nikki Beach Monte Carlo"
+  },
+  "CNS-001": {
+    "url": "https://lamomecannes.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "La Môme Plage"
+  },
+  "CNS-002": {
+    "url": "https://www.baolicannes.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Baoli Cannes"
+  },
+  "CNS-003": {
+    "url": "https://medusa-cannes.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Medusa Cannes"
+  },
+  "CNS-004": {
+    "url": "https://carltoncannes.com/restaurants-bars/carlton-beach-club/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Carlton Beach Club"
+  },
+  "CNS-005": {
+    "url": "https://restaurantlaguerite.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "La Guérite Cannes"
+  },
+  "BDR-001": {
+    "url": "https://scorpios.com/bodrum",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Scorpios Bodrum"
+  },
+  "BDR-002": {
+    "url": "https://xumavillage.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Xuma Village"
+  },
+  "BDR-003": {
+    "url": "https://www.luccastyle.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Lucca by the Sea"
+  },
+  "BDR-004": {
+    "url": "https://www.macakizi.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Maçakızı Beach"
+  },
+  "BDR-005": {
+    "url": "https://www.marriott.com/en-us/hotels/bxned-the-bodrum-edition/overview/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "The Bodrum EDITION Beach Club"
+  },
+  "HKT-001": {
+    "url": "https://phuket.cafedelmar.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Café del Mar Phuket"
+  },
+  "HKT-002": {
+    "url": "https://yonabeach.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "YONA Beach Club"
+  },
+  "HKT-003": {
+    "url": "https://www.catchbeachclub.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Catch Beach Club"
+  },
+  "HKT-004": {
+    "url": "https://www.carpediemphuket.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Carpe Diem Beach Club"
+  },
+  "HKT-005": {
+    "url": "https://www.illuzionphuket.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Illuzion Phuket"
+  },
+  "BKK-001": {
+    "url": "https://www.onyxbangkok.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "ONYX Bangkok"
+  },
+  "BKK-002": {
+    "url": "https://www.singsingbangkok.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Sing Sing Theater"
+  },
+  "BKK-003": {
+    "url": "https://www.facebook.com/tichucaroftopbar/",
+    "kind": "social",
+    "label": "Social",
+    "name": "Tichuca Rooftop Bar"
+  },
+  "BKK-004": {
+    "url": "https://lebua.com/restaurants/sky/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Sky Bar at Lebua"
+  },
+  "BKK-005": {
+    "url": "https://pastelbangkok.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Pastel Bangkok"
+  },
+  "BAL-001": {
+    "url": "https://finnsbeachclub.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "FINNS Beach Club"
+  },
+  "BAL-002": {
+    "url": "https://savaya.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Savaya Bali"
+  },
+  "BAL-003": {
+    "url": "https://seminyak.potatohead.co/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Potato Head"
+  },
+  "BAL-004": {
+    "url": "https://atlasbeachfest.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Atlas Beach Club"
+  },
+  "BAL-005": {
+    "url": "https://www.kudeta.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Ku De Ta"
+  },
+  "MIA-001": {
+    "url": "https://www.livnightclub.com/miami/events/",
+    "kind": "events",
+    "label": "Events & tables",
+    "name": "LIV Miami"
+  },
+  "MIA-002": {
+    "url": "https://www.e11evenmiami.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "E11EVEN Miami"
+  },
+  "MIA-003": {
+    "url": "https://mila-miami.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "MILA Miami"
+  },
+  "MIA-004": {
+    "url": "https://joiabeachmiami.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Joia Beach"
+  },
+  "MIA-005": {
+    "url": "https://baolimiami.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Baoli Miami"
+  },
+  "LAS-001": {
+    "url": "https://www.wynnsocial.com/vip-tables/",
+    "kind": "vip",
+    "label": "Wynn VIP Tables",
+    "name": "XS Nightclub"
+  },
+  "LAS-002": {
+    "url": "https://taogroup.com/venues/omnia-nightclub-las-vegas/vip/",
+    "kind": "vip",
+    "label": "VIP",
+    "name": "Omnia Nightclub"
+  },
+  "LAS-003": {
+    "url": "https://taogroup.com/venues/marquee-nightclub-las-vegas/vip/",
+    "kind": "vip",
+    "label": "VIP",
+    "name": "Marquee Nightclub & Dayclub"
+  },
+  "LAS-004": {
+    "url": "https://www.wynnsocial.com/vip-tables/",
+    "kind": "vip",
+    "label": "Wynn VIP Tables",
+    "name": "Encore Beach Club"
+  },
+  "LAS-005": {
+    "url": "https://www.fontainebleaulasvegas.com/nightlife/liv/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "LIV Las Vegas"
+  },
+  "TUL-001": {
+    "url": "https://www.papayaplayaproject.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Papaya Playa Project"
+  },
+  "TUL-002": {
+    "url": "https://www.vagalumetulum.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Vagalume Tulum"
+  },
+  "TUL-003": {
+    "url": "https://gitano.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Gitano Tulum"
+  },
+  "TUL-004": {
+    "url": "https://bagatelle.com/venues/tulum/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Bagatelle Tulum"
+  },
+  "TUL-005": {
+    "url": "https://www.tabootulum.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Taboo Tulum"
+  },
+  "BCN-001": {
+    "url": "https://opiumbarcelona.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Opium Barcelona"
+  },
+  "BCN-002": {
+    "url": "https://shoko.biz/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Shôko Barcelona"
+  },
+  "BCN-003": {
+    "url": "https://www.thesuttonclub.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Sutton Barcelona"
+  },
+  "BCN-004": {
+    "url": "https://cdlcbarcelona.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Carpe Diem Lounge Club"
+  },
+  "BCN-005": {
+    "url": "https://www.marriott.com/en-us/hotels/bcnwh-w-barcelona/dining/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Noxe Barcelona"
+  },
+  "CER-001": {
+    "url": "https://billionairesociety.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Billionaire Porto Cervo"
+  },
+  "CER-002": {
+    "url": "https://phibeach.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Phi Beach"
+  },
+  "CER-003": {
+    "url": "https://nikkibeach.com/costa-smeralda/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Nikki Beach Costa Smeralda"
+  },
+  "HVA-001": {
+    "url": "https://beach.cdhvar.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Carpe Diem Beach Hvar"
+  },
+  "HVA-002": {
+    "url": "https://www.hulahulahvar.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Hula Hula Hvar"
+  },
+  "HVA-003": {
+    "url": "https://cdhvar.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Carpe Diem Bar Hvar"
+  },
+  "ATH-001": {
+    "url": "https://islandclubrestaurant.gr/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Island Athens Riviera"
+  },
+  "ATH-002": {
+    "url": "https://www.bolivar.gr/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Bolivar Beach Bar"
+  },
+  "ATH-003": {
+    "url": "https://momentumgroup.gr/akanthus-summer-athens-riviera/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Akanthus"
+  },
+  "IST-001": {
+    "url": "https://www.sortie.com.tr/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Sortie"
+  },
+  "IST-002": {
+    "url": "https://rubyistanbul.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Ruby"
+  },
+  "IST-003": {
+    "url": "https://klein-entertainment.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Klein Phönix"
+  },
+  "CAP-001": {
+    "url": "https://www.fontelina-capri.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "La Fontelina"
+  },
+  "CAP-002": {
+    "url": "https://www.lacanzonedelmare.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "La Canzone del Mare"
+  },
+  "CAP-003": {
+    "url": "https://www.anemaecore.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Anema e Core"
+  },
+  "AMF-001": {
+    "url": "https://www.onefirebeach.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "One Fire Beach"
+  },
+  "AMF-002": {
+    "url": "https://musicontherocks.it/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Music on the Rocks"
+  },
+  "AMF-003": {
+    "url": "https://lascoglierapositano.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "La Scogliera Positano"
+  },
+  "LON-001": {
+    "url": "https://annabels.co.uk/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Annabel's"
+  },
+  "LON-002": {
+    "url": "https://theboxsoho.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "The Box Soho"
+  },
+  "LON-003": {
+    "url": "https://www.tapelondon.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Tape London"
+  },
+  "PAR-001": {
+    "url": "https://larc-paris.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "L'Arc Paris"
+  },
+  "PAR-002": {
+    "url": "https://raspoutine.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Raspoutine Paris"
+  },
+  "PAR-003": {
+    "url": "https://matignon-paris.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Matignon Paris"
+  },
+  "SIN-001": {
+    "url": "https://marqueesingapore.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Marquee Singapore"
+  },
+  "SIN-002": {
+    "url": "https://www.celavi.com/en/singapore/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "CÉ LA VI Singapore"
+  },
+  "SIN-003": {
+    "url": "https://www.tanjongbeachclub.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Tanjong Beach Club"
+  },
+  "LAX-001": {
+    "url": "https://hwoodgroup.com/portfolio/delilah/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Delilah Los Angeles"
+  },
+  "LAX-002": {
+    "url": "https://hwoodgroup.com/venues/poppy/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Poppy"
+  },
+  "LAX-003": {
+    "url": "https://hwoodgroup.com/venues/bootsy-bellows/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Bootsy Bellows"
+  },
+  "NYC-001": {
+    "url": "https://theboxnyc.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "The Box NYC"
+  },
+  "NYC-002": {
+    "url": "https://nebulanewyork.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Nebula"
+  },
+  "NYC-003": {
+    "url": "https://somewherenowherenyc.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Somewhere Nowhere NYC"
+  },
+  "ASP-001": {
+    "url": "https://www.aspensnowmass.com/visit/dining/aspen-highlands/cloud-nine-alpine-bistro",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Cloud Nine Alpine Bistro"
+  },
+  "ASP-002": {
+    "url": "https://thesnowlodge.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "The Snow Lodge"
+  },
+  "ASP-003": {
+    "url": "https://bellyupaspen.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Belly Up Aspen"
+  },
+  "CRV-001": {
+    "url": "https://www.lafoliedouce.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "La Folie Douce Méribel-Courchevel"
+  },
+  "CRV-002": {
+    "url": "https://bagatelle.com/venues/courchevel/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Bagatelle Courchevel"
+  },
+  "CRV-003": {
+    "url": "https://www.lescavesdecourchevel.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Les Caves de Courchevel"
+  },
+  "SBH-001": {
+    "url": "https://nikkibeach.com/saint-barth/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Nikki Beach Saint Barth"
+  },
+  "SBH-002": {
+    "url": "https://www.gypsea-stbarth.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Gyp Sea Beach Club"
+  },
+  "SBH-003": {
+    "url": "https://bagatelle.com/venues/st-barth/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Bagatelle St. Barth"
+  },
+  "PDE-001": {
+    "url": "https://www.lasusana.com/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "La Susana"
+  },
+  "PDE-002": {
+    "url": "https://mobydick.com.uy/",
+    "kind": "site",
+    "label": "Official site",
+    "name": "Moby Dick Pub"
+  },
+  "PDE-003": {
+    "url": "https://www.instagram.com/ovonightclub/",
+    "kind": "social",
+    "label": "Social",
+    "name": "OVO Nightclub"
+  }
+}
