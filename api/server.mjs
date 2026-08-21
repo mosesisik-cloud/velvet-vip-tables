@@ -58,9 +58,14 @@ function venueMatchesSeed(p, v, dests) {
   }
   const destsWant = (p.destinations || []).map((c) => String(c).toUpperCase());
   if (destsWant.includes(String(v?.destination_code || "").toUpperCase())) return true;
-  const region = String(dests[v?.destination_code]?.region || "");
+  const dest = dests[v?.destination_code] || {};
+  const region = String(dest.region || "");
+  const country = String(dest.country || v?.country || "");
   for (const r of p.regions || []) {
     if (region === r) return true;
+  }
+  for (const c of p.countries || []) {
+    if (country.toLowerCase() === String(c).toLowerCase()) return true;
   }
   return false;
 }
@@ -329,6 +334,7 @@ function isPromoter(user, venueId, db) {
 function isPromoterAnywhere(uid, db) {
   if (!uid) return false;
   if (isPromoter({ id: uid }, "", db)) return true;
+  if (db.users[uid]?.seed || isRosterPromoter(uid, db)) return true;
   for (const vid of Object.keys(db.promoters || {})) {
     if ((db.promoters[vid] || []).includes(uid)) return true;
   }
@@ -347,7 +353,7 @@ function allPromoterUids(db) {
     for (const id of list || []) if (id) set.add(String(id));
   }
   for (const uid of Object.keys(db.users || {})) {
-    if (isPromoter({ id: uid }, "", db)) set.add(uid);
+    if (isPromoter({ id: uid }, "", db) || db.users[uid]?.seed) set.add(uid);
   }
   return [...set];
 }
@@ -371,7 +377,7 @@ function publicPromoter(uid, db, venueId) {
   const operator = isPromoter({ id: uid }, "", db);
   if (venueId) {
     if (!claimed.includes(venueId)) return null;
-  } else if (!operator && !claimed.length) {
+  } else if (!operator && !claimed.length && !roster) {
     return null;
   }
   const d = dossier(uid, db) || {};

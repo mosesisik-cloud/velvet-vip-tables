@@ -20,6 +20,13 @@
       "legalName": "Vincenzo",
       "regions": ["Europe"],
       "scope": "Europa"
+    },
+    {
+      "id": "P-strebel",
+      "name": "Fredrik Strebel",
+      "legalName": "Fredrik Strebel",
+      "countries": ["Sweden"],
+      "scope": "Sverige"
     }
   ]
 }

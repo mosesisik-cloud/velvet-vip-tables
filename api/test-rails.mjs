@@ -343,13 +343,16 @@ async function runApi() {
     const jb = roster.find((p) => p.id === "P-jb");
     const thomas = roster.find((p) => p.id === "P-thomas");
     const vincenzo = roster.find((p) => p.id === "P-vincenzo");
+    const strebel = roster.find((p) => p.id === "P-strebel");
     if (!jb || jb.legalName !== "JB" || jb.idv !== "listed" || jb.card || jb.fields) {
       fail("seed-jb", JSON.stringify(jb).slice(0, 280));
     } else if (!thomas || thomas.legalName !== "Thomas" || thomas.idv !== "listed") {
       fail("seed-thomas", JSON.stringify(thomas).slice(0, 280));
     } else if (!vincenzo || vincenzo.legalName !== "Vincenzo" || vincenzo.idv !== "listed") {
       fail("seed-vincenzo", JSON.stringify(vincenzo).slice(0, 280));
-    } else ok("seed-roster", "JB + Thomas + Vincenzo listed, no passport/card");
+    } else if (!strebel || strebel.legalName !== "Fredrik Strebel" || strebel.scope !== "Sverige" || strebel.idv !== "listed") {
+      fail("seed-strebel", JSON.stringify(strebel).slice(0, 280));
+    } else ok("seed-roster", "JB + Thomas + Vincenzo + Strebel listed, no passport/card");
 
     const idsAt = (arr) => (arr || []).map((p) => p.id);
     const baoli = await req(base, "GET", "/promoters/CNS-002?userId=" + encodeURIComponent(host.id));
@@ -368,11 +371,11 @@ async function runApi() {
       fail("seed-bagatelle-tulum", jbTulum.join(","));
     } else if (!atDxb.includes("P-thomas") || atDxb.includes("P-vincenzo") || atDxb.includes("P-jb")) {
       fail("seed-dubai", atDxb.join(","));
-    } else if (!atIbz.includes("P-vincenzo") || atIbz.includes("P-jb") || atIbz.includes("P-thomas")) {
+    } else if (!atIbz.includes("P-vincenzo") || atIbz.includes("P-jb") || atIbz.includes("P-thomas") || atIbz.includes("P-strebel")) {
       fail("seed-ibiza", atIbz.join(","));
     } else if (!atMia.includes("P-jb") || atMia.includes("P-vincenzo")) {
       fail("seed-baoli-miami", atMia.join(","));
-    } else ok("seed-venues", "JB brand worldwide, Thomas Dubai, Vincenzo Europe");
+    } else ok("seed-venues", "JB brand worldwide, Thomas Dubai, Vincenzo Europe, Strebel Sweden");
 
     const got = await req(base, "GET", "/tables/TB-RAILS");
     const members = got.json.table?.members || [];
