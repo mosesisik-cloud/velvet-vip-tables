@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-57";
+const VERSION = "v4-real-58";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 

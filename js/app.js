@@ -3995,6 +3995,7 @@ async function renderVerify() {
     <div class="mrz-cam-wrap" id="mrz-cam-wrap" hidden>
       <video id="mrz-video" playsinline muted autoplay></video>
       <div class="mrz-guide" id="mrz-guide" aria-hidden="true"><span>${esc(t("verifyMrzGuide"))}</span></div>
+      <button type="button" class="mrz-shutter" id="idv-shutter" hidden aria-label="${esc(t("verifySnap"))}"></button>
       <button type="button" class="mrz-flip" id="idv-flip">${esc(t("verifyFlipCam"))}</button>
     </div>
     <p class="mrz-status" id="mrz-status" hidden></p>
@@ -4107,6 +4108,28 @@ async function renderVerify() {
   const camBtn = $("#idv-cam");
   let camFacing = "environment";
   let camMode = "pass";
+  let snapping = false;
+  const paintShutter = () => {
+    const shutter = $("#idv-shutter");
+    if (shutter) shutter.hidden = camMode !== "pass" || camBtn?.dataset.open !== "1";
+  };
+  const takePassShot = async () => {
+    if (snapping || camMode !== "pass" || camBtn?.dataset.open !== "1") return;
+    const video = $("#mrz-video");
+    if (!video || !video.videoWidth) return;
+    snapping = true;
+    const data = snapshotVideo(video, 2000, 0.9);
+    stopLiveness();
+    stopCamera();
+    const wrap = $("#mrz-cam-wrap");
+    if (wrap) wrap.hidden = true;
+    wrap?.classList.remove("selfie");
+    $("#idv-snap")?.classList.add("hidden");
+    paintShutter();
+    if (camBtn) { camBtn.dataset.open = ""; camBtn.textContent = t("verifyCam"); }
+    try { await readShot(data); }
+    finally { snapping = false; }
+  };
   const openCam = async (facing, { mode = camMode } = {}) => {
     const wrap = $("#mrz-cam-wrap");
     const video = $("#mrz-video");
@@ -4116,6 +4139,7 @@ async function renderVerify() {
     if (wrap) {
       wrap.hidden = false;
       wrap.classList.toggle("selfie", camMode === "selfie" || camFacing === "user");
+      wrap.scrollIntoView({ block: "center", behavior: "smooth" });
     }
     const guide = $("#mrz-guide");
     if (guide) {
@@ -4123,6 +4147,7 @@ async function renderVerify() {
       guide.innerHTML = `<span>${esc(txt)}</span>`;
     }
     if (camBtn) { camBtn.dataset.open = "1"; camBtn.textContent = t("verifyCamStop"); }
+    paintShutter();
   };
   $("#idv-flip")?.addEventListener("click", async () => {
     if (camBtn?.dataset.open !== "1") return;
@@ -4140,6 +4165,7 @@ async function renderVerify() {
         $("#idv-snap")?.classList.add("hidden");
         camBtn.dataset.open = "";
         camBtn.textContent = t("verifyCam");
+        paintShutter();
         return;
       }
       try {
@@ -4151,18 +4177,11 @@ async function renderVerify() {
       }
     };
   }
-  $("#idv-snap")?.addEventListener("click", async () => {
-    const video = $("#mrz-video");
-    if (!video || !video.videoWidth) return;
-    const data = snapshotVideo(video, 2000, 0.9);
-    stopLiveness();
-    stopCamera();
-    const wrap = $("#mrz-cam-wrap");
-    if (wrap) wrap.hidden = true;
-    wrap?.classList.remove("selfie");
-    $("#idv-snap")?.classList.add("hidden");
-    if (camBtn) { camBtn.dataset.open = ""; camBtn.textContent = t("verifyCam"); }
-    await readShot(data);
+  $("#idv-snap")?.addEventListener("click", () => { takePassShot(); });
+  $("#idv-shutter")?.addEventListener("click", (e) => { e.stopPropagation(); takePassShot(); });
+  $("#mrz-cam-wrap")?.addEventListener("click", (e) => {
+    if (e.target.closest(".mrz-flip, .mrz-shutter")) return;
+    takePassShot();
   });
   $("#idv-live")?.addEventListener("click", async () => {
     if (!passFace || !passFace.ok) {
@@ -4190,6 +4209,7 @@ async function renderVerify() {
       stopCamera();
       if (wrap) { wrap.hidden = true; wrap.classList.remove("selfie"); }
       if (camBtn) { camBtn.dataset.open = ""; camBtn.textContent = t("verifyCam"); }
+      paintShutter();
       if (!live.ok) {
         liveFace = null;
         faceMatch = null;
