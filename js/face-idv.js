@@ -86,10 +86,21 @@ function faceAreaRatio(det, w, h) {
   return (box.width * box.height) / (w * h);
 }
 
+const DETECT_TIMEOUT = Symbol("detect_timeout");
+let cpuFallback = false; // sätts om webgl-inferensen hänger — byt sker en gång per sidladdning
+
 async function detectOn(input, inputSize) {
   const fa = await loadFaceApi();
   const opts = new fa.TinyFaceDetectorOptions({ inputSize: inputSize || 320, scoreThreshold: 0.3 });
-  return fa.detectSingleFace(input, opts).withFaceLandmarks().withFaceDescriptor();
+  const run = () => fa.detectSingleFace(input, opts).withFaceLandmarks().withFaceDescriptor();
+  if (cpuFallback) return run();
+  // Watchdog: på vissa drivrutiner (SwiftShader, blocklistad GPU) hänger tfjs-webgl-
+  // inferensen för evigt utan fel. Utan timeout snurrar "Läser ansikte…" oändligt.
+  const raced = await Promise.race([run(), sleep(12000).then(() => DETECT_TIMEOUT)]);
+  if (raced !== DETECT_TIMEOUT) return raced;
+  cpuFallback = true;
+  try { if (fa.tf?.setBackend) { await fa.tf.setBackend("cpu"); await fa.tf.ready(); } } catch { /* kör vidare ändå */ }
+  return run();
 }
 
 export function descriptorDistance(a, b) {
