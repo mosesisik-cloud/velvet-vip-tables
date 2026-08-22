@@ -3956,8 +3956,8 @@ async function renderPayout() {
     <h1>${esc(t("paySetup"))}</h1>
     <p class="ob-sub" style="text-align:left">${esc(t("paySetupSub"))}</p>
     <form id="pay-form" class="pay-form">
-      <label>Admin-nyckel (VELVET_ADMIN_KEY på servern)<input name="adminKey" type="password" autocomplete="off" placeholder="Krävs för att spara"></label>
-      <label>Webhook-token (delad hemlighet för Revolut/PayPal-webhooks)<input name="webhookToken" type="password" autocomplete="off"></label>
+      <label>${esc(t("adminKey"))}<input name="adminKey" type="password" autocomplete="off" placeholder="${esc(t("adminKeyPh"))}"></label>
+      <label>${esc(t("webhookToken"))}<input name="webhookToken" type="password" autocomplete="off"></label>
       <label>Revolut IBAN<input name="revolutIban" autocomplete="off" placeholder="${esc(t("ibanPh"))}" value="${esc(cfg.account?.iban || "")}"></label>
       <label>BIC / SWIFT<input name="revolutBic" autocomplete="off" placeholder="${esc(t("bicPh"))}" value="${esc(cfg.account?.bic || "")}"></label>
       <label>${esc(t("payHolder"))}<input name="revolutName" value="${esc(cfg.account?.name || "")}" placeholder="${esc(t("holderPh"))}"></label>

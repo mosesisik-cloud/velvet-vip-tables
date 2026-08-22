@@ -188,7 +188,7 @@ async function runApi() {
   fs.writeFileSync(pay, "{}");
   const port = 18787;
   const child = spawn(process.execPath, [SERVER], {
-    env: { ...process.env, PORT: String(port), VELVET_DATA: data, VELVET_PAY: pay, VELVET_CRAWL: "0", VELVET_IDV: path.join(dir, "idv") },
+    env: { ...process.env, PORT: String(port), VELVET_DATA: data, VELVET_PAY: pay, VELVET_CRAWL: "0", VELVET_RATE: "0", VELVET_IDV: path.join(dir, "idv") },
     cwd: __dir,
     stdio: ["ignore", "pipe", "pipe"],
   });
@@ -541,7 +541,7 @@ async function runApi() {
 
     const sent = await req(base, "POST", "/pay/sent", {
       tableId: "TB-RAILS", user: host, amount: 80, method: "sepa",
-      reference: sepaOk.json.bank.reference,
+      reference: sepaOk.json.bank?.reference || "",
     });
     const pending = (sent.json.table?.members || []).find((m) => m.id === host.id);
     if (!sent.json.ok || !pending?.paidPending) fail("pay-sent", JSON.stringify(sent.json).slice(0, 240));
@@ -805,8 +805,15 @@ async function runApi() {
     } else ok("promoters-guest-sees", "verified paying guest sees verified promoter");
 
     const idvCard = await req(base, "GET", "/idv/" + encodeURIComponent(guest.id));
-    if (!idvCard.json.paying || idvCard.json.card?.last4 !== "4242") {
-      fail("card-idv-get", JSON.stringify(idvCard.json).slice(0, 220));
+    const idvLeak = JSON.stringify(idvCard.json);
+    if (idvCard.json.idv?.status !== "verified") {
+      fail("idv-status", JSON.stringify(idvCard.json).slice(0, 220));
+    } else if (idvCard.json.paying || idvCard.json.card || /4242|MOSES ISIK|AB1234567/.test(idvLeak)) {
+      fail("idv-no-leak", idvLeak.slice(0, 220));
+    } else ok("idv-no-leak", "GET /idv is status only");
+    const userPay = await req(base, "GET", "/users/" + encodeURIComponent(guest.id));
+    if (!userPay.json.user?.paying || userPay.json.user.card?.last4 !== "4242") {
+      fail("card-idv-get", JSON.stringify(userPay.json.user).slice(0, 220));
     } else ok("card-idv-get", "paying customer");
 
     const matchBlocked = await req(base, "POST", "/matches/IBZ-001", {

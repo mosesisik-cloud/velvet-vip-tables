@@ -1337,7 +1337,10 @@ function bankDetails(table, user, amount, currency) {
 // Vid flera instanser/byta till riktig databas: ersätt med Redis-baserad limit.
 const RATE = new Map(); // ip -> { n, reset }
 function rateLimited(req, res) {
-  const ip = String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "okänd").split(",")[0].trim();
+  if (String(process.env.VELVET_RATE || "1") === "0") return false;
+  const remote = String(req.socket.remoteAddress || "");
+  if (remote === "127.0.0.1" || remote === "::1" || remote.endsWith(":127.0.0.1")) return false;
+  const ip = String(req.headers["x-forwarded-for"] || remote || "okänd").split(",")[0].trim();
   const now = Date.now();
   let e = RATE.get(ip);
   if (!e || e.reset < now) { e = { n: 0, reset: now + 60_000 }; RATE.set(ip, e); }

@@ -674,6 +674,9 @@ const D = {
     footerMeta: "V4 · Concierge-förhandsversion · 30 destinationer · 120 handplockade ställen",
     navMain: "Huvudnavigation",
     metaDesc: "Skicka förfrågan om VIP-bord, cabanas och daybeds på världens främsta klubbar och beach clubs. VELVET-teamet tar den mot klubben — ingen automatisk reservation.",
+    adminKey: "Admin-nyckel (VELVET_ADMIN_KEY på servern)",
+    adminKeyPh: "Krävs för att spara",
+    webhookToken: "Webhook-token (delad hemlighet för Revolut/PayPal-webhooks)",
   },
   en: {
     skip: "Skip to main content",
@@ -1316,6 +1319,9 @@ const D = {
     footerMeta: "V4 · Concierge preview · 30 destinations · 120 hand-picked venues",
     navMain: "Main navigation",
     metaDesc: "Send a request for VIP tables, cabanas and daybeds at the world’s top clubs and beach clubs. The VELVET team takes it to the club — no automatic reservation.",
+    adminKey: "Admin key (VELVET_ADMIN_KEY on the server)",
+    adminKeyPh: "Required to save",
+    webhookToken: "Webhook token (shared secret for Revolut/PayPal webhooks)",
   },
   es: {
     skip: "Saltar al contenido",
@@ -1958,6 +1964,9 @@ const D = {
     footerMeta: "V4 · Vista previa de conserjería · 30 destinos · 120 locales seleccionados",
     navMain: "Navegación principal",
     metaDesc: "Envía una solicitud de mesas VIP, cabañas y daybeds en los mejores clubs y beach clubs. El equipo VELVET la lleva al club — no hay reserva automática.",
+    adminKey: "Clave de admin (VELVET_ADMIN_KEY en el servidor)",
+    adminKeyPh: "Necesaria para guardar",
+    webhookToken: "Token webhook (secreto compartido para Revolut/PayPal)",
   },
   fr: {
     skip: "Aller au contenu",
@@ -2600,6 +2609,9 @@ const D = {
     footerMeta: "V4 · Aperçu conciergerie · 30 destinations · 120 lieux choisis",
     navMain: "Navigation principale",
     metaDesc: "Envoyez une demande de tables VIP, cabanas et daybeds dans les meilleurs clubs. L’équipe VELVET la porte au club — pas de réservation automatique.",
+    adminKey: "Clé admin (VELVET_ADMIN_KEY sur le serveur)",
+    adminKeyPh: "Requise pour enregistrer",
+    webhookToken: "Jeton webhook (secret partagé pour Revolut/PayPal)",
   },
 };
 
