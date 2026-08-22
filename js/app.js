@@ -1,5 +1,5 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=80";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=81";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo } from "./passport-ocr.js";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload } from "./face-idv.js";
@@ -1005,6 +1005,20 @@ function cardBrandOf(num) {
 }
 function rememberAfterIdv(hash) {
   try { sessionStorage.setItem("velvet_after_idv", hash); } catch { /* private mode */ }
+}
+const PENDING_BRIDGE_KEY = "velvet_pending_bridge_v1";
+function savePendingBridge(rec) {
+  try { sessionStorage.setItem(PENDING_BRIDGE_KEY, JSON.stringify(rec)); } catch { /* private mode */ }
+}
+function loadPendingBridge(venueId) {
+  try {
+    const rec = JSON.parse(sessionStorage.getItem(PENDING_BRIDGE_KEY) || "null");
+    if (!rec || (venueId && rec.venueId !== venueId)) return null;
+    return rec;
+  } catch { return null; }
+}
+function clearPendingBridge() {
+  try { sessionStorage.removeItem(PENDING_BRIDGE_KEY); } catch { /* private mode */ }
 }
 function consumeAfterIdv() {
   try {
@@ -5658,14 +5672,25 @@ async function renderBookSite(id) {
   const openLabel = engineName ? t("bookOnSiteOpenEngine").replace("{engine}", engineName) : t("bookOnSiteOpen");
   const young = venueTooYoung(v);
   const tooYoung = live?.error === "too_young" || !!young;
-  const needLock = !me || live?.error === "idv_required" || live?.error === "card_required" || tooYoung || !isPayingMember();
-  const needCard = live?.error === "card_required" || (me && isIdvOk() && !isCardOk());
+  const needVerify = !tooYoung && (!me || live?.error === "idv_required" || live?.error === "card_required" || !isPayingMember());
   setTitle(`${v.name} · ${t("bridgeTitle")}`);
   const mine = live?.bridges || [];
   const nights = (adapter.inventory && Array.isArray(adapter.inventory.nights) ? adapter.inventory.nights : eventsFor(v)).slice(0, 24);
   const q = new URLSearchParams((location.hash.split("?")[1] || ""));
-  const preDate = /^\d{4}-\d{2}-\d{2}$/.test(q.get("date") || "") ? q.get("date") : (nights.find((n) => n.date)?.date || todayISO());
-  const preNight = q.get("night") || "";
+  const pending = loadPendingBridge(v.venue_id);
+  const preDate = /^\d{4}-\d{2}-\d{2}$/.test(q.get("date") || pending?.date || "")
+    ? (q.get("date") || pending.date)
+    : (nights.find((n) => n.date)?.date || todayISO());
+  const preNight = q.get("night") || pending?.note || pending?.eventTitle || "";
+  if (q.get("go") === "1" && pending && me && !tooYoung && !isPayingMember()) {
+    const p = new URLSearchParams();
+    if (preDate) p.set("date", preDate);
+    if (preNight) p.set("night", preNight);
+    p.set("go", "1");
+    rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}?${p.toString()}`);
+    location.hash = isIdvOk() ? "#/card" : "#/verify";
+    return;
+  }
   if (apiBase()) {
     apiJSON("/events/refresh", {
       method: "POST",
@@ -5685,18 +5710,16 @@ async function renderBookSite(id) {
         <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(t("bridgeSub").replace("{name}", v.name).replace("{engine}", enginePhrase))}</p>
         ${adapter.vipHow ? `<p class="events-meta">${esc(t("bridgeReadLive"))}: ${esc(adapter.vipHow)}</p>` : `<p class="events-meta">${esc(t("bridgeReadLive"))}</p>`}
         <div class="book-desk-card">
-        ${needLock ? (
-          tooYoung
-            ? `<p class="detail-cta-note">${esc(tooYoungText(live?.error === "too_young" ? live : young, v))}</p>`
-            : `${promoterLockHTML(needCard ? "card" : "idv")}
-          <p class="detail-cta-note">${esc(t("bridgeNeed"))}</p>`
-        ) : `
+        ${tooYoung ? `
+          <p class="detail-cta-note">${esc(tooYoungText(live?.error === "too_young" ? live : young, v))}</p>
+        ` : `
+        ${needVerify ? `<p class="events-meta">${esc(t("bridgeNeed"))}</p>` : ""}
         <div class="bridge-desk" id="bridge-desk">
           <label>${esc(t("bridgeDate"))}
             <input type="date" id="br-date" min="${todayISO()}" value="${esc(preDate)}">
           </label>
           <label>${esc(t("bridgeParty"))}
-            <input type="number" id="br-party" min="1" max="20" value="4" inputmode="numeric">
+            <input type="number" id="br-party" min="1" max="20" value="${esc(String(pending?.party || 4))}" inputmode="numeric">
           </label>
           <label>${esc(t("matchNote"))}
             <input type="text" id="br-note" maxlength="240" placeholder="${esc(t("bridgeNotePh"))}" value="${esc(preNight)}" autocomplete="off">
@@ -5705,11 +5728,11 @@ async function renderBookSite(id) {
           <label>${esc(t("menuTitle"))}
             <select id="br-menu">
               <option value="">${esc(t("menuPickNone"))}</option>
-              ${adapter.inventory.menu.items.slice(0, 40).map((it) => `<option value="${esc(it.name)}">${esc(it.name)}${it.price ? ` · ${esc(it.price)}` : ""}</option>`).join("")}
+              ${adapter.inventory.menu.items.slice(0, 40).map((it) => `<option value="${esc(it.name)}"${pending?.menuItem === it.name ? " selected" : ""}>${esc(it.name)}${it.price ? ` · ${esc(it.price)}` : ""}</option>`).join("")}
             </select>
           </label>` : ""}
           <label>${esc(t("bridgeAmount"))}
-            <input type="number" id="br-amount" min="0" step="1" inputmode="decimal" placeholder="EUR">
+            <input type="number" id="br-amount" min="0" step="1" inputmode="decimal" placeholder="EUR" value="${pending?.amount ? esc(String(pending.amount)) : ""}">
           </label>
           <p class="events-meta">${esc(isPayingMember() ? t("guestVerified") : t("bridgeNeed"))}${adapter.clubPay ? ` · ${esc(t("clubHasPay"))}` : ""}</p>
           <button type="button" class="btn btn-gold" id="br-make" style="width:100%">${esc(t("bridgeCta").replace("{name}", v.name))}</button>
@@ -5735,9 +5758,15 @@ async function renderBookSite(id) {
       </div>
     </div>
   </section>`;
-  $("#bs-velvet")?.addEventListener("click", () => openBookingModal(v));
-  $("#ch-verify")?.addEventListener("click", () => rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}`));
-  $("#ch-card")?.addEventListener("click", () => rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}`));
+  $("#bs-velvet")?.addEventListener("click", () => {
+    const desk = $("#bridge-desk");
+    if (desk) {
+      desk.scrollIntoView({ behavior: "smooth", block: "center" });
+      ($("#br-date") || $("#br-make"))?.focus();
+      return;
+    }
+    openBookingModal(v);
+  });
   const paintPacket = (bridge) => {
     const el = $("#bridge-out");
     if (!el || !bridge) return;
@@ -5750,7 +5779,7 @@ async function renderBookSite(id) {
       <p class="idv-badge ok">${esc(t("bridgeStatus"))}</p>
       <pre class="bridge-pre">${esc(bridge.packet || "")}</pre>
       <div class="book-site-actions" style="margin-top:12px">
-        ${(bridge.handoffUrl || adapter.widgetUrl || adapter.officialUrl || b.url) ? `<a class="btn btn-gold" href="${esc(bridge.handoffUrl || adapter.widgetUrl || adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bridgeOpen"))} ↗</a>` : ""}
+        ${(bridge.handoffUrl || adapter.widgetUrl || adapter.officialUrl || b.url) ? `<a class="btn btn-gold" id="br-open" href="${esc(bridge.handoffUrl || adapter.widgetUrl || adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bridgeOpen"))} ↗</a>` : ""}
         <button type="button" class="btn btn-ghost" id="br-copy">${esc(t("bridgeCopy"))}</button>
         ${mail ? `<a class="btn btn-ghost" href="${esc(mail)}">${esc(t("bridgeClubMail"))}</a>` : ""}
         ${bridge.payUrl || adapter.payUrl ? `<a class="btn btn-ghost" href="${esc(bridge.payUrl || adapter.payUrl)}" target="_blank" rel="noopener">${esc(t("clubHasPay"))} ↗</a>` : ""}
@@ -5760,6 +5789,7 @@ async function renderBookSite(id) {
       const ok = await copyText(bridge.packet || "");
       showToast(ok ? t("bridgeCopied") : t("bridgeCopy"));
     });
+    $("#br-open")?.addEventListener("click", () => { copyText(bridge.packet || ""); });
     $("#br-pay")?.addEventListener("click", async () => {
       const amount = Number(bridge.payment?.amount || $("#br-amount")?.value || 0);
       const pay = await apiJSON("/pay/intent", {
@@ -5781,9 +5811,9 @@ async function renderBookSite(id) {
       showToast(pay?.message || t("cardNeed"));
     });
   };
-  if (!needLock && mine[0]) paintPacket(mine[0]);
-  let pickedUrl = "";
-  let pickedTitle = preNight;
+  if (mine[0]) paintPacket(mine[0]);
+  let pickedUrl = pending?.eventUrl || "";
+  let pickedTitle = pending?.eventTitle || preNight;
   document.querySelectorAll(".bridge-night").forEach((btn) => {
     btn.addEventListener("click", () => {
       document.querySelectorAll(".bridge-night").forEach((x) => x.classList.remove("on"));
@@ -5798,7 +5828,42 @@ async function renderBookSite(id) {
     const hit = [...document.querySelectorAll(".bridge-night")].find((x) => x.dataset.title === preNight);
     if (hit) { pickedUrl = hit.dataset.url || ""; pickedTitle = hit.dataset.title || ""; }
   }
+  const returnHash = () => {
+    const date = $("#br-date")?.value || preDate || "";
+    const night = pickedTitle || ($("#br-note")?.value || "").trim();
+    const p = new URLSearchParams();
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) p.set("date", date);
+    if (night) p.set("night", night);
+    p.set("go", "1");
+    return `#/book-site/${encodeURIComponent(v.venue_id)}?${p.toString()}`;
+  };
+  const stashPending = () => {
+    savePendingBridge({
+      venueId: v.venue_id,
+      date: $("#br-date")?.value || "",
+      party: Number($("#br-party")?.value || 4),
+      note: ($("#br-note")?.value || "").trim(),
+      package: adapter.label || "",
+      menuItem: ($("#br-menu")?.value || "").trim(),
+      eventTitle: pickedTitle || ($("#br-note")?.value || "").trim(),
+      eventUrl: pickedUrl,
+      amount: Number($("#br-amount")?.value || 0),
+    });
+  };
+  const gateToMember = () => {
+    stashPending();
+    rememberAfterIdv(returnHash());
+    if (!loadUser()) {
+      openOnboarding({ dismissable: true, phase: "auth" });
+      return true;
+    }
+    if (!isIdvOk()) { location.hash = "#/verify"; return true; }
+    if (!isCardOk()) { location.hash = "#/card"; return true; }
+    return false;
+  };
   $("#br-make")?.addEventListener("click", async () => {
+    if (tooYoung) { showToast(tooYoungText(live?.error === "too_young" ? live : young, v)); return; }
+    if (gateToMember()) return;
     const btn = $("#br-make");
     if (btn) btn.disabled = true;
     const r = await apiJSON("/book/bridge", {
@@ -5818,11 +5883,12 @@ async function renderBookSite(id) {
       }),
     });
     if (btn) btn.disabled = false;
-    if (r?.error === "idv_required") { rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}`); location.hash = "#/verify"; return; }
-    if (r?.error === "card_required") { rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}`); location.hash = "#/card"; return; }
+    if (r?.error === "idv_required") { stashPending(); rememberAfterIdv(returnHash()); location.hash = "#/verify"; return; }
+    if (r?.error === "card_required") { stashPending(); rememberAfterIdv(returnHash()); location.hash = "#/card"; return; }
     if (r?.error === "too_young") { showToast(tooYoungText(r, v)); return; }
     if (r?.error === "date") { showToast(t("bridgeDate")); return; }
     if (r?.bridge) {
+      clearPendingBridge();
       paintPacket(r.bridge);
       const amt = Number($("#br-amount")?.value || r.bridge.payment?.amount || 0);
       if (r.payReady && amt > 0) {
@@ -5841,6 +5907,9 @@ async function renderBookSite(id) {
       }
     }
   });
+  if (pending && isPayingMember() && !tooYoung && q.get("go") === "1") {
+    requestAnimationFrame(() => $("#br-make")?.click());
+  }
 }
 
 // ---------- Router ----------
@@ -6045,7 +6114,7 @@ async function init() {
     // Kommande events: statisk JSON som fallback, sedan live API (daglig Firecrawl)
     await loadVenueEvents();
     try {
-      const rb = await fetch("data/booking-urls.json");
+      const rb = await fetch("data/booking-urls.json", { cache: "no-store" });
       if (rb.ok) BOOKING_URLS = await rb.json() || {};
     } catch (_) { BOOKING_URLS = {}; }
     try {
@@ -6170,7 +6239,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=80", { updateViaCache: "none" })
+      .register("sw.js?v=81", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
