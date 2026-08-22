@@ -4,7 +4,7 @@
   "description": "Skicka förfrågan om VIP-bord, cabanas och daybeds på världens främsta klubbar och beach clubs. VELVET-teamet tar den mot klubben — ingen automatisk reservation.",
   "lang": "sv",
   "dir": "ltr",
-  "start_url": "./index.html?v=75#/",
+  "start_url": "./index.html?v=76#/",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",

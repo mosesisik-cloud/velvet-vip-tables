@@ -1,5 +1,5 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=75";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=76";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo } from "./passport-ocr.js";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload } from "./face-idv.js";
@@ -1329,8 +1329,17 @@ function mailtoFor(b) {
   return `mailto:${CONCIERGE_MAIL}?subject=${subject}&body=${body}`;
 }
 
-function setTitle(page) {
-  document.title = page ? `${page} · VELVET` : `VELVET — ${t("tagline")}`;
+function setTitle(page, description) {
+  const title = page ? `${page} · VELVET` : `VELVET — ${t("tagline")}`;
+  document.title = title;
+  const desc = description || t("metaDesc") || "";
+  const set = (sel, attr, val) => {
+    const el = document.querySelector(sel);
+    if (el && val) el.setAttribute(attr, val);
+  };
+  set('meta[name="description"]', "content", desc);
+  set('meta[property="og:title"]', "content", title);
+  set('meta[property="og:description"]', "content", desc);
 }
 
 // ---------- Dela bokning (base64-länk, ingen backend) ----------
@@ -5975,7 +5984,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=75", { updateViaCache: "none" })
+      .register("sw.js?v=76", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

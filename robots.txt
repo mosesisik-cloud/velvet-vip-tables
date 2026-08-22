@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /ios-fix.html
+Disallow: /velvet-ny
+
+Sitemap: https://b2b.bakemyday.se/velvet/sitemap.xml

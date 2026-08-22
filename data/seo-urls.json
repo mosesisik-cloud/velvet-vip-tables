@@ -1,0 +1,877 @@
+{
+  "base": "https://b2b.bakemyday.se/velvet",
+  "destinations": [
+    {
+      "code": "IBZ",
+      "slug": "ibiza",
+      "url": "https://b2b.bakemyday.se/velvet/d/ibiza/"
+    },
+    {
+      "code": "MYK",
+      "slug": "mykonos",
+      "url": "https://b2b.bakemyday.se/velvet/d/mykonos/"
+    },
+    {
+      "code": "DXB",
+      "slug": "dubai",
+      "url": "https://b2b.bakemyday.se/velvet/d/dubai/"
+    },
+    {
+      "code": "MRB",
+      "slug": "marbella",
+      "url": "https://b2b.bakemyday.se/velvet/d/marbella/"
+    },
+    {
+      "code": "STT",
+      "slug": "saint-tropez",
+      "url": "https://b2b.bakemyday.se/velvet/d/saint-tropez/"
+    },
+    {
+      "code": "MCO",
+      "slug": "monaco",
+      "url": "https://b2b.bakemyday.se/velvet/d/monaco/"
+    },
+    {
+      "code": "CNS",
+      "slug": "cannes",
+      "url": "https://b2b.bakemyday.se/velvet/d/cannes/"
+    },
+    {
+      "code": "BDR",
+      "slug": "bodrum",
+      "url": "https://b2b.bakemyday.se/velvet/d/bodrum/"
+    },
+    {
+      "code": "HKT",
+      "slug": "phuket",
+      "url": "https://b2b.bakemyday.se/velvet/d/phuket/"
+    },
+    {
+      "code": "BKK",
+      "slug": "bangkok",
+      "url": "https://b2b.bakemyday.se/velvet/d/bangkok/"
+    },
+    {
+      "code": "BAL",
+      "slug": "bali",
+      "url": "https://b2b.bakemyday.se/velvet/d/bali/"
+    },
+    {
+      "code": "MIA",
+      "slug": "miami",
+      "url": "https://b2b.bakemyday.se/velvet/d/miami/"
+    },
+    {
+      "code": "LAS",
+      "slug": "las-vegas",
+      "url": "https://b2b.bakemyday.se/velvet/d/las-vegas/"
+    },
+    {
+      "code": "TUL",
+      "slug": "tulum",
+      "url": "https://b2b.bakemyday.se/velvet/d/tulum/"
+    },
+    {
+      "code": "BCN",
+      "slug": "barcelona",
+      "url": "https://b2b.bakemyday.se/velvet/d/barcelona/"
+    },
+    {
+      "code": "CER",
+      "slug": "porto-cervo",
+      "url": "https://b2b.bakemyday.se/velvet/d/porto-cervo/"
+    },
+    {
+      "code": "HVA",
+      "slug": "hvar",
+      "url": "https://b2b.bakemyday.se/velvet/d/hvar/"
+    },
+    {
+      "code": "ATH",
+      "slug": "athens-riviera",
+      "url": "https://b2b.bakemyday.se/velvet/d/athens-riviera/"
+    },
+    {
+      "code": "IST",
+      "slug": "istanbul",
+      "url": "https://b2b.bakemyday.se/velvet/d/istanbul/"
+    },
+    {
+      "code": "CAP",
+      "slug": "capri",
+      "url": "https://b2b.bakemyday.se/velvet/d/capri/"
+    },
+    {
+      "code": "AMF",
+      "slug": "amalfi-coast",
+      "url": "https://b2b.bakemyday.se/velvet/d/amalfi-coast/"
+    },
+    {
+      "code": "LON",
+      "slug": "london",
+      "url": "https://b2b.bakemyday.se/velvet/d/london/"
+    },
+    {
+      "code": "PAR",
+      "slug": "paris",
+      "url": "https://b2b.bakemyday.se/velvet/d/paris/"
+    },
+    {
+      "code": "SIN",
+      "slug": "singapore",
+      "url": "https://b2b.bakemyday.se/velvet/d/singapore/"
+    },
+    {
+      "code": "LAX",
+      "slug": "los-angeles",
+      "url": "https://b2b.bakemyday.se/velvet/d/los-angeles/"
+    },
+    {
+      "code": "NYC",
+      "slug": "new-york",
+      "url": "https://b2b.bakemyday.se/velvet/d/new-york/"
+    },
+    {
+      "code": "ASP",
+      "slug": "aspen",
+      "url": "https://b2b.bakemyday.se/velvet/d/aspen/"
+    },
+    {
+      "code": "CRV",
+      "slug": "courchevel",
+      "url": "https://b2b.bakemyday.se/velvet/d/courchevel/"
+    },
+    {
+      "code": "SBH",
+      "slug": "st-barts",
+      "url": "https://b2b.bakemyday.se/velvet/d/st-barts/"
+    },
+    {
+      "code": "PDE",
+      "slug": "punta-del-este",
+      "url": "https://b2b.bakemyday.se/velvet/d/punta-del-este/"
+    }
+  ],
+  "venues": [
+    {
+      "id": "IBZ-001",
+      "slug": "hi-ibiza",
+      "dest": "ibiza",
+      "url": "https://b2b.bakemyday.se/velvet/d/ibiza/hi-ibiza/"
+    },
+    {
+      "id": "IBZ-002",
+      "slug": "ushuaia-ibiza",
+      "dest": "ibiza",
+      "url": "https://b2b.bakemyday.se/velvet/d/ibiza/ushuaia-ibiza/"
+    },
+    {
+      "id": "IBZ-003",
+      "slug": "unvrs",
+      "dest": "ibiza",
+      "url": "https://b2b.bakemyday.se/velvet/d/ibiza/unvrs/"
+    },
+    {
+      "id": "IBZ-004",
+      "slug": "pacha-ibiza",
+      "dest": "ibiza",
+      "url": "https://b2b.bakemyday.se/velvet/d/ibiza/pacha-ibiza/"
+    },
+    {
+      "id": "IBZ-005",
+      "slug": "o-beach-ibiza",
+      "dest": "ibiza",
+      "url": "https://b2b.bakemyday.se/velvet/d/ibiza/o-beach-ibiza/"
+    },
+    {
+      "id": "MYK-001",
+      "slug": "scorpios-mykonos",
+      "dest": "mykonos",
+      "url": "https://b2b.bakemyday.se/velvet/d/mykonos/scorpios-mykonos/"
+    },
+    {
+      "id": "MYK-002",
+      "slug": "nammos-mykonos",
+      "dest": "mykonos",
+      "url": "https://b2b.bakemyday.se/velvet/d/mykonos/nammos-mykonos/"
+    },
+    {
+      "id": "MYK-003",
+      "slug": "santanna-mykonos",
+      "dest": "mykonos",
+      "url": "https://b2b.bakemyday.se/velvet/d/mykonos/santanna-mykonos/"
+    },
+    {
+      "id": "MYK-004",
+      "slug": "cavo-paradiso",
+      "dest": "mykonos",
+      "url": "https://b2b.bakemyday.se/velvet/d/mykonos/cavo-paradiso/"
+    },
+    {
+      "id": "MYK-005",
+      "slug": "alemagou",
+      "dest": "mykonos",
+      "url": "https://b2b.bakemyday.se/velvet/d/mykonos/alemagou/"
+    },
+    {
+      "id": "DXB-001",
+      "slug": "nikki-beach-dubai",
+      "dest": "dubai",
+      "url": "https://b2b.bakemyday.se/velvet/d/dubai/nikki-beach-dubai/"
+    },
+    {
+      "id": "DXB-002",
+      "slug": "o-beach-dubai",
+      "dest": "dubai",
+      "url": "https://b2b.bakemyday.se/velvet/d/dubai/o-beach-dubai/"
+    },
+    {
+      "id": "DXB-003",
+      "slug": "bla-bla-dubai",
+      "dest": "dubai",
+      "url": "https://b2b.bakemyday.se/velvet/d/dubai/bla-bla-dubai/"
+    },
+    {
+      "id": "DXB-004",
+      "slug": "zero-gravity",
+      "dest": "dubai",
+      "url": "https://b2b.bakemyday.se/velvet/d/dubai/zero-gravity/"
+    },
+    {
+      "id": "DXB-005",
+      "slug": "surf-club-dubai",
+      "dest": "dubai",
+      "url": "https://b2b.bakemyday.se/velvet/d/dubai/surf-club-dubai/"
+    },
+    {
+      "id": "MRB-001",
+      "slug": "nikki-beach-marbella",
+      "dest": "marbella",
+      "url": "https://b2b.bakemyday.se/velvet/d/marbella/nikki-beach-marbella/"
+    },
+    {
+      "id": "MRB-002",
+      "slug": "ocean-club-marbella",
+      "dest": "marbella",
+      "url": "https://b2b.bakemyday.se/velvet/d/marbella/ocean-club-marbella/"
+    },
+    {
+      "id": "MRB-003",
+      "slug": "momento-marbella",
+      "dest": "marbella",
+      "url": "https://b2b.bakemyday.se/velvet/d/marbella/momento-marbella/"
+    },
+    {
+      "id": "MRB-004",
+      "slug": "olivia-valere",
+      "dest": "marbella",
+      "url": "https://b2b.bakemyday.se/velvet/d/marbella/olivia-valere/"
+    },
+    {
+      "id": "MRB-005",
+      "slug": "mamzel-marbella",
+      "dest": "marbella",
+      "url": "https://b2b.bakemyday.se/velvet/d/marbella/mamzel-marbella/"
+    },
+    {
+      "id": "STT-001",
+      "slug": "nikki-beach-saint-tropez",
+      "dest": "saint-tropez",
+      "url": "https://b2b.bakemyday.se/velvet/d/saint-tropez/nikki-beach-saint-tropez/"
+    },
+    {
+      "id": "STT-002",
+      "slug": "club-55",
+      "dest": "saint-tropez",
+      "url": "https://b2b.bakemyday.se/velvet/d/saint-tropez/club-55/"
+    },
+    {
+      "id": "STT-003",
+      "slug": "gigi-ramatuelle",
+      "dest": "saint-tropez",
+      "url": "https://b2b.bakemyday.se/velvet/d/saint-tropez/gigi-ramatuelle/"
+    },
+    {
+      "id": "STT-004",
+      "slug": "verde-beach",
+      "dest": "saint-tropez",
+      "url": "https://b2b.bakemyday.se/velvet/d/saint-tropez/verde-beach/"
+    },
+    {
+      "id": "STT-005",
+      "slug": "shellona-saint-tropez",
+      "dest": "saint-tropez",
+      "url": "https://b2b.bakemyday.se/velvet/d/saint-tropez/shellona-saint-tropez/"
+    },
+    {
+      "id": "MCO-001",
+      "slug": "jimmy-z-monte-carlo",
+      "dest": "monaco",
+      "url": "https://b2b.bakemyday.se/velvet/d/monaco/jimmy-z-monte-carlo/"
+    },
+    {
+      "id": "MCO-002",
+      "slug": "twiga-monte-carlo",
+      "dest": "monaco",
+      "url": "https://b2b.bakemyday.se/velvet/d/monaco/twiga-monte-carlo/"
+    },
+    {
+      "id": "MCO-003",
+      "slug": "la-rascasse",
+      "dest": "monaco",
+      "url": "https://b2b.bakemyday.se/velvet/d/monaco/la-rascasse/"
+    },
+    {
+      "id": "MCO-004",
+      "slug": "amazonico-monte-carlo",
+      "dest": "monaco",
+      "url": "https://b2b.bakemyday.se/velvet/d/monaco/amazonico-monte-carlo/"
+    },
+    {
+      "id": "MCO-005",
+      "slug": "nikki-beach-monte-carlo",
+      "dest": "monaco",
+      "url": "https://b2b.bakemyday.se/velvet/d/monaco/nikki-beach-monte-carlo/"
+    },
+    {
+      "id": "CNS-001",
+      "slug": "la-mome-plage",
+      "dest": "cannes",
+      "url": "https://b2b.bakemyday.se/velvet/d/cannes/la-mome-plage/"
+    },
+    {
+      "id": "CNS-002",
+      "slug": "baoli-cannes",
+      "dest": "cannes",
+      "url": "https://b2b.bakemyday.se/velvet/d/cannes/baoli-cannes/"
+    },
+    {
+      "id": "CNS-003",
+      "slug": "medusa-cannes",
+      "dest": "cannes",
+      "url": "https://b2b.bakemyday.se/velvet/d/cannes/medusa-cannes/"
+    },
+    {
+      "id": "CNS-004",
+      "slug": "carlton-beach-club",
+      "dest": "cannes",
+      "url": "https://b2b.bakemyday.se/velvet/d/cannes/carlton-beach-club/"
+    },
+    {
+      "id": "CNS-005",
+      "slug": "la-guerite-cannes",
+      "dest": "cannes",
+      "url": "https://b2b.bakemyday.se/velvet/d/cannes/la-guerite-cannes/"
+    },
+    {
+      "id": "BDR-001",
+      "slug": "scorpios-bodrum",
+      "dest": "bodrum",
+      "url": "https://b2b.bakemyday.se/velvet/d/bodrum/scorpios-bodrum/"
+    },
+    {
+      "id": "BDR-002",
+      "slug": "xuma-village",
+      "dest": "bodrum",
+      "url": "https://b2b.bakemyday.se/velvet/d/bodrum/xuma-village/"
+    },
+    {
+      "id": "BDR-003",
+      "slug": "lucca-by-the-sea",
+      "dest": "bodrum",
+      "url": "https://b2b.bakemyday.se/velvet/d/bodrum/lucca-by-the-sea/"
+    },
+    {
+      "id": "BDR-004",
+      "slug": "macak-z-beach",
+      "dest": "bodrum",
+      "url": "https://b2b.bakemyday.se/velvet/d/bodrum/macak-z-beach/"
+    },
+    {
+      "id": "BDR-005",
+      "slug": "the-bodrum-edition-beach-club",
+      "dest": "bodrum",
+      "url": "https://b2b.bakemyday.se/velvet/d/bodrum/the-bodrum-edition-beach-club/"
+    },
+    {
+      "id": "HKT-001",
+      "slug": "cafe-del-mar-phuket",
+      "dest": "phuket",
+      "url": "https://b2b.bakemyday.se/velvet/d/phuket/cafe-del-mar-phuket/"
+    },
+    {
+      "id": "HKT-002",
+      "slug": "yona-beach-club",
+      "dest": "phuket",
+      "url": "https://b2b.bakemyday.se/velvet/d/phuket/yona-beach-club/"
+    },
+    {
+      "id": "HKT-003",
+      "slug": "catch-beach-club",
+      "dest": "phuket",
+      "url": "https://b2b.bakemyday.se/velvet/d/phuket/catch-beach-club/"
+    },
+    {
+      "id": "HKT-004",
+      "slug": "carpe-diem-beach-club",
+      "dest": "phuket",
+      "url": "https://b2b.bakemyday.se/velvet/d/phuket/carpe-diem-beach-club/"
+    },
+    {
+      "id": "HKT-005",
+      "slug": "illuzion-phuket",
+      "dest": "phuket",
+      "url": "https://b2b.bakemyday.se/velvet/d/phuket/illuzion-phuket/"
+    },
+    {
+      "id": "BKK-001",
+      "slug": "onyx-bangkok",
+      "dest": "bangkok",
+      "url": "https://b2b.bakemyday.se/velvet/d/bangkok/onyx-bangkok/"
+    },
+    {
+      "id": "BKK-002",
+      "slug": "sing-sing-theater",
+      "dest": "bangkok",
+      "url": "https://b2b.bakemyday.se/velvet/d/bangkok/sing-sing-theater/"
+    },
+    {
+      "id": "BKK-003",
+      "slug": "tichuca-rooftop-bar",
+      "dest": "bangkok",
+      "url": "https://b2b.bakemyday.se/velvet/d/bangkok/tichuca-rooftop-bar/"
+    },
+    {
+      "id": "BKK-004",
+      "slug": "sky-bar-at-lebua",
+      "dest": "bangkok",
+      "url": "https://b2b.bakemyday.se/velvet/d/bangkok/sky-bar-at-lebua/"
+    },
+    {
+      "id": "BKK-005",
+      "slug": "pastel-bangkok",
+      "dest": "bangkok",
+      "url": "https://b2b.bakemyday.se/velvet/d/bangkok/pastel-bangkok/"
+    },
+    {
+      "id": "BAL-001",
+      "slug": "finns-beach-club",
+      "dest": "bali",
+      "url": "https://b2b.bakemyday.se/velvet/d/bali/finns-beach-club/"
+    },
+    {
+      "id": "BAL-002",
+      "slug": "savaya-bali",
+      "dest": "bali",
+      "url": "https://b2b.bakemyday.se/velvet/d/bali/savaya-bali/"
+    },
+    {
+      "id": "BAL-003",
+      "slug": "potato-head",
+      "dest": "bali",
+      "url": "https://b2b.bakemyday.se/velvet/d/bali/potato-head/"
+    },
+    {
+      "id": "BAL-004",
+      "slug": "atlas-beach-club",
+      "dest": "bali",
+      "url": "https://b2b.bakemyday.se/velvet/d/bali/atlas-beach-club/"
+    },
+    {
+      "id": "BAL-005",
+      "slug": "ku-de-ta",
+      "dest": "bali",
+      "url": "https://b2b.bakemyday.se/velvet/d/bali/ku-de-ta/"
+    },
+    {
+      "id": "MIA-001",
+      "slug": "liv-miami",
+      "dest": "miami",
+      "url": "https://b2b.bakemyday.se/velvet/d/miami/liv-miami/"
+    },
+    {
+      "id": "MIA-002",
+      "slug": "e11even-miami",
+      "dest": "miami",
+      "url": "https://b2b.bakemyday.se/velvet/d/miami/e11even-miami/"
+    },
+    {
+      "id": "MIA-003",
+      "slug": "mila-miami",
+      "dest": "miami",
+      "url": "https://b2b.bakemyday.se/velvet/d/miami/mila-miami/"
+    },
+    {
+      "id": "MIA-004",
+      "slug": "joia-beach",
+      "dest": "miami",
+      "url": "https://b2b.bakemyday.se/velvet/d/miami/joia-beach/"
+    },
+    {
+      "id": "MIA-005",
+      "slug": "baoli-miami",
+      "dest": "miami",
+      "url": "https://b2b.bakemyday.se/velvet/d/miami/baoli-miami/"
+    },
+    {
+      "id": "LAS-001",
+      "slug": "xs-nightclub",
+      "dest": "las-vegas",
+      "url": "https://b2b.bakemyday.se/velvet/d/las-vegas/xs-nightclub/"
+    },
+    {
+      "id": "LAS-002",
+      "slug": "omnia-nightclub",
+      "dest": "las-vegas",
+      "url": "https://b2b.bakemyday.se/velvet/d/las-vegas/omnia-nightclub/"
+    },
+    {
+      "id": "LAS-003",
+      "slug": "marquee-nightclub-dayclub",
+      "dest": "las-vegas",
+      "url": "https://b2b.bakemyday.se/velvet/d/las-vegas/marquee-nightclub-dayclub/"
+    },
+    {
+      "id": "LAS-004",
+      "slug": "encore-beach-club",
+      "dest": "las-vegas",
+      "url": "https://b2b.bakemyday.se/velvet/d/las-vegas/encore-beach-club/"
+    },
+    {
+      "id": "LAS-005",
+      "slug": "liv-las-vegas",
+      "dest": "las-vegas",
+      "url": "https://b2b.bakemyday.se/velvet/d/las-vegas/liv-las-vegas/"
+    },
+    {
+      "id": "TUL-001",
+      "slug": "papaya-playa-project",
+      "dest": "tulum",
+      "url": "https://b2b.bakemyday.se/velvet/d/tulum/papaya-playa-project/"
+    },
+    {
+      "id": "TUL-002",
+      "slug": "vagalume-tulum",
+      "dest": "tulum",
+      "url": "https://b2b.bakemyday.se/velvet/d/tulum/vagalume-tulum/"
+    },
+    {
+      "id": "TUL-003",
+      "slug": "gitano-tulum",
+      "dest": "tulum",
+      "url": "https://b2b.bakemyday.se/velvet/d/tulum/gitano-tulum/"
+    },
+    {
+      "id": "TUL-004",
+      "slug": "bagatelle-tulum",
+      "dest": "tulum",
+      "url": "https://b2b.bakemyday.se/velvet/d/tulum/bagatelle-tulum/"
+    },
+    {
+      "id": "TUL-005",
+      "slug": "taboo-tulum",
+      "dest": "tulum",
+      "url": "https://b2b.bakemyday.se/velvet/d/tulum/taboo-tulum/"
+    },
+    {
+      "id": "BCN-001",
+      "slug": "opium-barcelona",
+      "dest": "barcelona",
+      "url": "https://b2b.bakemyday.se/velvet/d/barcelona/opium-barcelona/"
+    },
+    {
+      "id": "BCN-002",
+      "slug": "shoko-barcelona",
+      "dest": "barcelona",
+      "url": "https://b2b.bakemyday.se/velvet/d/barcelona/shoko-barcelona/"
+    },
+    {
+      "id": "BCN-003",
+      "slug": "sutton-barcelona",
+      "dest": "barcelona",
+      "url": "https://b2b.bakemyday.se/velvet/d/barcelona/sutton-barcelona/"
+    },
+    {
+      "id": "BCN-004",
+      "slug": "carpe-diem-lounge-club",
+      "dest": "barcelona",
+      "url": "https://b2b.bakemyday.se/velvet/d/barcelona/carpe-diem-lounge-club/"
+    },
+    {
+      "id": "BCN-005",
+      "slug": "noxe-barcelona",
+      "dest": "barcelona",
+      "url": "https://b2b.bakemyday.se/velvet/d/barcelona/noxe-barcelona/"
+    },
+    {
+      "id": "CER-001",
+      "slug": "billionaire-porto-cervo",
+      "dest": "porto-cervo",
+      "url": "https://b2b.bakemyday.se/velvet/d/porto-cervo/billionaire-porto-cervo/"
+    },
+    {
+      "id": "CER-002",
+      "slug": "phi-beach",
+      "dest": "porto-cervo",
+      "url": "https://b2b.bakemyday.se/velvet/d/porto-cervo/phi-beach/"
+    },
+    {
+      "id": "CER-003",
+      "slug": "nikki-beach-costa-smeralda",
+      "dest": "porto-cervo",
+      "url": "https://b2b.bakemyday.se/velvet/d/porto-cervo/nikki-beach-costa-smeralda/"
+    },
+    {
+      "id": "HVA-001",
+      "slug": "carpe-diem-beach-hvar",
+      "dest": "hvar",
+      "url": "https://b2b.bakemyday.se/velvet/d/hvar/carpe-diem-beach-hvar/"
+    },
+    {
+      "id": "HVA-002",
+      "slug": "hula-hula-hvar",
+      "dest": "hvar",
+      "url": "https://b2b.bakemyday.se/velvet/d/hvar/hula-hula-hvar/"
+    },
+    {
+      "id": "HVA-003",
+      "slug": "carpe-diem-bar-hvar",
+      "dest": "hvar",
+      "url": "https://b2b.bakemyday.se/velvet/d/hvar/carpe-diem-bar-hvar/"
+    },
+    {
+      "id": "ATH-001",
+      "slug": "island-athens-riviera",
+      "dest": "athens-riviera",
+      "url": "https://b2b.bakemyday.se/velvet/d/athens-riviera/island-athens-riviera/"
+    },
+    {
+      "id": "ATH-002",
+      "slug": "bolivar-beach-bar",
+      "dest": "athens-riviera",
+      "url": "https://b2b.bakemyday.se/velvet/d/athens-riviera/bolivar-beach-bar/"
+    },
+    {
+      "id": "ATH-003",
+      "slug": "akanthus",
+      "dest": "athens-riviera",
+      "url": "https://b2b.bakemyday.se/velvet/d/athens-riviera/akanthus/"
+    },
+    {
+      "id": "IST-001",
+      "slug": "sortie",
+      "dest": "istanbul",
+      "url": "https://b2b.bakemyday.se/velvet/d/istanbul/sortie/"
+    },
+    {
+      "id": "IST-002",
+      "slug": "ruby",
+      "dest": "istanbul",
+      "url": "https://b2b.bakemyday.se/velvet/d/istanbul/ruby/"
+    },
+    {
+      "id": "IST-003",
+      "slug": "klein-phonix",
+      "dest": "istanbul",
+      "url": "https://b2b.bakemyday.se/velvet/d/istanbul/klein-phonix/"
+    },
+    {
+      "id": "CAP-001",
+      "slug": "la-fontelina",
+      "dest": "capri",
+      "url": "https://b2b.bakemyday.se/velvet/d/capri/la-fontelina/"
+    },
+    {
+      "id": "CAP-002",
+      "slug": "la-canzone-del-mare",
+      "dest": "capri",
+      "url": "https://b2b.bakemyday.se/velvet/d/capri/la-canzone-del-mare/"
+    },
+    {
+      "id": "CAP-003",
+      "slug": "anema-e-core",
+      "dest": "capri",
+      "url": "https://b2b.bakemyday.se/velvet/d/capri/anema-e-core/"
+    },
+    {
+      "id": "AMF-001",
+      "slug": "one-fire-beach",
+      "dest": "amalfi-coast",
+      "url": "https://b2b.bakemyday.se/velvet/d/amalfi-coast/one-fire-beach/"
+    },
+    {
+      "id": "AMF-002",
+      "slug": "music-on-the-rocks",
+      "dest": "amalfi-coast",
+      "url": "https://b2b.bakemyday.se/velvet/d/amalfi-coast/music-on-the-rocks/"
+    },
+    {
+      "id": "AMF-003",
+      "slug": "la-scogliera-positano",
+      "dest": "amalfi-coast",
+      "url": "https://b2b.bakemyday.se/velvet/d/amalfi-coast/la-scogliera-positano/"
+    },
+    {
+      "id": "LON-001",
+      "slug": "annabel-s",
+      "dest": "london",
+      "url": "https://b2b.bakemyday.se/velvet/d/london/annabel-s/"
+    },
+    {
+      "id": "LON-002",
+      "slug": "the-box-soho",
+      "dest": "london",
+      "url": "https://b2b.bakemyday.se/velvet/d/london/the-box-soho/"
+    },
+    {
+      "id": "LON-003",
+      "slug": "tape-london",
+      "dest": "london",
+      "url": "https://b2b.bakemyday.se/velvet/d/london/tape-london/"
+    },
+    {
+      "id": "PAR-001",
+      "slug": "l-arc-paris",
+      "dest": "paris",
+      "url": "https://b2b.bakemyday.se/velvet/d/paris/l-arc-paris/"
+    },
+    {
+      "id": "PAR-002",
+      "slug": "raspoutine-paris",
+      "dest": "paris",
+      "url": "https://b2b.bakemyday.se/velvet/d/paris/raspoutine-paris/"
+    },
+    {
+      "id": "PAR-003",
+      "slug": "matignon-paris",
+      "dest": "paris",
+      "url": "https://b2b.bakemyday.se/velvet/d/paris/matignon-paris/"
+    },
+    {
+      "id": "SIN-001",
+      "slug": "marquee-singapore",
+      "dest": "singapore",
+      "url": "https://b2b.bakemyday.se/velvet/d/singapore/marquee-singapore/"
+    },
+    {
+      "id": "SIN-002",
+      "slug": "ce-la-vi-singapore",
+      "dest": "singapore",
+      "url": "https://b2b.bakemyday.se/velvet/d/singapore/ce-la-vi-singapore/"
+    },
+    {
+      "id": "SIN-003",
+      "slug": "tanjong-beach-club",
+      "dest": "singapore",
+      "url": "https://b2b.bakemyday.se/velvet/d/singapore/tanjong-beach-club/"
+    },
+    {
+      "id": "LAX-001",
+      "slug": "delilah-los-angeles",
+      "dest": "los-angeles",
+      "url": "https://b2b.bakemyday.se/velvet/d/los-angeles/delilah-los-angeles/"
+    },
+    {
+      "id": "LAX-002",
+      "slug": "poppy",
+      "dest": "los-angeles",
+      "url": "https://b2b.bakemyday.se/velvet/d/los-angeles/poppy/"
+    },
+    {
+      "id": "LAX-003",
+      "slug": "bootsy-bellows",
+      "dest": "los-angeles",
+      "url": "https://b2b.bakemyday.se/velvet/d/los-angeles/bootsy-bellows/"
+    },
+    {
+      "id": "NYC-001",
+      "slug": "the-box-nyc",
+      "dest": "new-york",
+      "url": "https://b2b.bakemyday.se/velvet/d/new-york/the-box-nyc/"
+    },
+    {
+      "id": "NYC-002",
+      "slug": "nebula",
+      "dest": "new-york",
+      "url": "https://b2b.bakemyday.se/velvet/d/new-york/nebula/"
+    },
+    {
+      "id": "NYC-003",
+      "slug": "somewhere-nowhere-nyc",
+      "dest": "new-york",
+      "url": "https://b2b.bakemyday.se/velvet/d/new-york/somewhere-nowhere-nyc/"
+    },
+    {
+      "id": "ASP-001",
+      "slug": "cloud-nine-alpine-bistro",
+      "dest": "aspen",
+      "url": "https://b2b.bakemyday.se/velvet/d/aspen/cloud-nine-alpine-bistro/"
+    },
+    {
+      "id": "ASP-002",
+      "slug": "the-snow-lodge",
+      "dest": "aspen",
+      "url": "https://b2b.bakemyday.se/velvet/d/aspen/the-snow-lodge/"
+    },
+    {
+      "id": "ASP-003",
+      "slug": "belly-up-aspen",
+      "dest": "aspen",
+      "url": "https://b2b.bakemyday.se/velvet/d/aspen/belly-up-aspen/"
+    },
+    {
+      "id": "CRV-001",
+      "slug": "la-folie-douce-meribel-courchevel",
+      "dest": "courchevel",
+      "url": "https://b2b.bakemyday.se/velvet/d/courchevel/la-folie-douce-meribel-courchevel/"
+    },
+    {
+      "id": "CRV-002",
+      "slug": "bagatelle-courchevel",
+      "dest": "courchevel",
+      "url": "https://b2b.bakemyday.se/velvet/d/courchevel/bagatelle-courchevel/"
+    },
+    {
+      "id": "CRV-003",
+      "slug": "les-caves-de-courchevel",
+      "dest": "courchevel",
+      "url": "https://b2b.bakemyday.se/velvet/d/courchevel/les-caves-de-courchevel/"
+    },
+    {
+      "id": "SBH-001",
+      "slug": "nikki-beach-saint-barth",
+      "dest": "st-barts",
+      "url": "https://b2b.bakemyday.se/velvet/d/st-barts/nikki-beach-saint-barth/"
+    },
+    {
+      "id": "SBH-002",
+      "slug": "gyp-sea-beach-club",
+      "dest": "st-barts",
+      "url": "https://b2b.bakemyday.se/velvet/d/st-barts/gyp-sea-beach-club/"
+    },
+    {
+      "id": "SBH-003",
+      "slug": "bagatelle-st-barth",
+      "dest": "st-barts",
+      "url": "https://b2b.bakemyday.se/velvet/d/st-barts/bagatelle-st-barth/"
+    },
+    {
+      "id": "PDE-001",
+      "slug": "la-susana",
+      "dest": "punta-del-este",
+      "url": "https://b2b.bakemyday.se/velvet/d/punta-del-este/la-susana/"
+    },
+    {
+      "id": "PDE-002",
+      "slug": "moby-dick-pub",
+      "dest": "punta-del-este",
+      "url": "https://b2b.bakemyday.se/velvet/d/punta-del-este/moby-dick-pub/"
+    },
+    {
+      "id": "PDE-003",
+      "slug": "ovo-nightclub",
+      "dest": "punta-del-este",
+      "url": "https://b2b.bakemyday.se/velvet/d/punta-del-este/ovo-nightclub/"
+    }
+  ]
+}
