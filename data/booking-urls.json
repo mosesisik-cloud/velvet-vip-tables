@@ -3,7 +3,9 @@
     "url": "https://www.hiibiza.com/vip-tables",
     "kind": "vip",
     "label": "VIP Tables",
-    "name": "Hï Ibiza"
+    "name": "Hï Ibiza",
+    "pay": true,
+    "payUrl": "https://vip.hiibiza.com/"
   },
   "IBZ-002": {
     "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",

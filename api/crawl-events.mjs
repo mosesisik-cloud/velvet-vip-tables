@@ -417,13 +417,23 @@ function collectHrefs(blob, pageUrl) {
   return out.slice(0, 80);
 }
 
+const PAY_HREF = /stripe\.com|checkout\.stripe|paypal\.com\/(cgi-bin|checkout|sdk)|\/deposit|\/prepay|\/pay-now|\/checkout|\/payments?\b/i;
+
+function pageHasPay(blob) {
+  return /js\.stripe\.com|checkout\.stripe|paypal\.com\/sdk|shopify\.com\/checkouts|woocommerce|square(up)?\.com\/pay|adyen\.com/i.test(blob || "");
+}
+
 function discoverBooking(blob, pageUrl, venueUrl) {
   let best = null;
+  let payUrl = "";
+  const payOnPage = pageHasPay(blob);
   for (const u of collectHrefs(blob, pageUrl)) {
     if (RESELLER.test(u) || /instagram|facebook|tiktok|snapchat|youtube|google\.|apple\.com/i.test(u)) continue;
+    if (!payUrl && PAY_HREF.test(u)) payUrl = u.split("#")[0];
     const engine = engineOf(u);
     if (engine !== "official-site" || ENGINE_HOST.test(u)) {
-      return { url: u.split("#")[0], kind: "vip", engine: engine === "official-site" ? "widget" : engine, label: "VIP Tables" };
+      best = { url: u.split("#")[0], kind: "vip", engine: engine === "official-site" ? "widget" : engine, label: "VIP Tables" };
+      continue;
     }
     if (!BOOK_PATH.test(u)) continue;
     const sameHost = (() => {
@@ -439,23 +449,50 @@ function discoverBooking(blob, pageUrl, venueUrl) {
     const rec = { url: u.split("?")[0].replace(/\/+$/, "") || u, kind, engine: "official-site", label: kind === "vip" ? "VIP Tables" : "Events" };
     if (!best || (best.kind !== "vip" && kind === "vip")) best = rec;
   }
+  if (!best && (payOnPage || payUrl)) {
+    best = { url: payUrl || pageUrl, kind: "vip", engine: "official-site", label: "Book / pay" };
+  }
+  if (best) {
+    best.pay = !!(payOnPage || payUrl);
+    best.payUrl = payUrl || "";
+  }
   return best;
 }
 
 function mergeBookingHint(booking, v, hint) {
-  if (!hint?.url || !/^https:\/\//i.test(hint.url)) return false;
-  const cur = booking[v.venue_id];
-  if (cur && (cur.kind === "vip" || cur.kind === "events") && cur.url) return false;
-  if (cur && cur.url === hint.url && cur.kind === hint.kind) return false;
-  booking[v.venue_id] = {
-    url: hint.url,
-    kind: hint.kind || "vip",
-    label: hint.label || cur?.label || "",
-    name: cur?.name || v.name,
-    engine: hint.engine || "",
-    discovered: todayISO(),
-  };
-  return true;
+  if (!hint) return false;
+  const cur = booking[v.venue_id] || {};
+  let changed = false;
+  if (hint.url && /^https:\/\//i.test(hint.url)) {
+    const locked = cur.kind === "vip" || cur.kind === "events";
+    if (!locked || !cur.url) {
+      if (cur.url !== hint.url || cur.kind !== hint.kind) {
+        booking[v.venue_id] = {
+          ...cur,
+          url: hint.url,
+          kind: hint.kind || cur.kind || "vip",
+          label: hint.label || cur.label || "",
+          name: cur.name || v.name,
+          engine: hint.engine || cur.engine || "",
+          discovered: todayISO(),
+        };
+        changed = true;
+      }
+    }
+  }
+  const row = booking[v.venue_id] || { url: v.website_url, kind: "site", name: v.name };
+  if (hint.pay && !row.pay) {
+    row.pay = true;
+    row.payUrl = hint.payUrl || row.payUrl || "";
+    row.name = row.name || v.name;
+    booking[v.venue_id] = row;
+    changed = true;
+  } else if (hint.payUrl && !row.payUrl) {
+    row.payUrl = hint.payUrl;
+    booking[v.venue_id] = row;
+    changed = true;
+  }
+  return changed;
 }
 
 function targetUrl(v, booking) {

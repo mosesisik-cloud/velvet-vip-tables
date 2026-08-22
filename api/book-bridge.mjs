@@ -65,6 +65,9 @@ export function officialBooking(venueId) {
     kind: String(rec?.kind || "site"),
     label: String(rec?.label || ""),
     host: hostOf(url),
+    pay: !!rec?.pay,
+    payUrl: /^https:\/\//i.test(rec?.payUrl || "") ? rec.payUrl : "",
+    engine: rec?.engine || "",
   };
 }
 
@@ -164,9 +167,10 @@ export function bookingAdapter(venueId) {
   const off = officialBooking(venueId);
   if (!off) return null;
   const inv = venueInventory(venueId);
-  const engine = engineOf(off.url);
+  const engine = off.engine && off.engine !== "official-site" ? off.engine : engineOf(off.url);
   const nights = inv.nights || [];
-  const bookable = engine !== "official-site" || off.kind === "vip" || off.kind === "events" || nights.length > 0 || !!inv.vipHow;
+  const bookable = engine !== "official-site" || off.kind === "vip" || off.kind === "events" || nights.length > 0 || !!inv.vipHow || !!off.pay;
+  const priced = (inv.menu?.items || []).filter((x) => Number(x.amount) > 0);
   return {
     venueId: off.venueId,
     name: off.name,
@@ -179,6 +183,8 @@ export function bookingAdapter(venueId) {
     mode: "handoff",
     overlap: true,
     bookable,
+    clubPay: !!(off.pay || off.payUrl),
+    payUrl: off.payUrl || "",
     writesToClub: false,
     clubEmail: inv.email,
     clubPhone: inv.phone,
@@ -188,7 +194,8 @@ export function bookingAdapter(venueId) {
     ageLimit: inv.ageLimit,
     season: inv.season,
     inventory: inv,
-    fields: ["date", "party", "legalName", "nationality", "documentMasked", "cardLast4", "email", "phone", "note"],
+    pricedMenu: priced.slice(0, 12),
+    fields: ["date", "party", "legalName", "nationality", "documentMasked", "cardLast4", "email", "phone", "note", "amount"],
   };
 }
 
@@ -202,24 +209,31 @@ export function handoffUrl(officialUrl, ref) {
 export function packetText(bridge) {
   const g = bridge.guest || {};
   const card = g.card ? `${g.card.brand || "card"} ••${g.card.last4}` : "";
+  const pay = bridge.payment;
+  const payLine = pay && Number(pay.amount) > 0
+    ? `Betalning via VELVET: ${pay.status || "pending"} ${pay.amount} ${pay.currency || "EUR"}${pay.providerId ? " · " + pay.providerId : ""}`
+    : (card ? "Kort på fil hos VELVET — klubben ser en verifierad betalande gäst. Debitering när Stripe är kopplat eller på klubbens egen pay-sida." : "");
   const lines = [
-    `VELVET-underlag ${bridge.id}`,
+    `VELVET-bokning ${bridge.id}`,
     `Klubb: ${bridge.venue || ""}`,
     `Officiell bokning: ${bridge.officialUrl || ""}`,
     `Datum: ${bridge.date || ""}`,
     `Sällskap: ${bridge.party || ""}`,
     bridge.eventTitle ? `Kväll på klubbens sajt: ${bridge.eventTitle}` : "",
     bridge.package ? `Paket: ${bridge.package}` : "",
+    "",
+    "VERIFIERAD GÄST (pass + live-selfie + kort)",
     g.legalName ? `Namn (pass): ${g.legalName}` : "",
     g.nationality ? `Nationalitet: ${g.nationality}` : "",
     g.documentMasked ? `Pass: ${g.documentMasked}` : "",
     g.ageYears != null ? `Ålder: ${g.ageYears}` : "",
-    card ? `Kort: ${card}` : "",
+    card ? `Kort: ${card}${g.card?.expMonth ? ` ${String(g.card.expMonth).padStart(2, "0")}/${g.card.expYear}` : ""}` : "",
     g.email ? `E-post: ${g.email}` : "",
     g.phone ? `Mobil: ${g.phone}` : "",
+    payLine,
     bridge.note ? `Meddelande: ${bridge.note}` : "",
     "",
-    "VELVET är bokningstjänsten — förfrågan går via oss mot klubbens egen sajt.",
+    "VELVET är bokningstjänsten. Gästen är ID-kollad (MRZ + blink + ansiktsmatch).",
     "Ingen reservation förrän klubben bekräftar. VELVET skriver inte i deras PMS.",
   ];
   return lines.filter((x) => x !== "").join("\n");
@@ -250,5 +264,8 @@ export function publicBridge(rec) {
     clubEmail: rec.clubEmail || "",
     guest: rec.guest || {},
     packet: rec.packet || "",
+    clubPay: !!rec.clubPay,
+    payUrl: rec.payUrl || "",
+    payment: rec.payment || null,
   };
 }

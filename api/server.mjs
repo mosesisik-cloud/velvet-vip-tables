@@ -1115,9 +1115,44 @@ function mintAuthToken(user) {
   save(db);
   return token;
 }
-function applyIncomingPayment(db, { tableId, userId, amount, currency, method, provider, providerId }) {
-  const t = db.tables.find((x) => x.id === tableId);
-  if (!t || !userId) return null;
+function applyIncomingPayment(db, { tableId, userId, amount, currency, method, provider, providerId, bridgeId, venueId }) {
+  if (bridgeId && db.bridges) {
+    const br = db.bridges.find((x) => x.id === bridgeId && (!userId || x.userId === userId));
+    if (br) {
+      br.payment = {
+        amount: Number(amount) || 0,
+        currency: currency || "EUR",
+        method: method || provider || "card",
+        provider: provider || "",
+        providerId: providerId || "",
+        status: "paid",
+      };
+      br.status = "paid";
+      br.packet = packetText(br);
+    }
+  }
+  const t = tableId ? db.tables.find((x) => x.id === tableId) : null;
+  if (!t || !userId) {
+    if (bridgeId) {
+      const rec = {
+        id: `PY-${Date.now().toString(36)}`,
+        tableId: "",
+        bridgeId: bridgeId || "",
+        venueId: venueId || "",
+        userId,
+        amount: Number(amount) || 0,
+        currency: currency || "EUR",
+        method: method || provider || "",
+        provider: provider || "",
+        providerId: providerId || "",
+        status: "paid",
+        created: new Date().toISOString(),
+      };
+      db.payments = [rec, ...(db.payments || [])].slice(0, 500);
+      return rec;
+    }
+    return null;
+  }
   let target = t.host?.id === userId ? t.host : (t.joiners || []).find((j) => j.id === userId);
   if (!target) return null;
   setPaidFlag(target, true, userId, provider || method);
@@ -1137,21 +1172,27 @@ function applyIncomingPayment(db, { tableId, userId, amount, currency, method, p
   db.payments = [rec, ...(db.payments || [])].slice(0, 500);
   return rec;
 }
-async function stripeCheckout({ table, user, cents, currency, method }) {
+async function stripeCheckout({ table, user, cents, currency, method, mode, venueId, bridgeId, venueName, successHash, cancelHash }) {
   const p = loadPay();
   if (!p.stripe.secret) return null;
   const params = new URLSearchParams();
-  params.set("mode", "payment");
-  params.set("success_url", `${PUBLIC_APP}/?session_id={CHECKOUT_SESSION_ID}#/pay-return`);
-  params.set("cancel_url", `${PUBLIC_APP}/#/pay/${encodeURIComponent(table.id)}`);
-  params.set("client_reference_id", `${table.id}:${user.id}`);
-  params.set("metadata[tableId]", table.id);
+  const setup = mode === "setup";
+  params.set("mode", setup ? "setup" : "payment");
+  params.set("success_url", `${PUBLIC_APP}/?session_id={CHECKOUT_SESSION_ID}${successHash || "#/pay-return"}`);
+  params.set("cancel_url", `${PUBLIC_APP}/${cancelHash || (table?.id ? "#/pay/" + encodeURIComponent(table.id) : "#/card")}`);
+  params.set("client_reference_id", `${bridgeId || table?.id || venueId || "card"}:${user.id}`);
+  params.set("metadata[tableId]", table?.id || "");
   params.set("metadata[userId]", user.id);
-  params.set("metadata[method]", method);
-  params.set("line_items[0][quantity]", "1");
-  params.set("line_items[0][price_data][currency]", currency.toLowerCase());
-  params.set("line_items[0][price_data][unit_amount]", String(cents));
-  params.set("line_items[0][price_data][product_data][name]", `VELVET · ${table.venue} · ${table.date || ""}`.slice(0, 120));
+  params.set("metadata[method]", method || "card");
+  params.set("metadata[venueId]", venueId || "");
+  params.set("metadata[bridgeId]", bridgeId || "");
+  params.set("metadata[kind]", setup ? "setup" : (bridgeId || venueId ? "booking" : "table"));
+  if (!setup) {
+    params.set("line_items[0][quantity]", "1");
+    params.set("line_items[0][price_data][currency]", (currency || "EUR").toLowerCase());
+    params.set("line_items[0][price_data][unit_amount]", String(cents));
+    params.set("line_items[0][price_data][product_data][name]", `VELVET · ${venueName || table?.venue || "booking"} · ${table?.date || ""}`.slice(0, 120));
+  }
   params.set("automatic_payment_methods[enabled]", "true");
   const r = await fetch("https://api.stripe.com/v1/checkout/sessions", {
     method: "POST",
@@ -1493,15 +1534,38 @@ const server = http.createServer(async (req, res) => {
       savePay(cur);
       return send(res, 200, { ok: true, config: publicPayConfig() });
     }
+    if (req.method === "POST" && url.pathname === "/card/setup") {
+      const b = await readBody(req, 2e5);
+      const uid = String(b.user?.id || "");
+      if (!uid) return send(res, 401, { error: "auth" });
+      const db = load();
+      if (!isIdvVerified(uid, db)) return send(res, 403, { error: "idv_required" });
+      const s = await stripeCheckout({
+        user: { id: uid, name: b.user?.name || "", email: b.user?.email || "" },
+        method: "card",
+        mode: "setup",
+        successHash: "#/pay-return",
+        cancelHash: "#/card",
+      }).catch(() => null);
+      if (!s?.url) return send(res, 409, { error: "no_processor" });
+      return send(res, 200, { mode: "redirect", url: s.url, id: s.id, provider: "stripe", kind: "setup" });
+    }
     if (req.method === "POST" && url.pathname === "/pay/intent") {
       const b = await readBody(req, 2e5);
       const userId = String(b.user?.id || "");
       if (!userId) return send(res, 401, { error: "auth" });
       const db = load();
+      const venueId = String(b.venueId || "");
+      const bridgeId = String(b.bridgeId || "");
       const t = db.tables.find((x) => x.id === String(b.tableId || ""));
-      if (!t) return send(res, 404, { error: "not_found" });
-      const member = t.host?.id === userId || (t.joiners || []).some((j) => j.id === userId);
-      if (!member) return send(res, 403, { error: "not_member" });
+      if (!t && !venueId && !bridgeId) return send(res, 404, { error: "not_found" });
+      if (t) {
+        const member = t.host?.id === userId || (t.joiners || []).some((j) => j.id === userId);
+        if (!member) return send(res, 403, { error: "not_member" });
+      } else {
+        const gate = memberGate(userId, db, venueId);
+        if (gate) return send(res, 403, gatePayload(gate, userId, db, venueId));
+      }
       const amount = Math.max(0, Number(b.amount) || 0);
       const currency = publicPayConfig().currency || "EUR";
       const method = String(b.method || "card");
@@ -1509,7 +1573,11 @@ const server = http.createServer(async (req, res) => {
         return send(res, 409, { error: "no_amount", message: "Ange beloppet i euro — klubben sätter priset, du betalar din del." });
       }
       const cents = Math.max(100, Math.round(amount * 100));
-      const table = { id: t.id, venue: t.venue, date: t.date };
+      const adapter = venueId ? bookingAdapter(venueId) : null;
+      const br = bridgeId ? (db.bridges || []).find((x) => x.id === bridgeId) : null;
+      const table = t
+        ? { id: t.id, venue: t.venue, date: t.date }
+        : { id: bridgeId || venueId, venue: br?.venue || adapter?.name || venueId, date: br?.date || "" };
       const user = { id: userId, name: b.user?.name || "", email: b.user?.email || "" };
       try {
         if (method === "sepa" || method === "swift" || (method === "revolut" && !loadPay().revolut.merchantSecret)) {
@@ -1533,7 +1601,13 @@ const server = http.createServer(async (req, res) => {
           return send(res, 200, { mode: "bank", bank, method });
         }
         // card / applepay / googlepay / klarna → Stripe, else Revolut Merchant
-        const s = await stripeCheckout({ table, user, cents, currency, method });
+        const s = await stripeCheckout({
+          table, user, cents, currency, method,
+          venueId, bridgeId,
+          venueName: table.venue,
+          successHash: "#/pay-return",
+          cancelHash: venueId ? `#/book-site/${encodeURIComponent(venueId)}` : (t ? `#/pay/${encodeURIComponent(t.id)}` : "#/card"),
+        });
         if (s?.url) return send(res, 200, { mode: "redirect", url: s.url, id: s.id, provider: "stripe", method });
         const o = await revolutOrder({ table, user, cents, currency });
         if (o?.url) return send(res, 200, { mode: "redirect", url: o.url, id: o.id, provider: "revolut", method });
@@ -1573,16 +1647,47 @@ const server = http.createServer(async (req, res) => {
           headers: { Authorization: `Bearer ${pay.stripe.secret}` },
         });
         const s = await r.json();
+        if (s.mode === "setup" && (s.status === "complete" || s.setup_intent)) {
+          let last4 = "";
+          let brand = "card";
+          let expMonth = 0;
+          let expYear = 0;
+          let pmId = typeof s.payment_method === "string" ? s.payment_method : (s.payment_method?.id || "");
+          const si = s.setup_intent;
+          const sid = typeof si === "string" ? si : si?.id;
+          if (sid) {
+            const r2 = await fetch(`https://api.stripe.com/v1/setup_intents/${encodeURIComponent(sid)}?expand[]=payment_method`, {
+              headers: { Authorization: `Bearer ${pay.stripe.secret}` },
+            });
+            const j2 = await r2.json();
+            const card = j2.payment_method?.card || {};
+            last4 = String(card.last4 || "");
+            brand = String(card.brand || "card");
+            expMonth = Number(card.exp_month) || 0;
+            expYear = Number(card.exp_year) || 0;
+            pmId = j2.payment_method?.id || pmId;
+          }
+          if (last4.length === 4) {
+            upsertUser(db, b.user || { id: userId });
+            db.users[userId].card = { last4, brand, expMonth, expYear, added: new Date().toISOString(), stripePm: pmId };
+            save(db);
+            return send(res, 200, { ok: true, card: publicCard(db.users[userId].card), kind: "setup" });
+          }
+        }
         if (s.payment_status === "paid" || s.status === "complete") {
           const tableId = s.metadata?.tableId || String(b.tableId || "");
           const uid = s.metadata?.userId || userId;
           const rec = applyIncomingPayment(db, {
-            tableId, userId: uid, amount: (s.amount_total || 0) / 100,
+            tableId, userId: uid,
+            bridgeId: s.metadata?.bridgeId || String(b.bridgeId || ""),
+            venueId: s.metadata?.venueId || String(b.venueId || ""),
+            amount: (s.amount_total || 0) / 100,
             currency: (s.currency || "eur").toUpperCase(), method: "card", provider: "stripe", providerId: s.id,
           });
           if (rec) save(db);
           const t = db.tables.find((x) => x.id === tableId);
-          return send(res, 200, { ok: !!rec, table: t ? publicTable(t, db) : null });
+          const br = (db.bridges || []).find((x) => x.id === (s.metadata?.bridgeId || b.bridgeId));
+          return send(res, 200, { ok: !!rec, table: t ? publicTable(t, db) : null, bridge: br ? publicBridge(br) : null });
         }
       }
       if (b.orderId && pay.revolut.merchantSecret) {
@@ -1630,6 +1735,7 @@ const server = http.createServer(async (req, res) => {
         const db = load();
         applyIncomingPayment(db, {
           tableId: s.metadata?.tableId, userId: s.metadata?.userId,
+          bridgeId: s.metadata?.bridgeId, venueId: s.metadata?.venueId,
           amount: (s.amount_total || 0) / 100, currency: (s.currency || "eur").toUpperCase(),
           method: "card", provider: "stripe", providerId: s.id,
         });
@@ -2164,15 +2270,15 @@ const server = http.createServer(async (req, res) => {
       const adapter = bookingAdapter(venueId);
       if (!adapter) return send(res, 404, { error: "no_booking_site" });
       const uid = url.searchParams.get("userId") || "";
-      if (!uid) return send(res, 200, { adapter });
+      if (!uid) return send(res, 200, { adapter, payReady: publicPayConfig().ready });
       const db = load();
       const promoter = isPromoter({ id: uid }, venueId, db);
       if (!promoter) {
         const gate = memberGate(uid, db, venueId);
-        if (gate) return send(res, 200, { adapter, ...gatePayload(gate, uid, db, venueId) });
+        if (gate) return send(res, 200, { adapter, payReady: publicPayConfig().ready, ...gatePayload(gate, uid, db, venueId) });
       }
       const list = (db.bridges || []).filter((x) => x.venueId === venueId && (promoter || x.userId === uid));
-      return send(res, 200, { adapter, bridges: list.map(publicBridge), promoter });
+      return send(res, 200, { adapter, bridges: list.map(publicBridge), promoter, payReady: publicPayConfig().ready });
     }
     if (req.method === "POST" && url.pathname === "/book/bridge") {
       const b = await readBody(req, 2e5);
@@ -2223,6 +2329,8 @@ const server = http.createServer(async (req, res) => {
         kind: adapter.kind,
         engine: adapter.engine,
         clubEmail: adapter.clubEmail,
+        clubPay: !!adapter.clubPay,
+        payUrl: adapter.payUrl || "",
         date,
         party,
         package: String(menuHit ? `${menuHit.name}${menuHit.price ? " · " + menuHit.price : ""}` : (b.package || adapter.label || "")).slice(0, 80),
@@ -2232,6 +2340,10 @@ const server = http.createServer(async (req, res) => {
         guest,
         created: new Date().toISOString(),
       };
+      const wantPay = Math.max(0, Number(b.amount) || Number(menuHit?.amount) || 0);
+      if (wantPay > 0) {
+        rec.payment = { amount: wantPay, currency: "EUR", status: "pending", method: "card" };
+      }
       rec.packet = packetText(rec);
       if (!db.bridges) db.bridges = [];
       db.bridges.unshift(rec);
@@ -2249,7 +2361,7 @@ const server = http.createServer(async (req, res) => {
         created: rec.created,
       });
       save(db);
-      return send(res, 201, { bridge: publicBridge(rec), adapter });
+      return send(res, 201, { bridge: publicBridge(rec), adapter, payReady: publicPayConfig().ready });
     }
 
     const promoOne = url.pathname.match(/^\/promoters\/([^/]+)$/);

@@ -3915,6 +3915,17 @@ async function renderPayReturn() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user: me, sessionId: sid }),
   }) : null;
+  if (r?.ok && r.card) {
+    saveUser({ ...loadUser(), cardLast4: r.card.last4, cardBrand: r.card.brand });
+    showToast(t("payingCustomer"));
+    location.hash = "#/account";
+    return;
+  }
+  if (r?.ok && r.bridge) {
+    showToast(t("paid"));
+    location.hash = `#/book-site/${encodeURIComponent(r.bridge.venueId)}`;
+    return;
+  }
   if (r?.ok && r.table) {
     showToast(t("paid"));
     location.hash = `#/table/${encodeURIComponent(r.table.id)}`;
@@ -4593,6 +4604,7 @@ async function renderCard() {
     location.hash = "#/verify";
     return;
   }
+  const payCfg = await apiJSON("/pay/config");
   setTitle(t("cardTitle"));
   view().innerHTML = `
   <section class="section card-page">
@@ -4624,6 +4636,8 @@ async function renderCard() {
         </label>
       </div>
       <div class="field-error hidden" id="card-err" role="alert"></div>
+      ${payCfg?.stripe ? `<p class="events-meta">${esc(t("cardStripeHint"))}</p>
+      <p><button type="button" class="btn btn-gold" id="card-stripe" style="width:100%">${esc(t("cardStripe"))}</button></p>` : ""}
       <button class="btn btn-gold" type="submit" style="width:100%">${esc(t("cardCta"))}</button>
     </form>
   </section>`;
@@ -4661,6 +4675,16 @@ async function renderCard() {
   });
   $("#card-cvc")?.addEventListener("input", (e) => { e.target.value = digits(e.target).slice(0, 4); });
   $("#card-name")?.addEventListener("input", paintFace);
+  $("#card-stripe")?.addEventListener("click", async () => {
+    setErr("");
+    const r = await apiJSON("/card/setup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user: u }),
+    });
+    if (r?.url) { location.href = r.url; return; }
+    setErr(r?.error === "no_processor" ? t("payNoProcessor") : t("cardBad"));
+  });
   $("#card-form")?.addEventListener("submit", async (e) => {
     e.preventDefault();
     setErr("");
@@ -5503,6 +5527,10 @@ async function renderBookSite(id) {
               ${adapter.inventory.menu.items.slice(0, 40).map((it) => `<option value="${esc(it.name)}">${esc(it.name)}${it.price ? ` · ${esc(it.price)}` : ""}</option>`).join("")}
             </select>
           </label>` : ""}
+          <label>${esc(t("bridgeAmount"))}
+            <input type="number" id="br-amount" min="0" step="1" inputmode="decimal" placeholder="EUR">
+          </label>
+          <p class="events-meta">${esc(isPayingMember() ? t("guestVerified") : t("bridgeNeed"))}${adapter.clubPay ? ` · ${esc(t("clubHasPay"))}` : ""}</p>
           <button type="button" class="btn btn-gold" id="br-make" style="width:100%">${esc(t("bridgeCta"))}</button>
         </div>
         <div class="bridge-packet hidden" id="bridge-out"></div>`}
@@ -5543,10 +5571,32 @@ async function renderBookSite(id) {
         <a class="btn btn-gold" href="${esc(bridge.handoffUrl || adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bridgeOpen"))} ↗</a>
         <button type="button" class="btn btn-ghost" id="br-copy">${esc(t("bridgeCopy"))}</button>
         ${mail ? `<a class="btn btn-ghost" href="${esc(mail)}">${esc(t("bridgeClubMail"))}</a>` : ""}
+        ${bridge.payUrl || adapter.payUrl ? `<a class="btn btn-ghost" href="${esc(bridge.payUrl || adapter.payUrl)}" target="_blank" rel="noopener">${esc(t("clubHasPay"))} ↗</a>` : ""}
+        ${live?.payReady && Number(bridge.payment?.amount || $("#br-amount")?.value || 0) > 0 ? `<button type="button" class="btn btn-gold" id="br-pay">${esc(t("bridgePayCta"))}</button>` : ""}
       </div>`;
     $("#br-copy")?.addEventListener("click", async () => {
       const ok = await copyText(bridge.packet || "");
       showToast(ok ? t("bridgeCopied") : t("bridgeCopy"));
+    });
+    $("#br-pay")?.addEventListener("click", async () => {
+      const amount = Number(bridge.payment?.amount || $("#br-amount")?.value || 0);
+      const pay = await apiJSON("/pay/intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user: loadUser(),
+          venueId: v.venue_id,
+          bridgeId: bridge.id,
+          amount,
+          method: "card",
+        }),
+      });
+      if (pay?.url) { location.href = pay.url; return; }
+      if (pay?.error === "no_processor" || pay?.error === "no_account") {
+        showToast(t("payNoProcessor"));
+        return;
+      }
+      showToast(pay?.message || t("cardNeed"));
     });
   };
   if (!needLock && mine[0]) paintPacket(mine[0]);
@@ -5582,6 +5632,7 @@ async function renderBookSite(id) {
         menuItem: ($("#br-menu")?.value || "").trim(),
         eventTitle: pickedTitle || ($("#br-note")?.value || "").trim(),
         eventUrl: pickedUrl,
+        amount: Number($("#br-amount")?.value || 0),
       }),
     });
     if (btn) btn.disabled = false;
@@ -5589,7 +5640,24 @@ async function renderBookSite(id) {
     if (r?.error === "card_required") { rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}`); location.hash = "#/card"; return; }
     if (r?.error === "too_young") { showToast(tooYoungText(r, v)); return; }
     if (r?.error === "date") { showToast(t("bridgeDate")); return; }
-    if (r?.bridge) paintPacket(r.bridge);
+    if (r?.bridge) {
+      paintPacket(r.bridge);
+      const amt = Number($("#br-amount")?.value || r.bridge.payment?.amount || 0);
+      if (r.payReady && amt > 0) {
+        const pay = await apiJSON("/pay/intent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user: loadUser(),
+            venueId: v.venue_id,
+            bridgeId: r.bridge.id,
+            amount: amt,
+            method: "card",
+          }),
+        });
+        if (pay?.url) location.href = pay.url;
+      }
+    }
   });
 }
 
