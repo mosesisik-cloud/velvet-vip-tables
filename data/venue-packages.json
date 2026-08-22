@@ -1,0 +1,17 @@
+{
+  "__meta": {
+    "description": "Verifierade bord, daybeds och cabanas per venue. Visa bara pris/innehåll som kommer från klubbens officiella kanal.",
+    "fields": {
+      "id": "stabilt paket-id",
+      "name": "officiellt namn på bordet/bädden",
+      "price": "officiellt publicerat pris eller minsta spend; utelämna om okänt",
+      "currency": "ISO-valuta, exempel EUR",
+      "priceClass": "1–4 för sortering och visuell jämförelse",
+      "capacity": "officiell kapacitet, exempel 4–6",
+      "included": "lista med exakt vad klubben uppger ingår",
+      "note": "officiella villkor eller kort förklaring",
+      "source": "direktlänk till klubbens officiella boknings-/paketsida",
+      "verified": "true endast när uppgifterna kontrollerats mot källan"
+    }
+  }
+}

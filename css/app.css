@@ -2228,3 +2228,60 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   .venue-gallery-track { scroll-behavior: auto; }
   .venue-gallery-dots button { transition: none; }
 }
+
+
+/* Booking.com-inspired package comparison */
+.package-compare { grid-column: 1 / -1; }
+.package-compare-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
+}
+.package-trust {
+  flex: 0 0 auto;
+  padding: 7px 11px;
+  border: 1px solid rgba(216,181,106,.32);
+  border-radius: 999px;
+  color: var(--gold, #d8b56a);
+  font-size: .75rem;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.package-trust.ok { background: rgba(216,181,106,.1); }
+.package-compare-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.package-option {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 16px;
+  background: rgba(255,255,255,.025);
+}
+.package-option.verified { border-color: rgba(216,181,106,.38); background: linear-gradient(180deg, rgba(216,181,106,.08), rgba(255,255,255,.025)); }
+.package-option-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.package-level { color: var(--gold, #d8b56a); letter-spacing: .08em; white-space: nowrap; }
+.package-option h3 { margin: 18px 0 8px; font-size: 1.2rem; }
+.package-option-price { margin-bottom: 12px; color: #fff; font-size: 1.3rem; font-weight: 700; }
+.package-capacity, .package-note { color: var(--text-dim, #aaa); font-size: .86rem; }
+.package-included { margin: 8px 0 18px; padding: 0; list-style: none; color: var(--text-dim, #aaa); font-size: .82rem; }
+.package-included li { position: relative; padding: 6px 0 6px 20px; border-top: 1px solid rgba(255,255,255,.06); }
+.package-included li::before { content: "✓"; position: absolute; left: 0; color: var(--gold, #d8b56a); }
+.package-option .btn { width: 100%; margin-top: auto; }
+#m-package-notes { width: 100%; resize: vertical; min-height: 96px; }
+.package .package-included { margin-bottom: 0; }
+@media (max-width: 1100px) {
+  .package-compare-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+  .package-compare-head { display: block; }
+  .package-trust { display: inline-block; margin-top: 12px; }
+  .package-compare-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: -18px; padding: 0 18px 8px; }
+  .package-option { flex: 0 0 84%; scroll-snap-align: start; }
+}
