@@ -12,6 +12,7 @@ let VENUE_YOUTUBE = {}; // venue_id -> mest visade officiella klipp (data/venue-
 let VENUE_MENUS = {}; // venue_id -> tryckt meny från klubbens sajt
 let VENUE_EVENTS = { fetched: null, venues: {} }; // kommande events per venue (data/venue-events.json)
 let BOOKING_URLS = {}; // venue_id -> { url, kind, label } officiell VIP/bokningssida
+let VENUE_PACKAGES = {}; // venue_id -> verifierade bord/daybeds/cabanas
 let GOOGLE_PLACES = { fetchedAt: null, venues: {} };
 let VENUE_FACTS = { fetchedAt: null, venues: {} };
 let CLUB_RANKINGS = { fetchedAt: null, byVenueId: {}, cities: [], clubs: [] };
@@ -414,15 +415,73 @@ function statusInfo(s) {
 }
 
 // Request types only — no invented EUR. Club publishes min-spend on their own site.
-function packagesFor(v) {
+function requestPackageTemplates(v) {
   const grp = venueGroup(v);
-  const pkgs = [];
-  if (grp === "beach" || grp === "day") {
-    pkgs.push({ id: "daybed", name: "Daybed / sunbed", desc: t("clubSetsPrice") });
-    pkgs.push({ id: "cabana", name: "Cabana", desc: t("clubSetsPrice") });
+  if (grp === "beach" || grp === "day") return [
+    { id: "sunbed", name: "Sunbed", priceClass: 1 },
+    { id: "daybed", name: "Daybed", priceClass: 2 },
+    { id: "cabana", name: "Cabana", priceClass: 3 },
+    { id: "vip-cabana", name: "VIP Cabana", priceClass: 4 },
+  ];
+  return [
+    { id: "vip-table", name: t("pkgTable"), priceClass: 1 },
+    { id: "premium-table", name: "Premium table", priceClass: 2 },
+    { id: "dancefloor-table", name: "Dancefloor table", priceClass: 3 },
+    { id: "front-row", name: "Front row / owner’s table", priceClass: 4 },
+  ];
+}
+function normalizePackage(p, verified) {
+  const amount = Number(p?.price);
+  const isVerified = Boolean(verified && p?.verified !== false);
+  return {
+    id: String(p?.id || p?.name || "package").toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+    name: String(p?.name || t("pkgTable")),
+    price: Number.isFinite(amount) && amount > 0 ? amount : null,
+    currency: String(p?.currency || "EUR").toUpperCase(),
+    priceClass: Math.min(4, Math.max(1, Number(p?.priceClass || 1))),
+    capacity: p?.capacity ? String(p.capacity) : "",
+    included: Array.isArray(p?.included) ? p.included.filter(Boolean).map(String) : [],
+    note: String(p?.note || ""), verified: isVerified, source: String(p?.source || ""),
+    desc: isVerified ? "Verifierad av klubben" : "Pris och innehåll bekräftas av klubben",
+  };
+}
+function packagesFor(v) {
+  const official = Array.isArray(VENUE_PACKAGES[v.venue_id]) ? VENUE_PACKAGES[v.venue_id] : [];
+  if (official.length) return official.map((p) => normalizePackage(p, true));
+  return requestPackageTemplates(v).map((p) => normalizePackage(p, false));
+}
+function packagePriceHTML(p) {
+  if (p.price) {
+    try { return new Intl.NumberFormat("sv-SE", { style: "currency", currency: p.currency, maximumFractionDigits: 0 }).format(p.price); } catch {}
   }
-  pkgs.push({ id: "table", name: t("pkgTable"), desc: t("clubSetsPrice") });
-  return pkgs;
+  return "Pris på förfrågan";
+}
+function packageIncludedHTML(p) {
+  const included = p.included.length ? p.included : ["Placering och minsta spend bekräftas av klubben", "Innehåll och serviceavgift bekräftas före betalning"];
+  return `<ul class="package-included">${included.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
+}
+function venuePackagesPanelHTML(v) {
+  const packages = packagesFor(v);
+  const hasOfficial = packages.some((p) => p.verified);
+  return `
+  <section class="detail-panel package-compare" aria-labelledby="package-compare-title">
+    <div class="package-compare-head">
+      <div><p class="detail-kicker">Bord · Daybeds · Cabanas</p><h2 class="detail-panel-title" id="package-compare-title">Välj din plats</h2>
+        <p class="events-meta">${hasOfficial ? "Verifierade alternativ från klubbens officiella kanal." : "Förfrågningsalternativ — pris och innehåll bekräftas alltid av klubben."}</p></div>
+      <span class="package-trust ${hasOfficial ? "ok" : ""}">${hasOfficial ? "Officiell data" : "Ingen låtsaspris"}</span>
+    </div>
+    <div class="package-compare-grid">
+      ${packages.map((p) => `<article class="package-option ${p.verified ? "verified" : ""}">
+        <div class="package-option-top"><span class="package-level" aria-label="Prisklass ${p.priceClass} av 4">${"€".repeat(p.priceClass)}</span>
+          ${p.verified ? '<span class="idv-badge ok">Verifierad</span>' : '<span class="idv-badge">Förfrågan</span>'}</div>
+        <h3>${esc(p.name)}</h3><div class="package-option-price">${esc(packagePriceHTML(p))}</div>
+        ${p.capacity ? `<p class="package-capacity">För ${esc(p.capacity)} personer</p>` : ""}${packageIncludedHTML(p)}
+        ${p.note ? `<p class="package-note">${esc(p.note)}</p>` : ""}
+        <button type="button" class="btn ${p.verified ? "btn-gold" : "btn-ghost"}" data-pkg-open="${esc(p.id)}">Välj alternativ</button>
+      </article>`).join("")}
+    </div>
+    <p class="detail-cta-note">Priser visas endast när de kommer från klubbens officiella kanal. Annars skickas en förfrågan utan betalning.</p>
+  </section>`;
 }
 
 // Defensiv: icke-numeriskt in (t.ex. manipulerad localStorage) → 0 € i stället för "NaN"
@@ -2458,6 +2517,7 @@ function renderVenueDetail(id) {
       ${googleReviewsPanelHTML(v)}
       ${menuPanelHTML(v)}
       ${eventsSectionHTML(v)}
+      ${venuePackagesPanelHTML(v)}
       <div class="detail-panel">
         <h2 class="detail-panel-title">${esc(t("velvetScore"))}</h2>
         <p class="events-meta">${esc(t("velvetScoreHint"))}</p>
@@ -2499,6 +2559,7 @@ function renderVenueDetail(id) {
   </section>`;
   document.body.classList.add("has-dock");
   bindVenueGallery();
+  document.querySelectorAll("[data-pkg-open]").forEach((btn) => btn.addEventListener("click", () => openBookingModal(v, btn.dataset.pkgOpen)));
 
   fillVenuePromoters(v.venue_id);
   $("#d-book").addEventListener("click", () => openBookingModal(v));
@@ -2542,7 +2603,7 @@ function renderVenueDetail(id) {
 // ---------- Booking modal ----------
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
-async function openBookingModal(v) {
+async function openBookingModal(v, preselectedPackageId = "") {
   const me0 = loadUser();
   if (!me0) {
     openOnboarding({ dismissable: false, phase: "auth" });
@@ -2588,7 +2649,7 @@ async function openBookingModal(v) {
     return;
   }
   const pkgs = packagesFor(v);
-  let sel = pkgs[0];
+  let sel = pkgs.find((p) => p.id === preselectedPackageId) || pkgs[0];
   let party = 4;
   let openSeats = 2;
   const guests = [];
@@ -2630,6 +2691,12 @@ async function openBookingModal(v) {
       </div>
 
       <div class="form-group">
+          <label for="m-package-notes">Vad vill du ska ingå? <span class="label-optional">(valfritt)</span></label>
+          <textarea id="m-package-notes" rows="3" maxlength="500" placeholder="T.ex. bästa placering, champagne, middag, födelsedag, nära dansgolvet…"></textarea>
+          <p class="stepper-hint">Önskemålet skickas till klubben och är inte garanterat förrän de bekräftar.</p>
+        </div>
+
+        <div class="form-group">
         <label for="m-date">${esc(t("dateLabel"))}</label>
         <input type="date" id="m-date" min="${todayISO()}" value="${new Date(Date.now() + 14 * 864e5).toISOString().slice(0, 10)}">
         <div class="field-error hidden" id="err-date" role="alert"></div>
@@ -2639,7 +2706,7 @@ async function openBookingModal(v) {
         <label id="lbl-pkgs">${esc(t("pickPackage"))}</label>
         <div class="package-list" id="m-pkgs" role="radiogroup" aria-labelledby="lbl-pkgs">
           ${pkgs.map((p, i) => `
-            <div class="package ${i === 0 ? "selected" : ""}" data-pkg="${esc(p.id)}" role="radio" aria-checked="${i === 0}" tabindex="0">
+            <div class="package ${p.id === sel.id ? "selected" : ""}" data-pkg="${esc(p.id)}" role="radio" aria-checked="${p.id === sel.id}" tabindex="0">
               <div><div class="package-name">${esc(p.name)}</div><div class="package-desc">${esc(p.desc)}</div></div>
               <div class="package-price">${esc(t("clubSetsPrice"))}</div>
             </div>`).join("")}
@@ -2870,7 +2937,8 @@ async function openBookingModal(v) {
     const booking = {
       id: `RQ-${Date.now().toString(36).toUpperCase()}`,
       venue_id: v.venue_id, venue: v.name, destination: v.destination,
-      date, package: sel.name, total: budgetVal(),
+      date, package: sel.name, packageId: sel.id, packageDetails: sel,
+      packageRequest: ($("#m-package-notes")?.value || "").trim(), total: budgetVal(),
       party, per_person: budgetVal() > 0 ? Math.ceil(budgetVal() / party) : 0,
       guests: guests.map((g) => ({ name: g.name, email: g.email, paid: false })),
       openSeats: openOn ? openSeats : 0,
@@ -6177,6 +6245,10 @@ async function init() {
       const rb = await fetch("data/booking-urls.json", { cache: "no-store" });
       if (rb.ok) BOOKING_URLS = await rb.json() || {};
     } catch (_) { BOOKING_URLS = {}; }
+    try {
+      const rp = await fetch("data/venue-packages.json", { cache: "no-store" });
+      if (rp.ok) VENUE_PACKAGES = await rp.json() || {};
+    } catch (_) { VENUE_PACKAGES = {}; }
     try {
       const rg = await fetch("data/google-places.json", { cache: "no-store" });
       if (rg.ok) {
