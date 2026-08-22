@@ -1290,6 +1290,12 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   cursor: pointer; min-height: 48px;
 }
 .social-btn:disabled { opacity: 0.65; cursor: wait; }
+.connect-form { display: grid; gap: 12px; text-align: left; max-width: 420px; margin: 0 auto; }
+.connect-form label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-dim); font-weight: 600; }
+.connect-form input {
+  padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text); font-size: 16px;
+}
 .chk-row { display: flex; align-items: center; gap: 8px; font-weight: 600; }
 .idv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
 .idv-slot {

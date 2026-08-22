@@ -480,21 +480,48 @@ function newSocialSid(provider) {
   try { localStorage.setItem("velvet_sid_" + provider, sid); } catch {}
   return sid;
 }
-// Ett klick = inne. Vänta aldrig på /auth/start (kan hänga bakom SW/Caddy) och
-// hoppa inte till Facebook/Instagram-OAuth förrän Gabbe har live appar — en
-// trasig url: lämnade appen och användaren kom aldrig tillbaka.
-function loginWithSocial(provider) {
-  if (!SOCIALS.some((s) => s.id === provider)) return false;
-  const sid = newSocialSid(provider);
-  saveUser({
-    id: `U-${provider}-${sid}`,
-    provider,
-    name: "",
-    handle: "",
-    auto: true,
-    created: new Date().toISOString(),
+function avatarHTML(u, cls = "") {
+  const name = displayName(u) || "?";
+  const pic = u && /^https:\/\//i.test(u.photo || "") ? u.photo : "";
+  const extra = `person-avatar ${cls} soc-${esc(u?.provider || "none")}`.trim();
+  if (pic) return `<div class="${extra} has-photo" aria-hidden="true"><img src="${esc(pic)}" alt="" width="64" height="64"></div>`;
+  return `<div class="${extra}" aria-hidden="true">${esc(name.slice(0, 1).toUpperCase())}</div>`;
+}
+function profileReady(u) {
+  return !!(u && u.provider && u.id && String(u.handle || "").replace(/^@/, "") && (u.name || u.legalName));
+}
+async function loginWithSocial(provider) {
+  if (!SOCIALS.some((s) => s.id === provider)) return { ok: false };
+  const start = await Promise.race([
+    apiJSON(`/auth/start/${encodeURIComponent(provider)}`),
+    new Promise((r) => setTimeout(() => r(null), 1800)),
+  ]);
+  if (start?.url && /^https:\/\//i.test(start.url) && !start.local) {
+    try { sessionStorage.setItem("velvet_oauth_from", location.hash || "#/"); } catch {}
+    location.href = start.url;
+    return { oauth: true };
+  }
+  return { connect: true, provider };
+}
+async function connectSocialProfile(provider, handle, name) {
+  const r = await apiJSON("/auth/connect", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ provider, handle, name }),
   });
-  return !!loadUser();
+  if (r?.error === "handle" || r?.error === "name") return { error: r.error };
+  if (r?.error === "not_found") return { error: "not_found" };
+  const user = r?.user;
+  if (!user || !user.id) return { error: "fail" };
+  saveUser({
+    ...loadUser(),
+    ...user,
+    provider,
+    created: user.created || new Date().toISOString(),
+    auto: false,
+    connected: true,
+  });
+  return { user: loadUser() };
 }
 function logoutUser() {
   userMem = null;
@@ -3238,16 +3265,31 @@ function openOnboarding(opts = {}) {
   // så att t.ex. geo-flödet landar fokus på "Välj X"-knappen i stället för toppen.
   const render = (focusSel) => {
     if (untrap) untrap();
-    if (phase === "lang" || phase === "auth") {
+    if (phase === "lang" || phase === "auth" || phase === "connect") {
       const entryCover = coverVenueForDest(DESTINATIONS.find((d) => d.code === "IBZ")) || coverVenueForDest(DESTINATIONS[0]) || null;
       root.innerHTML = `
       <div class="ob-overlay" id="ob-overlay">
         <div class="ob-overlay-media" aria-hidden="true">${coverImgHTML(entryCover && entryCover.url)}</div>
         ${entryCover && entryCover.v ? `<div class="ob-overlay-credit">${photoAttrHTML(entryCover.v)}</div>` : ""}
-        <div class="ob" role="dialog" aria-modal="true" aria-label="${esc(phase === "lang" ? t("chooseLang") : t("loginTitle"))}" tabindex="-1">
+        <div class="ob" role="dialog" aria-modal="true" aria-label="${esc(phase === "lang" ? t("chooseLang") : phase === "connect" ? t("connectTitle") : t("loginTitle"))}" tabindex="-1">
           <div class="ob-brand" aria-hidden="true">VELVET<span class="logo-dot">.</span></div>
           <div class="ob-brand-rule" aria-hidden="true"></div>
-          ${phase === "lang" ? `
+          ${phase === "connect" ? `
+          <h1 class="ob-title">${esc(t("connectTitle"))}</h1>
+          <p class="ob-sub">${esc(t("connectSub").replace("{net}", (SOCIALS.find((s) => s.id === authProvider) || {}).label || authProvider || ""))}</p>
+          <form class="connect-form" id="ob-connect">
+            <label>${esc(t("yourHandle"))}
+              <input type="text" id="ob-handle" autocomplete="username" spellcheck="false" placeholder="@anvandarnamn" maxlength="40" required>
+            </label>
+            <label>${esc(t("yourName"))}
+              <input type="text" id="ob-name" autocomplete="name" placeholder="${esc(t("yourName"))}" maxlength="80" required>
+            </label>
+            <p class="stepper-hint" id="ob-connect-err" hidden></p>
+            <div class="ob-actions">
+              <button type="submit" class="btn btn-gold" id="ob-connect-go">${esc(t("connectCta"))}</button>
+              <button type="button" class="btn btn-ghost" id="ob-connect-back">${esc(t("loginTitle"))}</button>
+            </div>
+          </form>` : phase === "lang" ? `
           <h1 class="ob-title">${esc(t("chooseLang"))}</h1>
           <p class="ob-sub">${esc(t("langSub"))}</p>
           <div class="lang-grid">
@@ -3281,19 +3323,41 @@ function openOnboarding(opts = {}) {
         });
       });
       root.querySelectorAll("[data-soc]").forEach((el) => {
-        el.addEventListener("click", () => {
+        el.addEventListener("click", async () => {
           el.disabled = true;
-          try {
-            loginWithSocial(el.dataset.soc);
-          } catch (err) {
-            console.warn("VELVET login", err);
+          let r = null;
+          try { r = await loginWithSocial(el.dataset.soc); }
+          catch (err) { console.warn("VELVET login", err); }
+          if (r?.oauth) return;
+          if (r?.connect) {
+            authProvider = el.dataset.soc;
+            phase = "connect";
+            render();
+            return;
           }
-          if (loadUser()) enterAfterLogin();
-          else el.disabled = false;
+          el.disabled = false;
         });
       });
       const skipA = $("#ob-skip-auth");
       if (skipA) skipA.addEventListener("click", () => { phase = "country"; render(); });
+      const backC = $("#ob-connect-back");
+      if (backC) backC.addEventListener("click", () => { phase = "auth"; render(); });
+      const formC = $("#ob-connect");
+      if (formC) {
+        formC.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const errEl = $("#ob-connect-err");
+          const go = $("#ob-connect-go");
+          if (go) go.disabled = true;
+          const r = await connectSocialProfile(authProvider, $("#ob-handle")?.value, $("#ob-name")?.value);
+          if (r?.user && profileReady(r.user)) { enterAfterLogin(); return; }
+          if (errEl) {
+            errEl.hidden = false;
+            errEl.textContent = r?.error === "not_found" ? t("connectMissing") : t("connectNeed");
+          }
+          if (go) go.disabled = false;
+        });
+      }
       return;
     }
     const countries = countryList();
@@ -4509,8 +4573,17 @@ async function renderAccount() {
   <section class="section">
     <div class="section-head"><div><h2>${esc(t("account"))}</h2></div></div>
     ${u ? `
+      ${!profileReady(u) ? `
+      <form class="connect-form" id="acc-connect" style="margin-bottom:20px">
+        <h2 class="detail-panel-title">${esc(t("connectTitle"))}</h2>
+        <p class="ob-sub" style="text-align:left;margin:0 0 12px">${esc(t("connectSub").replace("{net}", (SOCIALS.find((s) => s.id === u.provider) || {}).label || u.provider))}</p>
+        <label>${esc(t("yourHandle"))}<input type="text" id="acc-handle" value="${esc(u.handle || "")}" autocomplete="username" maxlength="40" required></label>
+        <label>${esc(t("yourName"))}<input type="text" id="acc-cname" value="${esc(u.name || "")}" autocomplete="name" maxlength="80" required></label>
+        <p class="field-error hidden" id="acc-connect-err"></p>
+        <button type="submit" class="btn btn-gold" id="acc-connect-go">${esc(t("connectCta"))}</button>
+      </form>` : ""}
       <div class="profile-head" style="margin-bottom:16px">
-        <div class="person-avatar lg soc-${esc(u.provider || "none")}" aria-hidden="true">${esc((displayName(u) || "?").slice(0, 1).toUpperCase())}</div>
+        ${avatarHTML(u, "lg")}
         <div>
           <p>${esc(t("loggedInAs"))} <b>${esc(displayName(u))}</b></p>
           <p class="person-meta">
@@ -4551,6 +4624,19 @@ async function renderAccount() {
   </section>`;
   $("#acc-out")?.addEventListener("click", () => { logoutUser(); renderAccount(); });
   $("#acc-in")?.addEventListener("click", () => openOnboarding({ dismissable: false, phase: "auth" }));
+  $("#acc-connect")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const go = $("#acc-connect-go");
+    const err = $("#acc-connect-err");
+    if (go) go.disabled = true;
+    const r = await connectSocialProfile(loadUser()?.provider, $("#acc-handle")?.value, $("#acc-cname")?.value);
+    if (r?.user && profileReady(r.user)) { renderAccount(); return; }
+    if (err) {
+      err.classList.remove("hidden");
+      err.textContent = r?.error === "not_found" ? t("connectMissing") : t("connectNeed");
+    }
+    if (go) go.disabled = false;
+  });
   document.querySelectorAll("[data-lang]").forEach((el) => {
     el.addEventListener("click", () => {
       applyLang(el.dataset.lang);

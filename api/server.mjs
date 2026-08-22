@@ -570,11 +570,56 @@ function socialUrl(provider, handle) {
   if (provider === "snapchat") return `https://www.snapchat.com/add/${enc}`;
   return "";
 }
+function cleanHandle(provider, raw) {
+  let h = String(raw || "").trim();
+  h = h.replace(/^https?:\/\/(www\.)?/i, "");
+  h = h.replace(/^(instagram|tiktok|facebook|snapchat)\.com\/(add\/|@)?/i, "");
+  h = h.split(/[/?#]/)[0].replace(/^@/, "").trim();
+  if (provider === "facebook") {
+    if (!/^[A-Za-z0-9.]{3,50}$/.test(h) && !/^\d{5,20}$/.test(h)) return "";
+  } else if (!/^[A-Za-z0-9._]{2,30}$/.test(h)) return "";
+  return h;
+}
+async function lookupPublicSocial(provider, handle) {
+  const url = socialUrl(provider, handle);
+  if (!url) return { ok: false, error: "handle" };
+  try {
+    const r = await fetch(url, {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (compatible; VELVET/1.0; +https://b2b.bakemyday.se/velvet/)",
+        Accept: "text/html",
+      },
+      redirect: "follow",
+      signal: AbortSignal.timeout(8000),
+    });
+    if (r.status === 404) return { ok: false, error: "not_found" };
+    const html = await r.text();
+    const og = (prop) => {
+      const re1 = new RegExp(`property=["']og:${prop}["'][^>]*content=["']([^"']+)["']`, "i");
+      const re2 = new RegExp(`content=["']([^"']+)["'][^>]*property=["']og:${prop}["']`, "i");
+      const m = html.match(re1) || html.match(re2);
+      return m ? String(m[1]).trim() : "";
+    };
+    let name = og("title").replace(/\s*[•|·\\-].*$/, "").replace(/\(@[^)]+\)/g, "").trim();
+    if (/^(instagram|tiktok|facebook|snapchat|log in|login|sign up)$/i.test(name)) name = "";
+    const photo = og("image");
+    const photoOk = /^https:\/\//i.test(photo) && !/rsrc\.php|static\.xx\.fbcdn|login/i.test(photo);
+    return {
+      ok: true,
+      name: name.slice(0, 80),
+      photo: photoOk ? photo.slice(0, 400) : "",
+      url,
+    };
+  } catch {
+    return { ok: true, name: "", photo: "", url };
+  }
+}
 function upsertUser(db, u) {
   if (!u || !u.id) return;
   const provider = String(u.provider || "");
   const handle = String(u.handle || "").replace(/^@/, "").slice(0, 40);
   const prev = db.users[u.id] || {};
+  const photo = String(u.photo || prev.photo || "");
   db.users[u.id] = {
     id: String(u.id).slice(0, 80),
     name: String(u.name || prev.name || "").slice(0, 80),
@@ -583,10 +628,12 @@ function upsertUser(db, u) {
     email: String(u.email || prev.email || "").toLowerCase().slice(0, 80),
     legalName: prev.legalName || "",
     promoterScope: prev.promoterScope || "",
-    photo: prev.photo || "",
+    photo: /^https:\/\//i.test(photo) ? photo.slice(0, 400) : (prev.photo || ""),
+    connected: !!(u.connected || prev.connected || handle),
+    oauth: !!(u.oauth || prev.oauth),
     seed: !!prev.seed,
     updated: new Date().toISOString(),
-    created: prev.created || new Date().toISOString(),
+    created: prev.created || u.created || new Date().toISOString(),
     whatsapp: prev.whatsapp || "",
     card: prev.card || null,
   };
@@ -670,6 +717,9 @@ function publicPerson(p, db, role) {
     handle,
     provider,
     socialUrl: socialUrl(provider, handle),
+    photo: String(p.photo || stored.photo || "").slice(0, 400),
+    connected: !!(p.connected || stored.connected || handle),
+    oauth: !!(p.oauth || stored.oauth),
     role: role || p.role || "guest",
     paid: !!p.paid,
     paidAt: p.paidAt || null,
@@ -1307,8 +1357,36 @@ const server = http.createServer(async (req, res) => {
       db.auth["st:" + state] = { provider, exp: Date.now() + 15 * 60 * 1000 };
       save(db);
       const dest = oauthAuthorizeUrl(provider, state);
-      if (!dest) return send(res, 200, { local: true, provider });
+      if (!dest) return send(res, 200, { local: true, connect: true, provider });
       return send(res, 200, { url: dest, provider });
+    }
+    if (req.method === "POST" && url.pathname === "/auth/connect") {
+      const b = await readBody(req, 2e5);
+      const provider = String(b.provider || "");
+      if (!["facebook", "instagram", "tiktok", "snapchat"].includes(provider)) {
+        return send(res, 400, { error: "provider" });
+      }
+      const handle = cleanHandle(provider, b.handle);
+      if (!handle) return send(res, 400, { error: "handle" });
+      const looked = await lookupPublicSocial(provider, handle);
+      if (looked.error === "not_found") return send(res, 404, { error: "not_found" });
+      const name = String(b.name || looked.name || "").trim().slice(0, 80);
+      if (!name) return send(res, 400, { error: "name" });
+      const profile = {
+        id: `U-${provider}-${handle.toLowerCase()}`,
+        provider,
+        handle,
+        name,
+        photo: looked.photo || "",
+        connected: true,
+        oauth: false,
+        created: new Date().toISOString(),
+      };
+      const db = load();
+      upsertUser(db, profile);
+      save(db);
+      const stored = db.users[profile.id];
+      return send(res, 200, { user: { ...publicPerson(stored, db, "user"), photo: stored.photo || "", connected: true } });
     }
     const authCb = url.pathname.match(/^\/auth\/callback\/(facebook|instagram|tiktok|snapchat)$/);
     if (req.method === "GET" && authCb) {

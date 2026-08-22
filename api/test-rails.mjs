@@ -576,7 +576,15 @@ async function runApi() {
 
     const auth = await req(base, "GET", "/auth/start/instagram");
     if (auth.status !== 200 || !(auth.json.local === true || auth.json.url)) fail("auth-start", JSON.stringify(auth));
-    else ok("auth-start", auth.json.local ? "one-tap local" : "oauth url");
+    else ok("auth-start", auth.json.local ? "connect public profile" : "oauth url");
+
+    const badH = await req(base, "POST", "/auth/connect", { provider: "instagram", handle: "!!", name: "Ada" });
+    if (badH.status !== 400) fail("auth-connect-handle", JSON.stringify(badH.json));
+    else ok("auth-connect-handle", "invalid @ rejected");
+    const conn = await req(base, "POST", "/auth/connect", { provider: "instagram", handle: "velvet_test_ada", name: "Ada Test" });
+    if (conn.status !== 200 || conn.json.user?.handle !== "velvet_test_ada" || conn.json.user?.name !== "Ada Test") {
+      fail("auth-connect", JSON.stringify(conn.json).slice(0, 240));
+    } else ok("auth-connect", "public @ linked");
 
     const events = await req(base, "GET", "/events");
     const evn = events.json?.venues || {};
