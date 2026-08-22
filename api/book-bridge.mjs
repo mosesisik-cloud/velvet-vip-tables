@@ -68,6 +68,7 @@ export function officialBooking(venueId) {
     pay: !!rec?.pay,
     payUrl: /^https:\/\//i.test(rec?.payUrl || "") ? rec.payUrl : "",
     engine: rec?.engine || "",
+    email: String(rec?.email || "").trim(),
   };
 }
 
@@ -186,7 +187,7 @@ export function bookingAdapter(venueId) {
     clubPay: !!(off.pay || off.payUrl),
     payUrl: off.payUrl || "",
     writesToClub: false,
-    clubEmail: inv.email,
+    clubEmail: off.email || inv.email,
     clubPhone: inv.phone,
     vipHow: inv.vipHow,
     hours: inv.hours,

@@ -32,10 +32,11 @@
     "name": "O Beach Ibiza"
   },
   "MYK-001": {
-    "url": "https://scorpios.com/mykonos",
-    "kind": "site",
-    "label": "Official site",
-    "name": "Scorpios Mykonos"
+    "url": "https://scorpios.com/contact",
+    "kind": "vip",
+    "label": "Reservations",
+    "name": "Scorpios Mykonos",
+    "email": "reservations.mykonos@scorpios.com"
   },
   "MYK-002": {
     "url": "https://www.nammos.com/mykonos",
@@ -212,10 +213,11 @@
     "name": "La Guérite Cannes"
   },
   "BDR-001": {
-    "url": "https://scorpios.com/bodrum",
-    "kind": "site",
-    "label": "Official site",
-    "name": "Scorpios Bodrum"
+    "url": "https://scorpios.com/contact",
+    "kind": "vip",
+    "label": "Reservations",
+    "name": "Scorpios Bodrum",
+    "email": "reservations.bodrum@scorpios.com"
   },
   "BDR-002": {
     "url": "https://xuma.com.tr/en/",

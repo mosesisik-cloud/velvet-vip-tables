@@ -1,5 +1,5 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=73";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo } from "./passport-ocr.js";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload } from "./face-idv.js";
@@ -191,7 +191,7 @@ function bookingLinkHTML(v, { gold = false, sm = false, full = false } = {}) {
   if (!bookingUrlFor(v)) return "";
   const cls = gold ? `btn btn-gold${sm ? " btn-sm" : ""}` : "icon-link";
   const style = full ? ` style="width:100%"` : "";
-  return `<a class="${cls}" href="#/book-site/${encodeURIComponent(v.venue_id)}" data-nav${style}>${esc(gold ? t("bookOnSite") : t("bookOnSiteShort"))} ↗</a>`;
+  return `<a class="${cls}" href="#/book-site/${encodeURIComponent(v.venue_id)}" data-nav${style}>${esc(gold ? t("bookOnSite") : t("bookOnSiteShort"))}</a>`;
 }
 
 function destForVenue(v) {
@@ -5477,7 +5477,7 @@ async function renderBookSite(id) {
   const tooYoung = live?.error === "too_young" || !!young;
   const needLock = !me || live?.error === "idv_required" || live?.error === "card_required" || tooYoung || !isPayingMember();
   const needCard = live?.error === "card_required" || (me && isIdvOk() && !isCardOk());
-  setTitle(`${t("bridgeTitle")} · ${v.name}`);
+  setTitle(`${v.name} · ${t("bridgeTitle")}`);
   const mine = live?.bridges || [];
   const nights = (adapter.inventory && Array.isArray(adapter.inventory.nights) ? adapter.inventory.nights : eventsFor(v)).slice(0, 24);
   const q = new URLSearchParams((location.hash.split("?")[1] || ""));
@@ -5490,15 +5490,16 @@ async function renderBookSite(id) {
       body: JSON.stringify({ user: me, venueId: v.venue_id }),
     }).catch(() => {});
   }
+  const host = adapter.host || b.host;
   view().innerHTML = `
   <section class="section book-site">
     <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
     <div class="book-site-hero">
       ${venueMediaHTML(v, "venue-hero-media", { eager: true, playable: true })}
       <div class="book-site-copy">
-        <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)}${engineName ? ` · ${esc(engineName)}` : ""}${adapter.bookable ? ` · ${esc(t("bookOnSiteShort"))}` : ""} · ${esc(adapter.host || b.host)}</p>
-        <h1>${esc(t("bridgeTitle"))}</h1>
-        <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(t("bridgeSub"))}</p>
+        <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)}${engineName ? ` · ${esc(engineName)}` : ""} · ${esc(host)}</p>
+        <h1>${esc(v.name)}</h1>
+        <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(t("bridgeSub").replace("{name}", v.name))}</p>
         ${adapter.vipHow ? `<p class="events-meta">${esc(t("bridgeReadLive"))}: ${esc(adapter.vipHow)}</p>` : `<p class="events-meta">${esc(t("bridgeReadLive"))}</p>`}
         ${nights.length ? `
         <div class="bridge-nights" id="bridge-nights">
@@ -5509,10 +5510,11 @@ async function renderBookSite(id) {
               <span>${esc(n.title)}${n.note ? ` · ${esc(n.note)}` : ""}</span>
             </button>`).join("")}
         </div>` : `<p class="events-meta">${esc(t("bridgeNoNights"))}</p>`}
+        <div class="book-desk-card">
         ${needLock ? (
           tooYoung
             ? `<p class="detail-cta-note">${esc(tooYoungText(live?.error === "too_young" ? live : young, v))}</p>`
-            : `<div style="margin-top:16px">${promoterLockHTML(needCard ? "card" : "idv")}</div>
+            : `${promoterLockHTML(needCard ? "card" : "idv")}
           <p class="detail-cta-note">${esc(t("bridgeNeed"))}</p>`
         ) : `
         <div class="bridge-desk" id="bridge-desk">
@@ -5536,27 +5538,19 @@ async function renderBookSite(id) {
             <input type="number" id="br-amount" min="0" step="1" inputmode="decimal" placeholder="EUR">
           </label>
           <p class="events-meta">${esc(isPayingMember() ? t("guestVerified") : t("bridgeNeed"))}${adapter.clubPay ? ` · ${esc(t("clubHasPay"))}` : ""}</p>
-          <button type="button" class="btn btn-gold" id="br-make" style="width:100%">${esc(t("bridgeCta"))}</button>
+          <button type="button" class="btn btn-gold" id="br-make" style="width:100%">${esc(t("bridgeCta").replace("{name}", v.name))}</button>
         </div>
         <div class="bridge-packet hidden" id="bridge-out"></div>`}
-        <div class="book-site-actions">
-          <a class="btn btn-ghost" id="bs-open" href="${esc(adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))} ↗</a>
-          <button class="btn btn-ghost" type="button" id="bs-velvet">${esc(t("sendRequest"))}</button>
-          ${tooYoung ? "" : `<a class="btn ${isPayingMember() ? "btn-gold" : "btn-ghost"}" href="${promoterHref(v.venue_id)}" data-nav>${esc(isPayingMember() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>`}
         </div>
-        <p class="book-site-url">${esc(adapter.host || b.host)} · ${esc(adapter.officialUrl || b.url)}</p>
+        <div class="book-site-actions">
+          <a class="btn btn-ghost" id="bs-open" href="${esc(adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))} · ${esc(host)}</a>
+          <button class="btn btn-ghost" type="button" id="bs-velvet">${esc(t("sendRequest"))}</button>
+          ${tooYoung ? "" : `<a class="btn btn-ghost" href="${promoterHref(v.venue_id)}" data-nav>${esc(isPayingMember() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>`}
+        </div>
         ${adapter.clubEmail ? `<p class="book-site-url">${esc(t("bridgeClubMail"))}: ${esc(adapter.clubEmail)}</p>` : ""}
         <p class="detail-cta-note" style="margin-bottom:0">${esc(t("bridgeHonest"))}</p>
       </div>
     </div>
-    ${b.social ? "" : `
-    <div class="book-site-frame-wrap">
-      <div class="book-site-frame-bar">
-        <span>${esc(t("bookOnSiteIframe"))}</span>
-        <a class="icon-link" href="${esc(adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))} ↗</a>
-      </div>
-      <iframe class="book-site-frame" src="${esc(adapter.officialUrl || b.url)}" title="${esc(v.name)} — ${esc(t("bookOnSite"))}" referrerpolicy="no-referrer-when-downgrade" loading="eager" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"></iframe>
-    </div>`}
   </section>`;
   $("#bs-velvet")?.addEventListener("click", () => openBookingModal(v));
   $("#ch-verify")?.addEventListener("click", () => rememberAfterIdv(`#/book-site/${encodeURIComponent(v.venue_id)}`));
@@ -5993,7 +5987,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=72", { updateViaCache: "none" })
+      .register("sw.js?v=73", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

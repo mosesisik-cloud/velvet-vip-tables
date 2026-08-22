@@ -2140,31 +2140,16 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   margin-top: 12px;
   word-break: break-all;
 }
-.book-site-frame-wrap {
-  margin-top: 8px;
-  border: 1px solid var(--border);
+.book-desk-card {
+  margin-top: 18px;
+  padding: 18px 18px 16px;
+  border: 1px solid rgba(212, 175, 95, 0.55);
   border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--bg-elev);
+  background: var(--bg-card);
+  max-width: 480px;
 }
-.book-site-frame-bar {
-  background: rgba(212, 175, 95, 0.08);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--border);
-  font-size: 12px;
-  color: var(--text-dim);
-}
-.book-site-frame {
-  width: 100%;
-  height: min(78vh, 860px);
-  border: 0;
-  background: #111;
-  display: block;
-}
+.book-desk-card .bridge-desk { max-width: none; margin-top: 0; }
+.book-desk-card .detail-cta-note { margin: 10px 0 0; }
 .city-avail { margin: 28px 0 8px; text-align: center; }
 .city-avail .detail-panel-title, .city-avail .events-meta { text-align: center; }
 .avail-chips {
@@ -2227,5 +2212,5 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 @media (max-width: 720px) {
   .book-site-hero { grid-template-columns: 1fr; }
   .book-site-hero .venue-hero-media { aspect-ratio: 16 / 9; }
-  .book-site-frame { height: 70vh; min-height: 360px; }
+  .book-desk-card { max-width: none; }
 }
