@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
 import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera } from "./passport-ocr.js";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, matchFaces, facePayload } from "./face-idv.js";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo } from "./passport-ocr.js";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload } from "./face-idv.js";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -4280,7 +4280,7 @@ async function renderVerify() {
   let snapping = false;
   const paintShutter = () => {
     const shutter = $("#idv-shutter");
-    if (shutter) shutter.hidden = camMode !== "pass" || camBtn?.dataset.open !== "1";
+    if (shutter) shutter.hidden = camBtn?.dataset.open !== "1";
   };
   const takePassShot = async () => {
     if (snapping || camMode !== "pass" || camBtn?.dataset.open !== "1") return;
@@ -4305,6 +4305,7 @@ async function renderVerify() {
     camMode = mode === "selfie" ? "selfie" : "pass";
     camFacing = facing === "user" ? "user" : "environment";
     await startCamera(video, camFacing);
+    await waitForVideo(video).catch(() => {});
     if (wrap) {
       wrap.hidden = false;
       wrap.classList.toggle("selfie", camMode === "selfie" || camFacing === "user");
@@ -4347,11 +4348,24 @@ async function renderVerify() {
     };
   }
   $("#idv-snap")?.addEventListener("click", () => { takePassShot(); });
-  $("#idv-shutter")?.addEventListener("click", (e) => { e.stopPropagation(); takePassShot(); });
+  $("#idv-shutter")?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (camMode === "selfie") {
+      requestLivenessTap();
+      setStatus(t("verifyBlinkNow"), true);
+      return;
+    }
+    takePassShot();
+  });
   $("#mrz-cam-wrap")?.addEventListener("click", (e) => {
     if (e.target.closest(".mrz-flip, .mrz-shutter")) return;
-    if (camMode !== "pass" || camBtn?.dataset.open !== "1") return;
+    if (camBtn?.dataset.open !== "1") return;
     const video = $("#mrz-video");
+    if (camMode === "selfie") {
+      requestLivenessTap();
+      setStatus(t("verifyBlinkNow"), true);
+      return;
+    }
     focusAt(video, e.clientX, e.clientY);
   });
   $("#idv-live")?.addEventListener("click", async () => {
@@ -4361,13 +4375,32 @@ async function renderVerify() {
     }
     const wrap = $("#mrz-cam-wrap");
     const video = $("#mrz-video");
-    const guide = $("#mrz-guide");
+    const liveBtn = $("#idv-live");
+    if (liveBtn?.dataset.busy === "1") return;
+    if (liveBtn) liveBtn.dataset.busy = "1";
     setErr("");
-    setStatus(t("verifyFaceLoad"), true);
-    try { await loadFaceApi(); }
-    catch { setStatus("", false); setErr(t("verifyFaceLoadFail")); return; }
     try {
       await openCam("user", { mode: "selfie" });
+    } catch {
+      if (liveBtn) liveBtn.dataset.busy = "";
+      setStatus("", false);
+      setErr(t("verifyCamFail"));
+      return;
+    }
+    setStatus(t("verifyFaceLoad"), true);
+    try { await loadFaceApi(); }
+    catch {
+      stopLiveness();
+      stopCamera();
+      if (wrap) { wrap.hidden = true; wrap.classList.remove("selfie"); }
+      if (camBtn) { camBtn.dataset.open = ""; camBtn.textContent = t("verifyCam"); }
+      paintShutter();
+      if (liveBtn) liveBtn.dataset.busy = "";
+      setStatus("", false);
+      setErr(t("verifyFaceLoadFail"));
+      return;
+    }
+    try {
       setStatus(t("verifyBlink"), true);
       const live = await watchBlink(video, (st) => {
         if (st === "no_face") setStatus(t("verifyNoFaceSelf"), true);
@@ -4400,8 +4433,13 @@ async function renderVerify() {
     } catch {
       stopLiveness();
       stopCamera();
+      if (wrap) { wrap.hidden = true; wrap.classList.remove("selfie"); }
+      if (camBtn) { camBtn.dataset.open = ""; camBtn.textContent = t("verifyCam"); }
+      paintShutter();
       setStatus("", false);
       setErr(t("verifyCamFail"));
+    } finally {
+      if (liveBtn) liveBtn.dataset.busy = "";
     }
   });
   $("#idv-confirm")?.addEventListener("change", (e) => {

@@ -88,7 +88,7 @@ function faceAreaRatio(det, w, h) {
 
 async function detectOn(input, inputSize) {
   const fa = await loadFaceApi();
-  const opts = new fa.TinyFaceDetectorOptions({ inputSize: inputSize || 320, scoreThreshold: 0.38 });
+  const opts = new fa.TinyFaceDetectorOptions({ inputSize: inputSize || 320, scoreThreshold: 0.3 });
   return fa.detectSingleFace(input, opts).withFaceLandmarks().withFaceDescriptor();
 }
 
@@ -127,11 +127,12 @@ export async function detectPassportFace(dataUrl) {
 }
 
 export async function detectSelfieFace(input) {
-  const c = input instanceof HTMLVideoElement ? scaleCanvas(input, 480) : scaleCanvas(input, 640);
+  const c = input instanceof HTMLVideoElement ? scaleCanvas(input, 560) : scaleCanvas(input, 640);
+  if (c.width < 32 || c.height < 32) return { ok: false, reason: "no_selfie_face" };
   const det = await detectOn(c, 320);
   if (!det) return { ok: false, reason: "no_selfie_face" };
   const ratio = faceAreaRatio(det, c.width, c.height);
-  if (ratio < 0.04) return { ok: false, reason: "face_too_small" };
+  if (ratio < 0.018) return { ok: false, reason: "face_too_small" };
   const left = det.landmarks.getLeftEye();
   const right = det.landmarks.getRightEye();
   const e = (ear(left) + ear(right)) / 2;
@@ -144,24 +145,67 @@ export async function detectSelfieFace(input) {
   };
 }
 
+let tapLiveness = false;
+
 export function stopLiveness() {
   if (liveAbort) liveAbort.abort();
   liveAbort = null;
 }
 
+export function requestLivenessTap() {
+  tapLiveness = true;
+}
+
+async function blinkFromSamples(video, n = 12) {
+  const ears = [];
+  let last = null;
+  for (let i = 0; i < n; i++) {
+    try { last = await detectSelfieFace(video); }
+    catch { last = { ok: false }; }
+    if (last && last.ok) ears.push(last.ear);
+    await sleep(45);
+  }
+  if (!last || !last.ok || ears.length < 3) return { ok: false, reason: "no_selfie_face" };
+  const maxE = Math.max(...ears);
+  const minE = Math.min(...ears);
+  if (maxE >= 0.18 && minE <= maxE * 0.82) {
+    return { ok: true, descriptor: last.descriptor, liveness: "blink" };
+  }
+  return { ok: false, reason: "timeout" };
+}
+
 export async function watchBlink(video, onStatus) {
-  stopLiveness();
+  if (liveAbort) {
+    liveAbort.abort();
+    liveAbort = null;
+  }
   const ac = new AbortController();
   liveAbort = ac;
   await loadFaceApi();
+  const readyAt = Date.now();
+  while (!ac.signal.aborted && !(video && video.videoWidth > 16) && Date.now() - readyAt < 5000) {
+    await sleep(40);
+  }
   let closed = 0;
   let openSeen = false;
+  let openEar = 0;
   const started = Date.now();
   while (!ac.signal.aborted) {
-    if (Date.now() - started > 45000) return { ok: false, reason: "timeout" };
+    if (Date.now() - started > 60000) return { ok: false, reason: "timeout" };
     if (!video.videoWidth) {
+      if (onStatus) onStatus("no_face");
       await sleep(80);
       continue;
+    }
+    if (tapLiveness) {
+      tapLiveness = false;
+      if (onStatus) onStatus("closed");
+      const burst = await blinkFromSamples(video);
+      if (ac.signal.aborted) return { ok: false, reason: "abort" };
+      if (burst.ok) {
+        if (onStatus) onStatus("ok");
+        return burst;
+      }
     }
     let rec;
     try { rec = await detectSelfieFace(video); }
@@ -169,25 +213,27 @@ export async function watchBlink(video, onStatus) {
     if (ac.signal.aborted) return { ok: false, reason: "abort" };
     if (!rec.ok) {
       closed = 0;
-      openSeen = false;
       if (onStatus) onStatus("no_face");
-      await sleep(90);
+      await sleep(80);
       continue;
     }
     const e = rec.ear;
-    if (e > 0.24) {
+    const openCut = openEar > 0 ? Math.max(0.2, openEar * 0.88) : 0.2;
+    const closeCut = openEar > 0 ? Math.min(0.19, openEar * 0.76) : 0.17;
+    if (e > openCut) {
+      openEar = Math.max(openEar * 0.6 + e * 0.4, e);
       openSeen = true;
-      if (closed >= 2) {
+      if (closed >= 1) {
         if (onStatus) onStatus("ok");
         return { ok: true, descriptor: rec.descriptor, liveness: "blink" };
       }
       closed = 0;
       if (onStatus) onStatus("blink");
-    } else if (e < 0.19 && openSeen) {
+    } else if (openSeen && e < closeCut) {
       closed += 1;
       if (onStatus) onStatus("closed");
     } else if (onStatus) onStatus("look");
-    await sleep(70);
+    await sleep(55);
   }
   return { ok: false, reason: "abort" };
 }

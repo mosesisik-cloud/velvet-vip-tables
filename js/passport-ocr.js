@@ -224,47 +224,82 @@ async function cameraByLabel(front) {
   }
 }
 
+function prepVideoEl(video) {
+  if (!video) return;
+  video.setAttribute("playsinline", "true");
+  video.setAttribute("webkit-playsinline", "true");
+  video.playsInline = true;
+  video.muted = true;
+  video.autoplay = true;
+}
+
+export async function waitForVideo(video, ms = 6000) {
+  if (!video) throw new Error("video");
+  if (video.videoWidth > 16 && !video.paused) return;
+  const t0 = Date.now();
+  while (Date.now() - t0 < ms) {
+    if (video.videoWidth > 16) {
+      try { await video.play(); } catch { /* playing */ }
+      if (video.videoWidth > 16) return;
+    }
+    await new Promise((r) => setTimeout(r, 50));
+  }
+  if (!(video.videoWidth > 16)) throw new Error("video");
+}
+
 export async function startCamera(video, facing = "environment") {
   stopCamera();
-  await new Promise((r) => setTimeout(r, 150));
+  await new Promise((r) => setTimeout(r, 80));
   const front = facing === "user";
+  prepVideoEl(video);
   // Inte 1920×1080 på selfie — bakkameran vinner då ofta över facingMode.
   const tries = front
     ? [
         { facingMode: { exact: "user" } },
+        { facingMode: { ideal: "user" } },
         { facingMode: "user" },
-        { facingMode: { ideal: "user" }, width: { ideal: 1280 }, height: { ideal: 720 } },
       ]
     : [
         { facingMode: { exact: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 }, focusMode: { ideal: "continuous" } },
-        { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 }, focusMode: { ideal: "continuous" } },
-        { facingMode: { ideal: "environment" } },
+        { facingMode: { ideal: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+        { facingMode: "environment" },
       ];
   let stream = null;
   for (const spec of tries) {
     try {
       stream = await gum(spec);
-      const got = camFacingOf(stream);
-      if (front && got && got !== "user") {
-        stream.getTracks().forEach((t) => t.stop());
-        stream = null;
-        continue;
-      }
-      if (!front && got === "user") {
-        stream.getTracks().forEach((t) => t.stop());
-        stream = null;
-        continue;
-      }
       break;
     } catch { /* next */ }
   }
   if (!stream) stream = await cameraByLabel(front);
-  if (!stream) stream = await gum(true);
+  if (!stream && !front) {
+    try { stream = await gum(true); } catch { /* none */ }
+  }
+  if (!stream) throw new Error("camera");
+  const got = camFacingOf(stream);
+  if (front && got === "environment") {
+    stream.getTracks().forEach((t) => t.stop());
+    stream = await cameraByLabel(true);
+    if (!stream) {
+      try { stream = await gum({ facingMode: { exact: "user" } }); }
+      catch { stream = null; }
+    }
+    if (!stream) throw new Error("camera");
+  }
   camStream = stream;
   video.srcObject = stream;
-  video.setAttribute("playsinline", "true");
-  video.muted = true;
-  await video.play();
+  prepVideoEl(video);
+  try {
+    await video.play();
+  } catch {
+    await new Promise((resolve, reject) => {
+      const t = setTimeout(() => reject(new Error("play")), 6000);
+      video.addEventListener("loadedmetadata", () => {
+        video.play().then(() => { clearTimeout(t); resolve(); }, (e) => { clearTimeout(t); reject(e); });
+      }, { once: true });
+    });
+  }
+  await waitForVideo(video).catch(() => {});
   if (!front) await applyAutofocus();
   return stream;
 }
