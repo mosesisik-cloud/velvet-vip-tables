@@ -376,13 +376,13 @@ function updateFavBadge() {
   el.classList.toggle("hidden", n === 0);
 }
 function favLabel(on, name) {
-  if (name) return on ? `Ta bort ${name} från favoriter` : `Spara ${name} som favorit`;
-  return on ? "Ta bort från favoriter" : "Spara som favorit";
+  if (name) return (on ? t("favRemove") : t("favAdd")).replace("{name}", name);
+  return on ? t("favRemoveShort") : t("favAddShort");
 }
 function favBtnHTML(id, name = "") {
   const on = isFav(id);
   const label = favLabel(on, name);
-  return `<button class="fav-btn" type="button" data-fav="${esc(id)}" data-fav-name="${esc(name)}" aria-pressed="${on}" title="${on ? "Sparad" : "Spara"}" aria-label="${esc(label)}">
+  return `<button class="fav-btn" type="button" data-fav="${esc(id)}" data-fav-name="${esc(name)}" aria-pressed="${on}" title="${on ? t("favSaved") : t("saveSettings")}" aria-label="${esc(label)}">
     <svg viewBox="0 0 24 24" fill="${on ? "currentColor" : "none"}" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12.1 21s-7.2-4.5-9.6-8.3C.3 9.3 2.2 5.4 6.3 5.4c2.1 0 3.5 1.3 4.4 2.6.9-1.3 2.3-2.6 4.4-2.6 4.1 0 6 3.9 3.8 7.3-2.4 3.8-9.6 8.3-9.6 8.3z"/></svg>
   </button>`;
 }
@@ -392,7 +392,7 @@ function paintFavButton(btn) {
   const label = favLabel(on, name);
   btn.setAttribute("aria-pressed", String(on));
   btn.setAttribute("aria-label", label);
-  btn.title = on ? "Sparad" : "Spara";
+  btn.title = on ? t("favSaved") : t("saveSettings");
   const svg = btn.querySelector("svg");
   if (svg) svg.setAttribute("fill", on ? "currentColor" : "none");
 }
@@ -1599,7 +1599,7 @@ function igHandle(url) {
 function igLinkHTML(v, { arrow = false } = {}) {
   if (!v.instagram_url) return "";
   const handle = igHandle(v.instagram_url) || "Instagram";
-  return `<a class="icon-link ig-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på Instagram">${IG_ICON}<span class="soc-handle">${esc(handle)}</span>${arrow ? " ↗" : ""}</a>`;
+  return `<a class="icon-link ig-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener" aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "Instagram"))}">${IG_ICON}<span class="soc-handle">${esc(handle)}</span>${arrow ? " ↗" : ""}</a>`;
 }
 
 function venueCard(v, { eager = false } = {}) {
@@ -1957,8 +1957,8 @@ function renderVenueDetail(id) {
             ${bookingLinkHTML(v)}
             <a class="icon-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
             ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">${esc(t("website"))} ↗</a>` : ""}
-            ${v.tiktok_url ? `<a class="icon-link" href="${esc(v.tiktok_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på TikTok">${TIKTOK_ICON}<span>TikTok</span> ↗</a>` : ""}
-            ${v.facebook_url ? `<a class="icon-link" href="${esc(v.facebook_url)}" target="_blank" rel="noopener" aria-label="${esc(v.name)} på Facebook">${FB_ICON}<span>Facebook</span> ↗</a>` : ""}
+            ${v.tiktok_url ? `<a class="icon-link" href="${esc(v.tiktok_url)}" target="_blank" rel="noopener" aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "TikTok"))}">${TIKTOK_ICON}<span>TikTok</span> ↗</a>` : ""}
+            ${v.facebook_url ? `<a class="icon-link" href="${esc(v.facebook_url)}" target="_blank" rel="noopener" aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "Facebook"))}">${FB_ICON}<span>Facebook</span> ↗</a>` : ""}
           </div>
         </div>
       </div>
@@ -3345,7 +3345,7 @@ function renderSharedList(raw) {
   if (save) {
     save.addEventListener("click", () => {
       saveFavs([...loadFavs(), ...list.map((v) => v.venue_id)]);
-      save.textContent = "Sparad ✓";
+      save.textContent = t("savedCheck");
       syncFavButtons();
     });
   }
