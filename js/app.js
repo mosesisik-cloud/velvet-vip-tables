@@ -5828,7 +5828,7 @@ function renderLoadError() {
 }
 
 async function fetchJSON(url) {
-  const r = await fetch(url);
+  const r = await fetch(url, { cache: "no-store" });
   if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
   const data = await r.json(); // kastar vid trasig JSON
   if (!Array.isArray(data)) throw new Error(`${url}: oväntat format (förväntade en lista)`);
@@ -5962,7 +5962,7 @@ async function init() {
   // Första besöket (inget val sparat) och ingen direktlänk → visa onboardingen.
   // Direktlänkar (#/venue/…, #/join/…, …) får aldrig blockeras.
   if (!homeChoice && (!location.hash || location.hash === "#/")) {
-    openOnboarding({ dismissable: false });
+    openOnboarding({ dismissable: true });
   }
 }
 

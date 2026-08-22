@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>VELVET — VIP-bord. Delad lyx.</title>
 <meta name="description" content="Skicka förfrågan om VIP-bord, cabanas och daybeds på världens främsta klubbar och beach clubs. VELVET-teamet tar den mot klubben — ingen automatisk reservation.">
-<link rel="stylesheet" href="css/app.css?v=68">
+<link rel="stylesheet" href="css/app.css?v=70">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥂</text></svg>">
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
@@ -85,6 +85,31 @@
 <!-- Global search -->
 <div id="search-root"></div>
 
-<script type="module" src="js/app.js?v=68"></script>
+<script>
+(function () {
+  var KEY = "velvet_sw_bust";
+  function bust() {
+    try { if (sessionStorage.getItem(KEY)) return; sessionStorage.setItem(KEY, "1"); } catch (e) { return; }
+    var done = function () { location.reload(); };
+    if (!("serviceWorker" in navigator)) { done(); return; }
+    navigator.serviceWorker.getRegistrations().then(function (rs) {
+      return Promise.all(rs.map(function (r) { return r.unregister(); }));
+    }).then(function () {
+      if (!caches || !caches.keys) { done(); return; }
+      return caches.keys().then(function (ks) {
+        return Promise.all(ks.filter(function (k) { return k.indexOf("velvet") === 0; }).map(function (k) { return caches.delete(k); }));
+      });
+    }).then(done).catch(done);
+  }
+  window.addEventListener("error", function (e) {
+    if (/\/js\/(app|i18n|mrz|passport-ocr|face-idv)\.js/i.test(String((e && e.filename) || ""))) bust();
+  });
+  window.addEventListener("unhandledrejection", function (e) {
+    var msg = String((e && e.reason && e.reason.message) || (e && e.reason) || "");
+    if (/dynamically imported module|Importing a module script failed/i.test(msg)) bust();
+  });
+})();
+</script>
+<script type="module" src="js/app.js?v=70"></script>
 </body>
 </html>

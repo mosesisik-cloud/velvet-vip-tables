@@ -1,6 +1,6 @@
 /* VELVET service worker — PWA-offlinestöd.
  * Strategi:
- *  - App-skalet (html/css/js/json + ikoner): cache-first, förcachat vid install.
+ *  - html/css/js/json: network-first (iPhone-PWA fick annars kraschat JS för evigt).
  *    OBS: bumpa VERSION vid varje deploy som ändrar skalet — annars serveras gammal version.
  *  - venue-events.json och /velvet-api/events: network-first (daglig crawl).
  *  - Google Fonts + Leaflet (unpkg) + CARTO-tiles: stale-while-revalidate i runtime-cache.
@@ -127,16 +127,21 @@ async function staleWhileRevalidate(request) {
   return Response.error();
 }
 
-// Navigationer: SPA:n bor i index.html (hash-router) — cache-first, nät som backup, offline.html som sista utväg.
+// Navigationer: alltid nätet först. Cache-first här var varför iPhone-ikonen
+// fastnade på kraschat JS — ny deploy nådde aldrig hemskärmen.
 async function handleNavigation(request) {
-  const cached = await caches.match("./index.html");
-  if (cached) return cached;
   try {
-    return await fetch(request);
-  } catch (_) {
-    const offline = await caches.match("./offline.html");
-    return offline || Response.error();
-  }
+    const fresh = await fetch(request, { cache: "no-store" });
+    if (fresh && fresh.ok) {
+      const cache = await caches.open(SHELL_CACHE);
+      cache.put("./index.html", fresh.clone());
+      return fresh;
+    }
+  } catch (_) { /* offline */ }
+  const cached = await caches.match("./index.html") || await caches.match(request);
+  if (cached) return cached;
+  const offline = await caches.match("./offline.html");
+  return offline || Response.error();
 }
 
 self.addEventListener("fetch", (event) => {
@@ -159,8 +164,12 @@ self.addEventListener("fetch", (event) => {
       event.respondWith(networkFirst(request));
       return;
     }
-    // App-skal: html/css/js/json + ikoner → cache-first
-    if (/\.(html|css|js|json|png|svg|webmanifest)(\?|$)/i.test(url.pathname)) {
+    // html/css/js/json: nätet först så en kraschad deploy inte låser iPhone-PWA.
+    if (/\.(html|css|js|json|webmanifest)(\?|$)/i.test(url.pathname)) {
+      event.respondWith(networkFirst(request));
+      return;
+    }
+    if (/\.(png|svg|woff2)(\?|$)/i.test(url.pathname)) {
       event.respondWith(cacheFirst(request));
       return;
     }
