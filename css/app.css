@@ -1475,6 +1475,8 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .person-avatar.soc-facebook { background: rgba(24,119,242,0.18); color: #7db4ff; border-color: rgba(24,119,242,0.4); }
 .person-avatar.soc-tiktok { background: #1a1a1a; color: #fff; border-color: #333; }
 .person-avatar.soc-snapchat { background: rgba(255,252,0,0.16); color: #ffe44d; border-color: rgba(255,252,0,0.4); }
+.person-avatar.soc-google { background: rgba(255,255,255,0.12); color: #fff; border-color: rgba(255,255,255,0.35); }
+.social-btn[data-soc="google"] { border: 1px solid rgba(255,255,255,0.28); }
 .person-name { font-weight: 600; }
 .person-name a { color: var(--text); }
 .person-name a:hover { color: var(--gold-bright); }

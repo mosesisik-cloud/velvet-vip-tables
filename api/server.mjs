@@ -573,10 +573,19 @@ function socialUrl(provider, handle) {
   if (provider === "facebook") return `https://www.facebook.com/${enc}`;
   if (provider === "tiktok") return `https://www.tiktok.com/@${enc}`;
   if (provider === "snapchat") return `https://www.snapchat.com/add/${enc}`;
+  if (provider === "google") {
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(h)) return `mailto:${h}`;
+    return "";
+  }
   return "";
 }
 function cleanHandle(provider, raw) {
   let h = String(raw || "").trim();
+  if (provider === "google") {
+    const email = h.replace(/^mailto:/i, "").toLowerCase();
+    if (!/^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/i.test(email)) return "";
+    return email.slice(0, 80);
+  }
   h = h.replace(/^https?:\/\/(www\.)?/i, "");
   h = h.replace(/^(instagram|tiktok|facebook|snapchat)\.com\/(add\/|@)?/i, "");
   h = h.split(/[/?#]/)[0].replace(/^@/, "").trim();
@@ -586,6 +595,9 @@ function cleanHandle(provider, raw) {
   return h;
 }
 async function lookupPublicSocial(provider, handle) {
+  if (provider === "google") {
+    return { ok: true, name: "", photo: "", url: socialUrl("google", handle) };
+  }
   const url = socialUrl(provider, handle);
   if (!url) return { ok: false, error: "handle" };
   try {
@@ -881,6 +893,7 @@ function emptyPay() {
       instagram: { id: "", secret: "" },
       tiktok: { key: "", secret: "" },
       snapchat: { id: "", secret: "" },
+      google: { id: "", secret: "" },
     },
   };
 }
@@ -904,6 +917,7 @@ function loadPay() {
         instagram: { ...base.oauth.instagram, ...(raw.oauth?.instagram || {}) },
         tiktok: { ...base.oauth.tiktok, ...(raw.oauth?.tiktok || {}) },
         snapchat: { ...base.oauth.snapchat, ...(raw.oauth?.snapchat || {}) },
+        google: { ...base.oauth.google, ...(raw.oauth?.google || {}) },
       },
     };
   } catch {
@@ -978,6 +992,7 @@ function oauthFlags(p) {
     instagram: ig,
     tiktok: !!(o.tiktok?.key && o.tiktok?.secret),
     snapchat: !!(o.snapchat?.id && o.snapchat?.secret),
+    google: !!(o.google?.id && o.google?.secret),
   };
 }
 function oauthRedirect(provider) {
@@ -1002,6 +1017,9 @@ function oauthAuthorizeUrl(provider, state) {
   }
   if (provider === "snapchat") {
     return `https://accounts.snapchat.com/login/oauth2/authorize?client_id=${encodeURIComponent(p.oauth.snapchat.id)}&redirect_uri=${encodeURIComponent(redir)}&response_type=code&scope=https://auth.snapchat.com/oauth2/api/user.display_name&state=${encodeURIComponent(state)}`;
+  }
+  if (provider === "google") {
+    return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(p.oauth.google.id)}&redirect_uri=${encodeURIComponent(redir)}&response_type=code&scope=${encodeURIComponent("openid email profile")}&state=${encodeURIComponent(state)}&prompt=select_account`;
   }
   return null;
 }
@@ -1099,6 +1117,39 @@ async function oauthProfile(provider, code) {
       handle: String(u.externalId || ""),
       provider: "snapchat",
       oauth: true,
+    };
+  }
+  if (provider === "google") {
+    const tok = await fetch("https://oauth2.googleapis.com/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        code,
+        client_id: p.oauth.google.id,
+        client_secret: p.oauth.google.secret,
+        redirect_uri: redir,
+        grant_type: "authorization_code",
+      }),
+    });
+    const tj = await tok.json();
+    if (!tj.access_token) throw new Error(tj.error || "google_token");
+    const me = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+      headers: { Authorization: "Bearer " + tj.access_token },
+    });
+    const u = await me.json();
+    const email = String(u.email || "").toLowerCase();
+    const sub = String(u.sub || "").replace(/[^a-zA-Z0-9_-]/g, "");
+    if (!sub && !email) throw new Error("google_profile");
+    const pic = /^https:\/\//i.test(u.picture || "") ? String(u.picture).slice(0, 400) : "";
+    return {
+      id: `U-google-${sub || email.replace(/[^a-z0-9]/g, "").slice(0, 40)}`,
+      name: String(u.name || "").slice(0, 80),
+      handle: email || sub,
+      email,
+      photo: pic,
+      provider: "google",
+      oauth: true,
+      connected: true,
     };
   }
   throw new Error("provider");
@@ -1418,7 +1469,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && url.pathname === "/pay/config") {
       return send(res, 200, publicPayConfig());
     }
-    const authStart = url.pathname.match(/^\/auth\/start\/(facebook|instagram|tiktok|snapchat)$/);
+    const authStart = url.pathname.match(/^\/auth\/start\/(facebook|instagram|tiktok|snapchat|google)$/);
     if (req.method === "GET" && authStart) {
       const provider = authStart[1];
       const state = crypto.randomBytes(12).toString("hex");
@@ -1433,7 +1484,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && url.pathname === "/auth/connect") {
       const b = await readBody(req, 2e5);
       const provider = String(b.provider || "");
-      if (!["facebook", "instagram", "tiktok", "snapchat"].includes(provider)) {
+      if (!["facebook", "instagram", "tiktok", "snapchat", "google"].includes(provider)) {
         return send(res, 400, { error: "provider" });
       }
       const handle = cleanHandle(provider, b.handle);
@@ -1458,7 +1509,7 @@ const server = http.createServer(async (req, res) => {
       const stored = db.users[profile.id];
       return send(res, 200, { user: { ...publicPerson(stored, db, "user"), photo: stored.photo || "", connected: true } });
     }
-    const authCb = url.pathname.match(/^\/auth\/callback\/(facebook|instagram|tiktok|snapchat)$/);
+    const authCb = url.pathname.match(/^\/auth\/callback\/(facebook|instagram|tiktok|snapchat|google)$/);
     if (req.method === "GET" && authCb) {
       const provider = authCb[1];
       const code = url.searchParams.get("code") || "";
@@ -1529,6 +1580,9 @@ const server = http.createServer(async (req, res) => {
       if (b.tiktokSecret) cur.oauth.tiktok.secret = String(b.tiktokSecret);
       if (b.snapchatId) cur.oauth.snapchat.id = String(b.snapchatId);
       if (b.snapchatSecret) cur.oauth.snapchat.secret = String(b.snapchatSecret);
+      if (!cur.oauth.google) cur.oauth.google = { id: "", secret: "" };
+      if (b.googleId) cur.oauth.google.id = String(b.googleId);
+      if (b.googleSecret) cur.oauth.google.secret = String(b.googleSecret);
       if (b.firecrawlKey) cur.firecrawlKey = String(b.firecrawlKey).trim();
       if (b.googlePlacesKey) cur.googlePlacesKey = String(b.googlePlacesKey).trim();
       savePay(cur);

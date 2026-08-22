@@ -577,6 +577,13 @@ async function runApi() {
     const auth = await req(base, "GET", "/auth/start/instagram");
     if (auth.status !== 200 || !(auth.json.local === true || auth.json.url)) fail("auth-start", JSON.stringify(auth));
     else ok("auth-start", auth.json.local ? "connect public profile" : "oauth url");
+    const gStart = await req(base, "GET", "/auth/start/google");
+    if (gStart.status !== 200 || !(gStart.json.local === true || gStart.json.url)) fail("auth-start-google", JSON.stringify(gStart.json));
+    else ok("auth-start-google", gStart.json.local ? "connect email" : "oauth url");
+    const gConn = await req(base, "POST", "/auth/connect", { provider: "google", handle: "ada.test@gmail.com", name: "Ada Test" });
+    if (gConn.status !== 200 || gConn.json.user?.handle !== "ada.test@gmail.com" || gConn.json.user?.provider !== "google") {
+      fail("auth-connect-google", JSON.stringify(gConn.json).slice(0, 240));
+    } else ok("auth-connect-google", "google email linked");
 
     const badH = await req(base, "POST", "/auth/connect", { provider: "instagram", handle: "!!", name: "Ada" });
     if (badH.status !== 400) fail("auth-connect-handle", JSON.stringify(badH.json));

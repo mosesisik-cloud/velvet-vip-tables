@@ -24,5 +24,12 @@
     "token": "",
     "phoneId": "",
     "verify": ""
+  },
+  "oauth": {
+    "google": { "id": "", "secret": "" },
+    "facebook": { "id": "", "secret": "" },
+    "instagram": { "id": "", "secret": "" },
+    "tiktok": { "key": "", "secret": "" },
+    "snapchat": { "id": "", "secret": "" }
   }
 }

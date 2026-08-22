@@ -465,6 +465,7 @@ function syncFavButtons(root = document) {
 }
 const USER_KEY = "velvet_user_v1";
 const SOCIALS = [
+  { id: "google", label: "Google", color: "#fff", dark: true },
   { id: "facebook", label: "Facebook", color: "#1877F2" },
   { id: "instagram", label: "Instagram", color: "#E4405F" },
   { id: "tiktok", label: "TikTok", color: "#111" },
@@ -499,6 +500,7 @@ function socialUrl(provider, handle) {
   if (provider === "facebook") return `https://www.facebook.com/${enc}`;
   if (provider === "tiktok") return `https://www.tiktok.com/@${enc}`;
   if (provider === "snapchat") return `https://www.snapchat.com/add/${enc}`;
+  if (provider === "google" && /@/.test(h)) return `mailto:${h}`;
   return "";
 }
 function registerUser(u) {
@@ -3381,10 +3383,10 @@ function openOnboarding(opts = {}) {
           <div class="ob-brand-rule" aria-hidden="true"></div>
           ${phase === "connect" ? `
           <h1 class="ob-title">${esc(t("connectTitle"))}</h1>
-          <p class="ob-sub">${esc(t("connectSub").replace("{net}", (SOCIALS.find((s) => s.id === authProvider) || {}).label || authProvider || ""))}</p>
+          <p class="ob-sub">${esc((authProvider === "google" ? t("connectGoogleSub") : t("connectSub")).replace("{net}", (SOCIALS.find((s) => s.id === authProvider) || {}).label || authProvider || ""))}</p>
           <form class="connect-form" id="ob-connect">
-            <label>${esc(t("yourHandle"))}
-              <input type="text" id="ob-handle" autocomplete="username" spellcheck="false" placeholder="@anvandarnamn" maxlength="40" required>
+            <label>${esc(authProvider === "google" ? t("yourGoogleEmail") : t("yourHandle"))}
+              <input type="${authProvider === "google" ? "email" : "text"}" id="ob-handle" autocomplete="${authProvider === "google" ? "email" : "username"}" spellcheck="false" placeholder="${authProvider === "google" ? "you@gmail.com" : "@anvandarnamn"}" maxlength="${authProvider === "google" ? 80 : 40}" required>
             </label>
             <label>${esc(t("yourName"))}
               <input type="text" id="ob-name" autocomplete="name" placeholder="${esc(t("yourName"))}" maxlength="80" required>
@@ -3965,6 +3967,9 @@ async function renderPayout() {
       <label>Revolut Merchant secret<input name="revolutMerchantSecret" type="password" placeholder="${cfg.keys?.revolut ? "•••• set" : ""}" autocomplete="off"></label>
       <label>PayPal client ID<input name="paypalClient" autocomplete="off"></label>
       <label>PayPal secret<input name="paypalSecret" type="password" autocomplete="off"></label>
+      <label>Google client ID<input name="googleId" autocomplete="off" placeholder="${cfg.oauth?.google ? "•••• set" : "….apps.googleusercontent.com"}"></label>
+      <label>Google client secret<input name="googleSecret" type="password" autocomplete="off"></label>
+      <p class="stepper-hint">${esc(t("googleOauthHint"))}</p>
       <label>Facebook / Instagram App ID<input name="facebookId" autocomplete="off"></label>
       <label>Facebook App secret<input name="facebookSecret" type="password" autocomplete="off"></label>
       <label>TikTok client key<input name="tiktokKey" autocomplete="off"></label>
