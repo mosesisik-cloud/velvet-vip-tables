@@ -444,7 +444,11 @@ function listVerifiedPromoters(db, venueId) {
     .sort((a, b) => String(a.legalName || a.name).localeCompare(String(b.legalName || b.name)));
 }
 function save(db) {
-  fs.writeFileSync(DATA, JSON.stringify(db, null, 2));
+  // Atomisk skrivning: skriv till tmp-fil och byt namn — vid krasch mitt i en
+  // skrivning lämnas gamla intakta db.json kvar i stället för en halvskriven fil.
+  const tmp = DATA + ".tmp";
+  fs.writeFileSync(tmp, JSON.stringify(db, null, 2));
+  fs.renameSync(tmp, DATA);
 }
 function safeId(id) {
   return String(id || "").replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 80) || "unknown";
@@ -1235,9 +1239,26 @@ function bankDetails(table, user, amount, currency) {
   };
 }
 
+// Enkel per-IP-rate-limit i minnet. Chatt-polling (1 GET / 4 s) ligger långt under
+// GET-taket; POST-taket skyddar /idv, /chats, /tables och /pay mot missbruk.
+// Vid flera instanser/byta till riktig databas: ersätt med Redis-baserad limit.
+const RATE = new Map(); // ip -> { n, reset }
+function rateLimited(req, res) {
+  const ip = String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "okänd").split(",")[0].trim();
+  const now = Date.now();
+  let e = RATE.get(ip);
+  if (!e || e.reset < now) { e = { n: 0, reset: now + 60_000 }; RATE.set(ip, e); }
+  e.n++;
+  if (RATE.size > 5000) { for (const [k, v] of RATE) { if (v.reset < now) RATE.delete(k); } }
+  const limit = req.method === "POST" ? 30 : 120; // anrop per minut
+  if (e.n > limit) { send(res, 429, { error: "rate_limit", message: "För många anrop — försök igen om en minut." }); return true; }
+  return false;
+}
+
 const server = http.createServer(async (req, res) => {
   res._corsOrigin = corsOriginFor(req);
   if (req.method === "OPTIONS") return send(res, 204, {});
+  if (rateLimited(req, res)) return;
   const url = new URL(req.url, "http://x");
   try {
     if (req.method === "GET" && (url.pathname === "/health" || url.pathname === "/")) {
