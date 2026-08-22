@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>VELVET — VIP-bord. Delad lyx.</title>
 <meta name="description" content="Skicka förfrågan om VIP-bord, cabanas och daybeds på världens främsta klubbar och beach clubs. VELVET-teamet tar den mot klubben — ingen automatisk reservation.">
-<link rel="stylesheet" href="css/app.css?v=70">
+<link rel="stylesheet" href="css/app.css?v=71">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥂</text></svg>">
 <!-- PWA -->
 <link rel="manifest" href="manifest.json">
@@ -87,19 +87,34 @@
 
 <script>
 (function () {
+  var ua = navigator.userAgent || "";
+  var ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  function wipe() {
+    if (!("serviceWorker" in navigator)) return Promise.resolve();
+    return navigator.serviceWorker.getRegistrations().then(function (rs) {
+      return Promise.all(rs.map(function (r) { return r.unregister(); }));
+    }).then(function () {
+      if (!caches || !caches.keys) return;
+      return caches.keys().then(function (ks) {
+        return Promise.all(ks.filter(function (k) { return k.indexOf("velvet") === 0; }).map(function (k) { return caches.delete(k); }));
+      });
+    });
+  }
+  if (ios) {
+    wipe().then(function () {
+      try {
+        if (!sessionStorage.getItem("velvet_ios_wipe")) {
+          sessionStorage.setItem("velvet_ios_wipe", "1");
+          location.reload();
+        }
+      } catch (e) {}
+    }).catch(function () {});
+  }
   var KEY = "velvet_sw_bust";
   function bust() {
     try { if (sessionStorage.getItem(KEY)) return; sessionStorage.setItem(KEY, "1"); } catch (e) { return; }
     var done = function () { location.reload(); };
-    if (!("serviceWorker" in navigator)) { done(); return; }
-    navigator.serviceWorker.getRegistrations().then(function (rs) {
-      return Promise.all(rs.map(function (r) { return r.unregister(); }));
-    }).then(function () {
-      if (!caches || !caches.keys) { done(); return; }
-      return caches.keys().then(function (ks) {
-        return Promise.all(ks.filter(function (k) { return k.indexOf("velvet") === 0; }).map(function (k) { return caches.delete(k); }));
-      });
-    }).then(done).catch(done);
+    wipe().then(done).catch(done);
   }
   window.addEventListener("error", function (e) {
     if (/\/js\/(app|i18n|mrz|passport-ocr|face-idv)\.js/i.test(String((e && e.filename) || ""))) bust();
@@ -110,6 +125,6 @@
   });
 })();
 </script>
-<script type="module" src="js/app.js?v=70"></script>
+<script type="module" src="js/app.js?v=71"></script>
 </body>
 </html>

@@ -5966,14 +5966,30 @@ async function init() {
   }
 }
 
-// PWA: service worker ger offline-stöd (cache-first-skal + SWR för typsnitt/Leaflet)
-// och gör appen installerbar från Chrome. Registreras efter load för att inte konkurrera
-// med första renderingen. Misslyckas registreringen (t.ex. file://) funkar appen som vanligt.
+// PWA: service worker ger offline-stöd på Android/desktop (network-first skal).
+// iPhone/iPad: ingen SW — Apples hem-skärms-PWA uppdaterar inte SW, vilket låste kraschat JS.
+function isAppleTouch() {
+  const ua = navigator.userAgent || "";
+  return /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+}
 function registerServiceWorker() {
   if (!("serviceWorker" in navigator)) return;
+  // iOS hem-skärms-PWA har egen SW som inte uppdateras — den är varför appen
+  // ofta är trasig när Moses öppnar ikonen. Ingen SW på iPhone/iPad.
+  if (isAppleTouch()) {
+    navigator.serviceWorker.getRegistrations().then((rs) => {
+      rs.forEach((r) => r.unregister());
+    }).catch(() => {});
+    if (caches && caches.keys) {
+      caches.keys().then((ks) => {
+        ks.filter((k) => String(k).indexOf("velvet") === 0).forEach((k) => caches.delete(k));
+      }).catch(() => {});
+    }
+    return;
+  }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js", { updateViaCache: "none" })
+      .register("sw.js?v=71", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
