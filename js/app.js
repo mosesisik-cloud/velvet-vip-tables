@@ -5978,7 +5978,11 @@ function registerServiceWorker() {
   // ofta är trasig när Moses öppnar ikonen. Ingen SW på iPhone/iPad.
   if (isAppleTouch()) {
     navigator.serviceWorker.getRegistrations().then((rs) => {
-      rs.forEach((r) => r.unregister());
+      rs.forEach((r) => {
+        const scope = r.scope || "";
+        const src = (r.active && r.active.scriptURL) || (r.waiting && r.waiting.scriptURL) || (r.installing && r.installing.scriptURL) || "";
+        if (/\/velvet(\/|$|\?)/i.test(scope) || /\/velvet\/sw\.js/i.test(src)) r.unregister();
+      });
     }).catch(() => {});
     if (caches && caches.keys) {
       caches.keys().then((ks) => {
@@ -5989,7 +5993,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=71", { updateViaCache: "none" })
+      .register("sw.js?v=72", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
