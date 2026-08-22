@@ -1396,7 +1396,7 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .mrz-cam-wrap {
   position: relative; margin: 12px 0 16px; border-radius: 14px; overflow: hidden;
   background: #000; aspect-ratio: 3 / 4; max-height: min(62vh, 520px);
-  cursor: pointer;
+  cursor: crosshair;
 }
 .mrz-cam-wrap video { width: 100%; height: 100%; object-fit: cover; display: block; }
 .mrz-guide {

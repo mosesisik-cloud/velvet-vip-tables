@@ -1,7 +1,7 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
 import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js";
-import { readPassportMrz, jpegFromFile, snapshotVideo, startCamera, stopCamera } from "./passport-ocr.js";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera } from "./passport-ocr.js";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, matchFaces, facePayload } from "./face-idv.js";
 
 // ---------- Data ----------
@@ -4118,7 +4118,7 @@ async function renderVerify() {
     const video = $("#mrz-video");
     if (!video || !video.videoWidth) return;
     snapping = true;
-    const data = snapshotVideo(video, 2000, 0.9);
+    const data = await captureStill(video);
     stopLiveness();
     stopCamera();
     const wrap = $("#mrz-cam-wrap");
@@ -4181,7 +4181,9 @@ async function renderVerify() {
   $("#idv-shutter")?.addEventListener("click", (e) => { e.stopPropagation(); takePassShot(); });
   $("#mrz-cam-wrap")?.addEventListener("click", (e) => {
     if (e.target.closest(".mrz-flip, .mrz-shutter")) return;
-    takePassShot();
+    if (camMode !== "pass" || camBtn?.dataset.open !== "1") return;
+    const video = $("#mrz-video");
+    focusAt(video, e.clientX, e.clientY);
   });
   $("#idv-live")?.addEventListener("click", async () => {
     if (!passFace || !passFace.ok) {
