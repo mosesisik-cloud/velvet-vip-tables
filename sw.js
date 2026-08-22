@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-59";
+const VERSION = "v4-real-60";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -78,11 +78,6 @@ self.addEventListener("activate", (event) => {
         .map((k) => caches.delete(k))
     );
     await self.clients.claim();
-    const windows = await self.clients.matchAll({ type: "window", includeUncontrolled: true });
-    await Promise.all(windows.map((c) => {
-      if (typeof c.navigate === "function") return c.navigate(c.url);
-      return undefined;
-    }));
   })());
 });
 
