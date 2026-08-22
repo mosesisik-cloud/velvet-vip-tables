@@ -1,18 +1,6 @@
 {
   "fetchedAt": "2026-08-22T10:54:36.294Z",
   "venues": {
-    "MIA-004": {
-      "source": "https://joiabeachmiami.com",
-      "currency": "EUR",
-      "items": [
-        {
-          "name": "Valet is available for",
-          "price": "$25",
-          "amount": 25,
-          "section": ""
-        }
-      ]
-    },
     "SBH-002": {
       "source": "https://www.gypsea-stbarth.com",
       "currency": "EUR",
@@ -27,6 +15,204 @@
           "name": "DAY SPA",
           "price": "160€",
           "amount": 160,
+          "section": ""
+        }
+      ]
+    },
+    "NYC-003": {
+      "source": "https://somewherenowherenyc.com/menu",
+      "currency": "USD",
+      "items": [
+        {
+          "name": "CAVIAR BITES",
+          "price": "$16",
+          "amount": 16,
+          "section": ""
+        },
+        {
+          "name": "TOMATO GAZPACHO",
+          "price": "$12",
+          "amount": 12,
+          "section": ""
+        },
+        {
+          "name": "WHIPPED RICOTTA",
+          "price": "$12",
+          "amount": 12,
+          "section": ""
+        },
+        {
+          "name": "SHISHITO PEPPERS",
+          "price": "$12",
+          "amount": 12,
+          "section": ""
+        },
+        {
+          "name": "CANNOLI TRIO",
+          "price": "$16",
+          "amount": 16,
+          "section": ""
+        },
+        {
+          "name": "KEY LIME PIE",
+          "price": "$16",
+          "amount": 16,
+          "section": ""
+        },
+        {
+          "name": "CHURROS",
+          "price": "$16",
+          "amount": 16,
+          "section": ""
+        },
+        {
+          "name": "HOT WINGS",
+          "price": "$26",
+          "amount": 26,
+          "section": ""
+        },
+        {
+          "name": "WAGYU BEEF SLIDERS",
+          "price": "$27",
+          "amount": 27,
+          "section": ""
+        },
+        {
+          "name": "WATERMELON SALAD",
+          "price": "$22",
+          "amount": 22,
+          "section": ""
+        },
+        {
+          "name": "Leche de tigre ceviche",
+          "price": "$26",
+          "amount": 26,
+          "section": ""
+        },
+        {
+          "name": "SOMEWHERE NOWHERE DOG",
+          "price": "$22",
+          "amount": 22,
+          "section": ""
+        },
+        {
+          "name": "TUNA TARTARE",
+          "price": "$28",
+          "amount": 28,
+          "section": ""
+        },
+        {
+          "name": "SHISHITO PEPPER",
+          "price": "$18",
+          "amount": 18,
+          "section": ""
+        },
+        {
+          "name": "JERK MONSTER PRAWNS",
+          "price": "$38",
+          "amount": 38,
+          "section": ""
+        },
+        {
+          "name": "SPICY CRISPY CHICKEN SANDO",
+          "price": "$26",
+          "amount": 26,
+          "section": ""
+        },
+        {
+          "name": "KOREAN BBQ TACOS",
+          "price": "$24",
+          "amount": 24,
+          "section": ""
+        },
+        {
+          "name": "TOTS & CAVIAR",
+          "price": "$85",
+          "amount": 85,
+          "section": ""
+        },
+        {
+          "name": "frozen daiquiri",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "daydreamer",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "Berry Breeze",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "Tropical smoke",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "matcha garden",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "Spicy paloma",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "Strawberry energy",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "Sunset reserved",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "Evening martini",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "Rose spritz",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "golden hour",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "Peach cobbler",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "FROZEN MARGARITA",
+          "price": "$20",
+          "amount": 20,
+          "section": ""
+        },
+        {
+          "name": "AMALFI BLUSH FROSÉ",
+          "price": "$20",
+          "amount": 20,
           "section": ""
         }
       ]
