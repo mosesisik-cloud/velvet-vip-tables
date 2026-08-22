@@ -5,722 +5,873 @@
     "label": "VIP Tables",
     "name": "Hï Ibiza",
     "pay": true,
-    "payUrl": "https://vip.hiibiza.com/"
+    "payUrl": "https://vip.hiibiza.com/",
+    "engine": "official-site"
   },
   "IBZ-002": {
     "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
     "kind": "vip",
     "label": "VIP Tables",
-    "name": "Ushuaïa Ibiza"
+    "name": "Ushuaïa Ibiza",
+    "engine": "official-site"
   },
   "IBZ-003": {
     "url": "https://www.unvrs.com/vip-tables/request",
     "kind": "vip",
     "label": "VIP Tables",
-    "name": "UNVRS"
+    "name": "UNVRS",
+    "engine": "official-site"
   },
   "IBZ-004": {
     "url": "https://pacha.com/vip-events",
     "kind": "vip",
     "label": "VIP Zone",
-    "name": "Pacha Ibiza"
+    "name": "Pacha Ibiza",
+    "engine": "fourvenues",
+    "widgetUrl": "https://fourvenues.com/iframe/pacha/798S"
   },
   "IBZ-005": {
     "url": "https://obeachibiza.com/events-calendar/",
     "kind": "events",
     "label": "Book a bed",
-    "name": "O Beach Ibiza"
+    "name": "O Beach Ibiza",
+    "engine": "official-site"
   },
   "MYK-001": {
     "url": "https://scorpios.com/contact",
     "kind": "vip",
     "label": "Reservations",
     "name": "Scorpios Mykonos",
-    "email": "reservations.mykonos@scorpios.com"
+    "email": "reservations.mykonos@scorpios.com",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/events/scorpiosmykonosterrace"
   },
   "MYK-002": {
     "url": "https://www.nammos.com/mykonos",
     "kind": "site",
     "label": "Official site",
-    "name": "NAMMOS Mykonos"
+    "name": "NAMMOS Mykonos",
+    "engine": "official-site"
   },
   "MYK-003": {
     "url": "https://www.santannamykonos.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "SantAnna Mykonos"
+    "name": "SantAnna Mykonos",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/explore/santannabeach/reservations/create/search"
   },
   "MYK-004": {
     "url": "https://www.cavoparadiso.gr/",
     "kind": "site",
     "label": "Official site",
-    "name": "Cavo Paradiso"
+    "name": "Cavo Paradiso",
+    "engine": "official-site"
   },
   "MYK-005": {
     "url": "https://alemagou.gr/",
     "kind": "site",
     "label": "Official site",
-    "name": "Alemagou"
+    "name": "Alemagou",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/reservations/alemagoumykonos"
   },
   "DXB-001": {
-    "url": "https://nikkibeach.com/dubai/",
-    "kind": "site",
-    "label": "Official site",
-    "name": "Nikki Beach Dubai"
+    "url": "https://www.sevenrooms.com/reservations/bungalo34",
+    "kind": "vip",
+    "label": "VIP Tables",
+    "name": "Nikki Beach Dubai",
+    "engine": "sevenrooms",
+    "discovered": "2026-08-22"
   },
   "DXB-002": {
     "url": "https://obeachdubai.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "O Beach Dubai"
+    "name": "O Beach Dubai",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/experiences/obeachdubai?tracking=obd-website"
   },
   "DXB-003": {
     "url": "https://blabladubai.ae/",
     "kind": "site",
     "label": "Official site",
-    "name": "Bla Bla Dubai"
+    "name": "Bla Bla Dubai",
+    "engine": "official-site"
   },
   "DXB-004": {
     "url": "https://0-gravity.ae/",
     "kind": "site",
     "label": "Official site",
-    "name": "Zero Gravity"
+    "name": "Zero Gravity",
+    "engine": "official-site"
   },
   "DXB-005": {
     "url": "https://surfclubdubai.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Surf Club Dubai"
+    "name": "Surf Club Dubai",
+    "engine": "official-site"
   },
   "MRB-001": {
     "url": "https://nikkibeach.com/marbella/",
     "kind": "site",
     "label": "Official site",
-    "name": "Nikki Beach Marbella"
+    "name": "Nikki Beach Marbella",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/experiences/nikkibeachmarbella/disco-del-sol---23rd-anniversary-5601952831815680?tracking=snap"
   },
   "MRB-002": {
     "url": "https://oceanclub.es/",
     "kind": "site",
     "label": "Official site",
-    "name": "Ocean Club Marbella"
+    "name": "Ocean Club Marbella",
+    "engine": "sevenrooms"
   },
   "MRB-003": {
     "url": "https://momentomarbella.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Momento Marbella"
+    "name": "Momento Marbella",
+    "engine": "official-site"
   },
   "MRB-004": {
     "url": "https://oliviavalere.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Olivia Valere"
+    "name": "Olivia Valere",
+    "engine": "official-site"
   },
   "MRB-005": {
     "url": "https://mamzelmarbella.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Mamzel Marbella"
+    "name": "Mamzel Marbella",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/experiences/mamzelmarbella"
   },
   "STT-001": {
     "url": "https://nikkibeach.com/saint-tropez/",
     "kind": "site",
     "label": "Official site",
-    "name": "Nikki Beach Saint-Tropez"
+    "name": "Nikki Beach Saint-Tropez",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/experiences/nikkibeachsainttropez"
   },
   "STT-002": {
     "url": "https://www.club55.fr/",
     "kind": "site",
     "label": "Official site",
-    "name": "Club 55"
+    "name": "Club 55",
+    "engine": "official-site"
   },
   "STT-003": {
     "url": "https://gigi-restaurant.com/ramatuelle/",
     "kind": "site",
     "label": "Official site",
-    "name": "Gigi Ramatuelle"
+    "name": "Gigi Ramatuelle",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/experiences/GigiSaint-Tropez"
   },
   "STT-004": {
     "url": "https://verde-beach.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Verde Beach"
+    "name": "Verde Beach",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/explore/verdebeach/reservations/create/search/"
   },
   "STT-005": {
     "url": "https://shellona.com/en/home-st-tropez/",
     "kind": "site",
     "label": "Official site",
-    "name": "Shellona Saint-Tropez"
+    "name": "Shellona Saint-Tropez",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/reservations/shellonasttropez"
   },
   "MCO-001": {
     "url": "https://www.montecarlosbm.com/en/nightlife/jimmyz-monte-carlo",
     "kind": "site",
     "label": "Official site",
-    "name": "Jimmy'z Monte-Carlo"
+    "name": "Jimmy'z Monte-Carlo",
+    "engine": "sevenrooms"
   },
   "MCO-002": {
     "url": "https://twigaworld.com/montecarlo/",
     "kind": "site",
     "label": "Official site",
-    "name": "Twiga Monte Carlo"
+    "name": "Twiga Monte Carlo",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/reservations/vestamontecarlo"
   },
   "MCO-003": {
     "url": "https://www.montecarlosbm.com/en/nightlife/la-rascasse",
     "kind": "site",
     "label": "Official site",
-    "name": "La Rascasse"
+    "name": "La Rascasse",
+    "engine": "sevenrooms"
   },
   "MCO-004": {
     "url": "https://www.amazonicorestaurant.com/monte-carlo/",
     "kind": "site",
     "label": "Official site",
-    "name": "Amazonico Monte-Carlo"
+    "name": "Amazonico Monte-Carlo",
+    "engine": "sevenrooms"
   },
   "MCO-005": {
     "url": "https://nikkibeach.com/monte-carlo/",
     "kind": "site",
     "label": "Official site",
-    "name": "Nikki Beach Monte Carlo"
+    "name": "Nikki Beach Monte Carlo",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/experiences/nikkibeach"
   },
   "CNS-001": {
     "url": "https://lamomecannes.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "La Môme Plage"
+    "name": "La Môme Plage",
+    "engine": "zenchef"
   },
   "CNS-002": {
     "url": "https://www.baolicannes.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Baoli Cannes"
+    "name": "Baoli Cannes",
+    "engine": "official-site"
   },
   "CNS-003": {
     "url": "https://medusa-cannes.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Medusa Cannes"
+    "name": "Medusa Cannes",
+    "engine": "official-site"
   },
   "CNS-004": {
     "url": "https://carltoncannes.com/restaurants-bars/carlton-beach-club/",
     "kind": "site",
     "label": "Official site",
-    "name": "Carlton Beach Club"
+    "name": "Carlton Beach Club",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/reservations/carltonbeachclubrestaurant?lang=fr"
   },
   "CNS-005": {
     "url": "https://restaurantlaguerite.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "La Guérite Cannes"
+    "name": "La Guérite Cannes",
+    "engine": "official-site"
   },
   "BDR-001": {
     "url": "https://scorpios.com/contact",
     "kind": "vip",
     "label": "Reservations",
     "name": "Scorpios Bodrum",
-    "email": "reservations.bodrum@scorpios.com"
+    "email": "reservations.bodrum@scorpios.com",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/events/scorpiosmykonosterrace"
   },
   "BDR-002": {
     "url": "https://xuma.com.tr/en/",
     "kind": "site",
     "label": "Official site",
-    "name": "Xuma Village"
+    "name": "Xuma Village",
+    "engine": "official-site"
   },
   "BDR-003": {
     "url": "https://www.luccastyle.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Lucca by the Sea"
+    "name": "Lucca by the Sea",
+    "engine": "official-site"
   },
   "BDR-004": {
     "url": "https://www.macakizi.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Maçakızı Beach"
+    "name": "Maçakızı Beach",
+    "engine": "official-site"
   },
   "BDR-005": {
     "url": "https://www.marriott.com/en-us/hotels/bxned-the-bodrum-edition/overview/",
     "kind": "site",
     "label": "Official site",
-    "name": "The Bodrum EDITION Beach Club"
+    "name": "The Bodrum EDITION Beach Club",
+    "engine": "official-site"
   },
   "HKT-001": {
     "url": "https://phuket.cafedelmar.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Café del Mar Phuket"
+    "name": "Café del Mar Phuket",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/explore/cafedelmarphuket/reservations/create/search?date=2026-08-22&halo=30&start_time=23%3A00"
   },
   "HKT-002": {
     "url": "https://yonabeach.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "YONA Beach Club"
+    "name": "YONA Beach Club",
+    "engine": "official-site"
   },
   "HKT-003": {
     "url": "https://www.catchbeachclub.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Catch Beach Club"
+    "name": "Catch Beach Club",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/experiences/catchbeachclub?tracking=website"
   },
   "HKT-004": {
     "url": "https://www.carpediemphuket.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Carpe Diem Beach Club"
+    "name": "Carpe Diem Beach Club",
+    "engine": "official-site"
   },
   "HKT-005": {
     "url": "https://www.illuzionphuket.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Illuzion Phuket"
+    "name": "Illuzion Phuket",
+    "engine": "official-site"
   },
   "BKK-001": {
     "url": "https://www.onyxbangkok.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "ONYX Bangkok"
+    "name": "ONYX Bangkok",
+    "engine": "official-site"
   },
   "BKK-002": {
     "url": "https://singsingtheater.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Sing Sing Theater"
+    "name": "Sing Sing Theater",
+    "engine": "official-site"
   },
   "BKK-003": {
     "url": "https://www.facebook.com/tichucaroftopbar/",
     "kind": "social",
     "label": "Social",
-    "name": "Tichuca Rooftop Bar"
+    "name": "Tichuca Rooftop Bar",
+    "engine": "official-site"
   },
   "BKK-004": {
     "url": "https://lebua.com/restaurants/sky/",
     "kind": "site",
     "label": "Official site",
-    "name": "Sky Bar at Lebua"
+    "name": "Sky Bar at Lebua",
+    "engine": "tablecheck"
   },
   "BKK-005": {
     "url": "https://pastelbangkok.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Pastel Bangkok"
+    "name": "Pastel Bangkok",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/reservations/pastelrooftopbarrestaurant?default_date=2026-08-26"
   },
   "BAL-001": {
     "url": "https://finnsbeachclub.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "FINNS Beach Club"
+    "name": "FINNS Beach Club",
+    "engine": "official-site"
   },
   "BAL-002": {
     "url": "https://savaya.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Savaya Bali"
+    "name": "Savaya Bali",
+    "engine": "official-site"
   },
   "BAL-003": {
     "url": "https://seminyak.potatohead.co/",
     "kind": "site",
     "label": "Official site",
-    "name": "Potato Head"
+    "name": "Potato Head",
+    "engine": "official-site"
   },
   "BAL-004": {
     "url": "https://atlasbeachfest.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Atlas Beach Club"
+    "name": "Atlas Beach Club",
+    "engine": "official-site"
   },
   "BAL-005": {
     "url": "https://www.kudeta.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Ku De Ta"
+    "name": "Ku De Ta",
+    "engine": "tablecheck",
+    "widgetUrl": "https://tablecheck.com/en/kudeta/reserve"
   },
   "MIA-001": {
     "url": "https://www.livnightclub.com/miami/events/",
     "kind": "events",
     "label": "Events & tables",
-    "name": "LIV Miami"
+    "name": "LIV Miami",
+    "engine": "official-site"
   },
   "MIA-002": {
     "url": "https://www.e11evenmiami.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "E11EVEN Miami"
+    "name": "E11EVEN Miami",
+    "engine": "official-site"
   },
   "MIA-003": {
     "url": "https://mila-miami.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "MILA Miami"
+    "name": "MILA Miami",
+    "engine": "opentable",
+    "widgetUrl": "https://www.opentable.com/r/mila-miami-restaurant-miami-2?ot_source=website&ot_campaign=reservation_link"
   },
   "MIA-004": {
     "url": "https://joiabeachmiami.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Joia Beach"
+    "name": "Joia Beach",
+    "engine": "official-site"
   },
   "MIA-005": {
     "url": "https://baolimiami.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Baoli Miami"
+    "name": "Baoli Miami",
+    "engine": "opentable",
+    "widgetUrl": "https://www.opentable.com/r/baoli-miami-miami-beach&quot"
   },
   "LAS-001": {
     "url": "https://www.wynnsocial.com/vip-tables/",
     "kind": "vip",
     "label": "Wynn VIP Tables",
-    "name": "XS Nightclub"
+    "name": "XS Nightclub",
+    "engine": "official-site"
   },
   "LAS-002": {
     "url": "https://taogroup.com/venues/omnia-nightclub-las-vegas/vip/",
     "kind": "vip",
     "label": "VIP",
-    "name": "Omnia Nightclub"
+    "name": "Omnia Nightclub",
+    "engine": "opentable"
   },
   "LAS-003": {
     "url": "https://taogroup.com/venues/marquee-nightclub-las-vegas/vip/",
     "kind": "vip",
     "label": "VIP",
-    "name": "Marquee Nightclub & Dayclub"
+    "name": "Marquee Nightclub & Dayclub",
+    "engine": "opentable"
   },
   "LAS-004": {
     "url": "https://www.wynnsocial.com/vip-tables/",
     "kind": "vip",
     "label": "Wynn VIP Tables",
-    "name": "Encore Beach Club"
+    "name": "Encore Beach Club",
+    "engine": "official-site"
   },
   "LAS-005": {
     "url": "https://www.fontainebleaulasvegas.com/nightlife/liv/",
     "kind": "site",
     "label": "Official site",
-    "name": "LIV Las Vegas"
+    "name": "LIV Las Vegas",
+    "engine": "official-site"
   },
   "TUL-001": {
     "url": "https://www.papayaplayaproject.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Papaya Playa Project"
+    "name": "Papaya Playa Project",
+    "engine": "opentable",
+    "widgetUrl": "https://www.opentable.com/r/beach-club-papaya-playa-tulum"
   },
   "TUL-002": {
     "url": "https://www.vagalumetulum.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Vagalume Tulum"
+    "name": "Vagalume Tulum",
+    "engine": "official-site"
   },
   "TUL-003": {
     "url": "https://gitano.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Gitano Tulum"
+    "name": "Gitano Tulum",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/reservations/gitanonyc"
   },
   "TUL-004": {
     "url": "https://bagatelle.com/venues/tulum/",
     "kind": "site",
     "label": "Official site",
-    "name": "Bagatelle Tulum"
+    "name": "Bagatelle Tulum",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/reservations/bagatelletulum"
   },
   "TUL-005": {
     "url": "https://www.tabootulum.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Taboo Tulum"
+    "name": "Taboo Tulum",
+    "engine": "official-site"
   },
   "BCN-001": {
     "url": "https://opiumbarcelona.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Opium Barcelona"
+    "name": "Opium Barcelona",
+    "engine": "official-site"
   },
   "BCN-002": {
     "url": "https://shoko.biz/",
     "kind": "site",
     "label": "Official site",
-    "name": "Shôko Barcelona"
+    "name": "Shôko Barcelona",
+    "engine": "official-site"
   },
   "BCN-003": {
     "url": "https://www.thesuttonclub.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Sutton Barcelona"
+    "name": "Sutton Barcelona",
+    "engine": "official-site"
   },
   "BCN-004": {
     "url": "https://cdlcbarcelona.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Carpe Diem Lounge Club"
+    "name": "Carpe Diem Lounge Club",
+    "engine": "official-site"
   },
   "BCN-005": {
     "url": "https://www.marriott.com/en-us/hotels/bcnwh-w-barcelona/dining/",
     "kind": "site",
     "label": "Official site",
-    "name": "Noxe Barcelona"
+    "name": "Noxe Barcelona",
+    "engine": "sevenrooms",
+    "widgetUrl": "http://www.sevenrooms.com/reservations/salt/marriott-com-hotel-websites?venues=salt,noxe,firebarcelona,wetdeckatwbarcelona"
   },
   "CER-001": {
     "url": "https://billionairesociety.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Billionaire Porto Cervo"
+    "name": "Billionaire Porto Cervo",
+    "engine": "official-site"
   },
   "CER-002": {
     "url": "https://phibeach.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Phi Beach"
+    "name": "Phi Beach",
+    "engine": "sevenrooms"
   },
   "CER-003": {
     "url": "https://nikkibeach.com/costa-smeralda/",
     "kind": "site",
     "label": "Official site",
-    "name": "Nikki Beach Costa Smeralda"
+    "name": "Nikki Beach Costa Smeralda",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/experiences/nikkibeachcostasmeraldaseasonal"
   },
   "HVA-001": {
     "url": "https://beach.cdhvar.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Carpe Diem Beach Hvar"
+    "name": "Carpe Diem Beach Hvar",
+    "engine": "official-site"
   },
   "HVA-002": {
     "url": "https://www.hulahulahvar.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Hula Hula Hvar"
+    "name": "Hula Hula Hvar",
+    "engine": "official-site"
   },
   "HVA-003": {
     "url": "https://cdhvar.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Carpe Diem Bar Hvar"
+    "name": "Carpe Diem Bar Hvar",
+    "engine": "official-site"
   },
   "ATH-001": {
     "url": "https://islandclubrestaurant.gr/",
     "kind": "site",
     "label": "Official site",
-    "name": "Island Athens Riviera"
+    "name": "Island Athens Riviera",
+    "engine": "official-site"
   },
   "ATH-002": {
     "url": "https://www.bolivar.gr/",
     "kind": "site",
     "label": "Official site",
-    "name": "Bolivar Beach Bar"
+    "name": "Bolivar Beach Bar",
+    "engine": "official-site"
   },
   "ATH-003": {
     "url": "https://momentumgroup.gr/akanthus-summer-athens-riviera/",
     "kind": "site",
     "label": "Official site",
-    "name": "Akanthus"
+    "name": "Akanthus",
+    "engine": "official-site"
   },
   "IST-001": {
     "url": "https://www.sortie.com.tr/",
     "kind": "site",
     "label": "Official site",
-    "name": "Sortie"
+    "name": "Sortie",
+    "engine": "official-site"
   },
   "IST-002": {
     "url": "https://rubyistanbul.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Ruby"
+    "name": "Ruby",
+    "engine": "official-site"
   },
   "IST-003": {
     "url": "https://klein-entertainment.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Klein Phönix"
+    "name": "Klein Phönix",
+    "engine": "official-site"
   },
   "CAP-001": {
     "url": "https://www.fontelina-capri.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "La Fontelina"
+    "name": "La Fontelina",
+    "engine": "official-site"
   },
   "CAP-002": {
     "url": "https://www.lacanzonedelmare.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "La Canzone del Mare"
+    "name": "La Canzone del Mare",
+    "engine": "official-site"
   },
   "CAP-003": {
     "url": "https://www.anemaecore.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Anema e Core"
+    "name": "Anema e Core",
+    "engine": "official-site"
   },
   "AMF-001": {
     "url": "https://www.onefirebeach.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "One Fire Beach"
+    "name": "One Fire Beach",
+    "engine": "official-site"
   },
   "AMF-002": {
     "url": "https://musicontherocks.it/",
     "kind": "site",
     "label": "Official site",
-    "name": "Music on the Rocks"
+    "name": "Music on the Rocks",
+    "engine": "official-site"
   },
   "AMF-003": {
     "url": "https://lascoglierapositano.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "La Scogliera Positano"
+    "name": "La Scogliera Positano",
+    "engine": "official-site"
   },
   "LON-001": {
     "url": "https://annabels.co.uk/",
     "kind": "site",
     "label": "Official site",
-    "name": "Annabel's"
+    "name": "Annabel's",
+    "engine": "official-site"
   },
   "LON-002": {
     "url": "https://theboxsoho.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "The Box Soho"
+    "name": "The Box Soho",
+    "engine": "official-site"
   },
   "LON-003": {
     "url": "https://www.tapelondon.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Tape London"
+    "name": "Tape London",
+    "engine": "official-site"
   },
   "PAR-001": {
     "url": "https://larc-paris.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "L'Arc Paris"
+    "name": "L'Arc Paris",
+    "engine": "official-site"
   },
   "PAR-002": {
     "url": "https://raspoutine.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Raspoutine Paris"
+    "name": "Raspoutine Paris",
+    "engine": "official-site"
   },
   "PAR-003": {
     "url": "https://matignon-paris.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Matignon Paris"
+    "name": "Matignon Paris",
+    "engine": "zenchef"
   },
   "SIN-001": {
     "url": "https://marqueesingapore.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Marquee Singapore"
+    "name": "Marquee Singapore",
+    "engine": "opentable"
   },
   "SIN-002": {
     "url": "https://www.celavi.com/en/singapore/",
     "kind": "site",
     "label": "Official site",
-    "name": "CÉ LA VI Singapore"
+    "name": "CÉ LA VI Singapore",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/experiences/celavisingaporeclublounge/sky-bar-club-lounge---general-entry-6270029442498560?tracking=clv-website"
   },
   "SIN-003": {
     "url": "https://www.tanjongbeachclub.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Tanjong Beach Club"
+    "name": "Tanjong Beach Club",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/experiences/tanjongbeachclub"
   },
   "LAX-001": {
     "url": "https://hwoodgroup.com/portfolio/delilah/",
     "kind": "site",
     "label": "Official site",
-    "name": "Delilah Los Angeles"
+    "name": "Delilah Los Angeles",
+    "engine": "sevenrooms"
   },
   "LAX-002": {
     "url": "https://hwoodgroup.com/venues/poppy/",
     "kind": "site",
     "label": "Official site",
-    "name": "Poppy"
+    "name": "Poppy",
+    "engine": "sevenrooms"
   },
   "LAX-003": {
     "url": "https://hwoodgroup.com/venues/bootsy-bellows/",
     "kind": "site",
     "label": "Official site",
-    "name": "Bootsy Bellows"
+    "name": "Bootsy Bellows",
+    "engine": "opentable"
   },
   "NYC-001": {
     "url": "https://theboxnyc.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "The Box NYC"
+    "name": "The Box NYC",
+    "engine": "official-site"
   },
   "NYC-002": {
     "url": "https://nebulanewyork.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Nebula"
+    "name": "Nebula",
+    "engine": "official-site"
   },
   "NYC-003": {
     "url": "https://somewherenowherenyc.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Somewhere Nowhere NYC"
+    "name": "Somewhere Nowhere NYC",
+    "engine": "official-site"
   },
   "ASP-001": {
     "url": "https://www.aspensnowmass.com/visit/dining/aspen-highlands/cloud-nine-alpine-bistro",
     "kind": "site",
     "label": "Official site",
-    "name": "Cloud Nine Alpine Bistro"
+    "name": "Cloud Nine Alpine Bistro",
+    "engine": "official-site"
   },
   "ASP-002": {
     "url": "https://thesnowlodge.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "The Snow Lodge"
+    "name": "The Snow Lodge",
+    "engine": "official-site"
   },
   "ASP-003": {
     "url": "https://bellyupaspen.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Belly Up Aspen"
+    "name": "Belly Up Aspen",
+    "engine": "official-site"
   },
   "CRV-001": {
     "url": "https://www.lafoliedouce.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "La Folie Douce Méribel-Courchevel"
+    "name": "La Folie Douce Méribel-Courchevel",
+    "engine": "official-site"
   },
   "CRV-002": {
     "url": "https://bagatelle.com/venues/courchevel/",
     "kind": "site",
     "label": "Official site",
-    "name": "Bagatelle Courchevel"
+    "name": "Bagatelle Courchevel",
+    "engine": "official-site"
   },
   "CRV-003": {
     "url": "https://www.lescavesdecourchevel.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Les Caves de Courchevel"
+    "name": "Les Caves de Courchevel",
+    "engine": "official-site"
   },
   "SBH-001": {
     "url": "https://nikkibeach.com/saint-barth/",
     "kind": "site",
     "label": "Official site",
-    "name": "Nikki Beach Saint Barth"
+    "name": "Nikki Beach Saint Barth",
+    "engine": "official-site"
   },
   "SBH-002": {
     "url": "https://www.gypsea-stbarth.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "Gyp Sea Beach Club"
+    "name": "Gyp Sea Beach Club",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/explore/gypsea/reservations/create/search/"
   },
   "SBH-003": {
     "url": "https://bagatelle.com/venues/st-barth/",
     "kind": "site",
     "label": "Official site",
-    "name": "Bagatelle St. Barth"
+    "name": "Bagatelle St. Barth",
+    "engine": "sevenrooms",
+    "widgetUrl": "https://www.sevenrooms.com/reservations/bagatellestbarth"
   },
   "PDE-001": {
     "url": "https://www.lasusana.com/",
     "kind": "site",
     "label": "Official site",
-    "name": "La Susana"
+    "name": "La Susana",
+    "engine": "official-site"
   },
   "PDE-002": {
     "url": "https://mobydick.com.uy/",
     "kind": "site",
     "label": "Official site",
-    "name": "Moby Dick Pub"
+    "name": "Moby Dick Pub",
+    "engine": "official-site"
   },
   "PDE-003": {
     "url": "https://www.instagram.com/ovonightclub/",
     "kind": "social",
     "label": "Social",
-    "name": "OVO Nightclub"
+    "name": "OVO Nightclub",
+    "engine": "official-site"
   }
 }

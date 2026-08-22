@@ -90,7 +90,9 @@ export function engineOf(url) {
 }
 
 function cleanFoundUrl(raw) {
-  return String(raw || "").replace(/&amp;/g, "&").replace(/[),.;'"\]]+$/, "").split("#")[0];
+  const u = String(raw || "").replace(/&amp;/g, "&").replace(/[),.;'"\\\]]+$/, "").split("#")[0];
+  if (!u || /\.js(\?|$)/i.test(u) || /\/widget\/embed\.js/i.test(u)) return "";
+  return u;
 }
 
 export function engineFromBlob(blob, pageUrl) {
