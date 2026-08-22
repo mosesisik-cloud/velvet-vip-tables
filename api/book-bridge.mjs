@@ -31,7 +31,7 @@ function todayLocal() {
 
 const RESELLER = /discotech|clubbookers|ticketsibiza|tasteibiza|nocovernightclubs|lasvegasnightclubs|miamiviptables|clubtickets|viator|getyourguide/i;
 
-function engineOf(url) {
+export function engineOf(url) {
   const s = String(url || "").toLowerCase();
   if (/sevenrooms/.test(s)) return "sevenrooms";
   if (/covermanager/.test(s)) return "covermanager";
@@ -165,6 +165,8 @@ export function bookingAdapter(venueId) {
   if (!off) return null;
   const inv = venueInventory(venueId);
   const engine = engineOf(off.url);
+  const nights = inv.nights || [];
+  const bookable = engine !== "official-site" || off.kind === "vip" || off.kind === "events" || nights.length > 0 || !!inv.vipHow;
   return {
     venueId: off.venueId,
     name: off.name,
@@ -175,6 +177,8 @@ export function bookingAdapter(venueId) {
     label: off.label,
     engine,
     mode: "handoff",
+    overlap: true,
+    bookable,
     writesToClub: false,
     clubEmail: inv.email,
     clubPhone: inv.phone,
@@ -215,8 +219,8 @@ export function packetText(bridge) {
     g.phone ? `Mobil: ${g.phone}` : "",
     bridge.note ? `Meddelande: ${bridge.note}` : "",
     "",
-    "Överlämnad till klubbens sajt — ingen reservation förrän klubben bekräftar.",
-    "VELVET skriver inte i klubbens eget system.",
+    "VELVET är bokningstjänsten — förfrågan går via oss mot klubbens egen sajt.",
+    "Ingen reservation förrän klubben bekräftar. VELVET skriver inte i deras PMS.",
   ];
   return lines.filter((x) => x !== "").join("\n");
 }
@@ -234,6 +238,7 @@ export function publicBridge(rec) {
     kind: rec.kind || "site",
     engine: rec.engine || "official-site",
     mode: "handoff",
+    overlap: true,
     date: rec.date,
     party: rec.party,
     package: rec.package || "",

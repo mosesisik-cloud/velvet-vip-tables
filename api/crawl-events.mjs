@@ -7,15 +7,19 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { engineOf } from "./book-bridge.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dir, "..");
 const APP_DATA = process.env.VELVET_APP_DATA || path.join(ROOT, "data");
 const EVENTS_FILE = process.env.VELVET_EVENTS || path.join(APP_DATA, "venue-events.json");
+const BOOKING_FILE = path.join(APP_DATA, "booking-urls.json");
 const STATUS_FILE = process.env.VELVET_CRAWL_STATUS || path.join(__dir, "crawl-status.json");
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const UA = "VELVET-daily-events/1.0 (+https://b2b.bakemyday.se/velvet/)";
 const RESELLER = /discotech|clubbookers|ticketsibiza|tasteibiza|nocovernightclubs|lasvegasnightclubs|miamiviptables|clubtickets|viator|getyourguide/i;
+const BOOK_PATH = /\/(vip-tables?|vip-events?|vip\/tables|bottle-service|reservations?|book-a-table|book\/table|tables\/book|cabana|daybed)/i;
+const ENGINE_HOST = /sevenrooms\.com|covermanager\.com|opentable\.com|resy\.com|exploretock|tock\.com|designmynight\.com|quandoo\.|formitable\.|eat-app\.com/;
 const SKIP_TITLE = /^(home|meny|menu|book now|book a table|vip tables?|contact|kontakt|privacy|cookies?|instagram|facebook|tiktok|newsletter|sign up|log in|follow us)$/i;
 const MAX_FIRECRAWL = Number(process.env.VELVET_FIRECRAWL_MAX || 48);
 const FC_URL = "https://api.firecrawl.dev/v2/scrape";
@@ -394,8 +398,64 @@ async function scrapeFirecrawl(url, wantJson) {
 
 function loadCatalog() {
   const venues = readJson(path.join(APP_DATA, "venues.json"), []);
-  const booking = readJson(path.join(APP_DATA, "booking-urls.json"), {});
-  return { venues: Array.isArray(venues) ? venues : [], booking };
+  const extra = readJson(path.join(APP_DATA, "unlisted-venues.json"), []);
+  const booking = readJson(BOOKING_FILE, {});
+  return {
+    venues: [...(Array.isArray(venues) ? venues : []), ...(Array.isArray(extra) ? extra : [])],
+    booking: booking && typeof booking === "object" ? booking : {},
+  };
+}
+
+function collectHrefs(blob, pageUrl) {
+  const out = [];
+  const add = (u) => {
+    const abs = absUrl(String(u || "").replace(/&amp;/g, "&"), pageUrl);
+    if (/^https:\/\//i.test(abs) && !out.includes(abs)) out.push(abs);
+  };
+  for (const m of String(blob || "").matchAll(/href=["']([^"'#]+)["']/gi)) add(m[1]);
+  for (const m of String(blob || "").matchAll(/\((https?:\/\/[^)\s]+)\)/g)) add(m[1]);
+  return out.slice(0, 80);
+}
+
+function discoverBooking(blob, pageUrl, venueUrl) {
+  let best = null;
+  for (const u of collectHrefs(blob, pageUrl)) {
+    if (RESELLER.test(u) || /instagram|facebook|tiktok|snapchat|youtube|google\.|apple\.com/i.test(u)) continue;
+    const engine = engineOf(u);
+    if (engine !== "official-site" || ENGINE_HOST.test(u)) {
+      return { url: u.split("#")[0], kind: "vip", engine: engine === "official-site" ? "widget" : engine, label: "VIP Tables" };
+    }
+    if (!BOOK_PATH.test(u)) continue;
+    const sameHost = (() => {
+      try {
+        const a = new URL(u).hostname.replace(/^www\./i, "");
+        const b = new URL(venueUrl || pageUrl).hostname.replace(/^www\./i, "");
+        if (a === b) return true;
+        return a.split(".").slice(-2).join(".") === b.split(".").slice(-2).join(".");
+      } catch { return false; }
+    })();
+    if (!sameHost) continue;
+    const kind = /event|calendar/i.test(u) ? "events" : "vip";
+    const rec = { url: u.split("?")[0].replace(/\/+$/, "") || u, kind, engine: "official-site", label: kind === "vip" ? "VIP Tables" : "Events" };
+    if (!best || (best.kind !== "vip" && kind === "vip")) best = rec;
+  }
+  return best;
+}
+
+function mergeBookingHint(booking, v, hint) {
+  if (!hint?.url || !/^https:\/\//i.test(hint.url)) return false;
+  const cur = booking[v.venue_id];
+  if (cur && (cur.kind === "vip" || cur.kind === "events") && cur.url) return false;
+  if (cur && cur.url === hint.url && cur.kind === hint.kind) return false;
+  booking[v.venue_id] = {
+    url: hint.url,
+    kind: hint.kind || "vip",
+    label: hint.label || cur?.label || "",
+    name: cur?.name || v.name,
+    engine: hint.engine || "",
+    discovered: todayISO(),
+  };
+  return true;
 }
 
 function targetUrl(v, booking) {
@@ -418,12 +478,15 @@ async function crawlOne(v, booking, useFirecrawl) {
   if (!tgt) return { id: v.venue_id, ok: false, skip: "no-url", events: [], source: "" };
   if (tgt.kind === "social") return { id: v.venue_id, ok: true, skip: "social", events: [], source: tgt.url };
   const pageUrl = tgt.url;
+  const home = String(v.website_url || v.source_url || pageUrl).replace(/^http:\/\//i, "https://");
   let events = [];
   let engine = "fetch";
+  let blob = "";
   if (useFirecrawl) {
     try {
       const fc = await scrapeFirecrawl(pageUrl, true);
       engine = "firecrawl";
+      blob = fc.markdown || "";
       events = (fc.jsonEvents || []).map((e) => cleanEvent(e, pageUrl)).filter(Boolean);
       if (!events.length) events = parseEmbeddedEvents(fc.markdown, pageUrl);
       if (!events.length) events = parseMarkdownEvents(fc.markdown, pageUrl);
@@ -431,23 +494,27 @@ async function crawlOne(v, booking, useFirecrawl) {
       engine = "fetch";
     }
   }
-  if (!events.length) {
+  if (!events.length || !blob) {
     try {
       const html = await fetchHtml(pageUrl);
       engine = engine === "firecrawl" ? "firecrawl" : "fetch";
-      events = [
-        ...parseJsonLdEvents(html, pageUrl),
-        ...parseDatetimeAttrs(html, pageUrl),
-        ...parseEmbeddedEvents(html, pageUrl),
-      ];
-      if (!events.length) events = parseMarkdownEvents(html.replace(/<[^>]+>/g, "\n"), pageUrl);
-    } catch (e) {
+      blob = blob || html;
       if (!events.length) {
+        events = [
+          ...parseJsonLdEvents(html, pageUrl),
+          ...parseDatetimeAttrs(html, pageUrl),
+          ...parseEmbeddedEvents(html, pageUrl),
+        ];
+        if (!events.length) events = parseMarkdownEvents(html.replace(/<[^>]+>/g, "\n"), pageUrl);
+      }
+    } catch (e) {
+      if (!events.length && !blob) {
         return { id: v.venue_id, ok: false, error: String(e.message || e).slice(0, 180), events: [], source: pageUrl, engine };
       }
     }
   }
-  return { id: v.venue_id, ok: true, events: dedupe(events), source: pageUrl, engine };
+  const hint = discoverBooking(blob, pageUrl, home);
+  return { id: v.venue_id, ok: true, events: dedupe(events), source: pageUrl, engine, bookingHint: hint };
 }
 
 async function mapPool(items, n, fn) {
@@ -471,8 +538,8 @@ export async function runCrawl(opts = {}) {
     const prev = loadEventsFile();
     const only = String(opts.venueId || "").trim();
     const list = only ? venues.filter((v) => v.venue_id === only) : venues;
-    const hasFc = true; // keyless Firecrawl is allowed; 401 falls back per venue
-    saveStatus({ lastRun: started, running: true, reason: opts.reason || "manual", firecrawl: !!firecrawlKey() || hasFc });
+    const hasKey = !!firecrawlKey();
+    saveStatus({ lastRun: started, running: true, reason: opts.reason || "manual", firecrawl: hasKey });
 
     const dests = readJson(path.join(APP_DATA, "destinations.json"), []);
     const t1 = new Set((Array.isArray(dests) ? dests : []).filter((d) => d.tier === "Tier 1").map((d) => d.code));
@@ -492,7 +559,8 @@ export async function runCrawl(opts = {}) {
       if (ka !== kb) return ka - kb;
       return (Number(b.priority_score) || 0) - (Number(a.priority_score) || 0);
     });
-    const fcTargets = new Set(vip.slice(0, MAX_FIRECRAWL).map((v) => v.venue_id));
+    const fcCap = hasKey ? MAX_FIRECRAWL : (only ? 1 : 8);
+    const fcTargets = new Set(vip.slice(0, fcCap).map((v) => v.venue_id));
 
     let updated = 0;
     let errors = 0;
@@ -507,6 +575,9 @@ export async function runCrawl(opts = {}) {
       return rec;
     });
 
+    const bookingOut = { ...booking };
+    let bookingHits = 0;
+    const byId = Object.fromEntries(list.map((v) => [v.venue_id, v]));
     for (const rec of results) {
       if (!rec) continue;
       if (!rec.ok && !rec.skip) errors += 1;
@@ -515,7 +586,11 @@ export async function runCrawl(opts = {}) {
         venuesOut[rec.id] = { source: rec.source, engine: rec.engine, events: rec.events };
         updated += 1;
       }
+      if (rec.bookingHint && mergeBookingHint(bookingOut, byId[rec.id] || { venue_id: rec.id, name: rec.id }, rec.bookingHint)) {
+        bookingHits += 1;
+      }
     }
+    if (bookingHits) writeJsonAtomic(BOOKING_FILE, bookingOut);
 
     const fetchedAt = new Date().toISOString();
     const out = {
@@ -561,7 +636,16 @@ export function scheduleDailyCrawl() {
     const t = Date.parse(st.lastOk || st.lastRun || 0);
     const age = Number.isFinite(t) ? Date.now() - t : Infinity;
     if (age > 20 * 3600 * 1000) {
-      runCrawl({ reason: "daily" }).catch((e) => console.error("velvet-crawl", e));
+      runCrawl({ reason: "daily" })
+        .then(async () => {
+          const { runMenusCrawl } = await import("./crawl-menus.mjs");
+          await runMenusCrawl({ reason: "daily", listedOnly: true, limit: 48 });
+        })
+        .then(async () => {
+          const { runFactsCrawl } = await import("./venue-facts.mjs");
+          await runFactsCrawl({ reason: "daily", listedOnly: true });
+        })
+        .catch((e) => console.error("velvet-crawl", e));
     }
   };
   setTimeout(tick, 25_000);

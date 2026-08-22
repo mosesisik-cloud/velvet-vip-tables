@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { loadEventsFile, loadCrawlStatus, runCrawl, getCrawlState, scheduleDailyCrawl } from "./crawl-events.mjs";
 import { loadPlacesFile, runPlacesLookup } from "./google-places.mjs";
 import { loadFactsFile, runFactsCrawl } from "./venue-facts.mjs";
+import { loadMenusFile, runMenusCrawl } from "./crawl-menus.mjs";
 import { parseTd3, extractMrzFromText, nameMatch, publicFields, legalName, ageYears } from "./mrz.mjs";
 import { bookingAdapter, handoffUrl, packetText, publicBridge, officialEventUrl, destInventory } from "./book-bridge.mjs";
 
@@ -1297,7 +1298,9 @@ const server = http.createServer(async (req, res) => {
       }
       if (venueId) {
         const result = await runCrawl({ venueId, reason: operator ? "operator-venue" : "app-venue" });
-        return send(res, 200, { ...(result.payload || loadEventsFile()), status: result, running: false }, { "Cache-Control": "no-store" });
+        try { await runMenusCrawl({ venueId, reason: operator ? "operator-venue" : "app-venue" }); } catch (e) { console.error("velvet-menus", e); }
+        try { await runFactsCrawl({ venueId, reason: operator ? "operator-venue" : "app-venue", force: true }); } catch (e) { console.error("velvet-facts", e); }
+        return send(res, 200, { ...(result.payload || loadEventsFile()), menus: loadMenusFile(), facts: loadFactsFile(), status: result, running: false }, { "Cache-Control": "no-store" });
       }
       runCrawl({ reason: operator ? "operator" : "app" }).catch((e) => console.error("velvet-crawl", e));
       return send(res, 202, { running: true, status: loadCrawlStatus(), ...loadEventsFile() });
@@ -1337,15 +1340,20 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, inv, { "Cache-Control": "no-store" });
     }
     if (req.method === "GET" && url.pathname === "/menus") {
-      let menus = { venues: {} };
-      for (const p of [
-        path.join(__dir, "public-data", "venue-menus.json"),
-        path.join(__dir, "..", "data", "venue-menus.json"),
-        path.join(__dir, "venue-menus.json"),
-      ]) {
-        try { menus = JSON.parse(fs.readFileSync(p, "utf8")); break; } catch { /* next */ }
+      return send(res, 200, loadMenusFile(), { "Cache-Control": "no-store" });
+    }
+    if (req.method === "POST" && url.pathname === "/menus/refresh") {
+      if (process.env.VELVET_CRAWL === "0") return send(res, 403, { error: "crawl_disabled" });
+      const b = await readBody(req, 2e5);
+      const venueId = String(b.venueId || "").replace(/[^A-Z0-9._-]/gi, "").slice(0, 20);
+      const operator = isOperator(b.user);
+      if (venueId) {
+        const result = await runMenusCrawl({ venueId, reason: operator ? "operator-venue" : "app-venue" });
+        return send(res, 200, { ...(result.payload || loadMenusFile()), status: result }, { "Cache-Control": "no-store" });
       }
-      return send(res, 200, menus, { "Cache-Control": "no-store" });
+      if (!operator) return send(res, 403, { error: "operator" });
+      runMenusCrawl({ reason: "operator", listedOnly: true, limit: 48 }).catch((e) => console.error("velvet-menus", e));
+      return send(res, 202, { running: true, ...loadMenusFile() });
     }
     const factOne = url.pathname.match(/^\/facts\/([A-Z0-9._-]+)$/i);
     if (req.method === "GET" && factOne) {

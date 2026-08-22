@@ -487,8 +487,8 @@ async function runApi() {
       user: host, venueId: "IBZ-001", date: "2026-08-29", party: 2,
       eventUrl: "https://www.discotech.com/hi-ibiza",
     });
-    if (brReseller.status !== 201 || /discotech/i.test(brReseller.json.bridge?.eventUrl || "")) {
-      fail("bridge-reseller", JSON.stringify(brReseller.json.bridge).slice(0, 220));
+    if (brReseller.status !== 201 || /discotech/i.test(brReseller.json?.bridge?.eventUrl || "")) {
+      fail("bridge-reseller", JSON.stringify(brReseller.json).slice(0, 280));
     } else ok("bridge-reseller", "reseller event URL dropped");
 
     const got = await req(base, "GET", "/tables/TB-RAILS");

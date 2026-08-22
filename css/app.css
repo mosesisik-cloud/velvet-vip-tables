@@ -2145,6 +2145,7 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   background: var(--bg-elev);
 }
 .book-site-frame-bar {
+  background: rgba(212, 175, 95, 0.08);
   display: flex;
   justify-content: space-between;
   align-items: center;

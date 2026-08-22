@@ -206,65 +206,107 @@ function dedupe(items) {
   return out.slice(0, 60);
 }
 
-async function run() {
-  const venues = readJson(path.join(APP_DATA, "venues.json"), []);
-  const booking = readJson(path.join(APP_DATA, "booking-urls.json"), {});
-  const prev = readJson(OUT, { venues: {} });
-  const ranked = [...venues].sort((a, b) => (b.priority_score || 0) - (a.priority_score || 0));
-  const out = { fetchedAt: new Date().toISOString(), venues: { ...(prev.venues || {}) } };
-  let ok = 0;
-  for (const venue of ranked) {
-    const urls = menuUrls(venue, booking[venue.venue_id]);
-    let items = [];
-    let source = "";
-    let currency = "";
-    for (const url of urls) {
-      try {
-        const html = await fetchHtml(url);
-        const ld = fromJsonLd(html);
-        const lines = fromHtmlLines(html);
-        const got = [...ld, ...lines];
-        if (got.length > items.length) {
-          items = got;
-          source = url;
-          currency = currencyOf(got.map((x) => x.priceText).join(" "), html);
-        }
-      } catch { /* next */ }
-      if (items.filter((x) => x.amount).length >= 6) break;
-    }
-    if (items.filter((x) => x.amount).length < 3 && firecrawlKey() && urls[0]) {
-      try {
-        const fc = await scrapeFirecrawl(urls[0]);
-        if (fc && fc.items.length > items.length) {
-          items = fc.items;
-          source = urls[0];
-          currency = fc.currency || currencyOf(fc.items.map((x) => x.priceText).join(" "));
-        }
-      } catch { /* keep html */ }
-    }
-    items = dedupe(items).filter((x) => x.amount || /request|poa|market/i.test(x.priceText));
-    if (items.length) {
-      out.venues[venue.venue_id] = {
-        source,
-        currency: currency || "",
-        items: items.map(({ name, priceText, amount, section }) => ({
-          name,
-          price: priceText || "",
-          amount: amount || null,
-          section: section || "",
-        })),
-      };
-      ok += 1;
-      console.log("OK", venue.venue_id, items.length, source);
-    } else {
-      console.log("NO", venue.venue_id, venue.name);
-    }
-    await new Promise((r) => setTimeout(r, 200));
-    writeJsonAtomic(OUT, { ...out, count: Object.keys(out.venues).length });
-  }
-  out.count = Object.keys(out.venues).length;
-  writeJsonAtomic(OUT, out);
-  console.log("wrote", OUT, ok, "with printed prices");
+let menusRunning = null;
+
+export function loadMenusFile() {
+  const raw = readJson(OUT, null);
+  if (raw && raw.venues && typeof raw.venues === "object") return raw;
+  return { fetchedAt: null, venues: {} };
 }
 
-run().catch((e) => { console.error(e); process.exit(1); });
+async function crawlMenuOne(venue, booking) {
+  const urls = menuUrls(venue, booking[venue.venue_id]);
+  let items = [];
+  let source = "";
+  let currency = "";
+  for (const url of urls) {
+    try {
+      const html = await fetchHtml(url);
+      const ld = fromJsonLd(html);
+      const lines = fromHtmlLines(html);
+      const got = [...ld, ...lines];
+      if (got.length > items.length) {
+        items = got;
+        source = url;
+        currency = currencyOf(got.map((x) => x.priceText).join(" "), html);
+      }
+    } catch { /* next */ }
+    if (items.filter((x) => x.amount).length >= 6) break;
+  }
+  if (items.filter((x) => x.amount).length < 3 && urls[0]) {
+    try {
+      const fc = await scrapeFirecrawl(urls[0]);
+      if (fc && fc.items.length > items.length) {
+        items = fc.items;
+        source = urls[0];
+        currency = fc.currency || currencyOf(fc.items.map((x) => x.priceText).join(" "));
+      }
+    } catch { /* keep html */ }
+  }
+  items = dedupe(items).filter((x) => x.amount || /request|poa|market/i.test(x.priceText));
+  if (!items.length) return { id: venue.venue_id, ok: false, items: [] };
+  return {
+    id: venue.venue_id,
+    ok: true,
+    source,
+    currency: currency || "",
+    items: items.map(({ name, priceText, amount, section }) => ({
+      name,
+      price: priceText || "",
+      amount: amount || null,
+      section: section || "",
+    })),
+  };
+}
+
+export async function runMenusCrawl(opts = {}) {
+  if (menusRunning) return menusRunning;
+  const job = (async () => {
+    const listed = readJson(path.join(APP_DATA, "venues.json"), []);
+    const extra = readJson(path.join(APP_DATA, "unlisted-venues.json"), []);
+    const booking = readJson(path.join(APP_DATA, "booking-urls.json"), {});
+    const prev = loadMenusFile();
+    const only = String(opts.venueId || "").trim();
+    let venues = [...(Array.isArray(listed) ? listed : [])];
+    if (!opts.listedOnly) venues = venues.concat(Array.isArray(extra) ? extra : []);
+    if (only) venues = venues.filter((v) => v.venue_id === only);
+    venues.sort((a, b) => (b.priority_score || 0) - (a.priority_score || 0));
+    if (!only && Number(opts.limit) > 0) {
+      venues = venues.filter((v) => !prev.venues?.[v.venue_id] || opts.force).slice(0, Number(opts.limit));
+    }
+    const out = { fetchedAt: new Date().toISOString(), venues: { ...(prev.venues || {}) } };
+    let ok = 0;
+    for (const venue of venues) {
+      const rec = await crawlMenuOne(venue, booking);
+      if (rec.ok && rec.items.length) {
+        out.venues[rec.id] = { source: rec.source, currency: rec.currency, items: rec.items };
+        ok += 1;
+        console.log("velvet-menus", rec.id, rec.items.length, rec.source);
+        writeJsonAtomic(OUT, { ...out, count: Object.keys(out.venues).length });
+      } else {
+        console.log("velvet-menus none", venue.venue_id);
+      }
+    }
+    out.count = Object.keys(out.venues).length;
+    writeJsonAtomic(OUT, out);
+    return { ok: true, updated: ok, count: out.count, payload: out };
+  })();
+  menusRunning = job;
+  try {
+    return await job;
+  } finally {
+    menusRunning = null;
+  }
+}
+
+const invoked = String(process.argv[1] || "").replace(/\\/g, "/");
+if (invoked.endsWith("crawl-menus.mjs") || invoked.endsWith("crawl-menus.js")) {
+  const i = process.argv.indexOf("--venue");
+  const venueId = i >= 0 ? process.argv[i + 1] : "";
+  runMenusCrawl({ venueId, reason: "cli" })
+    .then((st) => {
+      console.log("wrote", OUT, st.updated, "with printed prices");
+      process.exitCode = st.ok ? 0 : 1;
+    })
+    .catch((e) => { console.error(e); process.exit(1); });
+}

@@ -645,6 +645,20 @@ async function refreshVenueEvents(v) {
   } else {
     await refreshLiveEvents();
   }
+  if (r?.menus?.venues) VENUE_MENUS = r.menus.venues;
+  else {
+    try {
+      const rm = await apiJSON("/menus");
+      if (rm?.venues) VENUE_MENUS = rm.venues;
+    } catch { /* keep */ }
+  }
+  if (r?.facts?.venues) VENUE_FACTS = r.facts;
+  else {
+    try {
+      const rf = await apiJSON("/facts");
+      if (rf?.venues) VENUE_FACTS = rf;
+    } catch { /* keep */ }
+  }
   if ((location.hash || "").split("?")[0] === `#/venue/${v.venue_id}`) renderVenueDetail(v.venue_id);
 }
 const TABLES_KEY = "velvet_tables_v1";
@@ -5391,6 +5405,7 @@ async function renderBookSite(id) {
     officialUrl: b.url, host: b.host, kind: b.kind, label: b.label, engine: "official-site", mode: "handoff",
   };
   const kindLabel = adapter.kind === "vip" ? t("bookKindVip") : adapter.kind === "events" ? t("bookKindEvents") : t("bookKindSite");
+  const engineName = adapter.engine && adapter.engine !== "official-site" ? String(adapter.engine) : "";
   const young = venueTooYoung(v);
   const tooYoung = live?.error === "too_young" || !!young;
   const needLock = !me || live?.error === "idv_required" || live?.error === "card_required" || tooYoung || !isPayingMember();
@@ -5414,7 +5429,7 @@ async function renderBookSite(id) {
     <div class="book-site-hero">
       ${venueMediaHTML(v, "venue-hero-media", { eager: true, playable: true })}
       <div class="book-site-copy">
-        <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)} · ${esc(adapter.host || b.host)}</p>
+        <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)}${engineName ? ` · ${esc(engineName)}` : ""}${adapter.bookable ? ` · ${esc(t("bookOnSiteShort"))}` : ""} · ${esc(adapter.host || b.host)}</p>
         <h1>${esc(t("bridgeTitle"))}</h1>
         <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(t("bridgeSub"))}</p>
         ${adapter.vipHow ? `<p class="events-meta">${esc(t("bridgeReadLive"))}: ${esc(adapter.vipHow)}</p>` : `<p class="events-meta">${esc(t("bridgeReadLive"))}</p>`}
