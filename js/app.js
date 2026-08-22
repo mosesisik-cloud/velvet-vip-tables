@@ -14,6 +14,7 @@ let VENUE_EVENTS = { fetched: null, venues: {} }; // kommande events per venue (
 let BOOKING_URLS = {}; // venue_id -> { url, kind, label } officiell VIP/bokningssida
 let GOOGLE_PLACES = { fetchedAt: null, venues: {} };
 let VENUE_FACTS = { fetchedAt: null, venues: {} };
+let CLUB_RANKINGS = { fetchedAt: null, byVenueId: {}, cities: [], clubs: [] };
 const state = {
   filters: { q: "", dest: "", cat: "", status: "", price: "", sort: "priority" },
 };
@@ -51,11 +52,23 @@ function googleScore(v) {
   const n = Number(g.reviewCount) || 0;
   return Number(g.rating) + Math.min(0.4, n / 20000);
 }
+function rankingMeta(v) {
+  return (v && CLUB_RANKINGS.byVenueId && CLUB_RANKINGS.byVenueId[v.venue_id]) || null;
+}
+function sourceScore(v) {
+  const r = rankingMeta(v);
+  if (!r) return 0;
+  const raw = Number(r.score) || 0;
+  if (raw <= 0) return 0;
+  return isVenueVerified(v) ? raw : (Number(r.unverifiedScore) || raw * 0.72);
+}
 function compareVenues(a, b) {
   const pub = Number(isPublicVenue(b)) - Number(isPublicVenue(a));
   if (pub) return pub;
   const ver = Number(isVenueVerified(b)) - Number(isVenueVerified(a));
   if (ver) return ver;
+  const src = sourceScore(b) - sourceScore(a);
+  if (Math.abs(src) > 0.02) return src;
   const g = googleScore(b) - googleScore(a);
   if (Math.abs(g) > 0.04) return g;
   const prio = num(b.priority_score) - num(a.priority_score);
@@ -1599,6 +1612,10 @@ function renderDestinationDetail(code) {
         <div class="venue-tags detail-tags">
           <span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span>
           ${useCases.map((u) => `<span class="tag">${esc(u)}</span>`).join("")}
+          ${(() => {
+            const c = (CLUB_RANKINGS.cities || []).find((x) => x.destination_code === d.code);
+            return c ? `<span class="tag src-rank">${esc(t("srcTimeout").replace("{n}", String(c.rank)))}</span>` : "";
+          })()}
         </div>
         ${d.note ? `<p class="detail-notes"><span class="dest-note-label">${esc(t("strategicNote"))}</span> ${esc(d.note)}</p>` : ""}
         <div class="detail-links">
@@ -1714,6 +1731,7 @@ function venueCard(v, { eager = false, rank = 0 } = {}) {
       <div class="venue-tags">
         <span class="tag">${esc(v.category)}</span>
         <span class="tag ${st.cls}">${st.label}</span>
+        ${rankingTagHTML(v)}
         ${v.shareable_format ? `<span class="tag tag-verified">${esc(t("shareableCost"))}</span>` : ""}
         ${eventsFor(v).length ? `<span class="tag tag-events">🎟 ${esc(t("comingN").replace("{n}", String(eventsFor(v).length)))}</span>` : ""}
       </div>
@@ -1877,6 +1895,41 @@ function googleStars(rating) {
   if (half) s += "½";
   s += "☆".repeat(Math.max(0, 5 - full - (half ? 1 : 0)));
   return s;
+}
+function rankingSources(v) {
+  const r = rankingMeta(v);
+  return (r && Array.isArray(r.sources)) ? r.sources : [];
+}
+function rankingTagHTML(v) {
+  const dj = rankingSources(v).find((s) => s.source === "djmag-top100");
+  const ina = rankingSources(v).find((s) => s.source === "ina-100-best");
+  const best = dj || ina;
+  if (!best || !(Number(best.rank) > 0)) return "";
+  const label = dj
+    ? t("srcDjMag").replace("{year}", String(dj.year || 2026)).replace("{n}", String(dj.rank))
+    : t("srcIna").replace("{year}", String(ina.year || 2025)).replace("{n}", String(ina.rank));
+  return `<span class="tag src-rank">${esc(label)}</span>`;
+}
+function rankingPanelHTML(v) {
+  const srcs = rankingSources(v);
+  if (!srcs.length) return "";
+  const rows = srcs.map((s) => {
+    const label = s.source === "djmag-top100"
+      ? t("srcDjMag").replace("{year}", String(s.year || "")).replace("{n}", String(s.rank))
+      : s.source === "ina-100-best"
+        ? t("srcIna").replace("{year}", String(s.year || "")).replace("{n}", String(s.rank))
+        : `${s.source} #${s.rank}`;
+    const href = s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(label)} ↗</a>` : esc(label);
+    return `<li>${href}</li>`;
+  }).join("");
+  const disc = isVenueVerified(v) ? "" : `<p class="events-meta">${esc(t("rankUnverifiedHint"))}</p>`;
+  return `
+  <div class="detail-panel">
+    <h2 class="detail-panel-title">${esc(t("rankSources"))}</h2>
+    <p class="events-meta">${esc(t("rankSourcesHint"))}</p>
+    ${disc}
+    <ul class="rank-src-list">${rows}</ul>
+  </div>`;
 }
 function googleRatingHTML(v, { compact = false } = {}) {
   const g = googlePlace(v);
@@ -2116,6 +2169,7 @@ function renderVenueDetail(id) {
           <span class="tag ${st.cls}">${st.label}</span>
           ${v.shareable_format ? `<span class="tag tag-verified">${esc(t("shareableCost"))}</span>` : ""}
           ${v.vip_table_potential ? `<span class="tag">${esc(t("pkgTable"))}</span>` : ""}
+          ${rankingTagHTML(v)}
           ${dest ? `<span class="tag">${esc(t("seasonShort"))} ${esc(dest.peak_season)}</span>` : ""}
         </div>
         ${publicNote(v) ? `<p class="detail-notes">${esc(publicNote(v))}</p>` : ""}
@@ -2146,6 +2200,7 @@ function renderVenueDetail(id) {
 
     <div class="detail-grid">
       ${contactPanelHTML(v)}
+      ${rankingPanelHTML(v)}
       ${factsPanelHTML(v)}
       ${googleReviewsPanelHTML(v)}
       ${menuPanelHTML(v)}
@@ -5703,6 +5758,13 @@ async function init() {
     renderLoadError();
     return;
   }
+  try {
+    const rr = await fetch("data/club-rankings.json", { cache: "no-store" });
+    if (rr.ok) {
+      const ranks = await rr.json();
+      if (ranks && typeof ranks === "object") CLUB_RANKINGS = ranks;
+    }
+  } catch { /* optional */ }
   try {
     const rx = await fetch("data/extra-destinations.json");
     if (rx.ok) {

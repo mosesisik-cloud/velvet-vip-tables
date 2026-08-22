@@ -2,3 +2,4 @@ api/pay.json
 api/idv/**
 .DS_Store
 *.log
+scripts/__pycache__/

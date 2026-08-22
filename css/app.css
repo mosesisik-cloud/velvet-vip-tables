@@ -1677,6 +1677,9 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .rank-head { margin: 28px 0 12px; }
 .rank-head h3 { font-family: var(--font-display); font-size: 22px; margin: 0 0 4px; }
 .rank-head p { color: var(--text-dim); font-size: 14px; margin: 0; }
+.tag.src-rank { border-color: rgba(212,175,95,0.55); color: var(--gold-bright); }
+.rank-src-list { margin: 10px 0 0; padding-left: 18px; color: var(--text-dim); }
+.rank-src-list a { color: var(--gold-bright); }
 .venue-card > .fav-btn {
   position: absolute; top: 10px; right: 10px; left: auto; z-index: 3;
 }

@@ -1,0 +1,6686 @@
+{
+  "fetchedAt": "2026-08-22",
+  "engine": "html-fetch",
+  "note": "Firecrawl-nyckel saknas. Listor hämtade från officiell HTML. Overifierade använder källans ranking med 0.72-rabatt. Inga påhittade Google-stjärnor.",
+  "sources": [
+    {
+      "id": "djmag-top100",
+      "name": "DJ Mag Top 100 Clubs",
+      "year": 2026,
+      "url": "https://djmag.com/top100clubs",
+      "count": 100
+    },
+    {
+      "id": "ina-100-best",
+      "name": "International Nightlife Association — World's 100 Best Clubs",
+      "year": 2025,
+      "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+      "count": 100
+    },
+    {
+      "id": "timeout-nightlife-cities",
+      "name": "Time Out — World's 20 best cities for nightlife",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "count": 20
+    }
+  ],
+  "scoring": {
+    "djmag": "5.0 * (101-rank)/100",
+    "ina": "4.6 * (101-rank)/100",
+    "combined": "max(DJ Mag 5.0 scale, INA 4.6 scale); unverified * 0.72",
+    "unverifiedDiscount": 0.72,
+    "verifiedFirst": true
+  },
+  "cities": [
+    {
+      "rank": 1,
+      "name": "Las Vegas",
+      "destination_code": "LAS",
+      "country": "USA",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 4.0,
+      "mentioned_venues": [
+        "OMNIA"
+      ]
+    },
+    {
+      "rank": 2,
+      "name": "Madrid",
+      "destination_code": "MAD",
+      "country": "Spain",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 3.8,
+      "mentioned_venues": [
+        "Fabrik",
+        "Ochoymedio",
+        "LuLa",
+        "Fitz"
+      ]
+    },
+    {
+      "rank": 3,
+      "name": "Paris",
+      "destination_code": "PAR",
+      "country": "France",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 3.6,
+      "mentioned_venues": [
+        "Essaim",
+        "Mia Mao",
+        "La Station",
+        "Nexus"
+      ]
+    },
+    {
+      "rank": 4,
+      "name": "Shanghai",
+      "destination_code": "SHA",
+      "country": "China",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 3.4,
+      "mentioned_venues": [
+        "INS"
+      ]
+    },
+    {
+      "rank": 5,
+      "name": "Berlin",
+      "destination_code": "BER",
+      "country": "Germany",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 3.2,
+      "mentioned_venues": [
+        "RSO.Berlin",
+        "Sisyphos",
+        "SchwuZ"
+      ]
+    },
+    {
+      "rank": 6,
+      "name": "Melbourne",
+      "destination_code": "MEL",
+      "country": "Australia",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 3.0,
+      "mentioned_venues": [
+        "Revolver Upstairs"
+      ]
+    },
+    {
+      "rank": 7,
+      "name": "Brighton",
+      "destination_code": "BTN",
+      "country": "UK",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 2.8,
+      "mentioned_venues": [
+        "Pryzm Brighton"
+      ]
+    },
+    {
+      "rank": 8,
+      "name": "Mexico City",
+      "destination_code": "MEX",
+      "country": "Mexico",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 2.6,
+      "mentioned_venues": []
+    },
+    {
+      "rank": 9,
+      "name": "Dubai",
+      "destination_code": "DXB",
+      "country": "UAE",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 2.4,
+      "mentioned_venues": [
+        "Sky 2.0",
+        "Soho Garden"
+      ]
+    },
+    {
+      "rank": 10,
+      "name": "Mumbai",
+      "destination_code": "BOM",
+      "country": "India",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 2.2,
+      "mentioned_venues": [
+        "Kitty Su"
+      ]
+    },
+    {
+      "rank": 11,
+      "name": "Cape Town",
+      "destination_code": "CPT",
+      "country": "South Africa",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 2.0,
+      "mentioned_venues": []
+    },
+    {
+      "rank": 12,
+      "name": "Warsaw",
+      "destination_code": "WAW",
+      "country": "Poland",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 1.8,
+      "mentioned_venues": []
+    },
+    {
+      "rank": 13,
+      "name": "Bangkok",
+      "destination_code": "BKK",
+      "country": "Thailand",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 1.6,
+      "mentioned_venues": []
+    },
+    {
+      "rank": 14,
+      "name": "Lagos",
+      "destination_code": "LOS",
+      "country": "Nigeria",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 1.4,
+      "mentioned_venues": []
+    },
+    {
+      "rank": 15,
+      "name": "Cairo",
+      "destination_code": "CAI",
+      "country": "Egypt",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 1.2,
+      "mentioned_venues": []
+    },
+    {
+      "rank": 16,
+      "name": "Riyadh",
+      "destination_code": "RUH",
+      "country": "Saudi Arabia",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 1.0,
+      "mentioned_venues": []
+    },
+    {
+      "rank": 17,
+      "name": "Amsterdam",
+      "destination_code": "AMS",
+      "country": "Netherlands",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 0.8,
+      "mentioned_venues": [
+        "Garage Noord",
+        "Club Raum"
+      ]
+    },
+    {
+      "rank": 18,
+      "name": "Medellín",
+      "destination_code": "MDE",
+      "country": "Colombia",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 0.6,
+      "mentioned_venues": [
+        "Perro Negro"
+      ]
+    },
+    {
+      "rank": 19,
+      "name": "Marrakech",
+      "destination_code": "RAK",
+      "country": "Morocco",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 0.4,
+      "mentioned_venues": [
+        "Babouchka",
+        "Theatro",
+        "555 Famous Club"
+      ]
+    },
+    {
+      "rank": 20,
+      "name": "Athens Riviera",
+      "destination_code": "ATH",
+      "country": "Greece",
+      "source": "timeout-nightlife-cities",
+      "year": 2025,
+      "url": "https://www.timeout.com/travel/worlds-best-cities-for-nightlife",
+      "score": 0.2,
+      "mentioned_venues": [
+        "Island",
+        "Bolivar"
+      ]
+    }
+  ],
+  "clubs": [
+    {
+      "name": "UNVRS",
+      "city": "Ibiza",
+      "country": "Spain",
+      "website": "https://unvrs.com",
+      "capacity": "4,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 1,
+          "url": "https://djmag.com/top100clubs/2026/1/unvrs",
+          "score": 5.0
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 1,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.6
+        }
+      ],
+      "destination": "Ibiza",
+      "destination_code": "IBZ",
+      "score": 5.0,
+      "unverified_score": 3.6,
+      "venue_id": "IBZ-003",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "GREENVALLEY",
+      "city": "Camboriú",
+      "country": "Brazil",
+      "website": "http://greenvalleybr.com",
+      "capacity": "10,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 2,
+          "url": "https://djmag.com/top100clubs/2026/2/greenvalley",
+          "score": 4.95
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 5,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.416
+        }
+      ],
+      "destination": "Camboriú",
+      "destination_code": "CMB",
+      "score": 4.95,
+      "unverified_score": 3.564,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "CMB-101"
+    },
+    {
+      "name": "Ushuaïa Ibiza",
+      "city": "Ibiza",
+      "country": "Spain",
+      "website": "http://theushuaiaexperience.com",
+      "capacity": "7,866",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 3,
+          "url": "https://djmag.com/top100clubs/2026/3/ushuaia-ibiza",
+          "score": 4.9
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 3,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.508
+        }
+      ],
+      "destination": "Ibiza",
+      "destination_code": "IBZ",
+      "score": 4.9,
+      "unverified_score": 3.528,
+      "venue_id": "IBZ-002",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "Hï Ibiza",
+      "city": "Ibiza",
+      "country": "Spain",
+      "website": "http://hiibiza.com",
+      "capacity": "5,633",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 4,
+          "url": "https://djmag.com/top100clubs/2026/4/hi-ibiza",
+          "score": 4.85
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 2,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.554
+        }
+      ],
+      "destination": "Ibiza",
+      "destination_code": "IBZ",
+      "score": 4.85,
+      "unverified_score": 3.492,
+      "venue_id": "IBZ-001",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "Savaya",
+      "city": "Bali",
+      "country": "Indonesia",
+      "website": "https://www.savaya.com",
+      "capacity": "2,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 5,
+          "url": "https://djmag.com/top100clubs/2026/5/savaya",
+          "score": 4.8
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 37,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.944
+        }
+      ],
+      "destination": "Bali",
+      "destination_code": "BAL",
+      "score": 4.8,
+      "unverified_score": 3.456,
+      "venue_id": "BAL-002",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "Echostage",
+      "city": "Washington DC",
+      "country": "USA",
+      "website": "http://echostage.com",
+      "capacity": "3,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 6,
+          "url": "https://djmag.com/top100clubs/2026/6/echostage",
+          "score": 4.75
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 10,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.186
+        }
+      ],
+      "destination": "Washington DC",
+      "destination_code": "WAS",
+      "score": 4.75,
+      "unverified_score": 3.42,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "WAS-101"
+    },
+    {
+      "name": "Laroc Club",
+      "city": "Valinhos",
+      "country": "Brazil",
+      "website": "https://www.laroc.club/valinhos",
+      "capacity": "5,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 7,
+          "url": "https://djmag.com/top100clubs/2026/7/laroc-club",
+          "score": 4.7
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 16,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.91
+        }
+      ],
+      "destination": "Valinhos",
+      "destination_code": "VLN",
+      "score": 4.7,
+      "unverified_score": 3.384,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "VLN-101"
+    },
+    {
+      "name": "FABRIK",
+      "city": "Madrid",
+      "country": "Spain",
+      "website": "https://www.fabrikmadrid.com",
+      "capacity": "6,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 8,
+          "url": "https://djmag.com/top100clubs/2026/8/fabrik",
+          "score": 4.65
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 48,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.438
+        }
+      ],
+      "destination": "Madrid",
+      "destination_code": "MAD",
+      "score": 4.65,
+      "unverified_score": 3.348,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "MAD-102"
+    },
+    {
+      "name": "Illuzion Phuket",
+      "city": "Phuket",
+      "country": "Thailand",
+      "website": "http://illuzionphuket.com",
+      "capacity": "5,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 9,
+          "url": "https://djmag.com/top100clubs/2026/9/illuzion-phuket",
+          "score": 4.6
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 64,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.702
+        }
+      ],
+      "destination": "Phuket",
+      "destination_code": "HKT",
+      "score": 4.6,
+      "unverified_score": 3.312,
+      "venue_id": "HKT-005",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "Surreal Park",
+      "city": "Camboriú",
+      "country": "Brazil",
+      "website": "https://www.surreal.art.br",
+      "capacity": "20,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 10,
+          "url": "https://djmag.com/top100clubs/2026/10/surreal-park",
+          "score": 4.55
+        }
+      ],
+      "destination": "Camboriú",
+      "destination_code": "CMB",
+      "score": 4.55,
+      "unverified_score": 3.276,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "CMB-102"
+    },
+    {
+      "name": "Bootshaus",
+      "city": "Cologne",
+      "country": "Germany",
+      "website": "https://bootshaus.tv",
+      "capacity": "2,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 11,
+          "url": "https://djmag.com/top100clubs/2026/11/bootshaus",
+          "score": 4.5
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 4,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.462
+        }
+      ],
+      "destination": "Cologne",
+      "destination_code": "CGN",
+      "score": 4.5,
+      "unverified_score": 3.24,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "CGN-101"
+    },
+    {
+      "name": "INS LAND",
+      "city": "Shanghai",
+      "country": "China",
+      "website": "http://ins.hero.com",
+      "capacity": "10,000+",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 12,
+          "url": "https://djmag.com/top100clubs/2026/12/ins-land",
+          "score": 4.45
+        }
+      ],
+      "destination": "Shanghai",
+      "destination_code": "SHA",
+      "score": 4.45,
+      "unverified_score": 3.204,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "SHA-101"
+    },
+    {
+      "name": "fabric",
+      "city": "London",
+      "country": "UK",
+      "website": "http://fabriclondon.com",
+      "capacity": "2,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 13,
+          "url": "https://djmag.com/top100clubs/2026/13/fabric",
+          "score": 4.4
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 24,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.542
+        }
+      ],
+      "destination": "London",
+      "destination_code": "LON",
+      "score": 4.4,
+      "unverified_score": 3.168,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LON-102"
+    },
+    {
+      "name": "Club Space",
+      "city": "Miami",
+      "country": "USA",
+      "website": "https://www.clubspace.com",
+      "capacity": "1,100",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 14,
+          "url": "https://djmag.com/top100clubs/2026/14/club-space",
+          "score": 4.35
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 20,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.726
+        }
+      ],
+      "destination": "Miami",
+      "destination_code": "MIA",
+      "score": 4.35,
+      "unverified_score": 3.132,
+      "venue_id": "MIA-101",
+      "matched": true,
+      "listed": false,
+      "research_status": "Unverified"
+    },
+    {
+      "name": "The Warehouse Project",
+      "city": "Manchester",
+      "country": "UK",
+      "website": "https://thewarehouseproject.com",
+      "capacity": "10,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 15,
+          "url": "https://djmag.com/top100clubs/2026/15/warehouse-project",
+          "score": 4.3
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 27,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.404
+        }
+      ],
+      "destination": "Manchester",
+      "destination_code": "MAN",
+      "score": 4.3,
+      "unverified_score": 3.096,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "MAN-101"
+    },
+    {
+      "name": "Amnesia Ibiza",
+      "city": "Ibiza",
+      "country": "Spain",
+      "website": "http://amnesia.es",
+      "capacity": "3,800 people",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 16,
+          "url": "https://djmag.com/top100clubs/2026/16/amnesia-ibiza",
+          "score": 4.25
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 26,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.45
+        }
+      ],
+      "destination": "Ibiza",
+      "destination_code": "IBZ",
+      "score": 4.25,
+      "unverified_score": 3.06,
+      "venue_id": "IBZ-101",
+      "matched": true,
+      "listed": false,
+      "research_status": "Unverified"
+    },
+    {
+      "name": "Zouk Singapore",
+      "city": "Singapore",
+      "country": "Singapore",
+      "website": "http://zoukgroup.com/singapore",
+      "capacity": "2,900",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 17,
+          "url": "https://djmag.com/top100clubs/2026/17/zouk-singapore",
+          "score": 4.2
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 30,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.266
+        }
+      ],
+      "destination": "Singapore",
+      "destination_code": "SIN",
+      "score": 4.2,
+      "unverified_score": 3.024,
+      "venue_id": "SIN-101",
+      "matched": true,
+      "listed": false,
+      "research_status": "Unverified"
+    },
+    {
+      "name": "PACHA IBIZA",
+      "city": "Ibiza",
+      "country": "Spain",
+      "website": "http://pacha.com",
+      "capacity": "5,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 18,
+          "url": "https://djmag.com/top100clubs/2026/18/pacha-ibiza",
+          "score": 4.15
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 17,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.864
+        }
+      ],
+      "destination": "Ibiza",
+      "destination_code": "IBZ",
+      "score": 4.15,
+      "unverified_score": 2.988,
+      "venue_id": "IBZ-004",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "DC-10",
+      "city": "Ibiza",
+      "country": "Spain",
+      "website": "https://dc10ibiza.com",
+      "capacity": "1,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 19,
+          "url": "https://djmag.com/top100clubs/2026/19/dc-10",
+          "score": 4.1
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 8,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.278
+        }
+      ],
+      "destination": "Ibiza",
+      "destination_code": "IBZ",
+      "score": 4.278,
+      "unverified_score": 3.08,
+      "venue_id": "IBZ-102",
+      "matched": true,
+      "listed": false,
+      "research_status": "Unverified"
+    },
+    {
+      "name": "Studio 338",
+      "city": "London",
+      "country": "UK",
+      "website": "http://www.studio338.co.uk",
+      "capacity": "2,400",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 20,
+          "url": "https://djmag.com/top100clubs/2026/20/studio-338",
+          "score": 4.05
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 47,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.484
+        }
+      ],
+      "destination": "London",
+      "destination_code": "LON",
+      "score": 4.05,
+      "unverified_score": 2.916,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LON-103"
+    },
+    {
+      "name": "Berghain",
+      "city": "Berlin",
+      "country": "Germany",
+      "website": "https://berghain.de",
+      "capacity": "1,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 21,
+          "url": "https://djmag.com/top100clubs/2026/21/berghain",
+          "score": 4.0
+        }
+      ],
+      "destination": "Berlin",
+      "destination_code": "BER",
+      "score": 4.0,
+      "unverified_score": 2.88,
+      "venue_id": "BER-101",
+      "matched": true,
+      "listed": false,
+      "research_status": "Unverified"
+    },
+    {
+      "name": "Cavo Paradiso",
+      "city": "Mykonos",
+      "country": "Greece",
+      "website": "https://cavoparadiso.gr",
+      "capacity": "3,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 22,
+          "url": "https://djmag.com/top100clubs/2026/22/cavo-paradiso",
+          "score": 3.95
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 18,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.818
+        }
+      ],
+      "destination": "Mykonos",
+      "destination_code": "MYK",
+      "score": 3.95,
+      "unverified_score": 2.844,
+      "venue_id": "MYK-004",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "WAVE Club",
+      "city": "Taipei",
+      "country": "",
+      "website": "https://wavetaipei.tw",
+      "capacity": "800",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 23,
+          "url": "https://djmag.com/top100clubs/2026/23/wave-club",
+          "score": 3.9
+        }
+      ],
+      "destination": "Taipei",
+      "destination_code": "TPE",
+      "score": 3.9,
+      "unverified_score": 2.808,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "TPE-101"
+    },
+    {
+      "name": "Ministry Of Sound",
+      "city": "London",
+      "country": "UK",
+      "website": "http://ministryofsound.com",
+      "capacity": "1,600",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 24,
+          "url": "https://djmag.com/top100clubs/2026/24/ministry-of-sound",
+          "score": 3.85
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 28,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.358
+        }
+      ],
+      "destination": "London",
+      "destination_code": "LON",
+      "score": 3.85,
+      "unverified_score": 2.772,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LON-104"
+    },
+    {
+      "name": "Culture Club Revelin",
+      "city": "Dubrovnik",
+      "country": "Croatia",
+      "website": "http://clubrevelin.com",
+      "capacity": "1,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 25,
+          "url": "https://djmag.com/top100clubs/2026/25/culture-club-revelin",
+          "score": 3.8
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 39,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.852
+        }
+      ],
+      "destination": "Dubrovnik",
+      "destination_code": "DBV",
+      "score": 3.8,
+      "unverified_score": 2.736,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "DBV-101"
+    },
+    {
+      "name": "Space Riccione",
+      "city": "Riccione",
+      "country": "Italy",
+      "website": "http://spacericcione.com",
+      "capacity": "6,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 26,
+          "url": "https://djmag.com/top100clubs/2026/26/space-riccione",
+          "score": 3.75
+        }
+      ],
+      "destination": "Riccione",
+      "destination_code": "RIC",
+      "score": 3.75,
+      "unverified_score": 2.7,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "RIC-101"
+    },
+    {
+      "name": "Play X",
+      "city": "Shenzhen",
+      "country": "China",
+      "website": "",
+      "capacity": "3,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 27,
+          "url": "https://djmag.com/top100clubs/2026/27/play-x",
+          "score": 3.7
+        }
+      ],
+      "destination": "Shenzhen",
+      "destination_code": "SZX",
+      "score": 3.7,
+      "unverified_score": 2.664,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-official-site"
+    },
+    {
+      "name": "Lost Beach Club",
+      "city": "Montañita",
+      "country": "Ecuador",
+      "website": "",
+      "capacity": "2,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 28,
+          "url": "https://djmag.com/top100clubs/2026/28/lost-beach-club",
+          "score": 3.65
+        }
+      ],
+      "destination": "Montañita",
+      "destination_code": "MTA",
+      "score": 3.65,
+      "unverified_score": 2.628,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-official-site"
+    },
+    {
+      "name": "Papaya Club",
+      "city": "Zrće",
+      "country": "Croatia",
+      "website": "http://papaya.com.hr",
+      "capacity": "3,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 29,
+          "url": "https://djmag.com/top100clubs/2026/29/papaya-club",
+          "score": 3.6
+        }
+      ],
+      "destination": "Zrće",
+      "destination_code": "ZRC",
+      "score": 3.6,
+      "unverified_score": 2.592,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "ZRC-101"
+    },
+    {
+      "name": "Quake Arena",
+      "city": "Hyderabad",
+      "country": "India",
+      "website": "https://www.quakearena.in",
+      "capacity": "5,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 30,
+          "url": "https://djmag.com/top100clubs/2026/30/quake-arena",
+          "score": 3.55
+        }
+      ],
+      "destination": "Hyderabad",
+      "destination_code": "HYD",
+      "score": 3.55,
+      "unverified_score": 2.556,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "HYD-101"
+    },
+    {
+      "name": "The Concourse Project",
+      "city": "Austin",
+      "country": "USA",
+      "website": "https://concourseproject.com",
+      "capacity": "2,000+",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 31,
+          "url": "https://djmag.com/top100clubs/2026/31/concourse-project",
+          "score": 3.5
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 29,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.312
+        }
+      ],
+      "destination": "Austin",
+      "destination_code": "AUS",
+      "score": 3.5,
+      "unverified_score": 2.52,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "AUS-101"
+    },
+    {
+      "name": "Boomerang",
+      "city": "Hong Kong",
+      "country": "Hong Kong",
+      "website": "http://boomeranghkg.com",
+      "capacity": "650",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 32,
+          "url": "https://djmag.com/top100clubs/2026/32/boomerang",
+          "score": 3.45
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 78,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.058
+        }
+      ],
+      "destination": "Hong Kong",
+      "destination_code": "HKG",
+      "score": 3.45,
+      "unverified_score": 2.484,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "HKG-101"
+    },
+    {
+      "name": "Amnesia Cap d’Agde",
+      "city": "Cap d'Agde",
+      "country": "France",
+      "website": "http://www.amnesia.fr",
+      "capacity": "4,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 33,
+          "url": "https://djmag.com/top100clubs/2026/33/amnesia-cap-dagde",
+          "score": 3.4
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 11,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.14
+        }
+      ],
+      "destination": "Cap d'Agde",
+      "destination_code": "AGD",
+      "score": 4.14,
+      "unverified_score": 2.981,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "AGD-101"
+    },
+    {
+      "name": "Marquee Singapore",
+      "city": "Singapore",
+      "country": "",
+      "website": "http://www.marqueesingapore.com",
+      "capacity": "2,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 34,
+          "url": "https://djmag.com/top100clubs/2026/34/marquee-singapore",
+          "score": 3.35
+        }
+      ],
+      "destination": "Singapore",
+      "destination_code": "SIN",
+      "score": 3.35,
+      "unverified_score": 2.412,
+      "venue_id": "SIN-001",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "D-Edge",
+      "city": "São Paulo",
+      "country": "Brazil",
+      "website": "https://www.d-edge.com.br",
+      "capacity": "1,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 35,
+          "url": "https://djmag.com/top100clubs/2026/35/d-edge",
+          "score": 3.3
+        }
+      ],
+      "destination": "São Paulo",
+      "destination_code": "SAO",
+      "score": 3.3,
+      "unverified_score": 2.376,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "SAO-101"
+    },
+    {
+      "name": "The Penthouse",
+      "city": "Dubai",
+      "country": "UAE",
+      "website": "https://thepenthouse.co/dubai",
+      "capacity": "1,010",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 36,
+          "url": "https://djmag.com/top100clubs/2026/36/penthouse",
+          "score": 3.25
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 58,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.978
+        }
+      ],
+      "destination": "Dubai",
+      "destination_code": "DXB",
+      "score": 3.25,
+      "unverified_score": 2.34,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "DXB-102"
+    },
+    {
+      "name": "Café Del Mar Phuket",
+      "city": "Phuket",
+      "country": "Thailand",
+      "website": "https://phuket.cafedelmar.com",
+      "capacity": "600-3,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 37,
+          "url": "https://djmag.com/top100clubs/2026/37/cafe-del-mar-phuket",
+          "score": 3.2
+        }
+      ],
+      "destination": "Phuket",
+      "destination_code": "HKT",
+      "score": 3.2,
+      "unverified_score": 2.304,
+      "venue_id": "HKT-001",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "DupleX",
+      "city": "Prague",
+      "country": "Czech Republic",
+      "website": "https://www.duplex.cz",
+      "capacity": "2,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 38,
+          "url": "https://djmag.com/top100clubs/2026/38/duplex",
+          "score": 3.15
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 41,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.76
+        }
+      ],
+      "destination": "Prague",
+      "destination_code": "PRG",
+      "score": 3.15,
+      "unverified_score": 2.268,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "PRG-101"
+    },
+    {
+      "name": "SILO Dallas",
+      "city": "Dallas",
+      "country": "USA",
+      "website": "http://silodallas.com",
+      "capacity": "3,145",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 39,
+          "url": "https://djmag.com/top100clubs/2026/39/silo-dallas",
+          "score": 3.1
+        }
+      ],
+      "destination": "Dallas",
+      "destination_code": "DAL",
+      "score": 3.1,
+      "unverified_score": 2.232,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "DAL-101"
+    },
+    {
+      "name": "LOD",
+      "city": "Kathmandu",
+      "country": "Nepal",
+      "website": "https://www.clublod.com",
+      "capacity": "2,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 40,
+          "url": "https://djmag.com/top100clubs/2026/40/lod",
+          "score": 3.05
+        }
+      ],
+      "destination": "Kathmandu",
+      "destination_code": "KTM",
+      "score": 3.05,
+      "unverified_score": 2.196,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "KTM-101"
+    },
+    {
+      "name": "Crobar",
+      "city": "Buenos Aires",
+      "country": "Argentina",
+      "website": "http://www.crobar.com.ar",
+      "capacity": "2,300",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 41,
+          "url": "https://djmag.com/top100clubs/2026/41/crobar",
+          "score": 3.0
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 59,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.932
+        }
+      ],
+      "destination": "Buenos Aires",
+      "destination_code": "BUE",
+      "score": 3.0,
+      "unverified_score": 2.16,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BUE-101"
+    },
+    {
+      "name": "Atlas Superclub Bali",
+      "city": "Bali",
+      "country": "Indonesia",
+      "website": "http://atlasbeachfest.com/super-club",
+      "capacity": "1,200",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 42,
+          "url": "https://djmag.com/top100clubs/2026/42/atlas-superclub-bali",
+          "score": 2.95
+        }
+      ],
+      "destination": "Bali",
+      "destination_code": "BAL",
+      "score": 2.95,
+      "unverified_score": 2.124,
+      "venue_id": "BAL-004",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "APLUS HANOI",
+      "city": "Hanoi",
+      "country": "Vietnam",
+      "website": "https://aplushanoi.com",
+      "capacity": "800",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 43,
+          "url": "https://djmag.com/top100clubs/2026/43/aplus-hanoi",
+          "score": 2.9
+        }
+      ],
+      "destination": "Hanoi",
+      "destination_code": "HAN",
+      "score": 2.9,
+      "unverified_score": 2.088,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "HAN-101"
+    },
+    {
+      "name": "Academy LA",
+      "city": "Los Angeles",
+      "country": "USA",
+      "website": "https://academy.la",
+      "capacity": "1,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 44,
+          "url": "https://djmag.com/top100clubs/2026/44/academy-la",
+          "score": 2.85
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 61,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.84
+        }
+      ],
+      "destination": "Los Angeles",
+      "destination_code": "LAX",
+      "score": 2.85,
+      "unverified_score": 2.052,
+      "venue_id": "LAX-101",
+      "matched": true,
+      "listed": false,
+      "research_status": "Unverified"
+    },
+    {
+      "name": "Drumsheds",
+      "city": "London",
+      "country": "UK",
+      "website": "https://drumshedslondon.com",
+      "capacity": "15,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 45,
+          "url": "https://djmag.com/top100clubs/2026/45/drumsheds",
+          "score": 2.8
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 72,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.334
+        }
+      ],
+      "destination": "London",
+      "destination_code": "LON",
+      "score": 2.8,
+      "unverified_score": 2.016,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LON-105"
+    },
+    {
+      "name": "Warung Beach Club",
+      "city": "Itajaí",
+      "country": "Brazil",
+      "website": "http://warungclub.com.br",
+      "capacity": "2,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 46,
+          "url": "https://djmag.com/top100clubs/2026/46/warung-beach-club",
+          "score": 2.75
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 44,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.622
+        }
+      ],
+      "destination": "Itajaí",
+      "destination_code": "ITJ",
+      "score": 2.75,
+      "unverified_score": 1.98,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "ITJ-101"
+    },
+    {
+      "name": "ShiShi Bali",
+      "city": "Bali",
+      "country": "Indonesia",
+      "website": "http://www.shishibali.com",
+      "capacity": "2,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 47,
+          "url": "https://djmag.com/top100clubs/2026/47/shishi-bali",
+          "score": 2.7
+        }
+      ],
+      "destination": "Bali",
+      "destination_code": "BAL",
+      "score": 2.7,
+      "unverified_score": 1.944,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BAL-102"
+    },
+    {
+      "name": "Exchange LA",
+      "city": "Los Angeles",
+      "country": "USA",
+      "website": "https://exchangela.com",
+      "capacity": "1,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 48,
+          "url": "https://djmag.com/top100clubs/2026/48/exchange-la",
+          "score": 2.65
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 67,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.564
+        }
+      ],
+      "destination": "Los Angeles",
+      "destination_code": "LAX",
+      "score": 2.65,
+      "unverified_score": 1.908,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LAX-102"
+    },
+    {
+      "name": "FOMO",
+      "city": "Baku",
+      "country": "Azerbaijan",
+      "website": "https://fomobaku.com",
+      "capacity": "500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 49,
+          "url": "https://djmag.com/top100clubs/2026/49/fomo",
+          "score": 2.6
+        }
+      ],
+      "destination": "Baku",
+      "destination_code": "",
+      "score": 2.6,
+      "unverified_score": 1.872,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Atlas Superclub Bangkok",
+      "city": "Bangkok",
+      "country": "Thailand",
+      "website": "",
+      "capacity": "1,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 50,
+          "url": "https://djmag.com/top100clubs/2026/50/atlas-superclub-bangkok",
+          "score": 2.55
+        }
+      ],
+      "destination": "Bangkok",
+      "destination_code": "BKK",
+      "score": 2.55,
+      "unverified_score": 1.836,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-official-site"
+    },
+    {
+      "name": "Zouk Tokyo",
+      "city": "Tokyo",
+      "country": "Japan",
+      "website": "https://www.zoukgrouptky.com",
+      "capacity": "1,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 51,
+          "url": "https://djmag.com/top100clubs/2026/51/zouk-tokyo",
+          "score": 2.5
+        }
+      ],
+      "destination": "Tokyo",
+      "destination_code": "TYO",
+      "score": 2.5,
+      "unverified_score": 1.8,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "TYO-102"
+    },
+    {
+      "name": "CLUB SEEN Koh Samui",
+      "city": "Koh Samui",
+      "country": "Thailand",
+      "website": "http://seenbeachclubsamui.com",
+      "capacity": "2,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 52,
+          "url": "https://djmag.com/top100clubs/2026/52/club-seen-koh-samui",
+          "score": 2.45
+        }
+      ],
+      "destination": "Koh Samui",
+      "destination_code": "USM",
+      "score": 2.45,
+      "unverified_score": 1.764,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "USM-101"
+    },
+    {
+      "name": "Warehouse",
+      "city": "Nantes",
+      "country": "France",
+      "website": "https://warehouse-nantes.fr",
+      "capacity": "2,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 53,
+          "url": "https://djmag.com/top100clubs/2026/53/warehouse",
+          "score": 2.4
+        }
+      ],
+      "destination": "Nantes",
+      "destination_code": "",
+      "score": 2.4,
+      "unverified_score": 1.728,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Phi Beach",
+      "city": "Sardinia",
+      "country": "Italy",
+      "website": "https://phibeach.com",
+      "capacity": "2,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 54,
+          "url": "https://djmag.com/top100clubs/2026/54/phi-beach",
+          "score": 2.35
+        }
+      ],
+      "destination": "Sardinia",
+      "destination_code": "",
+      "score": 2.35,
+      "unverified_score": 1.692,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "The H Club Jakarta",
+      "city": "Jakarta",
+      "country": "Indonesia",
+      "website": "http://holywings.com/brands/the-h-club/the-h-club-scbd",
+      "capacity": "2,000+",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 55,
+          "url": "https://djmag.com/top100clubs/2026/55/h-club-jakarta",
+          "score": 2.3
+        }
+      ],
+      "destination": "Jakarta",
+      "destination_code": "",
+      "score": 2.3,
+      "unverified_score": 1.656,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Nitsa",
+      "city": "Barcelona",
+      "country": "Spain",
+      "website": "https://www.nitsa.com",
+      "capacity": "1,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 56,
+          "url": "https://djmag.com/top100clubs/2026/56/nitsa",
+          "score": 2.25
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 34,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.082
+        }
+      ],
+      "destination": "Barcelona",
+      "destination_code": "BCN",
+      "score": 3.082,
+      "unverified_score": 2.219,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BCN-101"
+    },
+    {
+      "name": "Lion Seoul",
+      "city": "Seoul",
+      "country": "South Korea",
+      "website": "",
+      "capacity": "700",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 57,
+          "url": "https://djmag.com/top100clubs/2026/57/lion-seoul",
+          "score": 2.2
+        }
+      ],
+      "destination": "Seoul",
+      "destination_code": "",
+      "score": 2.2,
+      "unverified_score": 1.584,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "WORLD HOUSE",
+      "city": "Pattaya",
+      "country": "Thailand",
+      "website": "https://linktr.ee/WorldHouse_Pattaya",
+      "capacity": "1,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 58,
+          "url": "https://djmag.com/top100clubs/2026/58/world-house",
+          "score": 2.15
+        }
+      ],
+      "destination": "Pattaya",
+      "destination_code": "",
+      "score": 2.15,
+      "unverified_score": 1.548,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "APLUS SAIGON",
+      "city": "Ho Chi Minh City",
+      "country": "Vietnam",
+      "website": "",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 59,
+          "url": "https://djmag.com/top100clubs/2026/59/aplus-saigon",
+          "score": 2.1
+        }
+      ],
+      "destination": "Ho Chi Minh City",
+      "destination_code": "",
+      "score": 2.1,
+      "unverified_score": 1.512,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "MAD Club",
+      "city": "Lausanne",
+      "country": "Switzerland",
+      "website": "https://mad.club",
+      "capacity": "2,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 60,
+          "url": "https://djmag.com/top100clubs/2026/60/mad-club",
+          "score": 2.05
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 89,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.552
+        }
+      ],
+      "destination": "Lausanne",
+      "destination_code": "LAU",
+      "score": 2.05,
+      "unverified_score": 1.476,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LAU-101"
+    },
+    {
+      "name": "Big Bull",
+      "city": "Hyderabad",
+      "country": "India",
+      "website": "https://bigbullhyd.com",
+      "capacity": "1,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 61,
+          "url": "https://djmag.com/top100clubs/2026/61/big-bull",
+          "score": 2.0
+        }
+      ],
+      "destination": "Hyderabad",
+      "destination_code": "HYD",
+      "score": 2.0,
+      "unverified_score": 1.44,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "HYD-102"
+    },
+    {
+      "name": "Room26",
+      "city": "Rome",
+      "country": "Italy",
+      "website": "https://www.room26.it",
+      "capacity": "500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 62,
+          "url": "https://djmag.com/top100clubs/2026/62/room26",
+          "score": 1.95
+        }
+      ],
+      "destination": "Rome",
+      "destination_code": "ROM",
+      "score": 1.95,
+      "unverified_score": 1.404,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "ROM-102"
+    },
+    {
+      "name": "Farout Beach Club",
+      "city": "Ios",
+      "country": "Greece",
+      "website": "https://faroutbeachclub.com",
+      "capacity": "2,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 63,
+          "url": "https://djmag.com/top100clubs/2026/63/farout-beach-club",
+          "score": 1.9
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 55,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.116
+        }
+      ],
+      "destination": "Ios",
+      "destination_code": "IOS",
+      "score": 2.116,
+      "unverified_score": 1.524,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "IOS-101"
+    },
+    {
+      "name": "AVALON Hollywood",
+      "city": "Los Angeles",
+      "country": "USA",
+      "website": "https://avalonhollywood.com",
+      "capacity": "1,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 64,
+          "url": "https://djmag.com/top100clubs/2026/64/avalon-hollywood",
+          "score": 1.85
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 52,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.254
+        }
+      ],
+      "destination": "Los Angeles",
+      "destination_code": "LAX",
+      "score": 2.254,
+      "unverified_score": 1.623,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LAX-103"
+    },
+    {
+      "name": "Hakkasan",
+      "city": "Las Vegas",
+      "country": "USA",
+      "website": "https://taogroup.com/venues/hakkasan-nightclub-las-vegas",
+      "capacity": "3,900",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 65,
+          "url": "https://djmag.com/top100clubs/2026/65/hakkasan",
+          "score": 1.8
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 31,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.22
+        }
+      ],
+      "destination": "Las Vegas",
+      "destination_code": "LAS",
+      "score": 3.22,
+      "unverified_score": 2.318,
+      "venue_id": "LAS-101",
+      "matched": true,
+      "listed": false,
+      "research_status": "Unverified"
+    },
+    {
+      "name": "Koko",
+      "city": "London",
+      "country": "UK",
+      "website": "http://koko.co.uk",
+      "capacity": "1,410",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 66,
+          "url": "https://djmag.com/top100clubs/2026/66/koko",
+          "score": 1.75
+        }
+      ],
+      "destination": "London",
+      "destination_code": "LON",
+      "score": 1.75,
+      "unverified_score": 1.26,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LON-106"
+    },
+    {
+      "name": "VOID",
+      "city": "Bangkok",
+      "country": "Thailand",
+      "website": "https://voidclubbkk.com",
+      "capacity": "800-1,200",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 67,
+          "url": "https://djmag.com/top100clubs/2026/67/void",
+          "score": 1.7
+        }
+      ],
+      "destination": "Bangkok",
+      "destination_code": "BKK",
+      "score": 1.7,
+      "unverified_score": 1.224,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BKK-101"
+    },
+    {
+      "name": "CINÉ Saigon",
+      "city": "Ho Chi Minh City",
+      "country": "Vietnam",
+      "website": "http://cinesaigon.vn",
+      "capacity": "800",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 68,
+          "url": "https://djmag.com/top100clubs/2026/68/cine-saigon",
+          "score": 1.65
+        }
+      ],
+      "destination": "Ho Chi Minh City",
+      "destination_code": "",
+      "score": 1.65,
+      "unverified_score": 1.188,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Space Club",
+      "city": "Hong Kong",
+      "country": "",
+      "website": "",
+      "capacity": "500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 69,
+          "url": "https://djmag.com/top100clubs/2026/69/space-club",
+          "score": 1.6
+        }
+      ],
+      "destination": "Hong Kong",
+      "destination_code": "HKG",
+      "score": 1.6,
+      "unverified_score": 1.152,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-official-site"
+    },
+    {
+      "name": "OMNIA",
+      "city": "Las Vegas",
+      "country": "USA",
+      "website": "https://taogroup.com/venues/omnia-nightclub-las-vegas",
+      "capacity": "4,300",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 70,
+          "url": "https://djmag.com/top100clubs/2026/70/omnia",
+          "score": 1.55
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 19,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.772
+        }
+      ],
+      "destination": "Las Vegas",
+      "destination_code": "LAS",
+      "score": 3.772,
+      "unverified_score": 2.716,
+      "venue_id": "LAS-002",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "The Club Khaosan",
+      "city": "Bangkok",
+      "country": "Thailand",
+      "website": "https://theclubkhaosan.com",
+      "capacity": "800",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 71,
+          "url": "https://djmag.com/top100clubs/2026/71/club-khaosan",
+          "score": 1.5
+        }
+      ],
+      "destination": "Bangkok",
+      "destination_code": "BKK",
+      "score": 1.5,
+      "unverified_score": 1.08,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BKK-102"
+    },
+    {
+      "name": "Liv Nightclub",
+      "city": "Miami",
+      "country": "USA",
+      "website": "http://www.livnightclub.com/miami",
+      "capacity": "1,100",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 72,
+          "url": "https://djmag.com/top100clubs/2026/72/liv-nightclub",
+          "score": 1.45
+        }
+      ],
+      "destination": "Miami",
+      "destination_code": "MIA",
+      "score": 1.45,
+      "unverified_score": 1.044,
+      "venue_id": "MIA-001",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "WARP Shinjuku",
+      "city": "Tokyo",
+      "country": "Japan",
+      "website": "http://warp-shinjuku.jp/en",
+      "capacity": "1,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 73,
+          "url": "https://djmag.com/top100clubs/2026/73/warp-shinjuku",
+          "score": 1.4
+        }
+      ],
+      "destination": "Tokyo",
+      "destination_code": "TYO",
+      "score": 1.4,
+      "unverified_score": 1.008,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "TYO-103"
+    },
+    {
+      "name": "Chinois",
+      "city": "Ibiza",
+      "country": "Spain",
+      "website": "http://chinois.com",
+      "capacity": "1,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 74,
+          "url": "https://djmag.com/top100clubs/2026/74/chinois",
+          "score": 1.35
+        }
+      ],
+      "destination": "Ibiza",
+      "destination_code": "IBZ",
+      "score": 1.35,
+      "unverified_score": 0.972,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "IBZ-107"
+    },
+    {
+      "name": "MUTE",
+      "city": "Mar del Plata",
+      "country": "Argentina",
+      "website": "https://mute.com.ar",
+      "capacity": "3,000–25,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 75,
+          "url": "https://djmag.com/top100clubs/2026/75/mute",
+          "score": 1.3
+        }
+      ],
+      "destination": "Mar del Plata",
+      "destination_code": "",
+      "score": 1.3,
+      "unverified_score": 0.936,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Papagayo Tenerife",
+      "city": "Tenerife",
+      "country": "Spain",
+      "website": "http://papagayotenerife.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 76,
+          "url": "https://djmag.com/top100clubs/2026/76/papagayo-tenerife",
+          "score": 1.25
+        }
+      ],
+      "destination": "Tenerife",
+      "destination_code": "",
+      "score": 1.25,
+      "unverified_score": 0.9,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Midnight Club",
+      "city": "Wuhan",
+      "country": "China",
+      "website": "",
+      "capacity": "1,200",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 77,
+          "url": "https://djmag.com/top100clubs/2026/77/midnight-club",
+          "score": 1.2
+        }
+      ],
+      "destination": "Wuhan",
+      "destination_code": "",
+      "score": 1.2,
+      "unverified_score": 0.864,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "After Caposile",
+      "city": "Venice",
+      "country": "Italy",
+      "website": "https://aftercaposile.it",
+      "capacity": "800",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 78,
+          "url": "https://djmag.com/top100clubs/2026/78/after-caposile",
+          "score": 1.15
+        }
+      ],
+      "destination": "Venice",
+      "destination_code": "",
+      "score": 1.15,
+      "unverified_score": 0.828,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Radius",
+      "city": "Chicago",
+      "country": "USA",
+      "website": "http://radius-chicago.com",
+      "capacity": "5,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 79,
+          "url": "https://djmag.com/top100clubs/2026/79/radius",
+          "score": 1.1
+        }
+      ],
+      "destination": "Chicago",
+      "destination_code": "",
+      "score": 1.1,
+      "unverified_score": 0.792,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Index",
+      "city": "Dublin",
+      "country": "Ireland",
+      "website": "http://indexdublin.com",
+      "capacity": "1000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 80,
+          "url": "https://djmag.com/top100clubs/2026/80/index",
+          "score": 1.05
+        }
+      ],
+      "destination": "Dublin",
+      "destination_code": "",
+      "score": 1.05,
+      "unverified_score": 0.756,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Pelícano",
+      "city": "Coruña",
+      "country": "Spain",
+      "website": "http://salapelicano.com",
+      "capacity": "3,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 81,
+          "url": "https://djmag.com/top100clubs/2026/81/pelicano",
+          "score": 1.0
+        }
+      ],
+      "destination": "Coruña",
+      "destination_code": "",
+      "score": 1.0,
+      "unverified_score": 0.72,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Republic Club",
+      "city": "Pattaya",
+      "country": "Thailand",
+      "website": "http://republic-nightclub.com",
+      "capacity": "700",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 82,
+          "url": "https://djmag.com/top100clubs/2026/82/republic-club",
+          "score": 0.95
+        }
+      ],
+      "destination": "Pattaya",
+      "destination_code": "",
+      "score": 0.95,
+      "unverified_score": 0.684,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Zouk",
+      "city": "Las Vegas",
+      "country": "USA",
+      "website": "http://zoukgrouplv.com/zouk",
+      "capacity": "2,160",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 83,
+          "url": "https://djmag.com/top100clubs/2026/83/zouk",
+          "score": 0.9
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 25,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.496
+        }
+      ],
+      "destination": "Las Vegas",
+      "destination_code": "LAS",
+      "score": 3.496,
+      "unverified_score": 2.517,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LAS-105"
+    },
+    {
+      "name": "Marquee Nightclub & Dayclub",
+      "city": "Las Vegas",
+      "country": "USA",
+      "website": "http://marqueelasvegas.com",
+      "capacity": "3,600",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 84,
+          "url": "https://djmag.com/top100clubs/2026/84/marquee-nightclub-dayclub",
+          "score": 0.85
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 40,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.806
+        }
+      ],
+      "destination": "Las Vegas",
+      "destination_code": "LAS",
+      "score": 2.806,
+      "unverified_score": 2.02,
+      "venue_id": "LAS-003",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "Ai-X",
+      "city": "Taipei",
+      "country": "",
+      "website": "",
+      "capacity": "750",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 85,
+          "url": "https://djmag.com/top100clubs/2026/85/ai-x",
+          "score": 0.8
+        }
+      ],
+      "destination": "Taipei",
+      "destination_code": "TPE",
+      "score": 0.8,
+      "unverified_score": 0.576,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-official-site"
+    },
+    {
+      "name": "Sound",
+      "city": "Los Angeles",
+      "country": "USA",
+      "website": "https://www.soundnightclub.com",
+      "capacity": "600",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 86,
+          "url": "https://djmag.com/top100clubs/2026/86/sound",
+          "score": 0.75
+        }
+      ],
+      "destination": "Los Angeles",
+      "destination_code": "LAX",
+      "score": 0.75,
+      "unverified_score": 0.54,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LAX-104"
+    },
+    {
+      "name": "Aquarius",
+      "city": "Zrće",
+      "country": "Croatia",
+      "website": "https://aquarius.club",
+      "capacity": "2,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 87,
+          "url": "https://djmag.com/top100clubs/2026/87/aquarius",
+          "score": 0.7
+        }
+      ],
+      "destination": "Zrće",
+      "destination_code": "ZRC",
+      "score": 0.7,
+      "unverified_score": 0.504,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "ZRC-102"
+    },
+    {
+      "name": "WOMB",
+      "city": "Tokyo",
+      "country": "Japan",
+      "website": "http://womb.co.jp",
+      "capacity": "1,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 88,
+          "url": "https://djmag.com/top100clubs/2026/88/womb",
+          "score": 0.65
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 84,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.782
+        }
+      ],
+      "destination": "Tokyo",
+      "destination_code": "TYO",
+      "score": 0.782,
+      "unverified_score": 0.563,
+      "venue_id": "TYO-101",
+      "matched": true,
+      "listed": false,
+      "research_status": "Unverified"
+    },
+    {
+      "name": "Tenax Club",
+      "city": "Florence",
+      "country": "Italy",
+      "website": "https://tenax.org",
+      "capacity": "999",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 89,
+          "url": "https://djmag.com/top100clubs/2026/89/tenax-club",
+          "score": 0.6
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 53,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.208
+        }
+      ],
+      "destination": "Florence",
+      "destination_code": "FLR",
+      "score": 2.208,
+      "unverified_score": 1.59,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "FLR-101"
+    },
+    {
+      "name": "Shelter Amsterdam",
+      "city": "Amsterdam",
+      "country": "Netherlands",
+      "website": "https://www.shelteramsterdam.nl",
+      "capacity": "1,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 90,
+          "url": "https://djmag.com/top100clubs/2026/90/shelter-amsterdam",
+          "score": 0.55
+        }
+      ],
+      "destination": "Amsterdam",
+      "destination_code": "AMS",
+      "score": 0.55,
+      "unverified_score": 0.396,
+      "venue_id": "AMS-102",
+      "matched": true,
+      "listed": false,
+      "research_status": "Unverified"
+    },
+    {
+      "name": "Beachclub",
+      "city": "Pointe-Calumet",
+      "country": "Canada",
+      "website": "https://www.beachclub.com",
+      "capacity": "6,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 91,
+          "url": "https://djmag.com/top100clubs/2026/91/beachclub",
+          "score": 0.5
+        }
+      ],
+      "destination": "Pointe-Calumet",
+      "destination_code": "PTC",
+      "score": 0.5,
+      "unverified_score": 0.36,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "PTC-101"
+    },
+    {
+      "name": "ivy Sydney",
+      "city": "Sydney",
+      "country": "Australia",
+      "website": "http://merivale.com/venues/ivy",
+      "capacity": "600-1,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 92,
+          "url": "https://djmag.com/top100clubs/2026/92/ivy-sydney",
+          "score": 0.45
+        }
+      ],
+      "destination": "Sydney",
+      "destination_code": "SYD",
+      "score": 0.45,
+      "unverified_score": 0.324,
+      "venue_id": "SYD-101",
+      "matched": true,
+      "listed": false,
+      "research_status": "Unverified"
+    },
+    {
+      "name": "Soho Garden",
+      "city": "Dubai",
+      "country": "UAE",
+      "website": "http://sohogardendxb.com",
+      "capacity": "3,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 93,
+          "url": "https://djmag.com/top100clubs/2026/93/soho-garden",
+          "score": 0.4
+        }
+      ],
+      "destination": "Dubai",
+      "destination_code": "DXB",
+      "score": 0.4,
+      "unverified_score": 0.288,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "DXB-103"
+    },
+    {
+      "name": "Amnesia Milano",
+      "city": "Milan",
+      "country": "Italy",
+      "website": "https://amnesiamilano.com",
+      "capacity": "2,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 94,
+          "url": "https://djmag.com/top100clubs/2026/94/amnesia-milano",
+          "score": 0.35
+        }
+      ],
+      "destination": "Milan",
+      "destination_code": "",
+      "score": 0.35,
+      "unverified_score": 0.252,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Time",
+      "city": "Costa Mesa",
+      "country": "USA",
+      "website": "https://timenightclub.com",
+      "capacity": "600",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 95,
+          "url": "https://djmag.com/top100clubs/2026/95/time",
+          "score": 0.3
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 71,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.38
+        }
+      ],
+      "destination": "Costa Mesa",
+      "destination_code": "CMA",
+      "score": 1.38,
+      "unverified_score": 0.994,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "CMA-101"
+    },
+    {
+      "name": "ilMuretto",
+      "city": "Venice",
+      "country": "Italy",
+      "website": "http://ilmuretto.org",
+      "capacity": "2.500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 96,
+          "url": "https://djmag.com/top100clubs/2026/96/ilmuretto",
+          "score": 0.25
+        }
+      ],
+      "destination": "Venice",
+      "destination_code": "",
+      "score": 0.25,
+      "unverified_score": 0.18,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Chinese Laundry",
+      "city": "Sydney",
+      "country": "Australia",
+      "website": "https://chineselaundry.club",
+      "capacity": "800",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 97,
+          "url": "https://djmag.com/top100clubs/2026/97/chinese-laundry",
+          "score": 0.2
+        }
+      ],
+      "destination": "Sydney",
+      "destination_code": "SYD",
+      "score": 0.2,
+      "unverified_score": 0.144,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "SYD-102"
+    },
+    {
+      "name": "MUZE",
+      "city": "Nairobi",
+      "country": "Kenya",
+      "website": "http://www.muzeclub.com",
+      "capacity": "1,500",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 98,
+          "url": "https://djmag.com/top100clubs/2026/98/muze",
+          "score": 0.15
+        }
+      ],
+      "destination": "Nairobi",
+      "destination_code": "",
+      "score": 0.15,
+      "unverified_score": 0.108,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-destination"
+    },
+    {
+      "name": "Eden",
+      "city": "Ibiza",
+      "country": "Spain",
+      "website": "http://edenibiza.com",
+      "capacity": "4,000",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 99,
+          "url": "https://djmag.com/top100clubs/2026/99/eden",
+          "score": 0.1
+        }
+      ],
+      "destination": "Ibiza",
+      "destination_code": "IBZ",
+      "score": 0.1,
+      "unverified_score": 0.072,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "IBZ-108"
+    },
+    {
+      "name": "Open Ground",
+      "city": "Wuppertal",
+      "country": "Germany",
+      "website": "https://www.openground.club/en",
+      "capacity": "800",
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 100,
+          "url": "https://djmag.com/top100clubs/2026/100/open-ground",
+          "score": 0.05
+        }
+      ],
+      "destination": "Wuppertal",
+      "destination_code": "WUP",
+      "score": 0.05,
+      "unverified_score": 0.036,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "WUP-101"
+    },
+    {
+      "name": "E11EVEN",
+      "city": "Miami",
+      "country": "USA",
+      "website": "https://11miami.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 6,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.37
+        }
+      ],
+      "destination": "Miami",
+      "destination_code": "MIA",
+      "score": 4.37,
+      "unverified_score": 3.146,
+      "venue_id": "MIA-002",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "SHÔKO BARCELONA",
+      "city": "Barcelona",
+      "country": "Spain",
+      "website": "https://shoko.biz",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 7,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.324
+        }
+      ],
+      "destination": "Barcelona",
+      "destination_code": "BCN",
+      "score": 4.324,
+      "unverified_score": 3.113,
+      "venue_id": "BCN-002",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "OPIUM BARCELONA",
+      "city": "Barcelona",
+      "country": "Spain",
+      "website": "https://opiumbarcelona.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 9,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.232
+        }
+      ],
+      "destination": "Barcelona",
+      "destination_code": "BCN",
+      "score": 4.232,
+      "unverified_score": 3.047,
+      "venue_id": "BCN-001",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "SUTTON BARCELONA",
+      "city": "Barcelona",
+      "country": "Spain",
+      "website": "https://www.suttonbarcelona.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 12,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.094
+        }
+      ],
+      "destination": "Barcelona",
+      "destination_code": "BCN",
+      "score": 4.094,
+      "unverified_score": 2.948,
+      "venue_id": "BCN-003",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "AVANT GARDNER / THE BROOKLYN MIRAGE",
+      "city": "New York",
+      "country": "USA",
+      "website": "https://www.avant-gardner.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 13,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.048
+        }
+      ],
+      "destination": "New York",
+      "destination_code": "NYC",
+      "score": 4.048,
+      "unverified_score": 2.915,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "NYC-102"
+    },
+    {
+      "name": "HQ2 NIGHTCLUB & BEACH CLUB",
+      "city": "Atlantic City",
+      "country": "USA",
+      "website": "https://hq2ac.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 14,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.002
+        }
+      ],
+      "destination": "Atlantic City",
+      "destination_code": "ACY",
+      "score": 4.002,
+      "unverified_score": 2.881,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "ACY-101"
+    },
+    {
+      "name": "BCM",
+      "city": "Mallorca",
+      "country": "Spain",
+      "website": "https://bcmmallorca.com/es",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 15,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.956
+        }
+      ],
+      "destination": "Mallorca",
+      "destination_code": "PMI",
+      "score": 3.956,
+      "unverified_score": 2.848,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "PMI-101"
+    },
+    {
+      "name": "PORT DU SOLEIL",
+      "city": "Gothenburg",
+      "country": "Sweden",
+      "website": "https://www.portdusoleil.se",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 21,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.68
+        }
+      ],
+      "destination": "Gothenburg",
+      "destination_code": "GOT",
+      "score": 3.68,
+      "unverified_score": 2.65,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "GOT-101"
+    },
+    {
+      "name": "SHÔKO MADRID",
+      "city": "Madrid",
+      "country": "Spain",
+      "website": "https://shokomadrid.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 22,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.634
+        }
+      ],
+      "destination": "Madrid",
+      "destination_code": "MAD",
+      "score": 3.634,
+      "unverified_score": 2.616,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "MAD-103"
+    },
+    {
+      "name": "DISCO TROPICS",
+      "city": "Lloret de Mar",
+      "country": "Spain",
+      "website": "https://www.discotropics.com/es",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 23,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.588
+        }
+      ],
+      "destination": "Lloret de Mar",
+      "destination_code": "LLO",
+      "score": 3.588,
+      "unverified_score": 2.583,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LLO-101"
+    },
+    {
+      "name": "GIANPULA MAIN ROOM",
+      "city": "Malta",
+      "country": "Malta",
+      "website": "https://gianpulavillage.com/mainroom",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 32,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.174
+        }
+      ],
+      "destination": "Malta",
+      "destination_code": "MLA",
+      "score": 3.174,
+      "unverified_score": 2.285,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "MLA-101"
+    },
+    {
+      "name": "MOTION",
+      "city": "Bristol",
+      "country": "UK",
+      "website": "https://motion-bristol.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 33,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.128
+        }
+      ],
+      "destination": "Bristol",
+      "destination_code": "BRS",
+      "score": 3.128,
+      "unverified_score": 2.252,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BRS-101"
+    },
+    {
+      "name": "FITZ CLUB",
+      "city": "Madrid",
+      "country": "Spain",
+      "website": "https://fitzclubmadrid.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 35,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.036
+        }
+      ],
+      "destination": "Madrid",
+      "destination_code": "MAD",
+      "score": 3.036,
+      "unverified_score": 2.186,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "MAD-104"
+    },
+    {
+      "name": "LA FERIA",
+      "city": "Santiago",
+      "country": "Chile",
+      "website": "https://laferia.cl",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 36,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.99
+        }
+      ],
+      "destination": "Santiago",
+      "destination_code": "SCL",
+      "score": 2.99,
+      "unverified_score": 2.153,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "SCL-101"
+    },
+    {
+      "name": "UNO MALTA",
+      "city": "Malta",
+      "country": "Malta",
+      "website": "https://unomalta.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 38,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.898
+        }
+      ],
+      "destination": "Malta",
+      "destination_code": "MLA",
+      "score": 2.898,
+      "unverified_score": 2.087,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "MLA-102"
+    },
+    {
+      "name": "LA DUNE CLUB",
+      "city": "La Grande-Motte",
+      "country": "France",
+      "website": "https://www.complexe-la-dune.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 42,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.714
+        }
+      ],
+      "destination": "La Grande-Motte",
+      "destination_code": "LGM",
+      "score": 2.714,
+      "unverified_score": 1.954,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LGM-101"
+    },
+    {
+      "name": "SOUNDCHECK",
+      "city": "Washington DC",
+      "country": "USA",
+      "website": "https://soundcheckdc.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 43,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.668
+        }
+      ],
+      "destination": "Washington DC",
+      "destination_code": "WAS",
+      "score": 2.668,
+      "unverified_score": 1.921,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "WAS-102"
+    },
+    {
+      "name": "LA PÉRGOLA CLANDESTINA",
+      "city": "Cali",
+      "country": "Colombia",
+      "website": "https://lapergola.co",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 45,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.576
+        }
+      ],
+      "destination": "Cali",
+      "destination_code": "CLO",
+      "score": 2.576,
+      "unverified_score": 1.855,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "CLO-101"
+    },
+    {
+      "name": "DRAI'S",
+      "city": "Las Vegas",
+      "country": "USA",
+      "website": "https://draisgroup.com/las-vegas",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 46,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.53
+        }
+      ],
+      "destination": "Las Vegas",
+      "destination_code": "LAS",
+      "score": 2.53,
+      "unverified_score": 1.822,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LAS-106"
+    },
+    {
+      "name": "ENCORE BEACH CLUB",
+      "city": "Las Vegas",
+      "country": "USA",
+      "website": "https://www.wynnlasvegas.com/nightlife/encore-beach-pool",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 49,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.392
+        }
+      ],
+      "destination": "Las Vegas",
+      "destination_code": "LAS",
+      "score": 2.392,
+      "unverified_score": 1.722,
+      "venue_id": "LAS-004",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "MARMARELA",
+      "city": "Alicante",
+      "country": "Spain",
+      "website": "https://marmarela.es",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 50,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.346
+        }
+      ],
+      "destination": "Alicante",
+      "destination_code": "ALC",
+      "score": 2.346,
+      "unverified_score": 1.689,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "ALC-101"
+    },
+    {
+      "name": "XS",
+      "city": "Las Vegas",
+      "country": "USA",
+      "website": "https://www.wynnlasvegas.com/nightlife/xs-nightclub",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 51,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.3
+        }
+      ],
+      "destination": "Las Vegas",
+      "destination_code": "LAS",
+      "score": 2.3,
+      "unverified_score": 1.656,
+      "venue_id": "LAS-001",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "THEATRO",
+      "city": "Marrakech",
+      "country": "Morocco",
+      "website": "https://theatromarrakech.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 54,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.162
+        }
+      ],
+      "destination": "Marrakech",
+      "destination_code": "RAK",
+      "score": 2.162,
+      "unverified_score": 1.557,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "RAK-101"
+    },
+    {
+      "name": "CÉ LA VI",
+      "city": "Singapore",
+      "country": "Singapore",
+      "website": "https://www.celavi.com/en/singapore",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 56,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.07
+        }
+      ],
+      "destination": "Singapore",
+      "destination_code": "SIN",
+      "score": 2.07,
+      "unverified_score": 1.49,
+      "venue_id": "SIN-002",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "VELICE",
+      "city": "Torrevieja",
+      "country": "Spain",
+      "website": "https://velice.es",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 57,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.024
+        }
+      ],
+      "destination": "Torrevieja",
+      "destination_code": "TRV",
+      "score": 2.024,
+      "unverified_score": 1.457,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "TRV-101"
+    },
+    {
+      "name": "SEN",
+      "city": "Warsaw",
+      "country": "Poland",
+      "website": "https://senwarsaw.pl",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 60,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.886
+        }
+      ],
+      "destination": "Warsaw",
+      "destination_code": "WAW",
+      "score": 1.886,
+      "unverified_score": 1.358,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "WAW-101"
+    },
+    {
+      "name": "THEATRON",
+      "city": "Bogotá",
+      "country": "Colombia",
+      "website": "https://www.portaltheatron.co",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 62,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.794
+        }
+      ],
+      "destination": "Bogotá",
+      "destination_code": "BOG",
+      "score": 1.794,
+      "unverified_score": 1.292,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BOG-101"
+    },
+    {
+      "name": "THE GRAND",
+      "city": "Boston",
+      "country": "USA",
+      "website": "https://thegrandboston.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 63,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.748
+        }
+      ],
+      "destination": "Boston",
+      "destination_code": "BOS",
+      "score": 1.748,
+      "unverified_score": 1.259,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BOS-101"
+    },
+    {
+      "name": "LEVEL 27",
+      "city": "Warsaw",
+      "country": "Poland",
+      "website": "https://level27.pl/en",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 65,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.656
+        }
+      ],
+      "destination": "Warsaw",
+      "destination_code": "WAW",
+      "score": 1.656,
+      "unverified_score": 1.192,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "WAW-102"
+    },
+    {
+      "name": "COCO BONGO",
+      "city": "Cancún",
+      "country": "Mexico",
+      "website": "https://www.cocobongo.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 66,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.61
+        }
+      ],
+      "destination": "Cancún",
+      "destination_code": "CUN",
+      "score": 1.61,
+      "unverified_score": 1.159,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "CUN-101"
+    },
+    {
+      "name": "PALM TREE BEACH CLUB",
+      "city": "Las Vegas",
+      "country": "USA",
+      "website": "https://www.palmtreeclubmiami.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 68,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.518
+        }
+      ],
+      "destination": "Las Vegas",
+      "destination_code": "LAS",
+      "score": 1.518,
+      "unverified_score": 1.093,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LAS-107"
+    },
+    {
+      "name": "NOVA SD",
+      "city": "San Diego",
+      "country": "USA",
+      "website": "https://novasd.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 69,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.472
+        }
+      ],
+      "destination": "San Diego",
+      "destination_code": "SAN",
+      "score": 1.472,
+      "unverified_score": 1.06,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "SAN-101"
+    },
+    {
+      "name": "PHI BEACH",
+      "city": "Porto Cervo",
+      "country": "Italy",
+      "website": "https://phibeach.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 70,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.426
+        }
+      ],
+      "destination": "Porto Cervo",
+      "destination_code": "CER",
+      "score": 1.426,
+      "unverified_score": 1.027,
+      "venue_id": "CER-002",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "CLANDESTINO CLUB",
+      "city": "Bogotá",
+      "country": "Colombia",
+      "website": "https://www.clandestinobog.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 73,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.288
+        }
+      ],
+      "destination": "Bogotá",
+      "destination_code": "BOG",
+      "score": 1.288,
+      "unverified_score": 0.927,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BOG-102"
+    },
+    {
+      "name": "ST TROP",
+      "city": "Lloret de Mar",
+      "country": "Spain",
+      "website": "https://www.sttrop.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 74,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.242
+        }
+      ],
+      "destination": "Lloret de Mar",
+      "destination_code": "LLO",
+      "score": 1.242,
+      "unverified_score": 0.894,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LLO-102"
+    },
+    {
+      "name": "NOA BEACH CLUB",
+      "city": "Zrće",
+      "country": "Croatia",
+      "website": "https://www.noa-zrce.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 75,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.196
+        }
+      ],
+      "destination": "Zrće",
+      "destination_code": "ZRC",
+      "score": 1.196,
+      "unverified_score": 0.861,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "ZRC-103"
+    },
+    {
+      "name": "LIO",
+      "city": "Ibiza",
+      "country": "Spain",
+      "website": "https://www.liogroup.com/ibiza",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 76,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.15
+        }
+      ],
+      "destination": "Ibiza",
+      "destination_code": "IBZ",
+      "score": 1.15,
+      "unverified_score": 0.828,
+      "venue_id": "IBZ-106",
+      "matched": true,
+      "listed": false,
+      "research_status": "Unverified"
+    },
+    {
+      "name": "LAB the Club",
+      "city": "Madrid",
+      "country": "Spain",
+      "website": "https://www.labtheclub.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 77,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.104
+        }
+      ],
+      "destination": "Madrid",
+      "destination_code": "MAD",
+      "score": 1.104,
+      "unverified_score": 0.795,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "MAD-105"
+    },
+    {
+      "name": "FACE CLUB",
+      "city": "Bucharest",
+      "country": "Romania",
+      "website": "https://www.faceclubbucharest.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 79,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.012
+        }
+      ],
+      "destination": "Bucharest",
+      "destination_code": "BUH",
+      "score": 1.012,
+      "unverified_score": 0.729,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BUH-101"
+    },
+    {
+      "name": "MOMENTO MARBELLA",
+      "city": "Marbella",
+      "country": "Spain",
+      "website": "https://momentomarbella.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 80,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.966
+        }
+      ],
+      "destination": "Marbella",
+      "destination_code": "MRB",
+      "score": 0.966,
+      "unverified_score": 0.696,
+      "venue_id": "MRB-003",
+      "matched": true,
+      "listed": true,
+      "research_status": "Web-verified"
+    },
+    {
+      "name": "DROP CLUB",
+      "city": "Lucca",
+      "country": "Italy",
+      "website": "",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 81,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.92
+        }
+      ],
+      "destination": "Lucca",
+      "destination_code": "LUC",
+      "score": 0.92,
+      "unverified_score": 0.662,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-official-site"
+    },
+    {
+      "name": "BILOBA",
+      "city": "Lleida",
+      "country": "Spain",
+      "website": "https://biloballeida.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 82,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.874
+        }
+      ],
+      "destination": "Lleida",
+      "destination_code": "LLE",
+      "score": 0.874,
+      "unverified_score": 0.629,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LLE-101"
+    },
+    {
+      "name": "CAROUSEL",
+      "city": "Sydney",
+      "country": "Australia",
+      "website": "https://carousel.net.au/events",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 83,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.828
+        }
+      ],
+      "destination": "Sydney",
+      "destination_code": "SYD",
+      "score": 0.828,
+      "unverified_score": 0.596,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "SYD-103"
+    },
+    {
+      "name": "TROPICAL SALOU",
+      "city": "Salou",
+      "country": "Spain",
+      "website": "https://tropicalsalou.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 85,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.736
+        }
+      ],
+      "destination": "Salou",
+      "destination_code": "SLU",
+      "score": 0.736,
+      "unverified_score": 0.53,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "SLU-101"
+    },
+    {
+      "name": "BEACH CLUB",
+      "city": "Pointe-Calumet",
+      "country": "Canada",
+      "website": "https://beachclub.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 86,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.69
+        }
+      ],
+      "destination": "Pointe-Calumet",
+      "destination_code": "PTC",
+      "score": 0.69,
+      "unverified_score": 0.497,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "PTC-102"
+    },
+    {
+      "name": "BABOUCHKA",
+      "city": "Marrakech",
+      "country": "Morocco",
+      "website": "https://www.babouchka-marrakech.com/en",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 87,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.644
+        }
+      ],
+      "destination": "Marrakech",
+      "destination_code": "RAK",
+      "score": 0.644,
+      "unverified_score": 0.464,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "RAK-102"
+    },
+    {
+      "name": "OCTAVA CLUB",
+      "city": "Bogotá",
+      "country": "Colombia",
+      "website": "https://octavaclub.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 88,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.598
+        }
+      ],
+      "destination": "Bogotá",
+      "destination_code": "BOG",
+      "score": 0.598,
+      "unverified_score": 0.431,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BOG-103"
+    },
+    {
+      "name": "COCOA MATARÓ",
+      "city": "Mataró",
+      "country": "Spain",
+      "website": "https://cocoamataro.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 90,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.506
+        }
+      ],
+      "destination": "Mataró",
+      "destination_code": "MAT",
+      "score": 0.506,
+      "unverified_score": 0.364,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "MAT-101"
+    },
+    {
+      "name": "SPAZIO 900",
+      "city": "Rome",
+      "country": "Italy",
+      "website": "",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 91,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.46
+        }
+      ],
+      "destination": "Rome",
+      "destination_code": "ROM",
+      "score": 0.46,
+      "unverified_score": 0.331,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": null,
+      "skip_reason": "no-official-site"
+    },
+    {
+      "name": "SUB CLUB",
+      "city": "Glasgow",
+      "country": "UK",
+      "website": "https://subclub.co.uk",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 92,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.414
+        }
+      ],
+      "destination": "Glasgow",
+      "destination_code": "GLA",
+      "score": 0.414,
+      "unverified_score": 0.298,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "GLA-101"
+    },
+    {
+      "name": "BROWN SUGAR",
+      "city": "Quito",
+      "country": "Ecuador",
+      "website": "https://shotme.com.ec/brown-sugar",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 93,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.368
+        }
+      ],
+      "destination": "Quito",
+      "destination_code": "UIO",
+      "score": 0.368,
+      "unverified_score": 0.265,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "UIO-101"
+    },
+    {
+      "name": "CONDADO CLUB",
+      "city": "Dénia",
+      "country": "Spain",
+      "website": "https://condadoclub.es",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 94,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.322
+        }
+      ],
+      "destination": "Dénia",
+      "destination_code": "DEN",
+      "score": 0.322,
+      "unverified_score": 0.232,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "DEN-101"
+    },
+    {
+      "name": "CASTLE CLUB",
+      "city": "Ayia Napa",
+      "country": "Cypruss",
+      "website": "https://thecastleclub.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 95,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.276
+        }
+      ],
+      "destination": "Ayia Napa",
+      "destination_code": "AYN",
+      "score": 0.276,
+      "unverified_score": 0.199,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "AYN-101"
+    },
+    {
+      "name": "LAPIKKARA",
+      "city": "Barberà del Vallès",
+      "country": "Spain",
+      "website": "https://lapikkara.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 96,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.23
+        }
+      ],
+      "destination": "Barberà del Vallès",
+      "destination_code": "BDV",
+      "score": 0.23,
+      "unverified_score": 0.166,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BDV-101"
+    },
+    {
+      "name": "KLUB 25",
+      "city": "Bangkok",
+      "country": "Thailand",
+      "website": "https://klub25thonglor.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 97,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.184
+        }
+      ],
+      "destination": "Bangkok",
+      "destination_code": "BKK",
+      "score": 0.184,
+      "unverified_score": 0.132,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BKK-103"
+    },
+    {
+      "name": "DISCO PRIVÉ",
+      "city": "Lloret de Mar",
+      "country": "Spain",
+      "website": "https://discoprivelloret.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 98,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.138
+        }
+      ],
+      "destination": "Lloret de Mar",
+      "destination_code": "LLO",
+      "score": 0.138,
+      "unverified_score": 0.099,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "LLO-103"
+    },
+    {
+      "name": "INSOMNIA BENIDORM",
+      "city": "Benidorm",
+      "country": "Spain",
+      "website": "https://insomniabenidorm.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 99,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.092
+        }
+      ],
+      "destination": "Benidorm",
+      "destination_code": "BEN",
+      "score": 0.092,
+      "unverified_score": 0.066,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "BEN-101"
+    },
+    {
+      "name": "HOME SYDNEY",
+      "city": "Sydney",
+      "country": "Australia",
+      "website": "https://www.homesydney.com",
+      "capacity": "",
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 100,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.046
+        }
+      ],
+      "destination": "Sydney",
+      "destination_code": "SYD",
+      "score": 0.046,
+      "unverified_score": 0.033,
+      "matched": false,
+      "listed": false,
+      "research_status": "Unverified",
+      "venue_id": "SYD-104"
+    }
+  ],
+  "byVenueId": {
+    "IBZ-003": {
+      "name": "UNVRS",
+      "score": 5.0,
+      "unverifiedScore": 3.6,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 1,
+          "url": "https://djmag.com/top100clubs/2026/1/unvrs",
+          "score": 5.0
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 1,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.6
+        }
+      ],
+      "city": "Ibiza"
+    },
+    "CMB-101": {
+      "name": "GREENVALLEY",
+      "score": 4.95,
+      "unverifiedScore": 3.564,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 2,
+          "url": "https://djmag.com/top100clubs/2026/2/greenvalley",
+          "score": 4.95
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 5,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.416
+        }
+      ],
+      "city": "Camboriú"
+    },
+    "IBZ-002": {
+      "name": "Ushuaïa Ibiza",
+      "score": 4.9,
+      "unverifiedScore": 3.528,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 3,
+          "url": "https://djmag.com/top100clubs/2026/3/ushuaia-ibiza",
+          "score": 4.9
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 3,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.508
+        }
+      ],
+      "city": "Ibiza"
+    },
+    "IBZ-001": {
+      "name": "Hï Ibiza",
+      "score": 4.85,
+      "unverifiedScore": 3.492,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 4,
+          "url": "https://djmag.com/top100clubs/2026/4/hi-ibiza",
+          "score": 4.85
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 2,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.554
+        }
+      ],
+      "city": "Ibiza"
+    },
+    "BAL-002": {
+      "name": "Savaya",
+      "score": 4.8,
+      "unverifiedScore": 3.456,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 5,
+          "url": "https://djmag.com/top100clubs/2026/5/savaya",
+          "score": 4.8
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 37,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.944
+        }
+      ],
+      "city": "Bali"
+    },
+    "WAS-101": {
+      "name": "Echostage",
+      "score": 4.75,
+      "unverifiedScore": 3.42,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 6,
+          "url": "https://djmag.com/top100clubs/2026/6/echostage",
+          "score": 4.75
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 10,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.186
+        }
+      ],
+      "city": "Washington DC"
+    },
+    "VLN-101": {
+      "name": "Laroc Club",
+      "score": 4.7,
+      "unverifiedScore": 3.384,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 7,
+          "url": "https://djmag.com/top100clubs/2026/7/laroc-club",
+          "score": 4.7
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 16,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.91
+        }
+      ],
+      "city": "Valinhos"
+    },
+    "MAD-102": {
+      "name": "FABRIK",
+      "score": 4.65,
+      "unverifiedScore": 3.348,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 8,
+          "url": "https://djmag.com/top100clubs/2026/8/fabrik",
+          "score": 4.65
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 48,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.438
+        }
+      ],
+      "city": "Madrid"
+    },
+    "HKT-005": {
+      "name": "Illuzion Phuket",
+      "score": 4.6,
+      "unverifiedScore": 3.312,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 9,
+          "url": "https://djmag.com/top100clubs/2026/9/illuzion-phuket",
+          "score": 4.6
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 64,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.702
+        }
+      ],
+      "city": "Phuket"
+    },
+    "CMB-102": {
+      "name": "Surreal Park",
+      "score": 4.55,
+      "unverifiedScore": 3.276,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 10,
+          "url": "https://djmag.com/top100clubs/2026/10/surreal-park",
+          "score": 4.55
+        }
+      ],
+      "city": "Camboriú"
+    },
+    "CGN-101": {
+      "name": "Bootshaus",
+      "score": 4.5,
+      "unverifiedScore": 3.24,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 11,
+          "url": "https://djmag.com/top100clubs/2026/11/bootshaus",
+          "score": 4.5
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 4,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.462
+        }
+      ],
+      "city": "Cologne"
+    },
+    "SHA-101": {
+      "name": "INS LAND",
+      "score": 4.45,
+      "unverifiedScore": 3.204,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 12,
+          "url": "https://djmag.com/top100clubs/2026/12/ins-land",
+          "score": 4.45
+        }
+      ],
+      "city": "Shanghai"
+    },
+    "LON-102": {
+      "name": "fabric",
+      "score": 4.4,
+      "unverifiedScore": 3.168,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 13,
+          "url": "https://djmag.com/top100clubs/2026/13/fabric",
+          "score": 4.4
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 24,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.542
+        }
+      ],
+      "city": "London"
+    },
+    "MIA-101": {
+      "name": "Club Space",
+      "score": 4.35,
+      "unverifiedScore": 3.132,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 14,
+          "url": "https://djmag.com/top100clubs/2026/14/club-space",
+          "score": 4.35
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 20,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.726
+        }
+      ],
+      "city": "Miami"
+    },
+    "MAN-101": {
+      "name": "The Warehouse Project",
+      "score": 4.3,
+      "unverifiedScore": 3.096,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 15,
+          "url": "https://djmag.com/top100clubs/2026/15/warehouse-project",
+          "score": 4.3
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 27,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.404
+        }
+      ],
+      "city": "Manchester"
+    },
+    "IBZ-101": {
+      "name": "Amnesia Ibiza",
+      "score": 4.25,
+      "unverifiedScore": 3.06,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 16,
+          "url": "https://djmag.com/top100clubs/2026/16/amnesia-ibiza",
+          "score": 4.25
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 26,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.45
+        }
+      ],
+      "city": "Ibiza"
+    },
+    "SIN-101": {
+      "name": "Zouk Singapore",
+      "score": 4.2,
+      "unverifiedScore": 3.024,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 17,
+          "url": "https://djmag.com/top100clubs/2026/17/zouk-singapore",
+          "score": 4.2
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 30,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.266
+        }
+      ],
+      "city": "Singapore"
+    },
+    "IBZ-004": {
+      "name": "PACHA IBIZA",
+      "score": 4.15,
+      "unverifiedScore": 2.988,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 18,
+          "url": "https://djmag.com/top100clubs/2026/18/pacha-ibiza",
+          "score": 4.15
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 17,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.864
+        }
+      ],
+      "city": "Ibiza"
+    },
+    "IBZ-102": {
+      "name": "DC-10",
+      "score": 4.278,
+      "unverifiedScore": 3.08,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 19,
+          "url": "https://djmag.com/top100clubs/2026/19/dc-10",
+          "score": 4.1
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 8,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.278
+        }
+      ],
+      "city": "Ibiza"
+    },
+    "LON-103": {
+      "name": "Studio 338",
+      "score": 4.05,
+      "unverifiedScore": 2.916,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 20,
+          "url": "https://djmag.com/top100clubs/2026/20/studio-338",
+          "score": 4.05
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 47,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.484
+        }
+      ],
+      "city": "London"
+    },
+    "BER-101": {
+      "name": "Berghain",
+      "score": 4.0,
+      "unverifiedScore": 2.88,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 21,
+          "url": "https://djmag.com/top100clubs/2026/21/berghain",
+          "score": 4.0
+        }
+      ],
+      "city": "Berlin"
+    },
+    "MYK-004": {
+      "name": "Cavo Paradiso",
+      "score": 3.95,
+      "unverifiedScore": 2.844,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 22,
+          "url": "https://djmag.com/top100clubs/2026/22/cavo-paradiso",
+          "score": 3.95
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 18,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.818
+        }
+      ],
+      "city": "Mykonos"
+    },
+    "TPE-101": {
+      "name": "WAVE Club",
+      "score": 3.9,
+      "unverifiedScore": 2.808,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 23,
+          "url": "https://djmag.com/top100clubs/2026/23/wave-club",
+          "score": 3.9
+        }
+      ],
+      "city": "Taipei"
+    },
+    "LON-104": {
+      "name": "Ministry Of Sound",
+      "score": 3.85,
+      "unverifiedScore": 2.772,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 24,
+          "url": "https://djmag.com/top100clubs/2026/24/ministry-of-sound",
+          "score": 3.85
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 28,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.358
+        }
+      ],
+      "city": "London"
+    },
+    "DBV-101": {
+      "name": "Culture Club Revelin",
+      "score": 3.8,
+      "unverifiedScore": 2.736,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 25,
+          "url": "https://djmag.com/top100clubs/2026/25/culture-club-revelin",
+          "score": 3.8
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 39,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.852
+        }
+      ],
+      "city": "Dubrovnik"
+    },
+    "RIC-101": {
+      "name": "Space Riccione",
+      "score": 3.75,
+      "unverifiedScore": 2.7,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 26,
+          "url": "https://djmag.com/top100clubs/2026/26/space-riccione",
+          "score": 3.75
+        }
+      ],
+      "city": "Riccione"
+    },
+    "ZRC-101": {
+      "name": "Papaya Club",
+      "score": 3.6,
+      "unverifiedScore": 2.592,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 29,
+          "url": "https://djmag.com/top100clubs/2026/29/papaya-club",
+          "score": 3.6
+        }
+      ],
+      "city": "Zrće"
+    },
+    "HYD-101": {
+      "name": "Quake Arena",
+      "score": 3.55,
+      "unverifiedScore": 2.556,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 30,
+          "url": "https://djmag.com/top100clubs/2026/30/quake-arena",
+          "score": 3.55
+        }
+      ],
+      "city": "Hyderabad"
+    },
+    "AUS-101": {
+      "name": "The Concourse Project",
+      "score": 3.5,
+      "unverifiedScore": 2.52,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 31,
+          "url": "https://djmag.com/top100clubs/2026/31/concourse-project",
+          "score": 3.5
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 29,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.312
+        }
+      ],
+      "city": "Austin"
+    },
+    "HKG-101": {
+      "name": "Boomerang",
+      "score": 3.45,
+      "unverifiedScore": 2.484,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 32,
+          "url": "https://djmag.com/top100clubs/2026/32/boomerang",
+          "score": 3.45
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 78,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.058
+        }
+      ],
+      "city": "Hong Kong"
+    },
+    "AGD-101": {
+      "name": "Amnesia Cap d’Agde",
+      "score": 4.14,
+      "unverifiedScore": 2.981,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 33,
+          "url": "https://djmag.com/top100clubs/2026/33/amnesia-cap-dagde",
+          "score": 3.4
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 11,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.14
+        }
+      ],
+      "city": "Cap d'Agde"
+    },
+    "SIN-001": {
+      "name": "Marquee Singapore",
+      "score": 3.35,
+      "unverifiedScore": 2.412,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 34,
+          "url": "https://djmag.com/top100clubs/2026/34/marquee-singapore",
+          "score": 3.35
+        }
+      ],
+      "city": "Singapore"
+    },
+    "SAO-101": {
+      "name": "D-Edge",
+      "score": 3.3,
+      "unverifiedScore": 2.376,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 35,
+          "url": "https://djmag.com/top100clubs/2026/35/d-edge",
+          "score": 3.3
+        }
+      ],
+      "city": "São Paulo"
+    },
+    "DXB-102": {
+      "name": "The Penthouse",
+      "score": 3.25,
+      "unverifiedScore": 2.34,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 36,
+          "url": "https://djmag.com/top100clubs/2026/36/penthouse",
+          "score": 3.25
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 58,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.978
+        }
+      ],
+      "city": "Dubai"
+    },
+    "HKT-001": {
+      "name": "Café Del Mar Phuket",
+      "score": 3.2,
+      "unverifiedScore": 2.304,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 37,
+          "url": "https://djmag.com/top100clubs/2026/37/cafe-del-mar-phuket",
+          "score": 3.2
+        }
+      ],
+      "city": "Phuket"
+    },
+    "PRG-101": {
+      "name": "DupleX",
+      "score": 3.15,
+      "unverifiedScore": 2.268,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 38,
+          "url": "https://djmag.com/top100clubs/2026/38/duplex",
+          "score": 3.15
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 41,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.76
+        }
+      ],
+      "city": "Prague"
+    },
+    "DAL-101": {
+      "name": "SILO Dallas",
+      "score": 3.1,
+      "unverifiedScore": 2.232,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 39,
+          "url": "https://djmag.com/top100clubs/2026/39/silo-dallas",
+          "score": 3.1
+        }
+      ],
+      "city": "Dallas"
+    },
+    "KTM-101": {
+      "name": "LOD",
+      "score": 3.05,
+      "unverifiedScore": 2.196,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 40,
+          "url": "https://djmag.com/top100clubs/2026/40/lod",
+          "score": 3.05
+        }
+      ],
+      "city": "Kathmandu"
+    },
+    "BUE-101": {
+      "name": "Crobar",
+      "score": 3.0,
+      "unverifiedScore": 2.16,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 41,
+          "url": "https://djmag.com/top100clubs/2026/41/crobar",
+          "score": 3.0
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 59,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.932
+        }
+      ],
+      "city": "Buenos Aires"
+    },
+    "BAL-004": {
+      "name": "Atlas Superclub Bali",
+      "score": 2.95,
+      "unverifiedScore": 2.124,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 42,
+          "url": "https://djmag.com/top100clubs/2026/42/atlas-superclub-bali",
+          "score": 2.95
+        }
+      ],
+      "city": "Bali"
+    },
+    "HAN-101": {
+      "name": "APLUS HANOI",
+      "score": 2.9,
+      "unverifiedScore": 2.088,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 43,
+          "url": "https://djmag.com/top100clubs/2026/43/aplus-hanoi",
+          "score": 2.9
+        }
+      ],
+      "city": "Hanoi"
+    },
+    "LAX-101": {
+      "name": "Academy LA",
+      "score": 2.85,
+      "unverifiedScore": 2.052,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 44,
+          "url": "https://djmag.com/top100clubs/2026/44/academy-la",
+          "score": 2.85
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 61,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.84
+        }
+      ],
+      "city": "Los Angeles"
+    },
+    "LON-105": {
+      "name": "Drumsheds",
+      "score": 2.8,
+      "unverifiedScore": 2.016,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 45,
+          "url": "https://djmag.com/top100clubs/2026/45/drumsheds",
+          "score": 2.8
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 72,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.334
+        }
+      ],
+      "city": "London"
+    },
+    "ITJ-101": {
+      "name": "Warung Beach Club",
+      "score": 2.75,
+      "unverifiedScore": 1.98,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 46,
+          "url": "https://djmag.com/top100clubs/2026/46/warung-beach-club",
+          "score": 2.75
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 44,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.622
+        }
+      ],
+      "city": "Itajaí"
+    },
+    "BAL-102": {
+      "name": "ShiShi Bali",
+      "score": 2.7,
+      "unverifiedScore": 1.944,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 47,
+          "url": "https://djmag.com/top100clubs/2026/47/shishi-bali",
+          "score": 2.7
+        }
+      ],
+      "city": "Bali"
+    },
+    "LAX-102": {
+      "name": "Exchange LA",
+      "score": 2.65,
+      "unverifiedScore": 1.908,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 48,
+          "url": "https://djmag.com/top100clubs/2026/48/exchange-la",
+          "score": 2.65
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 67,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.564
+        }
+      ],
+      "city": "Los Angeles"
+    },
+    "TYO-102": {
+      "name": "Zouk Tokyo",
+      "score": 2.5,
+      "unverifiedScore": 1.8,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 51,
+          "url": "https://djmag.com/top100clubs/2026/51/zouk-tokyo",
+          "score": 2.5
+        }
+      ],
+      "city": "Tokyo"
+    },
+    "USM-101": {
+      "name": "CLUB SEEN Koh Samui",
+      "score": 2.45,
+      "unverifiedScore": 1.764,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 52,
+          "url": "https://djmag.com/top100clubs/2026/52/club-seen-koh-samui",
+          "score": 2.45
+        }
+      ],
+      "city": "Koh Samui"
+    },
+    "BCN-101": {
+      "name": "Nitsa",
+      "score": 3.082,
+      "unverifiedScore": 2.219,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 56,
+          "url": "https://djmag.com/top100clubs/2026/56/nitsa",
+          "score": 2.25
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 34,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.082
+        }
+      ],
+      "city": "Barcelona"
+    },
+    "LAU-101": {
+      "name": "MAD Club",
+      "score": 2.05,
+      "unverifiedScore": 1.476,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 60,
+          "url": "https://djmag.com/top100clubs/2026/60/mad-club",
+          "score": 2.05
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 89,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.552
+        }
+      ],
+      "city": "Lausanne"
+    },
+    "HYD-102": {
+      "name": "Big Bull",
+      "score": 2.0,
+      "unverifiedScore": 1.44,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 61,
+          "url": "https://djmag.com/top100clubs/2026/61/big-bull",
+          "score": 2.0
+        }
+      ],
+      "city": "Hyderabad"
+    },
+    "ROM-102": {
+      "name": "Room26",
+      "score": 1.95,
+      "unverifiedScore": 1.404,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 62,
+          "url": "https://djmag.com/top100clubs/2026/62/room26",
+          "score": 1.95
+        }
+      ],
+      "city": "Rome"
+    },
+    "IOS-101": {
+      "name": "Farout Beach Club",
+      "score": 2.116,
+      "unverifiedScore": 1.524,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 63,
+          "url": "https://djmag.com/top100clubs/2026/63/farout-beach-club",
+          "score": 1.9
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 55,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.116
+        }
+      ],
+      "city": "Ios"
+    },
+    "LAX-103": {
+      "name": "AVALON Hollywood",
+      "score": 2.254,
+      "unverifiedScore": 1.623,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 64,
+          "url": "https://djmag.com/top100clubs/2026/64/avalon-hollywood",
+          "score": 1.85
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 52,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.254
+        }
+      ],
+      "city": "Los Angeles"
+    },
+    "LAS-101": {
+      "name": "Hakkasan",
+      "score": 3.22,
+      "unverifiedScore": 2.318,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 65,
+          "url": "https://djmag.com/top100clubs/2026/65/hakkasan",
+          "score": 1.8
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 31,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.22
+        }
+      ],
+      "city": "Las Vegas"
+    },
+    "LON-106": {
+      "name": "Koko",
+      "score": 1.75,
+      "unverifiedScore": 1.26,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 66,
+          "url": "https://djmag.com/top100clubs/2026/66/koko",
+          "score": 1.75
+        }
+      ],
+      "city": "London"
+    },
+    "BKK-101": {
+      "name": "VOID",
+      "score": 1.7,
+      "unverifiedScore": 1.224,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 67,
+          "url": "https://djmag.com/top100clubs/2026/67/void",
+          "score": 1.7
+        }
+      ],
+      "city": "Bangkok"
+    },
+    "LAS-002": {
+      "name": "OMNIA",
+      "score": 3.772,
+      "unverifiedScore": 2.716,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 70,
+          "url": "https://djmag.com/top100clubs/2026/70/omnia",
+          "score": 1.55
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 19,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.772
+        }
+      ],
+      "city": "Las Vegas"
+    },
+    "BKK-102": {
+      "name": "The Club Khaosan",
+      "score": 1.5,
+      "unverifiedScore": 1.08,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 71,
+          "url": "https://djmag.com/top100clubs/2026/71/club-khaosan",
+          "score": 1.5
+        }
+      ],
+      "city": "Bangkok"
+    },
+    "MIA-001": {
+      "name": "Liv Nightclub",
+      "score": 1.45,
+      "unverifiedScore": 1.044,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 72,
+          "url": "https://djmag.com/top100clubs/2026/72/liv-nightclub",
+          "score": 1.45
+        }
+      ],
+      "city": "Miami"
+    },
+    "TYO-103": {
+      "name": "WARP Shinjuku",
+      "score": 1.4,
+      "unverifiedScore": 1.008,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 73,
+          "url": "https://djmag.com/top100clubs/2026/73/warp-shinjuku",
+          "score": 1.4
+        }
+      ],
+      "city": "Tokyo"
+    },
+    "IBZ-107": {
+      "name": "Chinois",
+      "score": 1.35,
+      "unverifiedScore": 0.972,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 74,
+          "url": "https://djmag.com/top100clubs/2026/74/chinois",
+          "score": 1.35
+        }
+      ],
+      "city": "Ibiza"
+    },
+    "LAS-105": {
+      "name": "Zouk",
+      "score": 3.496,
+      "unverifiedScore": 2.517,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 83,
+          "url": "https://djmag.com/top100clubs/2026/83/zouk",
+          "score": 0.9
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 25,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.496
+        }
+      ],
+      "city": "Las Vegas"
+    },
+    "LAS-003": {
+      "name": "Marquee Nightclub & Dayclub",
+      "score": 2.806,
+      "unverifiedScore": 2.02,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 84,
+          "url": "https://djmag.com/top100clubs/2026/84/marquee-nightclub-dayclub",
+          "score": 0.85
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 40,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.806
+        }
+      ],
+      "city": "Las Vegas"
+    },
+    "LAX-104": {
+      "name": "Sound",
+      "score": 0.75,
+      "unverifiedScore": 0.54,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 86,
+          "url": "https://djmag.com/top100clubs/2026/86/sound",
+          "score": 0.75
+        }
+      ],
+      "city": "Los Angeles"
+    },
+    "ZRC-102": {
+      "name": "Aquarius",
+      "score": 0.7,
+      "unverifiedScore": 0.504,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 87,
+          "url": "https://djmag.com/top100clubs/2026/87/aquarius",
+          "score": 0.7
+        }
+      ],
+      "city": "Zrće"
+    },
+    "TYO-101": {
+      "name": "WOMB",
+      "score": 0.782,
+      "unverifiedScore": 0.563,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 88,
+          "url": "https://djmag.com/top100clubs/2026/88/womb",
+          "score": 0.65
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 84,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.782
+        }
+      ],
+      "city": "Tokyo"
+    },
+    "FLR-101": {
+      "name": "Tenax Club",
+      "score": 2.208,
+      "unverifiedScore": 1.59,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 89,
+          "url": "https://djmag.com/top100clubs/2026/89/tenax-club",
+          "score": 0.6
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 53,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.208
+        }
+      ],
+      "city": "Florence"
+    },
+    "AMS-102": {
+      "name": "Shelter Amsterdam",
+      "score": 0.55,
+      "unverifiedScore": 0.396,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 90,
+          "url": "https://djmag.com/top100clubs/2026/90/shelter-amsterdam",
+          "score": 0.55
+        }
+      ],
+      "city": "Amsterdam"
+    },
+    "PTC-101": {
+      "name": "Beachclub",
+      "score": 0.5,
+      "unverifiedScore": 0.36,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 91,
+          "url": "https://djmag.com/top100clubs/2026/91/beachclub",
+          "score": 0.5
+        }
+      ],
+      "city": "Pointe-Calumet"
+    },
+    "SYD-101": {
+      "name": "ivy Sydney",
+      "score": 0.45,
+      "unverifiedScore": 0.324,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 92,
+          "url": "https://djmag.com/top100clubs/2026/92/ivy-sydney",
+          "score": 0.45
+        }
+      ],
+      "city": "Sydney"
+    },
+    "DXB-103": {
+      "name": "Soho Garden",
+      "score": 0.4,
+      "unverifiedScore": 0.288,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 93,
+          "url": "https://djmag.com/top100clubs/2026/93/soho-garden",
+          "score": 0.4
+        }
+      ],
+      "city": "Dubai"
+    },
+    "CMA-101": {
+      "name": "Time",
+      "score": 1.38,
+      "unverifiedScore": 0.994,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 95,
+          "url": "https://djmag.com/top100clubs/2026/95/time",
+          "score": 0.3
+        },
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 71,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.38
+        }
+      ],
+      "city": "Costa Mesa"
+    },
+    "SYD-102": {
+      "name": "Chinese Laundry",
+      "score": 0.2,
+      "unverifiedScore": 0.144,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 97,
+          "url": "https://djmag.com/top100clubs/2026/97/chinese-laundry",
+          "score": 0.2
+        }
+      ],
+      "city": "Sydney"
+    },
+    "IBZ-108": {
+      "name": "Eden",
+      "score": 0.1,
+      "unverifiedScore": 0.072,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 99,
+          "url": "https://djmag.com/top100clubs/2026/99/eden",
+          "score": 0.1
+        }
+      ],
+      "city": "Ibiza"
+    },
+    "WUP-101": {
+      "name": "Open Ground",
+      "score": 0.05,
+      "unverifiedScore": 0.036,
+      "sources": [
+        {
+          "source": "djmag-top100",
+          "year": 2026,
+          "rank": 100,
+          "url": "https://djmag.com/top100clubs/2026/100/open-ground",
+          "score": 0.05
+        }
+      ],
+      "city": "Wuppertal"
+    },
+    "MIA-002": {
+      "name": "E11EVEN",
+      "score": 4.37,
+      "unverifiedScore": 3.146,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 6,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.37
+        }
+      ],
+      "city": "Miami"
+    },
+    "BCN-002": {
+      "name": "SHÔKO BARCELONA",
+      "score": 4.324,
+      "unverifiedScore": 3.113,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 7,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.324
+        }
+      ],
+      "city": "Barcelona"
+    },
+    "BCN-001": {
+      "name": "OPIUM BARCELONA",
+      "score": 4.232,
+      "unverifiedScore": 3.047,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 9,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.232
+        }
+      ],
+      "city": "Barcelona"
+    },
+    "BCN-003": {
+      "name": "SUTTON BARCELONA",
+      "score": 4.094,
+      "unverifiedScore": 2.948,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 12,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.094
+        }
+      ],
+      "city": "Barcelona"
+    },
+    "NYC-102": {
+      "name": "AVANT GARDNER / THE BROOKLYN MIRAGE",
+      "score": 4.048,
+      "unverifiedScore": 2.915,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 13,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.048
+        }
+      ],
+      "city": "New York"
+    },
+    "ACY-101": {
+      "name": "HQ2 NIGHTCLUB & BEACH CLUB",
+      "score": 4.002,
+      "unverifiedScore": 2.881,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 14,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 4.002
+        }
+      ],
+      "city": "Atlantic City"
+    },
+    "PMI-101": {
+      "name": "BCM",
+      "score": 3.956,
+      "unverifiedScore": 2.848,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 15,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.956
+        }
+      ],
+      "city": "Mallorca"
+    },
+    "GOT-101": {
+      "name": "PORT DU SOLEIL",
+      "score": 3.68,
+      "unverifiedScore": 2.65,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 21,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.68
+        }
+      ],
+      "city": "Gothenburg"
+    },
+    "MAD-103": {
+      "name": "SHÔKO MADRID",
+      "score": 3.634,
+      "unverifiedScore": 2.616,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 22,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.634
+        }
+      ],
+      "city": "Madrid"
+    },
+    "LLO-101": {
+      "name": "DISCO TROPICS",
+      "score": 3.588,
+      "unverifiedScore": 2.583,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 23,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.588
+        }
+      ],
+      "city": "Lloret de Mar"
+    },
+    "MLA-101": {
+      "name": "GIANPULA MAIN ROOM",
+      "score": 3.174,
+      "unverifiedScore": 2.285,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 32,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.174
+        }
+      ],
+      "city": "Malta"
+    },
+    "BRS-101": {
+      "name": "MOTION",
+      "score": 3.128,
+      "unverifiedScore": 2.252,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 33,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.128
+        }
+      ],
+      "city": "Bristol"
+    },
+    "MAD-104": {
+      "name": "FITZ CLUB",
+      "score": 3.036,
+      "unverifiedScore": 2.186,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 35,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 3.036
+        }
+      ],
+      "city": "Madrid"
+    },
+    "SCL-101": {
+      "name": "LA FERIA",
+      "score": 2.99,
+      "unverifiedScore": 2.153,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 36,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.99
+        }
+      ],
+      "city": "Santiago"
+    },
+    "MLA-102": {
+      "name": "UNO MALTA",
+      "score": 2.898,
+      "unverifiedScore": 2.087,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 38,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.898
+        }
+      ],
+      "city": "Malta"
+    },
+    "LGM-101": {
+      "name": "LA DUNE CLUB",
+      "score": 2.714,
+      "unverifiedScore": 1.954,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 42,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.714
+        }
+      ],
+      "city": "La Grande-Motte"
+    },
+    "WAS-102": {
+      "name": "SOUNDCHECK",
+      "score": 2.668,
+      "unverifiedScore": 1.921,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 43,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.668
+        }
+      ],
+      "city": "Washington DC"
+    },
+    "CLO-101": {
+      "name": "LA PÉRGOLA CLANDESTINA",
+      "score": 2.576,
+      "unverifiedScore": 1.855,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 45,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.576
+        }
+      ],
+      "city": "Cali"
+    },
+    "LAS-106": {
+      "name": "DRAI'S",
+      "score": 2.53,
+      "unverifiedScore": 1.822,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 46,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.53
+        }
+      ],
+      "city": "Las Vegas"
+    },
+    "LAS-004": {
+      "name": "ENCORE BEACH CLUB",
+      "score": 2.392,
+      "unverifiedScore": 1.722,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 49,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.392
+        }
+      ],
+      "city": "Las Vegas"
+    },
+    "ALC-101": {
+      "name": "MARMARELA",
+      "score": 2.346,
+      "unverifiedScore": 1.689,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 50,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.346
+        }
+      ],
+      "city": "Alicante"
+    },
+    "LAS-001": {
+      "name": "XS",
+      "score": 2.3,
+      "unverifiedScore": 1.656,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 51,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.3
+        }
+      ],
+      "city": "Las Vegas"
+    },
+    "RAK-101": {
+      "name": "THEATRO",
+      "score": 2.162,
+      "unverifiedScore": 1.557,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 54,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.162
+        }
+      ],
+      "city": "Marrakech"
+    },
+    "SIN-002": {
+      "name": "CÉ LA VI",
+      "score": 2.07,
+      "unverifiedScore": 1.49,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 56,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.07
+        }
+      ],
+      "city": "Singapore"
+    },
+    "TRV-101": {
+      "name": "VELICE",
+      "score": 2.024,
+      "unverifiedScore": 1.457,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 57,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 2.024
+        }
+      ],
+      "city": "Torrevieja"
+    },
+    "WAW-101": {
+      "name": "SEN",
+      "score": 1.886,
+      "unverifiedScore": 1.358,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 60,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.886
+        }
+      ],
+      "city": "Warsaw"
+    },
+    "BOG-101": {
+      "name": "THEATRON",
+      "score": 1.794,
+      "unverifiedScore": 1.292,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 62,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.794
+        }
+      ],
+      "city": "Bogotá"
+    },
+    "BOS-101": {
+      "name": "THE GRAND",
+      "score": 1.748,
+      "unverifiedScore": 1.259,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 63,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.748
+        }
+      ],
+      "city": "Boston"
+    },
+    "WAW-102": {
+      "name": "LEVEL 27",
+      "score": 1.656,
+      "unverifiedScore": 1.192,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 65,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.656
+        }
+      ],
+      "city": "Warsaw"
+    },
+    "CUN-101": {
+      "name": "COCO BONGO",
+      "score": 1.61,
+      "unverifiedScore": 1.159,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 66,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.61
+        }
+      ],
+      "city": "Cancún"
+    },
+    "LAS-107": {
+      "name": "PALM TREE BEACH CLUB",
+      "score": 1.518,
+      "unverifiedScore": 1.093,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 68,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.518
+        }
+      ],
+      "city": "Las Vegas"
+    },
+    "SAN-101": {
+      "name": "NOVA SD",
+      "score": 1.472,
+      "unverifiedScore": 1.06,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 69,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.472
+        }
+      ],
+      "city": "San Diego"
+    },
+    "CER-002": {
+      "name": "PHI BEACH",
+      "score": 1.426,
+      "unverifiedScore": 1.027,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 70,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.426
+        }
+      ],
+      "city": "Porto Cervo"
+    },
+    "BOG-102": {
+      "name": "CLANDESTINO CLUB",
+      "score": 1.288,
+      "unverifiedScore": 0.927,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 73,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.288
+        }
+      ],
+      "city": "Bogotá"
+    },
+    "LLO-102": {
+      "name": "ST TROP",
+      "score": 1.242,
+      "unverifiedScore": 0.894,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 74,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.242
+        }
+      ],
+      "city": "Lloret de Mar"
+    },
+    "ZRC-103": {
+      "name": "NOA BEACH CLUB",
+      "score": 1.196,
+      "unverifiedScore": 0.861,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 75,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.196
+        }
+      ],
+      "city": "Zrće"
+    },
+    "IBZ-106": {
+      "name": "LIO",
+      "score": 1.15,
+      "unverifiedScore": 0.828,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 76,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.15
+        }
+      ],
+      "city": "Ibiza"
+    },
+    "MAD-105": {
+      "name": "LAB the Club",
+      "score": 1.104,
+      "unverifiedScore": 0.795,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 77,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.104
+        }
+      ],
+      "city": "Madrid"
+    },
+    "BUH-101": {
+      "name": "FACE CLUB",
+      "score": 1.012,
+      "unverifiedScore": 0.729,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 79,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 1.012
+        }
+      ],
+      "city": "Bucharest"
+    },
+    "MRB-003": {
+      "name": "MOMENTO MARBELLA",
+      "score": 0.966,
+      "unverifiedScore": 0.696,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 80,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.966
+        }
+      ],
+      "city": "Marbella"
+    },
+    "LLE-101": {
+      "name": "BILOBA",
+      "score": 0.874,
+      "unverifiedScore": 0.629,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 82,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.874
+        }
+      ],
+      "city": "Lleida"
+    },
+    "SYD-103": {
+      "name": "CAROUSEL",
+      "score": 0.828,
+      "unverifiedScore": 0.596,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 83,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.828
+        }
+      ],
+      "city": "Sydney"
+    },
+    "SLU-101": {
+      "name": "TROPICAL SALOU",
+      "score": 0.736,
+      "unverifiedScore": 0.53,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 85,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.736
+        }
+      ],
+      "city": "Salou"
+    },
+    "PTC-102": {
+      "name": "BEACH CLUB",
+      "score": 0.69,
+      "unverifiedScore": 0.497,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 86,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.69
+        }
+      ],
+      "city": "Pointe-Calumet"
+    },
+    "RAK-102": {
+      "name": "BABOUCHKA",
+      "score": 0.644,
+      "unverifiedScore": 0.464,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 87,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.644
+        }
+      ],
+      "city": "Marrakech"
+    },
+    "BOG-103": {
+      "name": "OCTAVA CLUB",
+      "score": 0.598,
+      "unverifiedScore": 0.431,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 88,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.598
+        }
+      ],
+      "city": "Bogotá"
+    },
+    "MAT-101": {
+      "name": "COCOA MATARÓ",
+      "score": 0.506,
+      "unverifiedScore": 0.364,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 90,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.506
+        }
+      ],
+      "city": "Mataró"
+    },
+    "GLA-101": {
+      "name": "SUB CLUB",
+      "score": 0.414,
+      "unverifiedScore": 0.298,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 92,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.414
+        }
+      ],
+      "city": "Glasgow"
+    },
+    "UIO-101": {
+      "name": "BROWN SUGAR",
+      "score": 0.368,
+      "unverifiedScore": 0.265,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 93,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.368
+        }
+      ],
+      "city": "Quito"
+    },
+    "DEN-101": {
+      "name": "CONDADO CLUB",
+      "score": 0.322,
+      "unverifiedScore": 0.232,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 94,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.322
+        }
+      ],
+      "city": "Dénia"
+    },
+    "AYN-101": {
+      "name": "CASTLE CLUB",
+      "score": 0.276,
+      "unverifiedScore": 0.199,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 95,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.276
+        }
+      ],
+      "city": "Ayia Napa"
+    },
+    "BDV-101": {
+      "name": "LAPIKKARA",
+      "score": 0.23,
+      "unverifiedScore": 0.166,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 96,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.23
+        }
+      ],
+      "city": "Barberà del Vallès"
+    },
+    "BKK-103": {
+      "name": "KLUB 25",
+      "score": 0.184,
+      "unverifiedScore": 0.132,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 97,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.184
+        }
+      ],
+      "city": "Bangkok"
+    },
+    "LLO-103": {
+      "name": "DISCO PRIVÉ",
+      "score": 0.138,
+      "unverifiedScore": 0.099,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 98,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.138
+        }
+      ],
+      "city": "Lloret de Mar"
+    },
+    "BEN-101": {
+      "name": "INSOMNIA BENIDORM",
+      "score": 0.092,
+      "unverifiedScore": 0.066,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 99,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.092
+        }
+      ],
+      "city": "Benidorm"
+    },
+    "SYD-104": {
+      "name": "HOME SYDNEY",
+      "score": 0.046,
+      "unverifiedScore": 0.033,
+      "sources": [
+        {
+          "source": "ina-100-best",
+          "year": 2025,
+          "rank": 100,
+          "url": "https://www.nightlifeinternational.org/en/congress-awards/100-world-s-best-clubs",
+          "score": 0.046
+        }
+      ],
+      "city": "Sydney"
+    }
+  }
+}
