@@ -39,7 +39,32 @@ function queryMentionsCity(q, v) {
 }
 function venueVisible(v, q) {
   if (isPublicVenue(v)) return true;
+  if (state.filters.dest && (v.destination === state.filters.dest || v.destination_code === state.filters.dest)) return true;
   return queryMentionsCity(q != null ? q : state.filters.q, v);
+}
+function isVenueVerified(v) {
+  return isPublicVenue(v) && statusInfo(v.research_status).cls === "tag-verified";
+}
+function googleScore(v) {
+  const g = googlePlace(v);
+  if (!g || !g.matched || !(Number(g.rating) > 0)) return 0;
+  const n = Number(g.reviewCount) || 0;
+  return Number(g.rating) + Math.min(0.4, n / 20000);
+}
+function compareVenues(a, b) {
+  const pub = Number(isPublicVenue(b)) - Number(isPublicVenue(a));
+  if (pub) return pub;
+  const ver = Number(isVenueVerified(b)) - Number(isVenueVerified(a));
+  if (ver) return ver;
+  const g = googleScore(b) - googleScore(a);
+  if (Math.abs(g) > 0.04) return g;
+  const prio = num(b.priority_score) - num(a.priority_score);
+  if (prio) return prio;
+  const lux = num(b.luxury_score) - num(a.luxury_score);
+  if (lux) return lux;
+  const party = num(b.party_score) - num(a.party_score);
+  if (party) return party;
+  return String(a.name || "").localeCompare(String(b.name || ""), "sv");
 }
 
 const CATEGORY_GROUPS = [
@@ -1391,7 +1416,7 @@ function renderHome() {
   const pubD = publicDestinations();
   const pubV = publicVenues();
   const tier1 = pubD.filter((d) => d.tier === "Tier 1");
-  const top = [...pubV].sort((a, b) => b.priority_score - a.priority_score).slice(0, 6);
+  const top = [...pubV].sort(compareVenues).slice(0, 6);
   view().innerHTML = `
   <section class="hero">
     <div class="hero-media" id="hero-media" aria-hidden="true"></div>
@@ -1558,8 +1583,9 @@ function renderDestinationDetail(code) {
     return;
   }
   setTitle(d.name);
-  const verified = VENUES.filter((v) => isPublicVenue(v) && (v.destination === d.name || v.destination_code === d.code))
-    .sort((a, b) => b.priority_score - a.priority_score || a.name.localeCompare(b.name));
+  const inCity = VENUES.filter((v) => v.destination === d.name || v.destination_code === d.code).sort(compareVenues);
+  const verified = inCity.filter(isVenueVerified);
+  const rest = inCity.filter((v) => !isVenueVerified(v));
   const useCases = String(d.use_cases || "").split(",").map((s) => s.trim()).filter(Boolean);
 
   view().innerHTML = `
@@ -1618,12 +1644,18 @@ function renderDestinationDetail(code) {
       <p class="map-note">${esc(t("mapNoteApprox").replace("{name}", d.name))} <a class="link-gold" href="#/map" data-nav>${esc(t("wholeMap"))}</a></p>
     </div>` : ""}
 
-    ${verified.length ? `
+    ${inCity.length ? `
     <div class="section-head" style="margin-top:44px">
-      <div><h2>${esc(t("verifiedIn").replace("{status}", t("verified")).replace("{name}", d.name))}</h2><div class="sub">${esc(t("inPublicCatalog").replace("{n}", String(verified.length)))}</div></div>
+      <div><h2>${esc(t("cityBest").replace("{name}", d.name))}</h2><div class="sub">${esc(t("cityBestSub"))}</div></div>
       <a class="link-gold" href="#/venues" id="dd-list-2">${esc(t("seeInList"))}</a>
     </div>
-    <div class="venue-grid">${verified.map(venueCard).join("")}</div>` : `
+    <div class="venue-grid">${verified.map((v, i) => venueCard(v, { eager: i < 2, rank: i + 1 })).join("")}</div>
+    ${rest.length ? `
+    <div class="rank-head">
+      <h3>${esc(t("cityMore").replace("{name}", d.name))}</h3>
+      <p>${esc(t("cityMoreSub"))}</p>
+    </div>
+    <div class="venue-grid">${rest.map((v, i) => venueCard(v, { rank: verified.length + i + 1 })).join("")}</div>` : ""}` : `
     <p class="events-meta" style="margin-top:28px">${esc(t("unlistedNeedCity"))}</p>`}
   </section>`;
 
@@ -1642,7 +1674,7 @@ function renderDestinationDetail(code) {
     });
   });
   bindVenueCards();
-  mountDestMap(d, verified);
+  mountDestMap(d, inCity);
 }
 
 // ---------- Sociala länkar ----------
@@ -1662,13 +1694,16 @@ function igLinkHTML(v, { arrow = false } = {}) {
   return `<a class="icon-link ig-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener" aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "Instagram"))}">${IG_ICON}<span class="soc-handle">${esc(handle)}</span>${arrow ? " ↗" : ""}</a>`;
 }
 
-function venueCard(v, { eager = false } = {}) {
+function venueCard(v, { eager = false, rank = 0 } = {}) {
   const st = statusInfo(v.research_status);
+  const rankMark = rank > 0
+    ? `<span class="rank-badge${rank <= 3 ? " top" : ""}" title="${esc(t("rankLabel").replace("{n}", String(rank)))}">${rank}</span>`
+    : "";
   return `
   <div class="venue-card">
     ${favBtnHTML(v.venue_id, v.name)}
     <div class="venue-card-link" data-id="${esc(v.venue_id)}" role="link" tabindex="0" aria-label="${esc(t("viewDetails").replace("{name}", v.name))}">
-      ${venueMediaHTML(v, "venue-media", { eager })}
+      ${venueMediaHTML(v, "venue-media", { eager, extra: rankMark })}
       <div class="venue-top">
         <div>
           <div class="venue-name">${esc(v.name)}</div>
@@ -1708,11 +1743,9 @@ function applyFilters() {
     }
     return true;
   });
-  const vis = (a, b) => Number(isPublicVenue(b)) - Number(isPublicVenue(a));
-  if (f.sort === "priority") list.sort((a, b) => vis(a, b) || b.priority_score - a.priority_score || a.name.localeCompare(b.name));
-  else if (f.sort === "name") list.sort((a, b) => vis(a, b) || a.name.localeCompare(b.name));
-  else if (f.sort === "luxury") list.sort((a, b) => vis(a, b) || b.luxury_score - a.luxury_score || b.priority_score - a.priority_score);
-  else if (f.sort === "price") list.sort((a, b) => vis(a, b) || a.name.localeCompare(b.name));
+  if (f.sort === "name") list.sort((a, b) => compareVenues(a, b) || a.name.localeCompare(b.name, "sv"));
+  else if (f.sort === "luxury") list.sort((a, b) => compareVenues(a, b) || num(b.luxury_score) - num(a.luxury_score));
+  else list.sort(compareVenues);
   return list;
 }
 
@@ -1764,18 +1797,21 @@ function renderVenues() {
 
   const renderList = () => {
     const list = applyFilters();
-    const ver = list.filter(isPublicVenue);
-    const unv = list.filter((v) => !isPublicVenue(v));
+    const ver = list.filter(isVenueVerified);
+    const unv = list.filter((v) => !isVenueVerified(v));
     $("#f-count").textContent = f.dest
-      ? `${list.length} i ${f.dest} · ${ver.length} ${t("verified").toLowerCase()} · ${unv.length} ${t("unverified").toLowerCase()}`
-      : `${list.length} ${t("verified").toLowerCase()}`;
+      ? t("cityCount").replace("{n}", String(list.length)).replace("{name}", f.dest).replace("{ok}", String(ver.length)).replace("{rest}", String(unv.length))
+      : `${list.length} · ${ver.length} ${t("verified").toLowerCase()}`;
     let html = "";
-    if (ver.length) html += ver.map(venueCard).join("");
-    if (unv.length) {
-      html += `<div class="unlisted-banner" style="grid-column:1/-1"><h3>${esc(t("unverified"))}</h3><p>${esc(t("unlistedHint"))}</p></div>`;
-      html += unv.map(venueCard).join("");
+    if (f.dest && list.length) {
+      html += `<div class="rank-head" style="grid-column:1/-1"><h3>${esc(t("cityBest").replace("{name}", f.dest))}</h3><p>${esc(t("cityBestSub"))}</p></div>`;
     }
-    $("#venue-list").innerHTML = html || `<div class="empty-state" style="grid-column:1/-1"><div class="big">🔍</div><h3>${esc(t("noHits"))}</h3><p>${f.status === "tag-unverified" && !(f.q || "").trim() ? esc(t("unlistedNeedCity")) : esc(t("clearFilters"))}</p></div>`;
+    if (ver.length) html += ver.map((v, i) => venueCard(v, { eager: i < 2, rank: i + 1 })).join("");
+    if (unv.length) {
+      html += `<div class="unlisted-banner" style="grid-column:1/-1"><h3>${esc(t("cityMore").replace("{name}", f.dest || t("unverified")))}</h3><p>${esc(t("cityMoreSub"))}</p></div>`;
+      html += unv.map((v, i) => venueCard(v, { rank: ver.length + i + 1 })).join("");
+    }
+    $("#venue-list").innerHTML = html || `<div class="empty-state" style="grid-column:1/-1"><div class="big">🔍</div><h3>${esc(t("noHits"))}</h3><p>${f.status === "tag-unverified" && !(f.q || "").trim() && !f.dest ? esc(t("unlistedNeedCity")) : esc(t("clearFilters"))}</p></div>`;
     bindVenueCards();
   };
 
@@ -1940,7 +1976,7 @@ function venueMenu(v) {
   return (v && VENUE_MENUS[v.venue_id]) || null;
 }
 function destVenuesOf(d) {
-  return publicVenues().filter((v) => v.destination_code === d.code || v.destination === d.name);
+  return VENUES.filter((v) => v.destination_code === d.code || v.destination === d.name).sort(compareVenues);
 }
 function addDaysISO(iso, n) {
   const [y, m, day] = String(iso).split("-").map(Number);
