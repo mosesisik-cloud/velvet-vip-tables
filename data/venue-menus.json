@@ -1,0 +1,36 @@
+{
+  "fetchedAt": "2026-08-22T10:54:36.294Z",
+  "venues": {
+    "MIA-004": {
+      "source": "https://joiabeachmiami.com",
+      "currency": "EUR",
+      "items": [
+        {
+          "name": "Valet is available for",
+          "price": "$25",
+          "amount": 25,
+          "section": ""
+        }
+      ]
+    },
+    "SBH-002": {
+      "source": "https://www.gypsea-stbarth.com",
+      "currency": "EUR",
+      "items": [
+        {
+          "name": "Day Pass",
+          "price": "70€",
+          "amount": 70,
+          "section": ""
+        },
+        {
+          "name": "DAY SPA",
+          "price": "160€",
+          "amount": 160,
+          "section": ""
+        }
+      ]
+    }
+  },
+  "count": 2
+}

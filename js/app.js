@@ -9,6 +9,7 @@ let DESTINATIONS = [];
 let VENUES = [];
 let VENUE_IMAGES = {}; // venue_id -> bild från ställets egen hemsida (data/venue-images.json)
 let VENUE_YOUTUBE = {}; // venue_id -> mest visade officiella klipp (data/venue-youtube.json)
+let VENUE_MENUS = {}; // venue_id -> tryckt meny från klubbens sajt
 let VENUE_EVENTS = { fetched: null, venues: {} }; // kommande events per venue (data/venue-events.json)
 let BOOKING_URLS = {}; // venue_id -> { url, kind, label } officiell VIP/bokningssida
 let GOOGLE_PLACES = { fetchedAt: null, venues: {} };
@@ -1578,6 +1579,8 @@ function renderDestinationDetail(code) {
       </div>
     </div>
 
+    ${cityAvailHTML(d, (location.hash.split("?")[1] ? new URLSearchParams(location.hash.split("?")[1]).get("date") : "") || "")}
+
     ${Number.isFinite(d.lat) && Number.isFinite(d.lng) ? `
     <div class="detail-panel dest-map-panel">
       <h2 class="detail-panel-title">${esc(t("onMap"))}</h2>
@@ -1606,6 +1609,11 @@ function renderDestinationDetail(code) {
   $("#dd-list").addEventListener("click", goList);
   const l2 = $("#dd-list-2");
   if (l2) l2.addEventListener("click", goList);
+  document.querySelectorAll("[data-avail-date]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      location.hash = `#/destination/${encodeURIComponent(d.code)}?date=${encodeURIComponent(btn.dataset.availDate)}`;
+    });
+  });
   bindVenueCards();
   mountDestMap(d, verified);
 }
@@ -1901,6 +1909,85 @@ function eventsFor(v) {
   const today = todayISO();
   return list.filter((e) => !e.date || e.date >= today);
 }
+function venueMenu(v) {
+  return (v && VENUE_MENUS[v.venue_id]) || null;
+}
+function destVenuesOf(d) {
+  return publicVenues().filter((v) => v.destination_code === d.code || v.destination === d.name);
+}
+function addDaysISO(iso, n) {
+  const [y, m, day] = String(iso).split("-").map(Number);
+  const dt = new Date(y, m - 1, day + n);
+  return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+}
+function destNightRows(d, date) {
+  return destVenuesOf(d)
+    .map((v) => ({ v, nights: eventsFor(v).filter((e) => e.date === date) }))
+    .filter((x) => x.nights.length);
+}
+function cityAvailHTML(d, selected) {
+  const dates = [];
+  const today = todayISO();
+  for (let i = 0; i < 14; i++) dates.push(addDaysISO(today, i));
+  const date = dates.includes(selected) ? selected : today;
+  const rows = destNightRows(d, date);
+  const catalog = destVenuesOf(d);
+  const withCal = catalog.filter((v) => eventsFor(v).some((e) => e.date)).length;
+  const fmtChip = (iso) => {
+    const [y, m, day] = iso.split("-").map(Number);
+    try {
+      return new Date(y, m - 1, day).toLocaleDateString(currentLang(), { weekday: "short", day: "numeric" });
+    } catch { return iso.slice(8); }
+  };
+  return `
+  <div class="city-avail" id="city-avail">
+    <h2 class="detail-panel-title">${esc(t("cityAvail").replace("{name}", d.name))}</h2>
+    <p class="events-meta">${esc(t("cityAvailSub"))}${withCal ? ` · ${esc(t("cityCalCount").replace("{n}", String(withCal)).replace("{all}", String(catalog.length)))}` : ""}</p>
+    <div class="avail-chips" role="list">
+      ${dates.map((iso) => {
+        const n = destNightRows(d, iso).length;
+        return `<button type="button" class="avail-chip${iso === date ? " on" : ""}" data-avail-date="${iso}" aria-pressed="${iso === date ? "true" : "false"}">${esc(fmtChip(iso))}${n ? ` <span class="avail-n">${n}</span>` : ""}</button>`;
+      }).join("")}
+    </div>
+    ${rows.length ? `
+    <div class="avail-list">
+      ${rows.map(({ v, nights }) => `
+        <div class="avail-row">
+          <div>
+            <a class="avail-name" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>${esc(v.name)}</a>
+            <div class="avail-nights">${nights.slice(0, 3).map((e) => esc(e.title)).join(" · ")}</div>
+          </div>
+          <a class="btn btn-gold btn-sm" href="#/book-site/${encodeURIComponent(v.venue_id)}?date=${encodeURIComponent(date)}&night=${encodeURIComponent(nights[0].title)}" data-nav>${esc(t("bridgePickNight"))}</a>
+        </div>`).join("")}
+    </div>` : `<p class="events-meta">${esc(t("cityAvailEmpty"))}</p>`}
+    ${catalog.length > withCal ? `<p class="events-meta">${esc(t("cityAvailNoCal").replace("{n}", String(catalog.length - withCal)))}</p>` : ""}
+    <p class="events-meta">${esc(t("cityAvailOverlap"))}</p>
+  </div>`;
+}
+function menuPanelHTML(v) {
+  const m = venueMenu(v);
+  const items = m && Array.isArray(m.items) ? m.items.filter((x) => x && x.name) : [];
+  if (!items.length) {
+    return `
+    <div class="detail-panel menu-panel">
+      <h2 class="detail-panel-title">${esc(t("menuTitle"))}</h2>
+      <p class="events-meta">${esc(t("menuEmpty"))}</p>
+    </div>`;
+  }
+  return `
+  <div class="detail-panel menu-panel">
+    <h2 class="detail-panel-title">${esc(t("menuTitle"))}</h2>
+    <p class="events-meta">${esc(t("menuSub"))}</p>
+    <ul class="menu-list">
+      ${items.slice(0, 40).map((it) => `
+        <li class="menu-row">
+          <span class="menu-name">${esc(it.name)}${it.section ? ` <em>${esc(it.section)}</em>` : ""}</span>
+          <span class="menu-price">${esc(it.price || t("clubSetsPrice"))}</span>
+        </li>`).join("")}
+    </ul>
+    ${m.source ? `<p class="events-meta"><a href="${esc(m.source)}" target="_blank" rel="noopener">${esc(t("menuFrom"))} ↗</a></p>` : ""}
+  </div>`;
+}
 function eventWhen(e) {
   if (e.date && /^\d{4}-\d{2}-\d{2}$/.test(e.date)) {
     const [y, m, d] = e.date.split("-").map(Number);
@@ -1998,6 +2085,7 @@ function renderVenueDetail(id) {
       ${contactPanelHTML(v)}
       ${factsPanelHTML(v)}
       ${googleReviewsPanelHTML(v)}
+      ${menuPanelHTML(v)}
       ${eventsSectionHTML(v)}
       <div class="detail-panel">
         <h2 class="detail-panel-title">${esc(t("velvetScore"))}</h2>
@@ -5140,6 +5228,13 @@ async function renderBookSite(id) {
           <label>${esc(t("matchNote"))}
             <input type="text" id="br-note" maxlength="240" placeholder="${esc(t("bridgeNotePh"))}" value="${esc(preNight)}" autocomplete="off">
           </label>
+          ${(adapter.inventory?.menu?.items || []).length ? `
+          <label>${esc(t("menuTitle"))}
+            <select id="br-menu">
+              <option value="">${esc(t("menuPickNone"))}</option>
+              ${adapter.inventory.menu.items.slice(0, 40).map((it) => `<option value="${esc(it.name)}">${esc(it.name)}${it.price ? ` · ${esc(it.price)}` : ""}</option>`).join("")}
+            </select>
+          </label>` : ""}
           <button type="button" class="btn btn-gold" id="br-make" style="width:100%">${esc(t("bridgeCta"))}</button>
         </div>
         <div class="bridge-packet hidden" id="bridge-out"></div>`}
@@ -5216,6 +5311,7 @@ async function renderBookSite(id) {
         party: Number($("#br-party")?.value || 4),
         note: ($("#br-note")?.value || "").trim(),
         package: adapter.label || "",
+        menuItem: ($("#br-menu")?.value || "").trim(),
         eventTitle: pickedTitle || ($("#br-note")?.value || "").trim(),
         eventUrl: pickedUrl,
       }),
@@ -5421,6 +5517,13 @@ async function init() {
         VENUE_YOUTUBE = (y && y.venues && typeof y.venues === "object") ? y.venues : {};
       }
     } catch (_) { VENUE_YOUTUBE = {}; }
+    try {
+      const rm = await fetch("data/venue-menus.json", { cache: "no-store" });
+      if (rm.ok) {
+        const menus = await rm.json();
+        VENUE_MENUS = (menus && menus.venues && typeof menus.venues === "object") ? menus.venues : {};
+      }
+    } catch (_) { VENUE_MENUS = {}; }
     // Kommande events: statisk JSON som fallback, sedan live API (daglig Firecrawl)
     await loadVenueEvents();
     try {
@@ -5467,6 +5570,8 @@ async function init() {
   } catch { /* optional */ }
   const liveFacts = await apiJSON("/facts");
   if (liveFacts && liveFacts.venues) VENUE_FACTS = liveFacts;
+  const liveMenus = await apiJSON("/menus");
+  if (liveMenus && liveMenus.venues) VENUE_MENUS = liveMenus.venues;
   const existing = loadUser();
   if (existing) registerUser(existing);
   const authTok = new URLSearchParams(location.search).get("auth");

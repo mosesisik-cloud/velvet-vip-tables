@@ -7,7 +7,7 @@ import { loadEventsFile, loadCrawlStatus, runCrawl, getCrawlState, scheduleDaily
 import { loadPlacesFile, runPlacesLookup } from "./google-places.mjs";
 import { loadFactsFile, runFactsCrawl } from "./venue-facts.mjs";
 import { parseTd3, extractMrzFromText, nameMatch, publicFields, legalName, ageYears } from "./mrz.mjs";
-import { bookingAdapter, handoffUrl, packetText, publicBridge, officialEventUrl } from "./book-bridge.mjs";
+import { bookingAdapter, handoffUrl, packetText, publicBridge, officialEventUrl, destInventory } from "./book-bridge.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
@@ -1251,6 +1251,31 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && url.pathname === "/facts") {
       return send(res, 200, loadFactsFile(), { "Cache-Control": "no-store" });
     }
+    if (req.method === "GET" && url.pathname === "/inventory") {
+      const dest = String(url.searchParams.get("dest") || "").trim();
+      const date = String(url.searchParams.get("date") || "").trim();
+      const venueId = String(url.searchParams.get("venueId") || url.searchParams.get("venue") || "").trim();
+      if (venueId) {
+        const adapter = bookingAdapter(venueId);
+        if (!adapter) return send(res, 404, { error: "no_booking_site" });
+        return send(res, 200, { venueId, adapter }, { "Cache-Control": "no-store" });
+      }
+      if (!dest) return send(res, 400, { error: "dest" });
+      const inv = destInventory(dest, date);
+      if (!inv) return send(res, 404, { error: "dest" });
+      return send(res, 200, inv, { "Cache-Control": "no-store" });
+    }
+    if (req.method === "GET" && url.pathname === "/menus") {
+      let menus = { venues: {} };
+      for (const p of [
+        path.join(__dir, "public-data", "venue-menus.json"),
+        path.join(__dir, "..", "data", "venue-menus.json"),
+        path.join(__dir, "venue-menus.json"),
+      ]) {
+        try { menus = JSON.parse(fs.readFileSync(p, "utf8")); break; } catch { /* next */ }
+      }
+      return send(res, 200, menus, { "Cache-Control": "no-store" });
+    }
     const factOne = url.pathname.match(/^\/facts\/([A-Z0-9._-]+)$/i);
     if (req.method === "GET" && factOne) {
       const all = loadFactsFile();
@@ -2060,6 +2085,10 @@ const server = http.createServer(async (req, res) => {
       const party = Math.max(1, Math.min(20, Number(b.party) || 2));
       const eventTitle = String(b.eventTitle || "").trim().slice(0, 140);
       const eventUrl = officialEventUrl(adapter.officialUrl, b.eventUrl);
+      const menuWant = String(b.menuItem || "").trim().slice(0, 80);
+      const menuHit = menuWant
+        ? (adapter.inventory?.menu?.items || []).find((x) => x.name === menuWant)
+        : null;
       upsertUser(db, b.user);
       const d = dossier(uid, db) || {};
       const guest = {
@@ -2089,7 +2118,7 @@ const server = http.createServer(async (req, res) => {
         clubEmail: adapter.clubEmail,
         date,
         party,
-        package: String(b.package || adapter.label || "").slice(0, 80),
+        package: String(menuHit ? `${menuHit.name}${menuHit.price ? " · " + menuHit.price : ""}` : (b.package || adapter.label || "")).slice(0, 80),
         note: String(b.note || "").trim().slice(0, 240),
         status: "handed_off",
         userId: uid,

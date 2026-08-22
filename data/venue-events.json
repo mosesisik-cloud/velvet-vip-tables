@@ -1,173 +1,764 @@
 {
-  "fetched": "2026-08-21",
+  "fetched": "2026-08-22",
+  "fetchedAt": "2026-08-22T09:55:08.997Z",
+  "engine": "firecrawl+fetch",
   "venues": {
     "IBZ-001": {
       "source": "https://www.hiibiza.com/vip-tables",
+      "engine": "firecrawl",
       "events": [
+        {
+          "title": "HUGEL Presents Make The Girls Dance",
+          "date": "2026-08-20",
+          "url": "https://vip.hiibiza.com/?date=20-08-2026&lang=en",
+          "note": "23:30 – End"
+        },
         {
           "title": "Dom Dolla",
           "date": "2026-08-21",
-          "url": "https://www.hiibiza.com/vip-tables",
-          "note": "Theatre 23:30 · VIP via vip.hiibiza.com"
+          "url": "https://vip.hiibiza.com/?date=21-08-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "Black Coffee",
           "date": "2026-08-22",
-          "url": "https://www.hiibiza.com/vip-tables",
-          "note": "Theatre 23:30"
+          "url": "https://vip.hiibiza.com/?date=22-08-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "CamelPhat Present Summer of Love",
           "date": "2026-08-23",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=23-08-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "Francis Mercier Presents Solèy",
           "date": "2026-08-24",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=24-08-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "East End Dubs presents Eastenderz",
           "date": "2026-08-25",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=25-08-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "MEDUZA & James Hype present Our House",
           "date": "2026-08-26",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=26-08-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "HUGEL Presents Make The Girls Dance",
           "date": "2026-08-27",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=27-08-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
-          "title": "Dom Dolla — Closing Party",
+          "title": "Dom Dolla",
           "date": "2026-08-28",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=28-08-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "Black Coffee",
           "date": "2026-08-29",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=29-08-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "CamelPhat Present Summer of Love",
           "date": "2026-08-30",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=30-08-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "Francis Mercier Presents Solèy",
           "date": "2026-08-31",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=31-08-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "East End Dubs presents Eastenderz",
           "date": "2026-09-01",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=01-09-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "MEDUZA & James Hype present Our House",
           "date": "2026-09-02",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=02-09-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "HUGEL Presents Make The Girls Dance",
           "date": "2026-09-03",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=03-09-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "CamelPhat Present Summer of Love",
           "date": "2026-09-04",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=04-09-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
           "title": "Black Coffee",
           "date": "2026-09-05",
-          "url": "https://www.hiibiza.com/vip-tables"
+          "url": "https://vip.hiibiza.com/?date=05-09-2026&lang=en",
+          "note": "23:30 – End"
         },
         {
-          "title": "Closing Party 2026",
-          "date": "2026-10-09",
-          "url": "https://www.hiibiza.com/events/2026/hi-ibiza-closing-party",
-          "note": "Special event"
+          "title": "Francis Mercier Presents Solèy",
+          "date": "2026-09-07",
+          "url": "https://vip.hiibiza.com/?date=07-09-2026&lang=en",
+          "note": "23:30 – End"
+        },
+        {
+          "title": "East End Dubs presents Eastenderz",
+          "date": "2026-09-08",
+          "url": "https://vip.hiibiza.com/?date=08-09-2026&lang=en",
+          "note": "23:30 – End"
+        },
+        {
+          "title": "MEDUZA & James Hype present Our House",
+          "date": "2026-09-09",
+          "url": "https://vip.hiibiza.com/?date=09-09-2026&lang=en",
+          "note": "23:30 – End"
+        },
+        {
+          "title": "HUGEL Presents Make The Girls Dance",
+          "date": "2026-09-10",
+          "url": "https://vip.hiibiza.com/?date=10-09-2026&lang=en",
+          "note": "23:30 – End"
+        },
+        {
+          "title": "CamelPhat Present Summer of Love",
+          "date": "2026-09-11",
+          "url": "https://vip.hiibiza.com/?date=11-09-2026&lang=en",
+          "note": "23:30 – End"
+        },
+        {
+          "title": "Black Coffee",
+          "date": "2026-09-12",
+          "url": "https://vip.hiibiza.com/?date=12-09-2026&lang=en",
+          "note": "23:30 – End"
+        },
+        {
+          "title": "Francis Mercier Presents Solèy",
+          "date": "2026-09-14",
+          "url": "https://vip.hiibiza.com/?date=14-09-2026&lang=en",
+          "note": "23:30 – End"
         }
       ]
     },
     "IBZ-002": {
       "source": "https://www.theushuaiaexperience.com/club/en/vip-tables",
+      "engine": "fetch",
       "events": [
-        {
-          "title": "Calvin Harris",
-          "date": "2026-08-21",
-          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
-          "note": "From 17:00 · VIP via vip.theushuaiaexperience.com"
-        },
-        {
-          "title": "Nic Fanciulli B2B Hot Since 82",
-          "date": "2026-08-22",
-          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
-          "note": "From 17:00"
-        },
         {
           "title": "Swedish House Mafia",
           "date": "2026-08-23",
-          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
-          "note": "From 17:00"
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
         },
         {
-          "title": "David Guetta",
+          "title": "F*** ME I'M FAMOUS! By David Guetta",
           "date": "2026-08-24",
-          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
-          "note": "From 17:00"
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
         },
         {
-          "title": "Calvin Harris — Closing Party",
+          "title": "Calvin Harris",
           "date": "2026-08-25",
-          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
-          "note": "From 17:00"
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
         },
         {
-          "title": "Dimitri Vegas / Steve Aoki",
+          "title": "Tomorrowland and Dimitri Vegas & Like Mike",
           "date": "2026-08-26",
-          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
-          "note": "From 17:00"
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
         },
         {
           "title": "Martin Garrix",
           "date": "2026-08-27",
-          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
-          "note": "From 17:00"
-        },
-        {
-          "title": "Calvin Harris",
-          "date": "2026-08-28",
-          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
-          "note": "From 17:00"
-        },
-        {
-          "title": "Kölsch / Gorgon City / Paco Osuna",
-          "date": "2026-08-29",
-          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
-          "note": "From 17:00"
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
         },
         {
           "title": "Swedish House Mafia",
           "date": "2026-08-30",
-          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
-          "note": "From 17:00"
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
         },
         {
-          "title": "David Guetta / Alesso",
+          "title": "F*** ME I'M FAMOUS! By David Guetta",
           "date": "2026-08-31",
-          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
-          "note": "From 17:00"
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
         },
         {
-          "title": "ANTS Closing — Vintage Culture B2B Loco Dice",
-          "date": "2026-10-10",
-          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables",
-          "note": "From 13:00"
+          "title": "Tomorrowland and Dimitri Vegas & Like Mike",
+          "date": "2026-09-02",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "Martin Garrix",
+          "date": "2026-09-03",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "Swedish House Mafia",
+          "date": "2026-09-06",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "F*** ME I'M FAMOUS! By David Guetta",
+          "date": "2026-09-07",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "Tomorrowland and Dimitri Vegas & Like Mike",
+          "date": "2026-09-09",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "Martin Garrix",
+          "date": "2026-09-10",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "Swedish House Mafia",
+          "date": "2026-09-13",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "F*** ME I'M FAMOUS! By David Guetta",
+          "date": "2026-09-14",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "Tomorrowland and Dimitri Vegas & Like Mike",
+          "date": "2026-09-16",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "Martin Garrix",
+          "date": "2026-09-17",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "Swedish House Mafia",
+          "date": "2026-09-20",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "F*** ME I'M FAMOUS! By David Guetta",
+          "date": "2026-09-21",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "Tomorrowland and Dimitri Vegas & Like Mike",
+          "date": "2026-09-23",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "Martin Garrix",
+          "date": "2026-09-24",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "F*** ME I'M FAMOUS! By David Guetta",
+          "date": "2026-09-28",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "Tomorrowland and Dimitri Vegas & Like Mike",
+          "date": "2026-09-30",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        },
+        {
+          "title": "F*** ME I'M FAMOUS! By David Guetta",
+          "date": "2026-10-05",
+          "url": "https://www.theushuaiaexperience.com/club/en/vip-tables"
+        }
+      ]
+    },
+    "IBZ-004": {
+      "source": "https://pacha.com/vip-events",
+      "engine": "fetch",
+      "events": [
+        {
+          "title": "ROGER SANCHEZ | FLOWER POWER",
+          "date": "2026-08-22",
+          "url": "https://pacha.com/event/roger-sanchez--flower-power-22-08-2026"
+        },
+        {
+          "title": "SOLOMUN+1",
+          "date": "2026-08-23",
+          "url": "https://pacha.com/event/solomun1-23-08-2026"
+        },
+        {
+          "title": "GORDO | TARAKA",
+          "date": "2026-08-25",
+          "url": "https://pacha.com/event/gordo--taraka-25-08-2026"
+        },
+        {
+          "title": "MAU P | BADDEST BEHAVIOUR",
+          "date": "2026-08-26",
+          "url": "https://pacha.com/event/mau-p--baddest-behaviour-26-08-2026"
+        },
+        {
+          "title": "PURPLE DISCO MACHINE | PURE PACHA",
+          "date": "2026-08-27",
+          "url": "https://pacha.com/event/purple-disco-machine--pure-pacha-27-08-2026"
+        },
+        {
+          "title": "MARCO CAROLA PRESENTS MUSIC ON",
+          "date": "2026-08-28",
+          "url": "https://pacha.com/event/marco-carola-presents-music-on-28-08-2026"
+        },
+        {
+          "title": "ROGER SANCHEZ | FLOWER POWER - CLOSING PARTY",
+          "date": "2026-08-29",
+          "url": "https://pacha.com/event/roger-sanchez--flower-power---closing-party-29-08-2026"
+        },
+        {
+          "title": "SOLOMUN+1",
+          "date": "2026-08-30",
+          "url": "https://pacha.com/event/solomun1-30-08-2026"
+        },
+        {
+          "title": "GORDO | TARAKA",
+          "date": "2026-09-01",
+          "url": "https://pacha.com/event/gordo--taraka-01-09-2026"
+        },
+        {
+          "title": "MAU P | BADDEST BEHAVIOUR",
+          "date": "2026-09-02",
+          "url": "https://pacha.com/event/mau-p--baddest-behaviour-02-09-2026"
+        },
+        {
+          "title": "PURPLE DISCO MACHINE | PURE PACHA",
+          "date": "2026-09-03",
+          "url": "https://pacha.com/event/purple-disco-machine--pure-pacha-03-09-2026"
+        },
+        {
+          "title": "MARCO CAROLA PRESENTS MUSIC ON",
+          "date": "2026-09-04",
+          "url": "https://pacha.com/event/marco-carola-presents-music-on-04-09-2026"
+        },
+        {
+          "title": "ROBIN SCHULZ",
+          "date": "2026-09-05",
+          "url": "https://pacha.com/event/robin-schulz-05-09-2026"
+        },
+        {
+          "title": "SOLOMUN+1",
+          "date": "2026-09-06",
+          "url": "https://pacha.com/event/solomun1-06-09-2026"
+        },
+        {
+          "title": "GORDO | TARAKA",
+          "date": "2026-09-08",
+          "url": "https://pacha.com/event/gordo--taraka-08-09-2026"
+        },
+        {
+          "title": "MAU P | BADDEST BEHAVIOUR",
+          "date": "2026-09-09",
+          "url": "https://pacha.com/event/mau-p--baddest-behaviour-09-09-2026"
+        },
+        {
+          "title": "PURPLE DISCO MACHINE | PURE PACHA",
+          "date": "2026-09-10",
+          "url": "https://pacha.com/event/purple-disco-machine--pure-pacha-10-09-2026"
+        },
+        {
+          "title": "MARCO CAROLA PRESENTS MUSIC ON",
+          "date": "2026-09-11",
+          "url": "https://pacha.com/event/marco-carola-presents-music-on-11-09-2026"
+        },
+        {
+          "title": "ROBIN SCHULZ",
+          "date": "2026-09-12",
+          "url": "https://pacha.com/event/robin-schulz-12-09-2026"
+        },
+        {
+          "title": "SOLOMUN+1",
+          "date": "2026-09-13",
+          "url": "https://pacha.com/event/solomun1-13-09-2026"
+        },
+        {
+          "title": "GORDO | TARAKA",
+          "date": "2026-09-15",
+          "url": "https://pacha.com/event/gordo--taraka-15-09-2026"
+        },
+        {
+          "title": "MAU P | BADDEST BEHAVIOUR",
+          "date": "2026-09-16",
+          "url": "https://pacha.com/event/mau-p--baddest-behaviour-16-09-2026"
+        },
+        {
+          "title": "PURPLE DISCO MACHINE | PURE PACHA",
+          "date": "2026-09-17",
+          "url": "https://pacha.com/event/purple-disco-machine--pure-pacha-17-09-2026"
+        },
+        {
+          "title": "MARCO CAROLA PRESENTS MUSIC ON",
+          "date": "2026-09-18",
+          "url": "https://pacha.com/event/marco-carola-presents-music-on-18-09-2026"
+        },
+        {
+          "title": "ROBIN SCHULZ",
+          "date": "2026-09-19",
+          "url": "https://pacha.com/event/robin-schulz-19-09-2026"
+        },
+        {
+          "title": "SOLOMUN+1",
+          "date": "2026-09-20",
+          "url": "https://pacha.com/event/solomun1-20-09-2026"
+        },
+        {
+          "title": "GORDO | TARAKA",
+          "date": "2026-09-22",
+          "url": "https://pacha.com/event/gordo--taraka-22-09-2026"
+        },
+        {
+          "title": "MAU P | BADDEST BEHAVIOUR",
+          "date": "2026-09-23",
+          "url": "https://pacha.com/event/mau-p--baddest-behaviour-23-09-2026"
+        },
+        {
+          "title": "PURPLE DISCO MACHINE | PURE PACHA",
+          "date": "2026-09-24",
+          "url": "https://pacha.com/event/purple-disco-machine--pure-pacha-24-09-2026"
+        },
+        {
+          "title": "MARCO CAROLA PRESENTS MUSIC ON",
+          "date": "2026-09-25",
+          "url": "https://pacha.com/event/marco-carola-presents-music-on-25-09-2026"
+        },
+        {
+          "title": "ROBIN SCHULZ",
+          "date": "2026-09-26",
+          "url": "https://pacha.com/event/robin-schulz-26-09-2026"
+        },
+        {
+          "title": "SOLOMUN+1",
+          "date": "2026-09-27",
+          "url": "https://pacha.com/event/solomun1-27-09-2026"
+        },
+        {
+          "title": "GORDO | TARAKA - CLOSING PARTY",
+          "date": "2026-09-29",
+          "url": "https://pacha.com/event/gordo--taraka-29-09-2026"
+        },
+        {
+          "title": "MAU P | BADDEST BEHAVIOUR",
+          "date": "2026-09-30",
+          "url": "https://pacha.com/event/mau-p--baddest-behaviour-30-09-2026"
+        },
+        {
+          "title": "PURPLE DISCO MACHINE | PURE PACHA - CLOSING PARTY",
+          "date": "2026-10-01",
+          "url": "https://pacha.com/event/purple-disco-machine--pure-pacha---closing-party-01-10-2026"
+        },
+        {
+          "title": "MARCO CAROLA PRESENTS MUSIC ON",
+          "date": "2026-10-02",
+          "url": "https://pacha.com/event/marco-carola-presents-music-on-02-10-2026"
+        },
+        {
+          "title": "ROBIN SCHULZ - CLOSING PARTY",
+          "date": "2026-10-03",
+          "url": "https://pacha.com/event/robin-schulz---closing-party-03-10-2026"
+        },
+        {
+          "title": "SOLOMUN+1 - CLOSING PARTY",
+          "date": "2026-10-04",
+          "url": "https://pacha.com/event/solomun1---closing-party-04-10-2026"
+        },
+        {
+          "title": "RAMPA PRESENTS ANARCHY",
+          "date": "2026-10-06",
+          "url": "https://pacha.com/event/rampa-presents-anarchy-06-10-2026"
+        },
+        {
+          "title": "MAU P | BADDEST BEHAVIOUR - CLOSING PARTY",
+          "date": "2026-10-07",
+          "url": "https://pacha.com/event/mau-p--baddest-behaviour---closing-party-07-10-2026"
+        }
+      ]
+    },
+    "MYK-003": {
+      "source": "https://www.santannamykonos.com/",
+      "engine": "firecrawl",
+      "events": [
+        {
+          "title": "JOSEPH CAPRIATI & TRAUMER",
+          "date": "2026-08-21",
+          "url": "https://www.santannamykonos.com/vibing-sky/capriati-traumer-21-aug-2026/"
+        },
+        {
+          "title": "MAHMUT ORHAN",
+          "date": "2026-08-22",
+          "url": "https://www.santannamykonos.com/vibing-sky/mahmut-orhan-22-august-2026/",
+          "note": "RIVO"
+        },
+        {
+          "title": "PROSPA",
+          "date": "2026-08-24",
+          "url": "https://www.santannamykonos.com/vibing-sky/prospa-24-august-2026/",
+          "note": "BEN STERLING"
+        },
+        {
+          "title": "VINTAGE CULTURE",
+          "date": "2026-08-29",
+          "url": "https://www.santannamykonos.com/vibing-sky/vintage-culture-29-august-2026/"
+        }
+      ]
+    },
+    "CNS-004": {
+      "source": "https://carltoncannes.com/restaurants-bars/carlton-beach-club/",
+      "engine": "fetch",
+      "events": [
+        {
+          "title": "Fermeture exceptionnelle du à 15h jusqu’au 30 septembre inclus",
+          "date": "2026-09-24",
+          "url": "https://carltoncannes.com/restaurants-bars/carlton-beach-club/"
+        }
+      ]
+    },
+    "HKT-005": {
+      "source": "https://www.illuzionphuket.com/",
+      "engine": "fetch",
+      "events": [
+        {
+          "title": "Upcoming Upcoming",
+          "date": "2026-08-21",
+          "url": "https://www.illuzionphuket.com/"
+        },
+        {
+          "title": "Aug 21",
+          "date": "2026-08-21",
+          "url": "https://www.illuzionphuket.com/"
+        },
+        {
+          "title": "SAM COLLINS",
+          "date": "2026-08-22",
+          "url": "https://www.illuzionphuket.com/event/sam-collins-22-august-2026/",
+          "note": "Illuzion"
+        },
+        {
+          "title": "Aug 22",
+          "date": "2026-08-22",
+          "url": "https://www.illuzionphuket.com/"
+        },
+        {
+          "title": "PLASTIK FVNK",
+          "date": "2026-09-05",
+          "url": "https://www.illuzionphuket.com/event/plastik-fvnk-5-sep-2026/",
+          "note": "Illuzion"
+        },
+        {
+          "title": "Sep 5",
+          "date": "2026-09-05",
+          "url": "https://www.illuzionphuket.com/"
+        }
+      ]
+    },
+    "BAL-001": {
+      "source": "https://finnsbeachclub.com/",
+      "engine": "fetch",
+      "events": [
+        {
+          "title": "New Year's Eve Festival 2026",
+          "date": "2026-12-30",
+          "url": "https://finnsbeachclub.com/events/nye-festival-2026/",
+          "note": "Get ready for the biggest New Year's Eve bash Bali has ever seen! FINNS Beach Club is pulling out all the stops for NYE 2026, with a lineup of amazing artists i"
+        }
+      ]
+    },
+    "BCN-002": {
+      "source": "https://shoko.biz/",
+      "engine": "fetch",
+      "events": [
+        {
+          "title": "DEMON TIME - Friday,",
+          "date": "2026-09-11",
+          "url": "https://shoko.biz/"
+        },
+        {
+          "title": "AMENAZYY - LA RESIDENCIA - Thursday,",
+          "date": "2026-09-17",
+          "url": "https://shoko.biz/"
+        },
+        {
+          "title": "DEMON TIME - Friday,",
+          "date": "2026-09-18",
+          "url": "https://shoko.biz/"
+        }
+      ]
+    },
+    "BCN-005": {
+      "source": "https://www.marriott.com/en-us/hotels/bcnwh-w-barcelona/dining/",
+      "engine": "firecrawl",
+      "events": [
+        {
+          "title": "SALT Beach Club",
+          "url": "https://www.saltbarcelona.com/beach-club",
+          "note": "Reopening in Spring 2026"
+        },
+        {
+          "title": "NOXE",
+          "url": "https://www.noxebarcelona.com/",
+          "note": "Everyday 6:00 PM-2:00 AM"
+        },
+        {
+          "title": "FIRE",
+          "url": "https://www.firebarcelona.com/menu",
+          "note": "Everyday 1:00 PM-4:00 PM, 7:00 PM-12:00 AM"
+        },
+        {
+          "title": "COYA",
+          "url": "https://coyarestaurant.com/barcelona/en/home",
+          "note": "Tue-Wed 7:00 PM-1:30 AM, Thu-Sat 7:00 PM-2:00 AM, Mon, Sun Closed"
+        },
+        {
+          "title": "WET DECK",
+          "url": "https://www.marriott.com/en-us/hotels/bcnwh-w-barcelona/dining/",
+          "note": "Everyday 10:00 AM-12:00 AM"
+        },
+        {
+          "title": "W Lounge",
+          "url": "https://www.morecravings.com/en/venues/w-lounge-w-bar",
+          "note": "Mon-Thu 9:00 AM-1:00 AM, Fri-Sun 9:00 AM-2:00 AM"
+        }
+      ]
+    },
+    "NYC-002": {
+      "source": "https://nebulanewyork.com/",
+      "engine": "firecrawl",
+      "events": [
+        {
+          "title": "ROROLL",
+          "date": "2026-08-21",
+          "url": "https://speakeasygo.com/Nebula-New-York/ROROLL?eid=EVE-26UUIA",
+          "note": "11:00 PM"
+        },
+        {
+          "title": "NOME.",
+          "date": "2026-08-22",
+          "url": "https://speakeasygo.com/Nebula-New-York/NOME.?eid=EVE-3P526J",
+          "note": "11:00 PM"
+        },
+        {
+          "title": "Nebula Tuesdays",
+          "date": "2026-08-25",
+          "url": "https://speakeasygo.com/Nebula-New-York/Nebula-Tuesdays?eid=EVE-FY68PZ",
+          "note": "11:00 PM"
+        },
+        {
+          "title": "RICH DIETZ",
+          "date": "2026-08-28",
+          "url": "https://speakeasygo.com/Nebula-New-York/RICH-DIETZ?eid=EVE-8JYNNP",
+          "note": "11:00 PM"
+        }
+      ]
+    },
+    "ASP-003": {
+      "source": "https://bellyupaspen.com/",
+      "engine": "firecrawl",
+      "events": [
+        {
+          "title": "Goth Babe",
+          "date": "2026-08-20",
+          "url": "https://bellyupaspen.com/events/goth-babe-3/"
+        },
+        {
+          "title": "LOCALS NIGHT – Natti b2b Takki",
+          "date": "2026-08-22",
+          "url": "https://bellyupaspen.com/events/locals-night-natti-b2b-takki/"
+        },
+        {
+          "title": "Monster Rally",
+          "date": "2026-08-27",
+          "url": "https://bellyupaspen.com/events/monster-rally/"
+        },
+        {
+          "title": "The Knocks",
+          "date": "2026-08-28",
+          "url": "https://bellyupaspen.com/events/the-knocks-2/"
+        },
+        {
+          "title": "The Wailers",
+          "date": "2026-08-29",
+          "url": "https://bellyupaspen.com/events/the-wailers-3/"
+        },
+        {
+          "title": "An Evening With Black Flag",
+          "date": "2026-09-03",
+          "url": "https://bellyupaspen.com/events/black-flag/"
+        },
+        {
+          "title": "An Evening with Shakedown Street",
+          "date": "2026-09-04",
+          "url": "https://bellyupaspen.com/events/an-evening-with-shakedown-street-6/"
+        },
+        {
+          "title": "Buffalo Traffic Jam",
+          "date": "2026-09-05",
+          "url": "https://bellyupaspen.com/events/buffalo-traffic-jam-2/"
+        },
+        {
+          "title": "Chali 2na & Cut Chemist",
+          "date": "2026-09-10",
+          "url": "https://bellyupaspen.com/events/chali-2na-cut-chemist/"
+        },
+        {
+          "title": "Colby Acuff",
+          "date": "2026-09-11",
+          "url": "https://bellyupaspen.com/events/colby-acuff/"
+        },
+        {
+          "title": "Lupe Fiasco",
+          "date": "2026-09-16",
+          "url": "https://bellyupaspen.com/events/lupe-fiasco/"
+        },
+        {
+          "title": "Michigander",
+          "date": "2026-09-29",
+          "url": "https://bellyupaspen.com/events/michigander/"
+        },
+        {
+          "title": "Hans Williams",
+          "date": "2026-10-04",
+          "url": "https://bellyupaspen.com/events/hans-williams/"
+        },
+        {
+          "title": "49 Winchester",
+          "date": "2026-10-08",
+          "url": "https://bellyupaspen.com/events/49-winchester/"
+        },
+        {
+          "title": "Beach Weather",
+          "date": "2026-11-07",
+          "url": "https://bellyupaspen.com/events/beach-weather/"
+        },
+        {
+          "title": "Big Richard – Pet Tour 2026",
+          "date": "2026-12-03",
+          "url": "https://bellyupaspen.com/events/big-richard-pet-tour-2026/"
+        },
+        {
+          "title": "Opiuo",
+          "date": "2026-12-12",
+          "url": "https://bellyupaspen.com/events/opiuo-2/"
+        }
+      ]
+    },
+    "LAS-003": {
+      "source": "https://taogroup.com/venues/marquee-nightclub-las-vegas/vip/",
+      "engine": "firecrawl",
+      "events": [
+        {
+          "title": "Unleash Luxury and Exclusivity: Indulge in the VIP Experience at JEWEL Nightclub",
+          "url": "https://taogroup.com/venues/jewel-nightclub/events/"
         }
       ]
     },
@@ -254,43 +845,172 @@
         }
       ]
     },
-    "IBZ-004": {
-      "source": "https://pacha.com/vip-events",
+    "MIA-001": {
+      "source": "https://www.livnightclub.com/miami/events/",
+      "engine": "firecrawl",
       "events": [
         {
-          "title": "Marco Carola presents Music On",
+          "title": "Mentirosa Thursday",
+          "date": "2026-08-20",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260820/mentirosa-thursday/",
+          "note": "LIV Nightclub Miami 11:30pm"
+        },
+        {
+          "title": "Quavo",
           "date": "2026-08-21",
-          "url": "https://pacha.com/event/marco-carola-presents-music-on-21-08-2026"
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260821/quavo/",
+          "note": "LIV Nightclub Miami 11:30pm"
         },
         {
-          "title": "Roger Sanchez | Flower Power",
+          "title": "Loud Luxury",
           "date": "2026-08-22",
-          "url": "https://pacha.com/event/roger-sanchez--flower-power-22-08-2026"
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260822/loud-luxury/",
+          "note": "LIV Nightclub Miami 11:30pm"
         },
         {
-          "title": "Solomun+1",
+          "title": "Boston Richey",
           "date": "2026-08-23",
-          "url": "https://pacha.com/event/solomun1-23-08-2026"
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260823/boston-richey/",
+          "note": "LIV Nightclub Miami 11:30pm"
         },
         {
-          "title": "Sonny Fodera",
-          "date": "2026-08-24",
-          "url": "https://pacha.com/event/sonny-fodera-24-08-20261"
+          "title": "Mentirosa Thursday",
+          "date": "2026-08-27",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260827/mentirosa-thursday/",
+          "note": "LIV Nightclub Miami 11:30pm"
         },
         {
-          "title": "GORDO | Taraka",
-          "date": "2026-08-25",
-          "url": "https://pacha.com/event/gordo--taraka-25-08-2026"
+          "title": "French Montana",
+          "date": "2026-08-28",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260828/french-montana/",
+          "note": "LIV Nightclub Miami 11:30pm"
         },
         {
-          "title": "Mau P | Baddest Behaviour",
-          "date": "2026-08-26",
-          "url": "https://pacha.com/event/mau-p--baddest-behaviour-26-08-2026"
-        },
-        {
-          "title": "Flower Power Closing Party",
+          "title": "Two Friends w. Arden Jones",
           "date": "2026-08-29",
-          "url": "https://pacha.com/event/roger-sanchez--flower-power---closing-party-29-08-2026"
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260829/two-friends-w-arden-jones/",
+          "note": "LIV Nightclub Miami 11:30pm"
+        },
+        {
+          "title": "Skilla Baby",
+          "date": "2026-08-30",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260830/skilla-baby/",
+          "note": "LIV Nightclub Miami 11:30pm"
+        },
+        {
+          "title": "Mentirosa Thursday",
+          "date": "2026-09-03",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260903/mentirosa-thursday/",
+          "note": "LIV Nightclub Miami 11:30pm"
+        },
+        {
+          "title": "Disco Lines",
+          "date": "2026-09-05",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260905/disco-lines/",
+          "note": "LIV Nightclub Miami 11:30pm"
+        },
+        {
+          "title": "LIV ON SUNDAY",
+          "date": "2026-09-06",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260906/liv-on-sunday/",
+          "note": "LIV Nightclub Miami 11:30pm"
+        },
+        {
+          "title": "Mentirosa Thursday",
+          "date": "2026-09-10",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260910/mentirosa-thursday/",
+          "note": "LIV Nightclub Miami 11:30pm"
+        },
+        {
+          "title": "LIV ON SUNDAY",
+          "date": "2026-09-13",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260913/liv-on-sunday/",
+          "note": "LIV Nightclub Miami 11:30pm"
+        },
+        {
+          "title": "Mentirosa Thursday",
+          "date": "2026-09-17",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260917/mentirosa-thursday/",
+          "note": "LIV Nightclub Miami 11:30pm"
+        },
+        {
+          "title": "Korolova",
+          "date": "2026-09-18",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260918/korolova/",
+          "note": "LIV Nightclub Miami 11:30pm"
+        },
+        {
+          "title": "Matroda",
+          "date": "2026-09-19",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260919/matroda/",
+          "note": "LIV Nightclub Miami 11:30pm"
+        },
+        {
+          "title": "LIV ON SUNDAY",
+          "date": "2026-09-20",
+          "url": "https://www.livnightclub.com/miami/event/EVE112156200020260920/liv-on-sunday/},{",
+          "note": "LIV Nightclub Miami 11:30pm"
+        }
+      ]
+    },
+    "DXB-002": {
+      "source": "https://obeachdubai.com/",
+      "engine": "firecrawl",
+      "events": [
+        {
+          "title": "Mondays",
+          "url": "https://obeachdubai.com/web-stories/mondays/"
+        },
+        {
+          "title": "Thursdays",
+          "url": "https://obeachdubai.com/web-stories/thrusdays/"
+        },
+        {
+          "title": "Fridays",
+          "url": "https://obeachdubai.com/web-stories/fridays/"
+        },
+        {
+          "title": "Saturdays",
+          "url": "https://obeachdubai.com/web-stories/1608/"
+        },
+        {
+          "title": "Sundays",
+          "url": "https://obeachdubai.com/web-stories/sundays/"
+        }
+      ]
+    },
+    "MCO-001": {
+      "source": "https://www.montecarlosbm.com/en/nightlife/jimmyz-monte-carlo",
+      "engine": "firecrawl",
+      "events": [
+        {
+          "title": "Jimmy’z Monte-Carlo 2024 line-up",
+          "url": "https://www.montecarlosbm.com/en/agenda/programme-jimmyz-monte-carlo-season",
+          "note": "Summer 2024 events"
+        }
+      ]
+    },
+    "HKT-001": {
+      "source": "https://phuket.cafedelmar.com/",
+      "engine": "firecrawl",
+      "events": [
+        {
+          "title": "SOMMA",
+          "date": "2026-08-21",
+          "url": "https://phuket.cafedelmar.com/events/somma-cafe-del-mar-phuket-21-aug",
+          "note": "10:00 pm"
+        },
+        {
+          "title": "LONNER",
+          "date": "2026-08-22",
+          "url": "https://phuket.cafedelmar.com/events/lonner-22-aug-2026",
+          "note": "10:00 pm"
+        },
+        {
+          "title": "ZOO DEL MAR: DAYTIME PARTY",
+          "date": "2026-08-23",
+          "url": "https://phuket.cafedelmar.com/events/zoo-del-mar-23-august",
+          "note": "1:00 pm"
         }
       ]
     }

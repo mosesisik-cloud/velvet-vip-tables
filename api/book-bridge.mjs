@@ -24,6 +24,10 @@ function readJson(name) {
 function hostOf(url) {
   try { return new URL(url).host.replace(/^www\./, ""); } catch { return ""; }
 }
+function todayLocal() {
+  const n = new Date();
+  return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
+}
 
 const RESELLER = /discotech|clubbookers|ticketsibiza|tasteibiza|nocovernightclubs|lasvegasnightclubs|miamiviptables|clubtickets|viator|getyourguide/i;
 
@@ -68,7 +72,7 @@ export function venueInventory(venueId) {
   const id = String(venueId || "");
   const eventsFile = readJson("venue-events.json") || {};
   const rec = eventsFile.venues && eventsFile.venues[id] ? eventsFile.venues[id] : {};
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayLocal();
   const nights = (Array.isArray(rec.events) ? rec.events : [])
     .filter((e) => e && e.title && (!e.date || String(e.date) >= today))
     .slice(0, 40)
@@ -79,6 +83,14 @@ export function venueInventory(venueId) {
       url: /^https:\/\//i.test(e.url || "") && !RESELLER.test(e.url) ? e.url : "",
     }));
   const facts = loadFactsFile()?.venues?.[id] || {};
+  const menus = readJson("venue-menus.json") || {};
+  const menu = menus.venues && menus.venues[id] ? menus.venues[id] : null;
+  const menuItems = Array.isArray(menu?.items) ? menu.items.slice(0, 40).map((it) => ({
+    name: String(it.name || "").slice(0, 80),
+    price: String(it.price || "").slice(0, 40),
+    amount: Number.isFinite(Number(it.amount)) ? Number(it.amount) : null,
+    section: String(it.section || "").slice(0, 40),
+  })).filter((it) => it.name) : [];
   return {
     nights,
     source: String(rec.source || ""),
@@ -90,6 +102,48 @@ export function venueInventory(venueId) {
     season: String(facts.season || "").slice(0, 80),
     email: String(facts.email || "").trim(),
     phone: String(facts.phone || "").trim(),
+    menu: {
+      source: String(menu?.source || ""),
+      currency: String(menu?.currency || ""),
+      items: menuItems,
+    },
+  };
+}
+
+export function destInventory(code, date) {
+  const dests = [...(readJson("destinations.json") || []), ...(readJson("extra-destinations.json") || [])];
+  const d = dests.find((x) => String(x.code).toLowerCase() === String(code || "").toLowerCase());
+  if (!d) return null;
+  const today = todayLocal();
+  const want = /^\d{4}-\d{2}-\d{2}$/.test(date || "") ? date : today;
+  const venues = (readJson("venues.json") || []).filter((v) => v && v.listed !== false && (v.destination_code === d.code || v.destination === d.name));
+  const rows = [];
+  let withCal = 0;
+  for (const v of venues) {
+    const inv = venueInventory(v.venue_id);
+    const hasCal = (inv.nights || []).some((n) => n.date);
+    if (hasCal) withCal += 1;
+    const nights = (inv.nights || []).filter((n) => n.date === want);
+    if (!nights.length) continue;
+    const off = officialBooking(v.venue_id);
+    rows.push({
+      venueId: v.venue_id,
+      name: v.name,
+      category: v.category || "",
+      officialUrl: off?.url || "",
+      engine: off ? engineOf(off.url) : "official-site",
+      nights,
+      menuItems: (inv.menu?.items || []).length,
+    });
+  }
+  return {
+    dest: d.code,
+    name: d.name,
+    date: want,
+    venues: rows,
+    catalog: venues.length,
+    withCalendar: withCal,
+    fetched: String((readJson("venue-events.json") || {}).fetched || "").slice(0, 10),
   };
 }
 

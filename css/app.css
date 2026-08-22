@@ -2105,12 +2105,43 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   background: #111;
   display: block;
 }
+.city-avail { margin: 28px 0 8px; }
+.avail-chips {
+  display: flex; gap: 8px; overflow-x: auto; padding: 6px 0 12px;
+  -webkit-overflow-scrolling: touch;
+}
+.avail-chip {
+  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 12px; border-radius: 999px; border: 1px solid var(--border);
+  background: var(--bg-card); color: var(--text); font-weight: 600; font-size: 13px;
+  cursor: pointer; min-height: 44px;
+}
+.avail-chip.on { border-color: var(--gold); background: var(--gold-dim); color: var(--gold-bright); }
+.avail-n {
+  min-width: 18px; height: 18px; padding: 0 5px; border-radius: 999px;
+  background: var(--gold); color: #111; font-size: 11px; line-height: 18px; text-align: center;
+}
+.avail-list { display: flex; flex-direction: column; gap: 8px; margin: 8px 0 12px; }
+.avail-row {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--bg-card);
+}
+.avail-name { color: var(--text); font-weight: 700; }
+.avail-nights { color: var(--text-dim); font-size: 13px; margin-top: 2px; }
+.menu-list { list-style: none; margin: 10px 0 0; padding: 0; }
+.menu-row {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 8px 0; border-bottom: 1px solid var(--border-soft); font-size: 14px;
+}
+.menu-name em { color: var(--text-faint); font-style: normal; font-size: 12px; }
+.menu-price { color: var(--gold-bright); font-weight: 650; white-space: nowrap; }
 .bridge-desk {
   display: flex; flex-direction: column; gap: 10px;
   margin: 16px 0 8px; max-width: 420px;
 }
 .bridge-desk label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--text-dim); }
-.bridge-desk input {
+.bridge-desk input, .bridge-desk select {
   padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
   background: var(--bg-elev); color: var(--text); font-size: 15px;
 }

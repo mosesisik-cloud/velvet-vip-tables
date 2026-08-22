@@ -431,6 +431,15 @@ async function runApi() {
       fail("bridge-inventory", JSON.stringify(brMeta.json.adapter?.inventory).slice(0, 240));
     } else ok("bridge-adapter", brMeta.json.adapter.host + " nights=" + brMeta.json.adapter.inventory.nights.length);
 
+    const inv = await req(base, "GET", "/inventory?dest=IBZ");
+    if (inv.status !== 200 || inv.json.dest !== "IBZ" || !Array.isArray(inv.json.venues)) {
+      fail("city-inventory", JSON.stringify(inv.json).slice(0, 220));
+    } else ok("city-inventory", inv.json.venues.length + " Ibiza rows on " + inv.json.date);
+
+    const menus = await req(base, "GET", "/menus");
+    if (menus.status !== 200 || !menus.json.venues) fail("menus", JSON.stringify(menus.json).slice(0, 160));
+    else ok("menus", Object.keys(menus.json.venues).length + " printed menus");
+
     const brNone = await req(base, "GET", "/book/bridge/NOPE-000");
     if (brNone.status !== 404) fail("bridge-missing", "expected 404 got " + brNone.status);
     else ok("bridge-missing", "no booking site");
