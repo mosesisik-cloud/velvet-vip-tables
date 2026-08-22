@@ -1088,7 +1088,18 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .ob-overlay-media.img-fail { display: none; }
 .ob { max-width: 880px; width: 100%; text-align: center; position: relative; z-index: 1; }
 .ob:focus { outline: none; }
-.ob-close { position: absolute; top: -18px; right: -4px; }
+.ob-brand { pointer-events: none; }
+.ob-overlay-credit { pointer-events: none; }
+.ob-close {
+  position: fixed;
+  top: calc(10px + env(safe-area-inset-top, 0px));
+  right: 12px;
+  z-index: 330;
+  margin: 0;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  pointer-events: auto;
+}
 
 /* Lyxig entré: VELVET-märke + guldlinje, allt stiger in mjukt i sekvens */
 @keyframes obRise {
@@ -1206,7 +1217,7 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
     padding: calc(28px + env(safe-area-inset-top, 0px)) 16px
              calc(40px + env(safe-area-inset-bottom, 0px));
   }
-  .ob-close { top: -10px; right: 0; }
+  .ob-close { top: calc(8px + env(safe-area-inset-top, 0px)); right: 10px; }
   .ob-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
   .ob-card { padding: 0 13px 12px; min-height: 44px; }
   .ob-cover { height: 92px; margin: 0 -13px 10px; }

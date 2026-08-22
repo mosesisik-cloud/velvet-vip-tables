@@ -1,5 +1,5 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=79";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=80";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo } from "./passport-ocr.js";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload } from "./face-idv.js";
@@ -3546,6 +3546,7 @@ function openOnboarding(opts = {}) {
         <div class="ob-overlay-media" aria-hidden="true">${coverImgHTML(entryCover && entryCover.url)}</div>
         ${entryCover && entryCover.v ? `<div class="ob-overlay-credit">${photoAttrHTML(entryCover.v)}</div>` : ""}
         <div class="ob" role="dialog" aria-modal="true" aria-label="${esc(phase === "lang" ? t("chooseLang") : phase === "connect" ? t("connectTitle") : t("loginTitle"))}" tabindex="-1">
+          <button class="modal-close ob-close" id="ob-close" aria-label="${esc(t("close"))}">✕</button>
           <div class="ob-brand" aria-hidden="true">VELVET<span class="logo-dot">.</span></div>
           <div class="ob-brand-rule" aria-hidden="true"></div>
           ${phase === "connect" ? `
@@ -3612,6 +3613,8 @@ function openOnboarding(opts = {}) {
           el.disabled = false;
         });
       });
+      const closeLang = $("#ob-close");
+      if (closeLang) closeLang.addEventListener("click", () => { if (dismissable) close(); else skip(); });
       const skipA = $("#ob-skip-auth");
       if (skipA) skipA.addEventListener("click", () => { phase = "country"; render(); });
       const backC = $("#ob-connect-back");
@@ -3648,7 +3651,7 @@ function openOnboarding(opts = {}) {
       <div class="ob-overlay-media" aria-hidden="true">${coverImgHTML(entryCover && entryCover.url)}</div>
       ${entryCover && entryCover.v ? `<div class="ob-overlay-credit">${photoAttrHTML(entryCover.v)}</div>` : ""}
       <div class="ob" role="dialog" aria-modal="true" aria-label="${esc(dlgLabel)}" tabindex="-1">
-        ${dismissable ? `<button class="modal-close ob-close" id="ob-close" aria-label="${esc(t("close"))}">✕</button>` : ""}
+        <button class="modal-close ob-close" id="ob-close" aria-label="${esc(t("close"))}">✕</button>
         <div class="ob-brand" aria-hidden="true">VELVET<span class="logo-dot">.</span></div>
         <div class="ob-brand-rule" aria-hidden="true"></div>
         <div class="ob-kicker">${esc(t("tagline"))}</div>
@@ -3725,7 +3728,7 @@ function openOnboarding(opts = {}) {
     const geoDismiss = $("#ob-geo-dismiss");
     if (geoDismiss) geoDismiss.addEventListener("click", () => { geoState = "idle"; render("#ob-geo-btn"); });
     const x = $("#ob-close");
-    if (x) x.addEventListener("click", () => close());
+    if (x) x.addEventListener("click", () => { if (dismissable) close(); else skip(); });
     if (dismissable) {
       $("#ob-overlay").addEventListener("click", (e) => { if (e.target.id === "ob-overlay") close(); });
     }
@@ -6167,7 +6170,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=79", { updateViaCache: "none" })
+      .register("sw.js?v=80", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
