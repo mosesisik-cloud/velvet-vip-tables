@@ -4499,7 +4499,7 @@ function openSearch() {
         <div class="search-head">
           <input type="search" id="search-q" placeholder="${esc(t("searchPh"))}" autocomplete="off"
             role="combobox" aria-autocomplete="list" aria-controls="search-hits" aria-expanded="true" aria-activedescendant="" aria-label="${esc(t("navSearch"))}">
-          <button type="button" class="search-close" id="search-close" aria-label="${esc(t("navMenuClose"))}" title="${esc(t("navMenuClose"))}">✕</button>
+          <button type="button" class="search-close" id="search-close" aria-label="${esc(t("close"))}" title="${esc(t("close"))}">✕</button>
         </div>
         <div class="sr-only" id="search-status" role="status" aria-live="polite"></div>
         <div class="search-hits" id="search-hits" role="listbox"></div>
