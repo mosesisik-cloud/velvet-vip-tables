@@ -1,5 +1,5 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=78";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=79";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo } from "./passport-ocr.js";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload } from "./face-idv.js";
@@ -1468,6 +1468,7 @@ function pips(n) {
 
 // ---------- Views ----------
 function renderHome() {
+  try {
   const pubD = publicDestinations();
   const pubV = publicVenues();
   const tier1 = pubD.filter((d) => d.tier === "Tier 1");
@@ -1559,6 +1560,19 @@ function renderHome() {
     });
   });
   initHeroVideo();
+  } catch (err) {
+    console.error("VELVET: startsidan", err);
+    view().innerHTML = `
+    <section class="hero">
+      <div class="hero-kicker">VELVET</div>
+      <h1>${esc(t("heroTitle1"))}<br><em>${esc(t("heroTitle2"))}</em></h1>
+      <p>${esc(t("heroP"))}</p>
+      <div class="hero-cta">
+        <a class="btn btn-gold" href="#/venues" data-nav>${esc(t("explore"))}</a>
+        <a class="btn btn-ghost" href="#/destinations" data-nav>${esc(t("seeDest"))}</a>
+      </div>
+    </section>`;
+  }
 }
 function paintVibeRail() {
   const host = $("#vibe-rail");
@@ -6153,7 +6167,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=78", { updateViaCache: "none" })
+      .register("sw.js?v=79", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

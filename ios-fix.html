@@ -47,14 +47,18 @@
       await Promise.all(ks.filter(function (k) { return String(k).indexOf("velvet") === 0; }).map(function (k) { return caches.delete(k); }));
     }
   }
-  wipe().then(function () {
-    document.getElementById("title").textContent = "Klar";
-    document.getElementById("msg").textContent = "Cachen är rensad. Öppnar appen.";
-    location.replace("https://b2b.bakemyday.se/velvet/?fresh=" + Date.now());
-  }).catch(function () {
-    document.getElementById("title").textContent = "Öppna appen härifrån";
-    document.getElementById("msg").textContent = "Tryck på knappen nedan om den inte öppnas själv.";
-  });
+  var gone = false;
+  function go() {
+    if (gone) return;
+    gone = true;
+    try {
+      document.getElementById("title").textContent = "Klar";
+      document.getElementById("msg").textContent = "Öppnar startsidan.";
+    } catch (e) {}
+    location.replace("https://b2b.bakemyday.se/velvet/#/");
+  }
+  setTimeout(go, 900);
+  wipe().then(go).catch(go);
 })();
 </script>
 </body>
