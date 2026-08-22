@@ -1,5 +1,5 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=74";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=75";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo } from "./passport-ocr.js";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload } from "./face-idv.js";
@@ -5456,8 +5456,11 @@ async function renderBookSite(id) {
   const adapter = live?.adapter || {
     officialUrl: b.url, host: b.host, kind: b.kind, label: b.label, engine: "official-site", mode: "handoff",
   };
-  const kindLabel = adapter.kind === "vip" ? t("bookKindVip") : adapter.kind === "events" ? t("bookKindEvents") : t("bookKindSite");
-  const engineName = adapter.engine && adapter.engine !== "official-site" ? String(adapter.engine) : "";
+  const kindLabel = t("bridgeTitle");
+  const engineName = adapter.engineLabel || "";
+  const enginePhrase = engineName || t("bridgeAnySystem");
+  const openHref = adapter.widgetUrl || adapter.officialUrl || b.url;
+  const openLabel = engineName ? t("bookOnSiteOpenEngine").replace("{engine}", engineName) : t("bookOnSiteOpen");
   const young = venueTooYoung(v);
   const tooYoung = live?.error === "too_young" || !!young;
   const needLock = !me || live?.error === "idv_required" || live?.error === "card_required" || tooYoung || !isPayingMember();
@@ -5484,7 +5487,7 @@ async function renderBookSite(id) {
       <div class="book-site-copy">
         <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)}${engineName ? ` · ${esc(engineName)}` : ""}${host ? ` · ${esc(host)}` : ""}</p>
         <h1>${esc(v.name)}</h1>
-        <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(t("bridgeSub").replace("{name}", v.name))}</p>
+        <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(t("bridgeSub").replace("{name}", v.name).replace("{engine}", enginePhrase))}</p>
         ${adapter.vipHow ? `<p class="events-meta">${esc(t("bridgeReadLive"))}: ${esc(adapter.vipHow)}</p>` : `<p class="events-meta">${esc(t("bridgeReadLive"))}</p>`}
         <div class="book-desk-card">
         ${needLock ? (
@@ -5528,7 +5531,7 @@ async function renderBookSite(id) {
             </button>`).join("")}
         </div>` : `<p class="events-meta">${esc(t("bridgeNoNights"))}</p>`}
         <div class="book-site-actions">
-          ${(adapter.officialUrl || b.url) ? `<a class="btn btn-ghost" id="bs-open" href="${esc(adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bookOnSiteOpen"))}${host ? ` · ${esc(host)}` : ""}</a>` : ""}
+          ${openHref ? `<a class="btn btn-ghost" id="bs-open" href="${esc(openHref)}" target="_blank" rel="noopener noreferrer">${esc(openLabel)}</a>` : ""}
           <button class="btn btn-ghost" type="button" id="bs-velvet">${esc(t("sendRequest"))}</button>
           ${tooYoung ? "" : `<a class="btn btn-ghost" href="${promoterHref(v.venue_id)}" data-nav>${esc(isPayingMember() ? t("chatPromoter") : t("verifiedPerkPromoter"))}</a>`}
         </div>
@@ -5552,7 +5555,7 @@ async function renderBookSite(id) {
       <p class="idv-badge ok">${esc(t("bridgeStatus"))}</p>
       <pre class="bridge-pre">${esc(bridge.packet || "")}</pre>
       <div class="book-site-actions" style="margin-top:12px">
-        ${(bridge.handoffUrl || adapter.officialUrl || b.url) ? `<a class="btn btn-gold" href="${esc(bridge.handoffUrl || adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bridgeOpen"))} ↗</a>` : ""}
+        ${(bridge.handoffUrl || adapter.widgetUrl || adapter.officialUrl || b.url) ? `<a class="btn btn-gold" href="${esc(bridge.handoffUrl || adapter.widgetUrl || adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bridgeOpen"))} ↗</a>` : ""}
         <button type="button" class="btn btn-ghost" id="br-copy">${esc(t("bridgeCopy"))}</button>
         ${mail ? `<a class="btn btn-ghost" href="${esc(mail)}">${esc(t("bridgeClubMail"))}</a>` : ""}
         ${bridge.payUrl || adapter.payUrl ? `<a class="btn btn-ghost" href="${esc(bridge.payUrl || adapter.payUrl)}" target="_blank" rel="noopener">${esc(t("clubHasPay"))} ↗</a>` : ""}
@@ -5972,7 +5975,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=74", { updateViaCache: "none" })
+      .register("sw.js?v=75", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

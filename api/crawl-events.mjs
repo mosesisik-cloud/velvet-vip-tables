@@ -7,7 +7,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { engineOf } from "./book-bridge.mjs";
+import { engineOf, engineFromBlob } from "./book-bridge.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dir, "..");
@@ -19,7 +19,7 @@ const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const UA = "VELVET-daily-events/1.0 (+https://b2b.bakemyday.se/velvet/)";
 const RESELLER = /discotech|clubbookers|ticketsibiza|tasteibiza|nocovernightclubs|lasvegasnightclubs|miamiviptables|clubtickets|viator|getyourguide/i;
 const BOOK_PATH = /\/(vip-tables?|vip-events?|vip\/tables|bottle-service|reservations?|book-a-table|book\/table|tables\/book|cabana|daybed)/i;
-const ENGINE_HOST = /sevenrooms\.com|covermanager\.com|opentable\.com|resy\.com|exploretock|tock\.com|designmynight\.com|quandoo\.|formitable\.|eat-app\.com/;
+const ENGINE_HOST = /sevenrooms\.com|covermanager\.com|opentable\.com|resy\.com|exploretock|tock\.com|designmynight\.com|quandoo\.|formitable\.|eat-app\.com|tablecheck\.com|zenchef\.com|tripleseat\.com|fourvenues\.com/;
 const SKIP_TITLE = /^(home|meny|menu|book now|book a table|vip tables?|contact|kontakt|privacy|cookies?|instagram|facebook|tiktok|newsletter|sign up|log in|follow us)$/i;
 const MAX_FIRECRAWL = Number(process.env.VELVET_FIRECRAWL_MAX || 48);
 const FC_URL = "https://api.firecrawl.dev/v2/scrape";
@@ -427,6 +427,15 @@ function discoverBooking(blob, pageUrl, venueUrl) {
   let best = null;
   let payUrl = "";
   const payOnPage = pageHasPay(blob);
+  const fromHtml = engineFromBlob(blob, pageUrl);
+  if (fromHtml.engine !== "official-site" && fromHtml.engine !== "reseller") {
+    best = {
+      url: fromHtml.widgetUrl || pageUrl,
+      kind: "vip",
+      engine: fromHtml.engine,
+      label: fromHtml.engine === "sevenrooms" ? "SevenRooms" : "VIP Tables",
+    };
+  }
   for (const u of collectHrefs(blob, pageUrl)) {
     if (RESELLER.test(u) || /instagram|facebook|tiktok|snapchat|youtube|google\.|apple\.com/i.test(u)) continue;
     if (!payUrl && PAY_HREF.test(u)) payUrl = u.split("#")[0];
@@ -463,17 +472,23 @@ function mergeBookingHint(booking, v, hint) {
   if (!hint) return false;
   const cur = booking[v.venue_id] || {};
   let changed = false;
+  if (hint.engine && hint.engine !== "official-site" && hint.engine !== cur.engine) {
+    booking[v.venue_id] = { ...cur, ...booking[v.venue_id], engine: hint.engine, name: cur.name || v.name };
+    if (hint.url && engineOf(hint.url) === hint.engine) booking[v.venue_id].widgetUrl = hint.url;
+    changed = true;
+  }
   if (hint.url && /^https:\/\//i.test(hint.url)) {
     const locked = cur.kind === "vip" || cur.kind === "events";
     if (!locked || !cur.url) {
       if (cur.url !== hint.url || cur.kind !== hint.kind) {
         booking[v.venue_id] = {
           ...cur,
+          ...booking[v.venue_id],
           url: hint.url,
           kind: hint.kind || cur.kind || "vip",
           label: hint.label || cur.label || "",
           name: cur.name || v.name,
-          engine: hint.engine || cur.engine || "",
+          engine: hint.engine || cur.engine || booking[v.venue_id]?.engine || "",
           discovered: todayISO(),
         };
         changed = true;

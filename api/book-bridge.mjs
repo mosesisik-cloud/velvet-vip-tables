@@ -31,6 +31,45 @@ function todayLocal() {
 
 const RESELLER = /discotech|clubbookers|ticketsibiza|tasteibiza|nocovernightclubs|lasvegasnightclubs|miamiviptables|clubtickets|viator|getyourguide/i;
 
+const ENGINE_LABEL = {
+  sevenrooms: "SevenRooms",
+  covermanager: "CoverManager",
+  opentable: "OpenTable",
+  resy: "Resy",
+  tock: "Tock",
+  designmynight: "DesignMyNight",
+  tablecheck: "TableCheck",
+  zenchef: "Zenchef",
+  formitable: "Formitable",
+  quandoo: "Quandoo",
+  eatapp: "Eat App",
+  tripleseat: "TripleSeat",
+  fourvenues: "Fourvenues",
+  widget: "",
+  reseller: "",
+  "official-site": "",
+};
+
+const ENGINE_URL_RE = [
+  ["sevenrooms", /https?:\/\/(?:www\.)?sevenrooms\.com\/[^\s"'<>]+/i],
+  ["covermanager", /https?:\/\/[^\s"'<>]*covermanager\.com[^\s"'<>]*/i],
+  ["opentable", /https?:\/\/[^\s"'<>]*opentable\.com[^\s"'<>]*/i],
+  ["resy", /https?:\/\/[^\s"'<>]*resy\.com[^\s"'<>]*/i],
+  ["tock", /https?:\/\/[^\s"'<>]*(?:exploretock|tock)\.com[^\s"'<>]*/i],
+  ["designmynight", /https?:\/\/[^\s"'<>]*designmynight\.com[^\s"'<>]*/i],
+  ["tablecheck", /https?:\/\/[^\s"'<>]*tablecheck\.com[^\s"'<>]*/i],
+  ["zenchef", /https?:\/\/[^\s"'<>]*zenchef\.com[^\s"'<>]*/i],
+  ["formitable", /https?:\/\/[^\s"'<>]*formitable\.com[^\s"'<>]*/i],
+  ["quandoo", /https?:\/\/[^\s"'<>]*quandoo\.[^\s"'<>]+/i],
+  ["eatapp", /https?:\/\/[^\s"'<>]*eat-app\.com[^\s"'<>]*/i],
+  ["tripleseat", /https?:\/\/[^\s"'<>]*tripleseat\.com[^\s"'<>]*/i],
+  ["fourvenues", /https?:\/\/[^\s"'<>]*fourvenues\.com[^\s"'<>]*/i],
+];
+
+export function engineLabel(id) {
+  return ENGINE_LABEL[String(id || "")] || "";
+}
+
 export function engineOf(url) {
   const s = String(url || "").toLowerCase();
   if (/sevenrooms/.test(s)) return "sevenrooms";
@@ -39,8 +78,37 @@ export function engineOf(url) {
   if (/resy\.com/.test(s)) return "resy";
   if (/exploretock|tock\.com/.test(s)) return "tock";
   if (/designmynight/.test(s)) return "designmynight";
+  if (/tablecheck/.test(s)) return "tablecheck";
+  if (/zenchef/.test(s)) return "zenchef";
+  if (/formitable/.test(s)) return "formitable";
+  if (/quandoo\./.test(s)) return "quandoo";
+  if (/eat-app\.com/.test(s)) return "eatapp";
+  if (/tripleseat/.test(s)) return "tripleseat";
+  if (/fourvenues/.test(s)) return "fourvenues";
   if (/discotech|clubbookers|ticketsibiza/.test(s)) return "reseller";
   return "official-site";
+}
+
+function cleanFoundUrl(raw) {
+  return String(raw || "").replace(/&amp;/g, "&").replace(/[),.;'"\]]+$/, "").split("#")[0];
+}
+
+export function engineFromBlob(blob, pageUrl) {
+  const text = `${pageUrl || ""}\n${blob || ""}`;
+  const fromPage = engineOf(pageUrl);
+  for (const [id, re] of ENGINE_URL_RE) {
+    const m = text.match(re);
+    if (m) {
+      const widgetUrl = cleanFoundUrl(m[0]);
+      if (/^https?:\/\//i.test(widgetUrl)) return { engine: id, widgetUrl };
+    }
+  }
+  if (fromPage !== "official-site" && fromPage !== "reseller") {
+    return { engine: fromPage, widgetUrl: /^https?:\/\//i.test(pageUrl || "") ? pageUrl : "" };
+  }
+  if (/sevenrooms/i.test(text)) return { engine: "sevenrooms", widgetUrl: "" };
+  if (/\bresy\b/i.test(text) && /reserv/i.test(text)) return { engine: "resy", widgetUrl: "" };
+  return { engine: "official-site", widgetUrl: "" };
 }
 
 export function officialBooking(venueId) {
@@ -67,7 +135,8 @@ export function officialBooking(venueId) {
     host: hostOf(url),
     pay: !!rec?.pay,
     payUrl: /^https:\/\//i.test(rec?.payUrl || "") ? rec.payUrl : "",
-    engine: rec?.engine || "",
+    engine: rec?.engine || engineOf(url),
+    widgetUrl: /^https:\/\//i.test(rec?.widgetUrl || "") ? rec.widgetUrl : "",
     email: String(rec?.email || "").trim(),
   };
 }
@@ -168,22 +237,25 @@ export function bookingAdapter(venueId) {
   const off = officialBooking(venueId);
   if (!off) return null;
   const inv = venueInventory(venueId);
-  const engine = off.engine && off.engine !== "official-site" ? off.engine : engineOf(off.url);
-  const nights = inv.nights || [];
-  const bookable = engine !== "official-site" || off.kind === "vip" || off.kind === "events" || nights.length > 0 || !!inv.vipHow || !!off.pay;
+  const fromUrl = engineOf(off.widgetUrl || off.url);
+  const engine = (off.engine && off.engine !== "official-site" && off.engine !== "reseller") ? off.engine : fromUrl;
+  const widgetUrl = off.widgetUrl || (fromUrl !== "official-site" && fromUrl !== "reseller" ? off.url : "");
   const priced = (inv.menu?.items || []).filter((x) => Number(x.amount) > 0);
   return {
     venueId: off.venueId,
     name: off.name,
     destination: off.destination,
     officialUrl: off.url,
+    widgetUrl,
     host: off.host,
     kind: off.kind,
     label: off.label,
     engine,
+    engineLabel: engineLabel(engine),
     mode: "handoff",
     overlap: true,
-    bookable,
+    layer: "velvet",
+    bookable: true,
     clubPay: !!(off.pay || off.payUrl),
     payUrl: off.payUrl || "",
     writesToClub: false,
@@ -217,7 +289,9 @@ export function packetText(bridge) {
   const lines = [
     `VELVET-bokning ${bridge.id}`,
     `Klubb: ${bridge.venue || ""}`,
+    bridge.engineLabel ? `Deras system: ${bridge.engineLabel} — VELVET är länken ovanpå` : "VELVET är länken ovanpå klubbens bokningssystem",
     `Officiell bokning: ${bridge.officialUrl || ""}`,
+    bridge.widgetUrl && bridge.widgetUrl !== bridge.officialUrl ? `Widget: ${bridge.widgetUrl}` : "",
     `Datum: ${bridge.date || ""}`,
     `Sällskap: ${bridge.party || ""}`,
     bridge.eventTitle ? `Kväll på klubbens sajt: ${bridge.eventTitle}` : "",
@@ -235,7 +309,7 @@ export function packetText(bridge) {
     bridge.note ? `Meddelande: ${bridge.note}` : "",
     "",
     "VELVET är bokningstjänsten. Gästen är ID-kollad (MRZ + blink + ansiktsmatch).",
-    "Ingen reservation förrän klubben bekräftar. VELVET skriver inte i deras PMS.",
+    "Ingen reservation förrän klubben bekräftar. Direktinlägg i SevenRooms/Resy/Tock när partnernyckel finns.",
   ];
   return lines.filter((x) => x !== "").join("\n");
 }
@@ -248,10 +322,12 @@ export function publicBridge(rec) {
     venue: rec.venue,
     destination: rec.destination || "",
     officialUrl: rec.officialUrl,
-    handoffUrl: rec.handoffUrl || rec.officialUrl,
+    widgetUrl: rec.widgetUrl || "",
+    handoffUrl: rec.handoffUrl || rec.widgetUrl || rec.officialUrl,
     host: rec.host || "",
     kind: rec.kind || "site",
     engine: rec.engine || "official-site",
+    engineLabel: rec.engineLabel || engineLabel(rec.engine),
     mode: "handoff",
     overlap: true,
     date: rec.date,
