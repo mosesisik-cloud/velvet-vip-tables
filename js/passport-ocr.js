@@ -123,16 +123,69 @@ export function snapshotVideo(video, max = 2000, quality = 0.9) {
   return c.toDataURL("image/jpeg", quality);
 }
 
+function camFacingOf(stream) {
+  try {
+    return String(stream.getVideoTracks()[0]?.getSettings?.().facingMode || "");
+  } catch { return ""; }
+}
+
+async function gum(videoConstraint) {
+  return navigator.mediaDevices.getUserMedia({ audio: false, video: videoConstraint });
+}
+
+async function cameraByLabel(front) {
+  try {
+    const list = await navigator.mediaDevices.enumerateDevices();
+    const cams = list.filter((d) => d.kind === "videoinput");
+    const hit = cams.find((d) => {
+      const n = String(d.label || "").toLowerCase();
+      return front
+        ? /front|user|selfie|facing.?user/.test(n)
+        : /back|rear|environment|facing.?environment|world/.test(n);
+    });
+    if (!hit?.deviceId) return null;
+    return gum({ deviceId: { exact: hit.deviceId } });
+  } catch {
+    return null;
+  }
+}
+
 export async function startCamera(video, facing = "environment") {
   stopCamera();
-  const stream = await navigator.mediaDevices.getUserMedia({
-    audio: false,
-    video: {
-      facingMode: { ideal: facing },
-      width: { ideal: 1920 },
-      height: { ideal: 1080 },
-    },
-  });
+  await new Promise((r) => setTimeout(r, 150));
+  const front = facing === "user";
+  // Inte 1920×1080 på selfie — bakkameran vinner då ofta över facingMode.
+  const tries = front
+    ? [
+        { facingMode: { exact: "user" } },
+        { facingMode: "user" },
+        { facingMode: { ideal: "user" }, width: { ideal: 1280 }, height: { ideal: 720 } },
+      ]
+    : [
+        { facingMode: { exact: "environment" }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+        { facingMode: "environment", width: { ideal: 1920 }, height: { ideal: 1080 } },
+        { facingMode: { ideal: "environment" } },
+      ];
+  let stream = null;
+  for (const spec of tries) {
+    try {
+      stream = await gum(spec);
+      const got = camFacingOf(stream);
+      if (front && got && got !== "user") {
+        stream.getTracks().forEach((t) => t.stop());
+        stream = null;
+        continue;
+      }
+      if (!front && got === "user") {
+        stream.getTracks().forEach((t) => t.stop());
+        stream = null;
+        continue;
+      }
+      break;
+    } catch { /* next */ }
+  }
+  if (!stream) stream = await cameraByLabel(front);
+  if (!stream) stream = await gum(true);
   camStream = stream;
   video.srcObject = stream;
   video.setAttribute("playsinline", "true");

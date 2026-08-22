@@ -3995,6 +3995,7 @@ async function renderVerify() {
     <div class="mrz-cam-wrap" id="mrz-cam-wrap" hidden>
       <video id="mrz-video" playsinline muted autoplay></video>
       <div class="mrz-guide" id="mrz-guide" aria-hidden="true"><span>${esc(t("verifyMrzGuide"))}</span></div>
+      <button type="button" class="mrz-flip" id="idv-flip">${esc(t("verifyFlipCam"))}</button>
     </div>
     <p class="mrz-status" id="mrz-status" hidden></p>
     <div id="mrz-fields"></div>
@@ -4104,6 +4105,31 @@ async function renderVerify() {
     catch { setErr(t("verifyReadFail")); }
   });
   const camBtn = $("#idv-cam");
+  let camFacing = "environment";
+  let camMode = "pass";
+  const openCam = async (facing, { mode = camMode } = {}) => {
+    const wrap = $("#mrz-cam-wrap");
+    const video = $("#mrz-video");
+    camMode = mode === "selfie" ? "selfie" : "pass";
+    camFacing = facing === "user" ? "user" : "environment";
+    await startCamera(video, camFacing);
+    if (wrap) {
+      wrap.hidden = false;
+      wrap.classList.toggle("selfie", camMode === "selfie" || camFacing === "user");
+    }
+    const guide = $("#mrz-guide");
+    if (guide) {
+      const txt = camMode === "selfie" ? t("verifyBlink") : t("verifyMrzGuide");
+      guide.innerHTML = `<span>${esc(txt)}</span>`;
+    }
+    if (camBtn) { camBtn.dataset.open = "1"; camBtn.textContent = t("verifyCamStop"); }
+  };
+  $("#idv-flip")?.addEventListener("click", async () => {
+    if (camBtn?.dataset.open !== "1") return;
+    try {
+      await openCam(camFacing === "user" ? "environment" : "user", { mode: camMode });
+    } catch { setErr(t("verifyCamFail")); }
+  });
   if (camBtn) {
     camBtn.onclick = async () => {
       if (camBtn.dataset.open === "1") {
@@ -4116,16 +4142,9 @@ async function renderVerify() {
         camBtn.textContent = t("verifyCam");
         return;
       }
-      const wrap = $("#mrz-cam-wrap");
-      const video = $("#mrz-video");
       try {
-        await startCamera(video, "environment");
-        if (wrap) { wrap.hidden = false; wrap.classList.remove("selfie"); }
-        const guide = $("#mrz-guide");
-        if (guide) guide.innerHTML = `<span>${esc(t("verifyMrzGuide"))}</span>`;
+        await openCam("environment", { mode: "pass" });
         $("#idv-snap")?.classList.remove("hidden");
-        camBtn.dataset.open = "1";
-        camBtn.textContent = t("verifyCamStop");
       } catch {
         stopCamera();
         setErr(t("verifyCamFail"));
@@ -4158,10 +4177,7 @@ async function renderVerify() {
     try { await loadFaceApi(); }
     catch { setStatus("", false); setErr(t("verifyFaceLoadFail")); return; }
     try {
-      await startCamera(video, "user");
-      if (wrap) { wrap.hidden = false; wrap.classList.add("selfie"); }
-      if (guide) guide.innerHTML = `<span>${esc(t("verifyBlink"))}</span>`;
-      if (camBtn) { camBtn.dataset.open = "1"; camBtn.textContent = t("verifyCamStop"); }
+      await openCam("user", { mode: "selfie" });
       setStatus(t("verifyBlink"), true);
       const live = await watchBlink(video, (st) => {
         if (st === "no_face") setStatus(t("verifyNoFaceSelf"), true);
