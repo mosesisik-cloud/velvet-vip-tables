@@ -102,7 +102,7 @@ const D = {
     heroKicker: "Concierge-förhandsversion · V4",
     heroTitle1: "VIP-bord på världens bästa klubbar.",
     heroTitle2: "Dela kostnaden.",
-    heroP: "Skicka en förfrågan, boka med vänner, dela notan och släpp öppna stolar till andra.",
+    heroP: "Skicka en förfrågan, gå ut med vänner, dela notan och släpp öppna stolar till andra.",
     confirmOpen: "Öppna stolar publiceras i appen så andra kan ansluta. Ingen betalning dras här — VELVET återkommer.",
     perPerson: "per person",
     indicative: "Indikativt",
@@ -630,6 +630,9 @@ const D = {
     favSaved: "Sparad",
     savedCheck: "Sparad ✓",
     onSocial: "{name} på {net}",
+    footerMeta: "V4 · Concierge-förhandsversion · 30 destinationer · 120 handplockade ställen",
+    navMain: "Huvudnavigation",
+    metaDesc: "Skicka förfrågan om VIP-bord, cabanas och daybeds på världens främsta klubbar och beach clubs. VELVET-teamet tar den mot klubben — ingen automatisk reservation.",
   },
   en: {
     skip: "Skip to main content",
@@ -700,7 +703,7 @@ const D = {
     heroKicker: "Concierge preview · V4",
     heroTitle1: "VIP tables at the world’s best clubs.",
     heroTitle2: "Split the cost.",
-    heroP: "Send a request, book with friends, split the bill and leave open seats for others.",
+    heroP: "Send a request, go out with friends, split the bill and leave open seats for others.",
     confirmOpen: "Open seats are listed in the app so others can join. No charge here — VELVET will follow up.",
     perPerson: "per person",
     indicative: "From",
@@ -1228,6 +1231,9 @@ const D = {
     favSaved: "Saved",
     savedCheck: "Saved ✓",
     onSocial: "{name} on {net}",
+    footerMeta: "V4 · Concierge preview · 30 destinations · 120 hand-picked venues",
+    navMain: "Main navigation",
+    metaDesc: "Send a request for VIP tables, cabanas and daybeds at the world’s top clubs and beach clubs. The VELVET team takes it to the club — no automatic reservation.",
   },
   es: {
     skip: "Saltar al contenido",
@@ -1298,7 +1304,7 @@ const D = {
     heroKicker: "Vista previa concierge · V4",
     heroTitle1: "Mesas VIP en los mejores clubs.",
     heroTitle2: "Dividid el coste.",
-    heroP: "Envía una solicitud, reserva con amigos, dividid la cuenta y dejad asientos libres.",
+    heroP: "Envía una solicitud, sal con amigos, dividid la cuenta y dejad asientos libres.",
     confirmOpen: "Los asientos libres se publican para que otros se unan. Aquí no se cobra.",
     perPerson: "por persona",
     indicative: "Desde",
@@ -1826,6 +1832,9 @@ const D = {
     favSaved: "Guardado",
     savedCheck: "Guardado ✓",
     onSocial: "{name} en {net}",
+    footerMeta: "V4 · Vista previa de conserjería · 30 destinos · 120 locales seleccionados",
+    navMain: "Navegación principal",
+    metaDesc: "Envía una solicitud de mesas VIP, cabañas y daybeds en los mejores clubs y beach clubs. El equipo VELVET la lleva al club — no hay reserva automática.",
   },
   fr: {
     skip: "Aller au contenu",
@@ -1896,7 +1905,7 @@ const D = {
     heroKicker: "Aperçu concierge · V4",
     heroTitle1: "Tables VIP dans les meilleurs clubs.",
     heroTitle2: "Partagez le coût.",
-    heroP: "Envoyez une demande, réservez entre amis, partagez l’addition et laissez des places libres.",
+    heroP: "Envoyez une demande, sortez entre amis, partagez l’addition et laissez des places libres.",
     confirmOpen: "Les places libres sont listées pour que d’autres puissent rejoindre. Aucun paiement ici.",
     perPerson: "par personne",
     indicative: "À partir de",
@@ -2424,6 +2433,9 @@ const D = {
     favSaved: "Enregistré",
     savedCheck: "Enregistré ✓",
     onSocial: "{name} sur {net}",
+    footerMeta: "V4 · Aperçu conciergerie · 30 destinations · 120 lieux choisis",
+    navMain: "Navigation principale",
+    metaDesc: "Envoyez une demande de tables VIP, cabanas et daybeds dans les meilleurs clubs. L’équipe VELVET la porte au club — pas de réservation automatique.",
   },
 };
 
@@ -2447,6 +2459,8 @@ export function applyLang(id) {
       if (attr && key) el.setAttribute(attr, t(key));
     });
   });
+  const meta = document.querySelector('meta[name="description"]');
+  if (meta) meta.setAttribute("content", t("metaDesc"));
   return lang;
 }
 

@@ -624,8 +624,8 @@ async function joinOpenTable(id, hint) {
   return { table: decorateLocalTable(tb) };
 }
 
-function decorateLocalTable(t) {
-  if (!t) return null;
+function decorateLocalTable(tb) {
+  if (!tb) return null;
   const me = loadUser();
   const asPerson = (p, role) => {
     if (!p) return null;
@@ -635,7 +635,7 @@ function decorateLocalTable(t) {
     const idv = (id && me && id === me.id && isIdvOk()) ? "verified" : (p.idv || "none");
     return {
       id,
-      name: p.name || "Gäst",
+      name: p.name || t("guestRole"),
       handle,
       provider,
       socialUrl: socialUrl(provider, handle),
@@ -646,20 +646,20 @@ function decorateLocalTable(t) {
       joined: p.joined || null,
     };
   };
-  const host = asPerson(t.host, "host");
-  const joiners = (t.joiners || []).map((j) => asPerson(j, "guest")).filter(Boolean);
-  const invites = (t.guests || []).map((g) => asPerson({ name: g.name, paid: g.paid }, "invite")).filter(Boolean);
+  const host = asPerson(tb.host, "host");
+  const joiners = (tb.joiners || []).map((j) => asPerson(j, "guest")).filter(Boolean);
+  const invites = (tb.guests || []).map((g) => asPerson({ name: g.name, paid: g.paid }, "invite")).filter(Boolean);
   const members = [host, ...joiners, ...invites].filter(Boolean);
-  const party = Number(t.party) || Math.max(members.length, 1);
+  const party = Number(tb.party) || Math.max(members.length, 1);
   return {
-    ...t,
+    ...tb,
     host,
     joiners,
     guests: invites,
     members,
     paidN: members.filter((m) => m.paid).length,
     dueN: members.length,
-    per_person: t.per_person || Math.ceil((Number(t.total) || 0) / Math.max(1, party)),
+    per_person: tb.per_person || Math.ceil((Number(tb.total) || 0) / Math.max(1, party)),
   };
 }
 async function getTable(id) {
@@ -1222,8 +1222,8 @@ function mailtoFor(b) {
   return `mailto:${CONCIERGE_MAIL}?subject=${subject}&body=${body}`;
 }
 
-function setTitle(t) {
-  document.title = t ? `${t} · VELVET` : "VELVET — VIP-bord. Delad lyx.";
+function setTitle(page) {
+  document.title = page ? `${page} · VELVET` : `VELVET — ${t("tagline")}`;
 }
 
 // ---------- Dela bokning (base64-länk, ingen backend) ----------
