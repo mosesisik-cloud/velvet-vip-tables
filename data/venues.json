@@ -16,7 +16,8 @@
   "research_status": "Web-verified",
   "notes": "VIP tables; 2026 active",
   "source_url": "https://www.hiibiza.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "IBZ-002",
@@ -35,7 +36,8 @@
   "research_status": "Web-verified",
   "notes": "VIP tables; 2026 active",
   "source_url": "https://www.theushuaiaexperience.com/club/en",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "IBZ-003",
@@ -54,7 +56,8 @@
   "research_status": "Web-verified",
   "notes": "Major 2026 club; IG handle corrected from @unvrs to @unvrsibiza",
   "source_url": "https://www.unvrs.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "IBZ-004",
@@ -73,7 +76,8 @@
   "research_status": "Web-verified",
   "notes": "Iconic VIP nightlife",
   "source_url": "https://pacha.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "IBZ-005",
@@ -111,7 +115,8 @@
   "research_status": "Web-verified",
   "notes": "Cabanas, gatherings, sunset",
   "source_url": "https://scorpios.com/mykonos",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "MYK-002",
@@ -130,7 +135,8 @@
   "research_status": "Web-verified",
   "notes": "Private cabanas and premium service",
   "source_url": "https://www.nammos.com/mykonos",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "MYK-003",
@@ -149,7 +155,8 @@
   "research_status": "Web-verified",
   "notes": "VIP area, cabanas, premium daybeds",
   "source_url": "https://www.santannamykonos.com/reservations/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "MYK-004",
@@ -225,7 +232,8 @@
   "research_status": "Web-verified",
   "notes": "Strong dayclub/table model",
   "source_url": "https://obeachdubai.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "DXB-003",
@@ -301,7 +309,8 @@
   "research_status": "Web-verified",
   "notes": "Pool, beach, restaurant",
   "source_url": "https://nikkibeach.com/marbella/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "MRB-002",
@@ -320,7 +329,8 @@
   "research_status": "Web-verified",
   "notes": "Champagne/VIP dayclub",
   "source_url": "https://oceanclub.es/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "MRB-003",
@@ -339,7 +349,8 @@
   "research_status": "Web-verified",
   "notes": "Premium nightlife",
   "source_url": "https://momentomarbella.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "MRB-004",
@@ -358,7 +369,8 @@
   "research_status": "Web-verified",
   "notes": "Iconic Marbella nightlife",
   "source_url": "https://www.instagram.com/lov_oliviavalere/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "MRB-005",
@@ -396,7 +408,8 @@
   "research_status": "Web-verified",
   "notes": "Iconic luxury beach club",
   "source_url": "https://nikkibeach.com/saint-tropez/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "STT-002",
@@ -453,7 +466,8 @@
   "research_status": "Web-verified",
   "notes": "Party dining; IG handle corrected from @verdebeach to @verde.beach",
   "source_url": "https://verde-beach.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "STT-005",
@@ -491,7 +505,8 @@
   "research_status": "Web-verified",
   "notes": "Core Monaco nightlife",
   "source_url": "https://www.montecarlosbm.com/en/nightlife/jimmyz-monte-carlo",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "MCO-002",
@@ -510,7 +525,8 @@
   "research_status": "Web-verified",
   "notes": "Dinner + club",
   "source_url": "https://twigaworld.com/montecarlo/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "MCO-003",
@@ -605,7 +621,8 @@
   "research_status": "Web-verified",
   "notes": "Major Cannes nightlife",
   "source_url": "https://www.baolicannes.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "CNS-003",
@@ -681,7 +698,8 @@
   "research_status": "Web-verified",
   "notes": "Reported temporary operational disruption July 2026",
   "source_url": "https://scorpios.com/bodrum",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "BDR-002",
@@ -776,7 +794,8 @@
   "research_status": "Web-verified",
   "notes": "Pool parties, DJs, table booking",
   "source_url": "https://phuket.cafedelmar.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "HKT-002",
@@ -795,7 +814,8 @@
   "research_status": "Web-verified",
   "notes": "Floating venue; ideal shared experience",
   "source_url": "https://yonabeach.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "HKT-003",
