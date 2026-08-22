@@ -8,6 +8,7 @@ import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, matchFaces, 
 let DESTINATIONS = [];
 let VENUES = [];
 let VENUE_IMAGES = {}; // venue_id -> bild från ställets egen hemsida (data/venue-images.json)
+let VENUE_YOUTUBE = {}; // venue_id -> mest visade officiella klipp (data/venue-youtube.json)
 let VENUE_EVENTS = { fetched: null, venues: {} }; // kommande events per venue (data/venue-events.json)
 let BOOKING_URLS = {}; // venue_id -> { url, kind, label } officiell VIP/bokningssida
 let GOOGLE_PLACES = { fetchedAt: null, venues: {} };
@@ -63,6 +64,17 @@ function venuePhoto(v) {
   if (typeof u !== "string" || !/^https?:\/\//.test(u)) return null;
   return u.replace(/^http:\/\//i, "https://");
 }
+function venueYoutube(v) {
+  const y = v && VENUE_YOUTUBE[v.venue_id];
+  if (!y || typeof y.id !== "string" || !/^[A-Za-z0-9_-]{11}$/.test(y.id)) return null;
+  return y;
+}
+function youtubeThumb(id) {
+  return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+}
+function youtubeEmbed(id) {
+  return `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1&playsinline=1`;
+}
 function coverVenueForDest(d) {
   if (!d) return null;
   const list = VENUES
@@ -92,15 +104,22 @@ function coverImgHTML(url) {
 // och tar över permanent om den misslyckas (onerror → .img-fail).
 // { eager: true } för LCP-bilder (detalj-heron): laddas direkt med hög prioritet;
 // kort i listor förblir lazy så mobil inte laddar 120 bilder i onödan.
-function venueMediaHTML(v, cls, { eager = false, extra = "" } = {}) {
-  const url = venuePhoto(v);
-  const img = url ? `
+function venueMediaHTML(v, cls, { eager = false, extra = "", playable = false } = {}) {
+  const yt = venueYoutube(v);
+  const photo = venuePhoto(v);
+  const url = yt ? youtubeThumb(yt.id) : photo;
+  const play = yt && !playable ? `<span class="yt-play" aria-hidden="true"></span>` : "";
+  const frame = yt && playable ? `
+    <iframe class="yt-frame" src="${esc(youtubeEmbed(yt.id))}" title="${esc(yt.title || v.name)}"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="${eager ? "eager" : "lazy"}"></iframe>` : "";
+  const img = !frame && url ? `
     <img src="${esc(url)}" alt="${esc(v.name)} — ${esc(v.category || "")}" loading="${eager ? "eager" : "lazy"}"${eager ? ` fetchpriority="high"` : ""} decoding="async" referrerpolicy="no-referrer"
          onerror="this.closest('.${cls}').classList.add('img-fail')">` : "";
   return `
-  <div class="${cls}${url ? "" : " img-fail"}">
-    <div class="dest-emblem venue-media-emblem" aria-hidden="true" style="--h:${destHue(v.destination_code)}">${esc(v.destination_code || "")}</div>${img}
-    ${extra}
+  <div class="${cls}${url || frame ? "" : " img-fail"}${yt ? " has-yt" : ""}">
+    <div class="dest-emblem venue-media-emblem" aria-hidden="true" style="--h:${destHue(v.destination_code)}">${esc(v.destination_code || "")}</div>${frame || img}
+    ${play}${extra}
   </div>`;
 }
 
@@ -260,6 +279,12 @@ function venueDockHTML(v) {
 }
 
 function photoAttrHTML(v) {
+  const yt = venueYoutube(v);
+  if (yt) {
+    const href = yt.url || `https://www.youtube.com/watch?v=${yt.id}`;
+    const who = yt.channel || v.name;
+    return `<p class="photo-attr"><a href="${esc(href)}" target="_blank" rel="noopener">${esc(t("videoCredit").replace("{name}", who))}</a> · ${esc(t("videoMostViewed"))}</p>`;
+  }
   if (!venuePhoto(v)) return "";
   const href = v.website_url || v.source_url || "";
   const credit = href
@@ -1930,7 +1955,7 @@ function renderVenueDetail(id) {
   <section class="section detail">
     <a class="detail-back" href="#/venues" data-nav>← ${esc(t("allVenues"))}</a>
 
-    ${venueMediaHTML(v, "venue-hero-media", { eager: true, extra: favBtnHTML(v.venue_id, v.name) })}
+    ${venueMediaHTML(v, "venue-hero-media", { eager: true, playable: true, extra: favBtnHTML(v.venue_id, v.name) })}
     ${photoAttrHTML(v)}
 
     <div class="detail-hero">
@@ -5082,7 +5107,7 @@ async function renderBookSite(id) {
   <section class="section book-site">
     <a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
     <div class="book-site-hero">
-      ${venueMediaHTML(v, "venue-hero-media", { eager: true })}
+      ${venueMediaHTML(v, "venue-hero-media", { eager: true, playable: true })}
       <div class="book-site-copy">
         <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)} · ${esc(adapter.host || b.host)}</p>
         <h1>${esc(t("bridgeTitle"))}</h1>
@@ -5387,6 +5412,13 @@ async function init() {
       const r = await fetch("data/venue-images.json");
       if (r.ok) VENUE_IMAGES = await r.json() || {};
     } catch (_) { VENUE_IMAGES = {}; }
+    try {
+      const ry = await fetch("data/venue-youtube.json", { cache: "no-store" });
+      if (ry.ok) {
+        const y = await ry.json();
+        VENUE_YOUTUBE = (y && y.venues && typeof y.venues === "object") ? y.venues : {};
+      }
+    } catch (_) { VENUE_YOUTUBE = {}; }
     // Kommande events: statisk JSON som fallback, sedan live API (daglig Firecrawl)
     await loadVenueEvents();
     try {

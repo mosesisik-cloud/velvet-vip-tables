@@ -83,6 +83,17 @@ function checkBookingUrls() {
   if (missing.length) fail("booking-coverage", "no https url: " + missing.join(","));
   else ok("booking-coverage", venues.length + " venues");
 
+  const yt = loadJson("data/venue-youtube.json");
+  const ytMap = yt.venues || {};
+  const ytBad = [];
+  for (const [id, rec] of Object.entries(ytMap)) {
+    if (!venues.some((v) => v.venue_id === id)) ytBad.push("unknown " + id);
+    if (!rec || !/^[A-Za-z0-9_-]{11}$/.test(rec.id || "")) ytBad.push("id " + id);
+    if (!/^https:\/\/www\.youtube\.com\/watch\?v=/.test(rec.url || "")) ytBad.push("url " + id);
+  }
+  if (ytBad.length) fail("youtube-clips", ytBad.slice(0, 8).join("; "));
+  else ok("youtube-clips", Object.keys(ytMap).length + " official most-viewed clips");
+
   const unlisted = loadJson("data/unlisted-venues.json");
   const extraDest = loadJson("data/extra-destinations.json");
   const ids = new Set(venues.map((x) => x.venue_id));
