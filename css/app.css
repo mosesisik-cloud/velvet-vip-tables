@@ -2196,6 +2196,18 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 }
 .book-desk-card .bridge-desk { max-width: none; margin-top: 0; }
 .book-desk-card .detail-cta-note { margin: 10px 0 0; }
+.night-pick { margin: 0 0 14px; }
+.night-dest-label {
+  display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; color: var(--text-dim); max-width: 320px;
+}
+.night-dest-label select {
+  min-height: 44px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border);
+  background: var(--bg-elev); color: var(--text); font-size: 15px;
+}
+.night-h {
+  font-family: var(--font-display); font-size: 18px; font-weight: 600; margin: 22px 0 10px;
+}
+.night-section .avail-chips, .night-page .avail-chips { justify-content: flex-start; }
 .city-avail { margin: 28px 0 8px; text-align: center; }
 .city-avail .detail-panel-title, .city-avail .events-meta { text-align: center; }
 .avail-chips {

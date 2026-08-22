@@ -1,5 +1,5 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=77";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=78";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo } from "./passport-ocr.js";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload } from "./face-idv.js";
@@ -18,7 +18,9 @@ let CLUB_RANKINGS = { fetchedAt: null, byVenueId: {}, cities: [], clubs: [] };
 const state = {
   filters: { q: "", dest: "", cat: "", status: "", price: "", sort: "priority" },
   vibe: "",
+  night: { dest: "", date: "" },
 };
+const NIGHT_KEY = "velvet_night_v1";
 
 function isPublicVenue(v) { return v && v.listed !== false; }
 function isPublicDest(d) { return d && d.listed !== false; }
@@ -1482,6 +1484,23 @@ function renderHome() {
     <p class="hero-credit"><a href="${esc(HERO_VIDEO.credit)}" target="_blank" rel="noopener">${esc(t("videoPexels"))}</a></p>
   </section>
 
+  <section class="section night-section" id="night-home">
+    <div class="section-head">
+      <div><h2>${esc(t("tablesTitle"))}</h2><div class="sub">${esc(t("tablesSub"))}</div></div>
+      <a class="link-gold" href="${openNightHref(loadNight().dest, loadNight().date)}" data-nav>${esc(t("navOpen"))} →</a>
+    </div>
+    <div class="night-pick">
+      <label class="night-dest-label">${esc(t("tablesCity"))}
+        <select id="home-night-dest" aria-label="${esc(t("tablesCity"))}">
+          <option value="">${esc(t("allDest"))}</option>
+          ${publicDestinations().map((x) => `<option value="${esc(x.code)}" ${loadNight().dest === x.code ? "selected" : ""}>${esc(x.name)}</option>`).join("")}
+        </select>
+      </label>
+    </div>
+    <div class="avail-chips" id="home-night-chips" role="list">${dateChipsHTML(loadNight().date, destByCodeOrName(loadNight().dest))}</div>
+    <div class="night-board" id="home-night-list"></div>
+  </section>
+
   <section class="section vibe-section" id="vibe-walk">
     <div class="section-head">
       <div><h2>${esc(t("walkTitle"))}</h2><div class="sub">${esc(t("walkSub"))}</div></div>
@@ -1507,6 +1526,28 @@ function renderHome() {
   </div>`;
   bindDestCards();
   paintVibeRail();
+  const paintHomeNight = async () => {
+    const n = loadNight();
+    const dd = destByCodeOrName(n.dest);
+    const chips = $("#home-night-chips");
+    if (chips) chips.innerHTML = dateChipsHTML(n.date, dd);
+    chips?.querySelectorAll("[data-avail-date]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        saveNight({ dest: n.dest, date: btn.dataset.availDate });
+        paintHomeNight();
+      });
+    });
+    const more = document.querySelector(".night-section .link-gold");
+    if (more) more.setAttribute("href", openNightHref(n.dest, n.date));
+    if (dd) await hydrateNight(dd, n.date);
+    const tables = (await listOpenTables()).map((tb) => tb.members ? tb : decorateLocalTable(tb));
+    paintNightList($("#home-night-list"), dd, n.date, { limit: 6, openTables: tables });
+  };
+  $("#home-night-dest")?.addEventListener("change", (e) => {
+    saveNight({ dest: e.target.value, date: loadNight().date });
+    paintHomeNight();
+  });
+  paintHomeNight();
   $("#walk-start")?.addEventListener("click", () => {
     document.getElementById("vibe-walk")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
@@ -1680,6 +1721,7 @@ function renderDestinationDetail(code) {
         </div>
         ${d.note ? `<p class="detail-notes"><span class="dest-note-label">${esc(t("strategicNote"))}</span> ${esc(d.note)}</p>` : ""}
         <div class="detail-links">
+          <a class="icon-link" href="#/open?dest=${encodeURIComponent(d.code)}" data-nav>${esc(t("navOpen"))}</a>
           <a class="icon-link" href="#/venues" id="dd-list">${esc(t("seeInList"))}</a>
           <a class="icon-link" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
           <a class="icon-link" href="${esc(mapsAppleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("mapsApple"))} ↗</a>
@@ -1687,6 +1729,8 @@ function renderDestinationDetail(code) {
       </div>
       <div class="dest-emblem dest-emblem-lg" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
     </div>
+
+    ${cityAvailHTML(d, (location.hash.split("?")[1] ? new URLSearchParams(location.hash.split("?")[1]).get("date") : "") || loadNight().date)}
 
     <div class="detail-grid dest-detail-grid">
       <div class="detail-panel">
@@ -1709,8 +1753,6 @@ function renderDestinationDetail(code) {
         </div>
       </div>
     </div>
-
-    ${cityAvailHTML(d, (location.hash.split("?")[1] ? new URLSearchParams(location.hash.split("?")[1]).get("date") : "") || "")}
 
     ${Number.isFinite(d.lat) && Number.isFinite(d.lng) ? `
     <div class="detail-panel dest-map-panel">
@@ -1748,6 +1790,7 @@ function renderDestinationDetail(code) {
   if (l2) l2.addEventListener("click", goList);
   document.querySelectorAll("[data-avail-date]").forEach((btn) => {
     btn.addEventListener("click", () => {
+      saveNight({ dest: d.code, date: btn.dataset.availDate });
       location.hash = `#/destination/${encodeURIComponent(d.code)}?date=${encodeURIComponent(btn.dataset.availDate)}`;
     });
   });
@@ -2103,41 +2146,104 @@ function destNightRows(d, date) {
     .map((v) => ({ v, nights: eventsFor(v).filter((e) => e.date === date) }))
     .filter((x) => x.nights.length);
 }
-function cityAvailHTML(d, selected) {
-  const dates = [];
+function loadNight() {
+  let dest = state.night.dest || "";
+  let date = state.night.date || "";
+  try {
+    const j = JSON.parse(localStorage.getItem(NIGHT_KEY) || "{}");
+    if (!dest && j.dest) dest = j.dest;
+    if (!date && /^\d{4}-\d{2}-\d{2}$/.test(j.date || "")) date = j.date;
+  } catch { /* ignore */ }
+  if (!dest) {
+    const home = homeDestination();
+    if (home) dest = home.code;
+  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < todayISO()) date = todayISO();
+  state.night = { dest, date };
+  return state.night;
+}
+function saveNight(n) {
+  const dest = String(n.dest || "");
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(n.date || "") ? n.date : todayISO();
+  state.night = { dest, date };
+  try { localStorage.setItem(NIGHT_KEY, JSON.stringify(state.night)); } catch { /* ignore */ }
+}
+function destByCodeOrName(x) {
+  const s = String(x || "");
+  return DESTINATIONS.find((d) => d.code === s || d.name === s) || null;
+}
+function upcomingDates(n = 14) {
   const today = todayISO();
-  for (let i = 0; i < 14; i++) dates.push(addDaysISO(today, i));
-  const date = dates.includes(selected) ? selected : today;
-  const rows = destNightRows(d, date);
-  const catalog = destVenuesOf(d);
+  return Array.from({ length: n }, (_, i) => addDaysISO(today, i));
+}
+function fmtChipDate(iso) {
+  const [y, m, day] = String(iso).split("-").map(Number);
+  try {
+    return new Date(y, m - 1, day).toLocaleDateString(currentLang(), { weekday: "short", day: "numeric" });
+  } catch { return String(iso).slice(8); }
+}
+function nightBoard(d, date) {
+  const catalog = destVenuesOf(d).filter(isPublicVenue);
+  const onCal = [];
+  const rest = [];
+  for (const v of catalog) {
+    const nights = eventsFor(v).filter((e) => e.date === date);
+    if (nights.length) onCal.push({ v, nights });
+    else rest.push(v);
+  }
+  return { catalog, onCal, rest };
+}
+function dateChipsHTML(selected, dest) {
+  return upcomingDates(14).map((iso) => {
+    const n = dest ? destNightRows(dest, iso).length : 0;
+    return `<button type="button" class="avail-chip${iso === selected ? " on" : ""}" data-avail-date="${iso}" aria-pressed="${iso === selected ? "true" : "false"}">${esc(fmtChipDate(iso))}${n ? ` <span class="avail-n">${n}</span>` : ""}</button>`;
+  }).join("");
+}
+function nightRowHTML(v, date, nights) {
+  const href = nights && nights[0]
+    ? `#/book-site/${encodeURIComponent(v.venue_id)}?date=${encodeURIComponent(date)}&night=${encodeURIComponent(nights[0].title)}`
+    : `#/book-site/${encodeURIComponent(v.venue_id)}?date=${encodeURIComponent(date)}`;
+  const cta = nights && nights[0] ? t("bridgePickNight") : t("nightAskCta");
+  return `
+    <div class="avail-row">
+      <div>
+        <a class="avail-name" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>${esc(v.name)}</a>
+        <div class="avail-nights">${nights && nights.length ? nights.slice(0, 3).map((e) => esc(e.title)).join(" · ") : esc(v.category || "")}</div>
+      </div>
+      <a class="btn ${nights && nights[0] ? "btn-gold" : "btn-ghost"} btn-sm" href="${esc(href)}" data-nav>${esc(cta)}</a>
+    </div>`;
+}
+async function hydrateNight(d, date) {
+  await refreshLiveEvents();
+  if (!d) return;
+  const live = await apiJSON(`/inventory?dest=${encodeURIComponent(d.code)}&date=${encodeURIComponent(date)}`);
+  if (!live || !Array.isArray(live.venues)) return;
+  if (!VENUE_EVENTS.venues) VENUE_EVENTS.venues = {};
+  for (const row of live.venues) {
+    if (!row || !row.venueId || !Array.isArray(row.nights)) continue;
+    const rec = VENUE_EVENTS.venues[row.venueId] || { events: [] };
+    const have = new Set((rec.events || []).map((e) => `${e.date || ""}|${e.title || ""}`));
+    let extra = rec.events || [];
+    for (const n of row.nights) {
+      const k = `${n.date || ""}|${n.title || ""}`;
+      if (have.has(k) || !n.title) continue;
+      extra = extra.concat([n]);
+      have.add(k);
+    }
+    VENUE_EVENTS.venues[row.venueId] = { ...rec, events: extra };
+  }
+}
+function cityAvailHTML(d, selected) {
+  const dates = upcomingDates(14);
+  const date = dates.includes(selected) ? selected : todayISO();
+  const { catalog, onCal } = nightBoard(d, date);
   const withCal = catalog.filter((v) => eventsFor(v).some((e) => e.date)).length;
-  const fmtChip = (iso) => {
-    const [y, m, day] = iso.split("-").map(Number);
-    try {
-      return new Date(y, m - 1, day).toLocaleDateString(currentLang(), { weekday: "short", day: "numeric" });
-    } catch { return iso.slice(8); }
-  };
   return `
   <div class="city-avail" id="city-avail">
     <h2 class="detail-panel-title">${esc(t("cityAvail").replace("{name}", d.name))}</h2>
     <p class="events-meta">${esc(t("cityAvailSub"))}${withCal ? ` · ${esc(t("cityCalCount").replace("{n}", String(withCal)).replace("{all}", String(catalog.length)))}` : ""}</p>
-    <div class="avail-chips" role="list">
-      ${dates.map((iso) => {
-        const n = destNightRows(d, iso).length;
-        return `<button type="button" class="avail-chip${iso === date ? " on" : ""}" data-avail-date="${iso}" aria-pressed="${iso === date ? "true" : "false"}">${esc(fmtChip(iso))}${n ? ` <span class="avail-n">${n}</span>` : ""}</button>`;
-      }).join("")}
-    </div>
-    ${rows.length ? `
-    <div class="avail-list">
-      ${rows.map(({ v, nights }) => `
-        <div class="avail-row">
-          <div>
-            <a class="avail-name" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>${esc(v.name)}</a>
-            <div class="avail-nights">${nights.slice(0, 3).map((e) => esc(e.title)).join(" · ")}</div>
-          </div>
-          <a class="btn btn-gold btn-sm" href="#/book-site/${encodeURIComponent(v.venue_id)}?date=${encodeURIComponent(date)}&night=${encodeURIComponent(nights[0].title)}" data-nav>${esc(t("bridgePickNight"))}</a>
-        </div>`).join("")}
-    </div>` : `<p class="events-meta">${esc(t("cityAvailEmpty"))}</p>`}
+    <div class="avail-chips" role="list">${dateChipsHTML(date, d)}</div>
+    ${onCal.length ? `<div class="avail-list">${onCal.map(({ v, nights }) => nightRowHTML(v, date, nights)).join("")}</div>` : `<p class="events-meta">${esc(t("cityAvailEmpty"))}</p>`}
     ${catalog.length > withCal ? `<p class="events-meta">${esc(t("cityAvailNoCal").replace("{n}", String(catalog.length - withCal)))}</p>` : ""}
     <p class="events-meta">${esc(t("cityAvailOverlap"))}</p>
   </div>`;
@@ -3393,6 +3499,7 @@ function openOnboarding(opts = {}) {
 
   const choose = (d) => {
     saveHomeChoice({ code: d.code });
+    saveNight({ dest: d.code, date: loadNight().date });
     state.filters.dest = d.name; // förfiltrera venue-listan på hemdestinationen
     close(false);
     const target = `#/destination/${encodeURIComponent(d.code)}`;
@@ -3681,58 +3788,83 @@ function renderSharedList(raw) {
   }
 }
 
+function openNightHref(dest, date) {
+  const p = new URLSearchParams();
+  if (dest) p.set("dest", dest);
+  if (date) p.set("date", date);
+  const q = p.toString();
+  return q ? `#/open?${q}` : "#/open";
+}
+function paintNightList(host, d, date, { limit = 0, openTables = [] } = {}) {
+  if (!host) return;
+  if (!d) {
+    host.innerHTML = `<p class="events-meta">${esc(t("tablesPickCity"))}</p>`;
+    return;
+  }
+  const { onCal, rest } = nightBoard(d, date);
+  const seats = openTables.filter((tb) => tb.date === date && (tb.destination === d.name || destVenuesOf(d).some((v) => v.venue_id === tb.venue_id)));
+  const cal = limit ? onCal.slice(0, limit) : onCal;
+  const ask = limit ? rest.slice(0, Math.max(0, limit - cal.length)) : rest;
+  let html = "";
+  if (seats.length) {
+    html += `<h3 class="night-h">${esc(t("nightVelvetSeats"))}</h3>`;
+    html += seats.map((tb) => `
+      <div class="avail-row">
+        <div>
+          <a class="avail-name" href="#/table/${encodeURIComponent(tb.id)}" data-nav>${esc(tb.venue)}</a>
+          <div class="avail-nights">${esc(openSeatsLine(tb) || `${num(tb.openLeft)} ${t("seatsOpen")}`)}</div>
+        </div>
+        <a class="btn btn-gold btn-sm" href="#/table/${encodeURIComponent(tb.id)}" data-nav>${esc(t("viewParty"))}</a>
+      </div>`).join("");
+  }
+  html += `<h3 class="night-h">${esc(t("nightOnCal"))}</h3>`;
+  html += cal.length
+    ? `<div class="avail-list">${cal.map(({ v, nights }) => nightRowHTML(v, date, nights)).join("")}</div>`
+    : `<p class="events-meta">${esc(t("tablesEmptyCal"))}</p>`;
+  if (ask.length) {
+    html += `<h3 class="night-h">${esc(t("nightAsk"))}</h3><div class="avail-list">${ask.map((v) => nightRowHTML(v, date, [])).join("")}</div>`;
+  }
+  host.innerHTML = html;
+}
 async function renderOpenTables() {
-  const tables = (await listOpenTables()).map((tb) => tb.members ? tb : decorateLocalTable(tb));
+  const q = new URLSearchParams((location.hash.split("?")[1] || ""));
+  const night = loadNight();
+  if (q.get("dest")) night.dest = q.get("dest");
+  if (/^\d{4}-\d{2}-\d{2}$/.test(q.get("date") || "")) night.date = q.get("date");
+  saveNight(night);
+  const d = destByCodeOrName(night.dest) || null;
   const u = loadUser();
+  const dests = publicDestinations();
   view().innerHTML = `
-  <section class="section">
+  <section class="section night-page">
     <div class="section-head">
-      <div><h2>${esc(t("navOpen"))}</h2><div class="sub">${esc(t("openSeatsHint"))}</div></div>
+      <div><h2>${esc(t("tablesTitle"))}</h2><div class="sub">${esc(t("tablesSub"))}</div></div>
     </div>
+    <div class="night-pick">
+      <label class="night-dest-label">${esc(t("tablesCity"))}
+        <select id="night-dest" aria-label="${esc(t("tablesCity"))}">
+          <option value="">${esc(t("allDest"))}</option>
+          ${dests.map((x) => `<option value="${esc(x.code)}" ${d && d.code === x.code ? "selected" : ""}>${esc(x.name)}</option>`).join("")}
+        </select>
+      </label>
+    </div>
+    ${d ? `<div class="avail-chips" role="list">${dateChipsHTML(night.date, d)}</div>` : ""}
     ${!u ? `<p class="price-disclaimer"><button class="btn btn-gold btn-sm" id="open-login">${esc(t("loginTitle"))}</button></p>` : ""}
-    ${tables.length === 0 ? `
-      <div class="empty-state">
-        <div class="big">🪑</div>
-        <h3>${esc(t("noOpen"))}</h3>
-        <p>${esc(t("noOpenHint"))}</p>
-      </div>` : tables.map((tb) => {
-        const per = Number(tb.per_person) || Math.ceil((Number(tb.total) || 0) / Math.max(1, Number(tb.party) || 1));
-        return `
-        <div class="booking-card">
-          <div class="booking-info">
-            <h3><a href="#/table/${encodeURIComponent(tb.id)}" data-nav>${esc(tb.venue)}</a></h3>
-            <div class="booking-meta">${esc(tb.destination)} · ${esc(tb.date)} · ${esc(tb.package)} · ${tb.host?.id ? `<a href="#/user/${encodeURIComponent(tb.host.id)}" data-nav>${esc(tb.host?.name || "")}</a>` : esc(tb.host?.name || "")} ${tb.host?.handle ? "@" + esc(tb.host.handle) : ""}</div>
-            <div class="booking-meta">${esc(openSeatsLine(tb) || `${num(tb.openLeft)} ${t("seatsOpen")}`)} · ${esc(t("splitOn"))} ${num(tb.party)} ${esc(t("people"))}</div>
-            ${partyPreviewHTML(tb)}
-          </div>
-          <div class="booking-price">
-            <div class="per">${esc(t("clubSetsPrice"))}</div>
-            ${per > 0 ? `<div class="booking-meta">${esc(t("guestBudget").replace("{amount}", fmtEUR(per)))}</div>` : ""}
-            <a class="btn btn-ghost btn-sm" href="#/table/${encodeURIComponent(tb.id)}" data-nav>${esc(t("viewParty"))}</a>
-            ${canTakeOpenSeat(tb) ? `<button class="btn btn-gold btn-sm" data-join="${esc(tb.id)}">${esc(t("takeSeat"))}</button>` : `<p class="stepper-hint">${esc(t("seatPref").replace("{who}", openForLabel(tb.openFor).toLowerCase()))}</p>`}
-          </div>
-        </div>`;
-      }).join("")}
+    <div class="night-board" id="night-board"><p class="events-meta">${esc(t("tablesLoading"))}</p></div>
   </section>`;
-  $("#open-login")?.addEventListener("click", () => openOnboarding({ dismissable: true, phase: "auth" }));
-  document.querySelectorAll("[data-join]").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      if (!loadUser()) { openOnboarding({ dismissable: false, phase: "auth" }); return; }
-      btn.disabled = true;
-      const r = await joinOpenTable(btn.dataset.join, tables.find((x) => x.id === btn.dataset.join));
-      if (r.error === "auth") openOnboarding({ dismissable: false, phase: "auth" });
-      else if (r.error === "idv_required") location.hash = "#/verify";
-      else if (r.error === "too_young") {
-        const tb = tables.find((x) => x.id === btn.dataset.join);
-        const ven = VENUES.find((x) => x.venue_id === tb?.venue_id);
-        showToast(tooYoungText(r, ven));
-        btn.disabled = false;
-      }
-      else if (r.error === "seat_pref") { showToast(t("seatPref").replace("{who}", openForLabel(r.openFor).toLowerCase())); btn.disabled = false; }
-      else if (r.table) location.hash = `#/table/${encodeURIComponent(r.table.id)}`;
-      else renderOpenTables();
+  $("#night-dest")?.addEventListener("change", (e) => {
+    location.hash = openNightHref(e.target.value, night.date);
+  });
+  document.querySelectorAll("[data-avail-date]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      location.hash = openNightHref(d ? d.code : "", btn.dataset.availDate);
     });
   });
+  $("#open-login")?.addEventListener("click", () => openOnboarding({ dismissable: true, phase: "auth" }));
+  const tables = (await listOpenTables()).map((tb) => tb.members ? tb : decorateLocalTable(tb));
+  if (d) await hydrateNight(d, night.date);
+  paintNightList($("#night-board"), d, night.date, { openTables: tables });
+  setTitle(t("tablesTitle"));
 }
 
 async function renderTable(id) {
@@ -6021,7 +6153,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=77", { updateViaCache: "none" })
+      .register("sw.js?v=78", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

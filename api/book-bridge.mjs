@@ -199,7 +199,6 @@ export function destInventory(code, date) {
     const hasCal = (inv.nights || []).some((n) => n.date);
     if (hasCal) withCal += 1;
     const nights = (inv.nights || []).filter((n) => n.date === want);
-    if (!nights.length) continue;
     const off = officialBooking(v.venue_id);
     rows.push({
       venueId: v.venue_id,
@@ -208,6 +207,8 @@ export function destInventory(code, date) {
       officialUrl: off?.url || "",
       engine: off ? engineOf(off.url) : "official-site",
       nights,
+      onCalendar: nights.length > 0,
+      bookable: true,
       menuItems: (inv.menu?.items || []).length,
     });
   }
