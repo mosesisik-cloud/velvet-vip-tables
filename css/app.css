@@ -2119,6 +2119,10 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   aspect-ratio: 4 / 5;
   border-radius: var(--radius);
 }
+.book-site-hero .venue-hero-media.img-fail {
+  aspect-ratio: 16 / 9;
+  max-height: 200px;
+}
 .book-site-copy h1 {
   font-family: var(--font-display);
   font-size: clamp(28px, 4vw, 42px);
