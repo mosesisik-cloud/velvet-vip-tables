@@ -112,13 +112,9 @@ function vibeChipHTML() {
 }
 
 // ---------- Venue-bilder (V2) ----------
-function venuePhoto(v) {
-  // Endast ställets egen bild (hämtad från deras officiella hemsida).
-  // Saknas riktig bild visas gradient-emblemet.
-  // http:// → https:// så mobil-Safari inte blockerar mixed content.
-  const u = VENUE_IMAGES[v.venue_id];
-  if (typeof u !== "string" || !/^https?:\/\//.test(u)) return null;
-  return u.replace(/^http:\/\//i, "https://");
+function cleanVenuePhoto(url) {
+  if (typeof url !== "string" || !/^https?:\/\//i.test(url)) return null;
+  return url.replace(/^http:\/\//i, "https://").replace(/&amp;/g, "&");
 }
 function venueYoutube(v) {
   const y = v && VENUE_YOUTUBE[v.venue_id];
@@ -130,6 +126,66 @@ function youtubeThumb(id) {
 }
 function youtubeEmbed(id) {
   return `https://www.youtube-nocookie.com/embed/${id}?rel=0&modestbranding=1&playsinline=1`;
+}
+
+function venuePhotos(v) {
+  const raw = VENUE_IMAGES[v.venue_id];
+  const values = Array.isArray(raw) ? raw : [raw];
+  return [...new Set(values.map(cleanVenuePhoto).filter(Boolean))].slice(0, 5);
+}
+
+function venuePhoto(v) {
+  return venuePhotos(v)[0] || null;
+}
+
+function venueGalleryItems(v) {
+  return venuePhotos(v).map((url) => ({ url, original: true, alt: v.name }));
+}
+
+function venueGalleryHTML(v) {
+  const items = venueGalleryItems(v);
+  if (!items.length) return venueMediaHTML(v, "venue-hero-media", { eager: true, extra: favBtnHTML(v.venue_id, v.name) });
+  return `
+  <section class="venue-gallery" aria-label="Bildgalleri för ${esc(v.name)}">
+    <div class="venue-gallery-track" id="venue-gallery-track" tabindex="0">
+      ${items.map((photo, i) => `
+        <figure class="venue-gallery-slide">
+          <div class="dest-emblem venue-media-emblem" aria-hidden="true" style="--h:${destHue(v.destination_code)}">${esc(v.destination_code || "")}</div>
+          <img src="${esc(photo.url)}" alt="${esc(photo.original ? `${v.name} — originalbild från ställets officiella kanal` : photo.alt)}"
+               loading="${i === 0 ? "eager" : "lazy"}"${i === 0 ? ` fetchpriority="high"` : ""} decoding="async" referrerpolicy="no-referrer"
+               onerror="this.closest('.venue-gallery-slide').classList.add('img-fail')">
+          <figcaption class="${photo.original ? "is-original" : ""}">${esc(v.name)}</figcaption>
+        </figure>`).join("")}
+    </div>
+    ${favBtnHTML(v.venue_id, v.name)}
+    <button type="button" class="venue-gallery-arrow prev" data-gallery-dir="-1" aria-label="Föregående bild">←</button>
+    <button type="button" class="venue-gallery-arrow next" data-gallery-dir="1" aria-label="Nästa bild">→</button>
+    <div class="venue-gallery-dots" aria-label="Välj bild">
+      ${items.map((_, i) => `<button type="button" data-gallery-index="${i}" class="${i === 0 ? "on" : ""}" aria-label="Bild ${i + 1} av ${items.length}"></button>`).join("")}
+    </div>
+  </section>`;
+}
+
+function bindVenueGallery() {
+  const track = document.getElementById("venue-gallery-track");
+  if (!track) return;
+  const dots = [...document.querySelectorAll("[data-gallery-index]")];
+  const go = (index) => track.scrollTo({ left: Math.max(0, index) * track.clientWidth, behavior: "smooth" });
+  document.querySelectorAll("[data-gallery-dir]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const current = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+      go(current + Number(btn.dataset.galleryDir || 0));
+    });
+  });
+  dots.forEach((dot) => dot.addEventListener("click", () => go(Number(dot.dataset.galleryIndex || 0))));
+  let raf = 0;
+  track.addEventListener("scroll", () => {
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(() => {
+      const current = Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+      dots.forEach((dot, i) => dot.classList.toggle("on", i === current));
+    });
+  }, { passive: true });
 }
 function coverVenueForDest(d) {
   if (!d) return null;
@@ -2355,6 +2411,7 @@ function renderVenueDetail(id) {
     <a class="detail-back" href="#/venues" data-nav>← ${esc(t("allVenues"))}</a>
 
     ${venueMediaHTML(v, "venue-hero-media", { eager: true, playable: true, extra: favBtnHTML(v.venue_id, v.name) })}
+    ${venueGalleryHTML(v)}
     ${photoAttrHTML(v)}
 
     <div class="detail-hero">
@@ -2441,6 +2498,7 @@ function renderVenueDetail(id) {
     ${venueDockHTML(v)}
   </section>`;
   document.body.classList.add("has-dock");
+  bindVenueGallery();
 
   fillVenuePromoters(v.venue_id);
   $("#d-book").addEventListener("click", () => openBookingModal(v));
