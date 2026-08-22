@@ -449,13 +449,27 @@ function save(db) {
 function safeId(id) {
   return String(id || "").replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 80) || "unknown";
 }
+// CORS: bara kända frontends får läsa svaren i en browser. Server-till-server
+// (webhooks, curl) saknar Origin och påverkas inte. Utöka listan vid ny domän.
+const ALLOWED_ORIGINS = new Set([
+  "https://b2b.bakemyday.se",
+  "https://mosesisik-cloud.github.io",
+]);
+function corsOriginFor(req) {
+  const o = String(req.headers.origin || "");
+  if (ALLOWED_ORIGINS.has(o)) return o;
+  if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(o)) return o; // lokal utveckling
+  return "";
+}
 function send(res, code, obj, extra = {}) {
   const body = JSON.stringify(obj);
   res.writeHead(code, {
     "Content-Type": "application/json; charset=utf-8",
-    "Access-Control-Allow-Origin": "*",
+    ...(res._corsOrigin
+      ? { "Access-Control-Allow-Origin": res._corsOrigin, Vary: "Origin" }
+      : {}),
     "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Headers": "Content-Type, x-admin-key",
     ...extra,
   });
   res.end(body);
@@ -787,11 +801,22 @@ function isOperator(user) {
   return email === "gabrielhadodo@gmail.com" || email === "moses.isik@bakemyday.se" || handle === "velvet" || handle === "gabbe" || user?.role === "operator";
 }
 
+// Delad hemlighet för Revolut/PayPal-webhooks (de saknar egen signaturverifiering
+// i den här koden). Sätts via VELVET_WEBHOOK_TOKEN eller pay.json:s webhookToken,
+// och läggs som ?token= på webhook-URL:en hos leverantören.
+function webhookTokenOk(req, url, pay) {
+  const expected = String(process.env.VELVET_WEBHOOK_TOKEN || pay?.webhookToken || "");
+  if (!expected) return "missing";
+  const got = String(url.searchParams?.get("token") || req.headers["x-webhook-token"] || "");
+  return got === expected ? "ok" : "bad";
+}
+
 function emptyPay() {
   return {
     currency: "EUR",
     firecrawlKey: "",
     googlePlacesKey: "",
+    webhookToken: "",
     revolut: { iban: "", bic: "", name: "", me: "", merchantSecret: "", sandbox: false },
     stripe: { secret: "", pub: "", webhook: "" },
     paypal: { client: "", secret: "", sandbox: false },
@@ -1161,6 +1186,7 @@ function bankDetails(table, user, amount, currency) {
 }
 
 const server = http.createServer(async (req, res) => {
+  res._corsOrigin = corsOriginFor(req);
   if (req.method === "OPTIONS") return send(res, 204, {});
   const url = new URL(req.url, "http://x");
   try {
@@ -1298,7 +1324,16 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && url.pathname === "/pay/setup") {
       const b = await readBody(req, 2e5);
       if (!isOperator(b.user)) return send(res, 403, { error: "operator" });
+      // Kritiskt: inloggning är namn+handle utan lösenord, så en självpåstådd operator-
+      // identitet räcker inte för att byta betalnycklar. Kräv serverns admin-nyckel —
+      // annars kan vem som helst kapa Stripe/PayPal/Revolut-konf och dirigera om
+      // kundernas betalningar till sitt eget konto.
+      const adminKey = String(process.env.VELVET_ADMIN_KEY || "");
+      const givenKey = String(req.headers["x-admin-key"] || b.adminKey || "");
+      if (!adminKey) return send(res, 503, { error: "admin_key_not_configured", message: "Sätt VELVET_ADMIN_KEY på servern — /pay/setup är avstängd tills dess." });
+      if (givenKey !== adminKey) return send(res, 403, { error: "admin_key" });
       const cur = loadPay();
+      if (b.webhookToken) cur.webhookToken = String(b.webhookToken);
       if (b.currency) cur.currency = String(b.currency).toUpperCase().slice(0, 3);
       if (b.revolutIban !== undefined) cur.revolut.iban = ibanOk(b.revolutIban) || String(b.revolutIban || "").replace(/\s+/g, "").toUpperCase();
       if (b.revolutBic !== undefined) cur.revolut.bic = String(b.revolutBic || "").replace(/\s+/g, "").toUpperCase();
@@ -1441,7 +1476,10 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "POST" && url.pathname === "/pay/webhook/stripe") {
       const raw = await readRaw(req);
       const pay = loadPay();
-      if (pay.stripe.webhook) {
+      // Utan signaturhemlighet får inga betalningar bekräftas — annars kan vem som
+      // helst POST:a fejkade "paid"-events och markera sig själv som betald.
+      if (!pay.stripe.webhook) return send(res, 503, { error: "webhook_secret_missing" });
+      {
         const header = String(req.headers["stripe-signature"] || "");
         const parts = Object.fromEntries(header.split(",").map((x) => {
           const i = x.indexOf("=");
@@ -1469,6 +1507,10 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method === "POST" && url.pathname === "/pay/webhook/revolut") {
       const b = await readBody(req, 2e5);
+      const pay = loadPay();
+      const tok = webhookTokenOk(req, url, pay);
+      if (tok === "missing") return send(res, 503, { error: "webhook_token_missing" });
+      if (tok !== "ok") return send(res, 403, { error: "webhook_token" });
       const order = b.order || b.data || b;
       const state = String(order.state || order.status || b.event || "").toLowerCase();
       if (state.includes("complet") || state.includes("paid") || b.event === "ORDER_COMPLETED") {
@@ -1487,6 +1529,10 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method === "POST" && url.pathname === "/pay/webhook/paypal") {
       const b = await readBody(req, 2e5);
+      const pay = loadPay();
+      const tok = webhookTokenOk(req, url, pay);
+      if (tok === "missing") return send(res, 503, { error: "webhook_token_missing" });
+      if (tok !== "ok") return send(res, 403, { error: "webhook_token" });
       const ev = String(b.event_type || "");
       const custom = String(b.resource?.purchase_units?.[0]?.custom_id || b.resource?.custom_id || "");
       if (ev.includes("PAYMENT") || ev.includes("CHECKOUT.ORDER.APPROVED") || ev.includes("CAPTURE.COMPLETED")) {
@@ -1804,10 +1850,15 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       const rec = db.idv[decodeURIComponent(idvM[1])];
       const uid = decodeURIComponent(idvM[1]);
+      // Integritet: userId:n är gissningsbara (U-<leverantör>-<handle>), så passfält,
+      // juridiskt namn och kortuppgifter lämnas bara ut till operatorn med admin-nyckel.
+      // Appen själv behöver bara status (refreshIdv).
+      const adminKey = String(process.env.VELVET_ADMIN_KEY || "");
+      const isAdmin = adminKey && String(req.headers["x-admin-key"] || url.searchParams.get("adminKey") || "") === adminKey;
+      const pub = publicIdv(rec);
       return send(res, 200, {
-        idv: publicIdv(rec),
-        card: publicCard(db.users[uid]?.card),
-        paying: hasCardOnFile(uid, db),
+        idv: isAdmin ? pub : { status: pub.status, submitted: pub.submitted },
+        ...(isAdmin ? { card: publicCard(db.users[uid]?.card), paying: hasCardOnFile(uid, db) } : {}),
       });
     }
     if (req.method === "POST" && url.pathname === "/card") {
