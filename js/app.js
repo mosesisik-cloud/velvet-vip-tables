@@ -75,6 +75,34 @@ function venueGalleryItems(v) {
   return venuePhotos(v).map((url) => ({ url, original: true, alt: v.name }));
 }
 
+function venueCinematicHTML(v) {
+  const items = venueGalleryItems(v);
+  const frames = items.length ? [...items] : [{ url: "", original: false, alt: v.name }];
+  if (frames.length > 1 && frames.length < 4) {
+    const originals = [...frames];
+    while (frames.length < 4) frames.push(originals[frames.length % originals.length]);
+  }
+  const duration = Math.max(8, frames.length * 3);
+  return `
+  <section class="venue-cinematic${items.length ? "" : " is-graphic"}${frames.length === 1 ? " is-single" : ""}" aria-label="Filmisk introduktion till ${esc(v.name)}" style="--scene-count:${frames.length};--film-duration:${duration}s">
+    <div class="venue-cinematic-scenes" aria-hidden="true">
+      ${frames.map((photo, i) => `
+        <div class="venue-cinematic-scene" style="--scene:${i}">
+          <div class="dest-emblem venue-media-emblem" style="--h:${destHue(v.destination_code)}">${esc(v.destination_code || "")}</div>
+          ${photo.url ? `<img src="${esc(photo.url)}" alt="" loading="${i === 0 ? "eager" : "lazy"}"${i === 0 ? ` fetchpriority="high"` : ""} decoding="async" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('img-fail')">` : ""}
+        </div>`).join("")}
+    </div>
+    <div class="venue-cinematic-shade"></div>
+    <div class="venue-cinematic-copy">
+      <span class="venue-cinematic-kicker">VELVET presents</span>
+      <h2>${esc(v.name)}</h2>
+      <p>${esc(v.destination)} · ${esc(v.category || "VIP experience")}</p>
+    </div>
+    <div class="venue-cinematic-progress" aria-hidden="true"><span></span></div>
+    <button type="button" class="venue-cinematic-toggle" data-cinematic-toggle aria-label="Pausa introduktionen" aria-pressed="false"><span aria-hidden="true">Ⅱ</span></button>
+  </section>`;
+}
+
 function venueGalleryHTML(v) {
   const items = venueGalleryItems(v);
   if (!items.length) return venueMediaHTML(v, "venue-hero-media", { eager: true, extra: favBtnHTML(v.venue_id, v.name) });
@@ -119,6 +147,18 @@ function bindVenueGallery() {
       dots.forEach((dot, i) => dot.classList.toggle("on", i === current));
     });
   }, { passive: true });
+}
+
+function bindVenueCinematic() {
+  const intro = document.querySelector(".venue-cinematic");
+  const toggle = document.querySelector("[data-cinematic-toggle]");
+  if (!intro || !toggle) return;
+  toggle.addEventListener("click", () => {
+    const paused = intro.classList.toggle("is-paused");
+    toggle.setAttribute("aria-pressed", String(paused));
+    toggle.setAttribute("aria-label", paused ? "Spela introduktionen" : "Pausa introduktionen");
+    toggle.querySelector("span").textContent = paused ? "▶" : "Ⅱ";
+  });
 }
 
 function coverVenueForDest(d) {
@@ -2046,6 +2086,7 @@ function renderVenueDetail(id) {
   <section class="section detail">
     <a class="detail-back" href="#/venues" data-nav>← ${esc(t("allVenues"))}</a>
 
+    ${venueCinematicHTML(v)}
     ${venueGalleryHTML(v)}
     ${photoAttrHTML(v)}
 
@@ -2132,6 +2173,7 @@ function renderVenueDetail(id) {
   </section>`;
   document.body.classList.add("has-dock");
   bindVenueGallery();
+  bindVenueCinematic();
   document.querySelectorAll("[data-pkg-open]").forEach((btn) => btn.addEventListener("click", () => openBookingModal(v, btn.dataset.pkgOpen)));
 
   fillVenuePromoters(v.venue_id);

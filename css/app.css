@@ -2122,6 +2122,74 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 
 
 /* Venue detail: swipeable five-image gallery */
+.venue-cinematic {
+  position: relative;
+  width: 100vw;
+  height: clamp(620px, 92svh, 980px);
+  margin: 18px 0 clamp(72px, 10vw, 150px);
+  margin-left: calc(50% - 50vw);
+  overflow: hidden;
+  border-radius: 0;
+  background: #08080a;
+  box-shadow: 0 42px 120px rgba(0,0,0,.7);
+  isolation: isolate;
+}
+.venue-cinematic::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background: radial-gradient(circle at 72% 22%, transparent 0 20%, rgba(0,0,0,.18) 55%, rgba(0,0,0,.48) 100%);
+  pointer-events: none;
+}
+.venue-cinematic-scenes,
+.venue-cinematic-scene,
+.venue-cinematic-shade { position: absolute; inset: 0; }
+.venue-cinematic-scene {
+  opacity: 0;
+  animation: velvet-scene var(--film-duration) linear infinite;
+  animation-delay: calc(var(--scene) * var(--film-duration) / var(--scene-count));
+}
+.venue-cinematic.is-single .venue-cinematic-scene { opacity: 1; animation: none; }
+.venue-cinematic-scene img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  scale: 1.06;
+  animation: velvet-camera var(--film-duration) ease-in-out infinite alternate;
+}
+.venue-cinematic-scene:nth-child(even) img { transform-origin: 78% 38%; }
+.venue-cinematic-scene:nth-child(odd) img { transform-origin: 22% 62%; }
+.venue-cinematic-scene.img-fail img { display: none; }
+.venue-cinematic-scene .venue-media-emblem { opacity: .38; }
+.venue-cinematic-shade {
+  z-index: 2;
+  background: linear-gradient(180deg, rgba(0,0,0,.2) 0%, rgba(0,0,0,.04) 30%, rgba(0,0,0,.2) 58%, rgba(4,4,6,.92) 100%);
+  pointer-events: none;
+}
+.venue-cinematic-copy {
+  position: absolute; z-index: 3; left: max(24px, calc((100vw - 1240px) / 2)); bottom: clamp(70px, 12vh, 140px);
+  max-width: min(920px, 82vw); color: #fff;
+}
+.venue-cinematic-kicker { color: var(--gold, #d8b56a); text-transform: uppercase; letter-spacing: .2em; font-size: .72rem; }
+.venue-cinematic-copy h2 { margin: 10px 0 12px; font-size: clamp(3.8rem, 10vw, 9rem); line-height: .86; letter-spacing: -.055em; text-shadow: 0 12px 42px rgba(0,0,0,.55); }
+.venue-cinematic-copy p { margin: 0; color: rgba(255,255,255,.78); font-size: clamp(.85rem, 1.5vw, 1.05rem); letter-spacing: .08em; text-transform: uppercase; }
+.venue-cinematic-progress { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.16); }
+.venue-cinematic-progress span { display: block; width: 100%; height: 100%; background: var(--gold, #d8b56a); transform-origin: left; animation: velvet-progress var(--film-duration) linear infinite; }
+.venue-cinematic-toggle {
+  position: absolute; z-index: 5; right: 18px; bottom: 18px; width: 44px; height: 44px;
+  border: 1px solid rgba(255,255,255,.28); border-radius: 50%; color: #fff;
+  background: rgba(5,5,7,.55); backdrop-filter: blur(12px); cursor: pointer;
+}
+.venue-cinematic-toggle:hover { border-color: var(--gold, #d8b56a); color: var(--gold, #d8b56a); }
+.venue-cinematic.is-paused *, .venue-cinematic.is-paused *::before, .venue-cinematic.is-paused *::after { animation-play-state: paused !important; }
+@keyframes velvet-scene {
+  0% { opacity: 0; }
+  5% { opacity: 1; }
+  20% { opacity: 1; }
+  25%, 100% { opacity: 0; }
+}
+@keyframes velvet-camera { from { scale: 1.04; translate: -1% 0; } to { scale: 1.16; translate: 1% -1%; } }
+@keyframes velvet-progress { from { scale: 0 1; } to { scale: 1 1; } }
+
 .venue-gallery {
   position: relative;
   margin: 18px 0 28px;
@@ -2219,12 +2287,18 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 }
 .venue-gallery-dots button.on { width: 24px; background: var(--gold, #d8b56a); }
 @media (max-width: 720px) {
+  .venue-cinematic { width: 100vw; height: 88svh; min-height: 620px; margin-left: calc(50% - 50vw); margin-bottom: 72px; }
+  .venue-cinematic-copy { left: 22px; right: 34px; bottom: 82px; max-width: none; }
   .venue-gallery { margin-inline: -16px; border-radius: 0; }
   .venue-gallery-slide { height: 62vh; min-height: 420px; max-height: 620px; }
   .venue-gallery-arrow { display: none; }
   .venue-gallery-dots { bottom: 22px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .venue-cinematic-scene { opacity: 0; animation: none; }
+  .venue-cinematic-scene:first-child { opacity: 1; }
+  .venue-cinematic-scene img, .venue-cinematic-progress span { animation: none; }
+  .venue-cinematic-toggle { display: none; }
   .venue-gallery-track { scroll-behavior: auto; }
   .venue-gallery-dots button { transition: none; }
 }
