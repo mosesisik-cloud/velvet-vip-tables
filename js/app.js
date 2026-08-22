@@ -1,5 +1,5 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=76";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=77";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo } from "./passport-ocr.js";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload } from "./face-idv.js";
@@ -17,6 +17,7 @@ let VENUE_FACTS = { fetchedAt: null, venues: {} };
 let CLUB_RANKINGS = { fetchedAt: null, byVenueId: {}, cities: [], clubs: [] };
 const state = {
   filters: { q: "", dest: "", cat: "", status: "", price: "", sort: "priority" },
+  vibe: "",
 };
 
 function isPublicVenue(v) { return v && v.listed !== false; }
@@ -81,17 +82,31 @@ function compareVenues(a, b) {
 }
 
 const CATEGORY_GROUPS = [
-  { key: "nightclub", labelKey: "catNightclub", match: /night|hyperclub|open-air|club\b/i },
   { key: "beach", labelKey: "catBeach", match: /beach|floating|cliff/i },
   { key: "day", labelKey: "catDay", match: /day ?club|pool/i },
   { key: "rooftop", labelKey: "catRooftop", match: /rooftop/i },
-  { key: "restaurant", labelKey: "catRestaurant", match: /restaurant|dinner|show|tavern/i },
   { key: "apres", labelKey: "catApres", match: /après|apres/i },
+  { key: "restaurant", labelKey: "catRestaurant", match: /restaurant|dinner|show|tavern/i },
+  { key: "nightclub", labelKey: "catNightclub", match: /night|hyperclub|open-air|club\b/i },
 ];
 
 function venueGroup(v) {
   for (const g of CATEGORY_GROUPS) if (g.match.test(v.category)) return g.key;
   return "other";
+}
+function venuesForVibe(key) {
+  let list = publicVenues();
+  if (key) list = list.filter((v) => venueGroup(v) === key);
+  return [...list].sort(compareVenues);
+}
+function vibeChipHTML() {
+  const chips = [{ key: "", labelKey: "vibeAll" }, ...CATEGORY_GROUPS];
+  return chips.map((g) => {
+    const n = venuesForVibe(g.key).length;
+    if (g.key && n < 2) return "";
+    const on = state.vibe === g.key ? " on" : "";
+    return `<button type="button" class="vibe-chip${on}" data-vibe="${esc(g.key)}">${esc(t(g.labelKey))}</button>`;
+  }).join("");
 }
 
 // ---------- Venue-bilder (V2) ----------
@@ -1454,7 +1469,6 @@ function renderHome() {
   const pubD = publicDestinations();
   const pubV = publicVenues();
   const tier1 = pubD.filter((d) => d.tier === "Tier 1");
-  const top = [...pubV].sort(compareVenues).slice(0, 6);
   view().innerHTML = `
   <section class="hero">
     <div class="hero-media" id="hero-media" aria-hidden="true"></div>
@@ -1462,10 +1476,27 @@ function renderHome() {
     <h1>${esc(t("heroTitle1"))}<br><em>${esc(t("heroTitle2"))}</em></h1>
     <p>${esc(t("heroP"))}</p>
     <div class="hero-cta">
-      <a class="btn btn-gold" href="#/venues" data-nav>${esc(t("explore"))}</a>
+      <button type="button" class="btn btn-gold" id="walk-start">${esc(t("walkCta"))}</button>
       <a class="btn btn-ghost" href="#/destinations" data-nav>${esc(t("seeDest"))}</a>
     </div>
     <p class="hero-credit"><a href="${esc(HERO_VIDEO.credit)}" target="_blank" rel="noopener">${esc(t("videoPexels"))}</a></p>
+  </section>
+
+  <section class="section vibe-section" id="vibe-walk">
+    <div class="section-head">
+      <div><h2>${esc(t("walkTitle"))}</h2><div class="sub">${esc(t("walkSub"))}</div></div>
+      <a class="link-gold" href="#/venues" data-nav>${esc(t("explore"))} →</a>
+    </div>
+    <div class="vibe-bar" role="tablist" aria-label="${esc(t("walkTitle"))}">${vibeChipHTML()}</div>
+    <div class="vibe-rail" id="vibe-rail"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div><h2>${esc(t("launchDests"))}</h2><div class="sub">${esc(t("launchDestsSub"))}</div></div>
+      <a class="link-gold" href="#/destinations" data-nav>${esc(t("allDest"))} →</a>
+    </div>
+    <div class="dest-grid dest-grid-walk">${tier1.slice(0, 8).map(destCard).join("")}</div>
   </section>
 
   <div class="stats">
@@ -1473,26 +1504,29 @@ function renderHome() {
     <div class="stat"><div class="stat-num">${pubV.length}</div><div class="stat-label">${esc(t("statVenues"))}</div></div>
     <div class="stat"><div class="stat-num">${pubV.filter((v) => v.priority_score >= 90).length}</div><div class="stat-label">${esc(t("statPrio"))}</div></div>
     <div class="stat"><div class="stat-num">${pubV.filter((v) => statusInfo(v.research_status).cls === "tag-verified").length}</div><div class="stat-label">${esc(t("verified"))}</div></div>
-  </div>
-
-  <section class="section">
-    <div class="section-head">
-      <div><h2>${esc(t("launchDests"))}</h2><div class="sub">${esc(t("launchDestsSub"))}</div></div>
-      <a class="link-gold" href="#/destinations" data-nav>${esc(t("allDest"))} →</a>
-    </div>
-    <div class="dest-grid">${tier1.slice(0, 8).map(destCard).join("")}</div>
-  </section>
-
-  <section class="section">
-    <div class="section-head">
-      <div><h2>${esc(t("topVenues"))}</h2><div class="sub">${esc(t("topVenuesSub"))}</div></div>
-      <a class="link-gold" href="#/venues" data-nav>${esc(t("allVerifiedN").replace("{n}", String(pubV.length)))}</a>
-    </div>
-    <div class="venue-grid">${top.map((v) => venueCard(v, { eager: true })).join("")}</div>
-  </section>`;
-  bindVenueCards();
+  </div>`;
   bindDestCards();
+  paintVibeRail();
+  $("#walk-start")?.addEventListener("click", () => {
+    document.getElementById("vibe-walk")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  document.querySelectorAll("[data-vibe]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      state.vibe = btn.dataset.vibe || "";
+      document.querySelectorAll("[data-vibe]").forEach((b) => b.classList.toggle("on", b === btn));
+      paintVibeRail();
+    });
+  });
   initHeroVideo();
+}
+function paintVibeRail() {
+  const host = $("#vibe-rail");
+  if (!host) return;
+  const list = venuesForVibe(state.vibe).slice(0, 18);
+  host.innerHTML = list.length
+    ? list.map((v, i) => venueCard(v, { vibe: true, eager: i < 3 })).join("")
+    : `<p class="events-meta">${esc(t("noHits"))}</p>`;
+  bindVenueCards();
 }
 
 // ---------- Hero-video (V2) ----------
@@ -1626,9 +1660,11 @@ function renderDestinationDetail(code) {
   const rest = inCity.filter((v) => !isVenueVerified(v));
   const useCases = String(d.use_cases || "").split(",").map((s) => s.trim()).filter(Boolean);
 
+  const cover = coverVenueForDest(d);
   view().innerHTML = `
   <section class="section detail">
     <a class="detail-back" href="#/destinations" data-nav>← ${esc(t("allDest"))}</a>
+    ${cover ? `<div class="dest-walk-hero${cover.url ? "" : " img-fail"}">${coverImgHTML(cover.url)}<div class="dest-walk-hero-copy"><p class="kicker">${esc(d.country)}</p><p>${esc(t("walkCity").replace("{name}", d.name))}</p></div></div>` : ""}
 
     <div class="detail-hero">
       <div class="detail-hero-main">
@@ -1736,37 +1772,38 @@ function igLinkHTML(v, { arrow = false } = {}) {
   return `<a class="icon-link ig-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener" aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "Instagram"))}">${IG_ICON}<span class="soc-handle">${esc(handle)}</span>${arrow ? " ↗" : ""}</a>`;
 }
 
-function venueCard(v, { eager = false, rank = 0 } = {}) {
+function venueCard(v, { eager = false, rank = 0, vibe = false } = {}) {
   const st = statusInfo(v.research_status);
   const rankMark = rank > 0
     ? `<span class="rank-badge${rank <= 3 ? " top" : ""}" title="${esc(t("rankLabel").replace("{n}", String(rank)))}">${rank}</span>`
     : "";
   return `
-  <div class="venue-card">
+  <div class="venue-card${vibe ? " vibe-card" : ""}">
     ${favBtnHTML(v.venue_id, v.name)}
-    <div class="venue-card-link" data-id="${esc(v.venue_id)}" role="link" tabindex="0" aria-label="${esc(t("viewDetails").replace("{name}", v.name))}">
+    <div class="venue-card-link" data-id="${esc(v.venue_id)}" role="link" tabindex="0" aria-label="${esc(t("openRoom").replace("{name}", v.name))}">
       ${venueMediaHTML(v, "venue-media", { eager, extra: rankMark })}
       <div class="venue-top">
         <div>
           <div class="venue-name">${esc(v.name)}</div>
           <div class="venue-loc">${esc(v.destination)}</div>
         </div>
-        <div class="prio">${googleRatingHTML(v, { compact: true }) || `<span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">Prio</span>`}</div>
+        ${vibe ? "" : `<div class="prio">${googleRatingHTML(v, { compact: true }) || `<span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">Prio</span>`}</div>`}
       </div>
       <div class="venue-tags">
         <span class="tag">${esc(v.category)}</span>
-        <span class="tag ${st.cls}">${st.label}</span>
+        ${vibe ? "" : `<span class="tag ${st.cls}">${st.label}</span>
         ${rankingTagHTML(v)}
         ${v.shareable_format ? `<span class="tag tag-verified">${esc(t("shareableCost"))}</span>` : ""}
-        ${eventsFor(v).length ? `<span class="tag tag-events">🎟 ${esc(t("comingN").replace("{n}", String(eventsFor(v).length)))}</span>` : ""}
+        ${eventsFor(v).length ? `<span class="tag tag-events">🎟 ${esc(t("comingN").replace("{n}", String(eventsFor(v).length)))}</span>` : ""}`}
       </div>
-      ${publicNote(v) ? `<div class="venue-note">${esc(publicNote(v))}</div>` : ""}
+      ${!vibe && publicNote(v) ? `<div class="venue-note">${esc(publicNote(v))}</div>` : ""}
+      ${vibe ? `<div class="vibe-open">${esc(t("openRoom").replace("{name}", v.name))}</div>` : `
       <div class="venue-actions">
         <button class="btn btn-gold btn-sm" data-book="${esc(v.venue_id)}">${esc(t("sendRequest"))}</button>
         ${bookingLinkHTML(v)}
         <a class="icon-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("openMaps"))} ↗</a>
         ${igLinkHTML(v)}
-      </div>
+      </div>`}
     </div>
     ${photoAttrHTML(v)}
   </div>`;
@@ -5984,7 +6021,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=76", { updateViaCache: "none" })
+      .register("sw.js?v=77", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
