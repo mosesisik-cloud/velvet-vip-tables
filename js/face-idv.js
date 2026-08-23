@@ -98,6 +98,22 @@ function cropCanvas(img, x, y, w, h) {
   return c;
 }
 
+/** TinyFaceDetector misses faces that fill the frame — common on phone selfies. */
+function padCanvas(src, padRatio) {
+  const w0 = src.videoWidth || src.naturalWidth || src.width;
+  const h0 = src.videoHeight || src.naturalHeight || src.height;
+  const padX = Math.round(w0 * padRatio);
+  const padY = Math.round(h0 * padRatio);
+  const c = document.createElement("canvas");
+  c.width = Math.max(1, w0 + padX * 2);
+  c.height = Math.max(1, h0 + padY * 2);
+  const ctx = c.getContext("2d");
+  ctx.fillStyle = "#d8d2c6";
+  ctx.fillRect(0, 0, c.width, c.height);
+  ctx.drawImage(src, padX, padY, w0, h0);
+  return c;
+}
+
 function dist(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
@@ -194,19 +210,28 @@ function landmarkRec(det, c) {
 }
 
 export async function detectSelfieLandmarks(input) {
-  const c = input instanceof HTMLVideoElement ? scaleCanvas(input, 400) : scaleCanvas(input, 480);
-  if (c.width < 32 || c.height < 32) return { ok: false, reason: "no_selfie_face" };
-  const det = await detectOn(c, 224, { desc: false, scoreThreshold: 0.22 });
-  return landmarkRec(det, c);
+  const tries = [scaleCanvas(input, 400), padCanvas(input, 0.45), padCanvas(input, 0.8)];
+  let last = { ok: false, reason: "no_selfie_face" };
+  for (const c of tries) {
+    if (c.width < 32 || c.height < 32) continue;
+    const det = await detectOn(c, 224, { desc: false, scoreThreshold: 0.18 });
+    last = landmarkRec(det, c);
+    if (last.ok) return last;
+  }
+  return last;
 }
 
 export async function detectSelfieFace(input) {
-  const c = input instanceof HTMLVideoElement ? scaleCanvas(input, 560) : scaleCanvas(input, 640);
-  if (c.width < 32 || c.height < 32) return { ok: false, reason: "no_selfie_face" };
-  const det = await detectOn(c, 320, { desc: true, scoreThreshold: 0.25 });
-  const rec = landmarkRec(det, c);
-  if (!rec.ok || !rec.descriptor) return rec.ok ? { ...rec, ok: false, reason: "no_selfie_face" } : rec;
-  return rec;
+  const tries = [scaleCanvas(input, 560), padCanvas(input, 0.45), padCanvas(input, 0.8)];
+  let last = { ok: false, reason: "no_selfie_face" };
+  for (const c of tries) {
+    if (c.width < 32 || c.height < 32) continue;
+    const det = await detectOn(c, 320, { desc: true, scoreThreshold: 0.2 });
+    last = landmarkRec(det, c);
+    if (last.ok && last.descriptor) return last;
+    if (last.ok) last = { ...last, ok: false, reason: "no_selfie_face" };
+  }
+  return last;
 }
 
 let tapLiveness = false;

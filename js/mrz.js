@@ -111,7 +111,8 @@ export function parseTd3(line1, line2) {
   if (expired) reasons.push("expired");
 
   const checksumsOk = okNum && okBirth && okExp && okOpt && okComp;
-  const valid = checksumsOk && l1[0] === "P" && !!names.lastName && names.lastName.length <= 24
+  const hasNameSep = /[A-Z]<<[A-Z]/.test(l1);
+  const valid = checksumsOk && l1[0] === "P" && hasNameSep && !!names.lastName && names.lastName.length <= 24
     && !!documentNumber && !!birthDate && !!expirationDate && !expired;
 
   return {
@@ -255,6 +256,11 @@ export function repairTd3(line1, line2) {
   }
   a = a.replace(/<[CKEL]</g, "<<");
   a = a.replace(/[CL]{4,}/g, (m) => "<".repeat(m.length));
+  if (!/[A-Z]<<[A-Z]/.test(a)) {
+    const rest = a.slice(5).replace(/<+$/g, "");
+    const mashed = rest.match(/^([A-Z]{2,16}?)[CL]{1,3}([A-Z]{3,16})$/);
+    if (mashed) a = pad44(a.slice(0, 5) + mashed[1] + "<<" + mashed[2]);
+  }
   const repaired = parseTd3(a, chars.join(""));
   if (scoreParse(repaired) > scoreParse(best)) best = repaired;
   if (best && best.valid) return best;

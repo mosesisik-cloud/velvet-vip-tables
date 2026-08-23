@@ -1,4 +1,4 @@
-import { extractMrzFromText } from "./mrz.js";
+import { extractMrzFromText } from "./mrz.js?v=83";
 
 let worker = null;
 let workerBusy = false;
