@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=87";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=87";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=87";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=87";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=88";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=88";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=88";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=88";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -147,22 +147,22 @@ function venueGalleryHTML(v) {
   const items = venueGalleryItems(v);
   if (!items.length) return venueMediaHTML(v, "venue-hero-media", { eager: true, extra: favBtnHTML(v.venue_id, v.name) });
   return `
-  <section class="venue-gallery" aria-label="Bildgalleri för ${esc(v.name)}">
+  <section class="venue-gallery" aria-label="${esc(t("galleryAria").replace("{name}", v.name))}">
     <div class="venue-gallery-track" id="venue-gallery-track" tabindex="0">
       ${items.map((photo, i) => `
         <figure class="venue-gallery-slide">
           <div class="dest-emblem venue-media-emblem" aria-hidden="true" style="--h:${destHue(v.destination_code)}">${esc(v.destination_code || "")}</div>
-          <img src="${esc(photo.url)}" alt="${esc(photo.original ? `${v.name} — originalbild från ställets officiella kanal` : photo.alt)}"
+          <img src="${esc(photo.url)}" alt="${esc(photo.original ? t("galleryOrigAlt").replace("{name}", v.name) : photo.alt)}"
                loading="${i === 0 ? "eager" : "lazy"}"${i === 0 ? ` fetchpriority="high"` : ""} decoding="async" referrerpolicy="no-referrer"
                onerror="this.closest('.venue-gallery-slide').classList.add('img-fail')">
           <figcaption class="${photo.original ? "is-original" : ""}">${esc(v.name)}</figcaption>
         </figure>`).join("")}
     </div>
     ${favBtnHTML(v.venue_id, v.name)}
-    <button type="button" class="venue-gallery-arrow prev" data-gallery-dir="-1" aria-label="Föregående bild">←</button>
-    <button type="button" class="venue-gallery-arrow next" data-gallery-dir="1" aria-label="Nästa bild">→</button>
-    <div class="venue-gallery-dots" aria-label="Välj bild">
-      ${items.map((_, i) => `<button type="button" data-gallery-index="${i}" class="${i === 0 ? "on" : ""}" aria-label="Bild ${i + 1} av ${items.length}"></button>`).join("")}
+    <button type="button" class="venue-gallery-arrow prev" data-gallery-dir="-1" aria-label="${esc(t("galleryPrev"))}">←</button>
+    <button type="button" class="venue-gallery-arrow next" data-gallery-dir="1" aria-label="${esc(t("galleryNext"))}">→</button>
+    <div class="venue-gallery-dots" aria-label="${esc(t("galleryDots"))}">
+      ${items.map((_, i) => `<button type="button" data-gallery-index="${i}" class="${i === 0 ? "on" : ""}" aria-label="${esc(t("gallerySlide").replace("{n}", String(i + 1)).replace("{total}", String(items.length)))}"></button>`).join("")}
     </div>
   </section>`;
 }
@@ -206,10 +206,10 @@ function venueIntroHTML(v) {
         </div>`).join("")}
         ${favBtnHTML(v.venue_id, v.name)}
       </div>`;
-  return `<section class="venue-intro-shell${yt ? " has-video" : " has-scenes"}" aria-label="Introduktion till ${esc(v.name)}">
+  return `<section class="venue-intro-shell${yt ? " has-video" : " has-scenes"}" aria-label="${esc(t("introAria").replace("{name}", v.name))}">
     ${media}
     <div class="venue-intro-shade" aria-hidden="true"></div>
-    <div class="venue-intro-copy"><span>VELVET presents</span><h1>${esc(v.name)}</h1><p>${esc(v.destination)} · ${esc(v.category || "VIP experience")}</p></div>
+    <div class="venue-intro-copy"><span>${esc(t("velvetPresents"))}</span><h1>${esc(v.name)}</h1><p>${esc(v.destination)} · ${esc(v.category || "VIP experience")}</p></div>
     ${yt ? "" : `<div class="venue-intro-progress" aria-hidden="true"><span></span></div>`}
   </section>`;
 }
@@ -435,24 +435,24 @@ function statusInfo(s) {
   const x = (s || "").toLowerCase();
   if (x.includes("unverified") || x.includes("unlisted")) return { cls: "tag-unverified", label: t("unverified") };
   if (x.includes("verified") || x.includes("web")) return { cls: "tag-verified", label: t("verified") };
-  if (x.includes("check")) return { cls: "tag-check", label: "Kontrollera status" };
-  return { cls: "tag-research", label: "Research" };
+  if (x.includes("check")) return { cls: "tag-check", label: t("checkStatus") };
+  return { cls: "tag-research", label: t("research") };
 }
 
 // Request types only — no invented EUR. Club publishes min-spend on their own site.
 function requestPackageTemplates(v) {
   const grp = venueGroup(v);
   if (grp === "beach" || grp === "day") return [
-    { id: "sunbed", name: "Sunbed", priceClass: 1 },
-    { id: "daybed", name: "Daybed", priceClass: 2 },
-    { id: "cabana", name: "Cabana", priceClass: 3 },
-    { id: "vip-cabana", name: "VIP Cabana", priceClass: 4 },
+    { id: "sunbed", name: t("pkgSunbed"), priceClass: 1 },
+    { id: "daybed", name: t("pkgDaybed"), priceClass: 2 },
+    { id: "cabana", name: t("pkgCabana"), priceClass: 3 },
+    { id: "vip-cabana", name: t("pkgVipCabana"), priceClass: 4 },
   ];
   return [
     { id: "vip-table", name: t("pkgTable"), priceClass: 1 },
-    { id: "premium-table", name: "Premium table", priceClass: 2 },
-    { id: "dancefloor-table", name: "Dancefloor table", priceClass: 3 },
-    { id: "front-row", name: "Front row / owner’s table", priceClass: 4 },
+    { id: "premium-table", name: t("pkgPremium"), priceClass: 2 },
+    { id: "dancefloor-table", name: t("pkgDancefloor"), priceClass: 3 },
+    { id: "front-row", name: t("pkgFrontRow"), priceClass: 4 },
   ];
 }
 function normalizePackage(p, verified) {
@@ -467,7 +467,7 @@ function normalizePackage(p, verified) {
     capacity: p?.capacity ? String(p.capacity) : "",
     included: Array.isArray(p?.included) ? p.included.filter(Boolean).map(String) : [],
     note: String(p?.note || ""), verified: isVerified, source: String(p?.source || ""),
-    desc: isVerified ? "Verifierad av klubben" : "Pris och innehåll bekräftas av klubben",
+    desc: isVerified ? t("pkgVerifiedByClub") : t("pkgConfirmByClub"),
   };
 }
 function packagesFor(v) {
@@ -477,12 +477,12 @@ function packagesFor(v) {
 }
 function packagePriceHTML(p) {
   if (p.price) {
-    try { return new Intl.NumberFormat("sv-SE", { style: "currency", currency: p.currency, maximumFractionDigits: 0 }).format(p.price); } catch {}
+    try { return new Intl.NumberFormat(localeTag(), { style: "currency", currency: p.currency, maximumFractionDigits: 0 }).format(p.price); } catch {}
   }
-  return "Pris på förfrågan";
+  return t("priceOnRequest");
 }
 function packageIncludedHTML(p) {
-  const included = p.included.length ? p.included : ["Placering och minsta spend bekräftas av klubben", "Innehåll och serviceavgift bekräftas före betalning"];
+  const included = p.included.length ? p.included : [t("pkgIncludedPlace"), t("pkgIncludedContent")];
   return `<ul class="package-included">${included.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
 }
 function venuePackagesPanelHTML(v) {
@@ -491,26 +491,30 @@ function venuePackagesPanelHTML(v) {
   return `
   <section class="detail-panel package-compare" aria-labelledby="package-compare-title">
     <div class="package-compare-head">
-      <div><p class="detail-kicker">Bord · Daybeds · Cabanas</p><h2 class="detail-panel-title" id="package-compare-title">Välj din plats</h2>
-        <p class="events-meta">${hasOfficial ? "Verifierade alternativ från klubbens officiella kanal." : "Förfrågningsalternativ — pris och innehåll bekräftas alltid av klubben."}</p></div>
-      <span class="package-trust ${hasOfficial ? "ok" : ""}">${hasOfficial ? "Officiell data" : "Ingen låtsaspris"}</span>
+      <div><p class="detail-kicker">${esc(t("pkgKicker"))}</p><h2 class="detail-panel-title" id="package-compare-title">${esc(t("pkgPickTitle"))}</h2>
+        <p class="events-meta">${esc(hasOfficial ? t("pkgOfficialOpts") : t("pkgRequestOpts"))}</p></div>
+      <span class="package-trust ${hasOfficial ? "ok" : ""}">${esc(hasOfficial ? t("pkgOfficialData") : t("pkgNoFakePrice"))}</span>
     </div>
     <div class="package-compare-grid">
       ${packages.map((p) => `<article class="package-option ${p.verified ? "verified" : ""}">
-        <div class="package-option-top"><span class="package-level" aria-label="Prisklass ${p.priceClass} av 4">${"€".repeat(p.priceClass)}</span>
-          ${p.verified ? '<span class="idv-badge ok">Verifierad</span>' : '<span class="idv-badge">Förfrågan</span>'}</div>
+        <div class="package-option-top"><span class="package-level" aria-label="${esc(t("priceClassAria").replace("{n}", String(p.priceClass)))}">${"€".repeat(p.priceClass)}</span>
+          ${p.verified ? `<span class="idv-badge ok">${esc(t("verified"))}</span>` : `<span class="idv-badge">${esc(t("requestBadge"))}</span>`}</div>
         <h3>${esc(p.name)}</h3><div class="package-option-price">${esc(packagePriceHTML(p))}</div>
-        ${p.capacity ? `<p class="package-capacity">För ${esc(p.capacity)} personer</p>` : ""}${packageIncludedHTML(p)}
+        ${p.capacity ? `<p class="package-capacity">${esc(t("pkgForPeople").replace("{n}", p.capacity))}</p>` : ""}${packageIncludedHTML(p)}
         ${p.note ? `<p class="package-note">${esc(p.note)}</p>` : ""}
-        <button type="button" class="btn ${p.verified ? "btn-gold" : "btn-ghost"}" data-pkg-open="${esc(p.id)}">Välj alternativ</button>
+        <button type="button" class="btn ${p.verified ? "btn-gold" : "btn-ghost"}" data-pkg-open="${esc(p.id)}">${esc(t("pkgSelect"))}</button>
       </article>`).join("")}
     </div>
-    <p class="detail-cta-note">Priser visas endast när de kommer från klubbens officiella kanal. Annars skickas en förfrågan utan betalning.</p>
+    <p class="detail-cta-note">${esc(t("pkgPriceNote"))}</p>
   </section>`;
 }
 
 // Defensiv: icke-numeriskt in (t.ex. manipulerad localStorage) → 0 € i stället för "NaN"
-const fmtEUR = (n) => new Intl.NumberFormat("sv-SE", { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(Number.isFinite(Number(n)) ? Number(n) : 0);
+function localeTag() {
+  const l = currentLang();
+  return l === "en" ? "en-GB" : l === "es" ? "es-ES" : l === "fr" ? "fr-FR" : "sv-SE";
+}
+const fmtEUR = (n) => new Intl.NumberFormat(localeTag(), { style: "currency", currency: "EUR", maximumFractionDigits: 0 }).format(Number.isFinite(Number(n)) ? Number(n) : 0);
 
 function fromPriceFor() { return null; }
 function priceTierHTML() { return ""; }
@@ -2610,7 +2614,7 @@ function renderVenueDetail(id) {
         <div class="detail-facts">
           <div class="fact"><span class="fact-label">${esc(t("verification"))}</span><span class="fact-val"><span class="tag ${st.cls}">${st.label}</span></span></div>
           <div class="fact"><span class="fact-label">${esc(t("categoryLabel"))}</span><span class="fact-val">${esc(v.category)}</span></div>
-          <div class="fact"><span class="fact-label">Venue-ID</span><span class="fact-val">${esc(v.venue_id)}</span></div>
+          <div class="fact"><span class="fact-label">${esc(t("venueIdLabel"))}</span><span class="fact-val">${esc(v.venue_id)}</span></div>
           ${dest ? `<div class="fact"><span class="fact-label">${esc(t("regionLabel"))}</span><span class="fact-val">${esc(dest.region)}</span></div>` : ""}
         </div>
       </div>
@@ -2638,7 +2642,7 @@ function renderVenueDetail(id) {
         <p class="events-meta">${esc(t("availHint"))}</p>
         <div class="avail-controls" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0">
           <input type="date" id="avail-date" min="${todayISO()}" style="flex:1;min-width:150px">
-          <select id="avail-party">${[2, 4, 6, 8, 10, 12].map((n) => `<option value="${n}"${n === 6 ? " selected" : ""}>${n} pers</option>`).join("")}</select>
+          <select id="avail-party">${[2, 4, 6, 8, 10, 12].map((n) => `<option value="${n}"${n === 6 ? " selected" : ""}>${esc(t("availParty").replace("{n}", String(n)))}</option>`).join("")}</select>
           <button class="btn btn-gold btn-sm" id="avail-load">${esc(t("availLoad"))}</button>
         </div>
         <div id="avail-result"></div>
@@ -6500,7 +6504,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=87", { updateViaCache: "none" })
+      .register("sw.js?v=88", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

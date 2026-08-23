@@ -192,6 +192,32 @@ function checkBookingUrls() {
   return { count: venues.length, missing: missing.length, lines };
 }
 
+function checkI18n() {
+  const src = fs.readFileSync(path.join(ROOT, "js", "i18n.js"), "utf8");
+  const keys = { sv: new Set(), en: new Set(), es: new Set(), fr: new Set() };
+  let cur = null;
+  for (const line of src.split(/\n/)) {
+    const langHit = line.match(/^  (sv|en|es|fr): \{/);
+    if (langHit) { cur = langHit[1]; continue; }
+    if (cur && /^  \},?$/.test(line)) { cur = null; continue; }
+    const km = line.match(/^    ([A-Za-z_][A-Za-z0-9_]*):/);
+    if (cur && km) keys[cur].add(km[1]);
+  }
+  const langs = ["sv", "en", "es", "fr"];
+  const all = new Set(langs.flatMap((l) => [...keys[l]]));
+  const miss = [];
+  for (const k of [...all].sort()) {
+    const absent = langs.filter((l) => !keys[l].has(k));
+    if (absent.length) miss.push(k + ":" + absent.join("+"));
+  }
+  const need = ["availTitle", "pkgPickTitle", "galleryAria", "verifyAgain", "paySoon"];
+  const absentNeed = need.filter((k) => langs.some((l) => !keys[l].has(k)));
+  if (miss.length) fail("i18n-parity", miss.slice(0, 12).join("; "));
+  else if (absentNeed.length) fail("i18n-parity", "missing " + absentNeed.join(","));
+  else if (keys.sv.size < 600) fail("i18n-parity", "too few keys " + keys.sv.size);
+  else ok("i18n-parity", keys.sv.size + "×4");
+}
+
 async function waitBoot(child, ms = 8000) {
   return new Promise((resolve, reject) => {
     const t = setTimeout(() => reject(new Error("api boot timeout")), ms);
@@ -963,6 +989,7 @@ async function runApi() {
 }
 
 const booking = checkBookingUrls();
+checkI18n();
 checkMrz();
 const api = await runApi();
 if (FAIL.length) {
