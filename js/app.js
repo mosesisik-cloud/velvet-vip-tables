@@ -632,9 +632,9 @@ let userMem = null;
 function loadUser() {
   try {
     const u = JSON.parse(localStorage.getItem(USER_KEY));
-    if (u && u.provider && u.id) { userMem = u; return u; }
+    if (u && u.id) { userMem = u; return u; }
   } catch {}
-  return (userMem && userMem.provider && userMem.id) ? userMem : null;
+  return (userMem && userMem.id) ? userMem : null;
 }
 function displayName(u) {
   if (!u) return "";

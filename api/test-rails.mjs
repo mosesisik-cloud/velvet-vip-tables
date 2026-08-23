@@ -97,6 +97,13 @@ function checkMrz() {
     fail("mrz-viz-surname", JSON.stringify(vizFixed && vizFixed.fields));
   } else ok("mrz-viz-surname", "printed surname corrects MRZ");
 
+  const noisyBirth9 = extractMrzFromText(
+    TEST_LIVE.line1 + "\nAB12345671SWE9093152M3203156<<<<<<<<<<<<<<07"
+  );
+  if (!noisyBirth9?.valid || noisyBirth9.fields.birthDate !== "1990-03-15") {
+    fail("mrz-repair-09", JSON.stringify(noisyBirth9 && noisyBirth9.fields));
+  } else ok("mrz-repair-09", "9/0 in birth repaired");
+
   const full = nameMatch("MOSES", "ISIK", "Moses Isik");
   const miss = nameMatch("MOSES", "ISIK", "Gabbe Velvet");
   if (!full.ok || miss.ok) fail("mrz-name", JSON.stringify({ full, miss }));

@@ -162,7 +162,7 @@ function scoreParse(p) {
 
 /** Common Tesseract swaps on a TD3 field so one misread char can still checksum. */
 const OCR_SWAP = {
-  "0": "OQDB", "O": "0DQ", "Q": "0O", "D": "0O",
+  "0": "OQDB9", "O": "0DQ", "Q": "0O", "D": "0O", "9": "0G",
   "1": "I", "I": "1",
   "5": "S", "S": "5",
   "8": "B0",
@@ -177,8 +177,12 @@ function repairField(raw, checkChar) {
   const cd = String(checkChar || "");
   if (/^\d+$/.test(src) && checkDigit(src) === cd) return src;
   const tryOne = (s) => {
-    if (checkDigit(s) === cd && (s.length !== 6 || /^\d{6}$/.test(s))) return s;
-    return null;
+    if (checkDigit(s) !== cd) return null;
+    if (s.length === 6) {
+      if (!/^\d{6}$/.test(s)) return null;
+      if (!parseYYMMDD(s, "birth") && !parseYYMMDD(s, "expiry")) return null;
+    }
+    return s;
   };
   const hit = tryOne(src);
   if (hit) return hit;
@@ -207,7 +211,9 @@ function repairField(raw, checkChar) {
 function applyField(chars, start, len, checkIdx) {
   const raw = chars.slice(start, start + len).join("");
   const cd = chars[checkIdx];
-  if (checkDigit(raw) === cd && (len !== 6 || /^\d{6}$/.test(raw))) return;
+  if (len === 6) {
+    if (/^\d{6}$/.test(raw) && checkDigit(raw) === cd && (parseYYMMDD(raw, "birth") || parseYYMMDD(raw, "expiry"))) return;
+  } else if (checkDigit(raw) === cd) return;
   const fixed = repairField(raw, cd);
   if (fixed) {
     for (let i = 0; i < len; i++) chars[start + i] = fixed[i];
