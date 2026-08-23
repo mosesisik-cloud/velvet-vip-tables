@@ -96,7 +96,8 @@
   "research_status": "Web-verified",
   "notes": "Daybeds/tables; strong share fit",
   "source_url": "https://www.instagram.com/obeachibiza/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "xceed"
  },
  {
   "venue_id": "MYK-001",
@@ -175,7 +176,8 @@
   "research_status": "Web-verified",
   "notes": "VIP/table booking available",
   "source_url": "https://www.cavoparadiso.gr/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "MYK-005",
@@ -194,7 +196,8 @@
   "research_status": "Web-verified",
   "notes": "Premium beach/dining/party; IG handle corrected from @alemagou to @alemagou_mykonos",
   "source_url": "https://alemagou.gr/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "DXB-001",
@@ -213,7 +216,8 @@
   "research_status": "Web-verified",
   "notes": "Cabanas, pool, beach",
   "source_url": "https://www.instagram.com/nikkibeachdubai/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "DXB-002",
@@ -252,7 +256,8 @@
   "research_status": "Web-verified",
   "notes": "Multi-venue beach/nightlife; IG handle corrected from @blabladubai to @blablabymcgettigans",
   "source_url": "https://blabladubai.ae/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "DXB-004",
@@ -271,7 +276,8 @@
   "research_status": "Web-verified",
   "notes": "Day-to-night format; IG states venue closed for relocation (2026)",
   "source_url": "https://0-gravity.ae/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "unreachable"
  },
  {
   "venue_id": "DXB-005",
@@ -290,7 +296,8 @@
   "research_status": "Web-verified",
   "notes": "Premium Palm Jumeirah crowd",
   "source_url": "https://surfclubdubai.com/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "MRB-001",
@@ -389,7 +396,8 @@
   "research_status": "Web-verified",
   "notes": "Dinner-to-party experience",
   "source_url": "https://mamzelmarbella.com/",
-  "priority_score": 88
+  "priority_score": 88,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "STT-001",
@@ -428,7 +436,8 @@
   "research_status": "Web-verified",
   "notes": "Iconic Pampelonne venue; IG handle corrected from @club55sttropez to @leclub55official",
   "source_url": "https://www.club55.fr/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "STT-003",
@@ -447,7 +456,8 @@
   "research_status": "Web-verified",
   "notes": "High-end day-to-evening",
   "source_url": "https://gigi-restaurant.com/ramatuelle/",
-  "priority_score": 88
+  "priority_score": 88,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "STT-004",
@@ -486,7 +496,8 @@
   "research_status": "Web-verified",
   "notes": "Beach dining and music; IG handle corrected from @shellona.sttropez to @shellona_sttropez",
   "source_url": "https://shellona.com/en/home-st-tropez/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "MCO-001",
@@ -545,7 +556,8 @@
   "research_status": "Web-verified",
   "notes": "F1 and nightlife; IG handle corrected from @larascassemonaco to @larascassemc",
   "source_url": "https://www.montecarlosbm.com/en/nightlife/la-rascasse",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "MCO-004",
@@ -564,7 +576,8 @@
   "research_status": "Web-verified",
   "notes": "Premium dining/nightlife; IG handle corrected from @amazonico_restaurant to @amazonico_montecarlo",
   "source_url": "https://www.amazonicorestaurant.com/monte-carlo/",
-  "priority_score": 88
+  "priority_score": 88,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "MCO-005",
@@ -583,7 +596,8 @@
   "research_status": "Web-verified",
   "notes": "Hotel rooftop/pool premium",
   "source_url": "https://nikkibeach.com/monte-carlo/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "CNS-001",
@@ -602,7 +616,8 @@
   "research_status": "Web-verified",
   "notes": "Croisette premium dining; IG handle corrected from @lamomecannes to @lamomeplage (per lamomeplage.com footer)",
   "source_url": "https://lamomecannes.com/",
-  "priority_score": 88
+  "priority_score": 88,
+  "booking_system": "zenchef"
  },
  {
   "venue_id": "CNS-002",
@@ -641,7 +656,8 @@
   "research_status": "Web-verified",
   "notes": "Dinner-show format; IG handle corrected from @medusacannes to @medusa_cannes",
   "source_url": "https://medusa-cannes.com/",
-  "priority_score": 88
+  "priority_score": 88,
+  "booking_system": "unreachable"
  },
  {
   "venue_id": "CNS-004",
@@ -660,7 +676,8 @@
   "research_status": "Web-verified",
   "notes": "Luxury hotel beach club",
   "source_url": "https://carltoncannes.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "CNS-005",
@@ -679,7 +696,8 @@
   "research_status": "Web-verified",
   "notes": "Island dining/party; IG handle corrected from @lagueritecannes to @la_guerite",
   "source_url": "https://restaurantlaguerite.com/",
-  "priority_score": 88
+  "priority_score": 88,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BDR-001",
@@ -718,7 +736,8 @@
   "research_status": "Web-verified",
   "notes": "Yalıkavak premium beach",
   "source_url": "https://xuma.com.tr/en/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BDR-003",
@@ -737,7 +756,8 @@
   "research_status": "Web-verified",
   "notes": "Premium dining/party",
   "source_url": "https://www.luccastyle.com/",
-  "priority_score": 88
+  "priority_score": 88,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BDR-004",
@@ -756,7 +776,8 @@
   "research_status": "Web-verified",
   "notes": "Ultra-luxury Bodrum; IG handle corrected from @macakizibodrum to @macakizihotel",
   "source_url": "https://www.macakizi.com/",
-  "priority_score": 83
+  "priority_score": 83,
+  "booking_system": "unreachable"
  },
  {
   "venue_id": "BDR-005",
@@ -775,7 +796,8 @@
   "research_status": "Web-verified",
   "notes": "Luxury resort beach experience; IG handle corrected from @bodrumedition to @thebodrumedition",
   "source_url": "https://www.marriott.com/en-us/hotels/bxned-the-bodrum-edition/overview/",
-  "priority_score": 88
+  "priority_score": 88,
+  "booking_system": "unreachable"
  },
  {
   "venue_id": "HKT-001",
@@ -834,7 +856,8 @@
   "research_status": "Web-verified",
   "notes": "Established Phuket beach club",
   "source_url": "https://www.catchbeachclub.com/",
-  "priority_score": 90
+  "priority_score": 90,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "HKT-004",
@@ -853,7 +876,8 @@
   "research_status": "Web-verified",
   "notes": "Bang Tao premium beach",
   "source_url": "https://www.carpediemphuket.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "HKT-005",
@@ -872,7 +896,8 @@
   "research_status": "Web-verified",
   "notes": "Large Patong nightlife venue; IG handle corrected from @illuzionphuket to @illuzion_phuket",
   "source_url": "https://www.illuzionphuket.com/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BKK-001",
@@ -891,7 +916,8 @@
   "research_status": "Web-verified",
   "notes": "Large club format",
   "source_url": "https://www.onyxbangkok.com/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BKK-002",
@@ -910,7 +936,8 @@
   "research_status": "Web-verified",
   "notes": "Premium themed nightlife; IG handle corrected from @singsingtheater to @singsingtheater.bangkok",
   "source_url": "https://singsingtheater.com/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BKK-003",
@@ -929,7 +956,8 @@
   "research_status": "Web-verified",
   "notes": "High-demand rooftop; IG handle corrected from @tichucabkk to @tichuca.bkk",
   "source_url": "https://www.instagram.com/tichucabkk/",
-  "priority_score": 73
+  "priority_score": 73,
+  "booking_system": "unreachable"
  },
  {
   "venue_id": "BKK-004",
@@ -948,7 +976,8 @@
   "research_status": "Web-verified",
   "notes": "Luxury rooftop experience; IG handle corrected from @lebua_hotels_resorts to @skybarbangkok",
   "source_url": "https://lebua.com/restaurants/sky/",
-  "priority_score": 73
+  "priority_score": 73,
+  "booking_system": "tablecheck"
  },
  {
   "venue_id": "BKK-005",
@@ -967,7 +996,8 @@
   "research_status": "Web-verified",
   "notes": "Dinner-to-party rooftop",
   "source_url": "https://pastelbangkok.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "BAL-001",
@@ -988,7 +1018,8 @@
   "research_status": "Web-verified",
   "notes": "Major Canggu dayclub",
   "source_url": "https://finnsbeachclub.com/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BAL-002",
@@ -1009,7 +1040,8 @@
   "research_status": "Web-verified",
   "notes": "Premium Uluwatu club",
   "source_url": "https://savaya.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BAL-003",
@@ -1029,7 +1061,8 @@
   "research_status": "Web-verified",
   "notes": "Global lifestyle brand",
   "source_url": "https://seminyak.potatohead.co/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BAL-004",
@@ -1050,7 +1083,8 @@
   "research_status": "Web-verified",
   "notes": "Large-scale beach club; IG handle corrected from @atlasbeachclub to @atlasbeachfest",
   "source_url": "https://atlasbeachfest.com/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BAL-005",
@@ -1071,7 +1105,8 @@
   "research_status": "Web-verified",
   "notes": "Iconic Seminyak",
   "source_url": "https://www.kudeta.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "tablecheck"
  },
  {
   "venue_id": "MIA-001",
@@ -1091,7 +1126,8 @@
   "research_status": "Web-verified",
   "notes": "Major VIP club",
   "source_url": "https://www.livnightclub.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "MIA-002",
@@ -1112,7 +1148,8 @@
   "research_status": "Web-verified",
   "notes": "24/7 premium nightlife; IG handle corrected from @e11evenmiami to @11miami",
   "source_url": "https://www.e11evenmiami.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "MIA-003",
@@ -1132,7 +1169,8 @@
   "research_status": "Web-verified",
   "notes": "Premium dining/social; IG handle corrected from @milarestaurant to @milagroup_miami",
   "source_url": "https://mila-miami.com/",
-  "priority_score": 88
+  "priority_score": 88,
+  "booking_system": "opentable"
  },
  {
   "venue_id": "MIA-004",
@@ -1153,7 +1191,8 @@
   "research_status": "Web-verified",
   "notes": "Island beach-club format",
   "source_url": "https://joiabeachmiami.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "MIA-005",
@@ -1172,7 +1211,8 @@
   "research_status": "Web-verified",
   "notes": "Dinner-to-party",
   "source_url": "https://baolimiami.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "opentable"
  },
  {
   "venue_id": "LAS-001",
@@ -1192,7 +1232,8 @@
   "research_status": "Web-verified",
   "notes": "Top VIP table market",
   "source_url": "https://www.wynnlasvegas.com/nightlife/xs-nightclub",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "LAS-002",
@@ -1212,7 +1253,8 @@
   "research_status": "Web-verified",
   "notes": "Major table service venue",
   "source_url": "https://taogroup.com/venues/omnia-nightclub-las-vegas/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "opentable"
  },
  {
   "venue_id": "LAS-003",
@@ -1232,7 +1274,8 @@
   "research_status": "Web-verified",
   "notes": "Day + night VIP",
   "source_url": "https://taogroup.com/venues/marquee-nightclub-dayclub-las-vegas/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "opentable"
  },
  {
   "venue_id": "LAS-004",
@@ -1251,7 +1294,8 @@
   "research_status": "Web-verified",
   "notes": "High-value cabanas/tables",
   "source_url": "https://www.wynnlasvegas.com/nightlife/encore-beach-club",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "LAS-005",
@@ -1270,7 +1314,8 @@
   "research_status": "Web-verified",
   "notes": "Premium new-generation club",
   "source_url": "https://www.fontainebleaulasvegas.com/nightlife/liv/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "unreachable"
  },
  {
   "venue_id": "TUL-001",
@@ -1290,7 +1335,8 @@
   "research_status": "Web-verified",
   "notes": "Beach events",
   "source_url": "https://www.papayaplayaproject.com/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "opentable"
  },
  {
   "venue_id": "TUL-002",
@@ -1309,7 +1355,8 @@
   "research_status": "Web-verified",
   "notes": "Music-led beach club",
   "source_url": "https://vagalume-tulum.com/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "TUL-003",
@@ -1328,7 +1375,8 @@
   "research_status": "Web-verified",
   "notes": "Jungle dining/party",
   "source_url": "https://gitano.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "TUL-004",
@@ -1348,7 +1396,8 @@
   "research_status": "Web-verified",
   "notes": "Premium party dining; IG handle corrected from @bagatelle.tulum to @bagatelletulum",
   "source_url": "https://bagatelle.com/venues/tulum/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "TUL-005",
@@ -1367,7 +1416,8 @@
   "research_status": "Web-verified",
   "notes": "Luxury party restaurant",
   "source_url": "https://www.tabootulum.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BCN-001",
@@ -1387,7 +1437,8 @@
   "research_status": "Web-verified",
   "notes": "Beachfront VIP tables",
   "source_url": "https://opiumbarcelona.com/",
-  "priority_score": 95
+  "priority_score": 95,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BCN-002",
@@ -1408,7 +1459,8 @@
   "research_status": "Web-verified",
   "notes": "Dinner + beachfront club",
   "source_url": "https://shoko.biz/",
-  "priority_score": 88
+  "priority_score": 88,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BCN-003",
@@ -1427,7 +1479,8 @@
   "research_status": "Web-verified",
   "notes": "Premium table service",
   "source_url": "https://www.thesuttonclub.com/",
-  "priority_score": 100
+  "priority_score": 100,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BCN-004",
@@ -1448,7 +1501,8 @@
   "research_status": "Web-verified",
   "notes": "Beachfront lifestyle",
   "source_url": "https://cdlcbarcelona.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "BCN-005",
@@ -1467,7 +1521,8 @@
   "research_status": "Web-verified",
   "notes": "W Barcelona nightlife",
   "source_url": "https://www.marriott.com/en-us/hotels/bcnwh-w-barcelona/dining/",
-  "priority_score": 88
+  "priority_score": 88,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "CER-001",
@@ -1486,7 +1541,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG live-verifierad i Chrome 2026-08-20 (rättad)",
   "source_url": "https://billionairesociety.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "CER-002",
@@ -1507,7 +1563,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @phibeach to @phibeachofficial",
   "source_url": "https://phibeach.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "CER-003",
@@ -1527,7 +1584,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://nikkibeach.com/costa-smeralda/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "HVA-001",
@@ -1548,7 +1606,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @carpediembeachhvar to @carpediembeach",
   "source_url": "https://carpediembeachcroatia.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "HVA-002",
@@ -1568,7 +1627,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://www.hulahulahvar.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "HVA-003",
@@ -1587,7 +1647,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @carpediemhvar to @carpediembar_hvar",
   "source_url": "https://carpediem-hvar.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "ATH-001",
@@ -1608,7 +1669,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://islandclubrestaurant.gr/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "unreachable"
  },
  {
   "venue_id": "ATH-002",
@@ -1628,7 +1690,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://www.bolivar.gr/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "ATH-003",
@@ -1648,7 +1711,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @akanthus to @akanthus_club; VARNING: tidigare hemsidedomän visar casino-innehåll (kapad/utgången) — länk borttagen 2026-08-21, IG är officiell kanal | Gamla domänen akanthus.gr kapad (casino) — länkad till operatören Momentum Groups officiella sida.",
   "source_url": "https://akanthus.gr/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "IST-001",
@@ -1668,7 +1732,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @sortieistanbul to @sortiesortie",
   "source_url": "https://www.sortie.com.tr/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "IST-002",
@@ -1688,7 +1753,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @rubyistanbul to @ruby_istanbul",
   "source_url": "https://rubyistanbul.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "IST-003",
@@ -1707,7 +1773,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @klein.phonix to @phonix.klein",
   "source_url": "https://klein-entertainment.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "CAP-001",
@@ -1726,7 +1793,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @fontelinacapri to @lafontelinacapri",
   "source_url": "https://www.fontelina-capri.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "CAP-002",
@@ -1745,7 +1813,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @lacanzonedelmarecapri to @lacanzonedelmare",
   "source_url": "https://www.lacanzonedelmare.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "CAP-003",
@@ -1765,7 +1834,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @anemaecorecapri to @tavernaanemaecore",
   "source_url": "https://www.anemaecore.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "AMF-001",
@@ -1784,7 +1854,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://www.onefirebeach.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "AMF-002",
@@ -1803,7 +1874,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @musicontherockspositano to @musicontherocksofficial",
   "source_url": "https://musicontherocks.it/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "AMF-003",
@@ -1823,7 +1895,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://lascoglierapositano.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "LON-001",
@@ -1842,7 +1915,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://www.annabels.co.uk/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "LON-002",
@@ -1861,7 +1935,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @theboxsoho to @boxsoho",
   "source_url": "https://theboxsoho.com/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "LON-003",
@@ -1881,7 +1956,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://www.tapelondon.com/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "PAR-001",
@@ -1902,7 +1978,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://larc-paris.com/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "PAR-002",
@@ -1921,7 +1998,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @raspoutineparis to @raspoutine.paris",
   "source_url": "https://raspoutine.com/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "PAR-003",
@@ -1940,7 +2018,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @matignonparis to @matignonparisofficiel",
   "source_url": "https://matignon-paris.com/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "zenchef"
  },
  {
   "venue_id": "SIN-001",
@@ -1960,7 +2039,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://marqueesingapore.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "opentable"
  },
  {
   "venue_id": "SIN-002",
@@ -1980,7 +2060,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://www.celavi.com/en/singapore/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "SIN-003",
@@ -2000,7 +2081,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://www.tanjongbeachclub.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "LAX-001",
@@ -2020,7 +2102,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://www.delilahla.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "LAX-002",
@@ -2040,7 +2123,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://hwoodgroup.com/venues/poppy/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "LAX-003",
@@ -2059,7 +2143,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://hwoodgroup.com/venues/bootsy-bellows/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "opentable"
  },
  {
   "venue_id": "NYC-001",
@@ -2078,7 +2163,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; No official IG (strict no-camera policy); X @theboxnyc",
   "source_url": "https://theboxnyc.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "NYC-002",
@@ -2098,7 +2184,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://nebulanewyork.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "NYC-003",
@@ -2117,7 +2204,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://somewherenowherenyc.com/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "ASP-001",
@@ -2136,7 +2224,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG points to resort account @aspensnowmass (venue has no own official IG)",
   "source_url": "https://www.aspensnowmass.com/visit/dining/cloud-nine-alpine-bistro",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "tock"
  },
  {
   "venue_id": "ASP-002",
@@ -2155,7 +2244,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @thesnowlodge to @thesnowlodgeaspen",
   "source_url": "https://thesnowlodge.com/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "ASP-003",
@@ -2175,7 +2265,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://bellyupaspen.com/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "CRV-001",
@@ -2194,7 +2285,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @lafoliedoucemeribelcourchevel to @foliedoucemeribel",
   "source_url": "https://www.lafoliedouce.com/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "CRV-002",
@@ -2214,7 +2306,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://bagatelle.com/venues/courchevel/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "CRV-003",
@@ -2234,7 +2327,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://www.lescavesdecourchevel.com/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "SBH-001",
@@ -2254,7 +2348,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://nikkibeach.com/saint-barth/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "SBH-002",
@@ -2274,7 +2369,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @gypseabeach to @gypsea_stbarth",
   "source_url": "https://www.gypsea-stbarth.com/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "sevenrooms"
  },
  {
   "venue_id": "SBH-003",
@@ -2293,7 +2389,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG live-verifierad i Chrome 2026-08-20 (rättad)",
   "source_url": "https://bagatelle.com/venues/st-barth/",
-  "priority_score": 85
+  "priority_score": 85,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "PDE-001",
@@ -2312,7 +2409,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate",
   "source_url": "https://www.bahiavik.com/la-susana",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "PDE-002",
@@ -2332,7 +2430,8 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG-handle @mobypunta belagd via mobydick.com.uy 2026-08-21",
   "source_url": "https://www.instagram.com/mobydickpunta/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  },
  {
   "venue_id": "PDE-003",
@@ -2351,6 +2450,7 @@
   "research_status": "Web-verified",
   "notes": "Tier 2 V1 candidate; IG handle corrected from @ovonightclub to @ovonightpuntadeleste",
   "source_url": "https://www.instagram.com/ovonightclub/",
-  "priority_score": 80
+  "priority_score": 80,
+  "booking_system": "own-form"
  }
 ]
