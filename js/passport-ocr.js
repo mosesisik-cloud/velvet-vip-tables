@@ -141,10 +141,10 @@ export async function readPassportMrz(dataUrl) {
   const W = img.naturalWidth || img.width;
   const H = img.naturalHeight || img.height;
   const bands = [
-    { y: H * 0.58, h: H * 0.42, scale: 3.2 },
-    { y: H * 0.70, h: H * 0.30, scale: 3.6 },
-    { y: H * 0.78, h: H * 0.22, scale: 4 },
     { y: H * 0.84, h: H * 0.16, scale: 4.2 },
+    { y: H * 0.78, h: H * 0.22, scale: 4 },
+    { y: H * 0.70, h: H * 0.30, scale: 3.6 },
+    { y: H * 0.58, h: H * 0.42, scale: 3.2 },
     { y: 0, h: H, scale: Math.min(2.2, 2200 / Math.max(W, H)) },
   ];
   let best = null;

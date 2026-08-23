@@ -92,8 +92,8 @@ export function parseTd3(line1, line2) {
   const cdComp = l2[43];
 
   const okNum = checkDigit(l2.slice(0, 9)) === cdNum;
-  const okBirth = checkDigit(birthRaw) === cdBirth;
-  const okExp = checkDigit(expRaw) === cdExp;
+  const okBirth = /^\d{6}$/.test(birthRaw) && checkDigit(birthRaw) === cdBirth;
+  const okExp = /^\d{6}$/.test(expRaw) && checkDigit(expRaw) === cdExp;
   const okOpt = checkDigit(optional) === cdOpt;
   const composite = l2.slice(0, 10) + l2.slice(13, 20) + l2.slice(21, 43);
   const okComp = checkDigit(composite) === cdComp;
@@ -111,7 +111,8 @@ export function parseTd3(line1, line2) {
   if (expired) reasons.push("expired");
 
   const checksumsOk = okNum && okBirth && okExp && okOpt && okComp;
-  const valid = checksumsOk && l1[0] === "P" && !!names.lastName && !!documentNumber && !expired;
+  const valid = checksumsOk && l1[0] === "P" && !!names.lastName && names.lastName.length <= 24
+    && !!documentNumber && !!birthDate && !!expirationDate && !expired;
 
   return {
     valid,
@@ -149,30 +150,53 @@ function scoreParse(p) {
   if (p.line1 && p.line1[0] === "P") n += 10;
   if (p.checksumsOk) n += 40;
   n += 8 - (p.reasons || []).length;
-  if (p.fields && p.fields.lastName) n += 5;
+  if (p.fields && p.fields.lastName) {
+    n += 5;
+    const ln = p.fields.lastName;
+    if (!/\s/.test(ln) && ln.length >= 2 && ln.length <= 16) n += 8;
+  }
+  if (p.fields && p.fields.documentNumber && /^[A-Z0-9]{5,9}$/.test(p.fields.documentNumber)) n += 6;
   return n;
 }
 
 /** Common Tesseract swaps on a TD3 field so one misread char can still checksum. */
 const OCR_SWAP = {
-  "0": "OQD", "O": "0DQ", "Q": "0O", "D": "0O",
+  "0": "OQDB", "O": "0DQ", "Q": "0O", "D": "0O",
   "1": "I", "I": "1",
   "5": "S", "S": "5",
-  "8": "B", "B": "8",
+  "8": "B0", "B": "80",
   "2": "Z", "Z": "2",
   "6": "G", "G": "6",
-  "C": "<", "K": "<", "E": "<",
+  "C": "<", "K": "<", "E": "<", "L": "<",
 };
 
 function repairField(raw, checkChar) {
   const src = String(raw || "");
   const cd = String(checkChar || "");
-  if (checkDigit(src) === cd) return src;
+  if (/^\d+$/.test(src) && checkDigit(src) === cd) return src;
+  const tryOne = (s) => {
+    if (checkDigit(s) === cd && (s.length !== 6 || /^\d{6}$/.test(s))) return s;
+    return null;
+  };
+  const hit = tryOne(src);
+  if (hit) return hit;
   for (let i = 0; i < src.length; i++) {
-    const alts = OCR_SWAP[src[i]] || "";
-    for (const ch of alts) {
-      const next = src.slice(0, i) + ch + src.slice(i + 1);
-      if (checkDigit(next) === cd) return next;
+    for (const a of (OCR_SWAP[src[i]] || "")) {
+      const n1 = src.slice(0, i) + a + src.slice(i + 1);
+      if (tryOne(n1)) return n1;
+      for (let j = i + 1; j < src.length; j++) {
+        for (const b of (OCR_SWAP[n1[j]] || "")) {
+          const n2 = n1.slice(0, j) + b + n1.slice(j + 1);
+          if (tryOne(n2)) return n2;
+          if (src.length > 9) continue;
+          for (let k = j + 1; k < src.length; k++) {
+            for (const c of (OCR_SWAP[n2[k]] || "")) {
+              const n3 = n2.slice(0, k) + c + n2.slice(k + 1);
+              if (tryOne(n3)) return n3;
+            }
+          }
+        }
+      }
     }
   }
   return null;
@@ -181,7 +205,7 @@ function repairField(raw, checkChar) {
 function applyField(chars, start, len, checkIdx) {
   const raw = chars.slice(start, start + len).join("");
   const cd = chars[checkIdx];
-  if (checkDigit(raw) === cd) return;
+  if (checkDigit(raw) === cd && (len !== 6 || /^\d{6}$/.test(raw))) return;
   const fixed = repairField(raw, cd);
   if (fixed) {
     for (let i = 0; i < len; i++) chars[start + i] = fixed[i];
@@ -203,17 +227,34 @@ export function repairTd3(line1, line2) {
   applyField(chars, 13, 6, 19);
   applyField(chars, 21, 6, 27);
   applyField(chars, 28, 14, 42);
+  const opt = chars.slice(28, 42).join("");
+  let optionalForced = false;
+  if (!opt.replace(/[CKEXLI<]/g, "")) {
+    for (let i = 28; i < 42; i++) chars[i] = "<";
+    chars[42] = checkDigit(chars.slice(28, 42).join("")) || chars[42];
+    optionalForced = true;
+  }
   const l2 = chars.join("");
   const composite = l2.slice(0, 10) + l2.slice(13, 20) + l2.slice(21, 43);
   const wantComp = checkDigit(composite);
   if (wantComp && wantComp !== chars[43]) {
     const alts = OCR_SWAP[chars[43]] || "";
-    if (alts.includes(wantComp) || chars[43] === "<") chars[43] = wantComp;
+    if (optionalForced || alts.includes(wantComp) || chars[43] === "<") chars[43] = wantComp;
   }
   let a = a0;
   if (a[0] !== "P") {
     if (a[0] === "F" || a[0] === "R" || a[0] === "D") a = "P" + a.slice(1);
   }
+  const STATES = "SWEUSAGBRFRADEUITAESPNORDNKFINNLDBELAUTCHEIRLPRTPOLESTCZESVKHUNROUGRCTURCANAUSNZLUTOLVA";
+  for (let i = 2; i <= 6; i++) {
+    const st = a.slice(i, i + 3);
+    if (st.length === 3 && STATES.includes(st) && a[i + 3] && /[A-Z]/.test(a[i + 3])) {
+      a = pad44("P<" + a.slice(i));
+      break;
+    }
+  }
+  a = a.replace(/<[CKEL]</g, "<<");
+  a = a.replace(/[CL]{4,}/g, (m) => "<".repeat(m.length));
   const repaired = parseTd3(a, chars.join(""));
   if (scoreParse(repaired) > scoreParse(best)) best = repaired;
   if (best && best.valid) return best;
@@ -230,10 +271,23 @@ export function repairTd3(line1, line2) {
   return best;
 }
 
+/** Tesseract often reads MRZ filler '<' as C, K or E. Do not touch single K (names like ISIK). */
+function normalizeFiller(s) {
+  return String(s || "").toUpperCase().replace(/[CKEX]{3,}/g, (m) => "<".repeat(m.length));
+}
+
 function consider(best, line1, line2) {
-  const raw = parseTd3(pad44(line1), pad44(line2));
-  const p = raw && raw.valid ? raw : repairTd3(line1, line2);
-  if (scoreParse(p) > scoreParse(best)) return p;
+  const variants = [
+    [line1, line2],
+    [normalizeFiller(line1), normalizeFiller(line2)],
+    [line1, normalizeFiller(line2)],
+  ];
+  for (const [a, b] of variants) {
+    const raw = parseTd3(pad44(a), pad44(b));
+    const p = raw && raw.valid ? raw : repairTd3(a, b);
+    if (scoreParse(p) > scoreParse(best)) best = p;
+    if (best && best.valid) return best;
+  }
   return best;
 }
 

@@ -73,6 +73,20 @@ function checkMrz() {
     fail("mrz-repair-fp", JSON.stringify(noisyComp && noisyComp.reasons));
   } else ok("mrz-repair-fp", "P misread as F");
 
+  const noisyOpt = extractMrzFromText(
+    TEST_LIVE.line1 + "\n" + "AB12345671SWE9003152M3203156<<<<<<<<K<<KKLK7"
+  );
+  if (!noisyOpt?.valid || noisyOpt.fields.lastName !== "ISIK" || noisyOpt.fields.documentNumber !== "AB1234567") {
+    fail("mrz-repair-opt", JSON.stringify(noisyOpt && { reasons: noisyOpt.reasons, fields: noisyOpt.fields }));
+  } else ok("mrz-repair-opt", "optional filler junk repaired");
+
+  const noisyBirth = extractMrzFromText(
+    "P<LSWEISIK<<MOSES<<<<<<<<<<<<<<<<<<<<<<<<<<<<\nAB12345671SWE9BO31S2M3203156<<<<<<<<<<<<<<04"
+  );
+  if (!noisyBirth?.valid || noisyBirth.fields.birthDate !== "1990-03-15" || noisyBirth.fields.lastName !== "ISIK") {
+    fail("mrz-repair-birth", JSON.stringify(noisyBirth && { reasons: noisyBirth.reasons, fields: noisyBirth.fields }));
+  } else ok("mrz-repair-birth", "B/O/S birth + extra L before SWE");
+
   const full = nameMatch("MOSES", "ISIK", "Moses Isik");
   const miss = nameMatch("MOSES", "ISIK", "Gabbe Velvet");
   if (!full.ok || miss.ok) fail("mrz-name", JSON.stringify({ full, miss }));
