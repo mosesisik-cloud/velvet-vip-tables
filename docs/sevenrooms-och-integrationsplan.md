@@ -142,3 +142,23 @@ bygg generiska "widget-adapter" efter SevenRooms, dessa blir konfig-rader.
 4. **SevenRooms widget-adapter** (29 ställen i ett svep)
 5. **Partnerskapsansökningar** (SevenRooms först, sedan OpenTable Connect) när AB finns
 
+---
+
+## 11. LÖST 2026-08-23: direktbokning i SevenRooms fungerar
+
+Bokningsflödet är knäckt och live i produktion (commit `c547dc6`):
+
+- **Nyckeln:** book-endpointen kräver headern `X-Checkout-Hash` = SHA-256 av
+  `"förnamn|efternamn"` (lowercase, trimmat) + `X-Widget-Origin: old-widget`.
+  Utan den svarar den bara "Booking failed."
+- **Flödet:** `POST /availability/:vid/book` gör range → slot → hold (300 s) → book
+  i ett serveranrop. Payload som FormData: datum MM-DD-YYYY, `phone_number` utan
+  landskod + `dial_code`/`country_code` separat, `access_persistent_id` från sloten.
+- **Avbokning:** `POST /availability/cancel` med manage-token → `is_canceled: true`.
+- **Bevisat i produktion:** Nikki Beach Dubai 31 aug 18:00 → bekräftelsekod
+  `423G5442SVNJ` → avbokad via vårt eget API. Pastel Bangkok likaså (`664T4A8PMSCX`).
+- **Begränsning:** fungerar på slots av typ `book` (direkt). Typ `request` går
+  fortfarande via concierge — exakt som deras egen widget är tänkt att fungera.
+- Varje bokning sparas som bridge med status `confirmed` + historik → syns i
+  statusflödet (steg 1) och kan avbokas av ägaren.
+
