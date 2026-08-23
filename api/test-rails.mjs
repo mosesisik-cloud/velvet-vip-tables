@@ -59,6 +59,20 @@ function checkMrz() {
   if (!extracted?.valid) fail("mrz-extract", JSON.stringify(extracted && extracted.reasons));
   else ok("mrz-extract", "from ocr text");
 
+  const noisy = extractMrzFromText(
+    TEST_LIVE.line1 + "\n" + TEST_LIVE.line2.replace("9003152", "9O03152")
+  );
+  if (!noisy?.valid || noisy.fields.documentNumber !== "AB1234567") {
+    fail("mrz-repair-o0", JSON.stringify(noisy && { reasons: noisy.reasons, fields: noisy.fields }));
+  } else ok("mrz-repair-o0", "O/0 swap repaired");
+
+  const noisyComp = extractMrzFromText(
+    "F<" + TEST_LIVE.line1.slice(2) + "\n" + TEST_LIVE.line2
+  );
+  if (!noisyComp?.valid || noisyComp.fields.lastName !== "ISIK") {
+    fail("mrz-repair-fp", JSON.stringify(noisyComp && noisyComp.reasons));
+  } else ok("mrz-repair-fp", "P misread as F");
+
   const full = nameMatch("MOSES", "ISIK", "Moses Isik");
   const miss = nameMatch("MOSES", "ISIK", "Gabbe Velvet");
   if (!full.ok || miss.ok) fail("mrz-name", JSON.stringify({ full, miss }));

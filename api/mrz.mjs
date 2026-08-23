@@ -153,6 +153,90 @@ function scoreParse(p) {
   return n;
 }
 
+/** Common Tesseract swaps on a TD3 field so one misread char can still checksum. */
+const OCR_SWAP = {
+  "0": "OQD", "O": "0DQ", "Q": "0O", "D": "0O",
+  "1": "I", "I": "1",
+  "5": "S", "S": "5",
+  "8": "B", "B": "8",
+  "2": "Z", "Z": "2",
+  "6": "G", "G": "6",
+  "C": "<", "K": "<", "E": "<",
+};
+
+function repairField(raw, checkChar) {
+  const src = String(raw || "");
+  const cd = String(checkChar || "");
+  if (checkDigit(src) === cd) return src;
+  for (let i = 0; i < src.length; i++) {
+    const alts = OCR_SWAP[src[i]] || "";
+    for (const ch of alts) {
+      const next = src.slice(0, i) + ch + src.slice(i + 1);
+      if (checkDigit(next) === cd) return next;
+    }
+  }
+  return null;
+}
+
+function applyField(chars, start, len, checkIdx) {
+  const raw = chars.slice(start, start + len).join("");
+  const cd = chars[checkIdx];
+  if (checkDigit(raw) === cd) return;
+  const fixed = repairField(raw, cd);
+  if (fixed) {
+    for (let i = 0; i < len; i++) chars[start + i] = fixed[i];
+    return;
+  }
+  const altsCd = OCR_SWAP[cd] || "";
+  for (const ch of altsCd) {
+    if (checkDigit(raw) === ch) { chars[checkIdx] = ch; return; }
+  }
+}
+
+export function repairTd3(line1, line2) {
+  const a0 = pad44(line1);
+  const b0 = pad44(line2);
+  let best = parseTd3(a0, b0);
+  if (best && best.valid) return best;
+  const chars = b0.split("");
+  applyField(chars, 0, 9, 9);
+  applyField(chars, 13, 6, 19);
+  applyField(chars, 21, 6, 27);
+  applyField(chars, 28, 14, 42);
+  const l2 = chars.join("");
+  const composite = l2.slice(0, 10) + l2.slice(13, 20) + l2.slice(21, 43);
+  const wantComp = checkDigit(composite);
+  if (wantComp && wantComp !== chars[43]) {
+    const alts = OCR_SWAP[chars[43]] || "";
+    if (alts.includes(wantComp) || chars[43] === "<") chars[43] = wantComp;
+  }
+  let a = a0;
+  if (a[0] !== "P") {
+    if (a[0] === "F" || a[0] === "R" || a[0] === "D") a = "P" + a.slice(1);
+  }
+  const repaired = parseTd3(a, chars.join(""));
+  if (scoreParse(repaired) > scoreParse(best)) best = repaired;
+  if (best && best.valid) return best;
+  const src = (best && best.line2) || chars.join("");
+  for (let i = 0; i < 44; i++) {
+    const alts = OCR_SWAP[src[i]] || "";
+    for (const ch of alts) {
+      const n = src.slice(0, i) + ch + src.slice(i + 1);
+      const p = parseTd3(a, n);
+      if (scoreParse(p) > scoreParse(best)) best = p;
+      if (p.valid) return p;
+    }
+  }
+  return best;
+}
+
+function consider(best, line1, line2) {
+  const raw = parseTd3(pad44(line1), pad44(line2));
+  const p = raw && raw.valid ? raw : repairTd3(line1, line2);
+  if (scoreParse(p) > scoreParse(best)) return p;
+  return best;
+}
+
 export function extractMrzFromText(text) {
   const lines = String(text || "")
     .toUpperCase()
@@ -161,19 +245,17 @@ export function extractMrzFromText(text) {
     .filter((l) => l.length >= 28);
   let best = null;
   for (let i = 0; i < lines.length - 1; i++) {
-    if (lines[i][0] !== "P" && lines[i + 1][0] !== "P") continue;
-    const a = lines[i][0] === "P" ? lines[i] : lines[i + 1];
-    const b = lines[i][0] === "P" ? lines[i + 1] : lines[i];
-    const p = parseTd3(pad44(a), pad44(b));
-    if (scoreParse(p) > scoreParse(best)) best = p;
-    if (p.valid) return p;
+    if (lines[i][0] !== "P" && lines[i + 1][0] !== "P" && lines[i][0] !== "F" && lines[i + 1][0] !== "F") continue;
+    const a = (lines[i][0] === "P" || lines[i][0] === "F") ? lines[i] : lines[i + 1];
+    const b = a === lines[i] ? lines[i + 1] : lines[i];
+    best = consider(best, a, b);
+    if (best && best.valid) return best;
   }
   const blob = String(text || "").toUpperCase().replace(/[^A-Z0-9<]/g, "");
   for (let i = 0; i + 88 <= blob.length; i++) {
-    if (blob[i] !== "P") continue;
-    const p = parseTd3(blob.slice(i, i + 44), blob.slice(i + 44, i + 88));
-    if (scoreParse(p) > scoreParse(best)) best = p;
-    if (p.valid) return p;
+    if (blob[i] !== "P" && blob[i] !== "F") continue;
+    best = consider(best, blob.slice(i, i + 44), blob.slice(i + 44, i + 88));
+    if (best && best.valid) return best;
   }
   return best;
 }
