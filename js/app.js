@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=86";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=86";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=86";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=86";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=87";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=87";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=87";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=87";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -4616,7 +4616,8 @@ async function renderVerify() {
     <h1>${esc(t("verifyTitle"))}</h1>
     <p class="ob-sub" style="margin:0 0 18px;text-align:left">${esc(t("verifySub"))}</p>
     ${st === "verified"
-      ? `<p class="idv-badge ok">✓ ${esc(t("verifyOk"))}</p><p class="member-access${isPayingMember() ? " on" : ""}">${esc(isPayingMember() ? t("memberAccessOn") : t("cardNeed"))}</p>${mrzRowsHTML(savedFields)}`
+      ? `<p class="idv-badge ok">✓ ${esc(t("verifyOk"))}</p><p class="member-access${isPayingMember() ? " on" : ""}">${esc(isPayingMember() ? t("memberAccessOn") : t("cardNeed"))}</p>${mrzRowsHTML(savedFields)}
+        <p style="margin:12px 0 0"><button type="button" class="btn btn-gold" id="idv-again">${esc(t("verifyAgain"))}</button></p>`
       : `<div class="verify-perks">
           <p class="verify-perks-title">${esc(t("verifyPerksTitle"))}</p>
           <ul>
@@ -4659,7 +4660,7 @@ async function renderVerify() {
     <label class="chk-row hidden" id="idv-confirm-row">
       <input type="checkbox" id="idv-confirm"> ${esc(t("verifyConfirmName"))}
     </label>
-    <button class="btn btn-gold" id="idv-go" style="width:100%;margin-top:12px">${esc(t("verifyCta"))}</button>
+    <button class="btn btn-gold" id="idv-go" style="width:100%;margin-top:12px">${esc(st === "verified" ? t("verifyAgain") : t("verifyCta"))}</button>
   </section>`;
 
   const setErr = (msg) => {
@@ -4679,6 +4680,10 @@ async function renderVerify() {
     const el = $("#mrz-status");
     if (el && !el.hidden && el.textContent === t("verifyOcrLoad")) setStatus("", false);
   }).catch(() => {});
+  $("#idv-again")?.addEventListener("click", () => {
+    document.getElementById("idv-pass")?.closest(".idv-grid")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    $("#idv-cam")?.click();
+  });
   const paintFace = () => {
     const box = $("#face-box");
     if (box) box.innerHTML = faceChecksHTML(passFace && passFace.ok, liveFace && liveFace.ok, faceMatch);
@@ -5223,7 +5228,7 @@ async function renderAccount() {
             ${u.handle ? (socialUrl(u.provider, u.handle)
               ? `<a class="person-handle" href="${esc(socialUrl(u.provider, u.handle))}" target="_blank" rel="noopener">@${esc(u.handle)}</a>`
               : `<span class="person-handle">@${esc(u.handle)}</span>`) : ""}
-            ${st === "verified" ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span>` : `<a class="btn btn-gold btn-sm" href="#/verify" data-nav>${esc(t("verifyTitle"))}</a>`}
+            ${st === "verified" ? `<span class="idv-badge ok">✓ ${esc(t("verifyOk"))}</span> <a class="btn btn-ghost btn-sm" href="#/verify" data-nav>${esc(t("verifyAgain"))}</a>` : `<a class="btn btn-gold btn-sm" href="#/verify" data-nav>${esc(t("verifyTitle"))}</a>`}
           </p>
           <p class="member-access${isPayingMember() ? " on" : ""}">${esc(isPayingMember() ? t("memberAccessOn") : t("memberAccessOff"))}</p>
           <p class="person-meta" style="margin-top:6px">
@@ -6495,7 +6500,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=86", { updateViaCache: "none" })
+      .register("sw.js?v=87", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
