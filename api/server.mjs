@@ -11,6 +11,28 @@ import { parseTd3, extractMrzFromText, nameMatch, publicFields, legalName, ageYe
 import { bookingAdapter, handoffUrl, packetText, publicBridge, officialEventUrl, destInventory } from "./book-bridge.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
+
+// ---------- SevenRooms live-inventarie (offentligt widget-API, ingen nyckel) ----------
+// Verifierade slugs per VELVET-venue (api/sr-venues.json). Läs bara — ingen skrivning
+// i deras system förrän partnerskap finns (se docs/sevenrooms-och-integrationsplan.md).
+const SR_VENUES = (() => {
+  try { return JSON.parse(fs.readFileSync(path.join(__dir, "sr-venues.json"), "utf8")); } catch { return {}; }
+})();
+const srCache = new Map(); // "vid|date|party" -> { at, data }
+async function srFetchJson(p) {
+  const r = await fetch("https://www.sevenrooms.com" + p, {
+    headers: { "User-Agent": "Mozilla/5.0 (compatible; VELVET-availability-bridge)" },
+  });
+  if (!r.ok) throw new Error("sr_http_" + r.status);
+  const j = await r.json();
+  if (j.status !== 200 || !j.data) throw new Error(j.msg || "sr_error");
+  return j.data;
+}
+function srToday() {
+  const n = new Date();
+  return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
+}
+
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
@@ -2768,6 +2790,67 @@ const server = http.createServer(async (req, res) => {
       }
       save(db);
       return send(res, 201, { message: msg, messages, promoter, guestWa: guestWaForThread(db, venueId, threadId) });
+    }
+
+    // ---------- Live-tillgänglighet (SevenRooms) ----------
+    const availM = url.pathname.match(/^\/availability\/([A-Z]{3}-\d{3})$/);
+    if (req.method === "GET" && availM) {
+      const vid = availM[1];
+      const slug = SR_VENUES[vid];
+      if (!slug) return send(res, 200, { ok: false, reason: "no_live_inventory" });
+      const qDate = String(url.searchParams.get("date") || "");
+      const date = /^\d{4}-\d{2}-\d{2}$/.test(qDate) ? qDate : "";
+      const party = Math.min(20, Math.max(1, Number(url.searchParams.get("party")) || 2));
+      const key = `${vid}|${date}|${party}`;
+      const hit = srCache.get(key);
+      if (hit && Date.now() - hit.at < 60000) return send(res, 200, hit.data, { "Cache-Control": "no-store" });
+      try {
+        const start = date || srToday();
+        const dates = await srFetchJson(`/api-yoa/availability/dates?venue=${slug}&start_date=${start}&num_days=14`);
+        const valid = Array.isArray(dates.valid_dates) ? dates.valid_dates : [];
+        const day = date || valid[0] || "";
+        let shifts = [];
+        if (day) {
+          const range = await srFetchJson(`/api-yoa/availability/ng/widget/range?venue=${slug}&start_date=${day}&num_days=1&party_size=${party}&channel=website`);
+          const daySlots = (range.availability && range.availability[day]) || [];
+          shifts = daySlots.map((sh) => ({
+            name: String(sh.name || ""),
+            category: String(sh.shift_category || ""),
+            closed: !!sh.is_closed,
+            times: (sh.times || [])
+              .filter((t) => t && t.time && (t.type === "book" || t.is_requestable))
+              .slice(0, 40)
+              .map((t) => ({ time: String(t.time), type: t.type === "book" ? "book" : "request" })),
+          })).filter((s) => s.times.length);
+        }
+        const out = { ok: true, system: "sevenrooms", slug, venueId: vid, date: day || null, partySize: party, validDates: valid.slice(0, 14), shifts, fetched: new Date().toISOString() };
+        srCache.set(key, { at: Date.now(), data: out });
+        if (srCache.size > 300) srCache.clear();
+        return send(res, 200, out, { "Cache-Control": "no-store" });
+      } catch (e) {
+        return send(res, 200, { ok: false, reason: "upstream", message: String(e.message || e) });
+      }
+    }
+
+    // ---------- Bridge-status (operator: skickad → mottagen → bekräftad/avböjd) ----------
+    const bridgeStatusM = url.pathname.match(/^\/book\/bridge\/([^/]+)\/status$/);
+    if (req.method === "POST" && bridgeStatusM) {
+      const adminKey = String(process.env.VELVET_ADMIN_KEY || "");
+      const given = String(req.headers["x-admin-key"] || "");
+      if (!adminKey) return send(res, 503, { error: "admin_key_not_configured" });
+      if (given !== adminKey) return send(res, 403, { error: "admin_key" });
+      const b = await readBody(req, 2e5);
+      const next = String(b.status || "");
+      if (!["handed_off", "sent", "received", "confirmed", "declined", "cancelled"].includes(next)) {
+        return send(res, 400, { error: "status" });
+      }
+      const db = load();
+      const br = (db.bridges || []).find((x) => x.id === decodeURIComponent(bridgeStatusM[1]));
+      if (!br) return send(res, 404, { error: "not_found" });
+      br.status = next;
+      br.history = [...(Array.isArray(br.history) ? br.history : []), { status: next, note: String(b.note || "").slice(0, 200), at: new Date().toISOString() }];
+      save(db);
+      return send(res, 200, { ok: true, bridge: publicBridge(br) });
     }
 
     send(res, 404, { error: "nope" });

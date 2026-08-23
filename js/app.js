@@ -2633,6 +2633,16 @@ function renderVenueDetail(id) {
           <li>${esc(t("perkPromoter"))}</li>
         </ul>
       </div>
+      <div class="detail-panel" id="avail-panel">
+        <h2 class="detail-panel-title">${esc(t("availTitle"))}</h2>
+        <p class="events-meta">${esc(t("availHint"))}</p>
+        <div class="avail-controls" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0">
+          <input type="date" id="avail-date" min="${todayISO()}" style="flex:1;min-width:150px">
+          <select id="avail-party">${[2, 4, 6, 8, 10, 12].map((n) => `<option value="${n}"${n === 6 ? " selected" : ""}>${n} pers</option>`).join("")}</select>
+          <button class="btn btn-gold btn-sm" id="avail-load">${esc(t("availLoad"))}</button>
+        </div>
+        <div id="avail-result"></div>
+      </div>
       ${venuePromotersPanelHTML()}
     </div>
     ${venueDockHTML(v)}
@@ -2642,6 +2652,28 @@ function renderVenueDetail(id) {
   document.querySelectorAll("[data-pkg-open]").forEach((btn) => btn.addEventListener("click", () => openBookingModal(v, btn.dataset.pkgOpen)));
 
   fillVenuePromoters(v.venue_id);
+  (function bindAvail() {
+    const btn = $("#avail-load");
+    const out = $("#avail-result");
+    if (!btn || !out) return;
+    const run = async () => {
+      const date = $("#avail-date")?.value || "";
+      const party = $("#avail-party")?.value || "6";
+      out.innerHTML = `<p class="events-meta">${esc(t("availLoading"))}</p>`;
+      const r = await apiJSON(`/availability/${encodeURIComponent(v.venue_id)}?date=${encodeURIComponent(date)}&party=${encodeURIComponent(party)}`);
+      if (!r) { out.innerHTML = `<p class="events-meta">${esc(t("availErr"))}</p>`; return; }
+      if (!r.ok) { out.innerHTML = `<p class="events-meta">${esc(t("availNone"))}</p>`; return; }
+      const slots = (r.shifts || []).flatMap((s) => (s.times || []).map((x) => ({ shift: s.name, time: x.time, type: x.type })));
+      out.innerHTML = `
+        <p class="events-meta">${esc(t("availLive"))} · ${esc(r.date || "")} · ${esc(t("availVia"))} SevenRooms</p>
+        ${slots.length
+          ? `<div class="chip-list">${slots.slice(0, 24).map((s) => `<span class="chip">${esc(s.time)} · ${esc(s.type === "book" ? t("availBook") : t("availReq"))}</span>`).join("")}</div>`
+          : `<p class="events-meta">${esc(t("availNoneDay"))}</p>`}
+      `;
+    };
+    btn.addEventListener("click", run);
+    run();
+  })();
   $("#d-book").addEventListener("click", () => openBookingModal(v));
   $("#dock-book")?.addEventListener("click", () => openBookingModal(v));
   $("#v-share")?.addEventListener("click", () => shareVenue(v));
