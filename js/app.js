@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=84";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=84";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=84";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=84";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=85";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=85";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=85";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=85";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -4600,7 +4600,6 @@ async function renderVerify() {
     return;
   }
   await refreshIdv();
-  warmupOcr().catch(() => {});
   warmupFaceApi().catch(() => {});
   const st = idvStatus();
   const savedFields = (loadUser() && loadUser().idvFields) || null;
@@ -4634,7 +4633,7 @@ async function renderVerify() {
       <button type="button" class="mrz-shutter" id="idv-shutter" hidden aria-label="${esc(t("verifySnap"))}"></button>
       <button type="button" class="mrz-flip" id="idv-flip">${esc(t("verifyFlipCam"))}</button>
     </div>
-    <p class="mrz-status" id="mrz-status" hidden></p>
+    <p class="mrz-status" id="mrz-status">${esc(t("verifyOcrLoad"))}</p>
     <div id="mrz-fields"></div>
     <div id="face-box">${faceChecksHTML(false, false, null)}</div>
     <div class="idv-grid">
@@ -4676,6 +4675,10 @@ async function renderVerify() {
     el.textContent = msg || "";
     el.hidden = !show;
   };
+  warmupOcr().finally(() => {
+    const el = $("#mrz-status");
+    if (el && !el.hidden && el.textContent === t("verifyOcrLoad")) setStatus("", false);
+  }).catch(() => {});
   const paintFace = () => {
     const box = $("#face-box");
     if (box) box.innerHTML = faceChecksHTML(passFace && passFace.ok, liveFace && liveFace.ok, faceMatch);
@@ -4726,9 +4729,14 @@ async function renderVerify() {
       showMrz(rec);
       try { await loadFaceApi(); } catch { setStatus("", false); setErr(t("verifyFaceLoadFail")); return; }
       passFace = await detectPassportFace(data);
-      setStatus("", false);
       paintFace();
-      if (!passFace.ok) setErr(t("verifyNoFacePass"));
+      if (!passFace.ok) {
+        setStatus("", false);
+        setErr(t("verifyNoFacePass"));
+        return;
+      }
+      setStatus(t("verifyNextLive"), true);
+      requestAnimationFrame(() => $("#idv-live")?.click());
     } catch {
       setStatus("", false);
       setErr(t("verifyReadFail"));
@@ -5131,6 +5139,7 @@ async function renderCard() {
   });
   $("#card-cvc")?.addEventListener("input", (e) => { e.target.value = digits(e.target).slice(0, 4); });
   $("#card-name")?.addEventListener("input", paintFace);
+  $("#card-num")?.focus();
   $("#card-stripe")?.addEventListener("click", async () => {
     setErr("");
     const r = await apiJSON("/card/setup", {
@@ -6486,7 +6495,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=84", { updateViaCache: "none" })
+      .register("sw.js?v=85", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
