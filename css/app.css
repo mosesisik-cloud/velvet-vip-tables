@@ -736,6 +736,30 @@ button { font-family: inherit; cursor: pointer; }
 .detail-back:hover { color: var(--gold-bright); }
 
 /* Stor venue-bild på detaljvyn — bredare beskärning än korten */
+.venue-intro-shell {
+  position: relative; width: 100vw; height: clamp(620px, 92svh, 980px);
+  margin: 0 0 clamp(72px, 10vw, 150px); margin-left: calc(50% - 50vw);
+  overflow: hidden; background: #08080a; box-shadow: 0 42px 120px rgba(0,0,0,.7); isolation: isolate;
+}
+.venue-intro-shell > .venue-hero-media { width: 100%; height: 100%; aspect-ratio: auto; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+.venue-intro-scenes, .venue-intro-scene, .venue-intro-shade { position: absolute; inset: 0; }
+.venue-intro-scene { opacity: 0; animation: velvet-intro-scene var(--film-duration) linear infinite; animation-delay: calc(var(--scene) * var(--film-duration) / var(--scene-count)); }
+.venue-intro-scenes.is-single .venue-intro-scene { opacity: 1; animation: none; }
+.venue-intro-scene img { width: 100%; height: 100%; object-fit: cover; display: block; scale: 1.06; animation: velvet-intro-camera var(--film-duration) ease-in-out infinite alternate; }
+.venue-intro-scene:nth-child(even) img { transform-origin: 78% 38%; }
+.venue-intro-scene:nth-child(odd) img { transform-origin: 22% 62%; }
+.venue-intro-scene .venue-media-emblem { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 0; opacity: .38; }
+.venue-intro-shade { z-index: 2; pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,.18), transparent 34%, rgba(0,0,0,.18) 58%, rgba(4,4,6,.94)); }
+.venue-intro-copy { position: absolute; z-index: 3; left: max(24px, calc((100vw - 1240px) / 2)); bottom: clamp(70px, 12vh, 140px); max-width: min(940px, 84vw); color: #fff; pointer-events: none; }
+.venue-intro-copy span { color: var(--gold); text-transform: uppercase; letter-spacing: .2em; font-size: .72rem; }
+.venue-intro-copy h1 { margin: 10px 0 12px; font-family: var(--font-display); font-size: clamp(3.8rem, 10vw, 9rem); line-height: .86; letter-spacing: -.055em; text-shadow: 0 12px 42px rgba(0,0,0,.55); }
+.venue-intro-copy p { margin: 0; color: rgba(255,255,255,.78); font-size: clamp(.85rem, 1.5vw, 1.05rem); letter-spacing: .08em; text-transform: uppercase; }
+.venue-intro-progress { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.14); }
+.venue-intro-progress span { display: block; width: 100%; height: 100%; background: var(--gold); transform-origin: left; animation: velvet-intro-progress var(--film-duration) linear infinite; }
+.venue-intro-shell .fav-btn { position: absolute; z-index: 5; top: 20px; right: 20px; }
+@keyframes velvet-intro-scene { 0% { opacity: 0; } 5% { opacity: 1; } 20% { opacity: 1; } 25%, 100% { opacity: 0; } }
+@keyframes velvet-intro-camera { from { scale: 1.04; translate: -1% 0; } to { scale: 1.16; translate: 1% -1%; } }
+@keyframes velvet-intro-progress { from { scale: 0 1; } to { scale: 1 1; } }
 .venue-hero-media {
   position: relative; aspect-ratio: 21 / 9;
   border-radius: var(--radius); overflow: hidden;
@@ -890,6 +914,9 @@ button { font-family: inherit; cursor: pointer; }
 
 /* ---------- Responsive ---------- */
 @media (max-width: 720px) {
+  .venue-intro-shell { height: 88svh; min-height: 620px; margin-bottom: 72px; }
+  .venue-intro-copy { left: 22px; right: 30px; bottom: 82px; max-width: none; }
+  .venue-intro-copy h1 { font-size: clamp(3.2rem, 16vw, 5.8rem); }
   .hero { padding: 70px 20px 60px; }
   .section { padding: 50px 20px; }
   .stats { gap: 32px; padding: 26px 20px; }
@@ -954,6 +981,12 @@ button { font-family: inherit; cursor: pointer; }
   .prio-lg { flex-direction: row; align-items: baseline; gap: 10px; min-width: 0; padding: 10px 16px; }
   .prio-lg .prio-num { font-size: 26px; }
   .prio-lg .prio-label { margin-top: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .venue-intro-scene { opacity: 0; animation: none; }
+  .venue-intro-scene:first-child { opacity: 1; }
+  .venue-intro-scene img, .venue-intro-progress span { animation: none; }
 }
 
 /* ---------- Dela bokning & inbjudningsvy ---------- */

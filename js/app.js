@@ -188,6 +188,31 @@ function bindVenueGallery() {
     });
   }, { passive: true });
 }
+
+function venueIntroHTML(v) {
+  const yt = venueYoutube(v);
+  const items = venueGalleryItems(v);
+  const frames = items.length ? [...items] : [{ url: venuePhoto(v) || "" }];
+  if (frames.length > 1 && frames.length < 4) {
+    const originals = [...frames];
+    while (frames.length < 4) frames.push(originals[frames.length % originals.length]);
+  }
+  const media = yt
+    ? venueMediaHTML(v, "venue-hero-media", { eager: true, playable: true, extra: favBtnHTML(v.venue_id, v.name) })
+    : `<div class="venue-intro-scenes${frames.length === 1 ? " is-single" : ""}" style="--scene-count:${frames.length};--film-duration:${Math.max(9, frames.length * 3)}s">
+        ${frames.map((photo, i) => `<div class="venue-intro-scene" style="--scene:${i}">
+          <div class="dest-emblem venue-media-emblem" aria-hidden="true" style="--h:${destHue(v.destination_code)}">${esc(v.destination_code || "")}</div>
+          ${photo.url ? `<img src="${esc(photo.url)}" alt="" loading="${i ? "lazy" : "eager"}"${i ? "" : ` fetchpriority="high"`} decoding="async" referrerpolicy="no-referrer">` : ""}
+        </div>`).join("")}
+        ${favBtnHTML(v.venue_id, v.name)}
+      </div>`;
+  return `<section class="venue-intro-shell${yt ? " has-video" : " has-scenes"}" aria-label="Introduktion till ${esc(v.name)}">
+    ${media}
+    <div class="venue-intro-shade" aria-hidden="true"></div>
+    <div class="venue-intro-copy"><span>VELVET presents</span><h1>${esc(v.name)}</h1><p>${esc(v.destination)} · ${esc(v.category || "VIP experience")}</p></div>
+    ${yt ? "" : `<div class="venue-intro-progress" aria-hidden="true"><span></span></div>`}
+  </section>`;
+}
 function coverVenueForDest(d) {
   if (!d) return null;
   const list = VENUES
@@ -2524,7 +2549,7 @@ function renderVenueDetail(id) {
   <section class="section detail">
     <a class="detail-back" href="#/venues" data-nav>← ${esc(t("allVenues"))}</a>
 
-    ${venueMediaHTML(v, "venue-hero-media", { eager: true, playable: true, extra: favBtnHTML(v.venue_id, v.name) })}
+    ${venueIntroHTML(v)}
     ${venueGalleryHTML(v)}
     ${photoAttrHTML(v)}
 
