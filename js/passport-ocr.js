@@ -1,6 +1,7 @@
-import { extractMrzFromText } from "./mrz.js?v=83";
+import { extractMrzFromText, applyVizNames } from "./mrz.js?v=84";
 
-let worker = null;
+let mrzWorker = null;
+let vizWorker = null;
 let workerBusy = false;
 let camStream = null;
 
@@ -8,6 +9,7 @@ const TESS_SCRIPTS = [
   "https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js",
   "https://unpkg.com/tesseract.js@5.1.1/dist/tesseract.min.js",
 ];
+const MRZ_LANG_PATH = new URL("../vendor/mrz", import.meta.url).href.replace(/\/$/, "");
 
 function loadScript(src) {
   return new Promise((resolve, reject) => {
@@ -21,27 +23,46 @@ function loadScript(src) {
   });
 }
 
-async function tess() {
-  if (worker) return worker;
-  let T = window.Tesseract;
-  if (!T) {
-    let last = null;
-    for (const src of TESS_SCRIPTS) {
-      try { T = await loadScript(src); if (T) break; }
-      catch (e) { last = e; }
-    }
-    if (!T) throw last || new Error("tesseract");
+async function tesseractLib() {
+  if (window.Tesseract) return window.Tesseract;
+  let last = null;
+  for (const src of TESS_SCRIPTS) {
+    try {
+      const T = await loadScript(src);
+      if (T) return T;
+    } catch (e) { last = e; }
   }
-  worker = await T.createWorker("eng", 1, { logger: () => {} });
-  await worker.setParameters({
+  throw last || new Error("tesseract");
+}
+
+async function tessMrz() {
+  if (mrzWorker) return mrzWorker;
+  const T = await tesseractLib();
+  try {
+    mrzWorker = await T.createWorker("mrz", 1, { logger: () => {}, langPath: MRZ_LANG_PATH, gzip: true });
+  } catch {
+    mrzWorker = await T.createWorker("eng", 1, { logger: () => {} });
+  }
+  await mrzWorker.setParameters({
     tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<",
+    tessedit_pageseg_mode: "7",
+  });
+  return mrzWorker;
+}
+
+async function tessViz() {
+  if (vizWorker) return vizWorker;
+  const T = await tesseractLib();
+  vizWorker = await T.createWorker("eng", 1, { logger: () => {} });
+  await vizWorker.setParameters({
     tessedit_pageseg_mode: "6",
   });
-  return worker;
+  return vizWorker;
 }
 
 export async function warmupOcr() {
-  try { await tess(); } catch { /* verify page still works; readShot reports fail */ }
+  try { await tessMrz(); } catch { /* verify page still works */ }
+  try { await tessViz(); } catch { /* printed-name backup is optional */ }
 }
 
 function loadImg(src) {
@@ -115,8 +136,8 @@ function rotateCanvas(src, deg) {
   return c;
 }
 
-async function ocrCanvas(c, psm) {
-  const w = await tess();
+async function ocrCanvas(c, psm, kind) {
+  const w = kind === "viz" ? await tessViz() : await tessMrz();
   workerBusy = true;
   try {
     if (psm) await w.setParameters({ tessedit_pageseg_mode: String(psm) });
@@ -136,6 +157,41 @@ function keepBest(best, rec) {
   return best;
 }
 
+function cellInk(c) {
+  const ctx = c.getContext("2d");
+  const data = ctx.getImageData(0, 0, c.width, c.height).data;
+  let dark = 0;
+  const n = data.length / 4;
+  for (let i = 0; i < data.length; i += 4) {
+    const g = data[i] * 0.3 + data[i + 1] * 0.59 + data[i + 2] * 0.11;
+    if (g < 140) dark += 1;
+  }
+  return n ? dark / n : 0;
+}
+
+/** ICAO TD3 is 44 fixed-pitch OCR-B glyphs. Read one glyph per cell. */
+async function ocrLineCells(lineCanvas, n = 44) {
+  const w = lineCanvas.width;
+  const h = lineCanvas.height;
+  if (w < n * 4 || h < 8) return "";
+  const cellW = w / n;
+  let out = "";
+  for (let i = 0; i < n; i++) {
+    const c = document.createElement("canvas");
+    const pad = Math.max(2, Math.round(cellW * 0.1));
+    c.width = Math.max(10, Math.round(cellW) + pad * 2);
+    c.height = h + pad * 2;
+    const ctx = c.getContext("2d");
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(lineCanvas, i * cellW, 0, cellW, h, pad, pad, cellW, h);
+    if (cellInk(c) < 0.035) { out += "<"; continue; }
+    const t = String(await ocrCanvas(c, 10, "mrz")).toUpperCase().replace(/[^A-Z0-9<]/g, "");
+    out += t[0] || "<";
+  }
+  return out;
+}
+
 export async function readPassportMrz(dataUrl) {
   const img = await loadImg(dataUrl);
   const W = img.naturalWidth || img.width;
@@ -148,27 +204,46 @@ export async function readPassportMrz(dataUrl) {
     { y: 0, h: H, scale: Math.min(2.2, 2200 / Math.max(W, H)) },
   ];
   let best = null;
+  let line1Canvas = null;
   for (const b of bands) {
     const crop = canvasFrom(img, 0, b.y, W, b.h, b.scale, true);
     for (const v of [crop, invertCanvas(crop)]) {
-      const text = await ocrCanvas(v, 6);
+      const text = await ocrCanvas(v, 6, "mrz");
       best = keepBest(best, extractMrzFromText(text));
-      if (best && best.valid) return best;
     }
     const top = canvasFrom(img, 0, b.y, W, b.h * 0.5, b.scale, true);
     const bot = canvasFrom(img, 0, b.y + b.h * 0.45, W, b.h * 0.55, b.scale, true);
-    const joined = (await ocrCanvas(top, 7)) + "\n" + (await ocrCanvas(bot, 7));
-    best = keepBest(best, extractMrzFromText(joined));
-    if (best && best.valid) return best;
+    const t1 = await ocrCanvas(top, 7, "mrz");
+    const t2 = await ocrCanvas(bot, 7, "mrz");
+    best = keepBest(best, extractMrzFromText(t1 + "\n" + t2));
+    if (!line1Canvas) line1Canvas = top;
+    if (best && best.valid && best.fields && best.fields.lastName && best.fields.lastName.length <= 16) break;
   }
   if (!best || !best.valid) {
     const crop = canvasFrom(img, 0, H * 0.70, W, H * 0.30, 3.6, true);
     for (const deg of [-3, 3, -6, 6]) {
-      const text = await ocrCanvas(rotateCanvas(crop, deg), 6);
+      const text = await ocrCanvas(rotateCanvas(crop, deg), 6, "mrz");
       best = keepBest(best, extractMrzFromText(text));
-      if (best && best.valid) return best;
+      if (best && best.valid) break;
     }
   }
+  const last = best && best.fields && best.fields.lastName || "";
+  const nameDirty = !last || last.length > 16 || /[CKL]{2}/.test(last) || /\s/.test(last);
+  // Name line has no checksums — re-read glyph by glyph when the surname looks like OCR junk.
+  if (nameDirty && line1Canvas && best && best.line2) {
+    try {
+      const cells = await ocrLineCells(line1Canvas, 44);
+      if (cells.length >= 40) {
+        best = keepBest(best, extractMrzFromText(cells + "\n" + best.line2));
+      }
+    } catch { /* keep line-level read */ }
+  }
+  // Printed surname on the biodata page (VIZ) — same source a border officer reads by eye.
+  try {
+    const vizCrop = canvasFrom(img, 0, 0, W, H * 0.72, Math.min(1.6, 1600 / Math.max(W, H)), false);
+    const vizText = await ocrCanvas(vizCrop, 6, "viz");
+    if (vizText && best) best = applyVizNames(best, vizText);
+  } catch { /* VIZ is backup */ }
   return best;
 }
 

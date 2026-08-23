@@ -7,7 +7,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawn } from "node:child_process";
-import { parseTd3, extractMrzFromText, nameMatch, ageYears, ICAO_SAMPLE, TEST_LIVE, TEST_YOUNG } from "./mrz.mjs";
+import { parseTd3, extractMrzFromText, nameMatch, ageYears, ICAO_SAMPLE, TEST_LIVE, TEST_YOUNG, applyVizNames, icaoFold, editDistance } from "./mrz.mjs";
 import { fileURLToPath } from "node:url";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
@@ -86,6 +86,16 @@ function checkMrz() {
   if (!noisyBirth?.valid || noisyBirth.fields.birthDate !== "1990-03-15" || noisyBirth.fields.lastName !== "ISIK") {
     fail("mrz-repair-birth", JSON.stringify(noisyBirth && { reasons: noisyBirth.reasons, fields: noisyBirth.fields }));
   } else ok("mrz-repair-birth", "B/O/S birth + extra L before SWE");
+
+  if (icaoFold("Åström") !== "AASTROEM") fail("mrz-icao-fold", icaoFold("Åström"));
+  else ok("mrz-icao-fold", "Åström → AASTROEM");
+  if (editDistance("ISLK", "ISIK") !== 1) fail("mrz-edit", String(editDistance("ISLK", "ISIK")));
+  else ok("mrz-edit", "ISLK↔ISIK = 1");
+  const badLast = parseTd3("P<SWEISLK<<MOSES<<<<<<<<<<<<<<<<<<<<<<<<<<<<", TEST_LIVE.line2);
+  const vizFixed = applyVizNames(badLast, "EFTERNAMN / SURNAME\nISIK\nFÖRNAMN / GIVEN NAMES\nMOSES");
+  if (!vizFixed?.valid || vizFixed.fields.lastName !== "ISIK" || vizFixed.fields.firstName !== "MOSES") {
+    fail("mrz-viz-surname", JSON.stringify(vizFixed && vizFixed.fields));
+  } else ok("mrz-viz-surname", "printed surname corrects MRZ");
 
   const full = nameMatch("MOSES", "ISIK", "Moses Isik");
   const miss = nameMatch("MOSES", "ISIK", "Gabbe Velvet");

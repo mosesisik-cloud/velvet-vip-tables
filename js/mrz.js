@@ -329,6 +329,104 @@ export function foldName(s) {
     .trim();
 }
 
+/** ICAO 9303 Latin transliteration used on the MRZ (Å→AA, Ä→AE, Ö→OE). */
+export function icaoFold(s) {
+  return String(s || "")
+    .replace(/[Åå]/g, "AA")
+    .replace(/[ÄäÆæ]/g, "AE")
+    .replace(/[ÖöØø]/g, "OE")
+    .replace(/[Üü]/g, "UE")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase()
+    .replace(/[^A-Z]+/g, " ")
+    .trim();
+}
+
+export function editDistance(a, b) {
+  const s = String(a || "");
+  const t = String(b || "");
+  if (s === t) return 0;
+  if (!s) return t.length;
+  if (!t) return s.length;
+  if (Math.abs(s.length - t.length) > 4) return 99;
+  const prev = new Array(t.length + 1);
+  for (let j = 0; j <= t.length; j++) prev[j] = j;
+  for (let i = 1; i <= s.length; i++) {
+    let left = i;
+    const next = [i];
+    for (let j = 1; j <= t.length; j++) {
+      const cost = s[i - 1] === t[j - 1] ? 0 : 1;
+      left = Math.min(prev[j] + 1, left + 1, prev[j - 1] + cost);
+      next[j] = left;
+    }
+    for (let j = 0; j <= t.length; j++) prev[j] = next[j];
+  }
+  return prev[t.length];
+}
+
+const VIZ_STOP = new Set([
+  "PASSPORT", "PASS", "SVERIGE", "SWEDEN", "KINGDOM", "KONUNGARIKET", "TYPE", "CODE",
+  "SURNAME", "EFTERNAMN", "GIVEN", "FORNAMN", "FORENAMES", "NATIONALITY", "NATIONALITET",
+  "SEX", "DATE", "BIRTH", "EXPIRY", "NUMBER", "PERSONNUMMER", "AUTHORITY", "SEE", "PAGE",
+  "NAMN", "SUEDE", "SUECIA", "REISEPASS", "PASSEPORT", "DOCUMENT", "IDENTITY", "CARD",
+  "PERSONAL", "OPTIONAL", "HOLDER", "ISSUING", "STATE", "COUNTRY",
+]);
+
+export function vizNamesFromText(text) {
+  const labeled = { last: "", first: "" };
+  const lines = String(text || "").split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+  for (let i = 0; i < lines.length; i++) {
+    const L = lines[i];
+    const nxt = icaoFold(lines[i + 1] || "");
+    if (/efternamn|surname|apellido|primary identifier|familjenamn/i.test(L) && nxt.length >= 2) {
+      const w = nxt.split(" ").filter((x) => x.length >= 2 && !VIZ_STOP.has(x)).join("<");
+      if (w) labeled.last = w;
+    }
+    if (/f[oö]rnamn|given names|given name|pr[eé]nom|nombres/i.test(L) && nxt.length >= 2) {
+      const w = nxt.split(" ").filter((x) => x.length >= 2 && !VIZ_STOP.has(x)).join("<");
+      if (w) labeled.first = w;
+    }
+  }
+  const tokens = icaoFold(text).split(" ").filter((w) => w.length >= 3 && w.length <= 18 && !VIZ_STOP.has(w) && !/^\d/.test(w));
+  return { labeled, tokens };
+}
+
+/** Line 1 has no checksums — prefer the printed surname on the card when it is a close match. */
+export function applyVizNames(rec, vizText) {
+  if (!rec || !rec.line1) return rec;
+  const viz = vizNamesFromText(vizText);
+  const mrzLast = String(rec.fields && rec.fields.lastName || "").replace(/ /g, "");
+  const cand = [];
+  if (viz.labeled.last) cand.push(viz.labeled.last.replace(/</g, ""));
+  for (const t of viz.tokens) if (!cand.includes(t)) cand.push(t);
+  let pick = "";
+  if (viz.labeled.last) {
+    const c = viz.labeled.last.replace(/</g, "");
+    if (c.length >= 2 && (editDistance(c, mrzLast) <= 3 || !mrzLast || mrzLast.includes(c) || c.includes(mrzLast))) {
+      pick = c;
+    }
+  }
+  if (!pick) {
+    for (const c of cand) {
+      if (!c || c.length < 2) continue;
+      const d = editDistance(c, mrzLast);
+      if (d <= 2) { pick = c; break; }
+      if (mrzLast.includes(c) && c.length >= 3 && c.length < mrzLast.length) { pick = c; break; }
+    }
+  }
+  if (!pick) return rec;
+  const state = rec.line1.slice(0, 5);
+  const parts = rec.line1.slice(5).replace(/<+$/g, "").split("<<");
+  let first = (parts[1] || rec.fields.firstName || "").replace(/ /g, "<");
+  if (viz.labeled.first) first = viz.labeled.first;
+  const line1 = pad44(state + pick + "<<" + first);
+  const next = parseTd3(line1, rec.line2);
+  if (!next || !next.checksumsOk) return rec;
+  if (scoreParse(next) >= scoreParse(rec) || (pick && pick !== mrzLast)) return next;
+  return rec;
+}
+
 export function nameMatch(firstName, lastName, claimed) {
   const last = foldName(lastName);
   const first = foldName(firstName);
