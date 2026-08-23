@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=88";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=88";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=88";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=88";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=89";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=89";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=89";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=89";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -2886,9 +2886,9 @@ async function openBookingModal(v, preselectedPackageId = "") {
       </div>
 
       <div class="form-group">
-          <label for="m-package-notes">Vad vill du ska ingå? <span class="label-optional">(valfritt)</span></label>
-          <textarea id="m-package-notes" rows="3" maxlength="500" placeholder="T.ex. bästa placering, champagne, middag, födelsedag, nära dansgolvet…"></textarea>
-          <p class="stepper-hint">Önskemålet skickas till klubben och är inte garanterat förrän de bekräftar.</p>
+          <label for="m-package-notes">${esc(t("pkgWantIncluded"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
+          <textarea id="m-package-notes" rows="3" maxlength="500" placeholder="${esc(t("pkgWantPh"))}"></textarea>
+          <p class="stepper-hint">${esc(t("pkgWantHint"))}</p>
         </div>
 
         <div class="form-group">
@@ -3501,7 +3501,7 @@ function goldPin(L, { small = false } = {}) {
 function userDot(L) {
   return L.divIcon({
     className: "velvet-pin-wrap",
-    html: `<span class="velvet-user-dot" title="Din position"></span>`,
+    html: `<span class="velvet-user-dot" title="${esc(t("yourPosition"))}"></span>`,
     iconSize: [16, 16],
     iconAnchor: [8, 8],
   });
@@ -3590,13 +3590,13 @@ function renderMapView() {
         if (near.disabled) return;
         near.disabled = true;
         const orig = near.innerHTML;
-        near.innerHTML = `<span class="spinner spinner-sm" aria-hidden="true"></span> Hämtar plats …`;
+        near.innerHTML = `<span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("geoLoading"))}`;
         const done = () => { near.innerHTML = orig; near.disabled = false; };
         locateUser(
           (g) => {
             done();
             if (!ACTIVE_MAPS.includes(map)) return; // vyn har bytts
-            if (!userMarker) userMarker = L.marker([g.lat, g.lng], { icon: userDot(L), alt: "Din position" }).addTo(map);
+            if (!userMarker) userMarker = L.marker([g.lat, g.lng], { icon: userDot(L), alt: t("yourPosition") }).addTo(map);
             else userMarker.setLatLng([g.lat, g.lng]);
             map.flyTo([g.lat, g.lng], 7, { duration: 1.2 });
           },
@@ -6583,7 +6583,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=88", { updateViaCache: "none" })
+      .register("sw.js?v=89", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

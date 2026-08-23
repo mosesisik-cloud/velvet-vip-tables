@@ -1,4 +1,4 @@
-import { extractMrzFromText, applyVizNames } from "./mrz.js?v=88";
+import { extractMrzFromText, applyVizNames } from "./mrz.js?v=89";
 
 let mrzWorker = null;
 let vizWorker = null;

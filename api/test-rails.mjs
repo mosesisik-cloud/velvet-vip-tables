@@ -210,7 +210,7 @@ function checkI18n() {
     const absent = langs.filter((l) => !keys[l].has(k));
     if (absent.length) miss.push(k + ":" + absent.join("+"));
   }
-  const need = ["availTitle", "pkgPickTitle", "galleryAria", "verifyAgain", "paySoon"];
+  const need = ["availTitle", "pkgPickTitle", "galleryAria", "verifyAgain", "paySoon", "pkgWantIncluded", "yourPosition", "availBookTitle"];
   const absentNeed = need.filter((k) => langs.some((l) => !keys[l].has(k)));
   if (miss.length) fail("i18n-parity", miss.slice(0, 12).join("; "));
   else if (absentNeed.length) fail("i18n-parity", "missing " + absentNeed.join(","));
