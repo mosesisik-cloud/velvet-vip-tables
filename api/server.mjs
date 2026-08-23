@@ -4,7 +4,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { loadEventsFile, loadCrawlStatus, runCrawl, getCrawlState, scheduleDailyCrawl } from "./crawl-events.mjs";
-import { loadPlacesFile, runPlacesLookup } from "./google-places.mjs";
+import { loadPlacesFile, runPlacesLookup, loadRestaurantsFile, runRestaurantDiscovery } from "./google-places.mjs";
 import { loadFactsFile, runFactsCrawl } from "./venue-facts.mjs";
 import { loadMenusFile, runMenusCrawl } from "./crawl-menus.mjs";
 import { parseTd3, extractMrzFromText, nameMatch, publicFields, legalName, ageYears } from "./mrz.mjs";
@@ -1486,6 +1486,31 @@ const server = http.createServer(async (req, res) => {
     }
     if (req.method === "GET" && url.pathname === "/places") {
       return send(res, 200, loadPlacesFile(), { "Cache-Control": "no-store" });
+    }
+    if (req.method === "GET" && url.pathname === "/restaurants") {
+      const code = String(url.searchParams.get("dest") || "").trim().toUpperCase();
+      let all = loadRestaurantsFile();
+      if (code && !all.destinations?.[code] && process.env.VELVET_CRAWL !== "0") {
+        try {
+          await runRestaurantDiscovery({ destinationCode: code, reason: "app-missing" });
+          all = loadRestaurantsFile();
+        } catch (e) { console.error("velvet-restaurants", e); }
+      }
+      const found = code ? all.destinations?.[code] || null : null;
+      if (found && Date.now() - Date.parse(found.fetchedAt || 0) > 7 * 864e5 && process.env.VELVET_CRAWL !== "0") {
+        runRestaurantDiscovery({ destinationCode: code, reason: "app-stale" }).catch((e) => console.error("velvet-restaurants", e));
+      }
+      return send(res, 200, code
+        ? { fetchedAt: all.fetchedAt, minimumRating: all.minimumRating, destination: found }
+        : all, { "Cache-Control": "no-store" });
+    }
+    if (req.method === "POST" && url.pathname === "/restaurants/refresh") {
+      if (process.env.VELVET_CRAWL === "0") return send(res, 403, { error: "crawl_disabled" });
+      const b = await readBody(req, 2e5);
+      if (!isOperator(b.user)) return send(res, 403, { error: "operator" });
+      const destinationCode = String(b.destinationCode || "").replace(/[^A-Z0-9_-]/gi, "").slice(0, 12);
+      runRestaurantDiscovery({ destinationCode, reason: "operator" }).catch((e) => console.error("velvet-restaurants", e));
+      return send(res, 202, { running: true, destinationCode });
     }
     const placeOne = url.pathname.match(/^\/places\/([A-Z0-9._-]+)$/i);
     if (req.method === "GET" && placeOne) {

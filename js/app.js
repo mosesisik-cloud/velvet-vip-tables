@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=89";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=89";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=89";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=89";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=90";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=90";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=90";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=90";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -1907,6 +1907,42 @@ function bindDestCards() {
   });
 }
 
+function restaurantCardHTML(r) {
+  const reviews = Number(r.reviewCount) || 0;
+  return `<article class="restaurant-card">
+    <div class="restaurant-card-top">
+      <div><h3>${esc(r.name)}</h3><p>${esc(r.address || "")}</p></div>
+      <div class="restaurant-rating"><strong>${esc(String(r.rating))}</strong><span>${esc(googleStars(r.rating))}</span></div>
+    </div>
+    <p class="restaurant-review-count">${esc(reviews.toLocaleString(currentLang()))} ${esc(t("restaurantReviews"))}</p>
+    <div class="restaurant-actions">
+      ${r.website ? `<a class="btn btn-sm" href="${esc(r.website)}" target="_blank" rel="noopener">${esc(t("officialWebsite"))} ↗</a>` : ""}
+      <a class="btn btn-gold btn-sm" href="${esc(r.mapsUrl)}" target="_blank" rel="noopener">Google Maps ↗</a>
+    </div>
+  </article>`;
+}
+
+async function mountDestinationRestaurants(d) {
+  const root = document.getElementById("destination-restaurants");
+  if (!root) return;
+  let row = null;
+  const live = await apiJSON(`/restaurants?dest=${encodeURIComponent(d.code)}`);
+  if (live?.destination) row = live.destination;
+  if (!row) {
+    try {
+      const r = await fetch("data/restaurants.json", { cache: "no-store" });
+      if (r.ok) row = (await r.json())?.destinations?.[d.code] || null;
+    } catch { /* optional */ }
+  }
+  const restaurants = Array.isArray(row?.restaurants)
+    ? row.restaurants.filter((r) => Number(r.rating) >= 3.8).slice(0, 20)
+    : [];
+  root.innerHTML = restaurants.length
+    ? `<div class="restaurant-grid">${restaurants.map(restaurantCardHTML).join("")}</div>
+       <p class="restaurant-source">Google Places · ${esc(t("restaurantsSub"))}${row.fetchedAt ? ` · ${esc(new Date(row.fetchedAt).toLocaleDateString(currentLang()))}` : ""}</p>`
+    : `<div class="empty-state restaurant-empty"><p>${esc(t("restaurantsEmpty"))}</p></div>`;
+}
+
 // ---------- Destination detail ----------
 function renderDestinationDetail(code) {
   const d = DESTINATIONS.find((x) => String(x.code).toLowerCase() === String(code).toLowerCase());
@@ -1991,6 +2027,11 @@ function renderDestinationDetail(code) {
       <p class="map-note">${esc(t("mapNoteApprox").replace("{name}", d.name))} <a class="link-gold" href="#/map" data-nav>${esc(t("wholeMap"))}</a></p>
     </div>` : ""}
 
+    <div class="section-head restaurant-section-head">
+      <div><h2>${esc(t("restaurantsTitle").replace("{name}", d.name))}</h2><div class="sub">${esc(t("restaurantsSub"))}</div></div>
+    </div>
+    <div id="destination-restaurants" aria-live="polite"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("restaurantsLoading"))}</p></div>
+
     ${inCity.length ? `
     <div class="section-head" style="margin-top:44px">
       <div><h2>${esc(t("cityBest").replace("{name}", d.name))}</h2><div class="sub">${esc(t("cityBestSub"))}</div></div>
@@ -2023,6 +2064,7 @@ function renderDestinationDetail(code) {
   });
   bindVenueCards();
   mountDestMap(d, inCity);
+  mountDestinationRestaurants(d);
 }
 
 // ---------- Sociala länkar ----------
@@ -6583,7 +6625,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=89", { updateViaCache: "none" })
+      .register("sw.js?v=90", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

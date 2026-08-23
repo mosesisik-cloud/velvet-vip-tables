@@ -467,6 +467,21 @@ button { font-family: inherit; cursor: pointer; }
   border-color: rgba(212,175,95,0.4); background: var(--bg-card-hover);
   transform: translateY(-2px); box-shadow: var(--shadow-card-hover);
 }
+.restaurant-section-head { margin-top: 44px; }
+.restaurant-loading { padding: 22px 0; }
+.restaurant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 16px; }
+.restaurant-card { background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-card); }
+.restaurant-card-top { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+.restaurant-card h3 { font-family: var(--font-display); font-size: 19px; line-height: 1.25; margin: 0 0 7px; }
+.restaurant-card-top p { color: var(--text-dim); font-size: 12.5px; line-height: 1.45; margin: 0; }
+.restaurant-rating { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; color: var(--gold-bright); }
+.restaurant-rating strong { font-family: var(--font-display); font-size: 22px; }
+.restaurant-rating span { font-size: 10px; letter-spacing: -1px; }
+.restaurant-review-count, .restaurant-source { color: var(--text-faint); font-size: 12px; }
+.restaurant-review-count { margin: 16px 0 12px; }
+.restaurant-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.restaurant-source { margin: 14px 2px 0; }
+.restaurant-empty { padding: 26px; }
 /* Venue-bild överst på kortet — full bredd (negativa marginaler mot kortets padding),
    16:9, mörk gradient nedtill för läsbarhet. Emblemet ligger under bilden som
    placeholder/fallback; .img-fail (onerror) döljer bilden så emblemet tar över. */

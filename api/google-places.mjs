@@ -11,6 +11,7 @@ const __dir = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dir, "..");
 const APP_DATA = process.env.VELVET_APP_DATA || path.join(ROOT, "data");
 const PLACES_FILE = process.env.VELVET_PLACES || path.join(APP_DATA, "google-places.json");
+const RESTAURANTS_FILE = process.env.VELVET_RESTAURANTS || path.join(APP_DATA, "restaurants.json");
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const FC_URL = "https://api.firecrawl.dev/v2/scrape";
 const PLACES_API = "https://places.googleapis.com/v1/places:searchText";
@@ -40,6 +41,7 @@ const SCHEMA = {
 };
 
 let running = null;
+let restaurantsRunning = null;
 
 function fold(s) {
   return String(s || "").normalize("NFD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^a-z0-9]+/g, "");
@@ -86,6 +88,13 @@ export function loadPlacesFile() {
   return { fetchedAt: null, venues: {} };
 }
 
+export function loadRestaurantsFile() {
+  const raw = readJson(RESTAURANTS_FILE, {});
+  return raw && raw.destinations && typeof raw.destinations === "object"
+    ? raw
+    : { fetchedAt: null, minimumRating: 3.8, destinations: {} };
+}
+
 function mapsSearchUrl(name, city) {
   return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent([name, city].filter(Boolean).join(", "));
 }
@@ -117,6 +126,79 @@ async function placesApiSearch(query) {
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error("places " + r.status);
   return Array.isArray(j.places) ? j.places : [];
+}
+
+async function restaurantApiSearch(destination) {
+  const key = payKey("GOOGLE_PLACES_API_KEY");
+  if (!key) throw new Error("google_places_key_missing");
+  const query = `top restaurants in ${destination.name}, ${destination.country}`;
+  const r = await fetch(PLACES_API, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Goog-Api-Key": key,
+      "X-Goog-FieldMask": "places.id,places.displayName,places.rating,places.userRatingCount,places.googleMapsUri,places.websiteUri,places.formattedAddress,places.primaryType,places.types,places.priceLevel",
+    },
+    body: JSON.stringify({
+      textQuery: query,
+      includedType: "restaurant",
+      strictTypeFiltering: true,
+      minRating: 3.8,
+      maxResultCount: 20,
+      languageCode: "en",
+    }),
+    signal: AbortSignal.timeout(25000),
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(`places ${r.status}: ${j.error?.message || "search failed"}`);
+  return (Array.isArray(j.places) ? j.places : [])
+    .filter((p) => Number(p.rating) >= 3.8)
+    .map((p) => ({
+      placeId: p.id || "",
+      name: p.displayName?.text || "",
+      rating: Math.round(Number(p.rating) * 10) / 10,
+      reviewCount: Number(p.userRatingCount) || 0,
+      address: p.formattedAddress || "",
+      mapsUrl: p.googleMapsUri || "",
+      website: p.websiteUri || "",
+      priceLevel: p.priceLevel || "",
+      primaryType: p.primaryType || "restaurant",
+      source: "Google Places",
+    }))
+    .filter((p) => p.placeId && p.name)
+    .sort((a, b) => (b.rating + Math.min(.35, Math.log10(b.reviewCount + 1) / 12)) - (a.rating + Math.min(.35, Math.log10(a.reviewCount + 1) / 12)));
+}
+
+export async function runRestaurantDiscovery(opts = {}) {
+  if (restaurantsRunning) return restaurantsRunning;
+  const job = (async () => {
+    const { destBy } = loadCatalog();
+    const only = String(opts.destinationCode || "").trim().toUpperCase();
+    const targets = Object.values(destBy).filter((d) => d && d.code && (!only || d.code === only));
+    if (only && !targets.length) throw new Error("destination_not_found");
+    const previous = loadRestaurantsFile();
+    const destinations = { ...previous.destinations };
+    const errors = [];
+    const rows = await mapPool(targets, 2, async (d) => {
+      try { return { d, restaurants: await restaurantApiSearch(d) }; }
+      catch (error) { errors.push({ code: d.code, error: String(error.message || error) }); return null; }
+    });
+    for (const row of rows) {
+      if (!row) continue;
+      destinations[row.d.code] = {
+        destination: row.d.name,
+        country: row.d.country,
+        fetchedAt: new Date().toISOString(),
+        restaurants: row.restaurants,
+      };
+    }
+    const payload = { fetchedAt: new Date().toISOString(), minimumRating: 3.8, maxPerDestination: 20, destinations };
+    writeJsonAtomic(RESTAURANTS_FILE, payload);
+    return { ok: errors.length === 0, checked: targets.length, errors, payload };
+  })();
+  restaurantsRunning = job;
+  try { return await job; }
+  finally { restaurantsRunning = null; }
 }
 
 async function firecrawlMaps(url) {
