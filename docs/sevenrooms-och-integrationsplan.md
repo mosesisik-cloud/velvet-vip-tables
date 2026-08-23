@@ -76,3 +76,69 @@ Prioritet per adapter:
 - [ ] Ansök om SevenRooms-partnerskap (partnerships-formuläret) — ta det i Gabbes namn när bolaget finns
 - [ ] Bygg statusflödet: skickad → mottagen → bekräftad/avböjd (operatorpanelen)
 - [ ] Deposition med hold-logik: 5-minutershold som SevenRooms, men mot sällskapets delbetalningar
+
+---
+
+## 8. Fullständig inventering (2026-08-23, alla 120 venues)
+
+| System | Antal | Andel | Exempel |
+|---|---|---|---|
+| own-form (eget VIP-formulär) | 71 | 59 % | Hï, Ushuaïa, UNVRS, Pacha, Nammos |
+| sevenrooms | 29 | 24 % | Scorpios ×2, Nikki Beach ×2, Jimmy'z, Twiga, O Beach Dubai, Café del Mar Phuket |
+| opentable | 7 | 6 % | Omnia, Marquee LV + Singapore, MILA/Baoli Miami, Papaya Playa, Bootsy Bellows |
+| tablecheck | 2 | | Sky Bar Lebua, Ku De Ta |
+| zenchef | 2 | | La Môme Plage, Matignon Paris |
+| tock | 1 | | Cloud Nine Aspen |
+| xceed | 1 | | O Beach Ibiza |
+| unreachable (för tillfället) | 7 | | Zero Gravity, LIV LV, Island Athens m.fl. |
+
+`booking_system` ligger på varje venue i `data/venues.json` (commit 58b4c0a).
+
+## 9. Så bokar vi i DERAS system genom VÅR app — per system
+
+Gemensamt adapter-gränssnitt i velvet-api (alla adaptar implementerar samma kontrakt):
+
+```
+searchAvailability(venue, date, party)  → [{ slot, type: book|request, price? }]
+hold(slot)                              → { holdId, expiresInSec }   (5 min, som SevenRooms)
+book(holdId, guest, party, split)       → { confirmation } | { requestId, pending }
+status(requestId) / webhook             → sent → received → confirmed|declined
+```
+
+### SevenRooms (29 ställen) — största hävstången
+- **Nu (utan partnerskap):** driv deras publika widget-flöde programmatiskt — samma kedja som
+  gästwidgeten: search availability → hold (300 s) → create reservation. Servern gör anropen
+  åt gästen; VIP-bord landar nästan alltid som `request` = vårt concierge-flöde 1:1.
+- **Med partnerskap:** officiellt API + webhooks → realtidsstatus och auto-bekräftelse.
+  Ansök via partnerships-formuläret (kräver bolag — därför AB på roadmapen).
+- **Fallback tills dess:** `#/book-site` bäddar in deras widget med våra uppgifter förifyllda.
+
+### own-form (71 ställen) — störst räckvidd, ingen standard
+Tre nivåer, per ställe efter vad som är möjligt:
+1. **Auto-submit:** servern POST:ar direkt i ställets eget formulär (de flesta VIP-formulär är
+   enkla: namn, datum, gäster, önske). Kräver per-ställe-konfig (`booking_config`: form-URL,
+   fältmappning). Testa med Hï/UNVRS först.
+2. **Guided autofill:** vi bäddar in deras formulär i `#/book-site` och fyller allt vi vet —
+   gästen trycker bara "skicka". Noll integrationsrisk.
+3. **Strukturerad värd-förfrågan:** mejl/WhatsApp till klubbens VIP-host i deras format med
+   spårnings-ID (TB-XXXX); operator/promoter uppdaterar status i panelen.
+
+### OpenTable (7 ställen) — deep link nu, partner sen
+- OpenTable stöder **djuplänkar in i deras app** (och widget) per restaurang-id: skicka gästen
+  färdigifylld till rätt datum/sällskapsstorlek. Insamla deras OT-restaurang-id per venue.
+- Notera: Omnia/Marquee (Tao Group) kör VIP-bord via egna hosts — OT täcker restaurangsidan;
+  VIP-flödet går via own-form-spåret i praktiken.
+- Senare: OpenTable Connect/partnerprogram för inbäddad bokning med attribution.
+
+### Tock / TableCheck / Zenchef / XCEED (6 ställen) — samma mönster som SevenRooms
+Alla har publika bokningswidgets som kan bäddas in och/eller drivas. Lägre prioritet —
+bygg generiska "widget-adapter" efter SevenRooms, dessa blir konfig-rader.
+
+## 10. Rekommenderad byggordning
+
+1. **Statusflöde + spårnings-ID** (TB-XXXX) i operatorpanelen — förutsättning för allt
+2. **Guided autofill** i `#/book-site` (fungerar för 100 % av katalogen, noll risk)
+3. **Auto-submit-adapter** för Hï + UNVRS (största destinationen, enkla formulär)
+4. **SevenRooms widget-adapter** (29 ställen i ett svep)
+5. **Partnerskapsansökningar** (SevenRooms först, sedan OpenTable Connect) när AB finns
+
