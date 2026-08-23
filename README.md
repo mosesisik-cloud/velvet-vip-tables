@@ -61,9 +61,27 @@ node api/crawl-events.mjs
 
 | Person | Roll | GitHub |
 |---|---|---|
-| Gabriel (Gabbe) | Produktägare | [gabrielhadodo9602](https://github.com/gabrielhadodo9602) (write) |
+| Gabriel (Gabbe) | Produktägare | [gabrielhadodo9602](https://github.com/gabrielhadodo9602) (maintain) |
 | Moses | Bygg | [mosesisik-cloud](https://github.com/mosesisik-cloud) (admin) |
 | Dan Grant | Inbjuden | [dangrant29](https://github.com/dangrant29) — inbjudan skickad 2026-08-21, väntar på svar |
+
+## Hur Gabbe bidrar via GitHub
+
+Repot är [mosesisik-cloud/velvet-vip-tables](https://github.com/mosesisik-cloud/velvet-vip-tables). Gabbe är inlagd som collaborator.
+
+1. Logga in på https://github.com/login som **gabrielhadodo9602** (inte ett annat konto).
+2. Öppna repot. Du ska se knappen **Fork** och kunna redigera filer.
+3. Enklast: öppna en fil → pennan → spara till en **ny gren** → **Create pull request**.
+4. På MacBook, så GitHub kopplar dina commits till kontot:
+
+```bash
+git config --global user.name "Gabriel Hadodo"
+git config --global user.email "gabrielhadodo@gmail.com"
+```
+
+Om `user.email` är `…MacBook-Air….local` syns inte inloggningen på GitHub.
+
+5. Pusha till en gren (`feature/…`) och öppna PR mot `main`. Mergad `main` är källan Moses deployar till https://b2b.bakemyday.se/velvet/ — en push syns på GitHub direkt, live efter deploy.
 
 ## Datamodell
 
