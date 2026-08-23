@@ -695,6 +695,61 @@ async function connectSocialProfile(provider, handle, name) {
   });
   return { user: loadUser() };
 }
+
+function socialTrustCopy() {
+  const copy = {
+    sv: {
+      eyebrow: "SOCIAL TRUST", title: "Din sociala verifiering", preview: "Social profil ansluten · ej OAuth-verifierad", verified: "Socialt konto verifierat",
+      explain: "Ett valt socialt nätverk är inte samma sak som verifierad identitet. VELVET visar aldrig en verifierad badge förrän plattformens riktiga OAuth har bekräftat kontot.",
+      chosen: "Plattform vald", oauth: "Kontot bekräftat av plattformen", identity: "Namn matchat mot passverifiering", done: "Klart",
+      waiting: "Väntar på riktig OAuth", needPass: "Passverifiering krävs", launch: "Om OAuth saknas kan profilen anslutas manuellt, men den förblir tydligt ej verifierad.",
+      demo: "OAuth / säker anslutning", create: "Fortsätt med",
+    },
+    en: {
+      eyebrow: "SOCIAL TRUST", title: "Your social verification", preview: "Social profile connected · not OAuth-verified", verified: "Social account verified",
+      explain: "Choosing a social network is not verified identity. VELVET never displays a verified badge until the platform’s real OAuth confirms the account.",
+      chosen: "Platform selected", oauth: "Account confirmed by platform", identity: "Name matched to passport verification", done: "Done",
+      waiting: "Waiting for real OAuth", needPass: "Passport verification required", launch: "If OAuth is unavailable, the profile can be linked manually but remains clearly unverified.",
+      demo: "OAuth / secure connection", create: "Continue with",
+    },
+    es: {
+      eyebrow: "SOCIAL TRUST", title: "Tu verificación social", preview: "Perfil conectado · sin verificar por OAuth", verified: "Cuenta social verificada",
+      explain: "Elegir una red social no verifica la identidad. VELVET no muestra la insignia hasta que el OAuth real de la plataforma confirme la cuenta.",
+      chosen: "Plataforma elegida", oauth: "Cuenta confirmada por la plataforma", identity: "Nombre comparado con el pasaporte", done: "Listo",
+      waiting: "Esperando OAuth real", needPass: "Se requiere verificación de pasaporte", launch: "Si OAuth no está disponible, el perfil puede vincularse manualmente pero sigue sin verificar.",
+      demo: "OAuth / conexión segura", create: "Continuar con",
+    },
+    fr: {
+      eyebrow: "SOCIAL TRUST", title: "Votre vérification sociale", preview: "Profil connecté · non vérifié par OAuth", verified: "Compte social vérifié",
+      explain: "Choisir un réseau social ne vérifie pas l’identité. VELVET n’affiche jamais de badge avant confirmation par le véritable OAuth de la plateforme.",
+      chosen: "Plateforme choisie", oauth: "Compte confirmé par la plateforme", identity: "Nom comparé au passeport", done: "Terminé",
+      waiting: "En attente du véritable OAuth", needPass: "Vérification du passeport requise", launch: "Sans OAuth, le profil peut être lié manuellement mais reste clairement non vérifié.",
+      demo: "OAuth / connexion sécurisée", create: "Continuer avec",
+    },
+  };
+  return copy[currentLang()] || copy.sv;
+}
+
+function socialVerificationHTML(u) {
+  const c = socialTrustCopy();
+  const oauthOk = u?.oauth === true || u?.socialVerification === "verified" || u?.socialOAuthVerified === true;
+  const passOk = idvStatus() === "verified";
+  const provider = SOCIALS.find((s) => s.id === u?.provider)?.label || u?.provider || "—";
+  return `
+  <section class="social-trust-card ${oauthOk ? "is-verified" : "is-preview"}" aria-label="${esc(c.title)}">
+    <div class="social-trust-head">
+      <div><span class="social-trust-eyebrow">${esc(c.eyebrow)}</span><h3>${esc(c.title)}</h3></div>
+      <span class="social-trust-state">${oauthOk ? `✓ ${esc(c.verified)}` : `! ${esc(c.preview)}`}</span>
+    </div>
+    <p class="social-trust-explain">${esc(c.explain)}</p>
+    <ol class="social-trust-steps">
+      <li class="done"><span>1</span><div><b>${esc(c.chosen)}</b><small>${esc(provider)} · ${esc(c.done)}</small></div></li>
+      <li class="${oauthOk ? "done" : "waiting"}"><span>2</span><div><b>${esc(c.oauth)}</b><small>${esc(oauthOk ? c.done : c.waiting)}</small></div></li>
+      <li class="${oauthOk && passOk ? "done" : "waiting"}"><span>3</span><div><b>${esc(c.identity)}</b><small>${esc(oauthOk && passOk ? c.done : c.needPass)}</small></div></li>
+    </ol>
+    ${oauthOk ? "" : `<p class="social-trust-launch">🔒 ${esc(c.launch)}</p>`}
+  </section>`;
+}
 function logoutUser() {
   userMem = null;
   try { localStorage.removeItem(USER_KEY); } catch {}
@@ -3718,9 +3773,11 @@ function openOnboarding(opts = {}) {
           <p class="ob-sub">${esc(t("loginSub"))}</p>
           <div class="social-grid">
             ${SOCIALS.map((s) => `
-              <button type="button" class="social-btn" data-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}">${esc(t("loginWith"))} ${esc(s.label)}</button>`).join("")}
+              <button type="button" class="social-btn social-btn-preview" data-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}">
+                <span>${esc(socialTrustCopy().create)} ${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small>
+              </button>`).join("")}
           </div>
-          <p class="stepper-hint">${esc(t("loginAuto"))}</p>
+          <p class="stepper-hint social-honesty">🔒 ${esc(socialTrustCopy().explain)}</p>
           <div class="ob-actions"><button class="btn btn-ghost" id="ob-skip-auth">${esc(t("skipLogin"))}</button></div>
           `}
         </div>
@@ -5114,6 +5171,7 @@ async function renderAccount() {
             ${isPayingMember() ? `<a class="btn btn-gold btn-sm" href="#/promoters" data-nav>${esc(t("promotersSee"))}</a>` : ""}</p>
         </div>
       </div>
+      ${socialVerificationHTML(u)}
       ${partiesBlockHTML(mine, { mine: true })}
       ${(mine.reviews || []).length ? `
         <h2 class="detail-panel-title" style="margin-top:28px">${esc(t("funScore"))}</h2>
