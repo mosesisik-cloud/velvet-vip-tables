@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=90";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=90";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=90";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=90";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=91";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=91";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=91";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=91";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -325,6 +325,30 @@ function contactTile(href, title, sub, { gold = false, external = true, id = "",
     : `<a class="${cls}" href="${esc(href)}"${extra}${nav}${idAttr}>`;
   const close = tag === "button" ? "</button>" : "</a>";
   return `${open}<strong>${esc(title)}</strong><span>${esc(sub)}</span>${close}`;
+}
+const ICAO_PHONE = {
+  SWE: ["SE", "46"], NOR: ["NO", "47"], DNK: ["DK", "45"], FIN: ["FI", "358"],
+  ISL: ["IS", "354"], DEU: ["DE", "49"], FRA: ["FR", "33"], ESP: ["ES", "34"],
+  ITA: ["IT", "39"], GBR: ["GB", "44"], IRL: ["IE", "353"], NLD: ["NL", "31"],
+  BEL: ["BE", "32"], CHE: ["CH", "41"], AUT: ["AT", "43"], PRT: ["PT", "351"],
+  GRC: ["GR", "30"], POL: ["PL", "48"], TUR: ["TR", "90"], USA: ["US", "1"],
+  CAN: ["CA", "1"], AUS: ["AU", "61"], ARE: ["AE", "971"], BRA: ["BR", "55"],
+  MEX: ["MX", "52"], ARG: ["AR", "54"], JPN: ["JP", "81"],
+};
+function guestPhoneDial(phone, nationality) {
+  const raw = String(phone || "").trim();
+  const nat = String(nationality || "").toUpperCase();
+  const compact = raw.replace(/[^\d+]/g, "");
+  if (compact.startsWith("+") || compact.startsWith("00")) {
+    const rest = compact.replace(/^\+/, "").replace(/^00/, "");
+    const pairs = Object.values(ICAO_PHONE).sort((a, b) => b[1].length - a[1].length);
+    for (const [iso, d] of pairs) {
+      if (rest.startsWith(d)) return { dialCode: d, countryCode: iso };
+    }
+  }
+  if (ICAO_PHONE[nat]) return { dialCode: ICAO_PHONE[nat][1], countryCode: ICAO_PHONE[nat][0] };
+  if (/^0\d{6,14}$/.test(raw.replace(/\D/g, ""))) return { dialCode: "46", countryCode: "SE" };
+  return { dialCode: "", countryCode: "" };
 }
 function waDigits(raw) {
   let s = String(raw || "").trim();
@@ -2758,6 +2782,7 @@ function renderVenueDetail(id) {
         const go = $("#ab-go");
         go.disabled = true;
         go.textContent = t("availBookWorking");
+        const dial = guestPhoneDial(phone, me?.idvFields?.nationality || "");
         const r = await apiJSON(`/availability/${encodeURIComponent(v.venue_id)}/book`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -2768,7 +2793,8 @@ function renderVenueDetail(id) {
             party: Number(lastQuery.party) || 2,
             venueName: v.name,
             destination: v.destination,
-            guest: { firstName: first, lastName: last, email, phone, dialCode: "46", countryCode: "SE" },
+            lang: currentLang(),
+            guest: { firstName: first, lastName: last, email, phone, dialCode: dial.dialCode, countryCode: dial.countryCode },
             note: `VELVET · ${v.name}`,
           }),
         });
@@ -2777,7 +2803,7 @@ function renderVenueDetail(id) {
           box.innerHTML = `
             <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)">
               <h3 style="margin:0 0 8px">🥂 ${esc(t("availBookDone"))}</h3>
-              <p class="events-meta">${esc(t("availBookCode"))}: <b>${esc(r.booking.confirmation || "—")}</b> · ${esc(r.booking.date)} ${esc(r.booking.time)} · ${esc(String(r.booking.party))} pers</p>
+              <p class="events-meta">${esc(t("availBookCode"))}: <b>${esc(r.booking.confirmation || "—")}</b> · ${esc(r.booking.date)} ${esc(r.booking.time)} · ${esc(t("availParty").replace("{n}", String(r.booking.party)))}</p>
               <p class="events-meta">${esc(t("availBookInSystem"))}</p>
               <button class="btn btn-ghost" id="ab-cancel" style="width:100%;margin-top:10px">${esc(t("availBookCancel"))}</button>
             </div>`;
@@ -6625,7 +6651,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=90", { updateViaCache: "none" })
+      .register("sw.js?v=91", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

@@ -36,10 +36,11 @@ function srToday() {
 // Direktbokning mot SevenRooms publika widget-flöde: range → slot → hold → book.
 // X-Checkout-Hash (SHA-256 av "förnamn|efternamn" lowercase) är deras anti-bot-header —
 // utan den svarar book-endpointen bara "Booking failed." (Knäckt 2026-08-23, se docs.)
-async function srBookSlot(slug, { date, time, party, guest, note }) {
+async function srBookSlot(slug, { date, time, party, guest, note, lang }) {
   const [y, m, d] = String(date).split("-");
   const mdY = `${m}-${d}-${y}`;
-  const range = await srFetchJson(`/api-yoa/availability/widget/range?venue=${slug}&time_slot=${encodeURIComponent(time)}&party_size=${party}&halo_size_interval=64&start_date=${mdY}&num_days=1&channel=SEVENROOMS_WIDGET&selected_lang_code=sv`);
+  const srLang = /^(sv|en|es|fr)$/.test(String(lang || "")) ? lang : "en";
+  const range = await srFetchJson(`/api-yoa/availability/widget/range?venue=${slug}&time_slot=${encodeURIComponent(time)}&party_size=${party}&halo_size_interval=64&start_date=${mdY}&num_days=1&channel=SEVENROOMS_WIDGET&selected_lang_code=${srLang}`);
   const daySlots = (range.availability && range.availability[date]) || [];
   let slot = null, shift = null;
   for (const sh of daySlots) {
@@ -64,15 +65,26 @@ async function srBookSlot(slug, { date, time, party, guest, note }) {
   const first = String(guest.firstName || "").trim();
   const last = String(guest.lastName || "").trim();
   const hash = crypto.createHash("sha256").update(`${first.toLowerCase()}|${last.toLowerCase()}`).digest("hex");
-  const dial = String(guest.dialCode || "46").replace(/^\+/, "");
-  let phone = String(guest.phone || "").replace(/\D/g, "");
+  const rawPhone = String(guest.phone || "").trim();
+  let dial = String(guest.dialCode || "").replace(/^\+/, "");
+  let country = String(guest.countryCode || "").toUpperCase();
+  const plus = rawPhone.replace(/[^\d+]/g, "");
+  if (!dial && (plus.startsWith("+") || plus.startsWith("00"))) {
+    const rest = plus.replace(/^\+/, "").replace(/^00/, "");
+    for (const d of ["971", "358", "354", "353", "351", "61", "55", "52", "54", "81", "90", "49", "48", "47", "46", "45", "44", "43", "41", "39", "34", "33", "32", "31", "30", "27", "1"]) {
+      if (rest.startsWith(d)) { dial = d; break; }
+    }
+  }
+  if (!dial && /^0/.test(rawPhone.replace(/\s/g, ""))) dial = "46";
+  if (!country && dial === "46") country = "SE";
+  let phone = rawPhone.replace(/\D/g, "");
   if (dial && phone.startsWith(dial)) phone = phone.slice(dial.length);
   if (phone.startsWith("0")) phone = phone.slice(1);
   const form = new URLSearchParams();
   const fields = {
     reservation_hold_id: holdId, venue: slug, first_name: first, last_name: last,
     email: String(guest.email || ""), phone_number: phone, dial_code: dial,
-    country_code: String(guest.countryCode || "SE").toUpperCase(),
+    country_code: country,
     party_size: String(party), date: mdY, time, shift_persistent_id: shift.shift_persistent_id,
     channel: "SEVENROOMS_WIDGET", access_persistent_id: slot.access_persistent_id,
     notes: String(note || "").slice(0, 300),
@@ -2934,7 +2946,7 @@ const server = http.createServer(async (req, res) => {
       const g = b.guest || {};
       if (!date || !time || !party) return send(res, 400, { error: "slot" });
       if (!g.firstName || !g.lastName || !g.email) return send(res, 400, { error: "guest" });
-      const result = await srBookSlot(slug, { date, time, party, guest: g, note: b.note });
+      const result = await srBookSlot(slug, { date, time, party, guest: g, note: b.note, lang: b.lang });
       if (!result.ok) return send(res, result.error === "slot_gone" ? 409 : 502, result);
       const db = load();
       const bridge = {
