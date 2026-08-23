@@ -33,6 +33,68 @@ function srToday() {
   return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
 }
 
+// Direktbokning mot SevenRooms publika widget-flöde: range → slot → hold → book.
+// X-Checkout-Hash (SHA-256 av "förnamn|efternamn" lowercase) är deras anti-bot-header —
+// utan den svarar book-endpointen bara "Booking failed." (Knäckt 2026-08-23, se docs.)
+async function srBookSlot(slug, { date, time, party, guest, note }) {
+  const [y, m, d] = String(date).split("-");
+  const mdY = `${m}-${d}-${y}`;
+  const range = await srFetchJson(`/api-yoa/availability/widget/range?venue=${slug}&time_slot=${encodeURIComponent(time)}&party_size=${party}&halo_size_interval=64&start_date=${mdY}&num_days=1&channel=SEVENROOMS_WIDGET&selected_lang_code=sv`);
+  const daySlots = (range.availability && range.availability[date]) || [];
+  let slot = null, shift = null;
+  for (const sh of daySlots) {
+    for (const t of sh.times || []) {
+      if (t.type === "book" && t.time === time) { slot = t; shift = sh; break; }
+    }
+    if (slot) break;
+  }
+  if (!slot) return { error: "slot_gone" };
+  const holdResp = await fetch("https://www.sevenrooms.com/api-yoa/dining/hold/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (compatible; VELVET-booking-bridge)" },
+    body: JSON.stringify({
+      access_persistent_id: slot.access_persistent_id, actual_id: null, party_size: party, date,
+      shift_persistent_id: shift.shift_persistent_id, channel: "SEVENROOMS_WIDGET",
+      client_id: null, experience_id: null, picked_duration: null, time,
+      tracking_slug: null, venue: slug,
+    }),
+  }).then((r) => r.json()).catch(() => null);
+  const holdId = holdResp?.data?.reservation_hold_id;
+  if (!holdId) return { error: "hold_failed", detail: holdResp?.msg || null };
+  const first = String(guest.firstName || "").trim();
+  const last = String(guest.lastName || "").trim();
+  const hash = crypto.createHash("sha256").update(`${first.toLowerCase()}|${last.toLowerCase()}`).digest("hex");
+  const dial = String(guest.dialCode || "46").replace(/^\+/, "");
+  let phone = String(guest.phone || "").replace(/\D/g, "");
+  if (dial && phone.startsWith(dial)) phone = phone.slice(dial.length);
+  if (phone.startsWith("0")) phone = phone.slice(1);
+  const form = new URLSearchParams();
+  const fields = {
+    reservation_hold_id: holdId, venue: slug, first_name: first, last_name: last,
+    email: String(guest.email || ""), phone_number: phone, dial_code: dial,
+    country_code: String(guest.countryCode || "SE").toUpperCase(),
+    party_size: String(party), date: mdY, time, shift_persistent_id: shift.shift_persistent_id,
+    channel: "SEVENROOMS_WIDGET", access_persistent_id: slot.access_persistent_id,
+    notes: String(note || "").slice(0, 300),
+  };
+  for (const [k, v] of Object.entries(fields)) if (v) form.append(k, v);
+  const r = await fetch(`https://www.sevenrooms.com/booking/dining/widget/${slug}/book`, {
+    method: "POST",
+    headers: {
+      "X-Checkout-Hash": hash, "X-Widget-Origin": "old-widget",
+      "User-Agent": "Mozilla/5.0 (compatible; VELVET-booking-bridge)",
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: form,
+  });
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || !j.reservation_id) {
+    return { error: "book_failed", detail: (j.errors || [])[0] || j.message || ("http_" + r.status) };
+  }
+  return { ok: true, confirmation: String(j.message || ""), reservationId: j.reservation_id, token: String(j.token || ""), shift: shift.name, date, time, party };
+}
+
+
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
@@ -2830,6 +2892,68 @@ const server = http.createServer(async (req, res) => {
       } catch (e) {
         return send(res, 200, { ok: false, reason: "upstream", message: String(e.message || e) });
       }
+    }
+
+    // ---------- SevenRooms: direktbokning (range→hold→book i ett anrop) ----------
+    const srBookM = url.pathname.match(/^\/availability\/([A-Z]{3}-\d{3})\/book$/);
+    if (req.method === "POST" && srBookM) {
+      const vid = srBookM[1];
+      const slug = SR_VENUES[vid];
+      if (!slug) return send(res, 404, { error: "no_live_inventory" });
+      const b = await readBody(req, 2e5);
+      const uid = String(b.user?.id || "");
+      if (!uid) return send(res, 401, { error: "auth" });
+      const date = /^\d{4}-\d{2}-\d{2}$/.test(String(b.date || "")) ? String(b.date) : "";
+      const time = /^\d{1,2}:\d{2}$/.test(String(b.time || "")) ? String(b.time) : "";
+      const party = Math.min(20, Math.max(1, Number(b.party) || 0));
+      const g = b.guest || {};
+      if (!date || !time || !party) return send(res, 400, { error: "slot" });
+      if (!g.firstName || !g.lastName || !g.email) return send(res, 400, { error: "guest" });
+      const result = await srBookSlot(slug, { date, time, party, guest: g, note: b.note });
+      if (!result.ok) return send(res, result.error === "slot_gone" ? 409 : 502, result);
+      const db = load();
+      const bridge = {
+        id: "SR-" + Date.now().toString(36).toUpperCase(),
+        venueId: vid,
+        venue: String(b.venueName || vid),
+        destination: String(b.destination || ""),
+        engine: "sevenrooms",
+        officialUrl: `https://www.sevenrooms.com/reservations/${slug}`,
+        date, time, party,
+        guest: { name: `${g.firstName} ${g.lastName}`, email: g.email, phone: g.phone || "" },
+        status: "confirmed",
+        confirmation: result.confirmation,
+        reservationId: result.reservationId,
+        manageToken: result.token,
+        userId: uid,
+        note: String(b.note || "").slice(0, 300),
+        created: new Date().toISOString(),
+        history: [{ status: "confirmed", note: "Direktbokad i klubbens system (SevenRooms)", at: new Date().toISOString() }],
+      };
+      db.bridges = [bridge, ...(db.bridges || [])].slice(0, 200);
+      save(db);
+      return send(res, 200, { ok: true, booking: { id: bridge.id, confirmation: result.confirmation, date, time, party, venue: bridge.venue, token: result.token } });
+    }
+    if (req.method === "POST" && url.pathname === "/availability/cancel") {
+      const b = await readBody(req, 2e5);
+      const token = String(b.token || "");
+      const db = load();
+      const br = (db.bridges || []).find((x) => token && x.manageToken === token);
+      if (!br) return send(res, 404, { error: "not_found" });
+      const uid = String(b.user?.id || "");
+      if (!uid || (br.userId && br.userId !== uid)) return send(res, 403, { error: "auth" });
+      const r = await fetch(`https://www.sevenrooms.com/api-yoa/actuals/manage/cancel?token=${encodeURIComponent(token)}`, {
+        method: "POST",
+        headers: { "Content-Length": "0", "User-Agent": "Mozilla/5.0 (compatible; VELVET-booking-bridge)" },
+      });
+      const j = await r.json().catch(() => ({}));
+      if (j?.data?.is_canceled) {
+        br.status = "cancelled";
+        br.history = [...(Array.isArray(br.history) ? br.history : []), { status: "cancelled", note: "Avbokad via VELVET", at: new Date().toISOString() }];
+        save(db);
+        return send(res, 200, { ok: true, status: "cancelled" });
+      }
+      return send(res, 502, { ok: false, detail: j.msg || "cancel_failed" });
     }
 
     // ---------- Bridge-status (operator: skickad → mottagen → bekräftad/avböjd) ----------

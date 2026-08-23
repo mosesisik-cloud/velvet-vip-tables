@@ -2660,21 +2660,100 @@ function renderVenueDetail(id) {
     const btn = $("#avail-load");
     const out = $("#avail-result");
     if (!btn || !out) return;
+    let lastQuery = { date: "", party: "6" };
+    const slotChip = (s) => s.type === "book"
+      ? `<button type="button" class="chip chip-gold avail-book" data-time="${esc(s.time)}" style="cursor:pointer">${esc(s.time)} · ${esc(t("availBook"))}</button>`
+      : `<span class="chip">${esc(s.time)} · ${esc(t("availReq"))}</span>`;
     const run = async () => {
       const date = $("#avail-date")?.value || "";
       const party = $("#avail-party")?.value || "6";
+      lastQuery = { date, party };
       out.innerHTML = `<p class="events-meta">${esc(t("availLoading"))}</p>`;
       const r = await apiJSON(`/availability/${encodeURIComponent(v.venue_id)}?date=${encodeURIComponent(date)}&party=${encodeURIComponent(party)}`);
       if (!r) { out.innerHTML = `<p class="events-meta">${esc(t("availErr"))}</p>`; return; }
       if (!r.ok) { out.innerHTML = `<p class="events-meta">${esc(t("availNone"))}</p>`; return; }
       const slots = (r.shifts || []).flatMap((s) => (s.times || []).map((x) => ({ shift: s.name, time: x.time, type: x.type })));
+      lastQuery.resolvedDate = r.date || "";
       out.innerHTML = `
         <p class="events-meta">${esc(t("availLive"))} · ${esc(r.date || "")} · ${esc(t("availVia"))} SevenRooms</p>
         ${slots.length
-          ? `<div class="chip-list">${slots.slice(0, 24).map((s) => `<span class="chip">${esc(s.time)} · ${esc(s.type === "book" ? t("availBook") : t("availReq"))}</span>`).join("")}</div>`
+          ? `<div class="chip-list">${slots.slice(0, 24).map(slotChip).join("")}</div>`
           : `<p class="events-meta">${esc(t("availNoneDay"))}</p>`}
+        <div id="avail-booking"></div>
       `;
     };
+    // Klick på en "direkt"-slot: bokningsformulär direkt i panelen.
+    out.addEventListener("click", async (e) => {
+      const chip = e.target.closest(".avail-book");
+      if (!chip) return;
+      const time = chip.dataset.time;
+      const host = loadHost();
+      const me = loadUser();
+      const legal = String(me?.legalName || "").trim().split(/\s+/);
+      const box = $("#avail-booking");
+      if (!box) return;
+      box.innerHTML = `
+        <div class="avail-form" style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)">
+          <h3 style="margin:0 0 8px">${esc(t("availBookTitle"))} · ${esc(time)} · ${esc(lastQuery.date || "")}</h3>
+          ${!me ? `<p class="events-meta">${esc(t("availLoginBook"))}</p>` : ""}
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input id="ab-first" placeholder="${esc(t("availFirstName"))}" value="${esc(legal[0] || "")}" style="flex:1;min-width:120px">
+            <input id="ab-last" placeholder="${esc(t("availLastName"))}" value="${esc(legal.slice(1).join(" ") || "")}" style="flex:1;min-width:120px">
+            <input id="ab-email" type="email" placeholder="${esc(t("availEmail"))}" value="${esc(host.email || "")}" style="flex:1;min-width:160px">
+            <input id="ab-phone" type="tel" placeholder="${esc(t("availPhone"))}" value="${esc(host.phone || "")}" style="flex:1;min-width:130px">
+          </div>
+          <div class="field-error hidden" id="ab-err" role="alert"></div>
+          <button class="btn btn-gold" id="ab-go" style="width:100%;margin-top:10px">${esc(t("availConfirmBook"))}</button>
+        </div>`;
+      box.scrollIntoView({ block: "center", behavior: "smooth" });
+      $("#ab-go")?.addEventListener("click", async () => {
+        const first = $("#ab-first")?.value.trim();
+        const last = $("#ab-last")?.value.trim();
+        const email = $("#ab-email")?.value.trim();
+        const phone = $("#ab-phone")?.value.trim();
+        const err = $("#ab-err");
+        if (!first || !last || !email) { if (err) { err.textContent = t("availFormMissing"); err.classList.remove("hidden"); } return; }
+        const go = $("#ab-go");
+        go.disabled = true;
+        go.textContent = t("availBookWorking");
+        const r = await apiJSON(`/availability/${encodeURIComponent(v.venue_id)}/book`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user: me || { id: "guest" },
+            date: lastQuery.date || lastQuery.resolvedDate || "",
+            time,
+            party: Number(lastQuery.party) || 2,
+            venueName: v.name,
+            destination: v.destination,
+            guest: { firstName: first, lastName: last, email, phone, dialCode: "46", countryCode: "SE" },
+            note: `VELVET · ${v.name}`,
+          }),
+        });
+        if (r?.ok && r.booking) {
+          saveHost({ name: `${first} ${last}`, email, phone });
+          box.innerHTML = `
+            <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)">
+              <h3 style="margin:0 0 8px">🥂 ${esc(t("availBookDone"))}</h3>
+              <p class="events-meta">${esc(t("availBookCode"))}: <b>${esc(r.booking.confirmation || "—")}</b> · ${esc(r.booking.date)} ${esc(r.booking.time)} · ${esc(String(r.booking.party))} pers</p>
+              <p class="events-meta">${esc(t("availBookInSystem"))}</p>
+              <button class="btn btn-ghost" id="ab-cancel" style="width:100%;margin-top:10px">${esc(t("availBookCancel"))}</button>
+            </div>`;
+          $("#ab-cancel")?.addEventListener("click", async () => {
+            const cr = await apiJSON("/availability/cancel", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ user: me || { id: "guest" }, token: r.booking.token }),
+            });
+            box.innerHTML = `<p class="events-meta" style="margin-top:14px">${esc(cr?.ok ? t("availBookCancelled") : t("availBookFail"))}</p>`;
+          });
+        } else {
+          go.disabled = false;
+          go.textContent = t("availConfirmBook");
+          if (err) { err.textContent = (r && (r.detail || r.error)) || t("availBookFail"); err.classList.remove("hidden"); }
+        }
+      });
+    });
     btn.addEventListener("click", run);
     run();
   })();
