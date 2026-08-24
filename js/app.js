@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=94";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=94";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=94";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=94";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=95";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=95";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=95";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=95";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -13,6 +13,7 @@ let VENUE_MENUS = {}; // venue_id -> tryckt meny från klubbens sajt
 let VENUE_EVENTS = { fetched: null, venues: {} }; // kommande events per venue (data/venue-events.json)
 let BOOKING_URLS = {}; // venue_id -> { url, kind, label } officiell VIP/bokningssida
 let VENUE_PACKAGES = {}; // venue_id -> verifierade bord/daybeds/cabanas
+let VENUE_LAYOUTS = {}; // venue_id -> verifierad officiell karta/planritning
 let GOOGLE_PLACES = { fetchedAt: null, venues: {} };
 let VENUE_FACTS = { fetchedAt: null, venues: {} };
 let CLUB_RANKINGS = { fetchedAt: null, byVenueId: {}, cities: [], clubs: [] };
@@ -512,19 +513,21 @@ function packageIncludedHTML(p) {
   return `<ul class="package-included">${included.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
 }
 function venueSeatMapHTML(v, packages) {
-  const beach = ["beach", "day"].includes(venueGroup(v));
-  const anchor = beach ? t("seatMapWater") : t("seatMapStage");
+  const layout = VENUE_LAYOUTS[v.venue_id];
+  if (!layout?.verified || !layout?.url || !layout?.source) return `<div class="seat-map-wrap seat-map-unavailable">
+    <div class="seat-map-head"><div><h3>${esc(t("seatMapTitle"))}</h3><p>${esc(t("seatMapUnavailable"))}</p></div><span class="package-trust">${esc(t("seatMapNotPublished"))}</span></div>
+    <p class="events-meta">${esc(t("seatMapExactByClub"))}</p>
+    ${bookingLinkHTML(v, { gold: true })}
+  </div>`;
   return `<div class="seat-map-wrap">
-    <div class="seat-map-head"><div><h3>${esc(t("seatMapTitle"))}</h3><p>${esc(t("seatMapHint"))}</p></div>
-      <span class="package-trust ${packages.some((p) => p.verified) ? "ok" : ""}">${esc(packages.some((p) => p.verified) ? t("seatMapOfficialPrices") : t("seatMapGuide"))}</span></div>
-    <div class="seat-map ${beach ? "seat-map-beach" : "seat-map-club"}" role="radiogroup" aria-label="${esc(t("seatMapTitle"))}">
-      <div class="seat-map-anchor">${esc(anchor)}</div>
-      ${packages.map((p, i) => `<button type="button" class="seat-zone seat-zone-${i + 1}" data-seat-pkg="${esc(p.id)}" role="radio" aria-checked="false">
-        <span class="seat-zone-dot"></span><strong>${esc(p.name)}</strong>
-        <small>${esc(p.priceType === "minimum-spend" ? t("minimumSpend") : t("priceLabel"))}: ${esc(packagePriceHTML(p))}</small>
-      </button>`).join("")}
+    <div class="seat-map-head"><div><h3>${esc(layout.title || t("seatMapTitle"))}</h3><p>${esc(t("seatMapVerifiedHint"))}</p></div>
+      <span class="package-trust ok">✓ ${esc(t("seatMapOfficialVerified"))}</span></div>
+    <div class="official-layout-frame">
+      ${layout.format === "image" ? `<img src="${esc(layout.url)}" alt="${esc(layout.title || t("seatMapTitle"))}" loading="lazy">` : `<iframe src="${esc(layout.url)}#view=FitH" title="${esc(layout.title || t("seatMapTitle"))}" loading="lazy"></iframe>`}
     </div>
-    <div class="seat-map-summary" id="seat-map-summary">${esc(t("seatMapPick"))}</div>
+    <p class="events-meta">${esc(t("seatMapType"))}: ${esc(layout.type || "venue overview")} · ${esc(t("seatMapChecked"))}: ${esc(layout.checkedAt || "")}</p>
+    <p class="events-actions"><a class="btn btn-ghost btn-sm" href="${esc(layout.source)}" target="_blank" rel="noopener">${esc(t("factSource"))} ↗</a>${bookingLinkHTML(v, { gold: true })}</p>
+    <p class="detail-cta-note">${esc(layout.note || t("seatMapExactByClub"))}</p>
   </div>`;
 }
 function venuePackagesPanelHTML(v) {
@@ -6566,6 +6569,10 @@ async function init() {
       if (rp.ok) VENUE_PACKAGES = await rp.json() || {};
     } catch (_) { VENUE_PACKAGES = {}; }
     try {
+      const rl = await fetch("data/venue-layouts.json", { cache: "no-store" });
+      if (rl.ok) VENUE_LAYOUTS = await rl.json() || {};
+    } catch (_) { VENUE_LAYOUTS = {}; }
+    try {
       const rg = await fetch("data/google-places.json", { cache: "no-store" });
       if (rg.ok) {
         const g = await rg.json();
@@ -6687,7 +6694,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=94", { updateViaCache: "none" })
+      .register("sw.js?v=95", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
