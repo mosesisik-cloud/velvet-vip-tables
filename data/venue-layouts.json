@@ -1,0 +1,26 @@
+{
+  "__meta": {
+    "description": "Endast officiella, verifierade planritningar och venue-kartor. Ingen genererad geometri.",
+    "policy": "verified=true kräver direkt källa på ställets officiella domän eller officiella bokningssystem."
+  },
+  "DXB-001": {
+    "title": "Nikki Beach Dubai — officiell resortkarta",
+    "type": "resort overview, inte numrerad sittplatskarta",
+    "format": "pdf",
+    "url": "https://nikkibeach.com/dubai/uploads/sites/3/2024/09/Surf-Memebership.pdf",
+    "source": "https://nikkibeach.com/dubai/uploads/sites/3/2024/09/Surf-Memebership.pdf",
+    "checkedAt": "2026-08-24",
+    "verified": true,
+    "note": "Kartan visar officiella områden som Beach Club, pool och strand. Exakt sunbed eller cabana väljs eller tilldelas i klubbens officiella bokning."
+  },
+  "MRB-001": {
+    "title": "Nikki Beach Marbella — officiell floor plan",
+    "type": "floor plan med cabana, deck bed, pool bed och beach bed",
+    "format": "pdf",
+    "url": "https://nikkibeach.com/marbella/wp-content/uploads/sites/6/2026/03/Marbella-Deck-Brochure-2026-Private-Events.pdf",
+    "source": "https://nikkibeach.com/marbella/wp-content/uploads/sites/6/2026/03/Marbella-Deck-Brochure-2026-Private-Events.pdf",
+    "checkedAt": "2026-08-24",
+    "verified": true,
+    "note": "Officiell layout för venue-områden. Slutlig placering och tillgänglighet bekräftas av Nikki Beach Marbella."
+  }
+}
