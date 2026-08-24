@@ -1682,7 +1682,7 @@ const server = http.createServer(async (req, res) => {
         upsertUser(db, profile);
         save(db);
         const token = mintAuthToken(profile);
-        res.writeHead(302, { Location: `${PUBLIC_APP}/?auth=${encodeURIComponent(token)}#/` });
+        res.writeHead(302, { Location: `${PUBLIC_APP}/?auth=${encodeURIComponent(token)}#/verify` });
         res.end();
       } catch {
         fail();
