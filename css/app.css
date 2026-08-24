@@ -1744,6 +1744,14 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   margin: 8px 0; color: var(--text); font-size: 14px;
 }
 .match-pick input { margin-top: 4px; }
+.crew-card { max-width:520px; margin:16px auto 4px; padding:26px; border:1px solid rgba(212,175,95,.36); border-radius:24px; background:linear-gradient(160deg,rgba(212,175,95,.13),var(--bg-card)); text-align:center; box-shadow:0 18px 50px rgba(0,0,0,.3); }
+.crew-avatar { display:grid; place-items:center; width:78px; height:78px; margin:0 auto 14px; border-radius:50%; background:linear-gradient(135deg,var(--gold),var(--gold-bright)); color:#0b0b0f; font-family:var(--font-display); font-size:34px; font-weight:800; }
+.crew-card h3 { font-family:var(--font-display); font-size:25px; margin:4px 0 8px; }.crew-card>p:not(.detail-kicker){color:var(--text-dim)}
+.crew-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:20px 0; }.crew-stats span{padding:10px 6px;border-radius:12px;background:rgba(255,255,255,.04);font-size:10px;color:var(--text-faint);text-transform:uppercase}.crew-stats b{display:block;color:var(--text);font-size:16px;margin-bottom:3px}
+.crew-actions { display:flex; justify-content:center; gap:28px; }.crew-actions button{width:62px;height:62px;border-radius:50%;border:1px solid var(--border);font-size:26px;cursor:pointer}.crew-pass{background:rgba(255,80,90,.1);color:#ff6f78}.crew-like{background:rgba(212,175,95,.15);color:var(--gold-bright)}
+.crew-budget-summary { margin:14px 0 18px; padding:16px; border:1px solid rgba(212,175,95,.35); border-radius:16px; background:linear-gradient(135deg,rgba(212,175,95,.12),rgba(255,255,255,.03)); display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.crew-budget-summary div { display:flex; flex-direction:column; gap:4px; }.crew-budget-summary span{font-size:12px;color:var(--text-dim)}.crew-budget-summary b{font-size:21px;color:var(--gold)}.crew-budget-summary p{grid-column:1/-1;margin:0;font-size:12px;color:var(--text-dim)}
+.crew-empty{text-align:center;padding:28px;color:var(--text-dim)}.crew-empty span{font-size:32px}
 .chat-bubble.match { border-color: var(--gold); }
 .chat-table-link { display: inline-block; margin-top: 8px; color: var(--gold-bright); font-size: 13px; font-weight: 650; }
 @media (max-width: 719px) {
