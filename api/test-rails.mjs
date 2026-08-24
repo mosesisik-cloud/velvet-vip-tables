@@ -192,6 +192,36 @@ function checkBookingUrls() {
   return { count: venues.length, missing: missing.length, lines };
 }
 
+function checkRestaurants() {
+  const rec = loadJson("data/restaurants.json");
+  if (Number(rec.minimumRating) !== 3.8) fail("restaurants-min", String(rec.minimumRating));
+  else if (Number(rec.maxPerDestination) > 20) fail("restaurants-cap", String(rec.maxPerDestination));
+  else {
+    const dests = rec.destinations && typeof rec.destinations === "object" ? rec.destinations : {};
+    const bad = [];
+    for (const [code, row] of Object.entries(dests)) {
+      for (const r of row.restaurants || []) {
+        if (!(Number(r.rating) >= 3.8)) bad.push(code + " rating " + r.rating);
+        if (!/^https:\/\//i.test(r.mapsUrl || "")) bad.push(code + " maps " + (r.name || ""));
+        if (r.phone && !String(row.source || "").includes("google")) bad.push(code + " phone");
+      }
+    }
+    if (bad.length) fail("restaurants-honest", bad.slice(0, 8).join("; "));
+    else ok("restaurants-honest", Object.keys(dests).length + " dests, min 3.8, no invented phones");
+  }
+}
+
+function checkSeoHonesty() {
+  const gen = fs.readFileSync(path.join(ROOT, "scripts", "build-seo.mjs"), "utf8");
+  if (/Boka VIP-bord på \$\{/.test(gen) || /title = `Boka VIP-bord/.test(gen)) {
+    fail("seo-copy", "generator still titles pages as a completed booking");
+  } else ok("seo-copy", "förfrågan, not Boka VIP-bord titles");
+  const idx = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+  const desc = (idx.match(/<meta name="description" content="([^"]+)"/) || [])[1] || "";
+  if (!/förfrågan/i.test(desc)) fail("index-meta", desc.slice(0, 180));
+  else ok("index-meta", "förfrågan");
+}
+
 function checkI18n() {
   const src = fs.readFileSync(path.join(ROOT, "js", "i18n.js"), "utf8");
   const keys = { sv: new Set(), en: new Set(), es: new Set(), fr: new Set() };
@@ -510,6 +540,12 @@ async function runApi() {
     const menus = await req(base, "GET", "/menus");
     if (menus.status !== 200 || !menus.json.venues) fail("menus", JSON.stringify(menus.json).slice(0, 160));
     else ok("menus", Object.keys(menus.json.venues).length + " printed menus");
+
+    const rest = await req(base, "GET", "/restaurants?dest=IBZ");
+    if (rest.status !== 200) fail("restaurants-get", "HTTP " + rest.status);
+    else if (rest.json.destination && (rest.json.destination.restaurants || []).some((r) => !(Number(r.rating) >= 3.8))) {
+      fail("restaurants-get", "invented or low rating");
+    } else ok("restaurants-get", rest.json.destination ? "cached" : "empty until Google key");
 
     const availNone = await req(base, "GET", "/availability/IBZ-001");
     if (availNone.status !== 200 || availNone.json.ok !== false) {
@@ -1023,6 +1059,8 @@ async function runApi() {
 }
 
 const booking = checkBookingUrls();
+checkRestaurants();
+checkSeoHonesty();
 checkI18n();
 checkMrz();
 const api = await runApi();

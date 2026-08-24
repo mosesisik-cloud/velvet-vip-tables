@@ -145,8 +145,8 @@ function venuePage(v, d) {
   const ranks = rankById[v.venue_id] || [];
   const book = booking[v.venue_id] || {};
   const engine = book.engine && book.engine !== "official-site" ? book.engine : "";
-  const summary = f.summary || v.notes || `${v.name} är ett ${String(v.category || "ställe").toLowerCase()} i ${v.destination}. Boka VIP-bord via VELVET.`;
-  const title = `Boka VIP-bord på ${v.name} i ${v.destination} — VELVET`;
+  const summary = f.summary || v.notes || `${v.name} är ett ${String(v.category || "ställe").toLowerCase()} i ${v.destination}. VELVET tar förfrågan mot klubben.`;
+  const title = `${v.name} i ${v.destination} — VIP-bord via VELVET`;
   const description = `${summary}`.slice(0, 158);
   const canonical = venueUrl(v);
   const sameAs = [v.website_url, v.instagram_url].filter((u) => /^https:\/\//i.test(u || ""));
@@ -180,11 +180,11 @@ function venuePage(v, d) {
   const body = `
   <nav><a href="${BASE}/">Hem</a> · <a href="${BASE}/d/">Destinationer</a> · ${d ? `<a href="${destUrl(d)}">${esc(d.name)}</a>` : ""}</nav>
   <p class="kicker">${esc(v.destination)} · ${esc(v.category || "VIP")} · ${esc(v.country || d?.country || "")}${engine ? ` · ${esc(engine)}` : ""}</p>
-  <h1>Boka VIP-bord på ${esc(v.name)}</h1>
+  <h1>${esc(v.name)}</h1>
   <p class="sub">${esc(summary)}</p>
   ${rankLine.length ? `<p class="meta">${esc(rankLine.join(" · "))}</p>` : ""}
   ${f.hours || f.season || f.ageLimit || f.dressCode ? `<p class="meta">${esc([f.hours && "Öppet "+f.hours, f.season && "Säsong "+f.season, f.ageLimit, f.dressCode].filter(Boolean).join(" · "))}</p>` : ""}
-  <p><a class="btn" href="${appBook(v)}">Boka via VELVET</a></p>
+  <p><a class="btn" href="${appBook(v)}">Öppna i VELVET</a></p>
   ${evs.length ? `<h2>Kommande kvällar</h2><ul>${evs.map((e) => `<li>${esc(e.date || "")} — ${esc(e.title)}</li>`).join("")}</ul>` : ""}
   ${(f.highlights || []).length ? `<h2>Från ställets sajt</h2><ul>${f.highlights.slice(0, 6).map((h) => `<li>${esc(h)}</li>`).join("")}</ul>` : ""}
   <p class="meta">${v.website_url ? `<a href="${esc(v.website_url)}">Officiell sajt</a>` : ""} ${v.instagram_url ? ` · <a href="${esc(v.instagram_url)}">Instagram</a>` : ""} · <a href="${appVenue(v)}">Öppna i appen</a></p>
@@ -193,8 +193,8 @@ function venuePage(v, d) {
 }
 
 function destPage(d, list) {
-  const title = `VIP-bord i ${d.name} — boka via VELVET`;
-  const description = `Boka VIP-bord, cabanas och daybeds i ${d.name}, ${d.country}. ${list.length} handplockade ställen. VELVET tar förfrågan mot klubben.`.slice(0, 158);
+  const title = `VIP-bord i ${d.name} — förfrågan via VELVET`;
+  const description = `Skicka förfrågan om VIP-bord, cabanas och daybeds i ${d.name}, ${d.country}. ${list.length} handplockade ställen. VELVET tar den mot klubben.`.slice(0, 158);
   const canonical = destUrl(d);
   const ld = {
     "@context": "https://schema.org",
@@ -212,8 +212,8 @@ function destPage(d, list) {
   <nav><a href="${BASE}/">Hem</a> · <a href="${BASE}/d/">Destinationer</a></nav>
   <p class="kicker">${esc(d.country)} · ${esc(d.region)} · säsong ${esc(d.peak_season || "")}</p>
   <h1>VIP-bord i ${esc(d.name)}</h1>
-  <p class="sub">${esc(d.use_cases || d.note || "")} ${list.length} ställen i katalogen. Boka via VELVET — vi ligger ovanpå deras bokningssystem.</p>
-  ${list.map((v) => `<div class="card"><h2><a href="${venueUrl(v)}">${esc(v.name)}</a></h2><p class="meta">${esc(v.category || "")} · <a href="${appBook(v)}">Boka via VELVET</a></p></div>`).join("")}
+  <p class="sub">${esc(d.use_cases || d.note || "")} ${list.length} ställen i katalogen. VELVET tar förfrågan mot klubben — vi ligger ovanpå deras bokningssystem.</p>
+  ${list.map((v) => `<div class="card"><h2><a href="${venueUrl(v)}">${esc(v.name)}</a></h2><p class="meta">${esc(v.category || "")} · <a href="${appBook(v)}">Öppna i VELVET</a></p></div>`).join("")}
   <p><a class="btn" href="${appDest(d)}">Öppna ${esc(d.name)} i appen</a></p>
   `;
   return layout({ title, description, canonical, jsonLd: JSON.stringify(ld), body });
@@ -221,13 +221,13 @@ function destPage(d, list) {
 
 function hubPage(dests) {
   const title = "VIP-bord på världens klubbar — VELVET";
-  const description = "Boka VIP-bord, cabanas och daybeds på handplockade klubbar i Ibiza, Mykonos, Dubai och fler. VELVET tar förfrågan mot klubben.";
+  const description = "Skicka förfrågan om VIP-bord, cabanas och daybeds på handplockade klubbar i Ibiza, Mykonos, Dubai och fler. VELVET tar den mot klubben.";
   const canonical = `${BASE}/d/`;
   const body = `
   <nav><a href="${BASE}/">Hem</a></nav>
   <p class="kicker">VELVET</p>
   <h1>Destinationer för VIP-bord</h1>
-  <p class="sub">Boka via oss. VELVET ligger ovanpå klubbens system — SevenRooms, Resy, Tock eller deras egen sida.</p>
+  <p class="sub">VELVET tar förfrågan mot klubben. Vi ligger ovanpå SevenRooms, Resy, Tock eller deras egen sida.</p>
   ${dests.map((d) => `<div class="card"><h2><a href="${destUrl(d)}">${esc(d.name)}</a></h2><p class="meta">${esc(d.country)} · ${esc(d.use_cases || "")}</p></div>`).join("")}
   `;
   return layout({ title, description, canonical, jsonLd: "", body });
