@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=97";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=97";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=97";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=97";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=99";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=99";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=99";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=99";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -779,6 +779,7 @@ function socialTrustCopy() {
       chosen: "Plattform vald", oauth: "Kontot bekräftat av plattformen", identity: "Namn matchat mot passverifiering", done: "Klart",
       waiting: "Väntar på riktig OAuth", needPass: "Passverifiering krävs", launch: "Om OAuth saknas kan profilen anslutas manuellt, men den förblir tydligt ej verifierad.",
       demo: "OAuth / säker anslutning", create: "Fortsätt med",
+      oneTap: "Fortsätt med Google", oneTapSub: "Ett klick för att börja · vi visar automatiskt nästa steg", other: "Andra sätt att logga in",
     },
     en: {
       eyebrow: "SOCIAL TRUST", title: "Your social verification", preview: "Social profile connected · not OAuth-verified", verified: "Social account verified",
@@ -786,6 +787,7 @@ function socialTrustCopy() {
       chosen: "Platform selected", oauth: "Account confirmed by platform", identity: "Name matched to passport verification", done: "Done",
       waiting: "Waiting for real OAuth", needPass: "Passport verification required", launch: "If OAuth is unavailable, the profile can be linked manually but remains clearly unverified.",
       demo: "OAuth / secure connection", create: "Continue with",
+      oneTap: "Continue with Google", oneTapSub: "One click to start · we automatically show the next step", other: "Other ways to sign in",
     },
     es: {
       eyebrow: "SOCIAL TRUST", title: "Tu verificación social", preview: "Perfil conectado · sin verificar por OAuth", verified: "Cuenta social verificada",
@@ -793,6 +795,7 @@ function socialTrustCopy() {
       chosen: "Plataforma elegida", oauth: "Cuenta confirmada por la plataforma", identity: "Nombre comparado con el pasaporte", done: "Listo",
       waiting: "Esperando OAuth real", needPass: "Se requiere verificación de pasaporte", launch: "Si OAuth no está disponible, el perfil puede vincularse manualmente pero sigue sin verificar.",
       demo: "OAuth / conexión segura", create: "Continuar con",
+      oneTap: "Continuar con Google", oneTapSub: "Un clic para empezar · mostramos automáticamente el siguiente paso", other: "Otras formas de entrar",
     },
     fr: {
       eyebrow: "SOCIAL TRUST", title: "Votre vérification sociale", preview: "Profil connecté · non vérifié par OAuth", verified: "Compte social vérifié",
@@ -800,6 +803,7 @@ function socialTrustCopy() {
       chosen: "Plateforme choisie", oauth: "Compte confirmé par la plateforme", identity: "Nom comparé au passeport", done: "Terminé",
       waiting: "En attente du véritable OAuth", needPass: "Vérification du passeport requise", launch: "Sans OAuth, le profil peut être lié manuellement mais reste clairement non vérifié.",
       demo: "OAuth / connexion sécurisée", create: "Continuer avec",
+      oneTap: "Continuer avec Google", oneTapSub: "Un clic pour commencer · l’étape suivante s’affiche automatiquement", other: "Autres moyens de connexion",
     },
   };
   return copy[currentLang()] || copy.sv;
@@ -1975,6 +1979,19 @@ function restaurantCardHTML(r) {
   </article>`;
 }
 
+async function renderRestaurants() {
+  setTitle(t("navRestaurants"));
+  view().innerHTML = `<section class="section"><div class="section-head"><div><h1>${esc(t("navRestaurants"))}</h1><div class="sub">${esc(t("restaurantsSub"))}</div></div></div><p class="events-meta restaurant-loading"><span class="spinner spinner-sm"></span> ${esc(t("restaurantsLoading"))}</p></section>`;
+  let data = null;
+  try { const r = await fetch("data/restaurants.json", { cache: "no-store" }); if (r.ok) data = await r.json(); } catch {}
+  const rows = data?.destinations || {};
+  const groups = DESTINATIONS.map((d) => ({ d, restaurants: (rows[d.code]?.restaurants || []).filter((r) => r.curated || Number(r.rating) >= 3.8) })).filter((x) => x.restaurants.length);
+  view().innerHTML = `<section class="section restaurant-directory"><div class="section-head"><div><h1>${esc(t("navRestaurants"))}</h1><div class="sub">${esc(t("restaurantsSub"))}</div></div><span class="count">${groups.reduce((n, x) => n + x.restaurants.length, 0)}</span></div>
+    <div class="restaurant-jump">${groups.map(({ d }) => `<a href="#restaurant-${esc(d.code)}">${esc(d.name)}</a>`).join("")}</div>
+    ${groups.map(({ d, restaurants }) => `<section class="restaurant-city" id="restaurant-${esc(d.code)}"><div class="section-head"><div><h2>${esc(d.name)}</h2><div class="sub">${esc(d.country)}</div></div><a href="#/destination/${encodeURIComponent(d.code)}" data-nav>${esc(t("explore"))} →</a></div><div class="restaurant-grid">${restaurants.map(restaurantCardHTML).join("")}</div></section>`).join("")}
+    <p class="restaurant-source">VELVET curated · ${esc(t("restaurantsSub"))}</p></section>`;
+}
+
 async function mountDestinationRestaurants(d) {
   const root = document.getElementById("destination-restaurants");
   if (!root) return;
@@ -1988,11 +2005,11 @@ async function mountDestinationRestaurants(d) {
     } catch { /* optional */ }
   }
   const restaurants = Array.isArray(row?.restaurants)
-    ? row.restaurants.filter((r) => Number(r.rating) >= 3.8).slice(0, 20)
+    ? row.restaurants.filter((r) => r.curated === true || Number(r.rating) >= 3.8).slice(0, 20)
     : [];
   root.innerHTML = restaurants.length
     ? `<div class="restaurant-grid">${restaurants.map(restaurantCardHTML).join("")}</div>
-       <p class="restaurant-source">Google Places · ${esc(t("restaurantsSub"))}${row.fetchedAt ? ` · ${esc(new Date(row.fetchedAt).toLocaleDateString(currentLang()))}` : ""}</p>`
+       <p class="restaurant-source">${esc(row.source || "Google Places")} · ${esc(t("restaurantsSub"))}${row.fetchedAt ? ` · ${esc(new Date(row.fetchedAt).toLocaleDateString(currentLang()))}` : ""}</p>`
     : `<div class="empty-state restaurant-empty"><p>${esc(t("restaurantsEmpty"))}</p></div>`;
 }
 
@@ -4018,12 +4035,15 @@ function openOnboarding(opts = {}) {
           </div>` : `
           <h1 class="ob-title">${esc(t("loginTitle"))}</h1>
           <p class="ob-sub">${esc(t("loginSub"))}</p>
-          <div class="social-grid">
-            ${SOCIALS.map((s) => `
+          <div class="one-tap-login">
+            <button type="button" class="social-btn social-btn-primary" data-soc="google"><span>${esc(socialTrustCopy().oneTap)}</span><small>${esc(socialTrustCopy().oneTapSub)}</small></button>
+          </div>
+          <details class="other-login"><summary>${esc(socialTrustCopy().other)}</summary><div class="social-grid">
+            ${SOCIALS.filter((s) => s.id !== "google").map((s) => `
               <button type="button" class="social-btn social-btn-preview" data-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}">
                 <span>${esc(socialTrustCopy().create)} ${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small>
               </button>`).join("")}
-          </div>
+          </div></details>
           <p class="stepper-hint social-honesty">🔒 ${esc(socialTrustCopy().explain)}</p>
           <div class="ob-actions"><button class="btn btn-ghost" id="ob-skip-auth">${esc(t("skipLogin"))}</button></div>
           `}
@@ -6432,6 +6452,7 @@ const routes = {
   "#/": renderHome,
   "#/destinations": renderDestinations,
   "#/venues": renderVenues,
+  "#/restaurants": renderRestaurants,
   "#/map": renderMapView,
   "#/bookings": renderBookings,
   "#/open": () => { renderOpenTables(); },
@@ -6493,6 +6514,7 @@ function route() {
     "": null,
     "#/destinations": t("navDestinations"),
     "#/venues": t("navVenues"),
+    "#/restaurants": t("navRestaurants"),
     "#/map": t("navMap"),
     "#/bookings": t("navBookings"),
     "#/favorites": t("navFav"),
@@ -6761,7 +6783,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=97", { updateViaCache: "none" })
+      .register("sw.js?v=99", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

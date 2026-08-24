@@ -201,13 +201,15 @@ function checkRestaurants() {
     const bad = [];
     for (const [code, row] of Object.entries(dests)) {
       for (const r of row.restaurants || []) {
-        if (!(Number(r.rating) >= 3.8)) bad.push(code + " rating " + r.rating);
+        if (!r.curated && !(Number(r.rating) >= 3.8)) bad.push(code + " rating " + r.rating);
         if (!/^https:\/\//i.test(r.mapsUrl || "")) bad.push(code + " maps " + (r.name || ""));
         if (r.phone && !String(row.source || "").includes("google")) bad.push(code + " phone");
       }
     }
+    const total = Object.values(dests).reduce((n, row) => n + (row.restaurants || []).length, 0);
     if (bad.length) fail("restaurants-honest", bad.slice(0, 8).join("; "));
-    else ok("restaurants-honest", Object.keys(dests).length + " dests, min 3.8, no invented phones");
+    else if (Object.keys(dests).length !== 30 || total < 90) fail("restaurants-coverage", `${Object.keys(dests).length} dests · ${total} rows`);
+    else ok("restaurants-honest", `${Object.keys(dests).length} dests · ${total} rows · no invented ratings/phones`);
   }
 }
 
@@ -548,7 +550,7 @@ async function runApi() {
 
     const rest = await req(base, "GET", "/restaurants?dest=IBZ");
     if (rest.status !== 200) fail("restaurants-get", "HTTP " + rest.status);
-    else if (rest.json.destination && (rest.json.destination.restaurants || []).some((r) => !(Number(r.rating) >= 3.8))) {
+    else if (rest.json.destination && (rest.json.destination.restaurants || []).some((r) => !r.curated && !(Number(r.rating) >= 3.8))) {
       fail("restaurants-get", "invented or low rating");
     } else ok("restaurants-get", rest.json.destination ? "cached" : "empty until Google key");
 

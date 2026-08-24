@@ -2,5 +2,1327 @@
   "fetchedAt": null,
   "minimumRating": 3.8,
   "maxPerDestination": 20,
-  "destinations": {}
+  "mode": "curated-no-google-rating",
+  "destinations": {
+    "IBZ": {
+      "destination": "Ibiza",
+      "country": "Spain",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-IBZ-lio-ibiza",
+          "name": "Lío Ibiza",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Ibiza, Spain",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=L%C3%ADo%20Ibiza%2C%20Ibiza",
+          "website": "https://lioibiza.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-IBZ-casa-maca",
+          "name": "Casa Maca",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Ibiza, Spain",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Casa%20Maca%2C%20Ibiza",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-IBZ-la-paloma-ibiza",
+          "name": "La Paloma Ibiza",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Ibiza, Spain",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20Paloma%20Ibiza%2C%20Ibiza",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "MYK": {
+      "destination": "Mykonos",
+      "country": "Greece",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-MYK-scorpios-mykonos",
+          "name": "Scorpios Mykonos",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Mykonos, Greece",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Scorpios%20Mykonos%2C%20Mykonos",
+          "website": "https://scorpios.com/mykonos",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-MYK-nammos-mykonos",
+          "name": "NAMMOS Mykonos",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Mykonos, Greece",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=NAMMOS%20Mykonos%2C%20Mykonos",
+          "website": "https://www.nammos.com/mykonos",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-MYK-zuma-mykonos",
+          "name": "Zuma Mykonos",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Mykonos, Greece",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Zuma%20Mykonos%2C%20Mykonos",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "DXB": {
+      "destination": "Dubai",
+      "country": "UAE",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-DXB-zuma-dubai",
+          "name": "Zuma Dubai",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Dubai, UAE",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Zuma%20Dubai%2C%20Dubai",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-DXB-coya-dubai",
+          "name": "COYA Dubai",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Dubai, UAE",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=COYA%20Dubai%2C%20Dubai",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-DXB-ossiano",
+          "name": "Ossiano",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Dubai, UAE",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Ossiano%2C%20Dubai",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "MRB": {
+      "destination": "Marbella",
+      "country": "Spain",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-MRB-mamzel-marbella",
+          "name": "Mamzel Marbella",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Marbella, Spain",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Mamzel%20Marbella%2C%20Marbella",
+          "website": "https://mamzelmarbella.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-MRB-nobu-marbella",
+          "name": "Nobu Marbella",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Marbella, Spain",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Nobu%20Marbella%2C%20Marbella",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-MRB-skina",
+          "name": "Skina",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Marbella, Spain",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Skina%2C%20Marbella",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "STT": {
+      "destination": "Saint-Tropez",
+      "country": "France",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-STT-club-55",
+          "name": "Club 55",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Saint-Tropez, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Club%2055%2C%20Saint-Tropez",
+          "website": "https://www.club55.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-STT-gigi-ramatuelle",
+          "name": "Gigi Ramatuelle",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Saint-Tropez, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Gigi%20Ramatuelle%2C%20Saint-Tropez",
+          "website": "https://gigi-restaurant.com/ramatuelle/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-STT-verde-beach",
+          "name": "Verde Beach",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Saint-Tropez, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Verde%20Beach%2C%20Saint-Tropez",
+          "website": "https://verde-beach.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "MCO": {
+      "destination": "Monaco",
+      "country": "Monaco",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-MCO-amazonico-monte-carlo",
+          "name": "Amazonico Monte-Carlo",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Monaco, Monaco",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Amazonico%20Monte-Carlo%2C%20Monaco",
+          "website": "https://www.amazonicorestaurant.com/monte-carlo/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-MCO-pavyllon-monte-carlo",
+          "name": "Pavyllon Monte-Carlo",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Monaco, Monaco",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Pavyllon%20Monte-Carlo%2C%20Monaco",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-MCO-le-louis-xv",
+          "name": "Le Louis XV",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Monaco, Monaco",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Louis%20XV%2C%20Monaco",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "CNS": {
+      "destination": "Cannes",
+      "country": "France",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-CNS-la-guerite-cannes",
+          "name": "La Guérite Cannes",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Cannes, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20Gu%C3%A9rite%20Cannes%2C%20Cannes",
+          "website": "https://restaurantlaguerite.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-CNS-baoli-cannes",
+          "name": "Baoli Cannes",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Cannes, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Baoli%20Cannes%2C%20Cannes",
+          "website": "https://www.baolicannes.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-CNS-la-mome-plage",
+          "name": "La Môme Plage",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Cannes, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20M%C3%B4me%20Plage%2C%20Cannes",
+          "website": "https://lamomecannes.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "BDR": {
+      "destination": "Bodrum",
+      "country": "Türkiye",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-BDR-lucca-by-the-sea",
+          "name": "Lucca by the Sea",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Bodrum, Türkiye",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Lucca%20by%20the%20Sea%2C%20Bodrum",
+          "website": "https://www.luccastyle.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-BDR-zuma-bodrum",
+          "name": "Zuma Bodrum",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Bodrum, Türkiye",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Zuma%20Bodrum%2C%20Bodrum",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-BDR-mimoza-gumusluk",
+          "name": "Mimoza Gümüşlük",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Bodrum, Türkiye",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Mimoza%20G%C3%BCm%C3%BC%C5%9Fl%C3%BCk%2C%20Bodrum",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "HKT": {
+      "destination": "Phuket",
+      "country": "Thailand",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-HKT-pru",
+          "name": "PRU",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Phuket, Thailand",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=PRU%2C%20Phuket",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-HKT-acqua-restaurant-phuket",
+          "name": "Acqua Restaurant Phuket",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Phuket, Thailand",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Acqua%20Restaurant%20Phuket%2C%20Phuket",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-HKT-suay-cherngtalay",
+          "name": "Suay Cherngtalay",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Phuket, Thailand",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Suay%20Cherngtalay%2C%20Phuket",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "BKK": {
+      "destination": "Bangkok",
+      "country": "Thailand",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-BKK-gaggan-at-louis-vuitton",
+          "name": "Gaggan at Louis Vuitton",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Bangkok, Thailand",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Gaggan%20at%20Louis%20Vuitton%2C%20Bangkok",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-BKK-sorn",
+          "name": "Sorn",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Bangkok, Thailand",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Sorn%2C%20Bangkok",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-BKK-le-du",
+          "name": "Le Du",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Bangkok, Thailand",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Du%2C%20Bangkok",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "BAL": {
+      "destination": "Bali",
+      "country": "Indonesia",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-BAL-locavore-nxt",
+          "name": "Locavore NXT",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Bali, Indonesia",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Locavore%20NXT%2C%20Bali",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-BAL-aperitif-restaurant",
+          "name": "Apéritif Restaurant",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Bali, Indonesia",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Ap%C3%A9ritif%20Restaurant%2C%20Bali",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-BAL-mozaic-ubud",
+          "name": "Mozaic Ubud",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Bali, Indonesia",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Mozaic%20Ubud%2C%20Bali",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "MIA": {
+      "destination": "Miami",
+      "country": "USA",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-MIA-mila-miami",
+          "name": "MILA Miami",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Miami, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=MILA%20Miami%2C%20Miami",
+          "website": "https://mila-miami.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-MIA-cote-miami",
+          "name": "COTE Miami",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Miami, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=COTE%20Miami%2C%20Miami",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-MIA-joe-s-stone-crab",
+          "name": "Joe's Stone Crab",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Miami, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Joe's%20Stone%20Crab%2C%20Miami",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "LAS": {
+      "destination": "Las Vegas",
+      "country": "USA",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-LAS-sw-steakhouse",
+          "name": "SW Steakhouse",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Las Vegas, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=SW%20Steakhouse%2C%20Las%20Vegas",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-LAS-joel-robuchon-las-vegas",
+          "name": "Joël Robuchon Las Vegas",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Las Vegas, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Jo%C3%ABl%20Robuchon%20Las%20Vegas%2C%20Las%20Vegas",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-LAS-spago-las-vegas",
+          "name": "Spago Las Vegas",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Las Vegas, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Spago%20Las%20Vegas%2C%20Las%20Vegas",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "TUL": {
+      "destination": "Tulum",
+      "country": "Mexico",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-TUL-hartwood",
+          "name": "Hartwood",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Tulum, Mexico",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Hartwood%2C%20Tulum",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-TUL-arca-tulum",
+          "name": "ARCA Tulum",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Tulum, Mexico",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=ARCA%20Tulum%2C%20Tulum",
+          "website": "https://arcatulum.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-TUL-gitano-tulum",
+          "name": "Gitano Tulum",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Tulum, Mexico",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Gitano%20Tulum%2C%20Tulum",
+          "website": "https://gitano.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "BCN": {
+      "destination": "Barcelona",
+      "country": "Spain",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-BCN-disfrutar",
+          "name": "Disfrutar",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Barcelona, Spain",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Disfrutar%2C%20Barcelona",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-BCN-lasarte",
+          "name": "Lasarte",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Barcelona, Spain",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Lasarte%2C%20Barcelona",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-BCN-cocina-hermanos-torres",
+          "name": "Cocina Hermanos Torres",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Barcelona, Spain",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Cocina%20Hermanos%20Torres%2C%20Barcelona",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "CER": {
+      "destination": "Porto Cervo",
+      "country": "Italy",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-CER-billionaire-porto-cervo",
+          "name": "Billionaire Porto Cervo",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Porto Cervo, Italy",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Billionaire%20Porto%20Cervo%2C%20Porto%20Cervo",
+          "website": "https://billionairesociety.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-CER-zuma-porto-cervo",
+          "name": "Zuma Porto Cervo",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Porto Cervo, Italy",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Zuma%20Porto%20Cervo%2C%20Porto%20Cervo",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-CER-matsuhisa-cala-di-volpe",
+          "name": "Matsuhisa Cala di Volpe",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Porto Cervo, Italy",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matsuhisa%20Cala%20di%20Volpe%2C%20Porto%20Cervo",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "HVA": {
+      "destination": "Hvar",
+      "country": "Croatia",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-HVA-gariful",
+          "name": "Gariful",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Hvar, Croatia",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Gariful%2C%20Hvar",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-HVA-dalmatino-hvar",
+          "name": "Dalmatino Hvar",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Hvar, Croatia",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Dalmatino%20Hvar%2C%20Hvar",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-HVA-black-pepper-hvar",
+          "name": "Black Pepper Hvar",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Hvar, Croatia",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Black%20Pepper%20Hvar%2C%20Hvar",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "ATH": {
+      "destination": "Athens Riviera",
+      "country": "Greece",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-ATH-delta-restaurant",
+          "name": "Delta Restaurant",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Athens Riviera, Greece",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Delta%20Restaurant%2C%20Athens%20Riviera",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-ATH-varoulko-seaside",
+          "name": "Varoulko Seaside",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Athens Riviera, Greece",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Varoulko%20Seaside%2C%20Athens%20Riviera",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-ATH-island-athens-riviera",
+          "name": "Island Athens Riviera",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Athens Riviera, Greece",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Island%20Athens%20Riviera%2C%20Athens%20Riviera",
+          "website": "https://islandclubrestaurant.gr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "IST": {
+      "destination": "Istanbul",
+      "country": "Türkiye",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-IST-mikla",
+          "name": "Mikla",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Istanbul, Türkiye",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Mikla%2C%20Istanbul",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-IST-neolokal",
+          "name": "Neolokal",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Istanbul, Türkiye",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Neolokal%2C%20Istanbul",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-IST-turk-fatih-tutak",
+          "name": "TURK Fatih Tutak",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Istanbul, Türkiye",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=TURK%20Fatih%20Tutak%2C%20Istanbul",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "CAP": {
+      "destination": "Capri",
+      "country": "Italy",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-CAP-da-paolino",
+          "name": "Da Paolino",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Capri, Italy",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Da%20Paolino%2C%20Capri",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-CAP-il-riccio",
+          "name": "Il Riccio",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Capri, Italy",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Il%20Riccio%2C%20Capri",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-CAP-aurora-capri",
+          "name": "Aurora Capri",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Capri, Italy",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Aurora%20Capri%2C%20Capri",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "AMF": {
+      "destination": "Amalfi Coast",
+      "country": "Italy",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-AMF-don-alfonso-1890",
+          "name": "Don Alfonso 1890",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Amalfi Coast, Italy",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Don%20Alfonso%201890%2C%20Amalfi%20Coast",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-AMF-la-sponda",
+          "name": "La Sponda",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Amalfi Coast, Italy",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20Sponda%2C%20Amalfi%20Coast",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-AMF-rossellinis",
+          "name": "Rossellinis",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Amalfi Coast, Italy",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Rossellinis%2C%20Amalfi%20Coast",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "LON": {
+      "destination": "London",
+      "country": "UK",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-LON-core-by-clare-smyth",
+          "name": "CORE by Clare Smyth",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "London, UK",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=CORE%20by%20Clare%20Smyth%2C%20London",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-LON-gymkhana",
+          "name": "Gymkhana",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "London, UK",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Gymkhana%2C%20London",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-LON-the-ledbury",
+          "name": "The Ledbury",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "London, UK",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=The%20Ledbury%2C%20London",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "PAR": {
+      "destination": "Paris",
+      "country": "France",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-PAR-plenitude",
+          "name": "Plénitude",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Paris, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Pl%C3%A9nitude%2C%20Paris",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-PAR-arpege",
+          "name": "Arpège",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Paris, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Arp%C3%A8ge%2C%20Paris",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-PAR-septime",
+          "name": "Septime",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Paris, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Septime%2C%20Paris",
+          "website": "https://timenightclub.com",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "SIN": {
+      "destination": "Singapore",
+      "country": "Singapore",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-SIN-odette",
+          "name": "Odette",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Singapore, Singapore",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Odette%2C%20Singapore",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-SIN-les-amis",
+          "name": "Les Amis",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Singapore, Singapore",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Les%20Amis%2C%20Singapore",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-SIN-burnt-ends",
+          "name": "Burnt Ends",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Singapore, Singapore",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Burnt%20Ends%2C%20Singapore",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "LAX": {
+      "destination": "Los Angeles",
+      "country": "USA",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-LAX-providence",
+          "name": "Providence",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Los Angeles, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Providence%2C%20Los%20Angeles",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-LAX-n-naka",
+          "name": "n/naka",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Los Angeles, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=n%2Fnaka%2C%20Los%20Angeles",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-LAX-spago-beverly-hills",
+          "name": "Spago Beverly Hills",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Los Angeles, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Spago%20Beverly%20Hills%2C%20Los%20Angeles",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "NYC": {
+      "destination": "New York",
+      "country": "USA",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-NYC-le-bernardin",
+          "name": "Le Bernardin",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "New York, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Bernardin%2C%20New%20York",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-NYC-eleven-madison-park",
+          "name": "Eleven Madison Park",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "New York, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Eleven%20Madison%20Park%2C%20New%20York",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-NYC-atomix",
+          "name": "Atomix",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "New York, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Atomix%2C%20New%20York",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "ASP": {
+      "destination": "Aspen",
+      "country": "USA",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-ASP-matsuhisa-aspen",
+          "name": "Matsuhisa Aspen",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Aspen, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Matsuhisa%20Aspen%2C%20Aspen",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-ASP-cache-cache-aspen",
+          "name": "Cache Cache Aspen",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Aspen, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Cache%20Cache%20Aspen%2C%20Aspen",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-ASP-bosq",
+          "name": "Bosq",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Aspen, USA",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Bosq%2C%20Aspen",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "CRV": {
+      "destination": "Courchevel",
+      "country": "France",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-CRV-le-1947-a-cheval-blanc",
+          "name": "Le 1947 à Cheval Blanc",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Courchevel, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%201947%20%C3%A0%20Cheval%20Blanc%2C%20Courchevel",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-CRV-baumaniere-1850",
+          "name": "Baumanière 1850",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Courchevel, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Baumani%C3%A8re%201850%2C%20Courchevel",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-CRV-bagatelle-courchevel",
+          "name": "Bagatelle Courchevel",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Courchevel, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Bagatelle%20Courchevel%2C%20Courchevel",
+          "website": "https://bagatelle.com/venues/courchevel/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "SBH": {
+      "destination": "St. Barts",
+      "country": "Caribbean",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-SBH-bonito-saint-barth",
+          "name": "Bonito Saint Barth",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "St. Barts, Caribbean",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Bonito%20Saint%20Barth%2C%20St.%20Barts",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-SBH-tamarin-st-barth",
+          "name": "Tamarin St Barth",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "St. Barts, Caribbean",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Tamarin%20St%20Barth%2C%20St.%20Barts",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-SBH-le-toiny-restaurant",
+          "name": "Le Toiny Restaurant",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "St. Barts, Caribbean",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Toiny%20Restaurant%2C%20St.%20Barts",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    },
+    "PDE": {
+      "destination": "Punta del Este",
+      "country": "Uruguay",
+      "fetchedAt": null,
+      "source": "VELVET curated · official links where verified",
+      "restaurants": [
+        {
+          "placeId": "curated-PDE-parador-la-huella",
+          "name": "Parador La Huella",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Punta del Este, Uruguay",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Parador%20La%20Huella%2C%20Punta%20del%20Este",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-PDE-fasano-punta-del-este",
+          "name": "Fasano Punta del Este",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Punta del Este, Uruguay",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Fasano%20Punta%20del%20Este%2C%20Punta%20del%20Este",
+          "website": "",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        },
+        {
+          "placeId": "curated-PDE-la-susana",
+          "name": "La Susana",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Punta del Este, Uruguay",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20Susana%2C%20Punta%20del%20Este",
+          "website": "https://www.lasusana.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated",
+          "curated": true
+        }
+      ]
+    }
+  }
 }
