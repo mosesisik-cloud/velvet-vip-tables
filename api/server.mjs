@@ -1682,7 +1682,8 @@ const server = http.createServer(async (req, res) => {
         upsertUser(db, profile);
         save(db);
         const token = mintAuthToken(profile);
-        res.writeHead(302, { Location: `${PUBLIC_APP}/?auth=${encodeURIComponent(token)}#/verify` });
+        const next = db.idv?.[profile.id]?.status === "verified" ? "#/" : "#/verify";
+        res.writeHead(302, { Location: `${PUBLIC_APP}/?auth=${encodeURIComponent(token)}${next}` });
         res.end();
       } catch {
         fail();
@@ -2259,7 +2260,9 @@ const server = http.createServer(async (req, res) => {
         save(db);
         return send(res, 422, { error: face.error || "face_required", idv: publicIdv(db.idv[b.userId]) });
       }
-      const nm = nameMatch(parsed.fields.firstName, parsed.fields.lastName, claimed);
+      const nm = claimed.trim()
+        ? nameMatch(parsed.fields.firstName, parsed.fields.lastName, claimed)
+        : { ok: true, score: 1, skipped: true };
       let status = "verified";
       if (!nm.ok && !b.confirmMismatch) status = "mismatch";
       db.idv[b.userId] = {
