@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=96";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=96";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=96";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=96";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=97";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=97";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=97";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=97";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -5713,11 +5713,42 @@ function stopChatPoll() {
   if (chatPoll) { clearInterval(chatPoll); chatPoll = null; }
 }
 
+function renderCrewDemo(v) {
+  const crews = [
+    { name: "Sofia, Leo & Maya", seats: 3, note: "Middag först, sunset och sedan hela kvällen. Söker ett socialt crew.", budget: 850 },
+    { name: "Amir & Elias", seats: 2, note: "I stan för helgen och vill dela ett riktigt bra bord.", budget: 1000 },
+    { name: "Chloé, Nina & Jules", seats: 3, note: "Champagne, dans och bra energi — gärna ett större blandat sällskap.", budget: 750 },
+  ];
+  let ix = 0;
+  setTitle(`${t("crewDiscover")} · ${v.name}`);
+  view().innerHTML = `<section class="section"><a class="detail-back" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>← ${esc(v.name)}</a>
+    <p class="detail-kicker">${esc(v.destination)} · ${esc(t("crewDemoBadge"))}</p><h1>${esc(t("crewDiscover"))}</h1>
+    <p class="ob-sub" style="text-align:left">${esc(t("crewDiscoverSub"))}</p>
+    <div class="crew-demo-create"><span>ERT CREW</span><b>Du + 2 vänner</b><small>3 personer · €850/person · söker totalt 6</small></div>
+    <div id="crew-demo-card"></div></section>`;
+  const paintDemo = () => {
+    const c = crews[ix % crews.length];
+    $("#crew-demo-card").innerHTML = `<article class="crew-card"><div class="crew-avatar">${esc(c.name.slice(0,1))}</div>
+      <p class="detail-kicker">IKVÄLL · ${c.seats} ${esc(t("people"))} · ${esc(t("crewDemoBadge"))}</p><h3>${esc(c.name)}</h3><p>${esc(c.note)}</p>
+      <div class="crew-stats"><span><b>${3 + c.seats}</b>${esc(t("crewTogether"))}</span><span><b>${fmtEUR(c.budget)}</b>${esc(t("crewPerPerson"))}</span><span><b>€5 000</b>${esc(t("crewCombined"))}</span></div>
+      <div class="crew-actions"><button class="crew-pass" type="button" id="demo-pass" aria-label="${esc(t("crewPass"))}">✕</button><button class="crew-like" type="button" id="demo-like" aria-label="${esc(t("crewLike"))}">♥</button></div>
+      <div class="crew-demo-labels"><span>${esc(t("crewPass"))}</span><span>${esc(t("crewLike"))}</span></div></article>`;
+    $("#demo-pass")?.addEventListener("click", () => { ix++; paintDemo(); });
+    $("#demo-like")?.addEventListener("click", () => {
+      const party = 3 + c.seats;
+      $("#crew-demo-card").innerHTML = `<div class="crew-demo-match"><div class="crew-match-heart">♥</div><p class="detail-kicker">${esc(t("crewDemoBadge"))}</p><h2>${esc(t("crewItsMatch"))}</h2><p>Du + 2 vänner <b>×</b> ${esc(c.name)}</p><div class="crew-stats"><span><b>${party}</b>${esc(t("people"))}</span><span><b>€5 000</b>bord totalt</span><span><b>${fmtEUR(Math.ceil(5000 / party))}</b>${esc(t("perPerson"))}</span></div><p class="price-disclaimer">${esc(t("crewDemoTable"))}</p><button class="btn btn-gold" id="demo-again">Se fler crews</button></div>`;
+      $("#demo-again")?.addEventListener("click", () => { ix++; paintDemo(); });
+    });
+  };
+  paintDemo();
+}
+
 async function renderPromoterChat(venueId) {
   const v = VENUES.find((x) => x.venue_id === venueId);
   if (!v) { render404("#/promoter/" + venueId); return; }
   const me = loadUser();
   if (!me) {
+    if ((location.hash || "").includes("match=1")) { renderCrewDemo(v); return; }
     view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p>${esc(t("verifiedPerkPromoter"))}</p><p style="margin-top:16px"><button class="btn btn-gold" id="ch-login">${esc(t("loginCta"))}</button></p></div></section>`;
     $("#ch-login")?.addEventListener("click", () => openOnboarding({ dismissable: false, phase: "auth" }));
     return;
@@ -6730,7 +6761,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=96", { updateViaCache: "none" })
+      .register("sw.js?v=97", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
