@@ -400,6 +400,9 @@ function publicMatch(m, db) {
     note: String(m.note || "").slice(0, 240),
     openFor: parseOpenFor(m.openFor),
     openSeats: Number(m.openSeats) || 0,
+    budgetPerPerson: Number(m.budgetPerPerson) || 0,
+    targetSize: Number(m.targetSize) || 0,
+    demo: !!m.demo,
     status: m.status || "open",
     tableId: m.tableId || "",
     created: m.created,
@@ -411,6 +414,30 @@ function publicMatch(m, db) {
     handle: d.handle || "",
     provider: d.provider || "",
   };
+}
+function ensureDemoCrewCandidates(db, venueId, mine) {
+  if (!mine || process.env.VELVET_DEMO_CREWS === "0") return false;
+  const profiles = [
+    { name: "Sofia, Leo & Maya · DEMO", seats: 3, budget: 8500, note: "Vi vill dela ett riktigt bra bord, middag först och sedan hela kvällen." },
+    { name: "Amir & Elias · DEMO", seats: 2, budget: 11000, note: "I stan för helgen och söker ett socialt crew med bra energi." },
+    { name: "Chloé, Nina & Jules · DEMO", seats: 3, budget: 7000, note: "Champagne, sunset och dans — gärna ett större blandat sällskap." },
+  ];
+  let changed = false;
+  const key = crypto.createHash("sha1").update(`${mine.userId}|${venueId}|${mine.date}`).digest("hex").slice(0, 10);
+  for (let i = 0; i < profiles.length; i++) {
+    const p = profiles[i];
+    const userId = `DEMO-${key}-${i + 1}`;
+    if ((db.matches || []).some((m) => m.userId === userId && m.venueId === venueId && m.date === mine.date)) continue;
+    db.matches.unshift({
+      id: `MX-DEMO-${key}-${i + 1}`, venueId, userId, name: p.name, date: mine.date,
+      seats: p.seats, note: p.note, openFor: "anyone", openSeats: 0,
+      budgetPerPerson: p.budget, targetSize: Math.max(Number(mine.targetSize) || 6, p.seats),
+      likes: [mine.userId], passes: [], demo: true, status: "open", tableId: "", created: new Date().toISOString(),
+    });
+    changed = true;
+  }
+  if (changed) db.matches = db.matches.slice(0, 400);
+  return changed;
 }
 function dossier(uid, db) {
   if (!uid) return null;
@@ -923,6 +950,8 @@ function publicTable(t, db) {
     date: t.date,
     package: t.package,
     total: Number(t.total) || 0,
+    proposedBudget: Number(t.proposedBudget) || 0,
+    demo: !!t.demo,
     party,
     openSeats: Number(t.openSeats) || 0,
     openLeft: Number(t.openLeft) || 0,
@@ -2568,6 +2597,7 @@ const server = http.createServer(async (req, res) => {
     }
 
     const matchComposeM = url.pathname.match(/^\/matches\/([^/]+)\/compose$/);
+    const matchSwipeM = url.pathname.match(/^\/matches\/([^/]+)\/swipe$/);
     const matchM = url.pathname.match(/^\/matches\/([^/]+)$/);
     if (req.method === "POST" && matchM) {
       const b = await readBody(req, 2e5);
@@ -2585,6 +2615,8 @@ const server = http.createServer(async (req, res) => {
       const note = String(b.note || "").trim().slice(0, 240);
       const openFor = parseOpenFor(b.openFor);
       const wantOpen = Math.max(0, Math.min(12, Number(b.openSeats) || 0));
+      const budgetPerPerson = Math.max(0, Math.min(100000, Number(b.budgetPerPerson) || 0));
+      const targetSize = Math.max(seats, Math.min(20, Number(b.targetSize) || seats));
       upsertUser(db, b.user);
       if (!db.matches) db.matches = [];
       let rec = db.matches.find((m) => m.venueId === venueId && m.userId === uid && m.date === date && m.status === "open");
@@ -2600,6 +2632,10 @@ const server = http.createServer(async (req, res) => {
           note,
           openFor,
           openSeats: wantOpen,
+          budgetPerPerson,
+          targetSize,
+          likes: [],
+          passes: [],
           status: "open",
           tableId: "",
           created: new Date().toISOString(),
@@ -2612,10 +2648,12 @@ const server = http.createServer(async (req, res) => {
         rec.note = note;
         rec.openFor = openFor;
         rec.openSeats = wantOpen;
+        rec.budgetPerPerson = budgetPerPerson;
+        rec.targetSize = targetSize;
         rec.name = String(b.user?.name || rec.name || "").slice(0, 80);
       }
       const who = openFor === "women" ? "kvinnor" : openFor === "men" ? "män" : "alla";
-      const text = `Vill bli sammansatt till ett bord · ${date} · ${seats} pers${wantOpen ? ` · lämna ${wantOpen} stolar till ${who}` : ""}${note ? ` · ${note}` : ""}`;
+      const text = `Vill synka crew till ett bord · ${date} · ${seats} pers${targetSize > seats ? ` · söker totalt ${targetSize}` : ""}${budgetPerPerson ? ` · budget €${budgetPerPerson}/person` : ""}${wantOpen ? ` · lämna ${wantOpen} stolar till ${who}` : ""}${note ? ` · ${note}` : ""}`;
       const msg = {
         id: `M-${Date.now().toString(36)}`,
         role: "user",
@@ -2649,7 +2687,52 @@ const server = http.createServer(async (req, res) => {
         if (gate) return send(res, 403, gatePayload(gate, uid, db, venueId));
       }
       const list = (db.matches || []).filter((m) => m.venueId === venueId && (promoter || m.userId === uid));
-      return send(res, 200, { matches: list.map((m) => publicMatch(m, db)), promoter });
+      const mine = (db.matches || []).find((m) => m.venueId === venueId && m.userId === uid && m.status === "open");
+      if (!promoter && ensureDemoCrewCandidates(db, venueId, mine)) save(db);
+      const seen = new Set([...(mine?.likes || []), ...(mine?.passes || [])]);
+      const candidates = promoter || !mine ? [] : (db.matches || [])
+        .filter((m) => m.venueId === venueId && m.status === "open" && m.userId !== uid && m.date === mine.date && !seen.has(m.userId))
+        .map((m) => publicMatch(m, db));
+      return send(res, 200, { matches: list.map((m) => publicMatch(m, db)), candidates, promoter });
+    }
+    if (req.method === "POST" && matchSwipeM) {
+      const b = await readBody(req, 2e5);
+      const venueId = decodeURIComponent(matchSwipeM[1]);
+      const uid = String(b.user?.id || "");
+      if (!uid) return send(res, 400, { error: "user" });
+      const db = load();
+      const gate = memberGate(uid, db, venueId);
+      if (gate) return send(res, 403, gatePayload(gate, uid, db, venueId));
+      const mine = (db.matches || []).find((m) => m.venueId === venueId && m.userId === uid && m.status === "open");
+      const target = (db.matches || []).find((m) => m.id === String(b.targetMatchId || "") && m.venueId === venueId && m.status === "open");
+      if (!mine || !target || target.userId === uid || target.date !== mine.date) return send(res, 400, { error: "candidate" });
+      const like = b.decision === "like";
+      const bucket = like ? "likes" : "passes";
+      if (!Array.isArray(mine[bucket])) mine[bucket] = [];
+      if (!mine[bucket].includes(target.userId)) mine[bucket].push(target.userId);
+      const mutual = like && Array.isArray(target.likes) && target.likes.includes(uid);
+      if (!mutual) { save(db); return send(res, 200, { mutual: false, decision: like ? "like" : "pass" }); }
+      const hostUser = db.users[mine.userId] || { id: mine.userId, name: mine.name };
+      const joinUser = db.users[target.userId] || { id: target.userId, name: target.name };
+      const party = Math.min(20, (Number(mine.seats) || 1) + (Number(target.seats) || 1));
+      const proposedBudget = (Number(mine.budgetPerPerson) || 0) * (Number(mine.seats) || 1) + (Number(target.budgetPerPerson) || 0) * (Number(target.seats) || 1);
+      const demo = !!target.demo;
+      const table = {
+        id: `TB-${Date.now().toString(36).toUpperCase()}`, venue_id: venueId,
+        venue: String(b.venue || venueId), destination: String(b.destination || ""), date: mine.date,
+        package: String(b.package || (demo ? "DEMO · VIP-bord €5 000" : "Crew match · VIP-bord")), total: demo ? 5000 : 0, proposedBudget, party, demo,
+        openSeats: 0, openLeft: 0, openFor: "anyone", split: true, sharp: false, status: demo ? "demo_match" : "matched_pending",
+        host: { id: hostUser.id, name: String(hostUser.name || mine.name || "").slice(0, 80), provider: String(hostUser.provider || ""), handle: String(hostUser.handle || "").replace(/^@/, ""), paid: false, joined: new Date().toISOString() },
+        guests: [], joiners: [{ id: joinUser.id, name: String(joinUser.name || target.name || "").slice(0, 80), provider: String(joinUser.provider || ""), handle: String(joinUser.handle || "").replace(/^@/, ""), paid: false, joined: new Date().toISOString() }],
+        approvals: { [mine.userId]: true, [target.userId]: true }, created: new Date().toISOString(),
+      };
+      db.tables.unshift(table);
+      for (const m of [mine, target]) { m.status = "grouped"; m.tableId = table.id; }
+      const link = `${PUBLIC_APP}/#/table/${encodeURIComponent(table.id)}`;
+      const text = `Crew match! ${party} personer · ${mine.date}${proposedBudget ? ` · gemensam budget €${proposedBudget}` : ""} · ${link}`;
+      for (const m of [mine, target]) appendChat(db, venueId, m.userId, { id: `M-${Date.now().toString(36)}${m.userId.slice(-3)}`, role: "system", userId: "", name: "VELVET", handle: "", text, kind: "match_done", matchId: m.id, tableId: table.id, via: "app", created: new Date().toISOString() });
+      save(db);
+      return send(res, 201, { mutual: true, table: publicTable(table, db) });
     }
     if (req.method === "POST" && matchComposeM) {
       const b = await readBody(req, 2e5);

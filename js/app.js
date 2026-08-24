@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=95";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=95";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=95";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=95";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=96";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=96";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=96";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=96";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -4358,12 +4358,14 @@ async function renderTable(id) {
     <p class="detail-kicker">${esc(tb.destination)} · ${esc(tb.date)} · ${esc(tb.package || "")}${over ? ` · ${esc(t("pastParties"))}` : ""}</p>
     <h1>${esc(tb.venue)}</h1>
     <p class="ob-sub" style="text-align:left;margin:6px 0 18px">${esc(over ? t("partyOverTitle") : t("partySub"))}</p>
+    ${tb.demo ? `<p class="member-access on">${esc(t("crewDemoTable"))}</p>` : ""}
     <div class="party-stats">
       <div><b>${esc(moneyOrClub(tb.per_person))}</b><span>${esc(t("perPerson"))}</span></div>
       <div><b>${num(tb.paidN)}/${num(tb.dueN)}</b><span>${esc(t("paid"))}</span></div>
       <div><b>${num(tb.openLeft)}</b><span>${esc(openSeatsLine(tb) || t("seatsOpen"))}</span></div>
       <div><b>${num(tb.party)}</b><span>${esc(t("people"))}</span></div>
     </div>
+    ${num(tb.proposedBudget) > 0 ? `<div class="crew-budget-summary"><div><span>${esc(t("crewBudgetTitle"))}</span><b>${esc(fmtEUR(tb.proposedBudget))}</b></div><div><span>${esc(t("perPerson"))}</span><b>${esc(fmtEUR(Math.ceil(num(tb.proposedBudget) / Math.max(1, num(tb.party)))))}</b></div><p>${esc(t("crewBudgetNote"))}</p></div>` : ""}
     ${over ? "" : `<p class="price-disclaimer">${esc(t("payNote"))}</p>`}
     <h2 class="detail-panel-title" style="margin-top:8px">${esc(t("roster"))}</h2>
     <div class="person-list" id="party-list">
@@ -5873,11 +5875,19 @@ async function renderPromoterChat(venueId) {
         </label>
       </div>
       <div class="match-ask-row">
+        <label>${esc(t("crewTargetSize"))}
+          <input type="number" id="match-target" min="2" max="20" value="6" inputmode="numeric">
+        </label>
+        <label>${esc(t("crewBudget"))}
+          <input type="number" id="match-budget" min="0" max="100000" step="100" value="1000" inputmode="numeric">
+        </label>
+      </div>
+      <div class="match-ask-row">
         <label>${esc(t("matchOpenLeave"))}
-          <input type="number" id="match-leave" min="0" max="8" value="2" inputmode="numeric">
+          <input type="number" id="match-leave" min="0" max="8" value="0" inputmode="numeric">
         </label>
         <label>${esc(t("openForLabel"))}
-          ${openForSelectHTML("match-for", "women")}
+          ${openForSelectHTML("match-for", "anyone")}
         </label>
       </div>
       <p class="stepper-hint">${esc(t("openForHint"))}</p>
@@ -5948,18 +5958,42 @@ async function renderPromoterChat(venueId) {
     if (data?.messages) paint(data.messages);
     if (promoter) loadInbox();
   });
-  const paintMatchQueue = (list) => {
+  const paintMatchQueue = (list, candidates = []) => {
     const el = $("#match-queue");
     if (!el) return;
     const open = (list || []).filter((m) => m.status === "open");
     if (!promoter) {
-      el.classList.add("hidden");
       const mine = open.find((m) => m.userId === me.id);
       const lab = $("#match-mine");
       if (lab) {
         lab.textContent = mine ? `${t("matchMine")} · ${mine.date} · ${mine.seats}` : "";
         lab.classList.toggle("hidden", !mine);
       }
+      if (!mine) { el.classList.add("hidden"); return; }
+      el.classList.remove("hidden");
+      const card = candidates[0];
+      if (!card) {
+        el.innerHTML = `<h2 class="detail-panel-title">${esc(t("crewDiscover"))}</h2><div class="crew-empty"><span>✨</span><p>${esc(t("crewNoCandidates"))}</p></div>`;
+        return;
+      }
+      const combined = num(mine.seats) + num(card.seats);
+      const combinedBudget = num(mine.budgetPerPerson) * num(mine.seats) + num(card.budgetPerPerson) * num(card.seats);
+      el.innerHTML = `<h2 class="detail-panel-title">${esc(t("crewDiscover"))}</h2>
+        <p class="stepper-hint">${esc(t("crewDiscoverSub"))}</p>
+        <article class="crew-card" data-crew-card>
+          <div class="crew-avatar">${esc(String(card.name || "C").slice(0,1).toUpperCase())}</div>
+          <p class="detail-kicker">${esc(card.date)} · ${num(card.seats)} ${esc(t("people"))}${card.demo ? ` · ${esc(t("crewDemoBadge"))}` : ""}</p>
+          <h3>${esc(card.name || t("crewAnonymous"))}</h3>
+          <p>${esc(card.note || t("crewDefaultNote"))}</p>
+          <div class="crew-stats"><span><b>${combined}</b>${esc(t("crewTogether"))}</span><span><b>${card.budgetPerPerson ? fmtEUR(card.budgetPerPerson) : "—"}</b>${esc(t("crewPerPerson"))}</span><span><b>${combinedBudget ? fmtEUR(combinedBudget) : "—"}</b>${esc(t("crewCombined"))}</span></div>
+          <div class="crew-actions"><button class="crew-pass" type="button" data-crew-swipe="pass" aria-label="${esc(t("crewPass"))}">✕</button><button class="crew-like" type="button" data-crew-swipe="like" aria-label="${esc(t("crewLike"))}">♥</button></div>
+        </article>`;
+      el.querySelectorAll("[data-crew-swipe]").forEach((btn) => btn.addEventListener("click", async () => {
+        const r = await apiJSON(`/matches/${encodeURIComponent(venueId)}/swipe`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ user: me, targetMatchId: card.id, decision: btn.dataset.crewSwipe, venue: v.name, destination: v.destination }) });
+        if (r?.table) { showToast(t("crewItsMatch")); location.hash = `#/table/${encodeURIComponent(r.table.id)}`; return; }
+        showToast(btn.dataset.crewSwipe === "like" ? t("crewLiked") : t("crewPassed"));
+        await loadMatches();
+      }));
       return;
     }
     $("#match-ask")?.setAttribute("hidden", "");
@@ -6011,7 +6045,7 @@ async function renderPromoterChat(venueId) {
   async function loadMatches() {
     const data = await apiJSON(`/matches/${encodeURIComponent(venueId)}?userId=${encodeURIComponent(me.id)}`);
     if (data?.promoter) promoter = true;
-    paintMatchQueue(data?.matches || []);
+    paintMatchQueue(data?.matches || [], data?.candidates || []);
   }
   $("#match-send")?.addEventListener("click", async () => {
     const date = $("#match-date")?.value;
@@ -6019,12 +6053,14 @@ async function renderPromoterChat(venueId) {
     const note = ($("#match-note")?.value || "").trim();
     const openSeats = Number($("#match-leave")?.value || 0);
     const openFor = $("#match-for")?.value || "anyone";
+    const targetSize = Number($("#match-target")?.value || seats);
+    const budgetPerPerson = Number($("#match-budget")?.value || 0);
     const btn = $("#match-send");
     if (btn) btn.disabled = true;
     const r = await apiJSON(`/matches/${encodeURIComponent(venueId)}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user: me, date, seats, note, openSeats, openFor }),
+      body: JSON.stringify({ user: me, date, seats, note, openSeats, openFor, targetSize, budgetPerPerson }),
     });
     if (btn) btn.disabled = false;
     if (r?.error === "idv_required") { rememberAfterIdv(promoterHref(venueId) + "?match=1"); location.hash = "#/verify"; return; }
@@ -6694,7 +6730,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=95", { updateViaCache: "none" })
+      .register("sw.js?v=96", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
