@@ -1008,6 +1008,27 @@ async function runApi() {
     if (mine?.status !== "grouped" || mine?.tableId !== grouped.id) fail("match-grouped", JSON.stringify(mine));
     else ok("match-grouped", "guest sees grouped table");
 
+    const crewA = await req(base, "POST", "/matches/MYK-002", {
+      user: guest, date: "2026-09-12", seats: 3, targetSize: 6, budgetPerPerson: 8000, note: "Scorpios crew",
+    });
+    const crewB = await req(base, "POST", "/matches/MYK-002", {
+      user: host, date: "2026-09-12", seats: 3, targetSize: 6, budgetPerPerson: 9000, note: "Same night",
+    });
+    const crewFeed = await req(base, "GET", "/matches/MYK-002?userId=" + encodeURIComponent(guest.id));
+    if (crewA.status !== 200 || crewB.status !== 200 || !(crewFeed.json.candidates || []).some((m) => m.id === crewB.json.match?.id) || !(crewFeed.json.candidates || []).some((m) => m.demo)) {
+      fail("crew-discover", JSON.stringify(crewFeed.json).slice(0, 260));
+    } else ok("crew-discover", "same venue + date candidate and demo crews");
+
+    const crewLikeA = await req(base, "POST", "/matches/MYK-002/swipe", {
+      user: guest, targetMatchId: crewB.json.match.id, decision: "like", venue: "Scorpios", destination: "Mykonos",
+    });
+    const crewLikeB = await req(base, "POST", "/matches/MYK-002/swipe", {
+      user: host, targetMatchId: crewA.json.match.id, decision: "like", venue: "Scorpios", destination: "Mykonos",
+    });
+    if (crewLikeA.status !== 200 || crewLikeA.json.mutual || crewLikeB.status !== 201 || !crewLikeB.json.mutual || crewLikeB.json.table?.party !== 6 || crewLikeB.json.table?.proposedBudget !== 51000) {
+      fail("crew-mutual", JSON.stringify({ a: crewLikeA.json, b: crewLikeB.json }).slice(0, 400));
+    } else ok("crew-mutual", "3 + 3 people · €51,000 combined budget");
+
     const waFacts = await req(base, "GET", "/chats/BCN-102?userId=" + encodeURIComponent(guest.id));
     if (waFacts.status !== 200 || !String(waFacts.json.whatsapp?.phone || "").includes("34669")) {
       fail("wa-venue", JSON.stringify(waFacts.json).slice(0, 220));
