@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=90";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=90";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=90";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=90";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=94";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=94";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=94";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=94";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -326,6 +326,30 @@ function contactTile(href, title, sub, { gold = false, external = true, id = "",
   const close = tag === "button" ? "</button>" : "</a>";
   return `${open}<strong>${esc(title)}</strong><span>${esc(sub)}</span>${close}`;
 }
+const ICAO_PHONE = {
+  SWE: ["SE", "46"], NOR: ["NO", "47"], DNK: ["DK", "45"], FIN: ["FI", "358"],
+  ISL: ["IS", "354"], DEU: ["DE", "49"], FRA: ["FR", "33"], ESP: ["ES", "34"],
+  ITA: ["IT", "39"], GBR: ["GB", "44"], IRL: ["IE", "353"], NLD: ["NL", "31"],
+  BEL: ["BE", "32"], CHE: ["CH", "41"], AUT: ["AT", "43"], PRT: ["PT", "351"],
+  GRC: ["GR", "30"], POL: ["PL", "48"], TUR: ["TR", "90"], USA: ["US", "1"],
+  CAN: ["CA", "1"], AUS: ["AU", "61"], ARE: ["AE", "971"], BRA: ["BR", "55"],
+  MEX: ["MX", "52"], ARG: ["AR", "54"], JPN: ["JP", "81"],
+};
+function guestPhoneDial(phone, nationality) {
+  const raw = String(phone || "").trim();
+  const nat = String(nationality || "").toUpperCase();
+  const compact = raw.replace(/[^\d+]/g, "");
+  if (compact.startsWith("+") || compact.startsWith("00")) {
+    const rest = compact.replace(/^\+/, "").replace(/^00/, "");
+    const pairs = Object.values(ICAO_PHONE).sort((a, b) => b[1].length - a[1].length);
+    for (const [iso, d] of pairs) {
+      if (rest.startsWith(d)) return { dialCode: d, countryCode: iso };
+    }
+  }
+  if (ICAO_PHONE[nat]) return { dialCode: ICAO_PHONE[nat][1], countryCode: ICAO_PHONE[nat][0] };
+  if (/^0\d{6,14}$/.test(raw.replace(/\D/g, ""))) return { dialCode: "46", countryCode: "SE" };
+  return { dialCode: "", countryCode: "" };
+}
 function waDigits(raw) {
   let s = String(raw || "").trim();
   if (s.startsWith("00")) s = s.slice(2);
@@ -456,7 +480,8 @@ function requestPackageTemplates(v) {
   ];
 }
 function normalizePackage(p, verified) {
-  const amount = Number(p?.price);
+  const minimumSpend = Number(p?.minimumSpend);
+  const amount = Number.isFinite(minimumSpend) && minimumSpend > 0 ? minimumSpend : Number(p?.price);
   const isVerified = Boolean(verified && p?.verified !== false);
   return {
     id: String(p?.id || p?.name || "package").toLowerCase().replace(/[^a-z0-9]+/g, "-"),
@@ -466,6 +491,7 @@ function normalizePackage(p, verified) {
     priceClass: Math.min(4, Math.max(1, Number(p?.priceClass || 1))),
     capacity: p?.capacity ? String(p.capacity) : "",
     included: Array.isArray(p?.included) ? p.included.filter(Boolean).map(String) : [],
+    priceType: Number.isFinite(minimumSpend) && minimumSpend > 0 ? "minimum-spend" : String(p?.priceType || ""),
     note: String(p?.note || ""), verified: isVerified, source: String(p?.source || ""),
     desc: isVerified ? t("pkgVerifiedByClub") : t("pkgConfirmByClub"),
   };
@@ -485,6 +511,22 @@ function packageIncludedHTML(p) {
   const included = p.included.length ? p.included : [t("pkgIncludedPlace"), t("pkgIncludedContent")];
   return `<ul class="package-included">${included.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
 }
+function venueSeatMapHTML(v, packages) {
+  const beach = ["beach", "day"].includes(venueGroup(v));
+  const anchor = beach ? t("seatMapWater") : t("seatMapStage");
+  return `<div class="seat-map-wrap">
+    <div class="seat-map-head"><div><h3>${esc(t("seatMapTitle"))}</h3><p>${esc(t("seatMapHint"))}</p></div>
+      <span class="package-trust ${packages.some((p) => p.verified) ? "ok" : ""}">${esc(packages.some((p) => p.verified) ? t("seatMapOfficialPrices") : t("seatMapGuide"))}</span></div>
+    <div class="seat-map ${beach ? "seat-map-beach" : "seat-map-club"}" role="radiogroup" aria-label="${esc(t("seatMapTitle"))}">
+      <div class="seat-map-anchor">${esc(anchor)}</div>
+      ${packages.map((p, i) => `<button type="button" class="seat-zone seat-zone-${i + 1}" data-seat-pkg="${esc(p.id)}" role="radio" aria-checked="false">
+        <span class="seat-zone-dot"></span><strong>${esc(p.name)}</strong>
+        <small>${esc(p.priceType === "minimum-spend" ? t("minimumSpend") : t("priceLabel"))}: ${esc(packagePriceHTML(p))}</small>
+      </button>`).join("")}
+    </div>
+    <div class="seat-map-summary" id="seat-map-summary">${esc(t("seatMapPick"))}</div>
+  </div>`;
+}
 function venuePackagesPanelHTML(v) {
   const packages = packagesFor(v);
   const hasOfficial = packages.some((p) => p.verified);
@@ -495,11 +537,12 @@ function venuePackagesPanelHTML(v) {
         <p class="events-meta">${esc(hasOfficial ? t("pkgOfficialOpts") : t("pkgRequestOpts"))}</p></div>
       <span class="package-trust ${hasOfficial ? "ok" : ""}">${esc(hasOfficial ? t("pkgOfficialData") : t("pkgNoFakePrice"))}</span>
     </div>
+    ${venueSeatMapHTML(v, packages)}
     <div class="package-compare-grid">
-      ${packages.map((p) => `<article class="package-option ${p.verified ? "verified" : ""}">
+      ${packages.map((p) => `<article class="package-option ${p.verified ? "verified" : ""}" data-pkg-card="${esc(p.id)}">
         <div class="package-option-top"><span class="package-level" aria-label="${esc(t("priceClassAria").replace("{n}", String(p.priceClass)))}">${"€".repeat(p.priceClass)}</span>
           ${p.verified ? `<span class="idv-badge ok">${esc(t("verified"))}</span>` : `<span class="idv-badge">${esc(t("requestBadge"))}</span>`}</div>
-        <h3>${esc(p.name)}</h3><div class="package-option-price">${esc(packagePriceHTML(p))}</div>
+        <h3>${esc(p.name)}</h3><div class="package-option-price">${p.priceType === "minimum-spend" ? `<span>${esc(t("minimumSpend"))}</span> ` : ""}${esc(packagePriceHTML(p))}</div>
         ${p.capacity ? `<p class="package-capacity">${esc(t("pkgForPeople").replace("{n}", p.capacity))}</p>` : ""}${packageIncludedHTML(p)}
         ${p.note ? `<p class="package-note">${esc(p.note)}</p>` : ""}
         <button type="button" class="btn ${p.verified ? "btn-gold" : "btn-ghost"}" data-pkg-open="${esc(p.id)}">${esc(t("pkgSelect"))}</button>
@@ -1908,17 +1951,24 @@ function bindDestCards() {
 }
 
 function restaurantCardHTML(r) {
+  const rating = Number(r.rating);
   const reviews = Number(r.reviewCount) || 0;
+  const stars = Number.isFinite(rating) && rating >= 3.8
+    ? `<div class="restaurant-rating"><strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span></div>`
+    : "";
+  const maps = /^https:\/\//i.test(r.mapsUrl || "")
+    ? `<a class="btn btn-gold btn-sm" href="${esc(r.mapsUrl)}" target="_blank" rel="noopener">${esc(t("mapsGoogle"))} ↗</a>`
+    : "";
+  const site = /^https:\/\//i.test(r.website || "")
+    ? `<a class="btn btn-sm" href="${esc(r.website)}" target="_blank" rel="noopener">${esc(t("officialWebsite"))} ↗</a>`
+    : "";
   return `<article class="restaurant-card">
     <div class="restaurant-card-top">
       <div><h3>${esc(r.name)}</h3><p>${esc(r.address || "")}</p></div>
-      <div class="restaurant-rating"><strong>${esc(String(r.rating))}</strong><span>${esc(googleStars(r.rating))}</span></div>
+      ${stars}
     </div>
-    <p class="restaurant-review-count">${esc(reviews.toLocaleString(currentLang()))} ${esc(t("restaurantReviews"))}</p>
-    <div class="restaurant-actions">
-      ${r.website ? `<a class="btn btn-sm" href="${esc(r.website)}" target="_blank" rel="noopener">${esc(t("officialWebsite"))} ↗</a>` : ""}
-      <a class="btn btn-gold btn-sm" href="${esc(r.mapsUrl)}" target="_blank" rel="noopener">Google Maps ↗</a>
-    </div>
+    ${reviews > 0 ? `<p class="restaurant-review-count">${esc(reviews.toLocaleString(currentLang()))} ${esc(t("restaurantReviews"))}</p>` : ""}
+    <div class="restaurant-actions">${site}${maps}</div>
   </article>`;
 }
 
@@ -2696,6 +2746,16 @@ function renderVenueDetail(id) {
   document.body.classList.add("has-dock");
   bindVenueGallery();
   document.querySelectorAll("[data-pkg-open]").forEach((btn) => btn.addEventListener("click", () => openBookingModal(v, btn.dataset.pkgOpen)));
+  document.querySelectorAll("[data-seat-pkg]").forEach((zone) => zone.addEventListener("click", () => {
+    const id = zone.dataset.seatPkg;
+    const p = packagesFor(v).find((x) => x.id === id);
+    document.querySelectorAll("[data-seat-pkg]").forEach((x) => { x.classList.toggle("selected", x === zone); x.setAttribute("aria-checked", x === zone ? "true" : "false"); });
+    document.querySelectorAll("[data-pkg-card]").forEach((x) => x.classList.toggle("map-selected", x.dataset.pkgCard === id));
+    const summary = $("#seat-map-summary");
+    if (summary && p) summary.innerHTML = `<strong>${esc(p.name)}</strong> · ${esc(p.priceType === "minimum-spend" ? t("minimumSpend") : t("priceLabel"))}: ${esc(packagePriceHTML(p))} · ${esc(p.included.length ? p.included.join(" · ") : t("pkgConfirmByClub"))} <button type="button" class="btn btn-gold btn-sm" id="seat-map-book">${esc(t("pkgSelect"))}</button>`;
+    $("#seat-map-book")?.addEventListener("click", () => openBookingModal(v, id));
+    document.querySelector(`[data-pkg-card="${CSS.escape(id)}"]`)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }));
 
   fillVenuePromoters(v.venue_id);
   (function bindAvail() {
@@ -2758,6 +2818,7 @@ function renderVenueDetail(id) {
         const go = $("#ab-go");
         go.disabled = true;
         go.textContent = t("availBookWorking");
+        const dial = guestPhoneDial(phone, me?.idvFields?.nationality || "");
         const r = await apiJSON(`/availability/${encodeURIComponent(v.venue_id)}/book`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -2768,7 +2829,8 @@ function renderVenueDetail(id) {
             party: Number(lastQuery.party) || 2,
             venueName: v.name,
             destination: v.destination,
-            guest: { firstName: first, lastName: last, email, phone, dialCode: "46", countryCode: "SE" },
+            lang: currentLang(),
+            guest: { firstName: first, lastName: last, email, phone, dialCode: dial.dialCode, countryCode: dial.countryCode },
             note: `VELVET · ${v.name}`,
           }),
         });
@@ -2777,7 +2839,7 @@ function renderVenueDetail(id) {
           box.innerHTML = `
             <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.12)">
               <h3 style="margin:0 0 8px">🥂 ${esc(t("availBookDone"))}</h3>
-              <p class="events-meta">${esc(t("availBookCode"))}: <b>${esc(r.booking.confirmation || "—")}</b> · ${esc(r.booking.date)} ${esc(r.booking.time)} · ${esc(String(r.booking.party))} pers</p>
+              <p class="events-meta">${esc(t("availBookCode"))}: <b>${esc(r.booking.confirmation || "—")}</b> · ${esc(r.booking.date)} ${esc(r.booking.time)} · ${esc(t("availParty").replace("{n}", String(r.booking.party)))}</p>
               <p class="events-meta">${esc(t("availBookInSystem"))}</p>
               <button class="btn btn-ghost" id="ab-cancel" style="width:100%;margin-top:10px">${esc(t("availBookCancel"))}</button>
             </div>`;
@@ -2945,7 +3007,7 @@ async function openBookingModal(v, preselectedPackageId = "") {
           ${pkgs.map((p, i) => `
             <div class="package ${p.id === sel.id ? "selected" : ""}" data-pkg="${esc(p.id)}" role="radio" aria-checked="${p.id === sel.id}" tabindex="0">
               <div><div class="package-name">${esc(p.name)}</div><div class="package-desc">${esc(p.desc)}</div></div>
-              <div class="package-price">${esc(t("clubSetsPrice"))}</div>
+              <div class="package-price">${esc(p.priceType === "minimum-spend" ? `${t("minimumSpend")}: ${packagePriceHTML(p)}` : packagePriceHTML(p))}</div>
             </div>`).join("")}
         </div>
       </div>
@@ -6625,7 +6687,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=90", { updateViaCache: "none" })
+      .register("sw.js?v=94", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
