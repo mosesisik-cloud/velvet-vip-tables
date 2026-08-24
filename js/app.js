@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=99";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=99";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=99";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=99";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=100";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=100";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=100";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=100";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -3985,13 +3985,8 @@ function openOnboarding(opts = {}) {
     route();
   };
   const enterAfterLogin = () => {
-    if (loadHomeChoice()) {
-      close(false);
-      route();
-      return;
-    }
-    phase = "country";
-    render();
+    close(false);
+    location.hash = "#/verify";
   };
 
   // focusSel: valfritt CSS-mål att fokusera efter re-render (annars dialogen) —
@@ -4035,15 +4030,13 @@ function openOnboarding(opts = {}) {
           </div>` : `
           <h1 class="ob-title">${esc(t("loginTitle"))}</h1>
           <p class="ob-sub">${esc(t("loginSub"))}</p>
-          <div class="one-tap-login">
-            <button type="button" class="social-btn social-btn-primary" data-soc="google"><span>${esc(socialTrustCopy().oneTap)}</span><small>${esc(socialTrustCopy().oneTapSub)}</small></button>
-          </div>
-          <details class="other-login"><summary>${esc(socialTrustCopy().other)}</summary><div class="social-grid">
-            ${SOCIALS.filter((s) => s.id !== "google").map((s) => `
+          <p class="one-tap-copy">${esc(socialTrustCopy().oneTapSub)}</p>
+          <div class="social-grid social-grid-onetap">
+            ${SOCIALS.map((s) => `
               <button type="button" class="social-btn social-btn-preview" data-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}">
-                <span>${esc(socialTrustCopy().create)} ${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small>
+                <span class="social-one-icon">${esc(s.label.slice(0,1))}</span><span>${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small>
               </button>`).join("")}
-          </div></details>
+          </div>
           <p class="stepper-hint social-honesty">🔒 ${esc(socialTrustCopy().explain)}</p>
           <div class="ob-actions"><button class="btn btn-ghost" id="ob-skip-auth">${esc(t("skipLogin"))}</button></div>
           `}
@@ -6783,7 +6776,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=99", { updateViaCache: "none" })
+      .register("sw.js?v=100", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
