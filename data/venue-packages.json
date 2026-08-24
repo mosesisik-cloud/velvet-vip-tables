@@ -5,6 +5,8 @@
       "id": "stabilt paket-id",
       "name": "officiellt namn på bordet/bädden",
       "price": "officiellt publicerat pris eller minsta spend; utelämna om okänt",
+      "minimumSpend": "officiellt publicerad minimum spend; utelämna om okänd",
+      "priceType": "minimum-spend när beloppet är konsumtionskrav, annars vanligt pris",
       "currency": "ISO-valuta, exempel EUR",
       "priceClass": "1–4 för sortering och visuell jämförelse",
       "capacity": "officiell kapacitet, exempel 4–6",

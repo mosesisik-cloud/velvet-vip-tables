@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=93";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=93";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=93";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=93";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=94";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=94";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=94";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=94";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -480,7 +480,8 @@ function requestPackageTemplates(v) {
   ];
 }
 function normalizePackage(p, verified) {
-  const amount = Number(p?.price);
+  const minimumSpend = Number(p?.minimumSpend);
+  const amount = Number.isFinite(minimumSpend) && minimumSpend > 0 ? minimumSpend : Number(p?.price);
   const isVerified = Boolean(verified && p?.verified !== false);
   return {
     id: String(p?.id || p?.name || "package").toLowerCase().replace(/[^a-z0-9]+/g, "-"),
@@ -490,6 +491,7 @@ function normalizePackage(p, verified) {
     priceClass: Math.min(4, Math.max(1, Number(p?.priceClass || 1))),
     capacity: p?.capacity ? String(p.capacity) : "",
     included: Array.isArray(p?.included) ? p.included.filter(Boolean).map(String) : [],
+    priceType: Number.isFinite(minimumSpend) && minimumSpend > 0 ? "minimum-spend" : String(p?.priceType || ""),
     note: String(p?.note || ""), verified: isVerified, source: String(p?.source || ""),
     desc: isVerified ? t("pkgVerifiedByClub") : t("pkgConfirmByClub"),
   };
@@ -509,6 +511,22 @@ function packageIncludedHTML(p) {
   const included = p.included.length ? p.included : [t("pkgIncludedPlace"), t("pkgIncludedContent")];
   return `<ul class="package-included">${included.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>`;
 }
+function venueSeatMapHTML(v, packages) {
+  const beach = ["beach", "day"].includes(venueGroup(v));
+  const anchor = beach ? t("seatMapWater") : t("seatMapStage");
+  return `<div class="seat-map-wrap">
+    <div class="seat-map-head"><div><h3>${esc(t("seatMapTitle"))}</h3><p>${esc(t("seatMapHint"))}</p></div>
+      <span class="package-trust ${packages.some((p) => p.verified) ? "ok" : ""}">${esc(packages.some((p) => p.verified) ? t("seatMapOfficialPrices") : t("seatMapGuide"))}</span></div>
+    <div class="seat-map ${beach ? "seat-map-beach" : "seat-map-club"}" role="radiogroup" aria-label="${esc(t("seatMapTitle"))}">
+      <div class="seat-map-anchor">${esc(anchor)}</div>
+      ${packages.map((p, i) => `<button type="button" class="seat-zone seat-zone-${i + 1}" data-seat-pkg="${esc(p.id)}" role="radio" aria-checked="false">
+        <span class="seat-zone-dot"></span><strong>${esc(p.name)}</strong>
+        <small>${esc(p.priceType === "minimum-spend" ? t("minimumSpend") : t("priceLabel"))}: ${esc(packagePriceHTML(p))}</small>
+      </button>`).join("")}
+    </div>
+    <div class="seat-map-summary" id="seat-map-summary">${esc(t("seatMapPick"))}</div>
+  </div>`;
+}
 function venuePackagesPanelHTML(v) {
   const packages = packagesFor(v);
   const hasOfficial = packages.some((p) => p.verified);
@@ -519,11 +537,12 @@ function venuePackagesPanelHTML(v) {
         <p class="events-meta">${esc(hasOfficial ? t("pkgOfficialOpts") : t("pkgRequestOpts"))}</p></div>
       <span class="package-trust ${hasOfficial ? "ok" : ""}">${esc(hasOfficial ? t("pkgOfficialData") : t("pkgNoFakePrice"))}</span>
     </div>
+    ${venueSeatMapHTML(v, packages)}
     <div class="package-compare-grid">
-      ${packages.map((p) => `<article class="package-option ${p.verified ? "verified" : ""}">
+      ${packages.map((p) => `<article class="package-option ${p.verified ? "verified" : ""}" data-pkg-card="${esc(p.id)}">
         <div class="package-option-top"><span class="package-level" aria-label="${esc(t("priceClassAria").replace("{n}", String(p.priceClass)))}">${"€".repeat(p.priceClass)}</span>
           ${p.verified ? `<span class="idv-badge ok">${esc(t("verified"))}</span>` : `<span class="idv-badge">${esc(t("requestBadge"))}</span>`}</div>
-        <h3>${esc(p.name)}</h3><div class="package-option-price">${esc(packagePriceHTML(p))}</div>
+        <h3>${esc(p.name)}</h3><div class="package-option-price">${p.priceType === "minimum-spend" ? `<span>${esc(t("minimumSpend"))}</span> ` : ""}${esc(packagePriceHTML(p))}</div>
         ${p.capacity ? `<p class="package-capacity">${esc(t("pkgForPeople").replace("{n}", p.capacity))}</p>` : ""}${packageIncludedHTML(p)}
         ${p.note ? `<p class="package-note">${esc(p.note)}</p>` : ""}
         <button type="button" class="btn ${p.verified ? "btn-gold" : "btn-ghost"}" data-pkg-open="${esc(p.id)}">${esc(t("pkgSelect"))}</button>
@@ -2727,6 +2746,16 @@ function renderVenueDetail(id) {
   document.body.classList.add("has-dock");
   bindVenueGallery();
   document.querySelectorAll("[data-pkg-open]").forEach((btn) => btn.addEventListener("click", () => openBookingModal(v, btn.dataset.pkgOpen)));
+  document.querySelectorAll("[data-seat-pkg]").forEach((zone) => zone.addEventListener("click", () => {
+    const id = zone.dataset.seatPkg;
+    const p = packagesFor(v).find((x) => x.id === id);
+    document.querySelectorAll("[data-seat-pkg]").forEach((x) => { x.classList.toggle("selected", x === zone); x.setAttribute("aria-checked", x === zone ? "true" : "false"); });
+    document.querySelectorAll("[data-pkg-card]").forEach((x) => x.classList.toggle("map-selected", x.dataset.pkgCard === id));
+    const summary = $("#seat-map-summary");
+    if (summary && p) summary.innerHTML = `<strong>${esc(p.name)}</strong> · ${esc(p.priceType === "minimum-spend" ? t("minimumSpend") : t("priceLabel"))}: ${esc(packagePriceHTML(p))} · ${esc(p.included.length ? p.included.join(" · ") : t("pkgConfirmByClub"))} <button type="button" class="btn btn-gold btn-sm" id="seat-map-book">${esc(t("pkgSelect"))}</button>`;
+    $("#seat-map-book")?.addEventListener("click", () => openBookingModal(v, id));
+    document.querySelector(`[data-pkg-card="${CSS.escape(id)}"]`)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }));
 
   fillVenuePromoters(v.venue_id);
   (function bindAvail() {
@@ -2978,7 +3007,7 @@ async function openBookingModal(v, preselectedPackageId = "") {
           ${pkgs.map((p, i) => `
             <div class="package ${p.id === sel.id ? "selected" : ""}" data-pkg="${esc(p.id)}" role="radio" aria-checked="${p.id === sel.id}" tabindex="0">
               <div><div class="package-name">${esc(p.name)}</div><div class="package-desc">${esc(p.desc)}</div></div>
-              <div class="package-price">${esc(t("clubSetsPrice"))}</div>
+              <div class="package-price">${esc(p.priceType === "minimum-spend" ? `${t("minimumSpend")}: ${packagePriceHTML(p)}` : packagePriceHTML(p))}</div>
             </div>`).join("")}
         </div>
       </div>
@@ -6658,7 +6687,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=93", { updateViaCache: "none" })
+      .register("sw.js?v=94", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
