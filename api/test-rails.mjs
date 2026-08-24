@@ -220,6 +220,11 @@ function checkSeoHonesty() {
   const desc = (idx.match(/<meta name="description" content="([^"]+)"/) || [])[1] || "";
   if (!/förfrågan/i.test(desc)) fail("index-meta", desc.slice(0, 180));
   else ok("index-meta", "förfrågan");
+  const ibz = fs.readFileSync(path.join(ROOT, "d", "ibiza", "index.html"), "utf8");
+  const ibzTitle = (ibz.match(/<title>([^<]+)</) || [])[1] || "";
+  if (/Boka VIP-bord/i.test(ibzTitle) || !/förfrågan/i.test(ibz)) {
+    fail("seo-page", ibzTitle || "Ibiza page missing förfrågan");
+  } else ok("seo-page", ibzTitle);
 }
 
 function checkI18n() {

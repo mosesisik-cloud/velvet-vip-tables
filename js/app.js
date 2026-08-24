@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=92";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=92";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=92";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=92";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=93";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=93";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=93";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=93";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -1932,17 +1932,24 @@ function bindDestCards() {
 }
 
 function restaurantCardHTML(r) {
+  const rating = Number(r.rating);
   const reviews = Number(r.reviewCount) || 0;
+  const stars = Number.isFinite(rating) && rating >= 3.8
+    ? `<div class="restaurant-rating"><strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span></div>`
+    : "";
+  const maps = /^https:\/\//i.test(r.mapsUrl || "")
+    ? `<a class="btn btn-gold btn-sm" href="${esc(r.mapsUrl)}" target="_blank" rel="noopener">${esc(t("mapsGoogle"))} ↗</a>`
+    : "";
+  const site = /^https:\/\//i.test(r.website || "")
+    ? `<a class="btn btn-sm" href="${esc(r.website)}" target="_blank" rel="noopener">${esc(t("officialWebsite"))} ↗</a>`
+    : "";
   return `<article class="restaurant-card">
     <div class="restaurant-card-top">
       <div><h3>${esc(r.name)}</h3><p>${esc(r.address || "")}</p></div>
-      <div class="restaurant-rating"><strong>${esc(String(r.rating))}</strong><span>${esc(googleStars(r.rating))}</span></div>
+      ${stars}
     </div>
-    <p class="restaurant-review-count">${esc(reviews.toLocaleString(currentLang()))} ${esc(t("restaurantReviews"))}</p>
-    <div class="restaurant-actions">
-      ${r.website ? `<a class="btn btn-sm" href="${esc(r.website)}" target="_blank" rel="noopener">${esc(t("officialWebsite"))} ↗</a>` : ""}
-      <a class="btn btn-gold btn-sm" href="${esc(r.mapsUrl)}" target="_blank" rel="noopener">Google Maps ↗</a>
-    </div>
+    ${reviews > 0 ? `<p class="restaurant-review-count">${esc(reviews.toLocaleString(currentLang()))} ${esc(t("restaurantReviews"))}</p>` : ""}
+    <div class="restaurant-actions">${site}${maps}</div>
   </article>`;
 }
 
@@ -6651,7 +6658,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=92", { updateViaCache: "none" })
+      .register("sw.js?v=93", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
