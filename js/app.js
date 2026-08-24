@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=101";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=101";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=101";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=101";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=102";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=102";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=102";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=102";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -749,6 +749,24 @@ async function loginWithSocial(provider) {
     return { oauth: true };
   }
   return { unavailable: true, provider };
+}
+function loginWithThisPhone() {
+  const previous = loadUser();
+  const sid = newSocialSid("device");
+  const user = {
+    ...(previous || {}),
+    id: previous?.id || `U-device-${sid}`,
+    provider: "device",
+    name: previous?.name || "",
+    handle: "",
+    connected: true,
+    oauth: false,
+    deviceBound: true,
+    created: previous?.created || new Date().toISOString(),
+  };
+  saveUser(user);
+  location.hash = user.idvStatus === "verified" ? "#/" : "#/verify";
+  return user;
 }
 function socialTrustCopy() {
   const copy = {
@@ -3994,6 +4012,7 @@ function openOnboarding(opts = {}) {
           <h1 class="ob-title">${esc(t("loginTitle"))}</h1>
           <p class="ob-sub">${esc(t("loginSub"))}</p>
           <p class="one-tap-copy">${esc(socialTrustCopy().oneTapSub)}</p>
+          <button type="button" class="btn btn-gold phone-login" id="ob-phone-login">Fortsätt med den här telefonen</button>
           <div class="social-grid social-grid-onetap">
             ${SOCIALS.map((s) => `
               <button type="button" class="social-btn social-btn-preview" data-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}">
@@ -4032,6 +4051,7 @@ function openOnboarding(opts = {}) {
       if (closeLang) closeLang.addEventListener("click", () => { if (dismissable) close(); else skip(); });
       const skipA = $("#ob-skip-auth");
       if (skipA) skipA.addEventListener("click", () => { phase = "country"; render(); });
+      $("#ob-phone-login")?.addEventListener("click", () => { close(false); loginWithThisPhone(); });
       return;
     }
     const countries = countryList();
@@ -5391,6 +5411,7 @@ async function renderAccount() {
       ${isOperatorUser(u) ? `<p style="margin-top:16px"><a class="btn btn-gold btn-sm" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
       <p>${esc(socialTrustCopy().oneTapSub)}</p>
+      <button type="button" class="btn btn-gold phone-login" id="acc-phone-login" style="margin-top:16px">Fortsätt med den här telefonen</button>
       <div class="social-grid social-grid-onetap" style="margin-top:16px">
         ${SOCIALS.map((s) => `<button type="button" class="social-btn social-btn-preview" data-account-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}"><span class="social-one-icon">${esc(s.label.slice(0,1))}</span><span>${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small></button>`).join("")}
       </div>`}
@@ -5400,6 +5421,7 @@ async function renderAccount() {
     </div>
   </section>`;
   $("#acc-out")?.addEventListener("click", () => { logoutUser(); renderAccount(); });
+  $("#acc-phone-login")?.addEventListener("click", () => loginWithThisPhone());
   document.querySelectorAll("[data-account-soc]").forEach((el) => el.addEventListener("click", async () => {
     el.disabled = true;
     const r = await loginWithSocial(el.dataset.accountSoc).catch(() => null);
@@ -6702,7 +6724,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=101", { updateViaCache: "none" })
+      .register("sw.js?v=102", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
