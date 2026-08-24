@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=100";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=100";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=100";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=100";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=101";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=101";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=101";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=101";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -735,7 +735,7 @@ function avatarHTML(u, cls = "") {
   return `<div class="${extra}" aria-hidden="true">${esc(name.slice(0, 1).toUpperCase())}</div>`;
 }
 function profileReady(u) {
-  return !!(u && u.provider && u.id && String(u.handle || "").replace(/^@/, "") && (u.name || u.legalName));
+  return !!(u && u.provider && u.id);
 }
 async function loginWithSocial(provider) {
   if (!SOCIALS.some((s) => s.id === provider)) return { ok: false };
@@ -748,29 +748,8 @@ async function loginWithSocial(provider) {
     location.href = start.url;
     return { oauth: true };
   }
-  return { connect: true, provider };
+  return { unavailable: true, provider };
 }
-async function connectSocialProfile(provider, handle, name) {
-  const r = await apiJSON("/auth/connect", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ provider, handle, name }),
-  });
-  if (r?.error === "handle" || r?.error === "name") return { error: r.error };
-  if (r?.error === "not_found") return { error: "not_found" };
-  const user = r?.user;
-  if (!user || !user.id) return { error: "fail" };
-  saveUser({
-    ...loadUser(),
-    ...user,
-    provider,
-    created: user.created || new Date().toISOString(),
-    auto: false,
-    connected: true,
-  });
-  return { user: loadUser() };
-}
-
 function socialTrustCopy() {
   const copy = {
     sv: {
@@ -779,7 +758,7 @@ function socialTrustCopy() {
       chosen: "Plattform vald", oauth: "Kontot bekräftat av plattformen", identity: "Namn matchat mot passverifiering", done: "Klart",
       waiting: "Väntar på riktig OAuth", needPass: "Passverifiering krävs", launch: "Om OAuth saknas kan profilen anslutas manuellt, men den förblir tydligt ej verifierad.",
       demo: "OAuth / säker anslutning", create: "Fortsätt med",
-      oneTap: "Fortsätt med Google", oneTapSub: "Ett klick för att börja · vi visar automatiskt nästa steg", other: "Andra sätt att logga in",
+      oneTap: "Fortsätt med Google", oneTapSub: "Ett tryck · använd telefonens redan inloggade konto", unavailable: "Den här anslutningen är inte aktiverad ännu.", other: "Andra sätt att logga in",
     },
     en: {
       eyebrow: "SOCIAL TRUST", title: "Your social verification", preview: "Social profile connected · not OAuth-verified", verified: "Social account verified",
@@ -787,7 +766,7 @@ function socialTrustCopy() {
       chosen: "Platform selected", oauth: "Account confirmed by platform", identity: "Name matched to passport verification", done: "Done",
       waiting: "Waiting for real OAuth", needPass: "Passport verification required", launch: "If OAuth is unavailable, the profile can be linked manually but remains clearly unverified.",
       demo: "OAuth / secure connection", create: "Continue with",
-      oneTap: "Continue with Google", oneTapSub: "One click to start · we automatically show the next step", other: "Other ways to sign in",
+      oneTap: "Continue with Google", oneTapSub: "One tap · use the account already signed in on this phone", unavailable: "This connection is not enabled yet.", other: "Other ways to sign in",
     },
     es: {
       eyebrow: "SOCIAL TRUST", title: "Tu verificación social", preview: "Perfil conectado · sin verificar por OAuth", verified: "Cuenta social verificada",
@@ -795,7 +774,7 @@ function socialTrustCopy() {
       chosen: "Plataforma elegida", oauth: "Cuenta confirmada por la plataforma", identity: "Nombre comparado con el pasaporte", done: "Listo",
       waiting: "Esperando OAuth real", needPass: "Se requiere verificación de pasaporte", launch: "Si OAuth no está disponible, el perfil puede vincularse manualmente pero sigue sin verificar.",
       demo: "OAuth / conexión segura", create: "Continuar con",
-      oneTap: "Continuar con Google", oneTapSub: "Un clic para empezar · mostramos automáticamente el siguiente paso", other: "Otras formas de entrar",
+      oneTap: "Continuar con Google", oneTapSub: "Un toque · usa la cuenta ya iniciada en este teléfono", unavailable: "Esta conexión aún no está activada.", other: "Otras formas de entrar",
     },
     fr: {
       eyebrow: "SOCIAL TRUST", title: "Votre vérification sociale", preview: "Profil connecté · non vérifié par OAuth", verified: "Compte social vérifié",
@@ -803,7 +782,7 @@ function socialTrustCopy() {
       chosen: "Plateforme choisie", oauth: "Compte confirmé par la plateforme", identity: "Nom comparé au passeport", done: "Terminé",
       waiting: "En attente du véritable OAuth", needPass: "Vérification du passeport requise", launch: "Sans OAuth, le profil peut être lié manuellement mais reste clairement non vérifié.",
       demo: "OAuth / connexion sécurisée", create: "Continuer avec",
-      oneTap: "Continuer avec Google", oneTapSub: "Un clic pour commencer · l’étape suivante s’affiche automatiquement", other: "Autres moyens de connexion",
+      oneTap: "Continuer avec Google", oneTapSub: "Un geste · utilisez le compte déjà connecté sur ce téléphone", unavailable: "Cette connexion n’est pas encore activée.", other: "Autres moyens de connexion",
     },
   };
   return copy[currentLang()] || copy.sv;
@@ -3849,7 +3828,6 @@ function openOnboarding(opts = {}) {
   let phase = opts.phase
     || (dismissable ? "country" : (!langPicked() ? "lang" : (!loadUser() ? "auth" : "country")));
   let step = 1;
-  let authProvider = null;
   let country = null;
   let untrap = null;
   let closed = false;
@@ -3993,32 +3971,17 @@ function openOnboarding(opts = {}) {
   // så att t.ex. geo-flödet landar fokus på "Välj X"-knappen i stället för toppen.
   const render = (focusSel) => {
     if (untrap) untrap();
-    if (phase === "lang" || phase === "auth" || phase === "connect") {
+    if (phase === "lang" || phase === "auth") {
       const entryCover = coverVenueForDest(DESTINATIONS.find((d) => d.code === "IBZ")) || coverVenueForDest(DESTINATIONS[0]) || null;
       root.innerHTML = `
       <div class="ob-overlay" id="ob-overlay">
         <div class="ob-overlay-media" aria-hidden="true">${coverImgHTML(entryCover && entryCover.url)}</div>
         ${entryCover && entryCover.v ? `<div class="ob-overlay-credit">${photoAttrHTML(entryCover.v)}</div>` : ""}
-        <div class="ob" role="dialog" aria-modal="true" aria-label="${esc(phase === "lang" ? t("chooseLang") : phase === "connect" ? t("connectTitle") : t("loginTitle"))}" tabindex="-1">
+        <div class="ob" role="dialog" aria-modal="true" aria-label="${esc(phase === "lang" ? t("chooseLang") : t("loginTitle"))}" tabindex="-1">
           <button class="modal-close ob-close" id="ob-close" aria-label="${esc(t("close"))}">✕</button>
           <div class="ob-brand" aria-hidden="true">VELVET<span class="logo-dot">.</span></div>
           <div class="ob-brand-rule" aria-hidden="true"></div>
-          ${phase === "connect" ? `
-          <h1 class="ob-title">${esc(t("connectTitle"))}</h1>
-          <p class="ob-sub">${esc((authProvider === "google" ? t("connectGoogleSub") : t("connectSub")).replace("{net}", (SOCIALS.find((s) => s.id === authProvider) || {}).label || authProvider || ""))}</p>
-          <form class="connect-form" id="ob-connect">
-            <label>${esc(authProvider === "google" ? t("yourGoogleEmail") : t("yourHandle"))}
-              <input type="${authProvider === "google" ? "email" : "text"}" id="ob-handle" autocomplete="${authProvider === "google" ? "email" : "username"}" spellcheck="false" placeholder="${authProvider === "google" ? "you@gmail.com" : "@anvandarnamn"}" maxlength="${authProvider === "google" ? 80 : 40}" required>
-            </label>
-            <label>${esc(t("yourName"))}
-              <input type="text" id="ob-name" autocomplete="name" placeholder="${esc(t("yourName"))}" maxlength="80" required>
-            </label>
-            <p class="stepper-hint" id="ob-connect-err" hidden></p>
-            <div class="ob-actions">
-              <button type="submit" class="btn btn-gold" id="ob-connect-go">${esc(t("connectCta"))}</button>
-              <button type="button" class="btn btn-ghost" id="ob-connect-back">${esc(t("loginTitle"))}</button>
-            </div>
-          </form>` : phase === "lang" ? `
+          ${phase === "lang" ? `
           <h1 class="ob-title">${esc(t("chooseLang"))}</h1>
           <p class="ob-sub">${esc(t("langSub"))}</p>
           <div class="lang-grid">
@@ -4061,12 +4024,7 @@ function openOnboarding(opts = {}) {
           try { r = await loginWithSocial(el.dataset.soc); }
           catch (err) { console.warn("VELVET login", err); }
           if (r?.oauth) return;
-          if (r?.connect) {
-            authProvider = el.dataset.soc;
-            phase = "connect";
-            render();
-            return;
-          }
+          if (r?.unavailable) showToast(socialTrustCopy().unavailable);
           el.disabled = false;
         });
       });
@@ -4074,24 +4032,6 @@ function openOnboarding(opts = {}) {
       if (closeLang) closeLang.addEventListener("click", () => { if (dismissable) close(); else skip(); });
       const skipA = $("#ob-skip-auth");
       if (skipA) skipA.addEventListener("click", () => { phase = "country"; render(); });
-      const backC = $("#ob-connect-back");
-      if (backC) backC.addEventListener("click", () => { phase = "auth"; render(); });
-      const formC = $("#ob-connect");
-      if (formC) {
-        formC.addEventListener("submit", async (e) => {
-          e.preventDefault();
-          const errEl = $("#ob-connect-err");
-          const go = $("#ob-connect-go");
-          if (go) go.disabled = true;
-          const r = await connectSocialProfile(authProvider, $("#ob-handle")?.value, $("#ob-name")?.value);
-          if (r?.user && profileReady(r.user)) { enterAfterLogin(); return; }
-          if (errEl) {
-            errEl.hidden = false;
-            errEl.textContent = r?.error === "not_found" ? t("connectMissing") : t("connectNeed");
-          }
-          if (go) go.disabled = false;
-        });
-      }
       return;
     }
     const countries = countryList();
@@ -4900,7 +4840,8 @@ async function renderVerify() {
     if (box) box.innerHTML = rec && rec.checksumsOk ? mrzRowsHTML(fields) : "";
     const row = $("#idv-confirm-row");
     if (row && rec && rec.fields) {
-      const nm = nameMatch(rec.fields.firstName, rec.fields.lastName, u.name || displayName(u));
+      const claimedName = String(u.name || "").trim();
+      const nm = claimedName ? nameMatch(rec.fields.firstName, rec.fields.lastName, claimedName) : { ok: true };
       row.classList.toggle("hidden", nm.ok);
     }
   };
@@ -5154,7 +5095,7 @@ async function renderVerify() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userId: u.id,
-        name: u.name || displayName(u),
+        name: u.name || "",
         passport: passJpeg,
         selfie: selfJpeg,
         mrz: { line1: mrz.line1, line2: mrz.line2 },
@@ -5415,15 +5356,6 @@ async function renderAccount() {
   <section class="section">
     <div class="section-head"><div><h2>${esc(t("account"))}</h2></div></div>
     ${u ? `
-      ${!profileReady(u) ? `
-      <form class="connect-form" id="acc-connect" style="margin-bottom:20px">
-        <h2 class="detail-panel-title">${esc(t("connectTitle"))}</h2>
-        <p class="ob-sub" style="text-align:left;margin:0 0 12px">${esc(t("connectSub").replace("{net}", (SOCIALS.find((s) => s.id === u.provider) || {}).label || u.provider))}</p>
-        <label>${esc(t("yourHandle"))}<input type="text" id="acc-handle" value="${esc(u.handle || "")}" autocomplete="username" maxlength="40" required></label>
-        <label>${esc(t("yourName"))}<input type="text" id="acc-cname" value="${esc(u.name || "")}" autocomplete="name" maxlength="80" required></label>
-        <p class="field-error hidden" id="acc-connect-err"></p>
-        <button type="submit" class="btn btn-gold" id="acc-connect-go">${esc(t("connectCta"))}</button>
-      </form>` : ""}
       <div class="profile-head" style="margin-bottom:16px">
         ${avatarHTML(u, "lg")}
         <div>
@@ -5458,28 +5390,22 @@ async function renderAccount() {
           </div>`).join("")}` : ""}
       ${isOperatorUser(u) ? `<p style="margin-top:16px"><a class="btn btn-gold btn-sm" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
-      <p>${esc(t("loginSub"))}</p>
-      <p style="margin-top:16px"><button class="btn btn-gold" id="acc-in">${esc(t("loginTitle"))}</button></p>`}
+      <p>${esc(socialTrustCopy().oneTapSub)}</p>
+      <div class="social-grid social-grid-onetap" style="margin-top:16px">
+        ${SOCIALS.map((s) => `<button type="button" class="social-btn social-btn-preview" data-account-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}"><span class="social-one-icon">${esc(s.label.slice(0,1))}</span><span>${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small></button>`).join("")}
+      </div>`}
     <h3 style="margin:28px 0 12px">${esc(t("chooseLang"))}</h3>
     <div class="lang-grid">
       ${LANGS.map((l) => `<button type="button" class="lang-card${currentLang() === l.id ? " on" : ""}" data-lang="${l.id}"><span class="lang-flag">${l.flag}</span><span>${esc(l.label)}</span></button>`).join("")}
     </div>
   </section>`;
   $("#acc-out")?.addEventListener("click", () => { logoutUser(); renderAccount(); });
-  $("#acc-in")?.addEventListener("click", () => openOnboarding({ dismissable: false, phase: "auth" }));
-  $("#acc-connect")?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const go = $("#acc-connect-go");
-    const err = $("#acc-connect-err");
-    if (go) go.disabled = true;
-    const r = await connectSocialProfile(loadUser()?.provider, $("#acc-handle")?.value, $("#acc-cname")?.value);
-    if (r?.user && profileReady(r.user)) { renderAccount(); return; }
-    if (err) {
-      err.classList.remove("hidden");
-      err.textContent = r?.error === "not_found" ? t("connectMissing") : t("connectNeed");
-    }
-    if (go) go.disabled = false;
-  });
+  document.querySelectorAll("[data-account-soc]").forEach((el) => el.addEventListener("click", async () => {
+    el.disabled = true;
+    const r = await loginWithSocial(el.dataset.accountSoc).catch(() => null);
+    if (r?.unavailable) showToast(socialTrustCopy().unavailable);
+    if (!r?.oauth) el.disabled = false;
+  }));
   document.querySelectorAll("[data-lang]").forEach((el) => {
     el.addEventListener("click", () => {
       applyLang(el.dataset.lang);
@@ -6776,7 +6702,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=100", { updateViaCache: "none" })
+      .register("sw.js?v=101", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
