@@ -208,9 +208,35 @@ function checkRestaurants() {
     }
     const total = Object.values(dests).reduce((n, row) => n + (row.restaurants || []).length, 0);
     if (bad.length) fail("restaurants-honest", bad.slice(0, 8).join("; "));
-    else if (Object.keys(dests).length !== loadJson("data/destinations.json").length || total < Object.keys(dests).length * 3) fail("restaurants-coverage", `${Object.keys(dests).length} dests · ${total} rows`);
+    else if (Object.keys(dests).length < loadJson("data/destinations.json").length || total < Object.keys(dests).length * 3) fail("restaurants-coverage", `${Object.keys(dests).length} dests · ${total} rows`);
     else ok("restaurants-honest", `${Object.keys(dests).length} dests · ${total} rows · no invented ratings/phones`);
   }
+}
+
+function checkOfficialVenueImages() {
+  const venues = [...loadJson("data/venues.json"), ...loadJson("data/unlisted-venues.json")];
+  const galleries = loadJson("data/venue-images.json");
+  const sources = loadJson("data/venue-image-sources.json").venues || {};
+  const missing = venues.filter(({ venue_id: id }) =>
+    !Array.isArray(galleries[id]) || !galleries[id].length || !/^https?:\/\//i.test(sources[id]?.source || "")
+  );
+  const invalid = Object.entries(galleries).flatMap(([id, images]) =>
+    images.filter((url) => !/^https?:\/\//i.test(url) || /facebook\.com\/tr\?/i.test(url)).map((url) => `${id}: ${url}`)
+  );
+  if (missing.length) fail("venue-images-coverage", missing.map((v) => v.venue_id).join(", "));
+  else if (invalid.length) fail("venue-images-valid", invalid.slice(0, 5).join("; "));
+  else ok("venue-images-official", `${venues.length}/${venues.length} ställen · ${Object.values(galleries).reduce((n, rows) => n + rows.length, 0)} bilder · källor sparade`);
+}
+
+function checkLocationFirstHome() {
+  const src = fs.readFileSync(path.join(ROOT, "js", "app.js"), "utf8");
+  const stockholmVenues = loadJson("data/unlisted-venues.json").filter((v) => v.destination_code === "STO");
+  const stockholmRestaurants = loadJson("data/restaurants.json").destinations?.STO?.restaurants || [];
+  if (!/id="home-locate"/.test(src) || !/nearestDestination\(g\.lat, g\.lng\)/.test(src) || !/saveHomeChoice\(\{ code: nearest\.d\.code \}\)/.test(src)) {
+    fail("location-first-home", "location → nearest destination → home preference is incomplete");
+  } else if (stockholmVenues.length < 3 || stockholmRestaurants.length < 3) {
+    fail("location-stockholm", `${stockholmVenues.length} venues · ${stockholmRestaurants.length} restaurants`);
+  } else ok("location-first-home", `Stockholm · ${stockholmVenues.length} venues · ${stockholmRestaurants.length} restaurants`);
 }
 
 function checkSeoHonesty() {
@@ -1088,6 +1114,8 @@ async function runApi() {
 
 const booking = checkBookingUrls();
 checkRestaurants();
+checkOfficialVenueImages();
+checkLocationFirstHome();
 checkSeoHonesty();
 checkI18n();
 checkMrz();

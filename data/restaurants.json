@@ -1675,6 +1675,50 @@
           "curated": true
         }
       ]
+    },
+    "STO": {
+      "destination": "Stockholm",
+      "country": "Sweden",
+      "fetchedAt": null,
+      "source": "VELVET curated · official websites",
+      "restaurants": [
+        {
+          "placeId": "curated-STO-frantzen",
+          "name": "Frantzén",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Stockholm, Sweden",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Frantzen%2C%20Stockholm",
+          "website": "https://stockholmfrantzen.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-STO-aira",
+          "name": "AIRA",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Biskopsvägen 9, Stockholm",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=AIRA%2C%20Stockholm",
+          "website": "https://aira.se/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-STO-ekstedt",
+          "name": "Ekstedt",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Humlegårdsgatan 17, Stockholm",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Ekstedt%2C%20Stockholm",
+          "website": "https://ekstedt.nu/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        }
+      ]
     }
   }
 }

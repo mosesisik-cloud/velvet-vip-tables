@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=108";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=108";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=108";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=108";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=116";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=116";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=116";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=116";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -99,7 +99,10 @@ function venueGroup(v) {
   return "other";
 }
 function venuesForVibe(key) {
-  let list = publicVenues();
+  const local = homeDestination();
+  let list = local
+    ? VENUES.filter((v) => v.destination_code === local.code || v.destination === local.name)
+    : publicVenues();
   if (key) list = list.filter((v) => venueGroup(v) === key);
   return [...list].sort(compareVenues);
 }
@@ -1801,6 +1804,17 @@ function renderHome() {
   const pubD = publicDestinations();
   const pubV = publicVenues();
   const tier1 = pubD.filter((d) => d.tier === "Tier 1");
+  let knownGeo = loadGeo();
+  if (!knownGeo && (isPreviewHost() || /^(?:localhost|127\.0\.0\.1)$/i.test(location.hostname))) {
+    knownGeo = locateByTimezone();
+    if (knownGeo) saveGeo(knownGeo.lat, knownGeo.lng);
+  }
+  const geoNearest = knownGeo ? nearestDestination(knownGeo.lat, knownGeo.lng) : null;
+  const localDest = homeDestination() || geoNearest?.d || null;
+  const localVenues = localDest
+    ? VENUES.filter((v) => v.destination_code === localDest.code || v.destination === localDest.name).sort(compareVenues).slice(0, 6)
+    : [];
+  if (localDest && !loadNight().dest) saveNight({ dest: localDest.code, date: loadNight().date });
   view().innerHTML = `
   <section class="hero">
     <div class="hero-media" id="hero-media" aria-hidden="true"></div>
@@ -1812,6 +1826,15 @@ function renderHome() {
       <a class="btn btn-ghost" href="#/destinations" data-nav>${esc(t("seeDest"))}</a>
     </div>
     <p class="hero-credit"><a href="${esc(HERO_VIDEO.credit)}" target="_blank" rel="noopener">${esc(t("videoPexels"))}</a></p>
+  </section>
+
+  <section class="section home-nearby" id="home-nearby">
+    <div class="home-location-bar">
+      <div><span class="home-location-pin" aria-hidden="true">⌖</span><strong>${esc(localDest ? `${t("geoNearest")} ${localDest.name}` : t("nearMe"))}</strong><small>${esc(localDest ? `${localVenues.length} ställen visas först` : t("geoHint"))}</small></div>
+      <button type="button" class="btn btn-gold btn-sm" id="home-locate">${esc(localDest ? t("geoRetry") : t("geoUse"))}</button>
+    </div>
+    ${localDest ? `<div class="section-head"><div><h2>${esc(localDest.name)} först</h2><div class="sub">Restauranger och klubbar närmast din valda plats</div></div><a class="link-gold" href="#/destination/${encodeURIComponent(localDest.code)}" data-nav>${esc(t("explore"))} →</a></div>
+      <div class="vibe-rail home-local-rail">${localVenues.length ? localVenues.map((v, i) => venueCard(v, { vibe: true, eager: i < 3 })).join("") : `<p class="events-meta">${esc(t("noHits"))}</p>`}</div>` : ""}
   </section>
 
   <section class="section home-verify" id="home-verify">
@@ -1830,7 +1853,7 @@ function renderHome() {
 
   <section class="section home-restaurants" id="home-restaurants-section">
     <div class="section-head">
-      <div><h2>${esc(t("navRestaurants"))}</h2><div class="sub">114 handplockade restauranger i 38 destinationer</div></div>
+      <div><h2>${esc(t("navRestaurants"))}</h2><div class="sub">117 handplockade restauranger i 39 destinationer</div></div>
       <a class="link-gold" href="#/restaurants" data-nav>${esc(t("navRestaurants"))} →</a>
     </div>
     <div id="home-restaurants"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("restaurantsLoading"))}</p></div>
@@ -1877,7 +1900,22 @@ function renderHome() {
     <div class="stat"><div class="stat-num">${pubV.filter((v) => statusInfo(v.research_status).cls === "tag-verified").length}</div><div class="stat-label">${esc(t("verified"))}</div></div>
   </div>`;
   bindDestCards();
+  bindVenueCards();
   mountHomeRestaurants();
+  $("#home-locate")?.addEventListener("click", (e) => {
+    const btn = e.currentTarget;
+    btn.disabled = true;
+    btn.textContent = t("geoLoading");
+    locateUser((g) => {
+      const nearest = nearestDestination(g.lat, g.lng);
+      if (!nearest) { showToast(t("geoError")); btn.disabled = false; return; }
+      saveHomeChoice({ code: nearest.d.code });
+      state.filters.dest = nearest.d.name;
+      saveNight({ dest: nearest.d.code, date: loadNight().date });
+      showToast(t("geoAnnounce").replace("{name}", nearest.d.name).replace("{km}", fmtKm(nearest.km)));
+      renderHome();
+    }, () => { showToast(t("geoError")); btn.disabled = false; btn.textContent = t("geoUse"); });
+  });
   $("#home-passkey")?.addEventListener("click", () => loginWithPasskey());
   document.querySelectorAll("[data-home-soc]").forEach((el) => el.addEventListener("click", async () => {
     el.disabled = true;
@@ -2085,7 +2123,8 @@ async function mountHomeRestaurants() {
   let data = null;
   try { const res = await fetch("data/restaurants.json", { cache: "no-store" }); if (res.ok) data = await res.json(); } catch {}
   const rows = data?.destinations || {};
-  const featuredCodes = ["TYO", "HKG", "SYD", "CPT", "RIO", "CDM", "LIS", "AMS"];
+  const localCode = homeDestination()?.code || (() => { const g = loadGeo(); return g ? nearestDestination(g.lat, g.lng)?.d?.code : ""; })();
+  const featuredCodes = [localCode, "TYO", "HKG", "SYD", "CPT", "RIO", "CDM", "LIS", "AMS"].filter((code, i, all) => code && all.indexOf(code) === i);
   const featured = featuredCodes.flatMap((code) => (rows[code]?.restaurants || []).slice(0, 1));
   root.innerHTML = featured.length
     ? `<div class="restaurant-grid">${featured.map(restaurantCardHTML).join("")}</div>`
@@ -3664,6 +3703,54 @@ function distanceToDest(d) {
   return haversineKm(g.lat, g.lng, d.lat, d.lng);
 }
 
+// Reservmetod när en inbäddad webbläsare saknar GPS-behörighet. IP-positionen
+// är bara på stadsnivå och används aldrig som exakt position.
+async function locateByNetwork() {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 2500);
+  try {
+    const r = await fetch("https://ipwho.is/?fields=success,latitude,longitude,city,country_code", {
+      cache: "no-store",
+      referrerPolicy: "no-referrer",
+      signal: controller.signal,
+    });
+    if (!r.ok) return null;
+    const data = await r.json();
+    const lat = Number(data?.latitude);
+    const lng = Number(data?.longitude);
+    if (data?.success === false || !Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+    return { lat, lng, approximate: true, city: String(data?.city || "") };
+  } catch { return null; }
+  finally { clearTimeout(timer); }
+}
+
+function locateByTimezone() {
+  let zone = "";
+  try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone || ""; } catch {}
+  const fallbackCities = {
+    "Europe/Stockholm": { lat: 59.3293, lng: 18.0686, city: "Stockholm" },
+    "Europe/Athens": { lat: 37.9838, lng: 23.7275, city: "Athens" },
+    "Europe/London": { lat: 51.5072, lng: -0.1276, city: "London" },
+    "Europe/Paris": { lat: 48.8566, lng: 2.3522, city: "Paris" },
+    "Asia/Dubai": { lat: 25.2048, lng: 55.2708, city: "Dubai" },
+    "Asia/Bangkok": { lat: 13.7563, lng: 100.5018, city: "Bangkok" },
+    "Asia/Tokyo": { lat: 35.6762, lng: 139.6503, city: "Tokyo" },
+    "America/New_York": { lat: 40.7128, lng: -74.006, city: "New York" },
+    "America/Los_Angeles": { lat: 34.0522, lng: -118.2437, city: "Los Angeles" },
+  };
+  let hit = fallbackCities[zone];
+  // Vissa preview-webbläsare rapporterar UTC trots svensk enhet. Språket är
+  // då sista, grova reserven; användaren kan alltid byta stad i toppmenyn.
+  if (!hit) {
+    let language = "";
+    try { language = navigator.language || ""; } catch {}
+    if (/^sv(?:-|$)/i.test(language) || currentLang() === "sv") {
+      hit = { lat: 59.3293, lng: 18.0686, city: "Stockholm" };
+    }
+  }
+  return hit ? { ...hit, approximate: true, timezone: zone } : null;
+}
+
 // ---------- Karta (V3, Leaflet via CDN) ----------
 // Leaflet laddas LAZY först när en kartvy öppnas — unpkg-CDN med SRI-hashar
 // (verifierade mot unpkg 2026-08-21). Offline/blockerad CDN → graciös fallback-
@@ -3748,9 +3835,29 @@ function userDot(L) {
 function locateUser(onFound, onError) {
   const known = loadGeo();
   if (known) { onFound(known); return; }
+  // Codespaces/lokal förhandsvisning kan inte vidarebefordra operativsystemets
+  // platsdialog. Där väljer vi enhetens grova tidszons-/språkposition direkt.
+  if (isPreviewHost() || /^(?:localhost|127\.0\.0\.1)$/i.test(location.hostname)) {
+    const previewLocation = locateByTimezone();
+    if (previewLocation) {
+      saveGeo(previewLocation.lat, previewLocation.lng);
+      onFound(previewLocation);
+      return;
+    }
+  }
   if (!("geolocation" in navigator)) { onError(); return; }
   let done = false;
-  const guard = setTimeout(() => { if (!done) { done = true; onError(); } }, 10000);
+  const fallback = async () => {
+    if (done) return;
+    done = true;
+    clearTimeout(guard);
+    const network = await locateByNetwork();
+    const approximate = network || locateByTimezone();
+    if (!approximate) { onError(); return; }
+    saveGeo(approximate.lat, approximate.lng);
+    onFound(approximate);
+  };
+  const guard = setTimeout(fallback, 10000);
   try {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
@@ -3759,10 +3866,10 @@ function locateUser(onFound, onError) {
         saveGeo(pos.coords.latitude, pos.coords.longitude);
         onFound({ lat: pos.coords.latitude, lng: pos.coords.longitude });
       },
-      () => { if (done) return; done = true; clearTimeout(guard); onError(); },
+      () => { fallback(); },
       { timeout: 8000, maximumAge: 300000 }
     );
-  } catch { clearTimeout(guard); if (!done) { done = true; onError(); } }
+  } catch { fallback(); }
 }
 
 // Fallback-panel när CDN inte kan nås (offline etc.) — med retry
@@ -6850,7 +6957,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=108", { updateViaCache: "none" })
+      .register("sw.js?v=116", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
