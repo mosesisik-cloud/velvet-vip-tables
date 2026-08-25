@@ -208,7 +208,7 @@ function checkRestaurants() {
     }
     const total = Object.values(dests).reduce((n, row) => n + (row.restaurants || []).length, 0);
     if (bad.length) fail("restaurants-honest", bad.slice(0, 8).join("; "));
-    else if (Object.keys(dests).length !== 30 || total < 90) fail("restaurants-coverage", `${Object.keys(dests).length} dests · ${total} rows`);
+    else if (Object.keys(dests).length !== loadJson("data/destinations.json").length || total < Object.keys(dests).length * 3) fail("restaurants-coverage", `${Object.keys(dests).length} dests · ${total} rows`);
     else ok("restaurants-honest", `${Object.keys(dests).length} dests · ${total} rows · no invented ratings/phones`);
   }
 }
