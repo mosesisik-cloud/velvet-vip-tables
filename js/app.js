@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=103";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=103";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=103";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=103";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=104";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=104";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=104";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=104";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -749,6 +749,24 @@ async function loginWithSocial(provider) {
     return { oauth: true };
   }
   return { unavailable: true, provider };
+}
+function loginPreviewSocial(provider) {
+  const sid = newSocialSid(`preview_${provider}`);
+  const previous = loadUser();
+  const user = {
+    ...(previous || {}),
+    id: previous?.id || `U-preview-${provider}-${sid}`,
+    provider,
+    name: previous?.name || "",
+    handle: "",
+    connected: true,
+    oauth: false,
+    socialVerification: "preview",
+    created: previous?.created || new Date().toISOString(),
+  };
+  saveUser(user);
+  location.hash = user.idvStatus === "verified" ? "#/" : "#/verify";
+  return user;
 }
 function bytesToBase64Url(bytes) {
   let raw = "";
@@ -4088,7 +4106,7 @@ function openOnboarding(opts = {}) {
           try { r = await loginWithSocial(el.dataset.soc); }
           catch (err) { console.warn("VELVET login", err); }
           if (r?.oauth) return;
-          if (r?.unavailable) showToast(socialTrustCopy().unavailable);
+          if (r?.unavailable) { close(false); loginPreviewSocial(el.dataset.soc); return; }
           el.disabled = false;
         });
       });
@@ -5470,7 +5488,7 @@ async function renderAccount() {
   document.querySelectorAll("[data-account-soc]").forEach((el) => el.addEventListener("click", async () => {
     el.disabled = true;
     const r = await loginWithSocial(el.dataset.accountSoc).catch(() => null);
-    if (r?.unavailable) showToast(socialTrustCopy().unavailable);
+    if (r?.unavailable) { loginPreviewSocial(el.dataset.accountSoc); return; }
     if (!r?.oauth) el.disabled = false;
   }));
   document.querySelectorAll("[data-lang]").forEach((el) => {
@@ -6769,7 +6787,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=103", { updateViaCache: "none" })
+      .register("sw.js?v=104", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
