@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=106";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=106";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=106";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=106";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=107";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=107";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=107";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=107";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -768,6 +768,9 @@ function loginPreviewSocial(provider) {
   location.hash = user.idvStatus === "verified" ? "#/" : "#/verify";
   return user;
 }
+function isPreviewHost() {
+  return /\.app\.github\.dev$/i.test(location.hostname);
+}
 function bytesToBase64Url(bytes) {
   let raw = "";
   new Uint8Array(bytes).forEach((b) => { raw += String.fromCharCode(b); });
@@ -778,7 +781,7 @@ function base64UrlToBytes(value) {
   return Uint8Array.from(raw, (c) => c.charCodeAt(0));
 }
 async function loginWithPasskey() {
-  if (/\.app\.github\.dev$/i.test(location.hostname)) {
+  if (isPreviewHost()) {
     return loginPreviewSocial("passkey");
   }
   if (!window.PublicKeyCredential || !navigator.credentials) {
@@ -1817,7 +1820,7 @@ function renderHome() {
       <p class="stepper-hint">${idvStatus() === "verified" ? "✓ Verifieringen är klar på den här enheten" : "Kontot är anslutet · slutför pass och selfie"}</p>
       <a class="btn btn-gold" href="${idvStatus() === "verified" ? "#/account" : "#/verify"}" data-nav>${idvStatus() === "verified" ? "Öppna konto" : "Fortsätt verifieringen"}</a>
     ` : `
-      ${/\.app\.github\.dev$/i.test(location.hostname) ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
+      ${isPreviewHost() ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
       <button type="button" class="btn btn-gold phone-login" id="home-passkey">Face ID / Touch ID / skärmlås</button>
       <div class="social-grid social-grid-onetap">
         ${SOCIALS.map((s) => `<button type="button" class="social-btn social-btn-preview" data-home-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}"><span class="social-one-icon">${esc(s.label.slice(0,1))}</span><span>${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small></button>`).join("")}
@@ -1870,7 +1873,11 @@ function renderHome() {
   document.querySelectorAll("[data-home-soc]").forEach((el) => el.addEventListener("click", async () => {
     el.disabled = true;
     const r = await loginWithSocial(el.dataset.homeSoc).catch(() => null);
-    if (r?.unavailable) { loginPreviewSocial(el.dataset.homeSoc); return; }
+    if (r?.unavailable) {
+      if (isPreviewHost()) loginPreviewSocial(el.dataset.homeSoc);
+      else { showToast(socialTrustCopy().unavailable); el.disabled = false; }
+      return;
+    }
     if (!r?.oauth) el.disabled = false;
   }));
   paintVibeRail();
@@ -4099,7 +4106,7 @@ function openOnboarding(opts = {}) {
           <h1 class="ob-title">${esc(t("loginTitle"))}</h1>
           <p class="ob-sub">${esc(t("loginSub"))}</p>
           <p class="one-tap-copy">${esc(socialTrustCopy().oneTapSub)}</p>
-          ${/\.app\.github\.dev$/i.test(location.hostname) ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
+          ${isPreviewHost() ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
           <button type="button" class="btn btn-gold phone-login" id="ob-phone-login">Face ID / Touch ID / skärmlås</button>
           <div class="social-grid social-grid-onetap">
             ${SOCIALS.map((s) => `
@@ -4131,7 +4138,11 @@ function openOnboarding(opts = {}) {
           try { r = await loginWithSocial(el.dataset.soc); }
           catch (err) { console.warn("VELVET login", err); }
           if (r?.oauth) return;
-          if (r?.unavailable) { close(false); loginPreviewSocial(el.dataset.soc); return; }
+          if (r?.unavailable) {
+            if (isPreviewHost()) { close(false); loginPreviewSocial(el.dataset.soc); }
+            else { showToast(socialTrustCopy().unavailable); el.disabled = false; }
+            return;
+          }
           el.disabled = false;
         });
       });
@@ -5499,7 +5510,7 @@ async function renderAccount() {
       ${isOperatorUser(u) ? `<p style="margin-top:16px"><a class="btn btn-gold btn-sm" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
       <p>${esc(socialTrustCopy().oneTapSub)}</p>
-      ${/\.app\.github\.dev$/i.test(location.hostname) ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
+      ${isPreviewHost() ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
       <button type="button" class="btn btn-gold phone-login" id="acc-phone-login" style="margin-top:16px">Face ID / Touch ID / skärmlås</button>
       <div class="social-grid social-grid-onetap" style="margin-top:16px">
         ${SOCIALS.map((s) => `<button type="button" class="social-btn social-btn-preview" data-account-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}"><span class="social-one-icon">${esc(s.label.slice(0,1))}</span><span>${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small></button>`).join("")}
@@ -5514,7 +5525,11 @@ async function renderAccount() {
   document.querySelectorAll("[data-account-soc]").forEach((el) => el.addEventListener("click", async () => {
     el.disabled = true;
     const r = await loginWithSocial(el.dataset.accountSoc).catch(() => null);
-    if (r?.unavailable) { loginPreviewSocial(el.dataset.accountSoc); return; }
+    if (r?.unavailable) {
+      if (isPreviewHost()) loginPreviewSocial(el.dataset.accountSoc);
+      else { showToast(socialTrustCopy().unavailable); el.disabled = false; }
+      return;
+    }
     if (!r?.oauth) el.disabled = false;
   }));
   document.querySelectorAll("[data-lang]").forEach((el) => {
@@ -6813,7 +6828,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=106", { updateViaCache: "none" })
+      .register("sw.js?v=107", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
