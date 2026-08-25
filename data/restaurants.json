@@ -1323,6 +1323,358 @@
           "curated": true
         }
       ]
+    },
+    "TYO": {
+      "destination": "Tokyo",
+      "country": "Japan",
+      "fetchedAt": null,
+      "source": "VELVET curated · official websites",
+      "restaurants": [
+        {
+          "placeId": "curated-TYO-narisawa",
+          "name": "NARISAWA",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Tokyo, Japan",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=NARISAWA%2C%20Tokyo",
+          "website": "https://www.narisawa-yoshihiro-en.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-TYO-den",
+          "name": "Den",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Tokyo, Japan",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Den%2C%20Tokyo",
+          "website": "https://www.jimbochoden.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-TYO-florilege",
+          "name": "Florilège",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Tokyo, Japan",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Floril%C3%A8ge%2C%20Tokyo",
+          "website": "https://www.aoyama-florilege.jp/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        }
+      ]
+    },
+    "HKG": {
+      "destination": "Hong Kong",
+      "country": "Hong Kong",
+      "fetchedAt": null,
+      "source": "VELVET curated · official websites",
+      "restaurants": [
+        {
+          "placeId": "curated-HKG-amber",
+          "name": "Amber",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Hong Kong, Hong Kong",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Amber%2C%20Hong%20Kong",
+          "website": "https://www.landmarkmandarinoriental.com/en/dine/amber",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-HKG-caprice",
+          "name": "Caprice",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Hong Kong, Hong Kong",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Caprice%2C%20Hong%20Kong",
+          "website": "https://www.fourseasons.com/hongkong/dining/restaurants/caprice/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-HKG-the-chairman",
+          "name": "The Chairman",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Hong Kong, Hong Kong",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=The%20Chairman%2C%20Hong%20Kong",
+          "website": "https://www.thechairmangroup.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        }
+      ]
+    },
+    "SYD": {
+      "destination": "Sydney",
+      "country": "Australia",
+      "fetchedAt": null,
+      "source": "VELVET curated · official websites",
+      "restaurants": [
+        {
+          "placeId": "curated-SYD-quay",
+          "name": "Quay",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Sydney, Australia",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Quay%2C%20Sydney",
+          "website": "https://www.quay.com.au/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-SYD-bennelong",
+          "name": "Bennelong",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Sydney, Australia",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Bennelong%2C%20Sydney",
+          "website": "https://www.bennelong.com.au/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-SYD-saint-peter",
+          "name": "Saint Peter",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Sydney, Australia",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Saint%20Peter%2C%20Sydney",
+          "website": "https://www.saintpeter.com.au/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        }
+      ]
+    },
+    "CPT": {
+      "destination": "Cape Town",
+      "country": "South Africa",
+      "fetchedAt": null,
+      "source": "VELVET curated · official websites",
+      "restaurants": [
+        {
+          "placeId": "curated-CPT-fyn",
+          "name": "FYN",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Cape Town, South Africa",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=FYN%2C%20Cape%20Town",
+          "website": "https://fynrestaurant.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-CPT-la-colombe",
+          "name": "La Colombe",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Cape Town, South Africa",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20Colombe%2C%20Cape%20Town",
+          "website": "https://www.lacolombe.restaurant/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-CPT-salsify-at-the-roundhouse",
+          "name": "Salsify at the Roundhouse",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Cape Town, South Africa",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Salsify%20at%20the%20Roundhouse%2C%20Cape%20Town",
+          "website": "https://salsify.co.za/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        }
+      ]
+    },
+    "RIO": {
+      "destination": "Rio de Janeiro",
+      "country": "Brazil",
+      "fetchedAt": null,
+      "source": "VELVET curated · official websites",
+      "restaurants": [
+        {
+          "placeId": "curated-RIO-oteque",
+          "name": "Oteque",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Rio de Janeiro, Brazil",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Oteque%2C%20Rio%20de%20Janeiro",
+          "website": "https://www.oteque.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-RIO-lasai",
+          "name": "Lasai",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Rio de Janeiro, Brazil",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Lasai%2C%20Rio%20de%20Janeiro",
+          "website": "https://lasai.com.br/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-RIO-oro",
+          "name": "Oro",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Rio de Janeiro, Brazil",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Oro%2C%20Rio%20de%20Janeiro",
+          "website": "https://ororestaurante.com.br/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        }
+      ]
+    },
+    "CDM": {
+      "destination": "Mexico City",
+      "country": "Mexico",
+      "fetchedAt": null,
+      "source": "VELVET curated · official websites",
+      "restaurants": [
+        {
+          "placeId": "curated-CDM-pujol",
+          "name": "Pujol",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Mexico City, Mexico",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Pujol%2C%20Mexico%20City",
+          "website": "https://pujol.com.mx/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-CDM-quintonil",
+          "name": "Quintonil",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Mexico City, Mexico",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Quintonil%2C%20Mexico%20City",
+          "website": "https://quintonil.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-CDM-rosetta",
+          "name": "Rosetta",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Mexico City, Mexico",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Rosetta%2C%20Mexico%20City",
+          "website": "https://rosetta.com.mx/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        }
+      ]
+    },
+    "LIS": {
+      "destination": "Lisbon",
+      "country": "Portugal",
+      "fetchedAt": null,
+      "source": "VELVET curated · official websites",
+      "restaurants": [
+        {
+          "placeId": "curated-LIS-belcanto",
+          "name": "Belcanto",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Lisbon, Portugal",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Belcanto%2C%20Lisbon",
+          "website": "https://belcanto.pt/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-LIS-alma",
+          "name": "Alma",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Lisbon, Portugal",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Alma%2C%20Lisbon",
+          "website": "https://www.almalisboa.pt/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-LIS-cura",
+          "name": "CURA",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Lisbon, Portugal",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=CURA%2C%20Lisbon",
+          "website": "https://www.fourseasons.com/lisbon/dining/restaurants/cura/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        }
+      ]
+    },
+    "AMS": {
+      "destination": "Amsterdam",
+      "country": "Netherlands",
+      "fetchedAt": null,
+      "source": "VELVET curated · official websites",
+      "restaurants": [
+        {
+          "placeId": "curated-AMS-de-kas",
+          "name": "De Kas",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Amsterdam, Netherlands",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=De%20Kas%2C%20Amsterdam",
+          "website": "https://restaurantdekas.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-AMS-ciel-bleu",
+          "name": "Ciel Bleu",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Amsterdam, Netherlands",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Ciel%20Bleu%2C%20Amsterdam",
+          "website": "https://www.cielbleu.nl/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        },
+        {
+          "placeId": "curated-AMS-rijks",
+          "name": "RIJKS",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Amsterdam, Netherlands",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=RIJKS%2C%20Amsterdam",
+          "website": "https://www.rijksrestaurant.nl/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true
+        }
+      ]
     }
   }
 }
