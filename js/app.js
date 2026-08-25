@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=104";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=104";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=104";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=104";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=105";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=105";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=105";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=105";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -778,6 +778,9 @@ function base64UrlToBytes(value) {
   return Uint8Array.from(raw, (c) => c.charCodeAt(0));
 }
 async function loginWithPasskey() {
+  if (/\.app\.github\.dev$/i.test(location.hostname)) {
+    return loginPreviewSocial("passkey");
+  }
   if (!window.PublicKeyCredential || !navigator.credentials) {
     showToast("Passkey stöds inte i den här webbläsaren.");
     return null;
@@ -4075,6 +4078,7 @@ function openOnboarding(opts = {}) {
           <h1 class="ob-title">${esc(t("loginTitle"))}</h1>
           <p class="ob-sub">${esc(t("loginSub"))}</p>
           <p class="one-tap-copy">${esc(socialTrustCopy().oneTapSub)}</p>
+          ${/\.app\.github\.dev$/i.test(location.hostname) ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
           <button type="button" class="btn btn-gold phone-login" id="ob-phone-login">Face ID / Touch ID / skärmlås</button>
           <div class="social-grid social-grid-onetap">
             ${SOCIALS.map((s) => `
@@ -5474,6 +5478,7 @@ async function renderAccount() {
       ${isOperatorUser(u) ? `<p style="margin-top:16px"><a class="btn btn-gold btn-sm" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
       <p>${esc(socialTrustCopy().oneTapSub)}</p>
+      ${/\.app\.github\.dev$/i.test(location.hostname) ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
       <button type="button" class="btn btn-gold phone-login" id="acc-phone-login" style="margin-top:16px">Face ID / Touch ID / skärmlås</button>
       <div class="social-grid social-grid-onetap" style="margin-top:16px">
         ${SOCIALS.map((s) => `<button type="button" class="social-btn social-btn-preview" data-account-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}"><span class="social-one-icon">${esc(s.label.slice(0,1))}</span><span>${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small></button>`).join("")}
@@ -6787,7 +6792,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=104", { updateViaCache: "none" })
+      .register("sw.js?v=105", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
