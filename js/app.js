@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=102";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=102";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=102";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=102";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=103";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=103";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=103";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=103";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -750,18 +750,63 @@ async function loginWithSocial(provider) {
   }
   return { unavailable: true, provider };
 }
-function loginWithThisPhone() {
+function bytesToBase64Url(bytes) {
+  let raw = "";
+  new Uint8Array(bytes).forEach((b) => { raw += String.fromCharCode(b); });
+  return btoa(raw).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+function base64UrlToBytes(value) {
+  const raw = atob(String(value).replace(/-/g, "+").replace(/_/g, "/").padEnd(Math.ceil(value.length / 4) * 4, "="));
+  return Uint8Array.from(raw, (c) => c.charCodeAt(0));
+}
+async function loginWithPasskey() {
+  if (!window.PublicKeyCredential || !navigator.credentials) {
+    showToast("Passkey stöds inte i den här webbläsaren.");
+    return null;
+  }
+  const challenge = crypto.getRandomValues(new Uint8Array(32));
+  let savedCredential = "";
+  try { savedCredential = localStorage.getItem("velvet_passkey_id_v1") || ""; } catch {}
+  let credential;
+  try {
+    if (savedCredential) {
+      credential = await navigator.credentials.get({ publicKey: {
+        challenge,
+        allowCredentials: [{ id: base64UrlToBytes(savedCredential), type: "public-key" }],
+        userVerification: "required",
+        timeout: 60000,
+      }});
+    } else {
+      const userId = crypto.getRandomValues(new Uint8Array(32));
+      credential = await navigator.credentials.create({ publicKey: {
+        challenge,
+        rp: { name: "VELVET" },
+        user: { id: userId, name: "velvet-member", displayName: "VELVET member" },
+        pubKeyCredParams: [{ alg: -7, type: "public-key" }, { alg: -257, type: "public-key" }],
+        authenticatorSelection: { authenticatorAttachment: "platform", residentKey: "required", userVerification: "required" },
+        attestation: "none",
+        timeout: 60000,
+      }});
+    }
+  } catch (err) {
+    if (err?.name !== "NotAllowedError") console.warn("VELVET passkey", err);
+    showToast("Face ID, Touch ID eller skärmlås avbröts.");
+    return null;
+  }
+  if (!credential?.rawId) return null;
+  const credentialId = bytesToBase64Url(credential.rawId);
+  try { localStorage.setItem("velvet_passkey_id_v1", credentialId); } catch {}
   const previous = loadUser();
-  const sid = newSocialSid("device");
   const user = {
     ...(previous || {}),
-    id: previous?.id || `U-device-${sid}`,
-    provider: "device",
+    id: previous?.id || `U-passkey-${credentialId.slice(0, 48)}`,
+    provider: "passkey",
     name: previous?.name || "",
     handle: "",
     connected: true,
     oauth: false,
     deviceBound: true,
+    passkeyId: credentialId,
     created: previous?.created || new Date().toISOString(),
   };
   saveUser(user);
@@ -4012,7 +4057,7 @@ function openOnboarding(opts = {}) {
           <h1 class="ob-title">${esc(t("loginTitle"))}</h1>
           <p class="ob-sub">${esc(t("loginSub"))}</p>
           <p class="one-tap-copy">${esc(socialTrustCopy().oneTapSub)}</p>
-          <button type="button" class="btn btn-gold phone-login" id="ob-phone-login">Fortsätt med den här telefonen</button>
+          <button type="button" class="btn btn-gold phone-login" id="ob-phone-login">Face ID / Touch ID / skärmlås</button>
           <div class="social-grid social-grid-onetap">
             ${SOCIALS.map((s) => `
               <button type="button" class="social-btn social-btn-preview" data-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}">
@@ -4051,7 +4096,7 @@ function openOnboarding(opts = {}) {
       if (closeLang) closeLang.addEventListener("click", () => { if (dismissable) close(); else skip(); });
       const skipA = $("#ob-skip-auth");
       if (skipA) skipA.addEventListener("click", () => { phase = "country"; render(); });
-      $("#ob-phone-login")?.addEventListener("click", () => { close(false); loginWithThisPhone(); });
+      $("#ob-phone-login")?.addEventListener("click", async () => { if (await loginWithPasskey()) close(false); });
       return;
     }
     const countries = countryList();
@@ -5411,7 +5456,7 @@ async function renderAccount() {
       ${isOperatorUser(u) ? `<p style="margin-top:16px"><a class="btn btn-gold btn-sm" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
       <p>${esc(socialTrustCopy().oneTapSub)}</p>
-      <button type="button" class="btn btn-gold phone-login" id="acc-phone-login" style="margin-top:16px">Fortsätt med den här telefonen</button>
+      <button type="button" class="btn btn-gold phone-login" id="acc-phone-login" style="margin-top:16px">Face ID / Touch ID / skärmlås</button>
       <div class="social-grid social-grid-onetap" style="margin-top:16px">
         ${SOCIALS.map((s) => `<button type="button" class="social-btn social-btn-preview" data-account-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}"><span class="social-one-icon">${esc(s.label.slice(0,1))}</span><span>${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small></button>`).join("")}
       </div>`}
@@ -5421,7 +5466,7 @@ async function renderAccount() {
     </div>
   </section>`;
   $("#acc-out")?.addEventListener("click", () => { logoutUser(); renderAccount(); });
-  $("#acc-phone-login")?.addEventListener("click", () => loginWithThisPhone());
+  $("#acc-phone-login")?.addEventListener("click", () => loginWithPasskey());
   document.querySelectorAll("[data-account-soc]").forEach((el) => el.addEventListener("click", async () => {
     el.disabled = true;
     const r = await loginWithSocial(el.dataset.accountSoc).catch(() => null);
@@ -6724,7 +6769,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=102", { updateViaCache: "none" })
+      .register("sw.js?v=103", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
