@@ -15,9 +15,9 @@
   --green: #6fbf8f;
   --amber: #d9a24b;
   --red: #cf6f6f;
-  --radius: 14px;
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-body: "Inter", -apple-system, "Segoe UI", sans-serif;
+  --radius: 10px;
+  --font-display: "Velvet Display", "Arial Black", sans-serif;
+  --font-body: "Velvet Grotesk", "Avenir Next", sans-serif;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.25);
   --shadow-card-hover: 0 2px 6px rgba(0, 0, 0, 0.25), 0 16px 40px -18px rgba(0, 0, 0, 0.55);
@@ -37,6 +37,20 @@
   font-weight: 500 700;
   font-display: swap;
   src: url("../fonts/playfair-display-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Velvet Grotesk";
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url("../fonts/space-grotesk-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Velvet Display";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("../fonts/syne-latin.woff2") format("woff2");
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -2683,3 +2697,166 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .social-grid-onetap .social-btn-compact .social-logo-tile img { width:17px; height:17px; object-fit:contain; display:block; }
 .social-grid-onetap .social-btn-compact .social-logo-snapchat { background:#fffc00; }
 @media(max-width:560px){.social-grid.social-grid-onetap{display:flex;grid-template-columns:none}.social-grid-onetap .social-btn.social-btn-compact{min-height:36px;padding-right:8px}.social-grid-onetap .social-btn-compact>span:last-child{display:none}}
+
+/* ---------- V139: VELVET proprietary editorial identity ---------- */
+body {
+  counter-reset: velvet-section;
+  font-family: var(--font-body);
+  font-size: 15.5px;
+  line-height: 1.48;
+  letter-spacing: -.012em;
+  font-feature-settings: "ss01" 1, "ss02" 1, "case" 1;
+}
+button, input, select, textarea { font-family: var(--font-body); }
+h1, h2, h3, h4, .nav-logo, .footer-brand, .venue-name,
+.stat-num, .package-price, .prio-num, .split-price, .meter-val,
+.restaurant-rating strong, .restaurant-detail-rating strong {
+  font-family: var(--font-display);
+  font-variation-settings: "wght" 720;
+}
+
+/* Wordmark: compact, deliberately overtracked and technical. */
+.nav { min-height: 66px; padding-block: 14px; }
+.nav::after {
+  content: ""; position: absolute; left: 40px; right: 40px; bottom: 0;
+  height: 1px; background: linear-gradient(90deg,var(--gold),transparent 58%);
+  opacity: .55; pointer-events: none;
+}
+.nav-logo {
+  font-size: 19px; font-weight: 800; letter-spacing: .22em;
+  line-height: 1; text-transform: uppercase;
+}
+.nav-logo .logo-dot { margin-left: -.16em; }
+.nav-links a {
+  font-size: 10px; font-weight: 650; letter-spacing: .135em;
+  line-height: 1; text-transform: uppercase;
+}
+.nav-links a.active { position: relative; }
+.nav-links a.active::before {
+  content: ""; position: absolute; left: 50%; bottom: -10px;
+  width: 16px; height: 2px; translate: -50% 0; background: var(--gold);
+}
+
+/* Hero behaves like a magazine cover rather than a centered template. */
+body.light-shell .hero {
+  align-items: flex-start; text-align: left;
+  padding-inline: max(40px, calc((100vw - 1280px) / 2 + 40px));
+}
+body.light-shell .hero-kicker {
+  margin: 0 0 24px; padding: 5px 0 5px 46px;
+  border: 0; border-radius: 0; background: transparent; box-shadow: none;
+  color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: .22em;
+  position: relative;
+}
+body.light-shell .hero-kicker::before {
+  content: ""; position: absolute; left: 0; top: 50%; width: 32px; height: 1px;
+  background: currentColor;
+}
+body.light-shell .hero h1 {
+  max-width: 1000px; margin: 0 0 25px;
+  font-family: var(--font-display); font-size: clamp(48px,8.6vw,118px);
+  font-weight: 780; font-variation-settings: "wght" 780;
+  letter-spacing: -.072em; line-height: .79; text-transform: uppercase;
+  text-wrap: balance;
+}
+body.light-shell .hero h1 em {
+  display: inline-block; padding-right: .08em;
+  font-family: var(--font-display); font-style: normal; font-weight: 520;
+  font-variation-settings: "wght" 520; letter-spacing: -.058em;
+}
+body.light-shell .hero > p:not(.hero-credit) {
+  max-width: 500px; margin: 0 0 30px;
+  font-size: 15px; line-height: 1.52; text-wrap: pretty;
+}
+.hero-cta { justify-content: flex-start; }
+.hero-credit { margin-inline: 0; }
+
+/* Search is an architectural object with one cut corner. */
+.home-discovery {
+  width: min(760px,100%); margin: 0 0 15px; border-radius: 2px;
+  clip-path: polygon(0 0,calc(100% - 22px) 0,100% 22px,100% 100%,0 100%);
+}
+.home-discovery input { font-size: 16px; font-weight: 520; letter-spacing: -.02em; }
+.home-discovery button, .btn:not(.social-btn-compact) {
+  border-radius: 2px; text-transform: uppercase;
+  font-size: 10.5px; font-weight: 720; letter-spacing: .115em;
+  clip-path: polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,0 100%);
+}
+.home-category-links { justify-content: flex-start; margin-bottom: 28px; gap: 18px; }
+.home-category-links a {
+  padding: 5px 0; border: 0; border-bottom: 1px solid rgba(88,174,232,.28);
+  border-radius: 0; background: transparent;
+  font-size: 9.5px; font-weight: 680; letter-spacing: .16em; text-transform: uppercase;
+}
+.home-category-links a:hover { background: transparent; border-color: var(--gold); }
+
+/* Every major block receives its own issue number. */
+.section > .section-head { counter-increment: velvet-section; align-items: flex-start; }
+.section > .section-head > div:first-child::before {
+  content: "V/" counter(velvet-section, decimal-leading-zero);
+  display: block; margin-bottom: 9px; color: var(--gold);
+  font-size: 9px; font-weight: 700; letter-spacing: .2em;
+}
+.section-head h1, .section-head h2,
+body.light-shell .section-head h2, .rank-head h3 {
+  font-family: var(--font-display); font-size: clamp(29px,4vw,54px);
+  font-weight: 720; font-variation-settings: "wght" 720;
+  letter-spacing: -.052em; line-height: .92; text-transform: uppercase;
+}
+.section-head .sub { max-width: 560px; margin-top: 11px; font-size: 13px; line-height: 1.42; }
+.link-gold, .restaurant-city > .section-head a {
+  padding-top: 18px; font-size: 9.5px; font-weight: 700;
+  letter-spacing: .15em; text-transform: uppercase;
+}
+
+/* Cards use a recognizable asymmetric VELVET silhouette. */
+body.light-shell .venue-card, body.light-shell .restaurant-card,
+body.light-shell .dest-card, body.light-shell .detail-panel,
+.package-option, .booking-card, .crew-card, .crew-demo-create,
+.crew-demo-match, .modal, .restaurant-book-panel {
+  position: relative; border-radius: 3px 26px 3px 3px;
+}
+body.light-shell .venue-card::after, body.light-shell .restaurant-card::after,
+body.light-shell .dest-card::after {
+  content: ""; position: absolute; z-index: 2; top: 0; right: 25px;
+  width: 34px; height: 2px; background: var(--gold); opacity: .72;
+}
+.venue-media, .restaurant-media, .dest-cover {
+  border-radius: 0;
+  clip-path: polygon(0 0,100% 0,100% calc(100% - 14px),calc(100% - 14px) 100%,0 100%);
+}
+.venue-name, .restaurant-card h3, .dest-card h3 {
+  font-family: var(--font-display); font-weight: 680;
+  font-variation-settings: "wght" 680; letter-spacing: -.035em; line-height: 1.02;
+}
+.venue-loc, .detail-kicker, .stat-label, .form-group label,
+.package-level, .prio-label, .meter-label {
+  font-size: 9px; font-weight: 680; letter-spacing: .17em; text-transform: uppercase;
+}
+.tag, .badge, .chip, .vibe-chip, .restaurant-jump a,
+.package-trust, .status-badge {
+  border-radius: 2px; font-size: 9.5px; letter-spacing: .08em;
+}
+
+/* Form controls and lists inherit the same visual system. */
+.filters input, .filters select, .form-group input, .form-group select,
+.form-group textarea, .restaurant-book-form input, .restaurant-book-form select,
+.restaurant-book-form textarea, .chat-form input, .night-pick select {
+  border-radius: 2px; font-size: 13px;
+}
+.stats { justify-content: flex-start; gap: clamp(30px,7vw,90px); }
+.stat { text-align: left; }
+.stat-num { font-size: clamp(32px,4vw,58px); letter-spacing: -.06em; line-height: .85; }
+.stat-label { margin-top: 10px; }
+.footer-brand { font-size: 15px; font-weight: 800; letter-spacing: .2em; }
+
+@media (max-width: 720px) {
+  .nav::after { left: 16px; right: 16px; }
+  body.light-shell .hero { padding-inline: 18px; }
+  body.light-shell .hero h1 { font-size: clamp(44px,15.5vw,76px); line-height: .82; }
+  .home-category-links { gap: 15px; }
+  .section-head h1, .section-head h2, body.light-shell .section-head h2 { font-size: clamp(28px,10vw,43px); }
+  .link-gold, .restaurant-city > .section-head a { padding-top: 0; }
+  body.light-shell .venue-card, body.light-shell .restaurant-card,
+  body.light-shell .dest-card, body.light-shell .detail-panel { border-radius: 2px 18px 2px 2px; }
+}
