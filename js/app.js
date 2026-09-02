@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=116";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=116";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=116";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=116";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=138";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=138";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=138";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=138";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -136,7 +136,28 @@ function youtubeEmbed(id) {
 function venuePhotos(v) {
   const raw = VENUE_IMAGES[v.venue_id];
   const values = Array.isArray(raw) ? raw : [raw];
-  return [...new Set(values.map(cleanVenuePhoto).filter(Boolean))].slice(0, 5);
+  const official = [...new Set(values.map(cleanVenuePhoto).filter((url) => url && !/(?:favicon\.ico|logo[-_.]|logo\/)/i.test(url)))].slice(0, 5);
+  return official.length ? official : [venueFallbackImage(v)];
+}
+
+function venueHasOfficialPhoto(v) {
+  const raw = VENUE_IMAGES[v.venue_id];
+  const values = Array.isArray(raw) ? raw : [raw];
+  return values.map(cleanVenuePhoto).some((url) => url && !/(?:favicon\.ico|logo[-_.]|logo\/)/i.test(url));
+}
+
+function venueFallbackImage(v) {
+  const images = [
+    "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1600&q=84",
+    "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1600&q=84",
+    "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1600&q=84",
+    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=84",
+    "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=84"
+  ];
+  const key = String(v.venue_id || v.name || "venue");
+  let hash = 0;
+  for (let i = 0; i < key.length; i += 1) hash = ((hash << 5) - hash + key.charCodeAt(i)) | 0;
+  return images[Math.abs(hash) % images.length];
 }
 
 function venuePhoto(v) {
@@ -144,7 +165,8 @@ function venuePhoto(v) {
 }
 
 function venueGalleryItems(v) {
-  return venuePhotos(v).map((url) => ({ url, original: true, alt: v.name }));
+  const original = venueHasOfficialPhoto(v);
+  return venuePhotos(v).map((url) => ({ url, original, alt: original ? v.name : `Stämningsbild för ${v.name}` }));
 }
 
 function venueGalleryHTML(v) {
@@ -452,6 +474,7 @@ function photoAttrHTML(v) {
     return `<p class="photo-attr"><a href="${esc(href)}" target="_blank" rel="noopener">${esc(t("videoCredit").replace("{name}", who))}</a> · ${esc(t("videoMostViewed"))}</p>`;
   }
   if (!venuePhoto(v)) return "";
+  if (!venueHasOfficialPhoto(v)) return `<p class="photo-attr"><a href="https://unsplash.com/" target="_blank" rel="noopener">Stämningsbild</a> · officiell originalbild inväntar verifiering</p>`;
   const href = v.website_url || v.source_url || "";
   const credit = href
     ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(t("photoCredit").replace("{name}", v.name))}</a>`
@@ -675,12 +698,15 @@ function syncFavButtons(root = document) {
 }
 const USER_KEY = "velvet_user_v1";
 const SOCIALS = [
-  { id: "google", label: "Google", color: "#fff", dark: true },
-  { id: "facebook", label: "Facebook", color: "#1877F2" },
-  { id: "instagram", label: "Instagram", color: "#E4405F" },
-  { id: "tiktok", label: "TikTok", color: "#111" },
-  { id: "snapchat", label: "Snapchat", color: "#FFFC00", dark: true },
+  { id: "google", label: "Google", icon: "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" },
+  { id: "facebook", label: "Facebook", icon: "https://cdn.simpleicons.org/facebook/0866FF" },
+  { id: "instagram", label: "Instagram", icon: "https://cdn.simpleicons.org/instagram/E4405F" },
+  { id: "tiktok", label: "TikTok", icon: "https://cdn.simpleicons.org/tiktok/111111" },
+  { id: "snapchat", label: "Snapchat", icon: "https://cdn.simpleicons.org/snapchat/111111" },
 ];
+function socialCompactButton(s, attr) {
+  return `<button type="button" class="social-btn social-btn-compact" ${attr}="${s.id}" aria-label="Fortsätt med ${esc(s.label)}" title="${esc(s.label)}"><span class="social-logo-tile social-logo-${esc(s.id)}"><img src="${esc(s.icon)}" alt="" aria-hidden="true"></span><span>${esc(s.label)}</span></button>`;
+}
 let userMem = null;
 function loadUser() {
   try {
@@ -1821,6 +1847,16 @@ function renderHome() {
     <div class="hero-kicker">${esc(t("heroKicker"))}</div>
     <h1>${esc(t("heroTitle1"))}<br><em>${esc(t("heroTitle2"))}</em></h1>
     <p>${esc(t("heroP"))}</p>
+    <form class="home-discovery" id="home-discovery-form" role="search">
+      <span class="home-discovery-pin" aria-hidden="true">⌖</span>
+      <label class="sr-only" for="home-discovery-input">Sök destination eller ställe</label>
+      <input id="home-discovery-input" list="home-destination-list" placeholder="Vart vill du gå?" autocomplete="off">
+      <datalist id="home-destination-list">${pubD.map((d) => `<option value="${esc(d.name)}">${esc(d.country)}</option>`).join("")}</datalist>
+      <button type="submit">Utforska</button>
+    </form>
+    <div class="home-category-links" aria-label="Populära kategorier">
+      <a href="#/restaurants" data-nav>Restauranger</a><a href="#/venues?cat=nightclub" data-nav>Nattklubbar</a><a href="#/venues?cat=beach" data-nav>Beach clubs</a><a href="#/map" data-nav>Karta</a>
+    </div>
     <div class="hero-cta">
       <button type="button" class="btn btn-gold" id="walk-start">${esc(t("walkCta"))}</button>
       <a class="btn btn-ghost" href="#/destinations" data-nav>${esc(t("seeDest"))}</a>
@@ -1846,14 +1882,14 @@ function renderHome() {
       ${isPreviewHost() ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
       <button type="button" class="btn btn-gold phone-login" id="home-passkey">Face ID / Touch ID / skärmlås</button>
       <div class="social-grid social-grid-onetap">
-        ${SOCIALS.map((s) => `<button type="button" class="social-btn social-btn-preview" data-home-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}"><span class="social-one-icon">${esc(s.label.slice(0,1))}</span><span>${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small></button>`).join("")}
+        ${SOCIALS.map((s) => socialCompactButton(s, "data-home-soc")).join("")}
       </div>
     `}
   </section>
 
   <section class="section home-restaurants" id="home-restaurants-section">
     <div class="section-head">
-      <div><h2>${esc(t("navRestaurants"))}</h2><div class="sub">117 handplockade restauranger i 39 destinationer</div></div>
+      <div><h2>${esc(t("navRestaurants"))}</h2><div class="sub">739 restauranger i 39 destinationer</div></div>
       <a class="link-gold" href="#/restaurants" data-nav>${esc(t("navRestaurants"))} →</a>
     </div>
     <div id="home-restaurants"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("restaurantsLoading"))}</p></div>
@@ -1952,6 +1988,15 @@ function renderHome() {
   paintHomeNight();
   $("#walk-start")?.addEventListener("click", () => {
     document.getElementById("vibe-walk")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  $("#home-discovery-form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const query = fold($("#home-discovery-input")?.value || "").trim();
+    if (!query) { $("#home-discovery-input")?.focus(); return; }
+    const destination = DESTINATIONS.find((d) => fold(d.name) === query) || DESTINATIONS.find((d) => fold(`${d.name} ${d.country}`).includes(query));
+    if (destination) { location.hash = `#/destination/${encodeURIComponent(destination.code)}`; return; }
+    const venue = VENUES.find((v) => fold(`${v.name} ${v.destination} ${v.category}`).includes(query));
+    location.hash = venue ? `#/venue/${encodeURIComponent(venue.venue_id)}` : `#/venues?q=${encodeURIComponent($("#home-discovery-input")?.value || "")}`;
   });
   document.querySelectorAll("[data-vibe]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -2107,15 +2152,43 @@ function restaurantCardHTML(r) {
   const site = /^https:\/\//i.test(r.website || "")
     ? `<a class="btn btn-sm" href="${esc(r.website)}" target="_blank" rel="noopener">${esc(t("officialWebsite"))} ↗</a>`
     : "";
+  const detail = r.placeId
+    ? `<a class="btn btn-gold btn-sm" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav>Visa restaurang</a>`
+    : "";
   return `<article class="restaurant-card">
+    ${restaurantMediaHTML(r)}
     <div class="restaurant-card-top">
       <div><h3>${esc(r.name)}</h3><p>${esc(r.address || "")}</p></div>
       ${stars}
     </div>
     ${reviews > 0 ? `<p class="restaurant-review-count">${esc(reviews.toLocaleString(currentLang()))} ${esc(t("restaurantReviews"))}</p>` : ""}
-    <div class="restaurant-actions">${site}${maps}</div>
+    <div class="restaurant-actions">${detail}${site}${maps}</div>
   </article>`;
 }
+
+function restaurantMediaHTML(r) {
+  const image = Array.isArray(r.images) && r.images[0] ? r.images[0] : "";
+  if (image) return `<a class="restaurant-media" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav><img src="${esc(image)}" alt="${esc(r.name)}" loading="lazy" onerror="this.closest('.restaurant-media').classList.add('image-missing');this.remove()"><span>Visa restaurang</span></a>`;
+  return `<a class="restaurant-media restaurant-media-mood" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav aria-label="Visa ${esc(r.name)}"><img src="${esc(restaurantFallbackImage(r))}" alt="Stämningsbild för ${esc(r.name)}" loading="lazy"><span>Stämningsbild · original verifieras</span></a>`;
+}
+
+function restaurantFallbackImage(r) {
+  const images = [
+    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=82",
+    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=82",
+    "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=82",
+    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=82",
+    "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=1200&q=82",
+    "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&w=1200&q=82",
+    "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1200&q=82"
+  ];
+  const key = String(r.placeId || r.name || "restaurant");
+  let hash = 0;
+  for (let i = 0; i < key.length; i += 1) hash = ((hash << 5) - hash + key.charCodeAt(i)) | 0;
+  return images[Math.abs(hash) % images.length];
+}
+
+const sortRestaurants = (rows) => [...rows].sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)) || a.name.localeCompare(b.name, currentLang()));
 
 async function mountHomeRestaurants() {
   const root = document.getElementById("home-restaurants");
@@ -2125,7 +2198,7 @@ async function mountHomeRestaurants() {
   const rows = data?.destinations || {};
   const localCode = homeDestination()?.code || (() => { const g = loadGeo(); return g ? nearestDestination(g.lat, g.lng)?.d?.code : ""; })();
   const featuredCodes = [localCode, "TYO", "HKG", "SYD", "CPT", "RIO", "CDM", "LIS", "AMS"].filter((code, i, all) => code && all.indexOf(code) === i);
-  const featured = featuredCodes.flatMap((code) => (rows[code]?.restaurants || []).slice(0, 1));
+  const featured = featuredCodes.flatMap((code) => sortRestaurants(rows[code]?.restaurants || []).slice(0, 1));
   root.innerHTML = featured.length
     ? `<div class="restaurant-grid">${featured.map(restaurantCardHTML).join("")}</div>`
     : `<div class="empty-state"><p>${esc(t("restaurantsEmpty"))}</p></div>`;
@@ -2137,11 +2210,22 @@ async function renderRestaurants() {
   let data = null;
   try { const r = await fetch("data/restaurants.json", { cache: "no-store" }); if (r.ok) data = await r.json(); } catch {}
   const rows = data?.destinations || {};
-  const groups = DESTINATIONS.map((d) => ({ d, restaurants: (rows[d.code]?.restaurants || []).filter((r) => r.curated || Number(r.rating) >= 3.8) })).filter((x) => x.restaurants.length);
-  view().innerHTML = `<section class="section restaurant-directory"><div class="section-head"><div><h1>${esc(t("navRestaurants"))}</h1><div class="sub">${esc(t("restaurantsSub"))}</div></div><span class="count">${groups.reduce((n, x) => n + x.restaurants.length, 0)}</span></div>
+  const uniqueDestinations = DESTINATIONS.filter((d, index, all) => all.findIndex((candidate) => candidate.code === d.code) === index);
+  const queryIndex = location.hash.indexOf("?");
+  const params = new URLSearchParams(queryIndex >= 0 ? location.hash.slice(queryIndex + 1) : "");
+  const requestedDestination = params.get("dest") || "";
+  const selectedDestination = uniqueDestinations.find((d) => d.code === requestedDestination || d.name.toLowerCase() === requestedDestination.toLowerCase()) || null;
+  const groups = uniqueDestinations.filter((d) => !selectedDestination || d.code === selectedDestination.code).map((d) => ({ d, restaurants: sortRestaurants((rows[d.code]?.restaurants || []).filter((r) => r.curated || Number(r.rating) >= 3.8)) })).filter((x) => x.restaurants.length);
+  view().innerHTML = `<section class="section restaurant-directory"><div class="section-head"><div><h1>${esc(t("navRestaurants"))}${selectedDestination ? ` i ${esc(selectedDestination.name)}` : ""}</h1><div class="sub">${esc(t("restaurantsSub"))}</div></div><span class="count">${groups.reduce((n, x) => n + x.restaurants.length, 0)}</span></div>
+    <div class="filters restaurant-filters"><select id="restaurant-dest-filter" aria-label="${esc(t("filterDest"))}"><option value="">${esc(t("allDest"))}</option>${uniqueDestinations.filter((d) => rows[d.code]?.restaurants?.length).map((d) => `<option value="${esc(d.code)}" ${selectedDestination?.code === d.code ? "selected" : ""}>${esc(d.name)}</option>`).join("")}</select></div>
     <div class="restaurant-jump">${groups.map(({ d }) => `<a href="#restaurant-${esc(d.code)}">${esc(d.name)}</a>`).join("")}</div>
     ${groups.map(({ d, restaurants }) => `<section class="restaurant-city" id="restaurant-${esc(d.code)}"><div class="section-head"><div><h2>${esc(d.name)}</h2><div class="sub">${esc(d.country)}</div></div><a href="#/destination/${encodeURIComponent(d.code)}" data-nav>${esc(t("explore"))} →</a></div><div class="restaurant-grid">${restaurants.map(restaurantCardHTML).join("")}</div></section>`).join("")}
     <p class="restaurant-source">VELVET curated · ${esc(t("restaurantsSub"))}</p></section>`;
+  document.getElementById("restaurant-dest-filter")?.addEventListener("change", (event) => {
+    const code = event.target.value;
+    location.hash = code ? `#/restaurants?dest=${encodeURIComponent(code)}` : "#/restaurants";
+    renderRestaurants();
+  });
 }
 
 async function mountDestinationRestaurants(d) {
@@ -2149,20 +2233,75 @@ async function mountDestinationRestaurants(d) {
   if (!root) return;
   let row = null;
   const live = await apiJSON(`/restaurants?dest=${encodeURIComponent(d.code)}`);
-  if (live?.destination) row = live.destination;
-  if (!row) {
+  if (Array.isArray(live?.destination?.restaurants) && live.destination.restaurants.length) {
+    row = live.destination;
+  }
+  if (!Array.isArray(row?.restaurants) || !row.restaurants.length) {
     try {
       const r = await fetch("data/restaurants.json", { cache: "no-store" });
       if (r.ok) row = (await r.json())?.destinations?.[d.code] || null;
     } catch { /* optional */ }
   }
   const restaurants = Array.isArray(row?.restaurants)
-    ? row.restaurants.filter((r) => r.curated === true || Number(r.rating) >= 3.8).slice(0, 20)
+    ? sortRestaurants(row.restaurants.filter((r) => r.curated === true || Number(r.rating) >= 3.8))
     : [];
   root.innerHTML = restaurants.length
     ? `<div class="restaurant-grid">${restaurants.map(restaurantCardHTML).join("")}</div>
        <p class="restaurant-source">${esc(row.source || "Google Places")} · ${esc(t("restaurantsSub"))}${row.fetchedAt ? ` · ${esc(new Date(row.fetchedAt).toLocaleDateString(currentLang()))}` : ""}</p>`
     : `<div class="empty-state restaurant-empty"><p>${esc(t("restaurantsEmpty"))}</p></div>`;
+}
+
+async function renderRestaurantDetail(placeId) {
+  setTitle("Restaurang");
+  view().innerHTML = `<section class="section"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm"></span> Laddar restaurang…</p></section>`;
+  let data = null;
+  try { const response = await fetch("data/restaurants.json", { cache: "no-store" }); if (response.ok) data = await response.json(); } catch {}
+  let restaurant = null;
+  let destination = null;
+  for (const [code, row] of Object.entries(data?.destinations || {})) {
+    const match = (row.restaurants || []).find((item) => item.placeId === placeId);
+    if (match) { restaurant = match; destination = { code, ...row }; break; }
+  }
+  if (!restaurant) {
+    view().innerHTML = `<section class="section"><div class="empty-state"><h1>Restaurangen hittades inte</h1><p><a class="btn btn-gold" href="#/restaurants" data-nav>Till restauranger</a></p></div></section>`;
+    return;
+  }
+  setTitle(restaurant.name);
+  const rating = Number(restaurant.rating);
+  const images = Array.isArray(restaurant.images) ? restaurant.images : [];
+  const socials = [["Instagram", restaurant.instagram], ["Facebook", restaurant.facebook], ["TikTok", restaurant.tiktok]].filter(([, url]) => /^https:\/\//i.test(url || ""));
+  const today = new Date().toISOString().slice(0, 10);
+  view().innerHTML = `<section class="section restaurant-detail">
+    <a class="back-link" href="#/destination/${encodeURIComponent(destination.code)}" data-nav>← Restauranger i ${esc(destination.destination)}</a>
+    ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} officiella bilder · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">källa ↗</a></div></div>` : `<div class="restaurant-gallery"><div class="restaurant-gallery-track"><figure><img src="${esc(restaurantFallbackImage(restaurant))}" alt="Stämningsbild för ${esc(restaurant.name)}"></figure></div><div class="restaurant-gallery-meta">Stämningsbild · restaurangens officiella originalbild inväntar verifiering</div></div>`}
+    <div class="restaurant-detail-hero">
+      <div><div class="eyebrow">${esc(restaurant.cuisine || "Restaurang")}</div><h1>${esc(restaurant.name)}</h1><p class="restaurant-lead">${esc(restaurant.description || `Restaurang i ${destination.destination}.`)}</p>
+        <div class="restaurant-detail-actions">${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}${restaurant.menuUrl ? `<a class="btn" href="${esc(restaurant.menuUrl)}" target="_blank" rel="noopener">Meny ↗</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">Karta ↗</a>` : ""}</div>
+      </div>
+      <div class="restaurant-detail-rating">${Number.isFinite(rating) && rating > 0 ? `<strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span><small>${esc(String(restaurant.reviewCount || 0))} recensioner · ${esc(restaurant.reviewSource || "Google")}</small>` : `<small>Inget verifierat betyg publicerat ännu</small>`}</div>
+    </div>
+    <div class="restaurant-detail-grid">
+      <div class="restaurant-detail-main">
+        <div class="detail-panel"><h2>Om restaurangen</h2><dl class="restaurant-facts">
+          <div><dt>Plats</dt><dd>${esc(restaurant.address || destination.destination)}</dd></div>
+          ${restaurant.cuisine ? `<div><dt>Kök</dt><dd>${esc(restaurant.cuisine)}</dd></div>` : ""}${restaurant.priceClass ? `<div><dt>Prisklass</dt><dd>${esc(restaurant.priceClass)}</dd></div>` : ""}${restaurant.openingHours ? `<div><dt>Öppettider</dt><dd>${esc(restaurant.openingHours)}</dd></div>` : ""}
+          ${restaurant.phone ? `<div><dt>Telefon</dt><dd><a href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">${esc(restaurant.phone)}</a></dd></div>` : ""}${restaurant.email ? `<div><dt>E-post</dt><dd><a href="mailto:${esc(restaurant.email)}">${esc(restaurant.email)}</a></dd></div>` : ""}
+        </dl></div>
+        <div class="detail-panel"><h2>Sociala medier & recensioner</h2><div class="restaurant-socials">${socials.length ? socials.map(([name, url]) => `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)} ↗</a>`).join("") : `<span class="events-meta">Inga verifierade sociala länkar ännu.</span>`}</div>${restaurant.reviewUrl ? `<p class="restaurant-review-link"><a class="link-gold" href="${esc(restaurant.reviewUrl)}" target="_blank" rel="noopener">Läs verifierade recensioner på ${esc(restaurant.reviewSource || "Google")} ↗</a></p>` : ""}</div>
+      </div>
+      <aside class="detail-panel restaurant-book-panel"><span class="eyebrow">Vanlig restaurangbokning</span><h2>Boka bord</h2><p>Välj datum, tid och sällskap. Ingen promoter och ingen gruppmatchning.</p>
+        <form id="restaurant-book-form" class="restaurant-book-form"><label>Datum<input name="date" type="date" min="${today}" required></label><label>Tid<select name="time" required><option value="">Välj tid</option>${["17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00"].map((time) => `<option>${time}</option>`).join("")}</select></label><label>Antal gäster<select name="party" required>${Array.from({length: 12}, (_, i) => `<option value="${i + 1}">${i + 1} ${i ? "gäster" : "gäst"}</option>`).join("")}</select></label><label>Namn<input name="name" autocomplete="name" required></label><label>E-post<input name="email" type="email" autocomplete="email" required></label><label>Önskemål<textarea name="note" rows="3" placeholder="Allergier, barnstol eller annat"></textarea></label><button class="btn btn-gold btn-block" type="submit">Skicka bokningsförfrågan</button>${restaurant.bookingUrl ? `<a class="restaurant-official-book" href="${esc(restaurant.bookingUrl)}" target="_blank" rel="noopener">Eller boka direkt hos restaurangen ↗</a>` : ""}</form><div id="restaurant-book-result" aria-live="polite"></div>
+      </aside>
+    </div>
+  </section>`;
+  document.getElementById("restaurant-book-form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const values = Object.fromEntries(new FormData(event.currentTarget));
+    const booking = { id: `RB-${Date.now().toString(36).toUpperCase()}`, restaurantId: restaurant.placeId, restaurant: restaurant.name, destination: destination.destination, ...values, status: "request", createdAt: new Date().toISOString() };
+    const stored = JSON.parse(localStorage.getItem("velvetRestaurantBookings") || "[]"); stored.unshift(booking); localStorage.setItem("velvetRestaurantBookings", JSON.stringify(stored.slice(0, 50)));
+    event.currentTarget.hidden = true;
+    document.getElementById("restaurant-book-result").innerHTML = `<div class="restaurant-book-success"><div class="big">✓</div><h3>Förfrågan registrerad</h3><p>${esc(values.party)} gäster · ${esc(values.date)} kl. ${esc(values.time)}</p><small>Referens ${esc(booking.id)} · restaurangen behöver bekräfta bordet.</small></div>`;
+  });
 }
 
 // ---------- Destination detail ----------
@@ -2378,6 +2517,12 @@ function parseVenueQuery() {
 function renderVenues() {
   parseVenueQuery();
   const f = state.filters;
+  if (f.cat === "restaurant") {
+    const chosen = DESTINATIONS.find((d) => d.code === f.dest || d.name === f.dest);
+    state.filters.cat = "";
+    location.replace(chosen ? `#/restaurants?dest=${encodeURIComponent(chosen.code)}` : "#/restaurants");
+    return;
+  }
   const dests = [...new Set(publicDestinations().map((d) => d.name))].sort();
   view().innerHTML = `
   <section class="section">
@@ -2445,7 +2590,15 @@ function renderVenues() {
 
   $("#f-q").addEventListener("input", (e) => { state.filters.q = e.target.value; renderList(); syncHash(); });
   $("#f-dest").addEventListener("change", (e) => { state.filters.dest = e.target.value; renderList(); syncHash(); });
-  $("#f-cat").addEventListener("change", (e) => { state.filters.cat = e.target.value; renderList(); syncHash(); });
+  $("#f-cat").addEventListener("change", (e) => {
+    if (e.target.value === "restaurant") {
+      const chosen = DESTINATIONS.find((d) => d.code === state.filters.dest || d.name === state.filters.dest);
+      state.filters.cat = "";
+      location.hash = chosen ? `#/restaurants?dest=${encodeURIComponent(chosen.code)}` : "#/restaurants";
+      return;
+    }
+    state.filters.cat = e.target.value; renderList(); syncHash();
+  });
   $("#f-status").addEventListener("change", (e) => { state.filters.status = e.target.value; renderList(); syncHash(); });
   $("#f-sort").addEventListener("change", (e) => { state.filters.sort = e.target.value; renderList(); syncHash(); });
   renderList();
@@ -4238,10 +4391,7 @@ function openOnboarding(opts = {}) {
           ${isPreviewHost() ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
           <button type="button" class="btn btn-gold phone-login" id="ob-phone-login">Face ID / Touch ID / skärmlås</button>
           <div class="social-grid social-grid-onetap">
-            ${SOCIALS.map((s) => `
-              <button type="button" class="social-btn social-btn-preview" data-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}">
-                <span class="social-one-icon">${esc(s.label.slice(0,1))}</span><span>${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small>
-              </button>`).join("")}
+            ${SOCIALS.map((s) => socialCompactButton(s, "data-soc")).join("")}
           </div>
           <p class="stepper-hint social-honesty">🔒 ${esc(socialTrustCopy().explain)}</p>
           <div class="ob-actions"><button class="btn btn-ghost" id="ob-skip-auth">${esc(t("skipLogin"))}</button></div>
@@ -5642,7 +5792,7 @@ async function renderAccount() {
       ${isPreviewHost() ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
       <button type="button" class="btn btn-gold phone-login" id="acc-phone-login" style="margin-top:16px">Face ID / Touch ID / skärmlås</button>
       <div class="social-grid social-grid-onetap" style="margin-top:16px">
-        ${SOCIALS.map((s) => `<button type="button" class="social-btn social-btn-preview" data-account-soc="${s.id}" style="--soc:${s.color};color:${s.dark ? "#111" : "#fff"}"><span class="social-one-icon">${esc(s.label.slice(0,1))}</span><span>${esc(s.label)}</span><small>${esc(socialTrustCopy().demo)}</small></button>`).join("")}
+        ${SOCIALS.map((s) => socialCompactButton(s, "data-account-soc")).join("")}
       </div>`}
     <h3 style="margin:28px 0 12px">${esc(t("chooseLang"))}</h3>
     <div class="lang-grid">
@@ -6644,6 +6794,7 @@ const routes = {
 // Parametriserade rutter: mönster → handler(param)
 const paramRoutes = [
   { re: /^#\/venue\/(.+)$/, fn: renderVenueDetail, nav: "#/venues" },
+  { re: /^#\/restaurant\/(.+)$/, fn: renderRestaurantDetail, nav: "#/restaurants" },
   { re: /^#\/destination\/(.+)$/, fn: renderDestinationDetail, nav: "#/destinations" },
   { re: /^#\/join\/(.+)$/, fn: renderJoin, nav: "" },
   { re: /^#\/list\/(.+)$/, fn: renderSharedList, nav: "#/favorites" },
@@ -6672,6 +6823,7 @@ function route() {
   if ((location.hash || "").split("?")[0] !== "#/verify") { stopLiveness(); stopCamera(); }
   const raw = location.hash || "#/";
   const h = raw.split("?")[0];
+  document.body.classList.add("light-shell");
   let fn = routes[h];
   let active = h || "#/";
   if (!fn) {
@@ -6957,7 +7109,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=116", { updateViaCache: "none" })
+      .register("sw.js?v=138", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

@@ -11,6 +11,11 @@ const stats = { venues: venues.length, withGallery: 0, images: 0, errors: [] };
 // Officiella källor som blockerar automatisk hämtning (bot-skydd eller JS-rendering).
 // Dessa hålls här, inte bara i genererad JSON, så att full täckning är reproducerbar.
 const manualOfficial = {
+  "STO-102": { lock: true, source: "https://entrgroup.se/nightlife/the-spy-bar/", images: [
+    "https://entrgroup.se/wp-content/uploads/2024/04/SPY-BAR-Mega-by-Fabian-Wester-1-kopia-copy.webp",
+    "https://entrgroup.se/wp-content/uploads/2024/04/SPY-BAR-Mega-by-Fabian-Wester-5-copy.webp",
+    "https://entrgroup.se/wp-content/uploads/2024/04/SPY-BAR-Mega-by-Fabian-Wester-50.jpg"
+  ] },
   "BDR-005": { source: "https://www.instagram.com/thebodrumedition/", images: ["https://scontent-arn2-1.cdninstagram.com/v/t51.2885-19/322524174_5187696864664900_6178109386389879497_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=104&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=X1-czkhYzLUQ7kNvwFVunfa&_nc_oc=Ado5pDljxqFZHvN1S1EHE0sEgEr04kG43G-wSCoi6tB2JeaXbCDTM7WvViZx1NKymZM&_nc_zt=24&_nc_ht=scontent-arn2-1.cdninstagram.com&_nc_ss=7b689&oh=00_AQHddZvyxE5dpBScIhF51b-mJKTZDuHHTHurc_1sOMC1yg&oe=6A93D102"] },
   "BKK-001": { source: "https://www.instagram.com/onyxbangkok/", images: ["https://scontent-arn2-1.cdninstagram.com/v/t51.82787-19/759164339_18606458731031583_4439036265422246274_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=107&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=AbDnNHpnjU8Q7kNvwFAPIay&_nc_oc=AdoG60DeTAC7Wh7mVI_9ce2qdQn22SWVuAwLTSzWSjA5OQJlwFHqm3pjGCSiq1WVh-U&_nc_zt=24&_nc_ht=scontent-arn2-1.cdninstagram.com&_nc_gid=1-Q3sbwVMV3b7v7Tf1ogwg&_nc_ss=7b689&oh=00_AQE_pR93lggluSHmmasqyyjzHjclJfZDZ3PV2SXZ9ll5nA&oe=6A93E1A9"] },
   "BKK-003": { source: "https://www.instagram.com/tichuca.bkk/", images: ["https://scontent-arn2-1.cdninstagram.com/v/t51.82787-19/731295171_18116344460497620_7723530565672584174_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=104&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDgwLkMzIn0%3D&_nc_ohc=cZvITuHQplAQ7kNvwE4LCc0&_nc_oc=Adpi8he4BG-SOlMBxyPpt92r8Eb7QZyPAXeYsMEWTz1yKaKucXRn1LyCRkvh0nuIwkk&_nc_zt=24&_nc_ht=scontent-arn2-1.cdninstagram.com&_nc_gid=SAtjRJyFjSb-vYXX_hiC5g&_nc_ss=7b689&oh=00_AQFB5Ntw3fohLvwFpyV08EeQufWmKdk0h9fZCGZNWXdHlg&oe=6A93EA81"] },
@@ -57,6 +62,7 @@ async function discover(v) {
   const override = manualOfficial[id];
   const official = override?.source || v.website_url || v.source_url;
   const trustedManual = (override?.images || []).filter((url) => /^https?:\/\//i.test(url));
+  if (override?.lock) return [id, trustedManual.slice(0, 5), official];
   const found = [...trustedManual, ...existing.map((url) => clean(url, official || "https://example.com"))]
     .filter((url, i, all) => url && all.indexOf(url) === i);
   if (!official || found.length >= 5) return [id, found.slice(0, 5), official || null];

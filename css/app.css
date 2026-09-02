@@ -470,7 +470,15 @@ button { font-family: inherit; cursor: pointer; }
 .restaurant-section-head { margin-top: 44px; }
 .restaurant-loading { padding: 22px 0; }
 .restaurant-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); gap: 16px; }
-.restaurant-card { background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-card); }
+.restaurant-card { background: var(--bg-card); border: 1px solid var(--border-soft); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-card); overflow: hidden; }
+.restaurant-media { position: relative; display: block; height: 190px; margin: -20px -20px 18px; overflow: hidden; background: radial-gradient(circle at 20% 10%, rgba(212,175,95,.22), transparent 42%), linear-gradient(135deg,#211d18,#0e0e12); color: var(--text); text-decoration: none; }
+.restaurant-media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s var(--ease); }
+.restaurant-media:hover img { transform: scale(1.035); }
+.restaurant-media > span:not(:only-child) { position: absolute; left: 14px; bottom: 12px; padding: 6px 10px; border-radius: 999px; background: rgba(8,8,10,.72); color: #fff; font-size: 11px; }
+.restaurant-media-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-align: center; padding: 18px; }
+.restaurant-media-placeholder b { font-family: var(--font-display); font-size: 54px; color: var(--gold-bright); line-height: 1; }
+.restaurant-media-placeholder span { position: static !important; background: none !important; padding: 0 !important; font-family: var(--font-display); font-size: 18px !important; }
+.restaurant-media-placeholder small { color: var(--text-faint); font-size: 10px; }
 .restaurant-card-top { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
 .restaurant-card h3 { font-family: var(--font-display); font-size: 19px; line-height: 1.25; margin: 0 0 7px; }
 .restaurant-card-top p { color: var(--text-dim); font-size: 12.5px; line-height: 1.45; margin: 0; }
@@ -482,6 +490,100 @@ button { font-family: inherit; cursor: pointer; }
 .restaurant-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 .restaurant-source { margin: 14px 2px 0; }
 .restaurant-empty { padding: 26px; }
+.restaurant-gallery { margin: 24px 0 30px; }
+.restaurant-gallery-track { display: grid; grid-auto-flow: column; grid-auto-columns: min(76vw, 720px); gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: thin; padding-bottom: 8px; }
+.restaurant-gallery figure { height: clamp(300px, 55vw, 620px); margin: 0; border-radius: 18px; overflow: hidden; scroll-snap-align: start; background: var(--bg-card); }
+.restaurant-gallery img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.restaurant-gallery-meta { margin-top: 8px; color: var(--text-faint); font-size: 11px; }
+.restaurant-gallery-meta a { color: var(--gold); }
+.restaurant-detail-placeholder { height: 320px; margin: 24px 0 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border-radius: 18px; border: 1px solid var(--border-soft); background: radial-gradient(circle, rgba(212,175,95,.16), transparent 60%), var(--bg-card); color: var(--text-faint); }
+.restaurant-detail-placeholder b { font-family: var(--font-display); color: var(--gold); font-size: 72px; }
+.restaurant-detail-hero { display: flex; justify-content: space-between; gap: 28px; align-items: flex-start; margin-bottom: 28px; }
+.restaurant-detail-hero h1 { margin: 5px 0 10px; }
+.restaurant-lead { max-width: 720px; color: var(--text-dim); line-height: 1.6; }
+.restaurant-detail-actions,.restaurant-socials { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.restaurant-detail-rating { flex: 0 0 170px; padding: 18px; text-align: right; border: 1px solid var(--border-soft); border-radius: 14px; background: var(--bg-card); }
+.restaurant-detail-rating strong,.restaurant-detail-rating span,.restaurant-detail-rating small { display: block; }
+.restaurant-detail-rating strong { color: var(--gold-bright); font-family: var(--font-display); font-size: 38px; }
+.restaurant-detail-rating span { color: var(--gold); letter-spacing: 2px; }
+.restaurant-detail-rating small { margin-top: 6px; color: var(--text-faint); }
+.restaurant-detail-grid { display: grid; grid-template-columns: minmax(0,1.45fr) minmax(310px,.75fr); gap: 20px; align-items: start; }
+.restaurant-detail-main { display: grid; gap: 20px; }
+.restaurant-facts { margin: 16px 0 0; }
+.restaurant-facts div { display: grid; grid-template-columns: 120px 1fr; gap: 16px; padding: 12px 0; border-top: 1px solid var(--border-soft); }
+.restaurant-facts dt { color: var(--text-faint); }.restaurant-facts dd { margin: 0; color: var(--text); }
+.restaurant-review-link { margin-top: 18px; }
+.restaurant-book-panel { position: sticky; top: 92px; }
+.restaurant-book-panel > p { color: var(--text-dim); line-height: 1.5; margin: 8px 0 18px; }
+.restaurant-book-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.restaurant-book-form label { display: grid; gap: 6px; color: var(--text-dim); font-size: 12px; }
+.restaurant-book-form label:nth-of-type(n+4),.restaurant-book-form .btn,.restaurant-official-book { grid-column: 1 / -1; }
+.restaurant-book-form input,.restaurant-book-form select,.restaurant-book-form textarea { width: 100%; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); color: var(--text); padding: 11px 12px; font: inherit; }
+.restaurant-book-form textarea { resize: vertical; }.restaurant-official-book { text-align: center; color: var(--gold); font-size: 12px; }
+.restaurant-book-success { text-align: center; padding: 26px 8px 8px; }.restaurant-book-success .big { color: var(--gold); font-size: 40px; }.restaurant-book-success small { color: var(--text-faint); }
+@media (max-width: 760px) { .restaurant-detail-grid { grid-template-columns: 1fr; }.restaurant-detail-hero { flex-direction: column; }.restaurant-detail-rating { width: 100%; text-align: left; }.restaurant-book-panel { position: static; }.restaurant-gallery-track { grid-auto-columns: 88vw; }.restaurant-gallery figure { height: 62vw; min-height: 280px; } }
+
+/* ---------- V127: warm marketplace shell ---------- */
+body.light-shell {
+  --bg: #050b12;
+  --bg-elev: #08131e;
+  --bg-card: #0c1a26;
+  --bg-card-hover: #112535;
+  --border: #23394a;
+  --border-soft: #162b3a;
+  --gold: #58aee8;
+  --gold-bright: #8dccf3;
+  --gold-dim: rgba(88,174,232,.12);
+  --text: #f1f6f9;
+  --text-dim: #a9bac6;
+  --text-faint: #748b9b;
+  --shadow-card: 0 2px 10px rgba(0,0,0,.24), 0 18px 42px rgba(0,0,0,.2);
+  --shadow-card-hover: 0 6px 16px rgba(0,0,0,.3), 0 28px 64px rgba(0,0,0,.34);
+  background: var(--bg);
+}
+body.light-shell .nav { background: rgba(5,11,18,.94); border-color: rgba(88,174,232,.15); box-shadow: 0 1px 18px rgba(0,0,0,.32); }
+body.light-shell .nav-logo { color: #f1f6f9; }
+body.light-shell .logo-dot { color: #58aee8; }
+body.light-shell .nav-links a.active, body.light-shell .nav-links a:hover { color: var(--gold); }
+body.light-shell .nav-toggle span { background: var(--text); }
+body.light-shell .hero { min-height: min(720px, calc(100vh - 76px)); display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 88px; padding-bottom: 72px; background: #07131e; }
+body.light-shell .hero-media video, body.light-shell .hero-media .hero-still { filter: saturate(.72) brightness(.58) contrast(1.08); }
+body.light-shell .hero-media.loaded video, body.light-shell .hero-media.loaded .hero-still { opacity: .42; }
+body.light-shell .hero-media::after { background: linear-gradient(180deg,rgba(5,11,18,.36),rgba(5,11,18,.68) 54%,#050b12 100%),radial-gradient(ellipse 70% 60% at 50% 35%,rgba(38,90,126,.12),rgba(3,8,13,.5)); }
+body.light-shell .hero h1 { max-width: 930px; color: #f1f6f9; font-family: var(--font-body); font-size: clamp(42px,6.2vw,82px); font-weight: 750; letter-spacing: -.055em; line-height: .98; }
+body.light-shell .hero h1 em { color: var(--gold); font-family: var(--font-display); font-weight: 600; letter-spacing: -.025em; }
+body.light-shell .hero > p:not(.hero-credit) { color: #b8c8d2; font-size: 17px; }
+body.light-shell .hero-kicker { background: rgba(12,26,38,.78); border-color: rgba(88,174,232,.25); color: var(--gold); }
+body.light-shell .hero-credit, body.light-shell .hero-credit a { color: #748b9b; }
+body.light-shell .hero::after { background: linear-gradient(90deg,transparent,rgba(88,174,232,.26),transparent); }
+.home-discovery { position: relative; z-index: 3; width: min(720px,100%); display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; margin: 2px auto 14px; padding: 8px 9px 8px 18px; border: 1px solid rgba(88,174,232,.18); border-radius: 18px; background: #0c1a26; box-shadow: 0 18px 55px rgba(0,0,0,.34); }
+.home-discovery-pin { color: var(--gold); font-size: 23px; }
+.home-discovery input { min-width: 0; width: 100%; border: 0; outline: 0; background: transparent; color: #f1f6f9; font: 600 17px var(--font-body); padding: 12px 0; }
+.home-discovery input::placeholder { color: #748b9b; font-weight: 500; }
+.home-discovery button { min-height: 48px; padding: 0 25px; border: 0; border-radius: 13px; background: var(--gold); color: #04101a; font-weight: 750; }
+.home-category-links { position: relative; z-index: 3; display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.home-category-links a { padding: 8px 14px; border-radius: 999px; background: rgba(12,26,38,.9); border: 1px solid rgba(88,174,232,.16); color: #b9cfdd; font-size: 12.5px; font-weight: 650; }
+.home-category-links a:hover { background: #112535; color: var(--gold-bright); }
+body.light-shell .btn-gold { background: var(--gold); color: #04101a; box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+body.light-shell .btn-gold:hover { background: var(--gold-bright); box-shadow: 0 10px 28px rgba(32,124,184,.24); }
+body.light-shell .section-head h2, body.light-shell .restaurant-card h3, body.light-shell .rank-head h3 { font-family: var(--font-body); font-weight: 750; letter-spacing: -.025em; }
+body.light-shell .venue-card, body.light-shell .restaurant-card, body.light-shell .dest-card, body.light-shell .detail-panel { border-radius: 20px; border-color: rgba(88,174,232,.13); }
+body.light-shell .venue-card:hover, body.light-shell .restaurant-card:hover, body.light-shell .dest-card:hover { border-color: rgba(88,174,232,.38); }
+body.light-shell .home-location-bar { background: #0c1a26; border-color: rgba(88,174,232,.15); box-shadow: var(--shadow-card); }
+body.light-shell .filters input[type="search"], body.light-shell .filters select { background-color: #0c1a26; }
+
+/* Compact, original-brand social login row */
+.social-grid-onetap { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: none; margin: 14px auto 18px; }
+.social-grid-onetap .social-btn-compact { width: auto; min-width: 0; min-height: 38px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 5px 10px 5px 6px; border: 1px solid rgba(88,174,232,.17); border-radius: 999px; background: rgba(12,26,38,.94); color: #eaf2f6; box-shadow: 0 2px 8px rgba(0,0,0,.18); font-size: 11px; font-weight: 650; }
+.social-grid-onetap .social-btn-compact:hover { transform: translateY(-1px); border-color: rgba(88,174,232,.42); background: #112535; }
+.social-logo-tile { width: 27px; height: 27px; display: grid; place-items: center; border-radius: 50%; background: #fff; }
+.social-logo-tile img { width: 17px; height: 17px; object-fit: contain; display: block; }
+.social-logo-snapchat { background: #fffc00; }
+.social-logo-tiktok { background: #fff; }
+@media(max-width:560px){.social-grid-onetap{grid-template-columns:none;display:flex}.social-grid-onetap .social-btn-compact{min-height:36px;padding-right:8px}.social-grid-onetap .social-btn-compact>span:last-child{display:none}}
+body.light-shell .preview-ribbon { background: #02070c; color: #eaf2f6; }
+body.light-shell .photo-attr, body.light-shell .restaurant-source { color: #748b9b; }
+@media (max-width: 640px) { .home-discovery { grid-template-columns: auto 1fr; padding: 8px 12px 12px; }.home-discovery button { grid-column: 1 / -1; width: 100%; }.home-category-links { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; width: 100%; padding-bottom: 4px; }.home-category-links a { flex: 0 0 auto; } body.light-shell .hero { min-height: auto; padding-top: 70px; }.hero-cta { margin-top: 2px; } }
 /* Venue-bild överst på kortet — full bredd (negativa marginaler mot kortets padding),
    16:9, mörk gradient nedtill för läsbarhet. Emblemet ligger under bilden som
    placeholder/fallback; .img-fail (onerror) döljer bilden så emblemet tar över. */
@@ -2572,3 +2674,12 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   .package-compare-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: -18px; padding: 0 18px 8px; }
   .package-option { flex: 0 0 84%; scroll-snap-align: start; }
 }
+
+/* Keep one-tap providers deliberately compact (must stay after legacy auth rules). */
+.social-grid.social-grid-onetap { display:flex; grid-template-columns:none; flex-wrap:wrap; justify-content:center; gap:8px; max-width:none; margin:14px auto 18px; }
+.social-grid-onetap .social-btn.social-btn-compact { width:auto; min-width:0; min-height:38px; display:inline-flex; grid-template-columns:none; grid-template-rows:none; align-items:center; justify-content:center; gap:7px; padding:5px 10px 5px 6px; border:1px solid rgba(88,174,232,.17); border-radius:999px; background:rgba(12,26,38,.95); color:#eaf2f6; box-shadow:0 2px 8px rgba(0,0,0,.18); font-size:11px; font-weight:650; }
+.social-grid-onetap .social-btn.social-btn-compact:hover { transform:translateY(-1px); border-color:rgba(36,92,73,.3); background:#fff; }
+.social-grid-onetap .social-btn-compact .social-logo-tile { grid-row:auto; width:27px; height:27px; display:grid; place-items:center; border-radius:50%; background:#fff; }
+.social-grid-onetap .social-btn-compact .social-logo-tile img { width:17px; height:17px; object-fit:contain; display:block; }
+.social-grid-onetap .social-btn-compact .social-logo-snapchat { background:#fffc00; }
+@media(max-width:560px){.social-grid.social-grid-onetap{display:flex;grid-template-columns:none}.social-grid-onetap .social-btn.social-btn-compact{min-height:36px;padding-right:8px}.social-grid-onetap .social-btn-compact>span:last-child{display:none}}

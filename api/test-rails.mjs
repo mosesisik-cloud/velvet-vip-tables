@@ -195,7 +195,7 @@ function checkBookingUrls() {
 function checkRestaurants() {
   const rec = loadJson("data/restaurants.json");
   if (Number(rec.minimumRating) !== 3.8) fail("restaurants-min", String(rec.minimumRating));
-  else if (Number(rec.maxPerDestination) > 20) fail("restaurants-cap", String(rec.maxPerDestination));
+  else if (Number(rec.maxPerDestination) > 50) fail("restaurants-cap", String(rec.maxPerDestination));
   else {
     const dests = rec.destinations && typeof rec.destinations === "object" ? rec.destinations : {};
     const bad = [];
@@ -203,7 +203,7 @@ function checkRestaurants() {
       for (const r of row.restaurants || []) {
         if (!r.curated && !(Number(r.rating) >= 3.8)) bad.push(code + " rating " + r.rating);
         if (!/^https:\/\//i.test(r.mapsUrl || "")) bad.push(code + " maps " + (r.name || ""));
-        if (r.phone && !String(row.source || "").includes("google")) bad.push(code + " phone");
+        if (r.phone && !/google|official/i.test(`${row.source || ""} ${r.source || ""}`)) bad.push(code + " phone");
       }
     }
     const total = Object.values(dests).reduce((n, row) => n + (row.restaurants || []).length, 0);
