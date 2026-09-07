@@ -24,6 +24,17 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 
 ## Funktioner
 
+### V3 — karta, PWA, favoriter, sök, kalender (slut-QA 2026-09-07)
+- **Interaktiv karta** (`#/map`): Leaflet lazy-laddad från CDN (SRI-verifierad), OpenStreetMap-tiles med CSS-mörkfilter i appens tema (CARTO dark_all kräver numera API-nyckel), 38 guldnålar med mörka popups, "Nära mig"-geolocation, tangentbordsnåbara markörer och ett list-läge ("Lista istället för karta") för skärmläsare — valet minns. Mini-karta på destinationsdetaljen med venues i ring (ungefärliga positioner, sägs rakt ut).
+- **PWA**: installerbar från Chrome (manifest + ikoner + stabil `id`), service worker med shell-/runtime-cache och offline-sida.
+- **Favoriter**: hjärta på kort och detaljvy (aria-pressed), favoritvyn `#/favorites`, delbar lista `#/list/<data>` med personligt listnamn.
+- **Delbara filter**: pris/stad/kategori/sort speglas i hashen (`#/venues?dest=Ibiza&pris=4`) — bakåt/framåt vandrar mellan filterlägen.
+- **Global snabbsök**: `/` eller förstoringsglaset, combobox med piltangenter, aria-live-träffräknare, fullskärm på mobil, fokusretur vid Escape.
+- **Bokningsmodal i 3 steg** (1 Datum · 2 Paket · 3 Sällskap): klickbar stegindikator med progressbar, live-sammanfattning ("VIP-bord · 21 sep · 4 pers · …"), datumvalidering.
+- **Kalender & delning**: RFC 5545-korrekt `.ics` (radvikning, escaping, GEO, delningslänk), kopiera inbjudningstext med kopierad-feedback, mailto.
+- **Social-CTA**: stort Instagram-kort med @handle på detaljvyn, TikTok/Facebook som sekundära kort — IG-URL:erna är live-verifierade och rörs aldrig.
+- **Från-pris-kalkylator** på detaljvyn när ett officiellt prissatt paket finns — annars ärlig "Pris enligt klubben".
+
 ### Utforska
 - Onboarding land → destination, platstjänster, destinationsväljare
 - Destinationsvyer + interaktiv Leaflet-karta (`#/map`)

@@ -1395,6 +1395,11 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   font-family: var(--font-body);
   font-size: 13px;
 }
+/* OSM:s ljusa standardtiles inverteras till appens mörka tema (CARTO dark_all
+   kräver numera API-nyckel). Filtret ligger på tile-lagret — nålar/popups berörs ej. */
+.velvet-tiles-dark {
+  filter: invert(1) hue-rotate(180deg) brightness(0.62) contrast(0.92) saturate(0.28);
+}
 .leaflet-container a { color: var(--gold-bright); }
 .leaflet-bar { border: 1px solid var(--border) !important; box-shadow: var(--shadow-card-hover); }
 .leaflet-bar a {

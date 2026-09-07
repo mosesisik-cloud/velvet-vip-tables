@@ -1,5 +1,5 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=115";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=117";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=109";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=109";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=109";
@@ -3941,7 +3941,11 @@ function ensureLeaflet() {
     link.href = LEAFLET_CDN.css;
     link.integrity = LEAFLET_CDN.cssIntegrity;
     link.crossOrigin = "anonymous";
-    document.head.appendChild(link);
+    // Före app.css i kaskaden — annars vinner Leaflets defaults (vit popup)
+    // över appens mörka tema vid samma specificitet.
+    const appCss = document.querySelector('link[rel="stylesheet"][href*="app.css"]');
+    if (appCss) document.head.insertBefore(link, appCss);
+    else document.head.appendChild(link);
     const s = document.createElement("script");
     s.src = LEAFLET_CDN.js;
     s.integrity = LEAFLET_CDN.jsIntegrity;
@@ -3966,10 +3970,40 @@ function destroyMaps() {
   ACTIVE_MAPS = [];
 }
 
+// Passa in kartan när containern faktiskt har en storlek. Vid kall sidladdning
+// direkt till en kartrutt kan Leaflet initieras innan CSS:en layoutat — då
+// räknar fitBounds på 0×0 och fastnar på maxzoom (grå tiles). Vi väntar in
+// första riktiga layouten och passar in en gång till.
+function fitWhenSized(map, fit) {
+  fit();
+  const el = map.getContainer();
+  const sized = () => el.clientWidth > 0 && el.clientHeight > 0;
+  if (sized()) return; // layouten fanns vid init — fitBounds räknade rätt direkt
+  if (typeof ResizeObserver === "function") {
+    const ro = new ResizeObserver(() => {
+      if (!ACTIVE_MAPS.includes(map)) { ro.disconnect(); return; }
+      if (!sized()) return;
+      ro.disconnect();
+      map.invalidateSize();
+      fit();
+    });
+    ro.observe(el);
+  } else {
+    const tick = () => {
+      if (!ACTIVE_MAPS.includes(map)) return;
+      if (sized()) { map.invalidateSize(); fit(); }
+      else requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+}
+
 function darkTileLayer(L) {
-  return L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
-    subdomains: "abcd",
+  // OSM-standardtiles (nyckelfria) + CSS-mörkfilter (.velvet-tiles-dark) —
+  // CARTO:s dark_all kräver numera API-nyckel och servade "API KEY REQUIRED"-tiles.
+  return L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+    className: "velvet-tiles-dark",
     maxZoom: 19,
   });
 }
@@ -4138,8 +4172,10 @@ function renderMapView() {
               <a class="map-pop-link" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
             </div>`);
       });
-      if (pts.length) map.fitBounds(pts, { padding: [36, 36] });
-      else map.setView([40, 10], 3);
+      fitWhenSized(map, () => {
+        if (pts.length) map.fitBounds(pts, { padding: [36, 36] });
+        else map.setView([40, 10], 3);
+      });
 
       // "Nära mig" — zooma till användarens position (återanvänd geo-logiken)
       const near = $("#map-near");
@@ -4215,7 +4251,7 @@ function mountDestMap(d, venues) {
           ${v.instagram_url ? `<br><a class="map-pop-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">${esc(igHandle(v.instagram_url) || "Instagram")} ↗</a>` : ""}
         </div>`);
     });
-    map.fitBounds(pts, { padding: [30, 30], maxZoom: 13 });
+    fitWhenSized(map, () => map.fitBounds(pts, { padding: [30, 30], maxZoom: 13 }));
   }).catch(() => {
     const shell = host && host.closest(".map-shell");
     if (!shell || !document.contains(shell)) return;
@@ -6929,9 +6965,12 @@ function route() {
 // Endast hashchange går via denna; programmatiska route()-anrop förblir direkta.
 function routeWithTransition() {
   const reduce = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (typeof document.startViewTransition !== "function" || reduce) { route(); return; }
-  const vt = document.startViewTransition(() => route());
-  // Snabba ruttbyten avbryter pågående övergång → svälj de förväntade rejections
+  if (typeof document.startViewTransition !== "function" || reduce || document.visibilityState === "hidden") { route(); return; }
+  let vt;
+  try { vt = document.startViewTransition(() => route()); }
+  catch { route(); return; }
+  // Snabba ruttbyten/dold flik avbryter pågående övergång → svälj de förväntade rejections
+  vt.updateCallbackDone?.catch(() => {});
   vt.ready?.catch(() => {});
   vt.finished?.catch(() => {});
 }
