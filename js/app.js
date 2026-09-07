@@ -2244,7 +2244,7 @@ function renderDestinationDetail(code) {
   const goList = (e) => {
     e.preventDefault();
     state.filters = { q: "", dest: d.name, cat: "", status: "", price: "", sort: "priority" };
-    location.hash = "#/venues";
+    location.hash = `#/venues?dest=${encodeURIComponent(d.name)}`;
   };
   $("#dd-list").addEventListener("click", goList);
   const l2 = $("#dd-list-2");
@@ -2314,6 +2314,12 @@ function venueCard(v, { eager = false, rank = 0, vibe = false } = {}) {
   </div>`;
 }
 
+// Relativ prisklass €–€€€€ ur lyxnivån — ingen påhittad EUR, bara en nivåskala
+function venuePriceClass(v) {
+  const s = num(v.luxury_score);
+  return s >= 5 ? 4 : s >= 4 ? 3 : s >= 3 ? 2 : 1;
+}
+
 function applyFilters() {
   const f = state.filters;
   let list = VENUES.filter((v) => {
@@ -2321,7 +2327,7 @@ function applyFilters() {
     if (f.dest && v.destination !== f.dest && v.destination_code !== f.dest) return false;
     if (f.cat && venueGroup(v) !== f.cat) return false;
     if (f.status && statusInfo(v.research_status).cls !== f.status) return false;
-    if (f.price) return false;
+    if (f.price && String(venuePriceClass(v)) !== f.price) return false;
     if (f.q) {
       const q = f.q.toLowerCase();
       if (!`${v.name} ${v.destination} ${v.category} ${v.notes} ${v.instagram_url || ""} ${v.tiktok_url || ""} ${v.facebook_url || ""} ${v.website_url || ""}`.toLowerCase().includes(q)) return false;
@@ -2334,16 +2340,26 @@ function applyFilters() {
   return list;
 }
 
+// När venue-vyn väl skrivit sina filter till hashen är URL:en sanningen —
+// då betyder ett param-löst #/venues "inga filter" (bakåt/framåt-navigering).
+let venuesHashOwned = false;
 function parseVenueQuery() {
   const i = location.hash.indexOf("?");
-  if (i < 0) return;
+  if (i < 0) {
+    if (venuesHashOwned) state.filters = { q: "", dest: "", cat: "", status: "", price: "", sort: "priority" };
+    return;
+  }
   const p = new URLSearchParams(location.hash.slice(i + 1));
-  if (p.has("q")) state.filters.q = p.get("q") || "";
-  if (p.has("dest")) state.filters.dest = p.get("dest") || "";
-  if (p.has("cat")) state.filters.cat = p.get("cat") || "";
-  if (p.has("status")) state.filters.status = p.get("status") || "";
-  if (p.has("pris")) state.filters.price = p.get("pris") || "";
-  if (p.has("sort")) state.filters.sort = p.get("sort") || "priority";
+  const pris = p.get("pris") || "";
+  const sort = p.get("sort") || "priority";
+  state.filters = {
+    q: p.get("q") || "",
+    dest: p.get("dest") || "",
+    cat: CATEGORY_GROUPS.some((g) => g.key === p.get("cat")) ? p.get("cat") : "",
+    status: p.get("status") || "",
+    price: /^[1-4]$/.test(pris) ? pris : "",
+    sort: ["priority", "luxury", "name"].includes(sort) ? sort : "priority",
+  };
 }
 
 function renderVenues() {
@@ -2364,6 +2380,10 @@ function renderVenues() {
       <select id="f-cat" aria-label="${esc(t("filterCat"))}">
         <option value="">${esc(t("allCats"))}</option>
         ${CATEGORY_GROUPS.map((g) => `<option value="${g.key}" ${f.cat === g.key ? "selected" : ""}>${esc(t(g.labelKey))}</option>`).join("")}
+      </select>
+      <select id="f-pris" aria-label="${esc(t("filterPrice"))}">
+        <option value="">${esc(t("allPrices"))}</option>
+        ${[1, 2, 3, 4].map((n) => `<option value="${n}" ${f.price === String(n) ? "selected" : ""}>${"€".repeat(n)}</option>`).join("")}
       </select>
       <select id="f-status" aria-label="${esc(t("filterStatus"))}">
         <option value="">${esc(t("allStatus"))}</option>
@@ -2400,7 +2420,11 @@ function renderVenues() {
     bindVenueCards();
   };
 
-  const syncHash = () => {
+  // push=true → egen history-post (bakåt/framåt vandrar mellan filterlägen);
+  // push=false → replaceState (fritext-tangenttryck ska inte spamma historiken).
+  // pushState/replaceState triggar inte hashchange, så ingen omrendering sker här —
+  // bakåt/framåt ändrar däremot hashen → route() → renderVenues läser query:n.
+  const syncHash = (push) => {
     const f = state.filters;
     const p = new URLSearchParams();
     if (f.q) p.set("q", f.q);
@@ -2411,15 +2435,21 @@ function renderVenues() {
     if (f.sort && f.sort !== "priority") p.set("sort", f.sort);
     const qs = p.toString();
     const next = qs ? `#/venues?${qs}` : "#/venues";
-    if (location.hash !== next) history.replaceState(null, "", next);
+    if (location.hash === next) return;
+    if (push) history.pushState(null, "", next);
+    else history.replaceState(null, "", next);
   };
 
-  $("#f-q").addEventListener("input", (e) => { state.filters.q = e.target.value; renderList(); syncHash(); });
-  $("#f-dest").addEventListener("change", (e) => { state.filters.dest = e.target.value; renderList(); syncHash(); });
-  $("#f-cat").addEventListener("change", (e) => { state.filters.cat = e.target.value; renderList(); syncHash(); });
-  $("#f-status").addEventListener("change", (e) => { state.filters.status = e.target.value; renderList(); syncHash(); });
-  $("#f-sort").addEventListener("change", (e) => { state.filters.sort = e.target.value; renderList(); syncHash(); });
+  $("#f-q").addEventListener("input", (e) => { state.filters.q = e.target.value; renderList(); syncHash(false); });
+  $("#f-dest").addEventListener("change", (e) => { state.filters.dest = e.target.value; renderList(); syncHash(true); });
+  $("#f-cat").addEventListener("change", (e) => { state.filters.cat = e.target.value; renderList(); syncHash(true); });
+  $("#f-pris").addEventListener("change", (e) => { state.filters.price = e.target.value; renderList(); syncHash(true); });
+  $("#f-status").addEventListener("change", (e) => { state.filters.status = e.target.value; renderList(); syncHash(true); });
+  $("#f-sort").addEventListener("change", (e) => { state.filters.sort = e.target.value; renderList(); syncHash(true); });
   renderList();
+  // Spegla ev. förvalda filter (t.ex. hemdestination) i URL:en direkt — delbar från start
+  syncHash(false);
+  venuesHashOwned = true;
 }
 
 function bindVenueCards() {
@@ -5635,6 +5665,12 @@ function searchHits(q) {
   for (const d of DESTINATIONS) {
     if (fold(`${d.name} ${d.country} ${d.code}`).includes(s)) {
       out.push({ kind: t("searchKindDest"), title: d.name, meta: d.country, href: `#/destination/${encodeURIComponent(d.code)}` });
+    }
+  }
+  for (const g of CATEGORY_GROUPS) {
+    const label = t(g.labelKey);
+    if (fold(`${label} ${g.key}`).includes(s)) {
+      out.push({ kind: t("searchKindCat"), title: label, meta: t("navVenues"), href: `#/venues?cat=${encodeURIComponent(g.key)}` });
     }
   }
   for (const v of VENUES) {
