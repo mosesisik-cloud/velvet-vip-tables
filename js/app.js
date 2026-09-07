@@ -254,9 +254,10 @@ function venueMediaHTML(v, cls, { eager = false, extra = "", playable = false } 
       referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="${eager ? "eager" : "lazy"}"></iframe>` : "";
   const img = !frame && url ? `
     <img src="${esc(url)}" alt="${esc(v.name)} — ${esc(v.category || "")}" loading="${eager ? "eager" : "lazy"}"${eager ? ` fetchpriority="high"` : ""} decoding="async" referrerpolicy="no-referrer"
+         onload="this.closest('.${cls}').classList.add('img-loaded')"
          onerror="this.closest('.${cls}').classList.add('img-fail')">` : "";
   return `
-  <div class="${cls}${url || frame ? "" : " img-fail"}${yt ? " has-yt" : ""}">
+  <div class="${cls}${url || frame ? " img-pending" : " img-fail"}${yt ? " has-yt" : ""}">
     <div class="dest-emblem venue-media-emblem" aria-hidden="true" style="--h:${destHue(v.destination_code)}">${esc(v.destination_code || "")}</div>${frame || img}
     ${play}${extra}
   </div>`;
