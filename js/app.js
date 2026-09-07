@@ -1,5 +1,5 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=114";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=115";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=109";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=109";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=109";
@@ -4028,19 +4028,88 @@ function mapFallbackHTML(id) {
   </div>`;
 }
 
+// Touchvänlig karta: en-fingersvep ska scrolla sidan, två fingrar styr kartan.
+// (Samma mönster som leaflet-gesture-handling, utan plugin — dragging togglas
+// per antal fingrar och touch-action: pan-y låter sidan scrolla.)
+function attachMapGestures(map, shell) {
+  if (!window.matchMedia("(pointer: coarse)").matches) return;
+  const container = map.getContainer();
+  container.classList.add("map-gesture");
+  map.dragging.disable();
+  const hint = document.createElement("div");
+  hint.className = "map-gesture-hint";
+  hint.setAttribute("aria-hidden", "true");
+  hint.textContent = t("mapTwoFinger");
+  shell.appendChild(hint);
+  let hideTimer = null;
+  container.addEventListener("touchstart", (e) => {
+    if (e.touches.length >= 2) {
+      map.dragging.enable();
+      clearTimeout(hideTimer);
+      hint.classList.remove("on");
+    } else {
+      map.dragging.disable();
+    }
+  }, { passive: true });
+  container.addEventListener("touchmove", (e) => {
+    if (e.touches.length !== 1) return;
+    hint.classList.add("on");
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => hint.classList.remove("on"), 1100);
+  }, { passive: true });
+  container.addEventListener("touchend", (e) => {
+    if (e.touches.length === 0) map.dragging.disable();
+  }, { passive: true });
+}
+
 // ---------- Kartvyn (#/map) ----------
+// Kartläge/listläge — listan är det tangentbords- och skärmläsarvänliga
+// alternativet till kartmarkörerna, och valet minns mellan besök.
+const MAP_MODE_KEY = "velvet_map_mode_v1";
+const mapListMode = () => { try { return localStorage.getItem(MAP_MODE_KEY) === "list"; } catch { return false; } };
+
+function mapListHTML() {
+  const dests = [...publicDestinations()]
+    .filter((d) => d && d.name)
+    .sort((a, b) => (a.tier === b.tier ? String(a.name).localeCompare(String(b.name)) : String(a.tier).localeCompare(String(b.tier))));
+  return `<ol class="map-list">${dests.map((d) => {
+    const count = publicVenues().filter((v) => v.destination === d.name).length;
+    return `<li class="map-list-item">
+      <div class="map-list-main">
+        <a class="map-list-name" href="#/destination/${encodeURIComponent(d.code)}" data-nav>${esc(d.name)}</a>
+        <div class="map-list-meta">${esc(d.country)} · ${esc(d.tier)} · ${count} ${esc(count === 1 ? t("venueOne") : t("venueMany"))} · ${esc(t("seasonShort"))} ${esc(d.peak_season)}</div>
+      </div>
+      <a class="btn btn-ghost btn-sm" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
+    </li>`;
+  }).join("")}</ol>`;
+}
+
 function renderMapView() {
+  const asList = mapListMode();
   view().innerHTML = `
   <section class="section map-section">
     <div class="section-head">
-      <div><h2>${esc(t("navMap"))}</h2><div class="sub">${esc(t("mapSub").replace("{dests}", String(publicDestinations().length)).replace("{venues}", String(publicVenues().length)))}</div></div>
-      <button class="btn btn-ghost btn-sm map-near-btn" id="map-near" disabled><span aria-hidden="true">🧭</span> ${esc(t("nearMe"))}</button>
+      <div><h2>${esc(t("navMap"))}</h2><div class="sub">${esc((asList ? t("mapListSub") : t("mapSub")).replace("{dests}", String(publicDestinations().length)).replace("{venues}", String(publicVenues().length)))}</div></div>
+      <div class="map-head-actions">
+        <button class="btn btn-ghost btn-sm" id="map-mode" aria-pressed="${asList}">${esc(asList ? t("mapShowMap") : t("mapShowList"))}</button>
+        ${asList ? "" : `<button class="btn btn-ghost btn-sm map-near-btn" id="map-near" disabled><span aria-hidden="true">🧭</span> ${esc(t("nearMe"))}</button>`}
+      </div>
     </div>
+    ${asList ? mapListHTML() : `
     <div class="map-shell">
       <div id="map-all" class="map-canvas" role="application" aria-label="${esc(t("mapAria"))}"></div>
       <div class="map-loading" id="map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("loadingMap"))}</div>
-    </div>
+    </div>`}
   </section>`;
+
+  $("#map-mode").addEventListener("click", () => {
+    try { localStorage.setItem(MAP_MODE_KEY, asList ? "map" : "list"); } catch {}
+    destroyMaps();
+    renderMapView();
+    const btn = document.getElementById("map-mode");
+    if (btn) btn.focus();
+  });
+  if (asList) return;
 
   const shell = $(".map-shell");
   const mount = () => {
@@ -4051,6 +4120,7 @@ function renderMapView() {
       const map = L.map("map-all", { worldCopyJump: true, zoomControl: true });
       ACTIVE_MAPS.push(map);
       darkTileLayer(L).addTo(map);
+      attachMapGestures(map, shell);
 
       const pts = [];
       publicDestinations().forEach((d) => {
@@ -4114,6 +4184,7 @@ function mountDestMap(d, venues) {
     const map = L.map("map-dest", { scrollWheelZoom: false });
     ACTIVE_MAPS.push(map);
     darkTileLayer(L).addTo(map);
+    attachMapGestures(map, host.closest(".map-shell") || host.parentElement || host);
 
     // Destinationens egen nål i centrum
     L.marker([d.lat, d.lng], { icon: goldPin(L), title: d.name, alt: d.name })
