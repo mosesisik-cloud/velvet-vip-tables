@@ -864,6 +864,15 @@ button { font-family: inherit; cursor: pointer; }
   -webkit-text-fill-color: transparent; color: var(--gold-bright);
 }
 .detail-cta-note { font-size: 13.5px; color: var(--text-dim); margin-bottom: 20px; }
+/* Från-pris-kalkylator på detaljvyn */
+.detail-price .fp-from { font-size: 15px; font-weight: 600; letter-spacing: 0.3px; }
+.from-calc {
+  margin: 2px 0 14px; padding: 14px;
+  border: 1px solid var(--border-soft); border-radius: 12px;
+  background: var(--gold-dim);
+}
+.from-calc .stepper { margin-bottom: 10px; }
+.from-calc .stepper-hint { margin: 4px 0 0; text-align: center; }
 .detail-perks { list-style: none; margin-top: 20px; }
 .detail-perks li {
   font-size: 13px; color: var(--text-dim); padding: 7px 0 7px 24px; position: relative;
@@ -1855,16 +1864,47 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 
 /* Stepper in request modal */
 .req-steps {
-  display: flex; gap: 8px; margin: 4px 0 18px;
+  display: flex; gap: 8px; margin: 4px 0 10px;
   font-size: 11.5px; font-weight: 600; letter-spacing: 0.4px;
   color: var(--text-faint);
 }
 .req-step {
   flex: 1; text-align: center;
   padding: 8px 4px;
-  border-bottom: 2px solid var(--border);
+  border: 0; border-bottom: 2px solid var(--border);
+  background: none; color: inherit;
+  font: inherit; letter-spacing: inherit;
+  cursor: pointer;
+  transition: color 0.25s ease, border-color 0.25s ease;
 }
+.req-step:disabled { cursor: default; }
 .req-step.on { color: var(--gold-bright); border-color: var(--gold); }
+.req-step.done { color: var(--text-dim); border-color: rgba(212,175,95,0.5); }
+.req-step.done:hover { color: var(--gold-bright); }
+.req-progress {
+  height: 3px; border-radius: 3px; overflow: hidden;
+  background: rgba(255,255,255,0.06);
+  margin: 0 0 16px;
+}
+.req-progress-fill {
+  height: 100%; width: 33%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+  box-shadow: 0 0 10px rgba(212,175,95,0.45);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.req-pane { display: none; }
+.req-pane.active { display: block; animation: reqPaneIn 0.3s ease; }
+@keyframes reqPaneIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.req-nav { display: flex; gap: 10px; margin-top: 18px; }
+.req-nav .btn { flex: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .req-pane.active { animation: none; }
+  .req-progress-fill { transition: none; }
+}
 .req-summary {
   margin: 0 0 14px;
   padding: 10px 12px;

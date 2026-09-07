@@ -1,5 +1,5 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=109";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=113";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=109";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=109";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=109";
@@ -557,6 +557,47 @@ function venuePackagesPanelHTML(v) {
     </div>
     <p class="detail-cta-note">${esc(t("pkgPriceNote"))}</p>
   </section>`;
+}
+
+// ---------- Från-pris-kalkylator (detaljvyn) ----------
+// Billigaste paketet med känt pris (officiellt eller min-spend) — aldrig påhittade priser.
+function cheapestPricedPackage(v) {
+  const priced = packagesFor(v).filter((p) => p.price);
+  if (!priced.length) return null;
+  return priced.reduce((a, b) => (b.price < a.price ? b : a));
+}
+function fromCalcHTML(v) {
+  const p = cheapestPricedPackage(v);
+  if (!p) return `<p class="detail-cta-sub">${esc(t("clubSetsPrice"))}</p>
+        <div class="detail-price" id="from-price">${esc(t("clubSetsPrice"))}</div>`;
+  return `<p class="detail-cta-sub">${esc(t("fromCalcTitle"))}</p>
+        <div class="detail-price" id="fp-per" aria-live="polite" aria-atomic="true"></div>
+        <div class="from-calc">
+          <div class="stepper" role="group" aria-label="${esc(t("fromCalcParty"))}">
+            <button type="button" id="fp-minus" aria-label="${esc(t("fewerPeople"))}">−</button>
+            <span class="stepper-val" id="fp-party">4</span>
+            <button type="button" id="fp-plus" aria-label="${esc(t("morePeople"))}">+</button>
+          </div>
+          <p class="stepper-hint" id="fp-basis"></p>
+          <p class="stepper-hint">${esc(t("fromCalcHint"))}</p>
+        </div>`;
+}
+function bindFromCalc(v) {
+  const p = cheapestPricedPackage(v);
+  const per = $("#fp-per");
+  if (!p || !per) return;
+  let n = 4;
+  const fmt = (x) => {
+    try { return new Intl.NumberFormat(localeTag(), { style: "currency", currency: p.currency, maximumFractionDigits: 0 }).format(x); } catch { return fmtEUR(x); }
+  };
+  const render = () => {
+    $("#fp-party").textContent = n;
+    per.innerHTML = `<span class="fp-from">${esc(t("fromCalcFrom"))}</span> ${esc(fmt(Math.ceil(p.price / n)))}<span class="fp-from">/${esc(t("persShort"))}</span>`;
+    $("#fp-basis").textContent = `${p.name} · ${p.priceType === "minimum-spend" ? `${t("minimumSpend")}: ` : ""}${fmt(p.price)} · ${t("splitOn")} ${n} ${t("people")}`;
+  };
+  $("#fp-minus")?.addEventListener("click", () => { n = Math.max(1, n - 1); render(); });
+  $("#fp-plus")?.addEventListener("click", () => { n = Math.min(20, n + 1); render(); });
+  render();
 }
 
 // Defensiv: icke-numeriskt in (t.ex. manipulerad localStorage) → 0 € i stället för "NaN"
@@ -2965,8 +3006,7 @@ function renderVenueDetail(id) {
 
       <div class="detail-panel detail-cta">
         <h2 class="detail-panel-title">${esc(t("requestShareTitle"))}</h2>
-        <p class="detail-cta-sub">${esc(t("clubSetsPrice"))}</p>
-        <div class="detail-price" id="from-price">${esc(t("clubSetsPrice"))}</div>
+        ${fromCalcHTML(v)}
         <p class="detail-cta-note">${esc(t("priceHonest"))}</p>
         ${bookingLinkHTML(v, { gold: true, full: true })}
         <a class="btn btn-ghost" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener" style="width:100%;margin-top:10px">${esc(t("directions"))} ↗</a>
@@ -2997,6 +3037,7 @@ function renderVenueDetail(id) {
   </section>`;
   document.body.classList.add("has-dock");
   bindVenueGallery();
+  bindFromCalc(v);
   document.querySelectorAll("[data-pkg-open]").forEach((btn) => btn.addEventListener("click", () => openBookingModal(v, btn.dataset.pkgOpen)));
   document.querySelectorAll("[data-seat-pkg]").forEach((zone) => zone.addEventListener("click", () => {
     const id = zone.dataset.seatPkg;
@@ -3214,115 +3255,130 @@ async function openBookingModal(v, preselectedPackageId = "") {
       <button class="modal-close" id="m-close" aria-label="${esc(t("close"))}">✕</button>
       <h2>${esc(v.name)}</h2>
       <div class="modal-sub">${esc(v.destination)} · ${esc(v.category)}</div>
-      <div class="req-steps" aria-hidden="true">
-        <div class="req-step on">${esc(t("stepDate"))}</div>
-        <div class="req-step on">${esc(t("stepPkg"))}</div>
-        <div class="req-step on">${esc(t("stepParty"))}</div>
+      <div class="req-steps" id="m-steps">
+        <button type="button" class="req-step" data-step="1" aria-label="${esc(t("stepGoTo").replace("{name}", t("stepDate")))}">${esc(t("stepDate"))}</button>
+        <button type="button" class="req-step" data-step="2" aria-label="${esc(t("stepGoTo").replace("{name}", t("stepPkg")))}">${esc(t("stepPkg"))}</button>
+        <button type="button" class="req-step" data-step="3" aria-label="${esc(t("stepGoTo").replace("{name}", t("stepParty")))}">${esc(t("stepParty"))}</button>
       </div>
-      <p class="req-summary" id="m-summary"></p>
-      <div class="verify-perks" style="margin:0 0 16px">
-        <p class="verify-perks-title">${esc(t("bookSentAs"))}</p>
-        <p style="margin:0;color:var(--text)">${esc((loadUser()?.legalName || displayName(loadUser()) || host0.name))}${cardLabel() ? ` · ${esc(cardLabel())}` : ""}${loadUser()?.handle ? ` · @${esc(loadUser().handle)}` : ""}</p>
-        <p class="stepper-hint" style="margin:8px 0 0">${esc(t("bookCredentials"))}</p>
+      <div class="req-progress" aria-hidden="true"><div class="req-progress-fill" id="m-progress"></div></div>
+      <p class="req-summary" id="m-summary" aria-live="polite"></p>
+
+      <div class="req-pane" data-pane="1">
+        <div class="verify-perks" style="margin:0 0 16px">
+          <p class="verify-perks-title">${esc(t("bookSentAs"))}</p>
+          <p style="margin:0;color:var(--text)">${esc((loadUser()?.legalName || displayName(loadUser()) || host0.name))}${cardLabel() ? ` · ${esc(cardLabel())}` : ""}${loadUser()?.handle ? ` · @${esc(loadUser().handle)}` : ""}</p>
+          <p class="stepper-hint" style="margin:8px 0 0">${esc(t("bookCredentials"))}</p>
+        </div>
+        <div class="form-group">
+          <label for="m-date">${esc(t("dateLabel"))}</label>
+          <input type="date" id="m-date" min="${todayISO()}" value="${new Date(Date.now() + 14 * 864e5).toISOString().slice(0, 10)}">
+          <div class="field-error hidden" id="err-date" role="alert"></div>
+        </div>
+        <div class="req-nav">
+          <button type="button" class="btn btn-gold" id="m-next-1">${esc(t("stepNext"))} →</button>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="m-host">${esc(t("yourName"))}</label>
-        <input type="text" id="m-host" autocomplete="name" value="${esc(loadUser()?.legalName || host0.name)}" placeholder="${esc(t("hostPh"))}">
-        <div class="field-error hidden" id="err-host" role="alert"></div>
-      </div>
-      <div class="form-group">
-        <label for="m-email">${esc(t("emailPh"))}</label>
-        <input type="email" id="m-email" autocomplete="email" value="${esc(host0.email)}" placeholder="sarah.b@example.net">
-        <div class="field-error hidden" id="err-email" role="alert"></div>
-      </div>
-      <div class="form-group">
-        <label for="m-phone">${esc(t("mobileLabel"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
-        <input type="tel" id="m-phone" autocomplete="tel" value="${esc(host0.phone)}" placeholder="+46 …">
-      </div>
-
-      <div class="form-group">
+      <div class="req-pane" data-pane="2">
+        <div class="form-group">
+          <label id="lbl-pkgs">${esc(t("pickPackage"))}</label>
+          <div class="package-list" id="m-pkgs" role="radiogroup" aria-labelledby="lbl-pkgs">
+            ${pkgs.map((p, i) => `
+              <div class="package ${p.id === sel.id ? "selected" : ""}" data-pkg="${esc(p.id)}" role="radio" aria-checked="${p.id === sel.id}" tabindex="0">
+                <div><div class="package-name">${esc(p.name)}</div><div class="package-desc">${esc(p.desc)}</div></div>
+                <div class="package-price">${esc(p.priceType === "minimum-spend" ? `${t("minimumSpend")}: ${packagePriceHTML(p)}` : packagePriceHTML(p))}</div>
+              </div>`).join("")}
+          </div>
+        </div>
+        <div class="form-group">
           <label for="m-package-notes">${esc(t("pkgWantIncluded"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
           <textarea id="m-package-notes" rows="3" maxlength="500" placeholder="${esc(t("pkgWantPh"))}"></textarea>
           <p class="stepper-hint">${esc(t("pkgWantHint"))}</p>
         </div>
+        <div class="form-group">
+          <label for="m-budget">${esc(t("optionalBudget"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
+          <input type="number" id="m-budget" min="0" step="50" inputmode="numeric" placeholder="${esc(t("budgetPh"))}">
+          <p class="stepper-hint">${esc(t("budgetHint"))}</p>
+        </div>
+        <div class="req-nav">
+          <button type="button" class="btn btn-ghost" id="m-back-2">← ${esc(t("stepBack"))}</button>
+          <button type="button" class="btn btn-gold" id="m-next-2">${esc(t("stepNext"))} →</button>
+        </div>
+      </div>
+
+      <div class="req-pane" data-pane="3">
+        <div class="form-group">
+          <label id="lbl-party">${esc(t("partyCount"))}</label>
+          <div class="stepper" role="group" aria-labelledby="lbl-party">
+            <button id="m-minus" aria-label="${esc(t("fewerPeople"))}">−</button>
+            <span class="stepper-val" id="m-party" aria-live="polite" aria-atomic="true">4</span>
+            <button id="m-plus" aria-label="${esc(t("morePeople"))}">+</button>
+          </div>
+          <div class="stepper-hint" id="m-party-hint"></div>
+        </div>
 
         <div class="form-group">
-        <label for="m-date">${esc(t("dateLabel"))}</label>
-        <input type="date" id="m-date" min="${todayISO()}" value="${new Date(Date.now() + 14 * 864e5).toISOString().slice(0, 10)}">
-        <div class="field-error hidden" id="err-date" role="alert"></div>
-      </div>
-
-      <div class="form-group">
-        <label id="lbl-pkgs">${esc(t("pickPackage"))}</label>
-        <div class="package-list" id="m-pkgs" role="radiogroup" aria-labelledby="lbl-pkgs">
-          ${pkgs.map((p, i) => `
-            <div class="package ${p.id === sel.id ? "selected" : ""}" data-pkg="${esc(p.id)}" role="radio" aria-checked="${p.id === sel.id}" tabindex="0">
-              <div><div class="package-name">${esc(p.name)}</div><div class="package-desc">${esc(p.desc)}</div></div>
-              <div class="package-price">${esc(p.priceType === "minimum-spend" ? `${t("minimumSpend")}: ${packagePriceHTML(p)}` : packagePriceHTML(p))}</div>
-            </div>`).join("")}
+          <label class="chk-row"><input type="checkbox" id="m-open" checked> ${t("openSeats")}</label>
+          <p class="stepper-hint">${t("openSeatsHint")}</p>
+          <div class="stepper" id="m-open-row" role="group" aria-label="${t("openSeatsCount")}">
+            <button type="button" id="m-open-minus" aria-label="−">−</button>
+            <span class="stepper-val" id="m-open-val">2</span>
+            <button type="button" id="m-open-plus" aria-label="+">+</button>
+          </div>
+          <label class="stepper-hint" style="display:block;margin-top:10px">${esc(t("openForLabel"))}
+            ${openForSelectHTML("m-open-for", "women")}
+          </label>
+          <p class="stepper-hint">${esc(t("openForHint"))}</p>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label id="lbl-party">${esc(t("partyCount"))}</label>
-        <div class="stepper" role="group" aria-labelledby="lbl-party">
-          <button id="m-minus" aria-label="${esc(t("fewerPeople"))}">−</button>
-          <span class="stepper-val" id="m-party" aria-live="polite" aria-atomic="true">4</span>
-          <button id="m-plus" aria-label="${esc(t("morePeople"))}">+</button>
+        <div class="form-group">
+          <label for="g-name">${esc(t("inviteGuests"))} <span class="label-optional">(${esc(t("inviteGuestsHint"))})</span></label>
+          <div class="guest-row">
+            <input type="text" id="g-name" placeholder="${esc(t("namePh"))}" autocomplete="off">
+            <input type="email" id="g-email" placeholder="${esc(t("emailPh"))}" autocomplete="off">
+            <button class="btn btn-ghost btn-sm" id="g-add" type="button">${esc(t("addGuest"))}</button>
+          </div>
+          <div class="field-error hidden" id="err-guest" role="alert"></div>
+          <div class="chip-list" id="g-chips" aria-live="polite"></div>
         </div>
-        <div class="stepper-hint" id="m-party-hint"></div>
-      </div>
 
-      <div class="form-group">
-        <label class="chk-row"><input type="checkbox" id="m-open" checked> ${t("openSeats")}</label>
-        <p class="stepper-hint">${t("openSeatsHint")}</p>
-        <div class="stepper" id="m-open-row" role="group" aria-label="${t("openSeatsCount")}">
-          <button type="button" id="m-open-minus" aria-label="−">−</button>
-          <span class="stepper-val" id="m-open-val">2</span>
-          <button type="button" id="m-open-plus" aria-label="+">+</button>
+        <div class="form-group">
+          <label for="m-host">${esc(t("yourName"))}</label>
+          <input type="text" id="m-host" autocomplete="name" value="${esc(loadUser()?.legalName || host0.name)}" placeholder="${esc(t("hostPh"))}">
+          <div class="field-error hidden" id="err-host" role="alert"></div>
         </div>
-        <label class="stepper-hint" style="display:block;margin-top:10px">${esc(t("openForLabel"))}
-          ${openForSelectHTML("m-open-for", "women")}
+        <div class="form-group">
+          <label for="m-email">${esc(t("emailPh"))}</label>
+          <input type="email" id="m-email" autocomplete="email" value="${esc(host0.email)}" placeholder="sarah.b@example.net">
+          <div class="field-error hidden" id="err-email" role="alert"></div>
+        </div>
+        <div class="form-group">
+          <label for="m-phone">${esc(t("mobileLabel"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
+          <input type="tel" id="m-phone" autocomplete="tel" value="${esc(host0.phone)}" placeholder="+46 …">
+        </div>
+
+        <div class="split-box">
+          <div class="split-per" id="m-per"></div>
+          <div class="split-label">${esc(t("perPerson"))}</div>
+          <div class="split-total" id="m-total"></div>
+        </div>
+
+        <p class="price-disclaimer">${esc(t("priceHonest"))}</p>
+        <p class="price-disclaimer">${esc(t("requestMailNote"))}</p>
+        <label class="consent-row" for="m-consent">
+          <span class="consent-box"><input type="checkbox" id="m-consent" required></span>
+          <span class="consent-text">${esc(t("consentBefore"))}<a href="#/integritet" id="m-privacy">${esc(t("consentPrivacy"))}</a>${esc(t("consentAfter"))}</span>
         </label>
-        <p class="stepper-hint">${esc(t("openForHint"))}</p>
-      </div>
-
-      <div class="form-group">
-        <label for="g-name">${esc(t("inviteGuests"))} <span class="label-optional">(${esc(t("inviteGuestsHint"))})</span></label>
-        <div class="guest-row">
-          <input type="text" id="g-name" placeholder="${esc(t("namePh"))}" autocomplete="off">
-          <input type="email" id="g-email" placeholder="${esc(t("emailPh"))}" autocomplete="off">
-          <button class="btn btn-ghost btn-sm" id="g-add" type="button">${esc(t("addGuest"))}</button>
+        <details class="privacy-inline" id="m-privacy-details">
+          <summary>${esc(t("privacySummary"))}</summary>
+          <p>${esc(t("privacyInline").replace("{mail}", CONCIERGE_MAIL))}</p>
+        </details>
+        <div class="field-error hidden" id="err-confirm" role="alert"></div>
+        <div class="req-nav">
+          <button type="button" class="btn btn-ghost" id="m-back-3">← ${esc(t("stepBack"))}</button>
+          <button class="btn btn-gold" id="m-confirm">${esc(t("sendRequest"))}</button>
         </div>
-        <div class="field-error hidden" id="err-guest" role="alert"></div>
-        <div class="chip-list" id="g-chips" aria-live="polite"></div>
       </div>
-
-      <div class="form-group">
-        <label for="m-budget">${esc(t("optionalBudget"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
-        <input type="number" id="m-budget" min="0" step="50" inputmode="numeric" placeholder="${esc(t("budgetPh"))}">
-        <p class="stepper-hint">${esc(t("budgetHint"))}</p>
-      </div>
-
-      <div class="split-box">
-        <div class="split-per" id="m-per"></div>
-        <div class="split-label">${esc(t("perPerson"))}</div>
-        <div class="split-total" id="m-total"></div>
-      </div>
-
-      <p class="price-disclaimer">${esc(t("priceHonest"))}</p>
-      <p class="price-disclaimer">${esc(t("requestMailNote"))}</p>
-      <label class="consent-row" for="m-consent">
-        <span class="consent-box"><input type="checkbox" id="m-consent" required></span>
-        <span class="consent-text">${esc(t("consentBefore"))}<a href="#/integritet" id="m-privacy">${esc(t("consentPrivacy"))}</a>${esc(t("consentAfter"))}</span>
-      </label>
-      <details class="privacy-inline" id="m-privacy-details">
-        <summary>${esc(t("privacySummary"))}</summary>
-        <p>${esc(t("privacyInline").replace("{mail}", CONCIERGE_MAIL))}</p>
-      </details>
-      <div class="field-error hidden" id="err-confirm" role="alert"></div>
-      <button class="btn btn-gold" id="m-confirm" style="width:100%">${esc(t("sendRequest"))}</button>
     </div>
   </div>`;
 
@@ -3351,22 +3407,84 @@ async function openBookingModal(v, preselectedPackageId = "") {
   };
 
   const budgetVal = () => Math.max(0, Number($("#m-budget")?.value || 0));
+  const fmtCur = (n, cur = "EUR") => {
+    try { return new Intl.NumberFormat(localeTag(), { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(n); } catch { return fmtEUR(n); }
+  };
+  const shortDate = (iso) => {
+    try { return new Intl.DateTimeFormat(localeTag(), { day: "numeric", month: "short" }).format(new Date(`${iso}T12:00:00`)); } catch { return iso; }
+  };
+  // Per person: värdens budget vinner, annars billigaste kända pris för valt paket ("från").
+  const perPersonTxt = () => {
+    const budget = budgetVal();
+    if (budget > 0) return fmtEUR(Math.ceil(budget / party));
+    if (sel?.price) return `${t("fromCalcFrom")} ${fmtCur(Math.ceil(sel.price / party), sel.currency)}`;
+    return moneyOrClub(0);
+  };
+  let step = 1;
+  let maxStep = preselectedPackageId ? 2 : 1;
   const update = () => {
     $("#m-party").textContent = party;
     const budget = budgetVal();
-    const per = budget > 0 ? Math.ceil(budget / party) : 0;
-    $("#m-per").textContent = moneyOrClub(per);
+    $("#m-per").textContent = perPersonTxt();
     $("#m-total").textContent = budget > 0
       ? `${fmtEUR(budget)} · ${t("splitOn")} ${party} ${t("people")}`
-      : t("clubSetsPrice");
+      : sel?.price
+        ? `${sel.priceType === "minimum-spend" ? `${t("minimumSpend")}: ` : ""}${fmtCur(sel.price, sel.currency)} · ${t("splitOn")} ${party} ${t("people")}`
+        : t("clubSetsPrice");
+    // Sammanfattningen byggs upp allteftersom stegen besöks.
     const dateEl = $("#m-date");
-    const dateTxt = dateEl && dateEl.value ? dateEl.value : t("dateLabel").toLowerCase();
-    $("#m-summary").innerHTML = `<strong>${esc(sel.name)}</strong> · ${esc(dateTxt)} · ${party} ${esc(t("persShort"))} · ${esc(moneyOrClub(per))}`;
+    const parts = [];
+    if (maxStep >= 2 || preselectedPackageId) parts.push(`<strong>${esc(sel.name)}</strong>`);
+    if (dateEl?.value) parts.push(esc(shortDate(dateEl.value)));
+    if (maxStep >= 3) {
+      parts.push(`${party} ${esc(t("persShort"))}`);
+      parts.push(`${esc(perPersonTxt())} ${esc(t("perPerson"))}`);
+    }
+    $("#m-summary").innerHTML = parts.join(" · ");
     $("#m-party-hint").textContent = guests.length
       ? t("guestsPlus").replace("{n}", String(guests.length)).replace("{word}", guests.length === 1 ? t("guestOne") : t("guestMany"))
         + (party > minParty() ? t("unnamedExtra").replace("{n}", String(party - minParty())) : "")
       : "";
   };
+
+  const stepBtns = [...root.querySelectorAll(".req-step")];
+  const panes = [...root.querySelectorAll(".req-pane")];
+  const setStep = (n) => {
+    step = Math.min(3, Math.max(1, n));
+    maxStep = Math.max(maxStep, step);
+    panes.forEach((p) => p.classList.toggle("active", Number(p.dataset.pane) === step));
+    stepBtns.forEach((b, i) => {
+      const num = i + 1;
+      b.classList.toggle("on", num === step);
+      b.classList.toggle("done", num < step);
+      b.disabled = num > maxStep;
+      if (num === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+    });
+    const fill = $("#m-progress");
+    if (fill) fill.style.width = `${Math.round((step / 3) * 100)}%`;
+    const modalBox = root.querySelector(".modal");
+    if (modalBox) modalBox.scrollTop = 0;
+    const ov = $("#overlay");
+    if (ov) ov.scrollTop = 0;
+    update();
+  };
+  const validDate = () => {
+    const date = $("#m-date")?.value || "";
+    setErr("err-date", "");
+    if (!date) { setErr("err-date", t("errDate")); $("#m-date")?.focus(); return false; }
+    if (date < todayISO()) { setErr("err-date", t("errDatePast")); $("#m-date")?.focus(); return false; }
+    return true;
+  };
+  stepBtns.forEach((b) => b.addEventListener("click", () => {
+    const target = Number(b.dataset.step);
+    if (target === step || target > maxStep) return;
+    if (target > 1 && !validDate()) { setStep(1); return; }
+    setStep(target);
+  }));
+  $("#m-next-1")?.addEventListener("click", () => { if (validDate()) setStep(2); });
+  $("#m-next-2")?.addEventListener("click", () => setStep(3));
+  $("#m-back-2")?.addEventListener("click", () => setStep(1));
+  $("#m-back-3")?.addEventListener("click", () => setStep(2));
 
   const addGuest = () => {
     const name = $("#g-name").value.trim();
@@ -3458,8 +3576,8 @@ async function openBookingModal(v, preselectedPackageId = "") {
     setErr("err-date", ""); setErr("err-confirm", ""); setErr("err-host", ""); setErr("err-email", "");
     if (!hostName) { setErr("err-host", t("errHost")); $("#m-host").focus(); return; }
     if (!hostEmail || !EMAIL_RE.test(hostEmail)) { setErr("err-email", t("errEmail")); $("#m-email").focus(); return; }
-    if (!date) { setErr("err-date", t("errDate")); $("#m-date").focus(); return; }
-    if (date < todayISO()) { setErr("err-date", t("errDatePast")); $("#m-date").focus(); return; }
+    if (!date) { setStep(1); setErr("err-date", t("errDate")); $("#m-date").focus(); return; }
+    if (date < todayISO()) { setStep(1); setErr("err-date", t("errDatePast")); $("#m-date").focus(); return; }
     if (!Number.isInteger(party) || party < 1) { setErr("err-confirm", t("errParty")); return; }
     if (!$("#m-consent").checked) { setErr("err-confirm", t("errConsent")); $("#m-consent").focus(); return; }
 
@@ -3521,7 +3639,7 @@ async function openBookingModal(v, preselectedPackageId = "") {
   });
 
   renderChips();
-  update();
+  setStep(preselectedPackageId ? 2 : 1);
 }
 
 function showConfirmation(b, opener) {
