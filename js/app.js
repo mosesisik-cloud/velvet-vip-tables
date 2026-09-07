@@ -1568,27 +1568,71 @@ const saveHost = (h) => {
   } catch {}
 };
 
+// ---------- Kalenderfil (.ics, RFC 5545) ----------
+// Textvärden i ICS måste escapas: \ ; , och radbrytningar. Annars knäcker ett
+// venue-namn med komma ("Carrer de les Coves, 10") hela LOCATION-fältet.
+const icsEscape = (s) => String(s ?? "")
+  .replace(/\\/g, "\\\\")
+  .replace(/;/g, "\\;")
+  .replace(/,/g, "\\,")
+  .replace(/\r?\n/g, "\\n");
+// RFC 5545 §3.1: rader över 75 oktetter viks med CRLF + mellanslag.
+// Byte-medveten (TextEncoder) så åäö/emoji aldrig klipps mitt i en UTF-8-sekvens.
+function icsFold(line) {
+  const enc = new TextEncoder();
+  if (enc.encode(line).length <= 75) return line;
+  const out = [];
+  let cur = "", curBytes = 0;
+  for (const ch of line) {
+    const n = enc.encode(ch).length;
+    if (curBytes + n > 75) { out.push(cur); cur = " " + ch; curBytes = 1 + n; }
+    else { cur += ch; curBytes += n; }
+  }
+  if (cur) out.push(cur);
+  return out.join("\r\n");
+}
 function icsFor(b) {
   const ymd = String(b.date || "").replace(/-/g, "");
-  const uid = `${b.id}@velvet.app`;
+  const start = new Date(`${b.date}T00:00:00Z`);
+  // Heldagshändelse: DTEND är exklusivt → dagen efter, annars visar vissa
+  // kalendrar (Outlook) eventet som noll dagar långt.
+  const endYmd = Number.isFinite(start.getTime())
+    ? new Date(start.getTime() + 864e5).toISOString().slice(0, 10).replace(/-/g, "")
+    : "";
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
+  const v = (typeof VENUES !== "undefined" && VENUES.find((x) => x.venue_id === b.venue_id)) || null;
+  const facts = v ? venueFacts(v) : null;
+  const d = v ? destForVenue(v) : null;
+  const link = shareLinkFor(b);
   const summary = t("icsSummary").replace("{venue}", b.venue);
+  // Riktig gatuadress från venue-facts när den finns, annars venue + stad + land.
+  const where = facts?.address
+    ? `${b.venue}, ${facts.address}`
+    : [b.venue, b.destination, d?.country].filter(Boolean).join(", ");
   const desc = [
     t("icsDesc").replace("{id}", b.id),
     `${b.package} · ${b.party} ${t("people")} · ${b.per_person ? t("guestBudget").replace("{amount}", fmtEUR(b.per_person)) : t("clubSetsPrice")}.`,
-    t("inviteJoin").replace("{link}", shareLinkFor(b)),
-  ].join("\\n");
+    b.total > 0 ? t("inviteBudget").replace("{total}", fmtEUR(b.total)).replace("{per}", fmtEUR(b.per_person)) : "",
+    t("inviteJoin").replace("{link}", link),
+  ].filter(Boolean).map(icsEscape).join("\\n");
+  const geo = d && Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))
+    ? `GEO:${d.lat};${d.lng}` : "";
   const ics = [
-    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//VELVET//Concierge//SV", "CALSCALE:GREGORIAN",
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//VELVET//Concierge//SV", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
     "BEGIN:VEVENT",
-    `UID:${uid}`,
-    `DTSTAMP:${ymd}T120000Z`,
+    `UID:${b.id}@velvet.app`,
+    `DTSTAMP:${stamp}`,
     `DTSTART;VALUE=DATE:${ymd}`,
-    `SUMMARY:${summary}`,
+    endYmd ? `DTEND;VALUE=DATE:${endYmd}` : "",
+    `SUMMARY:${icsEscape(summary)}`,
     `DESCRIPTION:${desc}`,
-    `LOCATION:${b.venue}, ${b.destination}`,
+    `LOCATION:${icsEscape(where)}`,
+    geo,
+    `URL:${link}`,
     "STATUS:TENTATIVE",
+    "TRANSP:TRANSPARENT",
     "END:VEVENT", "END:VCALENDAR",
-  ].join("\r\n");
+  ].filter(Boolean).map(icsFold).join("\r\n");
   return `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
 }
 function inviteTextFor(b) {
@@ -3508,9 +3552,18 @@ function showConfirmation(b, opener) {
   $("#c-go").addEventListener("click", () => close(false));
   const copyBtn = $("#c-copy");
   if (copyBtn) {
+    const orig = copyBtn.textContent;
     copyBtn.addEventListener("click", async () => {
+      if (copyBtn.disabled) return;
+      copyBtn.disabled = true; // direkt — snabba dubbelklick ska inte hinna före await:en
       const ok = await copyText(inviteTextFor(b));
       copyBtn.textContent = ok ? t("copiedOk") : t("copyFail");
+      copyBtn.classList.toggle("copied", ok);
+      setTimeout(() => {
+        copyBtn.textContent = orig;
+        copyBtn.classList.remove("copied");
+        copyBtn.disabled = false;
+      }, 1800);
     });
   }
   $("#overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });

@@ -1019,7 +1019,8 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 /* ---------- Dela bokning & inbjudningsvy ---------- */
-.btn-share.copied { color: var(--green); border-color: rgba(111, 191, 143, 0.5); }
+.btn-share.copied,
+.btn.copied { color: var(--green); border-color: rgba(111, 191, 143, 0.5); }
 
 .invite { display: flex; justify-content: center; padding: 24px 0 40px; }
 .invite-card {
