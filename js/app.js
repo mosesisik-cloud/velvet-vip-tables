@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=108";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=108";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=108";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=108";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=109";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=109";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=109";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=109";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -646,6 +646,15 @@ function updateFavBadge() {
   if (!el) return;
   el.textContent = n;
   el.classList.toggle("hidden", n === 0);
+}
+// "Moses lista" / "Gabriels lista" — genitiv per språk, fallback "Delad lista" utan profilnamn.
+function favListName() {
+  const first = String(displayName(loadUser()) || "").trim().split(/\s+/)[0];
+  if (!first) return t("sharedListName");
+  const genitive = currentLang() === "sv"
+    ? (/[sxz]$/i.test(first) ? first : `${first}s`)
+    : (/s$/i.test(first) ? `${first}'` : `${first}'s`);
+  return t("namedList").replace("{name}", genitive);
 }
 function favLabel(on, name) {
   if (name) return (on ? t("favRemove") : t("favAdd")).replace("{name}", name);
@@ -4300,7 +4309,7 @@ function renderFavorites() {
   const share = $("#fav-share");
   if (share) {
     share.addEventListener("click", async () => {
-      const payload = { name: "VELVET-lista", ids: loadFavs() };
+      const payload = { name: favListName(), ids: loadFavs() };
       const url = `${location.origin}${location.pathname}#/list/${b64urlEncode(payload)}`;
       const ok = await copyText(url);
       share.textContent = ok ? t("linkCopied") : t("copyFail");
@@ -6851,7 +6860,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=108", { updateViaCache: "none" })
+      .register("sw.js?v=109", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
