@@ -442,7 +442,7 @@ function venueDockHTML(v) {
   </nav>`;
 }
 
-function photoAttrHTML(v) {
+function photoAttrHTML(v, { official = false } = {}) {
   const yt = venueYoutube(v);
   if (yt) {
     const href = yt.url || `https://www.youtube.com/watch?v=${yt.id}`;
@@ -451,10 +451,13 @@ function photoAttrHTML(v) {
   }
   if (!venuePhoto(v)) return "";
   const href = v.website_url || v.source_url || "";
+  // Detaljvyn ({ official: true }): transparent källrad — bilden kommer från
+  // ställets egen officiella hemsida (heligt beslut: aldrig stockfoton).
+  const label = official ? t("photoOfficialSrc") : t("photoCredit").replace("{name}", v.name);
   const credit = href
-    ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(t("photoCredit").replace("{name}", v.name))}</a>`
-    : esc(t("photoCredit").replace("{name}", v.name));
-  return `<p class="photo-attr">${credit} · ${esc(t("photoPreview"))}</p>`;
+    ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(label)}</a>`
+    : esc(label);
+  return `<p class="photo-attr${official ? " photo-attr-official" : ""}">${credit} · ${esc(t("photoPreview"))}</p>`;
 }
 
 function statusInfo(s) {
@@ -2321,6 +2324,48 @@ function igLinkHTML(v, { arrow = false } = {}) {
   return `<a class="icon-link ig-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener" aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "Instagram"))}">${IG_ICON}<span class="soc-handle">${esc(handle)}</span>${arrow ? " ↗" : ""}</a>`;
 }
 
+/** "Följ & inspireras" — social-CTA på detaljvyn. Instagram är ställets
+ * skyltfönster: stort IG-kort med gradient-ram och guld-CTA; TikTok/Facebook
+ * som sekundära kort där de finns. Länkarna är live-verifierade (rör ej). */
+function followSectionHTML(v) {
+  if (!v.instagram_url && !v.tiktok_url && !v.facebook_url) return "";
+  const secLabel = (net) => t("followOn").replace("{net}", net);
+  const secCard = (url, net, icon, handle) => `
+      <a class="follow-card follow-card-sec" href="${esc(url)}" target="_blank" rel="noopener"
+         aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", net))}">
+        <span class="follow-sec-ico" aria-hidden="true">${icon}</span>
+        <span class="follow-sec-txt"><strong>${esc(net)}</strong><span>${esc(handle || secLabel(net))}</span></span>
+        <span class="follow-arrow" aria-hidden="true">↗</span>
+      </a>`;
+  const tk = v.tiktok_url ? socialPath(v.tiktok_url) : "";
+  const fb = v.facebook_url ? socialPath(v.facebook_url) : "";
+  const secondary = [
+    v.tiktok_url ? secCard(v.tiktok_url, "TikTok", TIKTOK_ICON, tk ? (tk.startsWith("@") ? tk : "@" + tk) : "") : "",
+    v.facebook_url ? secCard(v.facebook_url, "Facebook", FB_ICON, fb ? "/" + fb : "") : "",
+  ].filter(Boolean).join("");
+  const igCard = v.instagram_url ? `
+      <a class="follow-card follow-card-ig" href="${esc(v.instagram_url)}" target="_blank" rel="noopener"
+         aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "Instagram"))}">
+        <span class="follow-ig-ico" aria-hidden="true">${IG_ICON}</span>
+        <span class="follow-ig-txt">
+          <span class="follow-ig-handle">${esc(igHandle(v.instagram_url) || "Instagram")}</span>
+          <span class="follow-ig-sub">${esc(t("followIg"))}</span>
+        </span>
+        <span class="btn btn-gold btn-sm follow-ig-cta">${esc(t("openInstagram"))} ↗</span>
+      </a>` : "";
+  return `
+  <section class="follow-section" aria-label="${esc(t("followTitle"))}">
+    <div class="follow-head">
+      <h2>${esc(t("followTitle"))}</h2>
+      <p>${esc(t("followSub").replace("{name}", v.name))}</p>
+    </div>
+    <div class="follow-cards${igCard && secondary ? " has-sec" : ""}">
+      ${igCard}
+      ${secondary ? `<div class="follow-sec-col">${secondary}</div>` : ""}
+    </div>
+  </section>`;
+}
+
 function venueCard(v, { eager = false, rank = 0, vibe = false } = {}) {
   const st = statusInfo(v.research_status);
   const rankMark = rank > 0
@@ -2864,7 +2909,7 @@ function renderVenueDetail(id) {
 
     ${venueIntroHTML(v)}
     ${venueGalleryHTML(v)}
-    ${photoAttrHTML(v)}
+    ${photoAttrHTML(v, { official: true })}
 
     <div class="detail-hero">
       <div class="detail-hero-main">
@@ -2878,22 +2923,10 @@ function renderVenueDetail(id) {
           ${dest ? `<span class="tag">${esc(t("seasonShort"))} ${esc(dest.peak_season)}</span>` : ""}
         </div>
         ${publicNote(v) ? `<p class="detail-notes">${esc(publicNote(v))}</p>` : ""}
-        <div class="follow-block">
-          ${v.instagram_url ? `
-          <div class="follow-ig">
-            <div>
-              <div class="soc-handle">${esc(igHandle(v.instagram_url) || t("instagram"))}</div>
-              <p>${esc(t("followIg"))}</p>
-            </div>
-            <a class="btn btn-gold btn-sm" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">${esc(t("instagram"))} ↗</a>
-          </div>` : ""}
-          <div class="detail-links">
-            ${bookingLinkHTML(v)}
-            <a class="icon-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
-            ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">${esc(t("website"))} ↗</a>` : ""}
-            ${v.tiktok_url ? `<a class="icon-link" href="${esc(v.tiktok_url)}" target="_blank" rel="noopener" aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "TikTok"))}">${TIKTOK_ICON}<span>TikTok</span> ↗</a>` : ""}
-            ${v.facebook_url ? `<a class="icon-link" href="${esc(v.facebook_url)}" target="_blank" rel="noopener" aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "Facebook"))}">${FB_ICON}<span>Facebook</span> ↗</a>` : ""}
-          </div>
+        <div class="detail-links">
+          ${bookingLinkHTML(v)}
+          <a class="icon-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
+          ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">${esc(t("website"))} ↗</a>` : ""}
         </div>
       </div>
       <div class="prio prio-lg">
@@ -2902,6 +2935,8 @@ function renderVenueDetail(id) {
           : `<span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">VELVET-prio</span>`}
       </div>
     </div>
+
+    ${followSectionHTML(v)}
 
     <div class="detail-grid">
       ${contactPanelHTML(v)}

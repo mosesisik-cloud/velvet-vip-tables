@@ -1927,19 +1927,79 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .from-calc-label { font-size: 12.5px; color: var(--text-dim); }
 .from-calc-val { font-family: var(--font-display); font-size: 20px; color: var(--gold-bright); }
 
-/* Social follow block */
-.follow-block { display: grid; gap: 10px; }
-.follow-ig {
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 16px 18px;
-  border-radius: 14px;
-  border: 1px solid rgba(212,175,95,0.35);
-  background:
-    linear-gradient(135deg, rgba(212,175,95,0.12), transparent 55%),
-    var(--bg-elev);
+/* "Följ & inspireras" — social-CTA på detaljvyn (Instagram = skyltfönstret) */
+.follow-section { margin: 26px 0 6px; }
+.follow-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(20px, 3vw, 26px);
+  font-weight: 600;
+  color: var(--text);
 }
-.follow-ig .soc-handle { font-size: 16px; font-weight: 600; color: var(--gold-bright); }
-.follow-ig p { font-size: 12.5px; color: var(--text-dim); margin-top: 2px; }
+.follow-head p { margin-top: 4px; font-size: 13.5px; color: var(--text-dim); max-width: 62ch; }
+.follow-cards { display: grid; gap: 12px; margin-top: 16px; }
+.follow-cards.has-sec { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); align-items: stretch; }
+.follow-sec-col { display: grid; gap: 12px; align-content: stretch; min-width: 0; }
+
+.follow-card {
+  display: flex; align-items: center; gap: 14px;
+  min-width: 0;
+  border-radius: 16px;
+  transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease), border-color 0.35s var(--ease);
+}
+.follow-card:hover { transform: translateY(-2px); }
+.follow-card:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+/* Stort IG-kort med gradient-ram (dubbel bakgrund: yta i padding-box, guldgradient i border-box) */
+.follow-card-ig {
+  padding: 20px 22px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(160deg, #191922, #14141b 70%) padding-box,
+    linear-gradient(135deg, rgba(232,200,126,0.85), rgba(212,175,95,0.28) 32%, rgba(212,175,95,0.1) 58%, rgba(232,200,126,0.65)) border-box;
+  box-shadow: var(--shadow-card), 0 18px 44px -24px rgba(212, 175, 95, 0.28);
+}
+.follow-card-ig:hover { box-shadow: var(--shadow-card-hover), 0 22px 52px -22px rgba(212, 175, 95, 0.4); }
+.follow-ig-ico {
+  flex: none; display: grid; place-items: center;
+  width: 52px; height: 52px; border-radius: 15px;
+  color: var(--gold-bright);
+  border: 1px solid rgba(212, 175, 95, 0.35);
+  background: radial-gradient(120% 120% at 30% 20%, rgba(212, 175, 95, 0.22), rgba(212, 175, 95, 0.05));
+}
+.follow-ig-ico .soc-ico { width: 26px; height: 26px; }
+.follow-ig-txt { flex: 1; min-width: 0; }
+.follow-ig-handle {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(17px, 2.4vw, 21px);
+  font-weight: 600;
+  color: var(--gold-bright);
+  overflow-wrap: anywhere;
+}
+.follow-ig-sub { display: block; margin-top: 3px; font-size: 12.5px; color: var(--text-dim); }
+.follow-ig-cta { flex: none; pointer-events: none; }
+
+/* Sekundära kort: TikTok/Facebook */
+.follow-card-sec {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+}
+.follow-card-sec:hover { border-color: rgba(212, 175, 95, 0.45); background: var(--bg-card-hover); }
+.follow-sec-ico {
+  flex: none; display: grid; place-items: center;
+  width: 38px; height: 38px; border-radius: 11px;
+  color: var(--text);
+  border: 1px solid var(--border);
+  background: var(--bg-elev);
+}
+.follow-sec-ico .soc-ico { width: 18px; height: 18px; }
+.follow-card-sec:hover .follow-sec-ico { color: var(--gold-bright); border-color: rgba(212, 175, 95, 0.4); }
+.follow-sec-txt { flex: 1; min-width: 0; display: grid; }
+.follow-sec-txt strong { font-size: 13.5px; font-weight: 600; color: var(--text); }
+.follow-sec-txt span { font-size: 12px; color: var(--text-faint); overflow-wrap: anywhere; }
+.follow-arrow { flex: none; color: var(--text-faint); font-size: 14px; transition: color 0.35s var(--ease), transform 0.35s var(--ease); }
+.follow-card:hover .follow-arrow { color: var(--gold-bright); transform: translate(1px, -1px); }
 .photo-attr { margin-top: 8px; font-size: 11.5px; color: var(--text-faint); overflow-wrap: anywhere; }
 .photo-attr a { color: var(--gold); text-decoration: underline; text-underline-offset: 2px; }
 .photo-attr a:hover { color: var(--gold-bright); }
@@ -2048,7 +2108,7 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
     min-height: 44px;
   }
   .search-hit > * { min-width: 0; overflow-wrap: anywhere; }
-  .follow-ig { flex-direction: column; align-items: flex-start; }
+  .follow-cards.has-sec { grid-template-columns: 1fr; }
   .nav-search { width: 44px; height: 44px; }
 }
 .map-pop-name { font-family: var(--font-display); font-size: 17px; font-weight: 600; color: var(--text); }
@@ -2201,7 +2261,8 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 
   .detail-links { gap: 8px; }
   .detail-links .icon-link, .detail-links .btn { justify-content: center; }
-  .follow-ig .btn { width: 100%; justify-content: center; }
+  .follow-card-ig { flex-wrap: wrap; padding: 18px; }
+  .follow-ig-cta { flex: 1 1 100%; justify-content: center; margin-top: 4px; }
   .contact-grid { grid-template-columns: 1fr 1fr; }
   .contact-tile { min-height: 68px; padding: 12px; }
   .g-hero-score { font-size: 32px; }
