@@ -2680,3 +2680,22 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
   .package-compare-grid { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin-inline: -18px; padding: 0 18px 8px; }
   .package-option { flex: 0 0 84%; scroll-snap-align: start; }
 }
+
+/* ---------- V3 Loop 8: Prestanda & finish ---------- */
+/* content-visibility: kort utanför viewporten layoutas/målas inte förrän de närmar sig
+   (venue-listan har 120 kort). contain-intrinsic-size ≈ kortets typiska höjd så
+   scrollisten inte hoppar när kort dyker upp. */
+.venue-card, .restaurant-card { content-visibility: auto; contain-intrinsic-size: auto 380px; }
+.dest-card { content-visibility: auto; contain-intrinsic-size: auto 320px; }
+
+/* Mjuk vyövergång vid ruttbyte (View Transitions API, progressive enhancement).
+   JS hoppar dessutom helt över startViewTransition vid reduced-motion. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) { animation: vt-out 0.16s ease both; }
+  ::view-transition-new(root) { animation: vt-in 0.24s var(--ease, ease) both; }
+}
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(7px); } }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+}

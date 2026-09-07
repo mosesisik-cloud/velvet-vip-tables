@@ -1,5 +1,5 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=113";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=114";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=109";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=109";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=109";
@@ -2239,8 +2239,11 @@ function renderDestinationDetail(code) {
     </section>`;
     return;
   }
-  setTitle(d.name);
   const inCity = VENUES.filter((v) => v.destination === d.name || v.destination_code === d.code).sort(compareVenues);
+  setTitle(d.name, t("metaDestDesc")
+    .replace("{dest}", d.name)
+    .replace("{country}", d.country || "")
+    .replace("{n}", String(inCity.length)));
   const verified = inCity.filter(isVenueVerified);
   const rest = inCity.filter((v) => !isVenueVerified(v));
   const useCases = String(d.use_cases || "").split(",").map((s) => s.trim()).filter(Boolean);
@@ -3175,7 +3178,10 @@ function renderVenueDetail(id) {
     }
     if ((location.hash || "").split("?")[0] === `#/venue/${v.venue_id}`) renderVenueDetail(v.venue_id);
   });
-  setTitle(v.name);
+  setTitle(v.name, t("metaVenueDesc")
+    .replace("{name}", v.name)
+    .replace("{category}", v.category || "VIP")
+    .replace("{dest}", v.destination || ""));
   if (apiBase()) {
     refreshLiveEvents().then((ok) => {
       if (!ok) return;
@@ -6847,6 +6853,18 @@ function route() {
   });
 }
 
+// Mjuk crossfade mellan vyer vid ruttbyte (View Transitions API, progressive
+// enhancement). Vid reduced-motion eller saknat stöd → omedelbart byte som förr.
+// Endast hashchange går via denna; programmatiska route()-anrop förblir direkta.
+function routeWithTransition() {
+  const reduce = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (typeof document.startViewTransition !== "function" || reduce) { route(); return; }
+  const vt = document.startViewTransition(() => route());
+  // Snabba ruttbyten avbryter pågående övergång → svälj de förväntade rejections
+  vt.ready?.catch(() => {});
+  vt.finished?.catch(() => {});
+}
+
 function paintNavLang() {
   const cur = currentLang();
   document.querySelectorAll("[data-nav-lang]").forEach((el) => {
@@ -7056,7 +7074,7 @@ async function init() {
     initMobileNav();
     initSkipLink();
     initSearch();
-    window.addEventListener("hashchange", route);
+    window.addEventListener("hashchange", routeWithTransition);
     const navDest = document.getElementById("nav-dest");
     if (navDest) navDest.addEventListener("click", () => openOnboarding({ dismissable: true }));
   }

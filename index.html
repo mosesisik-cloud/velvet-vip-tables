@@ -16,7 +16,14 @@
 <meta property="og:image" content="https://b2b.bakemyday.se/velvet/icons/icon-512.png">
 <meta name="twitter:card" content="summary">
 <link rel="sitemap" type="application/xml" href="sitemap.xml">
-<link rel="stylesheet" href="css/app.css?v=113">
+<!-- Preconnect: topp 5 bilddomäner ur data/venue-images.json (48/29/27/23/20 bilder) —
+     TLS-handskakningen görs medan HTML/CSS laddar, så venue-fotona startar snabbare. -->
+<link rel="preconnect" href="https://cdn.prod.website-files.com">
+<link rel="preconnect" href="https://i0.wp.com">
+<link rel="preconnect" href="https://static.wixstatic.com">
+<link rel="preconnect" href="https://images.squarespace-cdn.com">
+<link rel="preconnect" href="https://www.facebook.com">
+<link rel="stylesheet" href="css/app.css?v=114">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebSite","name":"VELVET","url":"https://b2b.bakemyday.se/velvet/","description":"VIP-bord. Delad lyx. Förfrågan via VELVET mot klubbens eget system.","inLanguage":"sv"}
 </script>
@@ -136,6 +143,6 @@
   });
 })();
 </script>
-<script type="module" src="js/app.js?v=113"></script>
+<script type="module" src="js/app.js?v=114"></script>
 </body>
 </html>
