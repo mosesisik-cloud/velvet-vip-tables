@@ -11,6 +11,45 @@ const stats = { venues: venues.length, withGallery: 0, images: 0, errors: [] };
 // Officiella källor som blockerar automatisk hämtning (bot-skydd eller JS-rendering).
 // Dessa hålls här, inte bara i genererad JSON, så att full täckning är reproducerbar.
 const manualOfficial = {
+  "CRV-003": { lock: true, source: "https://www.lescavesdecourchevel.com/", images: [
+    "https://www.lescavesdecourchevel.com/images/caves-de-courchevel.jpg",
+    "https://www.lescavesdecourchevel.com/images/social.jpg"
+  ] },
+  "GLA-101": { lock: true, source: "https://subclub.co.uk/", images: [
+    "https://subclub.co.uk/images/SUBCLUB_REOPENING_DIGITAL_V10_NORMAL_WEB_SPLASH_IMAGE_MED.png",
+    "https://subclub.co.uk/wp-content/uploads/2026/08/laure_croft_RA_ready-480x681.jpg",
+    "https://subclub.co.uk/wp-content/uploads/2026/08/august_subculture_26_RA_ready-2-480x681.jpg"
+  ] },
+  "IBZ-102": { lock: true, source: "https://www.dc10ibiza.com/", images: [
+    "https://dc10ibiza.com/wp-content/uploads/revslider/video-media/Diseno-sin-titulo-7_2.jpeg",
+    "https://dc10ibiza.com/wp-content/uploads/2025/02/Mario_Pinta_Circoloco_12.08.2024-52-1.jpg",
+    "https://dc10ibiza.com/wp-content/uploads/2025/05/Mario_Pinta_Circoloco_12.05.2025-28-1.jpg",
+    "https://dc10ibiza.com/wp-content/uploads/2025/09/Mario_Pinta_Circoloco_DC10_18.08.2025-55-1.jpg",
+    "https://dc10ibiza.com/wp-content/uploads/2026/09/mariopinta_DC10_Circoloco_03.08.2026-41.jpg"
+  ] },
+  "ROM-101": { lock: true, source: "https://www.goaclub.com/", images: [
+    "https://goaclub.com/wp-content/uploads/2018/09/goa-og.jpg"
+  ] },
+  "CNS-003": { lock: true, source: "https://medusa-cannes.com/", images: ["https://medusacannes.com/wp-content/uploads/2026/04/MEDUSA_CABARET_1.jpg"] },
+  "CNS-005": { lock: true, source: "https://restaurantlaguerite.com/", images: ["https://www.restaurantlaguerite.com/wp-content/uploads/2023/01/GUERITE_BEACH-4-1920x1280.jpg"] },
+  "BDR-001": { lock: true, source: "https://scorpios.com/bodrum", images: ["https://scorpios.com/assets/Reservations-Scorpios-Bodrum-Terrace_002513162513166a7b05e0.jpg"] },
+  "MIA-004": { lock: true, source: "https://joiabeachmiami.com/", images: ["https://joiabeachmiami.com/wp-content/uploads/2022/08/joia_beach_1-3-1080p-home-cover-image.jpg"] },
+  "LAS-005": { lock: true, source: "https://www.fontainebleaulasvegas.com/nightlife/liv/", images: ["https://www.fontainebleaulasvegas.com/uploads/2024/01/LIV_Arch_LFDCStudios-58948-scaled.jpg"] },
+  "CER-001": { lock: true, source: "https://billionairesociety.com/", images: ["https://billionairesociety.com/hideout-app/app-uploads/2023/10/BILLIONAIRE-2023.jpg"] },
+  "HVA-002": { lock: true, source: "https://www.hulahulahvar.com/", images: ["https://hulahulahvar.com/wp-content/uploads/2026/05/TLU09419-1-scaled.jpg"] },
+  "AMF-003": { lock: true, source: "https://lascoglierapositano.com/", images: ["https://lascoglierapositano.com/wp-content/uploads/2025/07/fondo-header-prenotazioni.webp"] },
+  "MAD-104": { lock: true, source: "https://fitzclubmadrid.com/", images: [
+    "https://fitzclubmadrid.com/wp-content/uploads/2024/02/image-17-1.png",
+    "https://fitzclubmadrid.com/wp-content/uploads/2024/02/Group-10-1.png",
+    "https://fitzclubmadrid.com/wp-content/uploads/2024/02/planta01-768x418.png",
+    "https://fitzclubmadrid.com/wp-content/uploads/2024/02/azul2-768x418.png"
+  ] },
+  "BOG-103": { lock: true, source: "https://octavaclub.com/", images: [
+    "https://octavaclub.com/opengraph-image?c30f9ed98cf34c6a",
+    "https://octavaclub.com/og-image.jpg",
+    "https://octavaclub.com/eventos-og.jpg",
+    "https://octavaclub.com/galeria-og.jpg"
+  ] },
   "STO-102": { lock: true, source: "https://entrgroup.se/nightlife/the-spy-bar/", images: [
     "https://entrgroup.se/wp-content/uploads/2024/04/SPY-BAR-Mega-by-Fabian-Wester-1-kopia-copy.webp",
     "https://entrgroup.se/wp-content/uploads/2024/04/SPY-BAR-Mega-by-Fabian-Wester-5-copy.webp",
@@ -26,7 +65,6 @@ const manualOfficial = {
   "CPT-001": { source: "https://cabobeach.co.za/", images: ["https://cabobeach.co.za/wp-content/uploads/2026/04/cabo-beach-front-entrance.jpg"] },
   "RIO-002": { source: "https://www.instagram.com/fosfoboxbarclub/", images: ["https://scontent-arn2-1.cdninstagram.com/v/t51.2885-19/279582170_2913196105650819_584380538361919778_n.jpg?stp=dst-jpg_s100x100_tt6&_nc_cat=100&ccb=7-5&_nc_sid=bf7eb4&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy44NTAuQzMifQ%3D%3D&_nc_ohc=73uCyMAAb4AQ7kNvwES5XUl&_nc_oc=AdrKcgZBIdRfI8LUAh23ahR05_hRKazLDWpy_yxqgrNeV_2AaUA9OFuewBQGJdZj5TY&_nc_zt=24&_nc_ht=scontent-arn2-1.cdninstagram.com&_nc_ss=7b689&oh=00_AQHPsk6sngdR8lbISd_7RXok_Py74CquEQbSDTX_O6zERQ&oe=6A93D9F5"] },
   "CDM-001": { source: "https://www.departamento.tv/", images: ["https://cdn.prod.website-files.com/60ff1dce4158bd5bbb2130dd/6109bf698dc9537ca478e7dc_256-departamento.png"] },
-  "IBZ-105": { source: "https://destinoibiza.com/", images: current["IBZ-004"] || [] },
   "SYD-101": { source: "https://merivale.com/venues/ivy/", images: current["SYD-002"] || [] },
   "SYD-104": { source: "https://www.homesydney.com/", images: current["SYD-001"] || [] },
 };
@@ -34,11 +72,16 @@ const manualOfficial = {
 function clean(raw, base) {
   if (!raw || /^data:|^blob:/i.test(raw)) return null;
   try {
-    const u = new URL(String(raw).replace(/&amp;/g, "&").trim(), base);
+    const u = new URL(String(raw).replace(/&amp;/g, "&").replace(/\\u0026/gi, "&").replace(/\\u002f/gi, "/").trim(), base);
     if (!/^https?:$/.test(u.protocol)) return null;
     if (/facebook\.com\/tr\?/i.test(u.href)) return null;
-    if (/\.(?:svg|ico)(?:$|\?)/i.test(u.href)) return null;
-    if (/(?:logo|icon|favicon|sprite|avatar|badge|placeholder|tracking|pixel)[-_./]/i.test(u.href)) return null;
+    if (/\.(?:svg|ico|gif)(?:$|\?)/i.test(u.href)) return null;
+    const path = decodeURIComponent(u.pathname).toLowerCase();
+    if (/(?:logo|icon|favicon|sprite|avatar|badge|placeholder|tracking|pixel|close|loader|spinner|tripadvisor|blank|flags?\/|flag[-_.]|quote[-_.]|star\.png|promo-domains|scroll-vertical|ico[-_.])/i.test(path)) return null;
+    const sizeHints = [...u.searchParams.entries(), ...[...path.matchAll(/(?:^|[/_,=-])(w|h|width|height)[_=-]?(\d{1,4})(?:$|[/_,.&-])/gi)].map((m) => [m[1], m[2]])];
+    if (sizeHints.some(([key, value]) => /^(?:w|h|width|height)$/i.test(key) && Number(value) > 0 && Number(value) < 360)) return null;
+    const embeddedSize = decodeURIComponent(u.href).match(/(?:^|[-_\/=])s?(\d{1,4})x(\d{1,4})(?:[-_.\/?&]|$)/i);
+    if (embeddedSize && Math.max(Number(embeddedSize[1]), Number(embeddedSize[2])) < 600) return null;
     return u.href.replace(/^http:/i, "https:");
   } catch { return null; }
 }
@@ -49,11 +92,23 @@ function candidates(html, base) {
   for (const m of html.matchAll(/<meta[^>]+(?:property|name)=["'](?:og:image|twitter:image(?::src)?)["'][^>]+content=["']([^"']+)["']/gi)) add(m[1]);
   for (const m of html.matchAll(/<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["'](?:og:image|twitter:image(?::src)?)["']/gi)) add(m[1]);
   for (const m of html.matchAll(/<img\b[^>]*(?:src|data-src|data-lazy-src)=["']([^"']+)["'][^>]*>/gi)) add(m[1]);
+  for (const m of html.matchAll(/<(?:img|video)\b[^>]*(?:poster|data-lazyload|data-original|data-bg)=["']([^"']+)["'][^>]*>/gi)) add(m[1]);
   for (const m of html.matchAll(/<img\b[^>]*srcset=["']([^"']+)["'][^>]*>/gi)) {
     for (const part of m[1].split(",")) add(part.trim().split(/\s+/)[0]);
   }
-  for (const m of html.matchAll(/url\(["']?([^"'()]+\.(?:jpe?g|png|webp)(?:\?[^"'()]*)?)["']?\)/gi)) add(m[1]);
+  for (const m of html.matchAll(/url\(["']?([^"'()]+\.(?:jpe?g|png|webp|avif)(?:\?[^"'()]*)?)["']?\)/gi)) add(m[1]);
   return out;
+}
+
+function imageScore(url) {
+  const value = decodeURIComponent(url).toLowerCase();
+  let score = 0;
+  if (/\.(?:jpe?g)(?:$|\?)/i.test(value)) score += 30;
+  else if (/\.(?:webp|avif)(?:$|\?)/i.test(value)) score += 26;
+  else if (/\.png(?:$|\?)/i.test(value)) score += 8;
+  if (/(?:photo|foto|gallery|galeria|club|interior|terrace|party|dsc|img_|hero|banner|venue|event)/i.test(value)) score += 9;
+  if (/(?:screen[-_ ]?shot|screenshot|history|line[-_]?map|postal|artboard)/i.test(value)) score -= 8;
+  return score;
 }
 
 async function discover(v) {
@@ -61,10 +116,12 @@ async function discover(v) {
   const existing = Array.isArray(current[id]) ? current[id] : current[id] ? [current[id]] : [];
   const override = manualOfficial[id];
   const official = override?.source || v.website_url || v.source_url;
-  const trustedManual = (override?.images || []).filter((url) => /^https?:\/\//i.test(url));
+  const trustedManual = (override?.images || []).map((url) => clean(url, official || url)).filter(Boolean);
   if (override?.lock) return [id, trustedManual.slice(0, 5), official];
-  const found = [...trustedManual, ...existing.map((url) => clean(url, official || "https://example.com"))]
-    .filter((url, i, all) => url && all.indexOf(url) === i);
+  // Börja om från den exakta enhetens officiella sida. Äldre crawlresultat får
+  // inte följa med automatiskt: det var så bilder från en systerklubb kunde
+  // hamna på en annan adress inom samma koncern.
+  const found = [...trustedManual].filter((url, i, all) => url && all.indexOf(url) === i);
   if (!official || found.length >= 5) return [id, found.slice(0, 5), official || null];
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 12000);
@@ -78,9 +135,9 @@ async function discover(v) {
     const html = await response.text();
     for (const url of candidates(html, response.url)) {
       if (!found.includes(url)) found.push(url);
-      if (found.length === 5) break;
+      if (found.length === 20) break;
     }
-    if (found.length < 5) {
+    if (found.length < 20) {
       const origin = new URL(response.url).origin;
       const pages = [...html.matchAll(/<a\b[^>]+href=["']([^"'#]+)["'][^>]*>/gi)]
         .map((m) => clean(m[1], response.url))
@@ -94,22 +151,16 @@ async function discover(v) {
           const subHtml = await sub.text();
           for (const url of candidates(subHtml, sub.url)) {
             if (!found.includes(url)) found.push(url);
-            if (found.length === 5) break;
+            if (found.length === 20) break;
           }
         } catch {}
-        if (found.length === 5) break;
+        if (found.length === 20) break;
       }
     }
   } catch (error) {
     stats.errors.push({ id, site: official, error: String(error.message || error) });
   } finally { clearTimeout(timer); }
-  // Sista skyddsnätet är alltid en fil från ställets egen domän. Det gör att
-  // även bot-skyddade/JS-renderade sajter får officiell branding i stället för
-  // VELVETs generiska emblem, tills nästa galleriuppdatering hittar ett foto.
-  if (!found.length && official) {
-    try { found.push(new URL("/favicon.ico", official).href); } catch {}
-  }
-  return [id, found.slice(0, 5), official];
+  return [id, found.sort((a, b) => imageScore(b) - imageScore(a)).slice(0, 5), official];
 }
 
 const queue = [...venues];
@@ -120,12 +171,19 @@ async function worker() {
 await Promise.all(Array.from({ length: 8 }, worker));
 
 const galleries = {};
+const imageOwner = new Map();
 for (const [id, images, source] of results) {
-  if (!images.length) continue;
-  galleries[id] = images;
-  provenance[id] = { source, images, checkedAt: new Date().toISOString() };
-  if (images.length > 1) stats.withGallery++;
-  stats.images += images.length;
+  // En exakt bild-URL får bara tillhöra en katalogenhet. Delade koncernbilder
+  // och felkopplade systerklubbar stoppas här i stället för att visas dubbelt.
+  const unique = images.filter((url) => {
+    if (imageOwner.has(url) && imageOwner.get(url) !== id) return false;
+    imageOwner.set(url, id);
+    return true;
+  });
+  if (unique.length) galleries[id] = unique;
+  provenance[id] = { source, images: unique, checkedAt: new Date().toISOString() };
+  if (unique.length > 1) stats.withGallery++;
+  stats.images += unique.length;
 }
 await fs.writeFile("data/venue-images.json", JSON.stringify(galleries, null, 2) + "\n");
 await fs.writeFile("data/venue-image-sources.json", JSON.stringify({ generatedAt: new Date().toISOString(), venues: provenance }, null, 2) + "\n");

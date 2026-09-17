@@ -1,13 +1,14 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=143";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=143";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=143";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=143";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=145";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=145";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=145";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=145";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
 let VENUES = [];
 let VENUE_IMAGES = {}; // venue_id -> bild från ställets egen hemsida (data/venue-images.json)
+let VENUE_IMAGE_SOURCES = {}; // venue_id -> verifierad officiell källa
 let VENUE_YOUTUBE = {}; // venue_id -> mest visade officiella klipp (data/venue-youtube.json)
 let VENUE_MENUS = {}; // venue_id -> tryckt meny från klubbens sajt
 let VENUE_EVENTS = { fetched: null, venues: {} }; // kommande events per venue (data/venue-events.json)
@@ -173,7 +174,9 @@ function venuePhotos(v) {
   const raw = VENUE_IMAGES[v.venue_id];
   const values = Array.isArray(raw) ? raw : [raw];
   const official = [...new Set(values.map(cleanVenuePhoto).filter((url) => url && !/(?:favicon\.ico|logo[-_.]|logo\/)/i.test(url)))].slice(0, 5);
-  return official.length ? official : [venueFallbackImage(v)];
+  // Aldrig en generisk ersättningsbild. Om exakt enhet inte har verifierats
+  // visar kortet sitt neutrala emblem tills rätt originalbild finns.
+  return official;
 }
 
 function venueHasOfficialPhoto(v) {
@@ -182,27 +185,13 @@ function venueHasOfficialPhoto(v) {
   return values.map(cleanVenuePhoto).some((url) => url && !/(?:favicon\.ico|logo[-_.]|logo\/)/i.test(url));
 }
 
-function venueFallbackImage(v) {
-  const images = [
-    "https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1600&q=84",
-    "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1600&q=84",
-    "https://images.unsplash.com/photo-1527529482837-4698179dc6ce?auto=format&fit=crop&w=1600&q=84",
-    "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=84",
-    "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=84"
-  ];
-  const key = String(v.venue_id || v.name || "venue");
-  let hash = 0;
-  for (let i = 0; i < key.length; i += 1) hash = ((hash << 5) - hash + key.charCodeAt(i)) | 0;
-  return images[Math.abs(hash) % images.length];
-}
-
 function venuePhoto(v) {
   return venuePhotos(v)[0] || null;
 }
 
 function venueGalleryItems(v) {
   const original = venueHasOfficialPhoto(v);
-  return venuePhotos(v).map((url) => ({ url, original, alt: original ? v.name : `Stämningsbild för ${v.name}` }));
+  return venuePhotos(v).map((url) => ({ url, original, alt: v.name }));
 }
 
 function venueGalleryHTML(v) {
@@ -306,16 +295,19 @@ function coverImgHTML(url) {
 // kort i listor förblir lazy så mobil inte laddar 120 bilder i onödan.
 function venueMediaHTML(v, cls, { eager = false, extra = "", playable = false } = {}) {
   const yt = venueYoutube(v);
-  const photo = venuePhoto(v);
+  const photos = venuePhotos(v);
+  const photo = photos[0] || null;
   const url = yt ? youtubeThumb(yt.id) : photo;
   const play = yt && !playable ? `<span class="yt-play" aria-hidden="true"></span>` : "";
   const frame = yt && playable ? `
     <iframe class="yt-frame" src="${esc(youtubeEmbed(yt.id))}" title="${esc(yt.title || v.name)}"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
       referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="${eager ? "eager" : "lazy"}"></iframe>` : "";
+  const fallbackPhotos = yt ? photos : photos.slice(1);
+  const fallbackData = esc(encodeURIComponent(JSON.stringify(fallbackPhotos)));
   const img = !frame && url ? `
-    <img src="${esc(url)}" alt="${esc(v.name)} — ${esc(v.category || "")}" loading="${eager ? "eager" : "lazy"}"${eager ? ` fetchpriority="high"` : ""} decoding="async" referrerpolicy="no-referrer"
-         onerror="this.closest('.${cls}').classList.add('img-fail')">` : "";
+    <img src="${esc(url)}" data-fallbacks="${fallbackData}" data-fallback-index="0" alt="${esc(v.name)} — ${esc(v.category || "")}" loading="${eager ? "eager" : "lazy"}"${eager ? ` fetchpriority="high"` : ""} decoding="async" referrerpolicy="no-referrer"
+         onerror="const xs=JSON.parse(decodeURIComponent(this.dataset.fallbacks||'%5B%5D'));const i=Number(this.dataset.fallbackIndex||0);if(xs[i]){this.dataset.fallbackIndex=String(i+1);this.src=xs[i]}else{const card=this.closest('.venue-card');if(card)card.remove();else this.closest('.${cls}')?.classList.add('img-fail')}">` : "";
   return `
   <div class="${cls}${url || frame ? "" : " img-fail"}${yt ? " has-yt" : ""}">
     <div class="dest-emblem venue-media-emblem" aria-hidden="true" style="--h:${destHue(v.destination_code)}">${esc(v.destination_code || "")}</div>${frame || img}
@@ -510,8 +502,7 @@ function photoAttrHTML(v) {
     return `<p class="photo-attr"><a href="${esc(href)}" target="_blank" rel="noopener">${esc(t("videoCredit").replace("{name}", who))}</a> · ${esc(t("videoMostViewed"))}</p>`;
   }
   if (!venuePhoto(v)) return "";
-  if (!venueHasOfficialPhoto(v)) return `<p class="photo-attr"><a href="https://unsplash.com/" target="_blank" rel="noopener">Stämningsbild</a> · officiell originalbild inväntar verifiering</p>`;
-  const href = v.website_url || v.source_url || "";
+  const href = VENUE_IMAGE_SOURCES[v.venue_id]?.source || v.website_url || v.source_url || "";
   const credit = href
     ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(t("photoCredit").replace("{name}", v.name))}</a>`
     : esc(t("photoCredit").replace("{name}", v.name));
@@ -2203,28 +2194,24 @@ function restaurantCardHTML(r) {
 }
 
 function restaurantMediaHTML(r) {
-  const image = Array.isArray(r.images) && r.images[0] ? r.images[0] : "";
-  if (image) return `<a class="restaurant-media" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav><img src="${esc(image)}" alt="${esc(r.name)}" loading="lazy" onerror="this.closest('.restaurant-media').classList.add('image-missing');this.remove()"><span>Visa restaurang</span></a>`;
-  return `<a class="restaurant-media restaurant-media-mood" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav aria-label="Visa ${esc(r.name)}"><img src="${esc(restaurantFallbackImage(r))}" alt="Stämningsbild för ${esc(r.name)}" loading="lazy"><span>Stämningsbild · original verifieras</span></a>`;
-}
-
-function restaurantFallbackImage(r) {
-  const images = [
-    "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=82",
-    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=82",
-    "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=82",
-    "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=82",
-    "https://images.unsplash.com/photo-1550966871-3ed3cdb5ed0c?auto=format&fit=crop&w=1200&q=82",
-    "https://images.unsplash.com/photo-1544148103-0773bf10d330?auto=format&fit=crop&w=1200&q=82",
-    "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?auto=format&fit=crop&w=1200&q=82"
-  ];
-  const key = String(r.placeId || r.name || "restaurant");
-  let hash = 0;
-  for (let i = 0; i < key.length; i += 1) hash = ((hash << 5) - hash + key.charCodeAt(i)) | 0;
-  return images[Math.abs(hash) % images.length];
+  const images = Array.isArray(r.images) ? r.images.filter((url) => /^https?:\/\//i.test(url)) : [];
+  const image = images[0] || "";
+  if (image) {
+    const fallbacks = esc(encodeURIComponent(JSON.stringify(images.slice(1))));
+    return `<a class="restaurant-media" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav><img src="${esc(image)}" data-fallbacks="${fallbacks}" data-fallback-index="0" alt="${esc(r.name)}" loading="lazy" onerror="const xs=JSON.parse(decodeURIComponent(this.dataset.fallbacks||'%5B%5D'));const i=Number(this.dataset.fallbackIndex||0);if(xs[i]){this.dataset.fallbackIndex=String(i+1);this.src=xs[i]}else{this.closest('.restaurant-card')?.remove()}"><span>Visa restaurang</span></a>`;
+  }
+  const initial = String(r.name || "R").trim().slice(0, 1).toUpperCase();
+  return `<a class="restaurant-media restaurant-media-placeholder" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav aria-label="Visa ${esc(r.name)}"><b aria-hidden="true">${esc(initial)}</b><span>${esc(r.name)}</span><small>Officiell originalbild verifieras</small></a>`;
 }
 
 const sortRestaurants = (rows) => [...rows].sort((a, b) => Number(Boolean(b.featured)) - Number(Boolean(a.featured)) || a.name.localeCompare(b.name, currentLang()));
+const hasVerifiedRestaurantImages = (restaurant) =>
+  Array.isArray(restaurant?.images)
+  && restaurant.images.some((url) => /^https?:\/\//i.test(url) && !/unsplash|pexels|pixabay/i.test(url))
+  && /^https?:\/\//i.test(restaurant?.imageSource || "");
+const publishableRestaurants = (rows) => sortRestaurants((rows || []).filter((restaurant) =>
+  (restaurant.curated === true || Number(restaurant.rating) >= 3.8) && hasVerifiedRestaurantImages(restaurant)
+));
 
 async function mountHomeRestaurants() {
   const root = document.getElementById("home-restaurants");
@@ -2234,7 +2221,7 @@ async function mountHomeRestaurants() {
   const rows = data?.destinations || {};
   const localCode = homeDestination()?.code || (() => { const g = loadGeo(); return g ? nearestDestination(g.lat, g.lng)?.d?.code : ""; })();
   const featuredCodes = [localCode, "TYO", "HKG", "SYD", "CPT", "RIO", "CDM", "LIS", "AMS"].filter((code, i, all) => code && all.indexOf(code) === i);
-  const featured = featuredCodes.flatMap((code) => sortRestaurants(rows[code]?.restaurants || []).slice(0, 1));
+  const featured = featuredCodes.flatMap((code) => publishableRestaurants(rows[code]?.restaurants || []).slice(0, 1));
   root.innerHTML = featured.length
     ? `<div class="restaurant-grid">${featured.map(restaurantCardHTML).join("")}</div>`
     : `<div class="empty-state"><p>${esc(t("restaurantsEmpty"))}</p></div>`;
@@ -2251,9 +2238,9 @@ async function renderRestaurants() {
   const params = new URLSearchParams(queryIndex >= 0 ? location.hash.slice(queryIndex + 1) : "");
   const requestedDestination = params.get("dest") || "";
   const selectedDestination = uniqueDestinations.find((d) => d.code === requestedDestination || d.name.toLowerCase() === requestedDestination.toLowerCase()) || null;
-  const groups = uniqueDestinations.filter((d) => !selectedDestination || d.code === selectedDestination.code).map((d) => ({ d, restaurants: sortRestaurants((rows[d.code]?.restaurants || []).filter((r) => r.curated || Number(r.rating) >= 3.8)) })).filter((x) => x.restaurants.length);
+  const groups = uniqueDestinations.filter((d) => !selectedDestination || d.code === selectedDestination.code).map((d) => ({ d, restaurants: publishableRestaurants(rows[d.code]?.restaurants || []) })).filter((x) => x.restaurants.length);
   view().innerHTML = `<section class="section restaurant-directory"><div class="section-head"><div><h1>${esc(t("navRestaurants"))}${selectedDestination ? ` i ${esc(selectedDestination.name)}` : ""}</h1><div class="sub">${esc(t("restaurantsSub"))}</div></div><span class="count">${groups.reduce((n, x) => n + x.restaurants.length, 0)}</span></div>
-    <div class="filters restaurant-filters"><select id="restaurant-dest-filter" aria-label="${esc(t("filterDest"))}"><option value="">${esc(t("allDest"))}</option>${uniqueDestinations.filter((d) => rows[d.code]?.restaurants?.length).map((d) => `<option value="${esc(d.code)}" ${selectedDestination?.code === d.code ? "selected" : ""}>${esc(d.name)}</option>`).join("")}</select></div>
+    <div class="filters restaurant-filters"><select id="restaurant-dest-filter" aria-label="${esc(t("filterDest"))}"><option value="">${esc(t("allDest"))}</option>${uniqueDestinations.filter((d) => publishableRestaurants(rows[d.code]?.restaurants || []).length).map((d) => `<option value="${esc(d.code)}" ${selectedDestination?.code === d.code ? "selected" : ""}>${esc(d.name)}</option>`).join("")}</select></div>
     <div class="restaurant-jump">${groups.map(({ d }) => `<a href="#restaurant-${esc(d.code)}">${esc(d.name)}</a>`).join("")}</div>
     ${groups.map(({ d, restaurants }) => `<section class="restaurant-city" id="restaurant-${esc(d.code)}"><div class="section-head"><div><h2>${esc(d.name)}</h2><div class="sub">${esc(d.country)}</div></div><a href="#/destination/${encodeURIComponent(d.code)}" data-nav>${esc(t("explore"))} →</a></div><div class="restaurant-grid">${restaurants.map(restaurantCardHTML).join("")}</div></section>`).join("")}
     <p class="restaurant-source">VELVET curated · ${esc(t("restaurantsSub"))}</p></section>`;
@@ -2272,15 +2259,16 @@ async function mountDestinationRestaurants(d) {
   if (Array.isArray(live?.destination?.restaurants) && live.destination.restaurants.length) {
     row = live.destination;
   }
-  if (!Array.isArray(row?.restaurants) || !row.restaurants.length) {
-    try {
-      const r = await fetch("data/restaurants.json", { cache: "no-store" });
-      if (r.ok) row = (await r.json())?.destinations?.[d.code] || null;
-    } catch { /* optional */ }
-  }
-  const restaurants = Array.isArray(row?.restaurants)
-    ? sortRestaurants(row.restaurants.filter((r) => r.curated === true || Number(r.rating) >= 3.8))
-    : [];
+  // Den statiska, bildreviderade katalogen är källan för media. Ett live-API
+  // utan bildproveniens får aldrig skriva över verifierade originalbilder.
+  try {
+    const r = await fetch("data/restaurants.json", { cache: "no-store" });
+    if (r.ok) {
+      const audited = (await r.json())?.destinations?.[d.code] || null;
+      if (Array.isArray(audited?.restaurants) && audited.restaurants.length) row = audited;
+    }
+  } catch { /* optional */ }
+  const restaurants = Array.isArray(row?.restaurants) ? publishableRestaurants(row.restaurants) : [];
   root.innerHTML = restaurants.length
     ? `<div class="restaurant-grid">${restaurants.map(restaurantCardHTML).join("")}</div>
        <p class="restaurant-source">${esc(row.source || "Google Places")} · ${esc(t("restaurantsSub"))}${row.fetchedAt ? ` · ${esc(new Date(row.fetchedAt).toLocaleDateString(currentLang()))}` : ""}</p>`
@@ -2298,7 +2286,7 @@ async function renderRestaurantDetail(placeId) {
     const match = (row.restaurants || []).find((item) => item.placeId === placeId);
     if (match) { restaurant = match; destination = { code, ...row }; break; }
   }
-  if (!restaurant) {
+  if (!restaurant || !hasVerifiedRestaurantImages(restaurant)) {
     view().innerHTML = `<section class="section"><div class="empty-state"><h1>Restaurangen hittades inte</h1><p><a class="btn btn-gold" href="#/restaurants" data-nav>Till restauranger</a></p></div></section>`;
     return;
   }
@@ -2309,7 +2297,7 @@ async function renderRestaurantDetail(placeId) {
   const today = new Date().toISOString().slice(0, 10);
   view().innerHTML = `<section class="section restaurant-detail">
     <a class="back-link" href="#/destination/${encodeURIComponent(destination.code)}" data-nav>← Restauranger i ${esc(destination.destination)}</a>
-    ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} officiella bilder · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">källa ↗</a></div></div>` : `<div class="restaurant-gallery"><div class="restaurant-gallery-track"><figure><img src="${esc(restaurantFallbackImage(restaurant))}" alt="Stämningsbild för ${esc(restaurant.name)}"></figure></div><div class="restaurant-gallery-meta">Stämningsbild · restaurangens officiella originalbild inväntar verifiering</div></div>`}
+    ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} officiella bilder · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">källa ↗</a></div></div>` : `<div class="restaurant-detail-placeholder"><b aria-hidden="true">${esc(String(restaurant.name || "R").slice(0, 1).toUpperCase())}</b><span>${esc(restaurant.name)}</span><small>Ingen generisk bild visas · officiell originalbild verifieras</small></div>`}
     <div class="restaurant-detail-hero">
       <div><div class="eyebrow">${esc(restaurant.cuisine || "Restaurang")}</div><h1>${esc(restaurant.name)}</h1><p class="restaurant-lead">${esc(restaurant.description || `Restaurang i ${destination.destination}.`)}</p>
         <div class="restaurant-detail-actions">${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}${restaurant.menuUrl ? `<a class="btn" href="${esc(restaurant.menuUrl)}" target="_blank" rel="noopener">Meny ↗</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">Karta ↗</a>` : ""}</div>
@@ -7016,6 +7004,13 @@ async function init() {
       if (r.ok) VENUE_IMAGES = await r.json() || {};
     } catch (_) { VENUE_IMAGES = {}; }
     try {
+      const rs = await fetch("data/venue-image-sources.json", { cache: "no-store" });
+      if (rs.ok) {
+        const sources = await rs.json();
+        VENUE_IMAGE_SOURCES = sources?.venues || {};
+      }
+    } catch (_) { VENUE_IMAGE_SOURCES = {}; }
+    try {
       const ry = await fetch("data/venue-youtube.json", { cache: "no-store" });
       if (ry.ok) {
         const y = await ry.json();
@@ -7078,7 +7073,23 @@ async function init() {
     }
   } catch { /* optional */ }
   DESTINATIONS = d;
-  VENUES = v;
+  // Samma enhet förekom tidigare både i huvudkatalogen och den sökbara
+  // extralistan. Dubbla poster gav dubbla kort och samma foto två gånger.
+  const seenVenueSites = new Set();
+  const seenVenueNames = new Set();
+  VENUES = v.filter((item) => {
+    const rawSite = item.website_url || item.source_url || "";
+    let site = "";
+    try { const u = new URL(rawSite); site = `${u.hostname.replace(/^www\./, "")}${u.pathname.replace(/\/$/, "")}`.toLowerCase(); } catch {}
+    const name = fold(item.name).replace(/[^a-z0-9]+/g, "");
+    const place = item.destination_code || item.destination;
+    const siteUnit = site ? `${place}|${site}` : "";
+    const nameUnit = `${place}|${name}`;
+    if ((siteUnit && seenVenueSites.has(siteUnit)) || seenVenueNames.has(nameUnit)) return false;
+    if (siteUnit) seenVenueSites.add(siteUnit);
+    seenVenueNames.add(nameUnit);
+    return true;
+  }).filter((item) => venueHasOfficialPhoto(item) || venueYoutube(item));
   const livePlaces = await apiJSON("/places");
   if (livePlaces && livePlaces.venues) GOOGLE_PLACES = livePlaces;
   try {
@@ -7165,7 +7176,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=143", { updateViaCache: "none" })
+      .register("sw.js?v=145", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

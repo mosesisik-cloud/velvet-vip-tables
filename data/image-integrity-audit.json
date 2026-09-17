@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-09-17T10:27:20.833Z",
+  "policy": "Only exact-unit images with an official source are publishable. Generic stock images and cross-unit URL reuse are forbidden.",
+  "venues": {
+    "catalogUnits": 269,
+    "publishableUnits": 238,
+    "heldBackUntilVerified": 31,
+    "units": 238,
+    "images": 1070,
+    "uniqueUrls": 1070
+  },
+  "restaurants": {
+    "catalogUnits": 739,
+    "publishableUnits": 140,
+    "heldBackUntilVerified": 599,
+    "units": 140,
+    "images": 606,
+    "uniqueUrls": 606
+  },
+  "failures": []
+}
