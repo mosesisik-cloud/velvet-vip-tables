@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=139";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=139";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=139";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=139";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=143";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=143";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=143";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=143";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -25,9 +25,45 @@ const state = {
 const NIGHT_KEY = "velvet_night_v1";
 
 function isPublicVenue(v) { return v && v.listed !== false; }
-function isPublicDest(d) { return d && d.listed !== false; }
+// Globala expansionen: de här destinationerna har redan riktiga profiler och
+// officiellt bildmaterial i katalogen, men låg tidigare gömda bakom sökningen.
+const EXPANDED_DESTINATION_CODES = new Set([
+  "STO", "GOT", "BER", "MAD", "ROM", "FLR", "PMI", "MAN",
+  "DBV", "AYN", "PRG", "WAW", "BUH", "MLA", "RAK",
+  "BOG", "BUE", "SAO", "SCL", "SHA", "HYD", "HAN", "TPE", "KTM",
+  "CAB", "CUN", "USM",
+]);
+function isPublicDest(d) { return d && (d.listed !== false || EXPANDED_DESTINATION_CODES.has(d.code)); }
 function publicVenues() { return VENUES.filter(isPublicVenue); }
 function publicDestinations() { return DESTINATIONS.filter(isPublicDest); }
+
+// Platsstyrd destinationsordning. Ett uttryckligt hemval vinner, därefter GPS
+// och sist en grov tidszonsfallback. Den lokala destinationen får visas först
+// även om den normalt bara är sökbar (t.ex. Stockholm i den globala katalogen).
+function localDestinationHint() {
+  const chosen = homeDestination();
+  if (chosen) return chosen;
+  const geo = loadGeo() || locateByTimezone();
+  return geo ? nearestDestination(geo.lat, geo.lng)?.d || null : null;
+}
+
+function compareDestinationsForUser(a, b, local = localDestinationHint()) {
+  if (local) {
+    const exact = Number(b.code === local.code) - Number(a.code === local.code);
+    if (exact) return exact;
+    const country = Number(b.country === local.country) - Number(a.country === local.country);
+    if (country) return country;
+  }
+  if (a.tier !== b.tier) return a.tier.localeCompare(b.tier);
+  return num(b.luxury) - num(a.luxury) || a.name.localeCompare(b.name, "sv");
+}
+
+function orderedPublicDestinations() {
+  const local = localDestinationHint();
+  const rows = [...publicDestinations()];
+  if (local && !rows.some((d) => d.code === local.code)) rows.push(local);
+  return rows.sort((a, b) => compareDestinationsForUser(a, b, local));
+}
 function queryMentionsCity(q, v) {
   const s = fold(q).replace(/[^a-z0-9]+/g, " ").trim();
   if (s.length < 3) return false;
@@ -242,8 +278,8 @@ function venueIntroHTML(v) {
 function coverVenueForDest(d) {
   if (!d) return null;
   const list = VENUES
-    .filter((v) => isPublicVenue(v) && (v.destination_code === d.code || v.destination === d.name))
-    .sort((a, b) => num(b.priority_score) - num(a.priority_score));
+    .filter((v) => (isPublicVenue(v) || isPublicDest(d)) && (v.destination_code === d.code || v.destination === d.name))
+    .sort((a, b) => Number(isPublicVenue(b)) - Number(isPublicVenue(a)) || num(b.priority_score) - num(a.priority_score));
   for (const v of list) {
     const url = venuePhoto(v);
     if (url) return { v, url };
@@ -1827,7 +1863,7 @@ function pips(n) {
 // ---------- Views ----------
 function renderHome() {
   try {
-  const pubD = publicDestinations();
+  const pubD = orderedPublicDestinations();
   const pubV = publicVenues();
   const tier1 = pubD.filter((d) => d.tier === "Tier 1");
   let knownGeo = loadGeo();
@@ -1904,7 +1940,7 @@ function renderHome() {
       <label class="night-dest-label">${esc(t("tablesCity"))}
         <select id="home-night-dest" aria-label="${esc(t("tablesCity"))}">
           <option value="">${esc(t("allDest"))}</option>
-          ${publicDestinations().map((x) => `<option value="${esc(x.code)}" ${loadNight().dest === x.code ? "selected" : ""}>${esc(x.name)}</option>`).join("")}
+          ${orderedPublicDestinations().map((x) => `<option value="${esc(x.code)}" ${loadNight().dest === x.code ? "selected" : ""}>${esc(x.name)}</option>`).join("")}
         </select>
       </label>
     </div>
@@ -2123,10 +2159,10 @@ function renderDestinations() {
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
-      <div><h2>${esc(t("navDestinations"))}</h2><div class="sub">${esc(t("destListSub").replace("{n}", String(publicDestinations().length)))}</div></div>
+      <div><h2>${esc(t("navDestinations"))}</h2><div class="sub">${esc(t("destListSub").replace("{n}", String(orderedPublicDestinations().length)))}</div></div>
     </div>
     <div class="dest-grid">
-      ${[...publicDestinations()].sort((a, b) => (a.tier === b.tier ? b.luxury - a.luxury : a.tier.localeCompare(b.tier))).map(destCard).join("")}
+      ${orderedPublicDestinations().map(destCard).join("")}
     </div>
   </section>`;
   bindDestCards();
@@ -2294,13 +2330,26 @@ async function renderRestaurantDetail(placeId) {
       </aside>
     </div>
   </section>`;
-  document.getElementById("restaurant-book-form")?.addEventListener("submit", (event) => {
+  document.getElementById("restaurant-book-form")?.addEventListener("submit", async (event) => {
     event.preventDefault();
+    const form = event.currentTarget;
+    const submit = form.querySelector('button[type="submit"]');
+    if (submit) { submit.disabled = true; submit.textContent = "Skickar…"; }
     const values = Object.fromEntries(new FormData(event.currentTarget));
-    const booking = { id: `RB-${Date.now().toString(36).toUpperCase()}`, restaurantId: restaurant.placeId, restaurant: restaurant.name, destination: destination.destination, ...values, status: "request", createdAt: new Date().toISOString() };
-    const stored = JSON.parse(localStorage.getItem("velvetRestaurantBookings") || "[]"); stored.unshift(booking); localStorage.setItem("velvetRestaurantBookings", JSON.stringify(stored.slice(0, 50)));
-    event.currentTarget.hidden = true;
-    document.getElementById("restaurant-book-result").innerHTML = `<div class="restaurant-book-success"><div class="big">✓</div><h3>Förfrågan registrerad</h3><p>${esc(values.party)} gäster · ${esc(values.date)} kl. ${esc(values.time)}</p><small>Referens ${esc(booking.id)} · restaurangen behöver bekräfta bordet.</small></div>`;
+    const payload = { restaurantId: restaurant.placeId, restaurant: restaurant.name, destination: destination.destination, ...values, user: loadUser() };
+    const remote = await apiJSON("/restaurant-bookings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    const synced = !!remote?.booking?.id;
+    const booking = synced
+      ? { ...payload, ...remote.booking, serverSynced: true }
+      : { ...payload, id: `RB-${Date.now().toString(36).toUpperCase()}`, status: "local-pending", createdAt: new Date().toISOString(), serverSynced: false };
+    try {
+      const stored = JSON.parse(localStorage.getItem("velvetRestaurantBookings") || "[]");
+      const rows = Array.isArray(stored) ? stored : [];
+      rows.unshift(booking);
+      localStorage.setItem("velvetRestaurantBookings", JSON.stringify(rows.slice(0, 50)));
+    } catch { /* servern är primär; lokal kopia är bara bekvämlighet */ }
+    form.hidden = true;
+    document.getElementById("restaurant-book-result").innerHTML = `<div class="restaurant-book-success"><div class="big">${synced ? "✓" : "!"}</div><h3>${synced ? "Förfrågan skickad" : "Förfrågan sparad lokalt"}</h3><p>${esc(values.party)} gäster · ${esc(values.date)} kl. ${esc(values.time)}</p><small>Referens ${esc(booking.id)} · ${synced ? "restaurangen behöver bekräfta bordet." : "servern kunde inte nås; försök igen när anslutningen är tillbaka."}</small></div>`;
   });
 }
 
@@ -2523,7 +2572,7 @@ function renderVenues() {
     location.replace(chosen ? `#/restaurants?dest=${encodeURIComponent(chosen.code)}` : "#/restaurants");
     return;
   }
-  const dests = [...new Set(publicDestinations().map((d) => d.name))].sort();
+  const dests = [...new Set(orderedPublicDestinations().map((d) => d.name))];
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
@@ -4041,7 +4090,7 @@ function renderMapView() {
   view().innerHTML = `
   <section class="section map-section">
     <div class="section-head">
-      <div><h2>${esc(t("navMap"))}</h2><div class="sub">${esc(t("mapSub").replace("{dests}", String(publicDestinations().length)).replace("{venues}", String(publicVenues().length)))}</div></div>
+      <div><h2>${esc(t("navMap"))}</h2><div class="sub">${esc(t("mapSub").replace("{dests}", String(orderedPublicDestinations().length)).replace("{venues}", String(publicVenues().length)))}</div></div>
       <button class="btn btn-ghost btn-sm map-near-btn" id="map-near" disabled><span aria-hidden="true">🧭</span> ${esc(t("nearMe"))}</button>
     </div>
     <div class="map-shell">
@@ -4061,7 +4110,7 @@ function renderMapView() {
       darkTileLayer(L).addTo(map);
 
       const pts = [];
-      publicDestinations().forEach((d) => {
+      orderedPublicDestinations().forEach((d) => {
         if (!Number.isFinite(d.lat) || !Number.isFinite(d.lng)) return;
         pts.push([d.lat, d.lng]);
         const count = publicVenues().filter((v) => v.destination === d.name).length;
@@ -4202,14 +4251,21 @@ function updateNavDest() {
 
 // Unika länder ur katalogen, med sina destinationer (flest först, sedan A–Ö)
 function countryList() {
+  const local = localDestinationHint();
   const map = new Map();
   for (const d of DESTINATIONS) {
     if (!map.has(d.country)) map.set(d.country, []);
     map.get(d.country).push(d);
   }
   return [...map.entries()]
-    .map(([country, dests]) => ({ country, dests: [...dests].sort((a, b) => b.luxury - a.luxury || a.name.localeCompare(b.name, "sv")) }))
-    .sort((a, b) => b.dests.length - a.dests.length || a.country.localeCompare(b.country, "sv"));
+    .map(([country, dests]) => ({ country, dests: [...dests].sort((a, b) => compareDestinationsForUser(a, b, local)) }))
+    .sort((a, b) => {
+      if (local) {
+        const nearby = Number(b.country === local.country) - Number(a.country === local.country);
+        if (nearby) return nearby;
+      }
+      return b.dests.length - a.dests.length || a.country.localeCompare(b.country, "sv");
+    });
 }
 
 // Helskärms-onboarding i två steg. dismissable=true när den öppnas som "byt destination".
@@ -4646,7 +4702,7 @@ async function renderOpenTables() {
   saveNight(night);
   const d = destByCodeOrName(night.dest) || null;
   const u = loadUser();
-  const dests = publicDestinations();
+  const dests = orderedPublicDestinations();
   view().innerHTML = `
   <section class="section night-page">
     <div class="section-head">
@@ -7109,7 +7165,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=139", { updateViaCache: "none" })
+      .register("sw.js?v=143", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

@@ -116,7 +116,7 @@ const PUBLIC_APP = process.env.PUBLIC_URL || "https://b2b.bakemyday.se/velvet";
 fs.mkdirSync(IDV_DIR, { recursive: true });
 
 function emptyDb() {
-  return { tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {}, matches: [], bridges: [] };
+  return { tables: [], restaurantBookings: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {}, matches: [], bridges: [] };
 }
 function loadJsonRel(name) {
   for (const p of [
@@ -216,6 +216,7 @@ function load() {
     const raw = JSON.parse(fs.readFileSync(DATA, "utf8"));
     db = {
       tables: Array.isArray(raw.tables) ? raw.tables : [],
+      restaurantBookings: Array.isArray(raw.restaurantBookings) ? raw.restaurantBookings : [],
       idv: raw.idv && typeof raw.idv === "object" ? raw.idv : {},
       reviews: Array.isArray(raw.reviews) ? raw.reviews : [],
       chats: raw.chats && typeof raw.chats === "object" ? raw.chats : {},
@@ -1995,6 +1996,38 @@ const server = http.createServer(async (req, res) => {
         }
       }
       return send(res, 200, { ok: true });
+    }
+
+    // Restaurangförfrågningar sparas server-side så de överlever byte av telefon.
+    // Detta är en förfrågan, inte en bekräftad reservation.
+    if (req.method === "POST" && url.pathname === "/restaurant-bookings") {
+      const b = await readBody(req, 2e5);
+      const email = String(b.email || "").trim().toLowerCase().slice(0, 120);
+      const date = String(b.date || "").trim();
+      const time = String(b.time || "").trim();
+      const party = Math.max(1, Math.min(20, Number(b.party) || 0));
+      if (!String(b.restaurantId || "").trim() || !String(b.restaurant || "").trim()) return send(res, 400, { error: "restaurant" });
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < new Date().toISOString().slice(0, 10)) return send(res, 400, { error: "date" });
+      if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return send(res, 400, { error: "time" });
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return send(res, 400, { error: "email" });
+      const db = load();
+      const booking = {
+        id: `RB-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString("hex").toUpperCase()}`,
+        restaurantId: String(b.restaurantId).slice(0, 120),
+        restaurant: String(b.restaurant).trim().slice(0, 120),
+        destination: String(b.destination || "").trim().slice(0, 80),
+        date, time, party,
+        name: String(b.name || "").trim().slice(0, 100),
+        email,
+        note: String(b.note || "").trim().slice(0, 500),
+        userId: String(b.user?.id || "").slice(0, 80),
+        status: "request",
+        createdAt: new Date().toISOString(),
+      };
+      if (!booking.name) return send(res, 400, { error: "name" });
+      db.restaurantBookings = [booking, ...(db.restaurantBookings || [])].slice(0, 5000);
+      save(db);
+      return send(res, 201, { ok: true, booking: { id: booking.id, restaurant: booking.restaurant, destination: booking.destination, date, time, party, status: booking.status, createdAt: booking.createdAt } });
     }
 
     if (req.method === "POST" && url.pathname === "/users") {
