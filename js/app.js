@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=145";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=145";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=145";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=145";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=146";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=146";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=146";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=146";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -7089,7 +7089,14 @@ async function init() {
     if (siteUnit) seenVenueSites.add(siteUnit);
     seenVenueNames.add(nameUnit);
     return true;
-  }).filter((item) => venueHasOfficialPhoto(item) || venueYoutube(item));
+  }).filter((item) => venueHasOfficialPhoto(item) || venueYoutube(item)).map((item) => ({
+    ...item,
+    // Enheter som tidigare låg i extrakatalogen publiceras automatiskt först
+    // när de har exakt, officiell media. Det ger fler riktiga ställen per stad
+    // utan att släppa tillbaka generiska eller felkopplade bilder.
+    listed: true,
+    research_status: "WEB-VERIFIED",
+  }));
   const livePlaces = await apiJSON("/places");
   if (livePlaces && livePlaces.venues) GOOGLE_PLACES = livePlaces;
   try {
@@ -7176,7 +7183,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=145", { updateViaCache: "none" })
+      .register("sw.js?v=146", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
