@@ -46,6 +46,14 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 - Villkor `#/villkor` · Integritet `#/integritet`
 - A11y, mobil, 404, defensiv localStorage, service worker
 
+### Skarp inloggning och verifiering
+
+- **Face ID / Touch ID / skärmlås** använder WebAuthn-passkeys. Servern skapar en engångsutmaning och verifierar enhetens signatur; biometrisk data lämnar aldrig telefonen.
+- **Google, Apple, Facebook, Instagram, TikTok och Snapchat** går genom respektive leverantörs riktiga OAuth-flöde. Det finns ingen simulerad login eller verifieringsbadge.
+- OAuth-callback är `https://b2b.bakemyday.se/velvet-api/auth/callback/<provider>`. Den måste läggas in som godkänd redirect-URL hos varje leverantör.
+- Leverantörens klient-ID och secret läggs på servern via operatörsvyn under Konto. Apple använder ett Services ID och en signerad client-secret-JWT.
+- Om en leverantör ännu saknar serverkonfiguration går knappen tillbaka till kontosidan med ett tydligt fel; den skapar aldrig ett falskt konto.
+
 ## Kör lokalt
 
 ```bash

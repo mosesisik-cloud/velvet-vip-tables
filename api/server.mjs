@@ -116,7 +116,7 @@ const PUBLIC_APP = process.env.PUBLIC_URL || "https://b2b.bakemyday.se/velvet";
 fs.mkdirSync(IDV_DIR, { recursive: true });
 
 function emptyDb() {
-  return { tables: [], restaurantBookings: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {}, matches: [], bridges: [] };
+  return { tables: [], restaurantBookings: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {}, passkeys: {}, matches: [], bridges: [] };
 }
 function loadJsonRel(name) {
   for (const p of [
@@ -227,6 +227,7 @@ function load() {
       users: raw.users && typeof raw.users === "object" ? raw.users : {},
       payments: Array.isArray(raw.payments) ? raw.payments : [],
       auth: raw.auth && typeof raw.auth === "object" ? raw.auth : {},
+      passkeys: raw.passkeys && typeof raw.passkeys === "object" ? raw.passkeys : {},
       matches: Array.isArray(raw.matches) ? raw.matches : [],
       bridges: Array.isArray(raw.bridges) ? raw.bridges : [],
     };
@@ -583,10 +584,12 @@ function safeId(id) {
 const ALLOWED_ORIGINS = new Set([
   "https://b2b.bakemyday.se",
   "https://mosesisik-cloud.github.io",
+  "https://raw.githack.com",
 ]);
 function corsOriginFor(req) {
   const o = String(req.headers.origin || "");
   if (ALLOWED_ORIGINS.has(o)) return o;
+  if (/^https:\/\/[a-z0-9-]+(?:-\d+)?\.app\.github\.dev$/i.test(o)) return o;
   if (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(o)) return o; // lokal utveckling
   return "";
 }
@@ -627,6 +630,10 @@ function readBody(req, max = 12e6) {
       try { resolve(s ? JSON.parse(s) : {}); } catch (e) { reject(e); }
     });
   });
+}
+async function readForm(req, max = 2e5) {
+  const raw = await readRaw(req, max);
+  return Object.fromEntries(new URLSearchParams(raw.toString("utf8")));
 }
 function decodeDataUrl(dataUrl) {
   const m = String(dataUrl || "").match(/^data:(image\/(jpeg|jpg|png|webp));base64,([A-Za-z0-9+/=\s]+)$/i);
@@ -755,7 +762,7 @@ async function lookupPublicSocial(provider, handle) {
     return { ok: true, name: "", photo: "", url };
   }
 }
-function upsertUser(db, u) {
+function upsertUser(db, u, options = {}) {
   if (!u || !u.id) return;
   const provider = String(u.provider || "");
   const handle = String(u.handle || "").replace(/^@/, "").slice(0, 40);
@@ -771,7 +778,10 @@ function upsertUser(db, u) {
     promoterScope: prev.promoterScope || "",
     photo: /^https:\/\//i.test(photo) ? photo.slice(0, 400) : (prev.photo || ""),
     connected: !!(u.connected || prev.connected || handle),
-    oauth: !!(u.oauth || prev.oauth),
+    oauth: options.trustedAuth ? !!(u.oauth || prev.oauth) : !!prev.oauth,
+    authVerified: options.trustedAuth ? !!(u.authVerified || prev.authVerified) : !!prev.authVerified,
+    deviceBound: options.trustedAuth ? !!(u.deviceBound || prev.deviceBound) : !!prev.deviceBound,
+    passkeyId: String(options.trustedAuth ? (u.passkeyId || prev.passkeyId || "") : (prev.passkeyId || "")).slice(0, 180),
     seed: !!prev.seed,
     updated: new Date().toISOString(),
     created: prev.created || u.created || new Date().toISOString(),
@@ -861,6 +871,8 @@ function publicPerson(p, db, role) {
     photo: String(p.photo || stored.photo || "").slice(0, 400),
     connected: !!(p.connected || stored.connected || handle),
     oauth: !!(p.oauth || stored.oauth),
+    authVerified: !!(p.authVerified || stored.authVerified),
+    deviceBound: !!(p.deviceBound || stored.deviceBound),
     role: role || p.role || "guest",
     paid: !!p.paid,
     paidAt: p.paidAt || null,
@@ -1020,6 +1032,7 @@ function emptyPay() {
       tiktok: { key: "", secret: "" },
       snapchat: { id: "", secret: "" },
       google: { id: "", secret: "" },
+      apple: { id: "", secret: "" },
     },
   };
 }
@@ -1044,6 +1057,7 @@ function loadPay() {
         tiktok: { ...base.oauth.tiktok, ...(raw.oauth?.tiktok || {}) },
         snapchat: { ...base.oauth.snapchat, ...(raw.oauth?.snapchat || {}) },
         google: { ...base.oauth.google, ...(raw.oauth?.google || {}) },
+        apple: { ...base.oauth.apple, ...(raw.oauth?.apple || {}) },
       },
     };
   } catch {
@@ -1119,6 +1133,7 @@ function oauthFlags(p) {
     tiktok: !!(o.tiktok?.key && o.tiktok?.secret),
     snapchat: !!(o.snapchat?.id && o.snapchat?.secret),
     google: !!(o.google?.id && o.google?.secret),
+    apple: !!(o.apple?.id && o.apple?.secret),
   };
 }
 function oauthRedirect(provider) {
@@ -1147,9 +1162,18 @@ function oauthAuthorizeUrl(provider, state) {
   if (provider === "google") {
     return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(p.oauth.google.id)}&redirect_uri=${encodeURIComponent(redir)}&response_type=code&scope=${encodeURIComponent("openid email profile")}&state=${encodeURIComponent(state)}&prompt=select_account`;
   }
+  if (provider === "apple") {
+    return `https://appleid.apple.com/auth/authorize?client_id=${encodeURIComponent(p.oauth.apple.id)}&redirect_uri=${encodeURIComponent(redir)}&response_type=code&response_mode=form_post&scope=${encodeURIComponent("name email")}&state=${encodeURIComponent(state)}`;
+  }
   return null;
 }
-async function oauthProfile(provider, code) {
+function decodeJwtPayload(token) {
+  try {
+    const part = String(token || "").split(".")[1] || "";
+    return JSON.parse(Buffer.from(part.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8"));
+  } catch { return null; }
+}
+async function oauthProfile(provider, code, extra = {}) {
   const p = loadPay();
   const redir = oauthRedirect(provider);
   if (provider === "facebook" || (provider === "instagram" && p.oauth.facebook?.id && !p.oauth.instagram?.id)) {
@@ -1278,6 +1302,41 @@ async function oauthProfile(provider, code) {
       connected: true,
     };
   }
+  if (provider === "apple") {
+    const tok = await fetch("https://appleid.apple.com/auth/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        code,
+        client_id: p.oauth.apple.id,
+        client_secret: p.oauth.apple.secret,
+        redirect_uri: redir,
+        grant_type: "authorization_code",
+      }),
+    });
+    const tj = await tok.json();
+    const claims = decodeJwtPayload(tj.id_token);
+    const now = Math.floor(Date.now() / 1000);
+    if (!tj.id_token || !claims?.sub || claims.iss !== "https://appleid.apple.com" || claims.aud !== p.oauth.apple.id || Number(claims.exp || 0) < now) {
+      throw new Error(tj.error || "apple_token");
+    }
+    let firstName = "", lastName = "";
+    try {
+      const supplied = typeof extra.user === "string" ? JSON.parse(extra.user) : extra.user;
+      firstName = String(supplied?.name?.firstName || "").slice(0, 40);
+      lastName = String(supplied?.name?.lastName || "").slice(0, 40);
+    } catch { /* Apple only sends name on first consent */ }
+    const email = String(claims.email || "").toLowerCase().slice(0, 120);
+    return {
+      id: `U-apple-${String(claims.sub).replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 80)}`,
+      name: `${firstName} ${lastName}`.trim() || email.split("@")[0] || "Apple-medlem",
+      handle: email,
+      email,
+      provider: "apple",
+      oauth: true,
+      connected: true,
+    };
+  }
   throw new Error("provider");
 }
 function mintAuthToken(user) {
@@ -1291,6 +1350,130 @@ function mintAuthToken(user) {
   }
   save(db);
   return token;
+}
+
+// ---------- WebAuthn / passkeys (Face ID, Touch ID, device screen lock) ----------
+// No biometric data leaves the device. The server stores only the credential's
+// public key and verifies a fresh signed challenge on every login.
+function b64url(value) {
+  return Buffer.from(value).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
+}
+function fromB64url(value) {
+  const s = String(value || "").replace(/-/g, "+").replace(/_/g, "/");
+  return Buffer.from(s.padEnd(Math.ceil(s.length / 4) * 4, "="), "base64");
+}
+function passkeyRpId() {
+  try { return new URL(PUBLIC_APP).hostname; } catch { return "b2b.bakemyday.se"; }
+}
+function passkeyOriginOk(origin, rpId) {
+  try {
+    const u = new URL(String(origin || ""));
+    const local = /^(localhost|127\.0\.0\.1)$/.test(u.hostname) && u.protocol === "http:";
+    return (u.protocol === "https:" && (u.hostname === rpId || u.hostname.endsWith("." + rpId))) || (local && u.hostname === rpId);
+  } catch { return false; }
+}
+function cborRead(buf, start = 0) {
+  let off = start;
+  if (off >= buf.length) throw new Error("cbor_eof");
+  const first = buf[off++];
+  const major = first >> 5;
+  const add = first & 31;
+  const size = () => {
+    if (add < 24) return add;
+    if (add === 24) return buf[off++];
+    if (add === 25) { const n = buf.readUInt16BE(off); off += 2; return n; }
+    if (add === 26) { const n = buf.readUInt32BE(off); off += 4; return n; }
+    if (add === 27) {
+      const n = buf.readBigUInt64BE(off); off += 8;
+      if (n > BigInt(Number.MAX_SAFE_INTEGER)) throw new Error("cbor_big");
+      return Number(n);
+    }
+    throw new Error("cbor_indefinite");
+  };
+  if (major === 0) return { value: size(), offset: off };
+  if (major === 1) return { value: -1 - size(), offset: off };
+  if (major === 2 || major === 3) {
+    const n = size();
+    if (off + n > buf.length) throw new Error("cbor_length");
+    const raw = buf.subarray(off, off + n); off += n;
+    return { value: major === 2 ? Buffer.from(raw) : raw.toString("utf8"), offset: off };
+  }
+  if (major === 4) {
+    const n = size(); const arr = [];
+    for (let i = 0; i < n; i++) { const item = cborRead(buf, off); arr.push(item.value); off = item.offset; }
+    return { value: arr, offset: off };
+  }
+  if (major === 5) {
+    const n = size(); const map = new Map();
+    for (let i = 0; i < n; i++) {
+      const k = cborRead(buf, off); off = k.offset;
+      const v = cborRead(buf, off); off = v.offset;
+      map.set(k.value, v.value);
+    }
+    return { value: map, offset: off };
+  }
+  if (major === 6) { size(); return cborRead(buf, off); }
+  if (major === 7) {
+    if (add === 20) return { value: false, offset: off };
+    if (add === 21) return { value: true, offset: off };
+    if (add === 22 || add === 23) return { value: null, offset: off };
+  }
+  throw new Error("cbor_type");
+}
+function clientDataOk(encoded, expectedType, expectedChallenge, rpId) {
+  const raw = fromB64url(encoded);
+  let data;
+  try { data = JSON.parse(raw.toString("utf8")); } catch { throw new Error("client_data"); }
+  if (data.type !== expectedType || data.challenge !== expectedChallenge || !passkeyOriginOk(data.origin, rpId)) {
+    throw new Error("client_data_mismatch");
+  }
+  return raw;
+}
+function authDataChecks(authData, rpId) {
+  if (!Buffer.isBuffer(authData) || authData.length < 37) throw new Error("auth_data");
+  const want = crypto.createHash("sha256").update(rpId).digest();
+  if (!crypto.timingSafeEqual(authData.subarray(0, 32), want)) throw new Error("rp_id");
+  const flags = authData[32];
+  if (!(flags & 0x01) || !(flags & 0x04)) throw new Error("user_verification");
+  return { flags, signCount: authData.readUInt32BE(33) };
+}
+function cosePublicKey(cose) {
+  if (!(cose instanceof Map)) throw new Error("cose_key");
+  const kty = cose.get(1);
+  const alg = cose.get(3);
+  let jwk;
+  if (kty === 2 && alg === -7 && cose.get(-1) === 1) {
+    jwk = { kty: "EC", crv: "P-256", x: b64url(cose.get(-2)), y: b64url(cose.get(-3)), ext: true };
+  } else if (kty === 3 && alg === -257) {
+    jwk = { kty: "RSA", n: b64url(cose.get(-1)), e: b64url(cose.get(-2)), alg: "RS256", ext: true };
+  } else {
+    throw new Error("passkey_algorithm");
+  }
+  return { alg, pem: crypto.createPublicKey({ key: jwk, format: "jwk" }).export({ type: "spki", format: "pem" }).toString() };
+}
+function passkeyRegistration(encoded, expectedChallenge, rpId) {
+  clientDataOk(encoded.clientDataJSON, "webauthn.create", expectedChallenge, rpId);
+  const att = cborRead(fromB64url(encoded.attestationObject)).value;
+  const authData = att instanceof Map ? att.get("authData") : null;
+  const checked = authDataChecks(authData, rpId);
+  if (!(checked.flags & 0x40) || authData.length < 56) throw new Error("attested_data");
+  const idLength = authData.readUInt16BE(53);
+  const idStart = 55;
+  const idEnd = idStart + idLength;
+  if (!idLength || idEnd >= authData.length) throw new Error("credential_id");
+  const credentialId = b64url(authData.subarray(idStart, idEnd));
+  const cose = cborRead(authData, idEnd).value;
+  return { credentialId, signCount: checked.signCount, ...cosePublicKey(cose) };
+}
+function passkeyAssertion(body, challengeRec, passkey) {
+  const clientRaw = clientDataOk(body.response?.clientDataJSON, "webauthn.get", challengeRec.challenge, challengeRec.rpId);
+  const authData = fromB64url(body.response?.authenticatorData);
+  const checked = authDataChecks(authData, challengeRec.rpId);
+  const signed = Buffer.concat([authData, crypto.createHash("sha256").update(clientRaw).digest()]);
+  const signature = fromB64url(body.response?.signature);
+  if (!signature.length || !crypto.verify("sha256", signed, passkey.publicKey, signature)) throw new Error("signature");
+  if (passkey.signCount && checked.signCount && checked.signCount <= passkey.signCount) throw new Error("counter");
+  return checked.signCount;
 }
 function applyIncomingPayment(db, { tableId, userId, amount, currency, method, provider, providerId, bridgeId, venueId }) {
   if (bridgeId && db.bridges) {
@@ -1623,17 +1806,112 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && url.pathname === "/pay/config") {
       return send(res, 200, publicPayConfig());
     }
-    const authStart = url.pathname.match(/^\/auth\/start\/(facebook|instagram|tiktok|snapchat|google)$/);
-    if (req.method === "GET" && authStart) {
-      const provider = authStart[1];
-      const state = crypto.randomBytes(12).toString("hex");
+    if (req.method === "POST" && url.pathname === "/auth/passkey/register/start") {
+      const db = load();
+      const state = crypto.randomBytes(18).toString("hex");
+      const challenge = b64url(crypto.randomBytes(32));
+      const uid = `U-passkey-${crypto.randomBytes(16).toString("hex")}`;
+      const rpId = passkeyRpId();
+      db.auth["pk:" + state] = { kind: "register", challenge, uid, rpId, exp: Date.now() + 5 * 60 * 1000 };
+      save(db);
+      return send(res, 200, {
+        state, challenge,
+        rp: { id: rpId, name: "VELVET" },
+        user: { id: b64url(Buffer.from(uid)), name: "velvet-member", displayName: "VELVET-medlem" },
+        pubKeyCredParams: [{ alg: -7, type: "public-key" }, { alg: -257, type: "public-key" }],
+      }, { "Cache-Control": "no-store" });
+    }
+    if (req.method === "POST" && url.pathname === "/auth/passkey/register/finish") {
+      const b = await readBody(req, 5e5);
+      const db = load();
+      const rec = db.auth?.["pk:" + String(b.state || "")];
+      if (!rec || rec.kind !== "register" || rec.exp < Date.now()) return send(res, 400, { error: "challenge" });
+      delete db.auth["pk:" + String(b.state || "")];
+      try {
+        const key = passkeyRegistration(b.response || {}, rec.challenge, rec.rpId);
+        if (String(b.rawId || b.id || "") !== key.credentialId || db.passkeys[key.credentialId]) throw new Error("credential_id");
+        const user = {
+          id: rec.uid, provider: "passkey", name: "", handle: "", connected: true,
+          authVerified: true, deviceBound: true, passkeyId: key.credentialId, created: new Date().toISOString(),
+        };
+        db.passkeys[key.credentialId] = {
+          id: key.credentialId, userId: rec.uid, publicKey: key.pem, alg: key.alg,
+          signCount: key.signCount, created: new Date().toISOString(), lastUsed: new Date().toISOString(),
+        };
+        upsertUser(db, user, { trustedAuth: true });
+        save(db);
+        return send(res, 200, { user }, { "Cache-Control": "no-store" });
+      } catch (err) {
+        save(db);
+        console.error("velvet-passkey-register", err?.message || err);
+        return send(res, 400, { error: "passkey_verification" });
+      }
+    }
+    if (req.method === "POST" && url.pathname === "/auth/passkey/login/start") {
+      const b = await readBody(req, 2e4);
+      const db = load();
+      const credentialId = String(b.credentialId || "");
+      const passkey = db.passkeys?.[credentialId];
+      if (!passkey) return send(res, 404, { error: "credential" });
+      const state = crypto.randomBytes(18).toString("hex");
+      const challenge = b64url(crypto.randomBytes(32));
+      const rpId = passkeyRpId();
+      db.auth["pk:" + state] = { kind: "login", challenge, credentialId, rpId, exp: Date.now() + 5 * 60 * 1000 };
+      save(db);
+      return send(res, 200, { state, challenge, rpId, allowCredentials: [{ id: credentialId, type: "public-key" }] }, { "Cache-Control": "no-store" });
+    }
+    if (req.method === "POST" && url.pathname === "/auth/passkey/login/finish") {
+      const b = await readBody(req, 5e5);
+      const db = load();
+      const rec = db.auth?.["pk:" + String(b.state || "")];
+      if (!rec || rec.kind !== "login" || rec.exp < Date.now()) return send(res, 400, { error: "challenge" });
+      delete db.auth["pk:" + String(b.state || "")];
+      const credentialId = String(b.rawId || b.id || "");
+      const passkey = db.passkeys?.[credentialId];
+      if (!passkey || rec.credentialId !== credentialId) { save(db); return send(res, 404, { error: "credential" }); }
+      try {
+        passkey.signCount = passkeyAssertion(b, rec, passkey);
+        passkey.lastUsed = new Date().toISOString();
+        const stored = db.users?.[passkey.userId] || { id: passkey.userId, provider: "passkey", name: "", handle: "" };
+        const user = { ...stored, connected: true, authVerified: true, deviceBound: true, passkeyId: credentialId };
+        upsertUser(db, user, { trustedAuth: true });
+        save(db);
+        return send(res, 200, { user }, { "Cache-Control": "no-store" });
+      } catch (err) {
+        save(db);
+        console.error("velvet-passkey-login", err?.message || err);
+        return send(res, 401, { error: "passkey_verification" });
+      }
+    }
+    const authLogin = url.pathname.match(/^\/auth\/login\/(facebook|instagram|tiktok|snapchat|google|apple)$/);
+    if (req.method === "GET" && authLogin) {
+      const provider = authLogin[1];
+      const state = crypto.randomBytes(18).toString("hex");
+      const dest = oauthAuthorizeUrl(provider, state);
+      if (!dest) {
+        res.writeHead(302, { Location: `${PUBLIC_APP}/?auth_error=not_configured&provider=${encodeURIComponent(provider)}#/account` });
+        res.end();
+        return;
+      }
       const db = load();
       if (!db.auth) db.auth = {};
       db.auth["st:" + state] = { provider, exp: Date.now() + 15 * 60 * 1000 };
       save(db);
+      res.writeHead(302, { Location: dest, "Cache-Control": "no-store" });
+      res.end();
+      return;
+    }
+    const authStart = url.pathname.match(/^\/auth\/start\/(facebook|instagram|tiktok|snapchat|google|apple)$/);
+    if (req.method === "GET" && authStart) {
+      const provider = authStart[1];
+      const state = crypto.randomBytes(12).toString("hex");
       const dest = oauthAuthorizeUrl(provider, state);
-      if (!dest) return send(res, 200, { local: true, connect: true, provider });
-      return send(res, 200, { url: dest, provider });
+      if (!dest) return send(res, 503, { error: "not_configured", configured: false, provider });
+      const db = load();
+      if (!db.auth) db.auth = {};
+      db.auth["st:" + state] = { provider, exp: Date.now() + 15 * 60 * 1000 };
+      save(db);
+      return send(res, 200, { url: dest, provider }, { "Cache-Control": "no-store" });
     }
     if (req.method === "POST" && url.pathname === "/auth/connect") {
       const b = await readBody(req, 2e5);
@@ -1663,31 +1941,35 @@ const server = http.createServer(async (req, res) => {
       const stored = db.users[profile.id];
       return send(res, 200, { user: { ...publicPerson(stored, db, "user"), photo: stored.photo || "", connected: true } });
     }
-    const authCb = url.pathname.match(/^\/auth\/callback\/(facebook|instagram|tiktok|snapchat|google)$/);
-    if (req.method === "GET" && authCb) {
+    const authCb = url.pathname.match(/^\/auth\/callback\/(facebook|instagram|tiktok|snapchat|google|apple)$/);
+    if ((req.method === "GET" || req.method === "POST") && authCb) {
       const provider = authCb[1];
-      const code = url.searchParams.get("code") || "";
-      const state = url.searchParams.get("state") || "";
-      const fail = () => {
-        res.writeHead(302, { Location: `${PUBLIC_APP}/#/account` });
+      const incoming = req.method === "POST" ? await readForm(req) : Object.fromEntries(url.searchParams);
+      const code = String(incoming.code || "");
+      const state = String(incoming.state || "");
+      const fail = (reason = "failed") => {
+        res.writeHead(302, { Location: `${PUBLIC_APP}/?auth_error=${encodeURIComponent(reason)}&provider=${encodeURIComponent(provider)}#/account` });
         res.end();
       };
-      if (!code) return fail();
+      if (!code) return fail(incoming.error ? "denied" : "failed");
       const db0 = load();
       const st = db0.auth?.["st:" + state];
-      if (!st || st.exp < Date.now()) return fail();
+      if (!st || st.provider !== provider || st.exp < Date.now()) return fail("state");
+      delete db0.auth["st:" + state];
+      save(db0);
       try {
-        const profile = await oauthProfile(provider, code);
+        const profile = await oauthProfile(provider, code, incoming);
         profile.created = new Date().toISOString();
         const db = load();
-        upsertUser(db, profile);
+        upsertUser(db, profile, { trustedAuth: true });
         save(db);
         const token = mintAuthToken(profile);
         const next = db.idv?.[profile.id]?.status === "verified" ? "#/" : "#/verify";
         res.writeHead(302, { Location: `${PUBLIC_APP}/?auth=${encodeURIComponent(token)}${next}` });
         res.end();
-      } catch {
-        fail();
+      } catch (err) {
+        console.error("velvet-oauth", provider, err?.message || err);
+        fail("failed");
       }
       return;
     }
@@ -1738,6 +2020,9 @@ const server = http.createServer(async (req, res) => {
       if (!cur.oauth.google) cur.oauth.google = { id: "", secret: "" };
       if (b.googleId) cur.oauth.google.id = String(b.googleId);
       if (b.googleSecret) cur.oauth.google.secret = String(b.googleSecret);
+      if (!cur.oauth.apple) cur.oauth.apple = { id: "", secret: "" };
+      if (b.appleId) cur.oauth.apple.id = String(b.appleId);
+      if (b.appleSecret) cur.oauth.apple.secret = String(b.appleSecret);
       if (b.firecrawlKey) cur.firecrawlKey = String(b.firecrawlKey).trim();
       if (b.googlePlacesKey) cur.googlePlacesKey = String(b.googlePlacesKey).trim();
       savePay(cur);

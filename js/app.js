@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=146";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=146";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=146";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=146";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=147";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=147";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=147";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=147";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -726,6 +726,7 @@ function syncFavButtons(root = document) {
 const USER_KEY = "velvet_user_v1";
 const SOCIALS = [
   { id: "google", label: "Google", icon: "https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" },
+  { id: "apple", label: "Apple", icon: "https://cdn.simpleicons.org/apple/000000" },
   { id: "facebook", label: "Facebook", icon: "https://cdn.simpleicons.org/facebook/0866FF" },
   { id: "instagram", label: "Instagram", icon: "https://cdn.simpleicons.org/instagram/E4405F" },
   { id: "tiktok", label: "TikTok", icon: "https://cdn.simpleicons.org/tiktok/111111" },
@@ -774,15 +775,6 @@ function registerUser(u) {
     body: JSON.stringify({ id: u.id, name: u.name || "", handle: u.handle || "", provider: u.provider }),
   });
 }
-function newSocialSid(provider) {
-  let sid = "";
-  try { sid = localStorage.getItem("velvet_sid_" + provider) || ""; } catch {}
-  if (sid) return sid;
-  sid = (globalThis.crypto?.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()).replace(/[^a-zA-Z0-9]/g, "").slice(0, 12);
-  if (!sid) sid = String(Date.now()).slice(-12);
-  try { localStorage.setItem("velvet_sid_" + provider, sid); } catch {}
-  return sid;
-}
 function avatarHTML(u, cls = "") {
   const name = displayName(u) || "?";
   const pic = u && /^https:\/\//i.test(u.photo || "") ? u.photo : "";
@@ -795,34 +787,11 @@ function profileReady(u) {
 }
 async function loginWithSocial(provider) {
   if (!SOCIALS.some((s) => s.id === provider)) return { ok: false };
-  const start = await Promise.race([
-    apiJSON(`/auth/start/${encodeURIComponent(provider)}`),
-    new Promise((r) => setTimeout(() => r(null), 1800)),
-  ]);
-  if (start?.url && /^https:\/\//i.test(start.url) && !start.local) {
-    try { sessionStorage.setItem("velvet_oauth_from", location.hash || "#/"); } catch {}
-    location.href = start.url;
-    return { oauth: true };
-  }
-  return { unavailable: true, provider };
-}
-function loginPreviewSocial(provider) {
-  const sid = newSocialSid(`preview_${provider}`);
-  const previous = loadUser();
-  const user = {
-    ...(previous || {}),
-    id: previous?.id || `U-preview-${provider}-${sid}`,
-    provider,
-    name: previous?.name || "",
-    handle: "",
-    connected: true,
-    oauth: false,
-    socialVerification: "preview",
-    created: previous?.created || new Date().toISOString(),
-  };
-  saveUser(user);
-  location.hash = user.idvStatus === "verified" ? "#/" : "#/verify";
-  return user;
+  // Full-page redirect works from GitHub previews too: no CORS preflight is
+  // involved, and the server owns state + callback validation.
+  try { sessionStorage.setItem("velvet_oauth_from", location.hash || "#/"); } catch {}
+  location.assign(`${apiBase()}/auth/login/${encodeURIComponent(provider)}`);
+  return { oauth: true };
 }
 function isPreviewHost() {
   return /\.app\.github\.dev$/i.test(location.hostname);
@@ -837,58 +806,86 @@ function base64UrlToBytes(value) {
   return Uint8Array.from(raw, (c) => c.charCodeAt(0));
 }
 async function loginWithPasskey() {
-  if (isPreviewHost()) {
-    return loginPreviewSocial("passkey");
+  const ownedHost = location.hostname === "b2b.bakemyday.se";
+  const localHost = /^(?:localhost|127\.0\.0\.1)$/i.test(location.hostname);
+  if (!ownedHost && !localHost) {
+    // WebAuthn credentials are bound to the current domain. Never bind a
+    // member's Face ID/passkey to raw.githack.com or a temporary Codespace.
+    location.assign("https://b2b.bakemyday.se/velvet/?passkey=1#/account");
+    return { redirect: true };
   }
   if (!window.PublicKeyCredential || !navigator.credentials) {
     showToast("Passkey stöds inte i den här webbläsaren.");
     return null;
   }
-  const challenge = crypto.getRandomValues(new Uint8Array(32));
   let savedCredential = "";
   try { savedCredential = localStorage.getItem("velvet_passkey_id_v1") || ""; } catch {}
   let credential;
+  let finish;
   try {
     if (savedCredential) {
+      const start = await apiJSON("/auth/passkey/login/start", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ credentialId: savedCredential }),
+      });
+      if (!start?.challenge || !start?.state) {
+        try { localStorage.removeItem("velvet_passkey_id_v1"); } catch {}
+        return loginWithPasskey();
+      }
       credential = await navigator.credentials.get({ publicKey: {
-        challenge,
-        allowCredentials: [{ id: base64UrlToBytes(savedCredential), type: "public-key" }],
+        challenge: base64UrlToBytes(start.challenge),
+        rpId: start.rpId,
+        allowCredentials: (start.allowCredentials || []).map((x) => ({ ...x, id: base64UrlToBytes(x.id) })),
         userVerification: "required",
         timeout: 60000,
       }});
+      finish = await apiJSON("/auth/passkey/login/finish", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          state: start.state, id: credential.id, rawId: bytesToBase64Url(credential.rawId), type: credential.type,
+          response: {
+            clientDataJSON: bytesToBase64Url(credential.response.clientDataJSON),
+            authenticatorData: bytesToBase64Url(credential.response.authenticatorData),
+            signature: bytesToBase64Url(credential.response.signature),
+            userHandle: credential.response.userHandle ? bytesToBase64Url(credential.response.userHandle) : "",
+          },
+        }),
+      });
     } else {
-      const userId = crypto.getRandomValues(new Uint8Array(32));
+      const start = await apiJSON("/auth/passkey/register/start", { method: "POST" });
+      if (!start?.challenge || !start?.state) throw new Error("passkey_server");
       credential = await navigator.credentials.create({ publicKey: {
-        challenge,
-        rp: { name: "VELVET" },
-        user: { id: userId, name: "velvet-member", displayName: "VELVET member" },
-        pubKeyCredParams: [{ alg: -7, type: "public-key" }, { alg: -257, type: "public-key" }],
+        challenge: base64UrlToBytes(start.challenge),
+        rp: start.rp,
+        user: { ...start.user, id: base64UrlToBytes(start.user.id) },
+        pubKeyCredParams: start.pubKeyCredParams,
         authenticatorSelection: { authenticatorAttachment: "platform", residentKey: "required", userVerification: "required" },
         attestation: "none",
         timeout: 60000,
       }});
+      finish = await apiJSON("/auth/passkey/register/finish", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          state: start.state, id: credential.id, rawId: bytesToBase64Url(credential.rawId), type: credential.type,
+          response: {
+            clientDataJSON: bytesToBase64Url(credential.response.clientDataJSON),
+            attestationObject: bytesToBase64Url(credential.response.attestationObject),
+          },
+        }),
+      });
     }
   } catch (err) {
     if (err?.name !== "NotAllowedError") console.warn("VELVET passkey", err);
-    showToast("Face ID, Touch ID eller skärmlås avbröts.");
+    showToast(err?.name === "NotAllowedError" ? "Face ID, Touch ID eller skärmlås avbröts." : "Säker inloggning kunde inte slutföras.");
     return null;
   }
-  if (!credential?.rawId) return null;
+  if (!credential?.rawId || !finish?.user) {
+    showToast("Enhetsnyckeln kunde inte verifieras av VELVET.");
+    return null;
+  }
   const credentialId = bytesToBase64Url(credential.rawId);
   try { localStorage.setItem("velvet_passkey_id_v1", credentialId); } catch {}
-  const previous = loadUser();
-  const user = {
-    ...(previous || {}),
-    id: previous?.id || `U-passkey-${credentialId.slice(0, 48)}`,
-    provider: "passkey",
-    name: previous?.name || "",
-    handle: "",
-    connected: true,
-    oauth: false,
-    deviceBound: true,
-    passkeyId: credentialId,
-    created: previous?.created || new Date().toISOString(),
-  };
+  const user = { ...finish.user, provider: "passkey", connected: true, authVerified: true, deviceBound: true, passkeyId: credentialId };
   saveUser(user);
   location.hash = user.idvStatus === "verified" ? "#/" : "#/verify";
   return user;
@@ -933,9 +930,10 @@ function socialTrustCopy() {
 
 function socialVerificationHTML(u) {
   const c = socialTrustCopy();
-  const oauthOk = u?.oauth === true || u?.socialVerification === "verified" || u?.socialOAuthVerified === true;
+  const passkeyOk = u?.provider === "passkey" && u?.authVerified === true;
+  const oauthOk = passkeyOk || u?.oauth === true || u?.socialVerification === "verified" || u?.socialOAuthVerified === true;
   const passOk = idvStatus() === "verified";
-  const provider = SOCIALS.find((s) => s.id === u?.provider)?.label || u?.provider || "—";
+  const provider = passkeyOk ? "Face ID / Touch ID / skärmlås" : (SOCIALS.find((s) => s.id === u?.provider)?.label || u?.provider || "—");
   return `
   <section class="social-trust-card ${oauthOk ? "is-verified" : "is-preview"}" aria-label="${esc(c.title)}">
     <div class="social-trust-head">
@@ -945,7 +943,7 @@ function socialVerificationHTML(u) {
     <p class="social-trust-explain">${esc(c.explain)}</p>
     <ol class="social-trust-steps">
       <li class="done"><span>1</span><div><b>${esc(c.chosen)}</b><small>${esc(provider)} · ${esc(c.done)}</small></div></li>
-      <li class="${oauthOk ? "done" : "waiting"}"><span>2</span><div><b>${esc(c.oauth)}</b><small>${esc(oauthOk ? c.done : c.waiting)}</small></div></li>
+      <li class="${oauthOk ? "done" : "waiting"}"><span>2</span><div><b>${esc(passkeyOk ? "Enheten har verifierat dig" : c.oauth)}</b><small>${esc(oauthOk ? c.done : c.waiting)}</small></div></li>
       <li class="${oauthOk && passOk ? "done" : "waiting"}"><span>3</span><div><b>${esc(c.identity)}</b><small>${esc(oauthOk && passOk ? c.done : c.needPass)}</small></div></li>
     </ol>
     ${oauthOk ? "" : `<p class="social-trust-launch">🔒 ${esc(c.launch)}</p>`}
@@ -971,8 +969,11 @@ function paintUser() {
 }
 function apiBase() {
   if (location.hostname === "b2b.bakemyday.se") return `${location.origin}/velvet-api`;
-  // GitHub Pages och andra origins: API:t är CORS-öppet (Access-Control-Allow-Origin: *),
-  // så livesajten får samma backend-funktioner som b2b.bakemyday.se/velvet/.
+  if (/^(?:localhost|127\.0\.0\.1)$/i.test(location.hostname)) {
+    const dev = new URLSearchParams(location.search).get("api") || "";
+    if (/^http:\/\/(?:localhost|127\.0\.0\.1):\d+$/i.test(dev)) return dev.replace(/\/$/, "");
+  }
+  // Publicerade VELVET-previewdomäner finns i API:ts uttryckliga CORS-lista.
   return "https://b2b.bakemyday.se/velvet-api";
 }
 async function apiJSON(path, opts) {
@@ -1906,7 +1907,7 @@ function renderHome() {
       <p class="stepper-hint">${idvStatus() === "verified" ? "✓ Verifieringen är klar på den här enheten" : "Kontot är anslutet · slutför pass och selfie"}</p>
       <a class="btn btn-gold" href="${idvStatus() === "verified" ? "#/account" : "#/verify"}" data-nav>${idvStatus() === "verified" ? "Öppna konto" : "Fortsätt verifieringen"}</a>
     ` : `
-      ${isPreviewHost() ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
+      <p class="stepper-hint social-honesty auth-real-note">🔒 Riktig säker inloggning · VELVET sparar aldrig ditt lösenord</p>
       <button type="button" class="btn btn-gold phone-login" id="home-passkey">Face ID / Touch ID / skärmlås</button>
       <div class="social-grid social-grid-onetap">
         ${SOCIALS.map((s) => socialCompactButton(s, "data-home-soc")).join("")}
@@ -1983,12 +1984,7 @@ function renderHome() {
   document.querySelectorAll("[data-home-soc]").forEach((el) => el.addEventListener("click", async () => {
     el.disabled = true;
     const r = await loginWithSocial(el.dataset.homeSoc).catch(() => null);
-    if (r?.unavailable) {
-      if (isPreviewHost()) loginPreviewSocial(el.dataset.homeSoc);
-      else { showToast(socialTrustCopy().unavailable); el.disabled = false; }
-      return;
-    }
-    if (!r?.oauth) el.disabled = false;
+    if (!r?.oauth) { showToast(socialTrustCopy().unavailable); el.disabled = false; }
   }));
   paintVibeRail();
   const paintHomeNight = async () => {
@@ -4432,7 +4428,7 @@ function openOnboarding(opts = {}) {
           <h1 class="ob-title">${esc(t("loginTitle"))}</h1>
           <p class="ob-sub">${esc(t("loginSub"))}</p>
           <p class="one-tap-copy">${esc(socialTrustCopy().oneTapSub)}</p>
-          ${isPreviewHost() ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
+          <p class="stepper-hint social-honesty auth-real-note">🔒 Riktig säker inloggning · VELVET sparar aldrig ditt lösenord</p>
           <button type="button" class="btn btn-gold phone-login" id="ob-phone-login">Face ID / Touch ID / skärmlås</button>
           <div class="social-grid social-grid-onetap">
             ${SOCIALS.map((s) => socialCompactButton(s, "data-soc")).join("")}
@@ -4461,11 +4457,7 @@ function openOnboarding(opts = {}) {
           try { r = await loginWithSocial(el.dataset.soc); }
           catch (err) { console.warn("VELVET login", err); }
           if (r?.oauth) return;
-          if (r?.unavailable) {
-            if (isPreviewHost()) { close(false); loginPreviewSocial(el.dataset.soc); }
-            else { showToast(socialTrustCopy().unavailable); el.disabled = false; }
-            return;
-          }
+          if (r?.unavailable) { showToast(socialTrustCopy().unavailable); el.disabled = false; return; }
           el.disabled = false;
         });
       });
@@ -5006,6 +4998,8 @@ async function renderPayout() {
       <label>Google client ID<input name="googleId" autocomplete="off" placeholder="${cfg.oauth?.google ? "•••• set" : "….apps.googleusercontent.com"}"></label>
       <label>Google client secret<input name="googleSecret" type="password" autocomplete="off"></label>
       <p class="stepper-hint">${esc(t("googleOauthHint"))}</p>
+      <label>Apple Services ID<input name="appleId" autocomplete="off" placeholder="com.example.velvet.web"></label>
+      <label>Apple client secret (signerad JWT)<input name="appleSecret" type="password" autocomplete="off"></label>
       <label>Facebook / Instagram App ID<input name="facebookId" autocomplete="off"></label>
       <label>Facebook App secret<input name="facebookSecret" type="password" autocomplete="off"></label>
       <label>TikTok client key<input name="tiktokKey" autocomplete="off"></label>
@@ -5833,7 +5827,7 @@ async function renderAccount() {
       ${isOperatorUser(u) ? `<p style="margin-top:16px"><a class="btn btn-gold btn-sm" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
       <p>${esc(socialTrustCopy().oneTapSub)}</p>
-      ${isPreviewHost() ? `<p class="stepper-hint social-honesty">🧪 TESTLÄGE · anslutningen simuleras och ger ingen verifieringsbadge</p>` : ""}
+      <p class="stepper-hint social-honesty auth-real-note">🔒 Riktig säker inloggning · VELVET sparar aldrig ditt lösenord</p>
       <button type="button" class="btn btn-gold phone-login" id="acc-phone-login" style="margin-top:16px">Face ID / Touch ID / skärmlås</button>
       <div class="social-grid social-grid-onetap" style="margin-top:16px">
         ${SOCIALS.map((s) => socialCompactButton(s, "data-account-soc")).join("")}
@@ -5848,12 +5842,7 @@ async function renderAccount() {
   document.querySelectorAll("[data-account-soc]").forEach((el) => el.addEventListener("click", async () => {
     el.disabled = true;
     const r = await loginWithSocial(el.dataset.accountSoc).catch(() => null);
-    if (r?.unavailable) {
-      if (isPreviewHost()) loginPreviewSocial(el.dataset.accountSoc);
-      else { showToast(socialTrustCopy().unavailable); el.disabled = false; }
-      return;
-    }
-    if (!r?.oauth) el.disabled = false;
+    if (!r?.oauth) { showToast(socialTrustCopy().unavailable); el.disabled = false; }
   }));
   document.querySelectorAll("[data-lang]").forEach((el) => {
     el.addEventListener("click", () => {
@@ -7112,13 +7101,21 @@ async function init() {
   if (liveMenus && liveMenus.venues) VENUE_MENUS = liveMenus.venues;
   const existing = loadUser();
   if (existing) registerUser(existing);
-  const authTok = new URLSearchParams(location.search).get("auth");
+  const bootParams = new URLSearchParams(location.search);
+  const authTok = bootParams.get("auth");
+  const authError = bootParams.get("auth_error") || "";
+  const authProvider = bootParams.get("provider") || "";
+  const passkeyRequested = bootParams.get("passkey") === "1";
   if (authTok) {
     const sess = await apiJSON("/auth/session?token=" + encodeURIComponent(authTok));
     if (sess?.user) saveUser({ ...sess.user, created: sess.user.created || new Date().toISOString() });
-    history.replaceState(null, "", location.pathname + (location.hash || "#/"));
   }
-  const sid = new URLSearchParams(location.search).get("session_id");
+  if (authTok || authError || passkeyRequested) {
+    ["auth", "auth_error", "provider", "passkey"].forEach((key) => bootParams.delete(key));
+    const rest = bootParams.toString();
+    history.replaceState(null, "", location.pathname + (rest ? `?${rest}` : "") + (location.hash || "#/"));
+  }
+  const sid = bootParams.get("session_id");
   if (sid && (!location.hash || location.hash === "#/" || location.hash === "#")) {
     location.hash = "#/pay-return";
   }
@@ -7151,8 +7148,18 @@ async function init() {
   updateFavBadge();
   // Första besöket (inget val sparat) och ingen direktlänk → visa onboardingen.
   // Direktlänkar (#/venue/…, #/join/…, …) får aldrig blockeras.
-  if (!homeChoice && (!location.hash || location.hash === "#/")) {
+  if (!passkeyRequested && !homeChoice && (!location.hash || location.hash === "#/")) {
     openOnboarding({ dismissable: true });
+  }
+  if (authError) {
+    const provider = SOCIALS.find((s) => s.id === authProvider)?.label || authProvider || "Anslutningen";
+    const msg = authError === "not_configured"
+      ? `${provider} är inte aktiverat på VELVET-servern ännu.`
+      : authError === "denied" ? `${provider}: inloggningen avbröts.` : `${provider}: inloggningen kunde inte slutföras.`;
+    setTimeout(() => showToast(msg), 150);
+  }
+  if (passkeyRequested && !loadUser()) {
+    setTimeout(() => loginWithPasskey(), 250);
   }
 }
 
@@ -7183,7 +7190,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=146", { updateViaCache: "none" })
+      .register("sw.js?v=147", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

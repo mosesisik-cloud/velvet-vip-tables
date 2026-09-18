@@ -30,6 +30,7 @@
     "facebook": { "id": "", "secret": "" },
     "instagram": { "id": "", "secret": "" },
     "tiktok": { "key": "", "secret": "" },
-    "snapchat": { "id": "", "secret": "" }
+    "snapchat": { "id": "", "secret": "" },
+    "apple": { "id": "", "secret": "" }
   }
 }
