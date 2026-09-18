@@ -238,6 +238,16 @@ function checkLocationFirstHome() {
   } else ok("location-first-home", `Stockholm · ${stockholmVenues.length} venues · ${stockholmRestaurants.length} restaurants`);
 }
 
+function checkAuthShell() {
+  const src = fs.readFileSync(path.join(ROOT, "js", "app.js"), "utf8");
+  const oldShellRedirect = /location\.assign\(["']https:\/\/b2b\.bakemyday\.se\/velvet\/\?passkey=1/;
+  if (oldShellRedirect.test(src)) {
+    fail("auth-shell", "passkey still replaces the current app with the old production shell");
+  } else if (!/Du är kvar i nya VELVET/.test(src)) {
+    fail("auth-shell", "preview passkey flow has no clear same-app feedback");
+  } else ok("auth-shell", "login stays in the current VELVET release");
+}
+
 function checkSeoHonesty() {
   const gen = fs.readFileSync(path.join(ROOT, "scripts", "build-seo.mjs"), "utf8");
   if (/Boka VIP-bord på \$\{/.test(gen) || /title = `Boka VIP-bord/.test(gen)) {
@@ -1128,6 +1138,7 @@ const booking = checkBookingUrls();
 checkRestaurants();
 checkOfficialVenueImages();
 checkLocationFirstHome();
+checkAuthShell();
 checkSeoHonesty();
 checkI18n();
 checkMrz();

@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=151";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=151";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=151";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=151";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=152";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=152";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=152";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=152";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -871,9 +871,12 @@ async function loginWithPasskey() {
   const localHost = /^(?:localhost|127\.0\.0\.1)$/i.test(location.hostname);
   if (!ownedHost && !localHost) {
     // WebAuthn credentials are bound to the current domain. Never bind a
-    // member's Face ID/passkey to raw.githack.com or a temporary Codespace.
-    location.assign("https://b2b.bakemyday.se/velvet/?passkey=1#/account");
-    return { redirect: true };
+    // member's Face ID/passkey to GitHub Pages, raw.githack.com or a temporary
+    // Codespace. Above all, never replace the new app with the old production
+    // shell: keep the user here until this same release is live on VELVET's
+    // secure first-party domain.
+    showToast("Du är kvar i nya VELVET. Face ID aktiveras när den nya versionen är publicerad på VELVET-domänen.");
+    return null;
   }
   if (!window.PublicKeyCredential || !navigator.credentials) {
     showToast("Passkey stöds inte i den här webbläsaren.");
@@ -7578,7 +7581,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=151", { updateViaCache: "none" })
+      .register("sw.js?v=152", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
