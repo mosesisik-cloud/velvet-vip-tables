@@ -215,6 +215,10 @@ function checkRestaurants() {
     if (!zink?.bookingDirect || zink.bookingProvider !== "BokaBord" || !/^https:\/\/app\.bokabord\.se\/reservation\/\?/.test(zink.bookingUrl || "")) {
       fail("zink-direct-booking", JSON.stringify(zink && { bookingUrl: zink.bookingUrl, bookingProvider: zink.bookingProvider, bookingDirect: zink.bookingDirect }));
     } else ok("zink-direct-booking", "official BokaBord flow is primary");
+    const app = fs.readFileSync(path.join(ROOT, "js", "app.js"), "utf8");
+    if (!app.includes("const bookingPanel = restaurant.bookingDirect && restaurant.bookingUrl") || !app.includes("Boka hos ${esc(restaurant.name)} nu ↗")) {
+      fail("direct-booking-ui", "direct booking must bypass the local VELVET request form");
+    } else ok("direct-booking-ui", "direct booking bypasses local-only requests");
   }
 }
 
@@ -251,6 +255,7 @@ function checkMenuCoverage() {
   if (explicit.length < 80) fail("restaurant-menu-links", `${explicit.length} explicit official links`);
   else if (accessible.length !== restaurants.length) fail("restaurant-menu-access", `${accessible.length}/${restaurants.length}`);
   else if (venueAccess.length !== venues.length || !/menuOfficialHint/.test(app)) fail("venue-menu-access", `${venueAccess.length}/${venues.length}`);
+  else if (!app.includes('renderMenuReader("restaurant", id)') || !app.includes('renderMenuReader("venue", id)') || !app.includes("menu-browser")) fail("menu-reader", "missing in-app routes for restaurants or venues");
   else ok("menu-coverage", `${explicit.length} direct official menus · ${restaurants.length} restaurant paths · ${venues.length} venue paths`);
 }
 

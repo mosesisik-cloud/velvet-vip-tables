@@ -537,6 +537,25 @@ button { font-family: inherit; cursor: pointer; }
 .restaurant-book-success { text-align: center; padding: 26px 8px 8px; }.restaurant-book-success .big { color: var(--gold); font-size: 40px; }.restaurant-book-success small { color: var(--text-faint); }
 @media (max-width: 760px) { .restaurant-detail-grid { grid-template-columns: 1fr; }.restaurant-detail-hero { flex-direction: column; }.restaurant-detail-rating { width: 100%; text-align: left; }.restaurant-book-panel { position: static; }.restaurant-gallery-track { grid-auto-columns: 88vw; }.restaurant-gallery figure { height: 62vw; min-height: 280px; } }
 
+/* V156: official menus stay inside VELVET */
+.menu-reader { max-width: 1240px; }
+.menu-reader-head { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin:24px 0; padding:26px; border:1px solid var(--border-soft); border-radius:20px; background:linear-gradient(135deg,rgba(88,174,232,.12),rgba(12,26,38,.94) 58%); }
+.menu-reader-head h1 { margin:5px 0 8px; }
+.menu-reader-head p { max-width:720px; margin:0; color:var(--text-dim); }
+.menu-reader-items { margin:0 0 20px; padding:24px; border:1px solid var(--border-soft); border-radius:18px; background:var(--bg-card); }
+.menu-reader-items h2 { margin:0 0 4px; }
+.menu-reader-items .menu-list { max-height:none; }
+.menu-browser { overflow:hidden; border:1px solid var(--border); border-radius:20px; background:#fff; box-shadow:var(--shadow-card); }
+.menu-browser-bar { display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:48px; padding:10px 16px; color:var(--text); background:var(--bg-card); border-bottom:1px solid var(--border-soft); }
+.menu-browser-bar span { display:flex; align-items:center; gap:9px; font-size:12px; font-weight:750; letter-spacing:.02em; }
+.menu-browser-bar i { width:9px; height:9px; border-radius:50%; background:#4ad295; box-shadow:0 0 0 4px rgba(74,210,149,.12); }
+.menu-browser-bar small { overflow:hidden; color:var(--text-faint); text-overflow:ellipsis; white-space:nowrap; }
+.menu-browser iframe { display:block; width:100%; height:clamp(620px,76vh,980px); border:0; background:#fff; }
+.menu-browser-fallback { display:flex; align-items:center; gap:10px; padding:12px 16px; color:var(--text-dim); background:var(--bg-card); border-top:1px solid var(--border-soft); font-size:12px; }
+.menu-browser-fallback strong { color:var(--text); }
+.menu-browser-fallback a { margin-left:auto; color:var(--gold-bright); }
+@media (max-width:760px) { .menu-reader-head { align-items:stretch; flex-direction:column; padding:20px; }.menu-browser iframe { height:72vh; min-height:560px; }.menu-browser-fallback { align-items:flex-start; flex-direction:column; }.menu-browser-fallback a { margin-left:0; } }
+
 /* ---------- V127: warm marketplace shell ---------- */
 body.light-shell {
   --bg: #050b12;

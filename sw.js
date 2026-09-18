@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-155-menu-coverage";
+const VERSION = "v4-real-156-menu-reader";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
