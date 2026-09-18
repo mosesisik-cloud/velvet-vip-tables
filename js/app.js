@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=148";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=148";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=148";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=148";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=149";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=149";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=149";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=149";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -307,9 +307,10 @@ function venueMediaHTML(v, cls, { eager = false, extra = "", playable = false } 
   const fallbackData = esc(encodeURIComponent(JSON.stringify(fallbackPhotos)));
   const img = !frame && url ? `
     <img src="${esc(url)}" data-fallbacks="${fallbackData}" data-fallback-index="0" alt="${esc(v.name)} — ${esc(v.category || "")}" loading="${eager ? "eager" : "lazy"}"${eager ? ` fetchpriority="high"` : ""} decoding="async" referrerpolicy="no-referrer"
+         onload="this.closest('.${cls}')?.classList.add('img-loaded')"
          onerror="const xs=JSON.parse(decodeURIComponent(this.dataset.fallbacks||'%5B%5D'));const i=Number(this.dataset.fallbackIndex||0);if(xs[i]){this.dataset.fallbackIndex=String(i+1);this.src=xs[i]}else{const card=this.closest('.venue-card');if(card)card.remove();else this.closest('.${cls}')?.classList.add('img-fail')}">` : "";
   return `
-  <div class="${cls}${url || frame ? "" : " img-fail"}${yt ? " has-yt" : ""}">
+  <div class="${cls}${url || frame ? " img-pending" : " img-fail"}${yt ? " has-yt" : ""}">
     <div class="dest-emblem venue-media-emblem" aria-hidden="true" style="--h:${destHue(v.destination_code)}">${esc(v.destination_code || "")}</div>${frame || img}
     ${play}${extra}
   </div>`;
@@ -494,7 +495,7 @@ function venueDockHTML(v) {
   </nav>`;
 }
 
-function photoAttrHTML(v) {
+function photoAttrHTML(v, { official = false } = {}) {
   const yt = venueYoutube(v);
   if (yt) {
     const href = yt.url || `https://www.youtube.com/watch?v=${yt.id}`;
@@ -503,10 +504,13 @@ function photoAttrHTML(v) {
   }
   if (!venuePhoto(v)) return "";
   const href = VENUE_IMAGE_SOURCES[v.venue_id]?.source || v.website_url || v.source_url || "";
+  // Detaljvyn ({ official: true }): transparent källrad — bilden kommer från
+  // ställets egen officiella hemsida (heligt beslut: aldrig stockfoton).
+  const label = official ? t("photoOfficialSrc") : t("photoCredit").replace("{name}", v.name);
   const credit = href
-    ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(t("photoCredit").replace("{name}", v.name))}</a>`
-    : esc(t("photoCredit").replace("{name}", v.name));
-  return `<p class="photo-attr">${credit} · ${esc(t("photoPreview"))}</p>`;
+    ? `<a href="${esc(href)}" target="_blank" rel="noopener">${esc(label)}</a>`
+    : esc(label);
+  return `<p class="photo-attr${official ? " photo-attr-official" : ""}">${credit} · ${esc(t("photoPreview"))}</p>`;
 }
 
 function statusInfo(s) {
@@ -608,6 +612,47 @@ function venuePackagesPanelHTML(v) {
   </section>`;
 }
 
+// ---------- Från-pris-kalkylator (detaljvyn) ----------
+// Billigaste paketet med känt pris (officiellt eller min-spend) — aldrig påhittade priser.
+function cheapestPricedPackage(v) {
+  const priced = packagesFor(v).filter((p) => p.price);
+  if (!priced.length) return null;
+  return priced.reduce((a, b) => (b.price < a.price ? b : a));
+}
+function fromCalcHTML(v) {
+  const p = cheapestPricedPackage(v);
+  if (!p) return `<p class="detail-cta-sub">${esc(t("clubSetsPrice"))}</p>
+        <div class="detail-price" id="from-price">${esc(t("clubSetsPrice"))}</div>`;
+  return `<p class="detail-cta-sub">${esc(t("fromCalcTitle"))}</p>
+        <div class="detail-price" id="fp-per" aria-live="polite" aria-atomic="true"></div>
+        <div class="from-calc">
+          <div class="stepper" role="group" aria-label="${esc(t("fromCalcParty"))}">
+            <button type="button" id="fp-minus" aria-label="${esc(t("fewerPeople"))}">−</button>
+            <span class="stepper-val" id="fp-party">4</span>
+            <button type="button" id="fp-plus" aria-label="${esc(t("morePeople"))}">+</button>
+          </div>
+          <p class="stepper-hint" id="fp-basis"></p>
+          <p class="stepper-hint">${esc(t("fromCalcHint"))}</p>
+        </div>`;
+}
+function bindFromCalc(v) {
+  const p = cheapestPricedPackage(v);
+  const per = $("#fp-per");
+  if (!p || !per) return;
+  let n = 4;
+  const fmt = (x) => {
+    try { return new Intl.NumberFormat(localeTag(), { style: "currency", currency: p.currency, maximumFractionDigits: 0 }).format(x); } catch { return fmtEUR(x); }
+  };
+  const render = () => {
+    $("#fp-party").textContent = n;
+    per.innerHTML = `<span class="fp-from">${esc(t("fromCalcFrom"))}</span> ${esc(fmt(Math.ceil(p.price / n)))}<span class="fp-from">/${esc(t("persShort"))}</span>`;
+    $("#fp-basis").textContent = `${p.name} · ${p.priceType === "minimum-spend" ? `${t("minimumSpend")}: ` : ""}${fmt(p.price)} · ${t("splitOn")} ${n} ${t("people")}`;
+  };
+  $("#fp-minus")?.addEventListener("click", () => { n = Math.max(1, n - 1); render(); });
+  $("#fp-plus")?.addEventListener("click", () => { n = Math.min(20, n + 1); render(); });
+  render();
+}
+
 // Defensiv: icke-numeriskt in (t.ex. manipulerad localStorage) → 0 € i stället för "NaN"
 function localeTag() {
   const l = currentLang();
@@ -698,6 +743,15 @@ function updateFavBadge() {
   if (!el) return;
   el.textContent = n;
   el.classList.toggle("hidden", n === 0);
+}
+// "Moses lista" / "Gabriels lista" — genitiv per språk, fallback "Delad lista" utan profilnamn.
+function favListName() {
+  const first = String(displayName(loadUser()) || "").trim().split(/\s+/)[0];
+  if (!first) return t("sharedListName");
+  const genitive = currentLang() === "sv"
+    ? (/[sxz]$/i.test(first) ? first : `${first}s`)
+    : (/s$/i.test(first) ? `${first}'` : `${first}'s`);
+  return t("namedList").replace("{name}", genitive);
 }
 function favLabel(on, name) {
   if (name) return (on ? t("favRemove") : t("favAdd")).replace("{name}", name);
@@ -1622,27 +1676,71 @@ const saveHost = (h) => {
   } catch {}
 };
 
+// ---------- Kalenderfil (.ics, RFC 5545) ----------
+// Textvärden i ICS måste escapas: \ ; , och radbrytningar. Annars knäcker ett
+// venue-namn med komma ("Carrer de les Coves, 10") hela LOCATION-fältet.
+const icsEscape = (s) => String(s ?? "")
+  .replace(/\\/g, "\\\\")
+  .replace(/;/g, "\\;")
+  .replace(/,/g, "\\,")
+  .replace(/\r?\n/g, "\\n");
+// RFC 5545 §3.1: rader över 75 oktetter viks med CRLF + mellanslag.
+// Byte-medveten (TextEncoder) så åäö/emoji aldrig klipps mitt i en UTF-8-sekvens.
+function icsFold(line) {
+  const enc = new TextEncoder();
+  if (enc.encode(line).length <= 75) return line;
+  const out = [];
+  let cur = "", curBytes = 0;
+  for (const ch of line) {
+    const n = enc.encode(ch).length;
+    if (curBytes + n > 75) { out.push(cur); cur = " " + ch; curBytes = 1 + n; }
+    else { cur += ch; curBytes += n; }
+  }
+  if (cur) out.push(cur);
+  return out.join("\r\n");
+}
 function icsFor(b) {
   const ymd = String(b.date || "").replace(/-/g, "");
-  const uid = `${b.id}@velvet.app`;
+  const start = new Date(`${b.date}T00:00:00Z`);
+  // Heldagshändelse: DTEND är exklusivt → dagen efter, annars visar vissa
+  // kalendrar (Outlook) eventet som noll dagar långt.
+  const endYmd = Number.isFinite(start.getTime())
+    ? new Date(start.getTime() + 864e5).toISOString().slice(0, 10).replace(/-/g, "")
+    : "";
+  const stamp = new Date().toISOString().replace(/[-:]/g, "").slice(0, 15) + "Z";
+  const v = (typeof VENUES !== "undefined" && VENUES.find((x) => x.venue_id === b.venue_id)) || null;
+  const facts = v ? venueFacts(v) : null;
+  const d = v ? destForVenue(v) : null;
+  const link = shareLinkFor(b);
   const summary = t("icsSummary").replace("{venue}", b.venue);
+  // Riktig gatuadress från venue-facts när den finns, annars venue + stad + land.
+  const where = facts?.address
+    ? `${b.venue}, ${facts.address}`
+    : [b.venue, b.destination, d?.country].filter(Boolean).join(", ");
   const desc = [
     t("icsDesc").replace("{id}", b.id),
     `${b.package} · ${b.party} ${t("people")} · ${b.per_person ? t("guestBudget").replace("{amount}", fmtEUR(b.per_person)) : t("clubSetsPrice")}.`,
-    t("inviteJoin").replace("{link}", shareLinkFor(b)),
-  ].join("\\n");
+    b.total > 0 ? t("inviteBudget").replace("{total}", fmtEUR(b.total)).replace("{per}", fmtEUR(b.per_person)) : "",
+    t("inviteJoin").replace("{link}", link),
+  ].filter(Boolean).map(icsEscape).join("\\n");
+  const geo = d && Number.isFinite(Number(d.lat)) && Number.isFinite(Number(d.lng))
+    ? `GEO:${d.lat};${d.lng}` : "";
   const ics = [
-    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//VELVET//Concierge//SV", "CALSCALE:GREGORIAN",
+    "BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//VELVET//Concierge//SV", "CALSCALE:GREGORIAN", "METHOD:PUBLISH",
     "BEGIN:VEVENT",
-    `UID:${uid}`,
-    `DTSTAMP:${ymd}T120000Z`,
+    `UID:${b.id}@velvet.app`,
+    `DTSTAMP:${stamp}`,
     `DTSTART;VALUE=DATE:${ymd}`,
-    `SUMMARY:${summary}`,
+    endYmd ? `DTEND;VALUE=DATE:${endYmd}` : "",
+    `SUMMARY:${icsEscape(summary)}`,
     `DESCRIPTION:${desc}`,
-    `LOCATION:${b.venue}, ${b.destination}`,
+    `LOCATION:${icsEscape(where)}`,
+    geo,
+    `URL:${link}`,
     "STATUS:TENTATIVE",
+    "TRANSP:TRANSPARENT",
     "END:VEVENT", "END:VCALENDAR",
-  ].join("\r\n");
+  ].filter(Boolean).map(icsFold).join("\r\n");
   return `data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`;
 }
 function inviteTextFor(b) {
@@ -1907,7 +2005,6 @@ function renderHome() {
     ${localDest ? `<div class="section-head"><div><h2>${esc(localDest.name)} först</h2><div class="sub">Restauranger och klubbar närmast din valda plats</div></div><a class="link-gold" href="#/destination/${encodeURIComponent(localDest.code)}" data-nav>${esc(t("explore"))} →</a></div>
       <div class="vibe-rail home-local-rail">${localVenues.length ? localVenues.map((v, i) => venueCard(v, { vibe: true, eager: i < 3 })).join("") : `<p class="events-meta">${esc(t("noHits"))}</p>`}</div>` : ""}
   </section>
-
   <section class="section home-verify" id="home-verify">
     <div class="section-head"><div><h2>Verifiera dig</h2><div class="sub">Ett tryck för att börja · pass och selfie görs bara första gången</div></div></div>
     ${loadUser() ? `
@@ -2215,7 +2312,6 @@ const hasVerifiedRestaurantImages = (restaurant) =>
 const publishableRestaurants = (rows) => sortRestaurants((rows || []).filter((restaurant) =>
   (restaurant.curated === true || Number(restaurant.rating) >= 3.8) && hasVerifiedRestaurantImages(restaurant)
 ));
-
 async function mountHomeRestaurants() {
   const root = document.getElementById("home-restaurants");
   if (!root) return;
@@ -2359,8 +2455,11 @@ function renderDestinationDetail(code) {
     </section>`;
     return;
   }
-  setTitle(d.name);
   const inCity = VENUES.filter((v) => v.destination === d.name || v.destination_code === d.code).sort(compareVenues);
+  setTitle(d.name, t("metaDestDesc")
+    .replace("{dest}", d.name)
+    .replace("{country}", d.country || "")
+    .replace("{n}", String(inCity.length)));
   const verified = inCity.filter(isVenueVerified);
   const rest = inCity.filter((v) => !isVenueVerified(v));
   const useCases = String(d.use_cases || "").split(",").map((s) => s.trim()).filter(Boolean);
@@ -2452,7 +2551,7 @@ function renderDestinationDetail(code) {
   const goList = (e) => {
     e.preventDefault();
     state.filters = { q: "", dest: d.name, cat: "", status: "", price: "", sort: "priority" };
-    location.hash = "#/venues";
+    location.hash = `#/venues?dest=${encodeURIComponent(d.name)}`;
   };
   $("#dd-list").addEventListener("click", goList);
   const l2 = $("#dd-list-2");
@@ -2483,6 +2582,48 @@ function igLinkHTML(v, { arrow = false } = {}) {
   if (!v.instagram_url) return "";
   const handle = igHandle(v.instagram_url) || "Instagram";
   return `<a class="icon-link ig-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener" aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "Instagram"))}">${IG_ICON}<span class="soc-handle">${esc(handle)}</span>${arrow ? " ↗" : ""}</a>`;
+}
+
+/** "Följ & inspireras" — social-CTA på detaljvyn. Instagram är ställets
+ * skyltfönster: stort IG-kort med gradient-ram och guld-CTA; TikTok/Facebook
+ * som sekundära kort där de finns. Länkarna är live-verifierade (rör ej). */
+function followSectionHTML(v) {
+  if (!v.instagram_url && !v.tiktok_url && !v.facebook_url) return "";
+  const secLabel = (net) => t("followOn").replace("{net}", net);
+  const secCard = (url, net, icon, handle) => `
+      <a class="follow-card follow-card-sec" href="${esc(url)}" target="_blank" rel="noopener"
+         aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", net))}">
+        <span class="follow-sec-ico" aria-hidden="true">${icon}</span>
+        <span class="follow-sec-txt"><strong>${esc(net)}</strong><span>${esc(handle || secLabel(net))}</span></span>
+        <span class="follow-arrow" aria-hidden="true">↗</span>
+      </a>`;
+  const tk = v.tiktok_url ? socialPath(v.tiktok_url) : "";
+  const fb = v.facebook_url ? socialPath(v.facebook_url) : "";
+  const secondary = [
+    v.tiktok_url ? secCard(v.tiktok_url, "TikTok", TIKTOK_ICON, tk ? (tk.startsWith("@") ? tk : "@" + tk) : "") : "",
+    v.facebook_url ? secCard(v.facebook_url, "Facebook", FB_ICON, fb ? "/" + fb : "") : "",
+  ].filter(Boolean).join("");
+  const igCard = v.instagram_url ? `
+      <a class="follow-card follow-card-ig" href="${esc(v.instagram_url)}" target="_blank" rel="noopener"
+         aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "Instagram"))}">
+        <span class="follow-ig-ico" aria-hidden="true">${IG_ICON}</span>
+        <span class="follow-ig-txt">
+          <span class="follow-ig-handle">${esc(igHandle(v.instagram_url) || "Instagram")}</span>
+          <span class="follow-ig-sub">${esc(t("followIg"))}</span>
+        </span>
+        <span class="btn btn-gold btn-sm follow-ig-cta">${esc(t("openInstagram"))} ↗</span>
+      </a>` : "";
+  return `
+  <section class="follow-section" aria-label="${esc(t("followTitle"))}">
+    <div class="follow-head">
+      <h2>${esc(t("followTitle"))}</h2>
+      <p>${esc(t("followSub").replace("{name}", v.name))}</p>
+    </div>
+    <div class="follow-cards${igCard && secondary ? " has-sec" : ""}">
+      ${igCard}
+      ${secondary ? `<div class="follow-sec-col">${secondary}</div>` : ""}
+    </div>
+  </section>`;
 }
 
 function venueCard(v, { eager = false, rank = 0, vibe = false } = {}) {
@@ -2522,6 +2663,12 @@ function venueCard(v, { eager = false, rank = 0, vibe = false } = {}) {
   </div>`;
 }
 
+// Relativ prisklass €–€€€€ ur lyxnivån — ingen påhittad EUR, bara en nivåskala
+function venuePriceClass(v) {
+  const s = num(v.luxury_score);
+  return s >= 5 ? 4 : s >= 4 ? 3 : s >= 3 ? 2 : 1;
+}
+
 function applyFilters() {
   const f = state.filters;
   let list = VENUES.filter((v) => {
@@ -2529,7 +2676,7 @@ function applyFilters() {
     if (f.dest && v.destination !== f.dest && v.destination_code !== f.dest) return false;
     if (f.cat && venueGroup(v) !== f.cat) return false;
     if (f.status && statusInfo(v.research_status).cls !== f.status) return false;
-    if (f.price) return false;
+    if (f.price && String(venuePriceClass(v)) !== f.price) return false;
     if (f.q) {
       const q = f.q.toLowerCase();
       if (!`${v.name} ${v.destination} ${v.category} ${v.notes} ${v.instagram_url || ""} ${v.tiktok_url || ""} ${v.facebook_url || ""} ${v.website_url || ""}`.toLowerCase().includes(q)) return false;
@@ -2542,16 +2689,26 @@ function applyFilters() {
   return list;
 }
 
+// När venue-vyn väl skrivit sina filter till hashen är URL:en sanningen —
+// då betyder ett param-löst #/venues "inga filter" (bakåt/framåt-navigering).
+let venuesHashOwned = false;
 function parseVenueQuery() {
   const i = location.hash.indexOf("?");
-  if (i < 0) return;
+  if (i < 0) {
+    if (venuesHashOwned) state.filters = { q: "", dest: "", cat: "", status: "", price: "", sort: "priority" };
+    return;
+  }
   const p = new URLSearchParams(location.hash.slice(i + 1));
-  if (p.has("q")) state.filters.q = p.get("q") || "";
-  if (p.has("dest")) state.filters.dest = p.get("dest") || "";
-  if (p.has("cat")) state.filters.cat = p.get("cat") || "";
-  if (p.has("status")) state.filters.status = p.get("status") || "";
-  if (p.has("pris")) state.filters.price = p.get("pris") || "";
-  if (p.has("sort")) state.filters.sort = p.get("sort") || "priority";
+  const pris = p.get("pris") || "";
+  const sort = p.get("sort") || "priority";
+  state.filters = {
+    q: p.get("q") || "",
+    dest: p.get("dest") || "",
+    cat: CATEGORY_GROUPS.some((g) => g.key === p.get("cat")) ? p.get("cat") : "",
+    status: p.get("status") || "",
+    price: /^[1-4]$/.test(pris) ? pris : "",
+    sort: ["priority", "luxury", "name"].includes(sort) ? sort : "priority",
+  };
 }
 
 function renderVenues() {
@@ -2578,6 +2735,10 @@ function renderVenues() {
       <select id="f-cat" aria-label="${esc(t("filterCat"))}">
         <option value="">${esc(t("allCats"))}</option>
         ${CATEGORY_GROUPS.map((g) => `<option value="${g.key}" ${f.cat === g.key ? "selected" : ""}>${esc(t(g.labelKey))}</option>`).join("")}
+      </select>
+      <select id="f-pris" aria-label="${esc(t("filterPrice"))}">
+        <option value="">${esc(t("allPrices"))}</option>
+        ${[1, 2, 3, 4].map((n) => `<option value="${n}" ${f.price === String(n) ? "selected" : ""}>${"€".repeat(n)}</option>`).join("")}
       </select>
       <select id="f-status" aria-label="${esc(t("filterStatus"))}">
         <option value="">${esc(t("allStatus"))}</option>
@@ -2614,7 +2775,11 @@ function renderVenues() {
     bindVenueCards();
   };
 
-  const syncHash = () => {
+  // push=true → egen history-post (bakåt/framåt vandrar mellan filterlägen);
+  // push=false → replaceState (fritext-tangenttryck ska inte spamma historiken).
+  // pushState/replaceState triggar inte hashchange, så ingen omrendering sker här —
+  // bakåt/framåt ändrar däremot hashen → route() → renderVenues läser query:n.
+  const syncHash = (push) => {
     const f = state.filters;
     const p = new URLSearchParams();
     if (f.q) p.set("q", f.q);
@@ -2625,11 +2790,13 @@ function renderVenues() {
     if (f.sort && f.sort !== "priority") p.set("sort", f.sort);
     const qs = p.toString();
     const next = qs ? `#/venues?${qs}` : "#/venues";
-    if (location.hash !== next) history.replaceState(null, "", next);
+    if (location.hash === next) return;
+    if (push) history.pushState(null, "", next);
+    else history.replaceState(null, "", next);
   };
 
-  $("#f-q").addEventListener("input", (e) => { state.filters.q = e.target.value; renderList(); syncHash(); });
-  $("#f-dest").addEventListener("change", (e) => { state.filters.dest = e.target.value; renderList(); syncHash(); });
+  $("#f-q").addEventListener("input", (e) => { state.filters.q = e.target.value; renderList(); syncHash(false); });
+  $("#f-dest").addEventListener("change", (e) => { state.filters.dest = e.target.value; renderList(); syncHash(true); });
   $("#f-cat").addEventListener("change", (e) => {
     if (e.target.value === "restaurant") {
       const chosen = DESTINATIONS.find((d) => d.code === state.filters.dest || d.name === state.filters.dest);
@@ -2637,11 +2804,15 @@ function renderVenues() {
       location.hash = chosen ? `#/restaurants?dest=${encodeURIComponent(chosen.code)}` : "#/restaurants";
       return;
     }
-    state.filters.cat = e.target.value; renderList(); syncHash();
+    state.filters.cat = e.target.value; renderList(); syncHash(true);
   });
-  $("#f-status").addEventListener("change", (e) => { state.filters.status = e.target.value; renderList(); syncHash(); });
-  $("#f-sort").addEventListener("change", (e) => { state.filters.sort = e.target.value; renderList(); syncHash(); });
+  $("#f-pris").addEventListener("change", (e) => { state.filters.price = e.target.value; renderList(); syncHash(true); });
+  $("#f-status").addEventListener("change", (e) => { state.filters.status = e.target.value; renderList(); syncHash(true); });
+  $("#f-sort").addEventListener("change", (e) => { state.filters.sort = e.target.value; renderList(); syncHash(true); });
   renderList();
+  // Spegla ev. förvalda filter (t.ex. hemdestination) i URL:en direkt — delbar från start
+  syncHash(false);
+  venuesHashOwned = true;
 }
 
 function bindVenueCards() {
@@ -3012,7 +3183,7 @@ function renderVenueDetail(id) {
 
     ${venueIntroHTML(v)}
     ${venueGalleryHTML(v)}
-    ${photoAttrHTML(v)}
+    ${photoAttrHTML(v, { official: true })}
 
     <div class="detail-hero">
       <div class="detail-hero-main">
@@ -3026,22 +3197,10 @@ function renderVenueDetail(id) {
           ${dest ? `<span class="tag">${esc(t("seasonShort"))} ${esc(dest.peak_season)}</span>` : ""}
         </div>
         ${publicNote(v) ? `<p class="detail-notes">${esc(publicNote(v))}</p>` : ""}
-        <div class="follow-block">
-          ${v.instagram_url ? `
-          <div class="follow-ig">
-            <div>
-              <div class="soc-handle">${esc(igHandle(v.instagram_url) || t("instagram"))}</div>
-              <p>${esc(t("followIg"))}</p>
-            </div>
-            <a class="btn btn-gold btn-sm" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">${esc(t("instagram"))} ↗</a>
-          </div>` : ""}
-          <div class="detail-links">
-            ${bookingLinkHTML(v)}
-            <a class="icon-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
-            ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">${esc(t("website"))} ↗</a>` : ""}
-            ${v.tiktok_url ? `<a class="icon-link" href="${esc(v.tiktok_url)}" target="_blank" rel="noopener" aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "TikTok"))}">${TIKTOK_ICON}<span>TikTok</span> ↗</a>` : ""}
-            ${v.facebook_url ? `<a class="icon-link" href="${esc(v.facebook_url)}" target="_blank" rel="noopener" aria-label="${esc(t("onSocial").replace("{name}", v.name).replace("{net}", "Facebook"))}">${FB_ICON}<span>Facebook</span> ↗</a>` : ""}
-          </div>
+        <div class="detail-links">
+          ${bookingLinkHTML(v)}
+          <a class="icon-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
+          ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">${esc(t("website"))} ↗</a>` : ""}
         </div>
       </div>
       <div class="prio prio-lg">
@@ -3050,6 +3209,8 @@ function renderVenueDetail(id) {
           : `<span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">VELVET-prio</span>`}
       </div>
     </div>
+
+    ${followSectionHTML(v)}
 
     <div class="detail-grid">
       ${contactPanelHTML(v)}
@@ -3078,8 +3239,7 @@ function renderVenueDetail(id) {
 
       <div class="detail-panel detail-cta">
         <h2 class="detail-panel-title">${esc(t("requestShareTitle"))}</h2>
-        <p class="detail-cta-sub">${esc(t("clubSetsPrice"))}</p>
-        <div class="detail-price" id="from-price">${esc(t("clubSetsPrice"))}</div>
+        ${fromCalcHTML(v)}
         <p class="detail-cta-note">${esc(t("priceHonest"))}</p>
         ${bookingLinkHTML(v, { gold: true, full: true })}
         <a class="btn btn-ghost" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener" style="width:100%;margin-top:10px">${esc(t("directions"))} ↗</a>
@@ -3110,6 +3270,7 @@ function renderVenueDetail(id) {
   </section>`;
   document.body.classList.add("has-dock");
   bindVenueGallery();
+  bindFromCalc(v);
   document.querySelectorAll("[data-pkg-open]").forEach((btn) => btn.addEventListener("click", () => openBookingModal(v, btn.dataset.pkgOpen)));
   document.querySelectorAll("[data-seat-pkg]").forEach((zone) => zone.addEventListener("click", () => {
     const id = zone.dataset.seatPkg;
@@ -3247,7 +3408,10 @@ function renderVenueDetail(id) {
     }
     if ((location.hash || "").split("?")[0] === `#/venue/${v.venue_id}`) renderVenueDetail(v.venue_id);
   });
-  setTitle(v.name);
+  setTitle(v.name, t("metaVenueDesc")
+    .replace("{name}", v.name)
+    .replace("{category}", v.category || "VIP")
+    .replace("{dest}", v.destination || ""));
   if (apiBase()) {
     refreshLiveEvents().then((ok) => {
       if (!ok) return;
@@ -3327,115 +3491,130 @@ async function openBookingModal(v, preselectedPackageId = "") {
       <button class="modal-close" id="m-close" aria-label="${esc(t("close"))}">✕</button>
       <h2>${esc(v.name)}</h2>
       <div class="modal-sub">${esc(v.destination)} · ${esc(v.category)}</div>
-      <div class="req-steps" aria-hidden="true">
-        <div class="req-step on">${esc(t("stepDate"))}</div>
-        <div class="req-step on">${esc(t("stepPkg"))}</div>
-        <div class="req-step on">${esc(t("stepParty"))}</div>
+      <div class="req-steps" id="m-steps">
+        <button type="button" class="req-step" data-step="1" aria-label="${esc(t("stepGoTo").replace("{name}", t("stepDate")))}">${esc(t("stepDate"))}</button>
+        <button type="button" class="req-step" data-step="2" aria-label="${esc(t("stepGoTo").replace("{name}", t("stepPkg")))}">${esc(t("stepPkg"))}</button>
+        <button type="button" class="req-step" data-step="3" aria-label="${esc(t("stepGoTo").replace("{name}", t("stepParty")))}">${esc(t("stepParty"))}</button>
       </div>
-      <p class="req-summary" id="m-summary"></p>
-      <div class="verify-perks" style="margin:0 0 16px">
-        <p class="verify-perks-title">${esc(t("bookSentAs"))}</p>
-        <p style="margin:0;color:var(--text)">${esc((loadUser()?.legalName || displayName(loadUser()) || host0.name))}${cardLabel() ? ` · ${esc(cardLabel())}` : ""}${loadUser()?.handle ? ` · @${esc(loadUser().handle)}` : ""}</p>
-        <p class="stepper-hint" style="margin:8px 0 0">${esc(t("bookCredentials"))}</p>
+      <div class="req-progress" aria-hidden="true"><div class="req-progress-fill" id="m-progress"></div></div>
+      <p class="req-summary" id="m-summary" aria-live="polite"></p>
+
+      <div class="req-pane" data-pane="1">
+        <div class="verify-perks" style="margin:0 0 16px">
+          <p class="verify-perks-title">${esc(t("bookSentAs"))}</p>
+          <p style="margin:0;color:var(--text)">${esc((loadUser()?.legalName || displayName(loadUser()) || host0.name))}${cardLabel() ? ` · ${esc(cardLabel())}` : ""}${loadUser()?.handle ? ` · @${esc(loadUser().handle)}` : ""}</p>
+          <p class="stepper-hint" style="margin:8px 0 0">${esc(t("bookCredentials"))}</p>
+        </div>
+        <div class="form-group">
+          <label for="m-date">${esc(t("dateLabel"))}</label>
+          <input type="date" id="m-date" min="${todayISO()}" value="${new Date(Date.now() + 14 * 864e5).toISOString().slice(0, 10)}">
+          <div class="field-error hidden" id="err-date" role="alert"></div>
+        </div>
+        <div class="req-nav">
+          <button type="button" class="btn btn-gold" id="m-next-1">${esc(t("stepNext"))} →</button>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="m-host">${esc(t("yourName"))}</label>
-        <input type="text" id="m-host" autocomplete="name" value="${esc(loadUser()?.legalName || host0.name)}" placeholder="${esc(t("hostPh"))}">
-        <div class="field-error hidden" id="err-host" role="alert"></div>
-      </div>
-      <div class="form-group">
-        <label for="m-email">${esc(t("emailPh"))}</label>
-        <input type="email" id="m-email" autocomplete="email" value="${esc(host0.email)}" placeholder="sarah.b@example.net">
-        <div class="field-error hidden" id="err-email" role="alert"></div>
-      </div>
-      <div class="form-group">
-        <label for="m-phone">${esc(t("mobileLabel"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
-        <input type="tel" id="m-phone" autocomplete="tel" value="${esc(host0.phone)}" placeholder="+46 …">
-      </div>
-
-      <div class="form-group">
+      <div class="req-pane" data-pane="2">
+        <div class="form-group">
+          <label id="lbl-pkgs">${esc(t("pickPackage"))}</label>
+          <div class="package-list" id="m-pkgs" role="radiogroup" aria-labelledby="lbl-pkgs">
+            ${pkgs.map((p, i) => `
+              <div class="package ${p.id === sel.id ? "selected" : ""}" data-pkg="${esc(p.id)}" role="radio" aria-checked="${p.id === sel.id}" tabindex="0">
+                <div><div class="package-name">${esc(p.name)}</div><div class="package-desc">${esc(p.desc)}</div></div>
+                <div class="package-price">${esc(p.priceType === "minimum-spend" ? `${t("minimumSpend")}: ${packagePriceHTML(p)}` : packagePriceHTML(p))}</div>
+              </div>`).join("")}
+          </div>
+        </div>
+        <div class="form-group">
           <label for="m-package-notes">${esc(t("pkgWantIncluded"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
           <textarea id="m-package-notes" rows="3" maxlength="500" placeholder="${esc(t("pkgWantPh"))}"></textarea>
           <p class="stepper-hint">${esc(t("pkgWantHint"))}</p>
         </div>
+        <div class="form-group">
+          <label for="m-budget">${esc(t("optionalBudget"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
+          <input type="number" id="m-budget" min="0" step="50" inputmode="numeric" placeholder="${esc(t("budgetPh"))}">
+          <p class="stepper-hint">${esc(t("budgetHint"))}</p>
+        </div>
+        <div class="req-nav">
+          <button type="button" class="btn btn-ghost" id="m-back-2">← ${esc(t("stepBack"))}</button>
+          <button type="button" class="btn btn-gold" id="m-next-2">${esc(t("stepNext"))} →</button>
+        </div>
+      </div>
+
+      <div class="req-pane" data-pane="3">
+        <div class="form-group">
+          <label id="lbl-party">${esc(t("partyCount"))}</label>
+          <div class="stepper" role="group" aria-labelledby="lbl-party">
+            <button id="m-minus" aria-label="${esc(t("fewerPeople"))}">−</button>
+            <span class="stepper-val" id="m-party" aria-live="polite" aria-atomic="true">4</span>
+            <button id="m-plus" aria-label="${esc(t("morePeople"))}">+</button>
+          </div>
+          <div class="stepper-hint" id="m-party-hint"></div>
+        </div>
 
         <div class="form-group">
-        <label for="m-date">${esc(t("dateLabel"))}</label>
-        <input type="date" id="m-date" min="${todayISO()}" value="${new Date(Date.now() + 14 * 864e5).toISOString().slice(0, 10)}">
-        <div class="field-error hidden" id="err-date" role="alert"></div>
-      </div>
-
-      <div class="form-group">
-        <label id="lbl-pkgs">${esc(t("pickPackage"))}</label>
-        <div class="package-list" id="m-pkgs" role="radiogroup" aria-labelledby="lbl-pkgs">
-          ${pkgs.map((p, i) => `
-            <div class="package ${p.id === sel.id ? "selected" : ""}" data-pkg="${esc(p.id)}" role="radio" aria-checked="${p.id === sel.id}" tabindex="0">
-              <div><div class="package-name">${esc(p.name)}</div><div class="package-desc">${esc(p.desc)}</div></div>
-              <div class="package-price">${esc(p.priceType === "minimum-spend" ? `${t("minimumSpend")}: ${packagePriceHTML(p)}` : packagePriceHTML(p))}</div>
-            </div>`).join("")}
+          <label class="chk-row"><input type="checkbox" id="m-open" checked> ${t("openSeats")}</label>
+          <p class="stepper-hint">${t("openSeatsHint")}</p>
+          <div class="stepper" id="m-open-row" role="group" aria-label="${t("openSeatsCount")}">
+            <button type="button" id="m-open-minus" aria-label="−">−</button>
+            <span class="stepper-val" id="m-open-val">2</span>
+            <button type="button" id="m-open-plus" aria-label="+">+</button>
+          </div>
+          <label class="stepper-hint" style="display:block;margin-top:10px">${esc(t("openForLabel"))}
+            ${openForSelectHTML("m-open-for", "women")}
+          </label>
+          <p class="stepper-hint">${esc(t("openForHint"))}</p>
         </div>
-      </div>
 
-      <div class="form-group">
-        <label id="lbl-party">${esc(t("partyCount"))}</label>
-        <div class="stepper" role="group" aria-labelledby="lbl-party">
-          <button id="m-minus" aria-label="${esc(t("fewerPeople"))}">−</button>
-          <span class="stepper-val" id="m-party" aria-live="polite" aria-atomic="true">4</span>
-          <button id="m-plus" aria-label="${esc(t("morePeople"))}">+</button>
+        <div class="form-group">
+          <label for="g-name">${esc(t("inviteGuests"))} <span class="label-optional">(${esc(t("inviteGuestsHint"))})</span></label>
+          <div class="guest-row">
+            <input type="text" id="g-name" placeholder="${esc(t("namePh"))}" autocomplete="off">
+            <input type="email" id="g-email" placeholder="${esc(t("emailPh"))}" autocomplete="off">
+            <button class="btn btn-ghost btn-sm" id="g-add" type="button">${esc(t("addGuest"))}</button>
+          </div>
+          <div class="field-error hidden" id="err-guest" role="alert"></div>
+          <div class="chip-list" id="g-chips" aria-live="polite"></div>
         </div>
-        <div class="stepper-hint" id="m-party-hint"></div>
-      </div>
 
-      <div class="form-group">
-        <label class="chk-row"><input type="checkbox" id="m-open" checked> ${t("openSeats")}</label>
-        <p class="stepper-hint">${t("openSeatsHint")}</p>
-        <div class="stepper" id="m-open-row" role="group" aria-label="${t("openSeatsCount")}">
-          <button type="button" id="m-open-minus" aria-label="−">−</button>
-          <span class="stepper-val" id="m-open-val">2</span>
-          <button type="button" id="m-open-plus" aria-label="+">+</button>
+        <div class="form-group">
+          <label for="m-host">${esc(t("yourName"))}</label>
+          <input type="text" id="m-host" autocomplete="name" value="${esc(loadUser()?.legalName || host0.name)}" placeholder="${esc(t("hostPh"))}">
+          <div class="field-error hidden" id="err-host" role="alert"></div>
         </div>
-        <label class="stepper-hint" style="display:block;margin-top:10px">${esc(t("openForLabel"))}
-          ${openForSelectHTML("m-open-for", "women")}
+        <div class="form-group">
+          <label for="m-email">${esc(t("emailPh"))}</label>
+          <input type="email" id="m-email" autocomplete="email" value="${esc(host0.email)}" placeholder="sarah.b@example.net">
+          <div class="field-error hidden" id="err-email" role="alert"></div>
+        </div>
+        <div class="form-group">
+          <label for="m-phone">${esc(t("mobileLabel"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
+          <input type="tel" id="m-phone" autocomplete="tel" value="${esc(host0.phone)}" placeholder="+46 …">
+        </div>
+
+        <div class="split-box">
+          <div class="split-per" id="m-per"></div>
+          <div class="split-label">${esc(t("perPerson"))}</div>
+          <div class="split-total" id="m-total"></div>
+        </div>
+
+        <p class="price-disclaimer">${esc(t("priceHonest"))}</p>
+        <p class="price-disclaimer">${esc(t("requestMailNote"))}</p>
+        <label class="consent-row" for="m-consent">
+          <span class="consent-box"><input type="checkbox" id="m-consent" required></span>
+          <span class="consent-text">${esc(t("consentBefore"))}<a href="#/integritet" id="m-privacy">${esc(t("consentPrivacy"))}</a>${esc(t("consentAfter"))}</span>
         </label>
-        <p class="stepper-hint">${esc(t("openForHint"))}</p>
-      </div>
-
-      <div class="form-group">
-        <label for="g-name">${esc(t("inviteGuests"))} <span class="label-optional">(${esc(t("inviteGuestsHint"))})</span></label>
-        <div class="guest-row">
-          <input type="text" id="g-name" placeholder="${esc(t("namePh"))}" autocomplete="off">
-          <input type="email" id="g-email" placeholder="${esc(t("emailPh"))}" autocomplete="off">
-          <button class="btn btn-ghost btn-sm" id="g-add" type="button">${esc(t("addGuest"))}</button>
+        <details class="privacy-inline" id="m-privacy-details">
+          <summary>${esc(t("privacySummary"))}</summary>
+          <p>${esc(t("privacyInline").replace("{mail}", CONCIERGE_MAIL))}</p>
+        </details>
+        <div class="field-error hidden" id="err-confirm" role="alert"></div>
+        <div class="req-nav">
+          <button type="button" class="btn btn-ghost" id="m-back-3">← ${esc(t("stepBack"))}</button>
+          <button class="btn btn-gold" id="m-confirm">${esc(t("sendRequest"))}</button>
         </div>
-        <div class="field-error hidden" id="err-guest" role="alert"></div>
-        <div class="chip-list" id="g-chips" aria-live="polite"></div>
       </div>
-
-      <div class="form-group">
-        <label for="m-budget">${esc(t("optionalBudget"))} <span class="label-optional">(${esc(t("optional"))})</span></label>
-        <input type="number" id="m-budget" min="0" step="50" inputmode="numeric" placeholder="${esc(t("budgetPh"))}">
-        <p class="stepper-hint">${esc(t("budgetHint"))}</p>
-      </div>
-
-      <div class="split-box">
-        <div class="split-per" id="m-per"></div>
-        <div class="split-label">${esc(t("perPerson"))}</div>
-        <div class="split-total" id="m-total"></div>
-      </div>
-
-      <p class="price-disclaimer">${esc(t("priceHonest"))}</p>
-      <p class="price-disclaimer">${esc(t("requestMailNote"))}</p>
-      <label class="consent-row" for="m-consent">
-        <span class="consent-box"><input type="checkbox" id="m-consent" required></span>
-        <span class="consent-text">${esc(t("consentBefore"))}<a href="#/integritet" id="m-privacy">${esc(t("consentPrivacy"))}</a>${esc(t("consentAfter"))}</span>
-      </label>
-      <details class="privacy-inline" id="m-privacy-details">
-        <summary>${esc(t("privacySummary"))}</summary>
-        <p>${esc(t("privacyInline").replace("{mail}", CONCIERGE_MAIL))}</p>
-      </details>
-      <div class="field-error hidden" id="err-confirm" role="alert"></div>
-      <button class="btn btn-gold" id="m-confirm" style="width:100%">${esc(t("sendRequest"))}</button>
     </div>
   </div>`;
 
@@ -3464,22 +3643,84 @@ async function openBookingModal(v, preselectedPackageId = "") {
   };
 
   const budgetVal = () => Math.max(0, Number($("#m-budget")?.value || 0));
+  const fmtCur = (n, cur = "EUR") => {
+    try { return new Intl.NumberFormat(localeTag(), { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(n); } catch { return fmtEUR(n); }
+  };
+  const shortDate = (iso) => {
+    try { return new Intl.DateTimeFormat(localeTag(), { day: "numeric", month: "short" }).format(new Date(`${iso}T12:00:00`)); } catch { return iso; }
+  };
+  // Per person: värdens budget vinner, annars billigaste kända pris för valt paket ("från").
+  const perPersonTxt = () => {
+    const budget = budgetVal();
+    if (budget > 0) return fmtEUR(Math.ceil(budget / party));
+    if (sel?.price) return `${t("fromCalcFrom")} ${fmtCur(Math.ceil(sel.price / party), sel.currency)}`;
+    return moneyOrClub(0);
+  };
+  let step = 1;
+  let maxStep = preselectedPackageId ? 2 : 1;
   const update = () => {
     $("#m-party").textContent = party;
     const budget = budgetVal();
-    const per = budget > 0 ? Math.ceil(budget / party) : 0;
-    $("#m-per").textContent = moneyOrClub(per);
+    $("#m-per").textContent = perPersonTxt();
     $("#m-total").textContent = budget > 0
       ? `${fmtEUR(budget)} · ${t("splitOn")} ${party} ${t("people")}`
-      : t("clubSetsPrice");
+      : sel?.price
+        ? `${sel.priceType === "minimum-spend" ? `${t("minimumSpend")}: ` : ""}${fmtCur(sel.price, sel.currency)} · ${t("splitOn")} ${party} ${t("people")}`
+        : t("clubSetsPrice");
+    // Sammanfattningen byggs upp allteftersom stegen besöks.
     const dateEl = $("#m-date");
-    const dateTxt = dateEl && dateEl.value ? dateEl.value : t("dateLabel").toLowerCase();
-    $("#m-summary").innerHTML = `<strong>${esc(sel.name)}</strong> · ${esc(dateTxt)} · ${party} ${esc(t("persShort"))} · ${esc(moneyOrClub(per))}`;
+    const parts = [];
+    if (maxStep >= 2 || preselectedPackageId) parts.push(`<strong>${esc(sel.name)}</strong>`);
+    if (dateEl?.value) parts.push(esc(shortDate(dateEl.value)));
+    if (maxStep >= 3) {
+      parts.push(`${party} ${esc(t("persShort"))}`);
+      parts.push(`${esc(perPersonTxt())} ${esc(t("perPerson"))}`);
+    }
+    $("#m-summary").innerHTML = parts.join(" · ");
     $("#m-party-hint").textContent = guests.length
       ? t("guestsPlus").replace("{n}", String(guests.length)).replace("{word}", guests.length === 1 ? t("guestOne") : t("guestMany"))
         + (party > minParty() ? t("unnamedExtra").replace("{n}", String(party - minParty())) : "")
       : "";
   };
+
+  const stepBtns = [...root.querySelectorAll(".req-step")];
+  const panes = [...root.querySelectorAll(".req-pane")];
+  const setStep = (n) => {
+    step = Math.min(3, Math.max(1, n));
+    maxStep = Math.max(maxStep, step);
+    panes.forEach((p) => p.classList.toggle("active", Number(p.dataset.pane) === step));
+    stepBtns.forEach((b, i) => {
+      const num = i + 1;
+      b.classList.toggle("on", num === step);
+      b.classList.toggle("done", num < step);
+      b.disabled = num > maxStep;
+      if (num === step) b.setAttribute("aria-current", "step"); else b.removeAttribute("aria-current");
+    });
+    const fill = $("#m-progress");
+    if (fill) fill.style.width = `${Math.round((step / 3) * 100)}%`;
+    const modalBox = root.querySelector(".modal");
+    if (modalBox) modalBox.scrollTop = 0;
+    const ov = $("#overlay");
+    if (ov) ov.scrollTop = 0;
+    update();
+  };
+  const validDate = () => {
+    const date = $("#m-date")?.value || "";
+    setErr("err-date", "");
+    if (!date) { setErr("err-date", t("errDate")); $("#m-date")?.focus(); return false; }
+    if (date < todayISO()) { setErr("err-date", t("errDatePast")); $("#m-date")?.focus(); return false; }
+    return true;
+  };
+  stepBtns.forEach((b) => b.addEventListener("click", () => {
+    const target = Number(b.dataset.step);
+    if (target === step || target > maxStep) return;
+    if (target > 1 && !validDate()) { setStep(1); return; }
+    setStep(target);
+  }));
+  $("#m-next-1")?.addEventListener("click", () => { if (validDate()) setStep(2); });
+  $("#m-next-2")?.addEventListener("click", () => setStep(3));
+  $("#m-back-2")?.addEventListener("click", () => setStep(1));
+  $("#m-back-3")?.addEventListener("click", () => setStep(2));
 
   const addGuest = () => {
     const name = $("#g-name").value.trim();
@@ -3571,8 +3812,8 @@ async function openBookingModal(v, preselectedPackageId = "") {
     setErr("err-date", ""); setErr("err-confirm", ""); setErr("err-host", ""); setErr("err-email", "");
     if (!hostName) { setErr("err-host", t("errHost")); $("#m-host").focus(); return; }
     if (!hostEmail || !EMAIL_RE.test(hostEmail)) { setErr("err-email", t("errEmail")); $("#m-email").focus(); return; }
-    if (!date) { setErr("err-date", t("errDate")); $("#m-date").focus(); return; }
-    if (date < todayISO()) { setErr("err-date", t("errDatePast")); $("#m-date").focus(); return; }
+    if (!date) { setStep(1); setErr("err-date", t("errDate")); $("#m-date").focus(); return; }
+    if (date < todayISO()) { setStep(1); setErr("err-date", t("errDatePast")); $("#m-date").focus(); return; }
     if (!Number.isInteger(party) || party < 1) { setErr("err-confirm", t("errParty")); return; }
     if (!$("#m-consent").checked) { setErr("err-confirm", t("errConsent")); $("#m-consent").focus(); return; }
 
@@ -3634,7 +3875,7 @@ async function openBookingModal(v, preselectedPackageId = "") {
   });
 
   renderChips();
-  update();
+  setStep(preselectedPackageId ? 2 : 1);
 }
 
 function showConfirmation(b, opener) {
@@ -3700,9 +3941,18 @@ function showConfirmation(b, opener) {
   $("#c-go").addEventListener("click", () => close(false));
   const copyBtn = $("#c-copy");
   if (copyBtn) {
+    const orig = copyBtn.textContent;
     copyBtn.addEventListener("click", async () => {
+      if (copyBtn.disabled) return;
+      copyBtn.disabled = true; // direkt — snabba dubbelklick ska inte hinna före await:en
       const ok = await copyText(inviteTextFor(b));
       copyBtn.textContent = ok ? t("copiedOk") : t("copyFail");
+      copyBtn.classList.toggle("copied", ok);
+      setTimeout(() => {
+        copyBtn.textContent = orig;
+        copyBtn.classList.remove("copied");
+        copyBtn.disabled = false;
+      }, 1800);
     });
   }
   $("#overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });
@@ -3969,7 +4219,11 @@ function ensureLeaflet() {
     link.href = LEAFLET_CDN.css;
     link.integrity = LEAFLET_CDN.cssIntegrity;
     link.crossOrigin = "anonymous";
-    document.head.appendChild(link);
+    // Före app.css i kaskaden — annars vinner Leaflets defaults (vit popup)
+    // över appens mörka tema vid samma specificitet.
+    const appCss = document.querySelector('link[rel="stylesheet"][href*="app.css"]');
+    if (appCss) document.head.insertBefore(link, appCss);
+    else document.head.appendChild(link);
     const s = document.createElement("script");
     s.src = LEAFLET_CDN.js;
     s.integrity = LEAFLET_CDN.jsIntegrity;
@@ -3994,10 +4248,40 @@ function destroyMaps() {
   ACTIVE_MAPS = [];
 }
 
+// Passa in kartan när containern faktiskt har en storlek. Vid kall sidladdning
+// direkt till en kartrutt kan Leaflet initieras innan CSS:en layoutat — då
+// räknar fitBounds på 0×0 och fastnar på maxzoom (grå tiles). Vi väntar in
+// första riktiga layouten och passar in en gång till.
+function fitWhenSized(map, fit) {
+  fit();
+  const el = map.getContainer();
+  const sized = () => el.clientWidth > 0 && el.clientHeight > 0;
+  if (sized()) return; // layouten fanns vid init — fitBounds räknade rätt direkt
+  if (typeof ResizeObserver === "function") {
+    const ro = new ResizeObserver(() => {
+      if (!ACTIVE_MAPS.includes(map)) { ro.disconnect(); return; }
+      if (!sized()) return;
+      ro.disconnect();
+      map.invalidateSize();
+      fit();
+    });
+    ro.observe(el);
+  } else {
+    const tick = () => {
+      if (!ACTIVE_MAPS.includes(map)) return;
+      if (sized()) { map.invalidateSize(); fit(); }
+      else requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+}
+
 function darkTileLayer(L) {
-  return L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
-    subdomains: "abcd",
+  // OSM-standardtiles (nyckelfria) + CSS-mörkfilter (.velvet-tiles-dark) —
+  // CARTO:s dark_all kräver numera API-nyckel och servade "API KEY REQUIRED"-tiles.
+  return L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+    className: "velvet-tiles-dark",
     maxZoom: 19,
   });
 }
@@ -4076,19 +4360,88 @@ function mapFallbackHTML(id) {
   </div>`;
 }
 
+// Touchvänlig karta: en-fingersvep ska scrolla sidan, två fingrar styr kartan.
+// (Samma mönster som leaflet-gesture-handling, utan plugin — dragging togglas
+// per antal fingrar och touch-action: pan-y låter sidan scrolla.)
+function attachMapGestures(map, shell) {
+  if (!window.matchMedia("(pointer: coarse)").matches) return;
+  const container = map.getContainer();
+  container.classList.add("map-gesture");
+  map.dragging.disable();
+  const hint = document.createElement("div");
+  hint.className = "map-gesture-hint";
+  hint.setAttribute("aria-hidden", "true");
+  hint.textContent = t("mapTwoFinger");
+  shell.appendChild(hint);
+  let hideTimer = null;
+  container.addEventListener("touchstart", (e) => {
+    if (e.touches.length >= 2) {
+      map.dragging.enable();
+      clearTimeout(hideTimer);
+      hint.classList.remove("on");
+    } else {
+      map.dragging.disable();
+    }
+  }, { passive: true });
+  container.addEventListener("touchmove", (e) => {
+    if (e.touches.length !== 1) return;
+    hint.classList.add("on");
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => hint.classList.remove("on"), 1100);
+  }, { passive: true });
+  container.addEventListener("touchend", (e) => {
+    if (e.touches.length === 0) map.dragging.disable();
+  }, { passive: true });
+}
+
 // ---------- Kartvyn (#/map) ----------
+// Kartläge/listläge — listan är det tangentbords- och skärmläsarvänliga
+// alternativet till kartmarkörerna, och valet minns mellan besök.
+const MAP_MODE_KEY = "velvet_map_mode_v1";
+const mapListMode = () => { try { return localStorage.getItem(MAP_MODE_KEY) === "list"; } catch { return false; } };
+
+function mapListHTML() {
+  const dests = [...publicDestinations()]
+    .filter((d) => d && d.name)
+    .sort((a, b) => (a.tier === b.tier ? String(a.name).localeCompare(String(b.name)) : String(a.tier).localeCompare(String(b.tier))));
+  return `<ol class="map-list">${dests.map((d) => {
+    const count = publicVenues().filter((v) => v.destination === d.name).length;
+    return `<li class="map-list-item">
+      <div class="map-list-main">
+        <a class="map-list-name" href="#/destination/${encodeURIComponent(d.code)}" data-nav>${esc(d.name)}</a>
+        <div class="map-list-meta">${esc(d.country)} · ${esc(d.tier)} · ${count} ${esc(count === 1 ? t("venueOne") : t("venueMany"))} · ${esc(t("seasonShort"))} ${esc(d.peak_season)}</div>
+      </div>
+      <a class="btn btn-ghost btn-sm" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
+    </li>`;
+  }).join("")}</ol>`;
+}
+
 function renderMapView() {
+  const asList = mapListMode();
   view().innerHTML = `
   <section class="section map-section">
     <div class="section-head">
-      <div><h2>${esc(t("navMap"))}</h2><div class="sub">${esc(t("mapSub").replace("{dests}", String(orderedPublicDestinations().length)).replace("{venues}", String(publicVenues().length)))}</div></div>
-      <button class="btn btn-ghost btn-sm map-near-btn" id="map-near" disabled><span aria-hidden="true">🧭</span> ${esc(t("nearMe"))}</button>
+      <div><h2>${esc(t("navMap"))}</h2><div class="sub">${esc((asList ? t("mapListSub") : t("mapSub")).replace("{dests}", String(orderedPublicDestinations().length)).replace("{venues}", String(publicVenues().length)))}</div></div>
+      <div class="map-head-actions">
+        <button class="btn btn-ghost btn-sm" id="map-mode" aria-pressed="${asList}">${esc(asList ? t("mapShowMap") : t("mapShowList"))}</button>
+        ${asList ? "" : `<button class="btn btn-ghost btn-sm map-near-btn" id="map-near" disabled><span aria-hidden="true">🧭</span> ${esc(t("nearMe"))}</button>`}
+      </div>
     </div>
+    ${asList ? mapListHTML() : `
     <div class="map-shell">
       <div id="map-all" class="map-canvas" role="application" aria-label="${esc(t("mapAria"))}"></div>
       <div class="map-loading" id="map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("loadingMap"))}</div>
-    </div>
+    </div>`}
   </section>`;
+
+  $("#map-mode").addEventListener("click", () => {
+    try { localStorage.setItem(MAP_MODE_KEY, asList ? "map" : "list"); } catch {}
+    destroyMaps();
+    renderMapView();
+    const btn = document.getElementById("map-mode");
+    if (btn) btn.focus();
+  });
+  if (asList) return;
 
   const shell = $(".map-shell");
   const mount = () => {
@@ -4099,6 +4452,7 @@ function renderMapView() {
       const map = L.map("map-all", { worldCopyJump: true, zoomControl: true });
       ACTIVE_MAPS.push(map);
       darkTileLayer(L).addTo(map);
+      attachMapGestures(map, shell);
 
       const pts = [];
       orderedPublicDestinations().forEach((d) => {
@@ -4116,8 +4470,10 @@ function renderMapView() {
               <a class="map-pop-link" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
             </div>`);
       });
-      if (pts.length) map.fitBounds(pts, { padding: [36, 36] });
-      else map.setView([40, 10], 3);
+      fitWhenSized(map, () => {
+        if (pts.length) map.fitBounds(pts, { padding: [36, 36] });
+        else map.setView([40, 10], 3);
+      });
 
       // "Nära mig" — zooma till användarens position (återanvänd geo-logiken)
       const near = $("#map-near");
@@ -4162,6 +4518,7 @@ function mountDestMap(d, venues) {
     const map = L.map("map-dest", { scrollWheelZoom: false });
     ACTIVE_MAPS.push(map);
     darkTileLayer(L).addTo(map);
+    attachMapGestures(map, host.closest(".map-shell") || host.parentElement || host);
 
     // Destinationens egen nål i centrum
     L.marker([d.lat, d.lng], { icon: goldPin(L), title: d.name, alt: d.name })
@@ -4192,7 +4549,7 @@ function mountDestMap(d, venues) {
           ${v.instagram_url ? `<br><a class="map-pop-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">${esc(igHandle(v.instagram_url) || "Instagram")} ↗</a>` : ""}
         </div>`);
     });
-    map.fitBounds(pts, { padding: [30, 30], maxZoom: 13 });
+    fitWhenSized(map, () => map.fitBounds(pts, { padding: [30, 30], maxZoom: 13 }));
   }).catch(() => {
     const shell = host && host.closest(".map-shell");
     if (!shell || !document.contains(shell)) return;
@@ -4599,7 +4956,7 @@ function renderFavorites() {
   const share = $("#fav-share");
   if (share) {
     share.addEventListener("click", async () => {
-      const payload = { name: "VELVET-lista", ids: loadFavs() };
+      const payload = { name: favListName(), ids: loadFavs() };
       const url = `${location.origin}${location.pathname}#/list/${b64urlEncode(payload)}`;
       const ok = await copyText(url);
       share.textContent = ok ? t("linkCopied") : t("copyFail");
@@ -5924,6 +6281,12 @@ function searchHits(q) {
       out.push({ kind: t("searchKindDest"), title: d.name, meta: d.country, href: `#/destination/${encodeURIComponent(d.code)}` });
     }
   }
+  for (const g of CATEGORY_GROUPS) {
+    const label = t(g.labelKey);
+    if (fold(`${label} ${g.key}`).includes(s)) {
+      out.push({ kind: t("searchKindCat"), title: label, meta: t("navVenues"), href: `#/venues?cat=${encodeURIComponent(g.key)}` });
+    }
+  }
   for (const v of VENUES) {
     if (!venueVisible(v, q)) continue;
     if (fold(`${v.name} ${v.destination} ${v.category}`).includes(s) || !isPublicVenue(v)) {
@@ -6894,6 +7257,21 @@ function route() {
   });
 }
 
+// Mjuk crossfade mellan vyer vid ruttbyte (View Transitions API, progressive
+// enhancement). Vid reduced-motion eller saknat stöd → omedelbart byte som förr.
+// Endast hashchange går via denna; programmatiska route()-anrop förblir direkta.
+function routeWithTransition() {
+  const reduce = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (typeof document.startViewTransition !== "function" || reduce || document.visibilityState === "hidden") { route(); return; }
+  let vt;
+  try { vt = document.startViewTransition(() => route()); }
+  catch { route(); return; }
+  // Snabba ruttbyten/dold flik avbryter pågående övergång → svälj de förväntade rejections
+  vt.updateCallbackDone?.catch(() => {});
+  vt.ready?.catch(() => {});
+  vt.finished?.catch(() => {});
+}
+
 function paintNavLang() {
   const cur = currentLang();
   document.querySelectorAll("[data-nav-lang]").forEach((el) => {
@@ -7141,7 +7519,7 @@ async function init() {
     initMobileNav();
     initSkipLink();
     initSearch();
-    window.addEventListener("hashchange", route);
+    window.addEventListener("hashchange", routeWithTransition);
     const navDest = document.getElementById("nav-dest");
     if (navDest) navDest.addEventListener("click", () => openOnboarding({ dismissable: true }));
   }
@@ -7197,7 +7575,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=148", { updateViaCache: "none" })
+      .register("sw.js?v=149", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
