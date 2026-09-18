@@ -10592,10 +10592,14 @@
           "source": "VELVET curated · official website",
           "curated": true,
           "images": [
-            "https://zinkitalian.se/storage/app/resized/80c/dd5/c42/zinkvideo_ted_thumb_resized_80cdd5c420fb56ab1d451ee7d180d95d6b39c3c1.webp"
+            "https://zinkitalian.se/storage/app/media/bilder/Summer%20at%20Zink_8.jpg",
+            "https://zinkitalian.se/storage/app/media/bilder/Zink%20mix_15.jpg",
+            "https://zinkitalian.se/storage/app/media/bilder/Summer%20at%20Zink_3.jpg",
+            "https://zinkitalian.se/storage/app/media/bilder/Summer%20at%20Zink_7.jpg",
+            "https://zinkitalian.se/storage/app/media/bilder/Zink%20mix_11.jpg"
           ],
-          "imageSource": "https://zinkitalian.se/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.780Z"
+          "imageSource": "https://zinkitalian.se/bilder",
+          "imageVerifiedAt": "2026-09-18T12:46:00.000Z"
         },
         {
           "placeId": "curated-STO-brasserie-astoria",
