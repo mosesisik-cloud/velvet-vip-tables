@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-153-principote-party";
+const VERSION = "v4-real-154-zink-booking";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 

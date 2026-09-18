@@ -210,6 +210,11 @@ function checkRestaurants() {
     if (bad.length) fail("restaurants-honest", bad.slice(0, 8).join("; "));
     else if (Object.keys(dests).length < loadJson("data/destinations.json").length || total < Object.keys(dests).length * 3) fail("restaurants-coverage", `${Object.keys(dests).length} dests · ${total} rows`);
     else ok("restaurants-honest", `${Object.keys(dests).length} dests · ${total} rows · no invented ratings/phones`);
+
+    const zink = dests.STO?.restaurants?.find((r) => r.placeId === "curated-STO-zink-italian-cuisine");
+    if (!zink?.bookingDirect || zink.bookingProvider !== "BokaBord" || !/^https:\/\/app\.bokabord\.se\/reservation\/\?/.test(zink.bookingUrl || "")) {
+      fail("zink-direct-booking", JSON.stringify(zink && { bookingUrl: zink.bookingUrl, bookingProvider: zink.bookingProvider, bookingDirect: zink.bookingDirect }));
+    } else ok("zink-direct-booking", "official BokaBord flow is primary");
   }
 }
 
