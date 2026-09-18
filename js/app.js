@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=149";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=149";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=149";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=149";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=150";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=150";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=150";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=150";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -2021,7 +2021,7 @@ function renderHome() {
 
   <section class="section home-restaurants" id="home-restaurants-section">
     <div class="section-head">
-      <div><h2>${esc(t("navRestaurants"))}</h2><div class="sub">739 restauranger i 39 destinationer</div></div>
+      <div><h2>${esc(t("navRestaurants"))}</h2><div class="sub" id="home-restaurants-count">Restauranger i 39 destinationer</div></div>
       <a class="link-gold" href="#/restaurants" data-nav>${esc(t("navRestaurants"))} →</a>
     </div>
     <div id="home-restaurants"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("restaurantsLoading"))}</p></div>
@@ -2318,6 +2318,9 @@ async function mountHomeRestaurants() {
   let data = null;
   try { const res = await fetch("data/restaurants.json", { cache: "no-store" }); if (res.ok) data = await res.json(); } catch {}
   const rows = data?.destinations || {};
+  const total = Object.values(rows).reduce((sum, destination) => sum + (destination.restaurants || []).length, 0);
+  const counter = document.getElementById("home-restaurants-count");
+  if (counter && total) counter.textContent = `${total.toLocaleString(currentLang())} restauranger i ${Object.keys(rows).length} destinationer`;
   const localCode = homeDestination()?.code || (() => { const g = loadGeo(); return g ? nearestDestination(g.lat, g.lng)?.d?.code : ""; })();
   const featuredCodes = [localCode, "TYO", "HKG", "SYD", "CPT", "RIO", "CDM", "LIS", "AMS"].filter((code, i, all) => code && all.indexOf(code) === i);
   const featured = featuredCodes.flatMap((code) => publishableRestaurants(rows[code]?.restaurants || []).slice(0, 1));
@@ -7575,7 +7578,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=149", { updateViaCache: "none" })
+      .register("sw.js?v=150", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
