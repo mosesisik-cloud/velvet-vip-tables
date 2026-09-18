@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=147";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=147";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=147";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=147";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=148";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=148";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=148";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=148";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -787,11 +787,18 @@ function profileReady(u) {
 }
 async function loginWithSocial(provider) {
   if (!SOCIALS.some((s) => s.id === provider)) return { ok: false };
-  // Full-page redirect works from GitHub previews too: no CORS preflight is
-  // involved, and the server owns state + callback validation.
   try { sessionStorage.setItem("velvet_oauth_from", location.hash || "#/"); } catch {}
-  location.assign(`${apiBase()}/auth/login/${encodeURIComponent(provider)}`);
-  return { oauth: true };
+  // Readiness check prevents an old/non-deployed API from turning a click into
+  // a 404. Once configured, the returned URL is the provider's real OAuth page.
+  const start = await Promise.race([
+    apiJSON(`/auth/start/${encodeURIComponent(provider)}`),
+    new Promise((resolve) => setTimeout(() => resolve(null), 2500)),
+  ]);
+  if (start?.url && /^https:\/\//i.test(start.url)) {
+    location.assign(start.url);
+    return { oauth: true };
+  }
+  return { unavailable: true, provider, reason: start?.error || (start?.local ? "not_configured" : "server") };
 }
 function isPreviewHost() {
   return /\.app\.github\.dev$/i.test(location.hostname);
@@ -7190,7 +7197,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=147", { updateViaCache: "none" })
+      .register("sw.js?v=148", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
