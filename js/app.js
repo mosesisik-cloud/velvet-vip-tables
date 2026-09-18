@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=154";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=154";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=154";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=154";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=155";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=155";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=155";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=155";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -2399,13 +2399,21 @@ async function renderRestaurantDetail(placeId) {
   const rating = Number(restaurant.rating);
   const images = Array.isArray(restaurant.images) ? restaurant.images : [];
   const socials = [["Instagram", restaurant.instagram], ["Facebook", restaurant.facebook], ["TikTok", restaurant.tiktok]].filter(([, url]) => /^https:\/\//i.test(url || ""));
+  const directMenu = /^https:\/\//i.test(restaurant.menuUrl || "");
+  const menuHref = directMenu ? restaurant.menuUrl : (/^https:\/\//i.test(restaurant.website || "") ? restaurant.website : restaurant.mapsUrl);
+  const menuLabel = directMenu ? "Öppna officiell meny" : (restaurant.website ? "Hitta menyn på officiella sidan" : "Meny och information på Google");
+  const menuNote = directMenu
+    ? "Verifierad länk till restaurangens egen meny. Rätter och priser kan ändras."
+    : restaurant.website
+      ? "Restaurangen har ännu ingen separat verifierad menylänk. Öppna deras egen sida för aktuell meny."
+      : "Ingen officiell webbmeny är verifierad ännu. VELVET hittar aldrig på rätter eller priser.";
   const today = new Date().toISOString().slice(0, 10);
   view().innerHTML = `<section class="section restaurant-detail">
     <a class="back-link" href="#/destination/${encodeURIComponent(destination.code)}" data-nav>← Restauranger i ${esc(destination.destination)}</a>
     ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} officiella bilder · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">källa ↗</a></div></div>` : `<div class="restaurant-detail-placeholder"><b aria-hidden="true">${esc(String(restaurant.name || "R").slice(0, 1).toUpperCase())}</b><span>${esc(restaurant.name)}</span><small>Ingen generisk bild visas · officiell originalbild verifieras</small></div>`}
     <div class="restaurant-detail-hero">
       <div><div class="eyebrow">${esc(restaurant.cuisine || "Restaurang")}</div><h1>${esc(restaurant.name)}</h1><p class="restaurant-lead">${esc(restaurant.description || `Restaurang i ${destination.destination}.`)}</p>
-        <div class="restaurant-detail-actions">${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}${restaurant.menuUrl ? `<a class="btn" href="${esc(restaurant.menuUrl)}" target="_blank" rel="noopener">Meny ↗</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">Karta ↗</a>` : ""}</div>
+        <div class="restaurant-detail-actions">${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuHref)}" target="_blank" rel="noopener">Meny ↗</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">Karta ↗</a>` : ""}</div>
       </div>
       <div class="restaurant-detail-rating">${Number.isFinite(rating) && rating > 0 ? `<strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span><small>${esc(String(restaurant.reviewCount || 0))} recensioner · ${esc(restaurant.reviewSource || "Google")}</small>` : `<small>Inget verifierat betyg publicerat ännu</small>`}</div>
     </div>
@@ -2416,6 +2424,7 @@ async function renderRestaurantDetail(placeId) {
           ${restaurant.cuisine ? `<div><dt>Kök</dt><dd>${esc(restaurant.cuisine)}</dd></div>` : ""}${restaurant.priceClass ? `<div><dt>Prisklass</dt><dd>${esc(restaurant.priceClass)}</dd></div>` : ""}${restaurant.openingHours ? `<div><dt>Öppettider</dt><dd>${esc(restaurant.openingHours)}</dd></div>` : ""}
           ${restaurant.phone ? `<div><dt>Telefon</dt><dd><a href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">${esc(restaurant.phone)}</a></dd></div>` : ""}${restaurant.email ? `<div><dt>E-post</dt><dd><a href="mailto:${esc(restaurant.email)}">${esc(restaurant.email)}</a></dd></div>` : ""}
         </dl></div>
+        <div class="detail-panel restaurant-menu-panel"><span class="eyebrow">Mat & dryck</span><h2>Meny</h2><p>${esc(menuNote)}</p>${menuHref ? `<a class="btn btn-gold" href="${esc(menuHref)}" target="_blank" rel="noopener">${esc(menuLabel)} ↗</a>` : ""}</div>
         <div class="detail-panel"><h2>Sociala medier & recensioner</h2><div class="restaurant-socials">${socials.length ? socials.map(([name, url]) => `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)} ↗</a>`).join("") : `<span class="events-meta">Inga verifierade sociala länkar ännu.</span>`}</div>${restaurant.reviewUrl ? `<p class="restaurant-review-link"><a class="link-gold" href="${esc(restaurant.reviewUrl)}" target="_blank" rel="noopener">Läs verifierade recensioner på ${esc(restaurant.reviewSource || "Google")} ↗</a></p>` : ""}</div>
       </div>
       <aside class="detail-panel restaurant-book-panel"><span class="eyebrow">Vanlig restaurangbokning</span><h2>Boka bord</h2><p>Välj datum, tid och sällskap. Ingen promoter och ingen gruppmatchning.</p>
@@ -3114,10 +3123,13 @@ function menuPanelHTML(v) {
   const m = venueMenu(v);
   const items = m && Array.isArray(m.items) ? m.items.filter((x) => x && x.name) : [];
   if (!items.length) {
+    const official = (m && /^https:\/\//i.test(m.source || "") && m.source) || v.website_url || v.source_url || "";
     return `
     <div class="detail-panel menu-panel">
       <h2 class="detail-panel-title">${esc(t("menuTitle"))}</h2>
       <p class="events-meta">${esc(t("menuEmpty"))}</p>
+      <p class="events-meta">${esc(t("menuOfficialHint"))}</p>
+      ${official ? `<p><a class="btn btn-gold btn-sm" href="${esc(official)}" target="_blank" rel="noopener">${esc(t("menuOfficial"))} ↗</a></p>` : ""}
     </div>`;
   }
   return `
@@ -7582,7 +7594,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=154", { updateViaCache: "none" })
+      .register("sw.js?v=155", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

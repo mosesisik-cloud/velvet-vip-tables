@@ -86,7 +86,10 @@
             "https://cancaus.com/system/images/restaurant/galeria/thumb/16.jpg"
           ],
           "imageSource": "https://cancaus.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.772Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.772Z",
+          "menuUrl": "https://cancaus.com/system/images/restaurant/vinos.pdf",
+          "menuSource": "https://cancaus.com",
+          "menuVerifiedAt": "2026-09-18T13:20:17.623Z"
         },
         {
           "placeId": "osm-IBZ-ama-lur",
@@ -228,7 +231,10 @@
             "https://wildbeets.com/wp-content/uploads/2015/07/wild-beets-iv6.jpg"
           ],
           "imageSource": "https://wildbeets.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.778Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.778Z",
+          "menuUrl": "https://wildbeets.com/menu/",
+          "menuSource": "https://wildbeets.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:18.085Z"
         },
         {
           "placeId": "osm-IBZ-l-atelier-no74",
@@ -323,7 +329,10 @@
             "https://www.restaurantesantagertrudis.com/images/banner-home2.jpg"
           ],
           "imageSource": "https://www.restaurantesantagertrudis.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.777Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.777Z",
+          "menuUrl": "https://www.restaurantesantagertrudis.com/pdf/Menu_ESP.pdf",
+          "menuSource": "https://www.restaurantesantagertrudis.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:17.629Z"
         },
         {
           "placeId": "osm-IBZ-bar-ulivans",
@@ -358,7 +367,10 @@
             "https://www.fincalaplaza.com/wp-content/uploads/2026/06/5K3A6996-scaled.jpg"
           ],
           "imageSource": "https://www.fincalaplaza.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.778Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.778Z",
+          "menuUrl": "https://www.fincalaplaza.com/menu/",
+          "menuSource": "https://www.fincalaplaza.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:18.292Z"
         },
         {
           "placeId": "osm-IBZ-musset-cafe",
@@ -461,7 +473,10 @@
             "https://lasdoslunas.com/wp-content/uploads/2018/04/history4.png"
           ],
           "imageSource": "https://lasdoslunas.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.778Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.778Z",
+          "menuUrl": "https://lasdoslunas.com/wp-content/uploads/2022/05/Menu-2022-ENG-Small.pdf",
+          "menuSource": "https://lasdoslunas.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:18.924Z"
         },
         {
           "placeId": "osm-IBZ-tonu",
@@ -795,7 +810,10 @@
             "https://rowleysrestaurants.com/wp-content/uploads/2026/05/The-little-fox-now-open--726x1024.jpg"
           ],
           "imageSource": "https://rowleysrestaurants.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.778Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.778Z",
+          "menuUrl": "https://rowleysrestaurants.com/the-menu/",
+          "menuSource": "https://rowleysrestaurants.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:20.349Z"
         },
         {
           "placeId": "osm-DXB-be-super-natural-kitchen",
@@ -1109,7 +1127,10 @@
             "https://baraltamirano.es//wp-content//uploads//2023//06//azulejos-sevillanos-altamirano.jpg"
           ],
           "imageSource": "https://baraltamirano.es/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.778Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.778Z",
+          "menuUrl": "https://baraltamirano.es/wp-content/uploads/2023/08/Altamirano_Carta_final.pdf",
+          "menuSource": "https://baraltamirano.es/",
+          "menuVerifiedAt": "2026-09-18T13:20:18.429Z"
         },
         {
           "placeId": "osm-MRB-zozoi",
@@ -1180,7 +1201,10 @@
             "https://www.bellambriananelmondo.com/_next/image?url=%2Fimages%2Fgallery%2Fgallery-3.jpg&w=3840&q=75&dpl=dpl_8YCfxA1CpzJQXnCby26HQXa63atf"
           ],
           "imageSource": "https://www.bellambriananelmondo.com/it",
-          "imageVerifiedAt": "2026-09-17T10:26:11.778Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.778Z",
+          "menuUrl": "https://www.bellambriananelmondo.com/menu/bellambriana-bayahibe.pdf",
+          "menuSource": "https://www.bellambriananelmondo.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:18.540Z"
         },
         {
           "placeId": "osm-MRB-stuzzikini",
@@ -1202,7 +1226,10 @@
             "https://stuzzikini.com/wp-content/uploads/2020/07/stuzzikini_discover_menu-1024x1024.jpg"
           ],
           "imageSource": "https://stuzzikini.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://stuzzikini.com/wp-content/uploads/2020/07/stuzzikini_discover_menu.jpg",
+          "menuSource": "https://stuzzikini.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:19.597Z"
         },
         {
           "placeId": "osm-MRB-mr-pizza",
@@ -1278,7 +1305,10 @@
             "https://buenosairesmarbella.com/wp-content/uploads/2017/03/Buenos-Aires-Photos.png"
           ],
           "imageSource": "https://buenosairesmarbella.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.778Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.778Z",
+          "menuUrl": "https://buenosairesmarbella.com/menu/",
+          "menuSource": "https://buenosairesmarbella.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:19.459Z"
         },
         {
           "placeId": "osm-MRB-la-luca",
@@ -1447,7 +1477,10 @@
             "https://verde-beach.com/wp-content/uploads/2026/06/beach-event-3-1195x1536.jpg"
           ],
           "imageSource": "https://verde-beach.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://verde-beach.com/wp-content/uploads/2026/06/2026-VerdeBeach-Menu.pdf",
+          "menuSource": "https://verde-beach.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:19.393Z"
         },
         {
           "placeId": "osm-STT-le-sporting",
@@ -1673,7 +1706,10 @@
             "https://www.salama-saint-tropez.com/images/histoire/restaurant-salama-saint-tropez-6-2026.jpg"
           ],
           "imageSource": "https://www.salama-saint-tropez.com/fr/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.salama-saint-tropez.com/menu",
+          "menuSource": "https://www.salama-saint-tropez.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:19.241Z"
         },
         {
           "placeId": "osm-STT-le-girelier",
@@ -1832,7 +1868,10 @@
             "https://www.lapesquiere.fr/wp-content/uploads/2024/06/cuisine-pesquiere.webp"
           ],
           "imageSource": "https://www.lapesquiere.fr/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.lapesquiere.fr/menu-et-carte-cuisine-provencale/",
+          "menuSource": "https://www.lapesquiere.fr/",
+          "menuVerifiedAt": "2026-09-18T13:20:19.735Z"
         }
       ]
     },
@@ -1861,7 +1900,10 @@
             "https://www.amazonicorestaurant.com/wp-content/uploads/2026/07/23f7fc71-ada6-4c17-9051-1b31210280fe-819x1024.jpeg"
           ],
           "imageSource": "https://www.amazonicorestaurant.com/monte-carlo/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.amazonicorestaurant.com/monte-carlo/menus/",
+          "menuSource": "https://www.amazonicorestaurant.com/monte-carlo/",
+          "menuVerifiedAt": "2026-09-18T13:20:19.892Z"
         },
         {
           "placeId": "curated-MCO-pavyllon-monte-carlo",
@@ -1980,7 +2022,10 @@
             "https://www.fourseasons.com/alt/img-opt/~70.1530.0,0000-1378,7957-2252,0000-1266,7500/publish/content/dam/fourseasons/images/web/GHF/GHF_3448_original.jpg"
           ],
           "imageSource": "https://www.fourseasons.com/capferrat/dining/restaurants/la_veranda/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.fourseasons.com/capferrat/dining/menus/childrens-menu/",
+          "menuSource": "https://www.fourseasons.com/capferrat/dining/restaurants/la_veranda/",
+          "menuVerifiedAt": "2026-09-18T13:20:19.472Z"
         },
         {
           "placeId": "osm-MCO-le-cap",
@@ -2002,7 +2047,10 @@
             "https://www.fourseasons.com/alt/img-opt/~70.1530.0,0000-312,5000-3000,0000-1687,5000/publish/content/dam/fourseasons/images/web/GHF/GHF_3032_original.jpg"
           ],
           "imageSource": "https://www.fourseasons.com/capferrat/dining/restaurants/le_cap/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.fourseasons.com/capferrat/dining/menus/dinner/",
+          "menuSource": "https://www.fourseasons.com/capferrat/dining/restaurants/le_cap/",
+          "menuVerifiedAt": "2026-09-18T13:20:19.524Z"
         },
         {
           "placeId": "osm-MCO-pizza-du-mont-boron",
@@ -2037,7 +2085,10 @@
             "https://www.asiafood79.com/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fllhef0a9%2Fproduction%2Fd1e6e97bc6a1645d542b83fccc5a9499ccbbd2e9-2048x1542.jpg%3Frect%3D10%2C3%2C2037%2C1538%26auto%3Dformat&w=828&q=75"
           ],
           "imageSource": "https://www.asiafood79.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.asiafood79.com/carte",
+          "menuSource": "https://www.asiafood79.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:19.875Z"
         },
         {
           "placeId": "osm-MCO-aradhana",
@@ -2059,7 +2110,10 @@
             "https://aradhana.fr/image/og-image.jpg"
           ],
           "imageSource": "https://aradhana.fr/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://aradhana.fr/data/files/Menu2025.pdf",
+          "menuSource": "https://aradhana.fr/",
+          "menuVerifiedAt": "2026-09-18T13:20:20.097Z"
         },
         {
           "placeId": "osm-MCO-lalqila",
@@ -2179,7 +2233,10 @@
             "https://www.restaurant-la-vigna.com/wp-content/uploads/2026/04/restaurant-port-nice-la-vigna-7-820x1024.jpg"
           ],
           "imageSource": "https://www.restaurant-la-vigna.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.restaurant-la-vigna.com/la-carte",
+          "menuSource": "https://www.restaurant-la-vigna.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:19.991Z"
         },
         {
           "placeId": "osm-MCO-ruines",
@@ -2213,7 +2270,10 @@
             "https://www.chezpipo.fr/assets/img/gallery/min/gallery-04.webp"
           ],
           "imageSource": "https://www.chezpipo.fr/fr/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.chezpipo.fr/fr/la-carte",
+          "menuSource": "https://www.chezpipo.fr/fr/",
+          "menuVerifiedAt": "2026-09-18T13:20:19.902Z"
         },
         {
           "placeId": "osm-MCO-le-36-bonap",
@@ -2269,7 +2329,10 @@
             "https://www.gigitavola.com/wp-content/uploads/2023/07/gigi_restaurant_pizza_sans_gluten-031-copie-768x512.jpg"
           ],
           "imageSource": "https://www.gigitavola.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.gigitavola.com/carte-avec-sans-gluten",
+          "menuSource": "https://www.gigitavola.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:20.017Z"
         },
         {
           "placeId": "osm-MCO-les-copains",
@@ -2393,7 +2456,10 @@
             "https://luccastyle.com/wp-content/uploads/2026/08/lucca-beach-1.jpg"
           ],
           "imageSource": "https://luccastyle.com/en/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://luccastyle.com/wp-content/uploads/2025/12/lu_menu_main26.pdf",
+          "menuSource": "https://www.luccastyle.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:22.552Z"
         },
         {
           "placeId": "curated-BDR-zuma-bodrum",
@@ -2816,7 +2882,10 @@
             "https://baan-food.com/assets/images/no_image.png"
           ],
           "imageSource": "https://baan-food.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://baan-food.com/menu",
+          "menuSource": "https://baan-food.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:20.609Z"
         },
         {
           "placeId": "osm-HKT-love2eat",
@@ -3115,7 +3184,10 @@
             "https://static.wixstatic.com/media/1cce5b_f84c429746074fe49333224593b2ace2~mv2.png/v1/fill/w_560,h_93,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/1cce5b_f84c429746074fe49333224593b2ace2~mv2.png"
           ],
           "imageSource": "https://www.baraka-restaurant-phuket.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.baraka-restaurant-phuket.com/menu",
+          "menuSource": "https://baraka-restaurant-phuket.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:21.577Z"
         },
         {
           "placeId": "osm-HKT-yunnan",
@@ -3283,7 +3355,10 @@
             "https://lh7-us.googleusercontent.com/sitesv-images-rt/AMxu72sA532KB543SPshHJI7-28r6I4fsFkYgK_8NrGBvDSLBFLlLK0BL6gO9vb0EfJBV88njnLoARpFvtL7GJZ3tX0EbkgVoKcFlLo3txv3Sz4Wy6WcaQn_uhERrETgI2Hy7l9JXUwCpVTNMtOrdqj--41EjIGG25FhzXRq7G0Vk5OG9qPfWQMquHLbENIH=w1280"
           ],
           "imageSource": "https://www.kem-kon.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.kem-kon.com/our-menu",
+          "menuSource": "https://www.kem-kon.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:20.676Z"
         },
         {
           "placeId": "osm-BKK-street-restaurants",
@@ -3320,7 +3395,10 @@
           "website": "https://www.kem-kon.com/",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
-          "curated": true
+          "curated": true,
+          "menuUrl": "https://www.kem-kon.com/our-menu",
+          "menuSource": "https://www.kem-kon.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:20.951Z"
         },
         {
           "placeId": "osm-BKK-",
@@ -3381,7 +3459,10 @@
           "website": "http://patonggocafe.com/",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
-          "curated": true
+          "curated": true,
+          "menuUrl": "http://patonggocafe.com/menu/",
+          "menuSource": "http://patonggocafe.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:21.659Z"
         },
         {
           "placeId": "osm-BKK-hachiban-ramen",
@@ -3791,7 +3872,10 @@
             "https://sazonbali.com/wp-content/uploads/2026/04/RGN05244-crop-768x960.jpg"
           ],
           "imageSource": "https://sazonbali.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://sazonbali.com/wp-content/uploads/2026/08/Sazon-All-Day-Menu_A3_August-2026.pdf",
+          "menuSource": "https://sazonbali.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:21.237Z"
         },
         {
           "placeId": "osm-BAL-milk-madu-beach-road",
@@ -3900,7 +3984,10 @@
             "https://static.wixstatic.com/media/b41041_6d01b1088c3641c78d9493593882bc48~mv2.png/v1/fill/w_450,h_451,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/YUKI-SB-Flyer-Sept26-1080x1080.png"
           ],
           "imageSource": "https://www.yuki-bali.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.yuki-bali.com/menu",
+          "menuSource": "https://www.yuki-bali.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:21.048Z"
         },
         {
           "placeId": "osm-BAL-warung-varuna",
@@ -3947,7 +4034,10 @@
             "https://cdn.prod.website-files.com/68c234b7023a902c90432f95/68c7bb0eb26cbd692a005e10_mason_bhg_food_normalcrop-8498-scaled-p-1600.avif"
           ],
           "imageSource": "https://masonrybali.com/canggu",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://masonrybali.com/canggu/menu",
+          "menuSource": "https://masonrybali.com/canggu",
+          "menuVerifiedAt": "2026-09-18T13:20:21.064Z"
         },
         {
           "placeId": "osm-BAL-lulu-bistrot",
@@ -3969,7 +4059,10 @@
             "https://images.squarespace-cdn.com/content/v1/63ea37188c5a3757a85b160b/08ce695b-ccbc-421f-955a-cad242cf6749/bartolo+lulu+1+.jpg"
           ],
           "imageSource": "https://www.lulubistrot.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.lulubistrot.com/s/Lulu_Bar-Cocktail-Menu_20260608-website.pdf",
+          "menuSource": "https://www.lulubistrot.com",
+          "menuVerifiedAt": "2026-09-18T13:20:21.130Z"
         },
         {
           "placeId": "osm-BAL-plant-cartel",
@@ -4094,7 +4187,10 @@
             "https://images.getbento.com/accounts/dfdeee2249dedb4897c4e5e4bf24459c/media/images/640411I3A2093.jpg?w=5400&fit=max&auto=compress,format&cs=origin"
           ],
           "imageSource": "https://www.mayfair-grill.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.mayfair-grill.com/menus",
+          "menuSource": "https://www.mayfair-grill.com",
+          "menuVerifiedAt": "2026-09-18T13:20:21.200Z"
         },
         {
           "placeId": "osm-MIA-sipsip-rum-bar",
@@ -4173,7 +4269,10 @@
             "https://lacabreramiami.com/imgs/galeria_sunny/13/big0000.jpg"
           ],
           "imageSource": "https://lacabreramiami.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://lacabreramiami.com/carta",
+          "menuSource": "https://lacabreramiami.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:22.072Z"
         },
         {
           "placeId": "osm-MIA-panorama-restaurant-sky-lounge",
@@ -5186,7 +5285,10 @@
             "https://irp.cdn-website.com/d55ab78c/dms3rep/multi/opt/66A84F05-7FCB-4E1E-9D13-25931A7310A3-419w.PNG"
           ],
           "imageSource": "https://www.ristorantehivaoa.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.ristorantehivaoa.com/menu",
+          "menuSource": "https://www.ristorantehivaoa.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:22.496Z"
         },
         {
           "placeId": "osm-CER-spinnaker",
@@ -5303,7 +5405,10 @@
             "https://www.iyo-poltuquatu.com/wp-content/uploads/2026/06/IYO-Poltu-Quatu_tramonto-1.png"
           ],
           "imageSource": "https://www.iyo-poltuquatu.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.iyo-poltuquatu.com/menu/",
+          "menuSource": "https://www.iyo-poltuquatu.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:22.994Z"
         },
         {
           "placeId": "osm-CER-da-gianni",
@@ -5404,7 +5509,10 @@
             "https://www.ristoranteilguscio.it/wp-content/uploads/birra-hp-camiceria-ristorante-ilguscio-sardegna-01.jpg"
           ],
           "imageSource": "https://ristoranteilguscio.it/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://ristoranteilguscio.it/il-menu/",
+          "menuSource": "https://ristoranteilguscio.it/",
+          "menuVerifiedAt": "2026-09-18T13:20:24.143Z"
         },
         {
           "placeId": "osm-CER-baia-blu",
@@ -5423,7 +5531,10 @@
             "https://h.mygc.it/www.ristorantebaiablu.it/wp-content/uploads/ristorante-baia-blu-baia-sardinia-sassari-sardegna-la-cantina.jpg"
           ],
           "imageSource": "https://www.ristorantebaiablu.it/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.ristorantebaiablu.it/menu/",
+          "menuSource": "https://www.ristorantebaiablu.it/",
+          "menuVerifiedAt": "2026-09-18T13:20:22.857Z"
         },
         {
           "placeId": "osm-CER-su-entu",
@@ -5635,7 +5746,10 @@
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
           "curated": true,
-          "cuisine": "mediterranean;breakfast;lunch"
+          "cuisine": "mediterranean;breakfast;lunch",
+          "menuUrl": "https://solhvar.com/menu/",
+          "menuSource": "https://solhvar.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:23.022Z"
         },
         {
           "placeId": "osm-HVA-mizarola",
@@ -5707,7 +5821,10 @@
             "https://dalmatino-hvar.com/wp-content/uploads/2022/05/d1-600x390-1-300x195.png"
           ],
           "imageSource": "https://dalmatino-hvar.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://dalmatino-hvar.com/menu",
+          "menuSource": "https://dalmatino-hvar.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:23.200Z"
         },
         {
           "placeId": "osm-HVA-oasis",
@@ -5838,7 +5955,10 @@
             "https://www.macondo.com.hr/al_c"
           ],
           "imageSource": "https://www.macondo.com.hr/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.macondo.com.hr/menu",
+          "menuSource": "https://www.macondo.com.hr/",
+          "menuVerifiedAt": "2026-09-18T13:20:23.103Z"
         }
       ]
     },
@@ -5920,7 +6040,10 @@
           "website": "https://www.barbounaki.gr",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
-          "curated": true
+          "curated": true,
+          "menuUrl": "https://www.barbounaki.gr/el/menu",
+          "menuSource": "https://www.barbounaki.gr",
+          "menuVerifiedAt": "2026-09-18T13:20:23.524Z"
         },
         {
           "placeId": "osm-ATH-",
@@ -5991,7 +6114,10 @@
             "https://agorariviera.gr/wp-content/uploads/2019/11/kotopoulo-konotsouvli-agora-riviera.jpg"
           ],
           "imageSource": "https://agorariviera.gr/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://agorariviera.gr/menu/",
+          "menuSource": "https://agorariviera.gr/",
+          "menuVerifiedAt": "2026-09-18T13:20:24.116Z"
         },
         {
           "placeId": "osm-ATH-kastelorizo",
@@ -6086,7 +6212,10 @@
             "https://static.wixstatic.com/media/007764_d34f6a6b7ba144b985904ab3251d6c8e~mv2.jpg/v1/fit/w_960,h_768,q_90,enc_avif,quality_auto/007764_d34f6a6b7ba144b985904ab3251d6c8e~mv2.jpg"
           ],
           "imageSource": "https://www.napuleitaliancomfortfood.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.napuleitaliancomfortfood.com/menus",
+          "menuSource": "https://www.napuleitaliancomfortfood.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:23.180Z"
         },
         {
           "placeId": "osm-ATH-flames",
@@ -6262,7 +6391,10 @@
             "https://www.seasatinathens.com/themes/custom/mtheme/assets/img/instagram/sea_satin_restaurant_athens_05.jpg"
           ],
           "imageSource": "https://www.seasatinathens.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.seasatinathens.com/menu-sea-satin-athens",
+          "menuSource": "https://www.seasatinathens.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:23.429Z"
         }
       ]
     },
@@ -6706,7 +6838,10 @@
             "https://www.panoramacapri.com/images/image6.jpg"
           ],
           "imageSource": "https://www.panoramacapri.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.panoramacapri.com/food-menu",
+          "menuSource": "https://www.panoramacapri.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:23.441Z"
         },
         {
           "placeId": "osm-CAP-capri-s-ristorante",
@@ -6849,7 +6984,10 @@
             "https://angelicacapri.com/wp-content/uploads/2023/07/image000181-1024x1536.jpg"
           ],
           "imageSource": "https://angelicacapri.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://angelicacapri.com/wp-content/uploads/2023/07/menu.pdf",
+          "menuSource": "https://www.angelicacapri.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:24.338Z"
         },
         {
           "placeId": "osm-CAP-faraglioni",
@@ -7127,7 +7265,10 @@
           "website": "https://www.antichiortidelsole.it/",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
-          "curated": true
+          "curated": true,
+          "menuUrl": "https://antichiortidelsole.it/menu",
+          "menuSource": "https://www.antichiortidelsole.it/",
+          "menuVerifiedAt": "2026-09-18T13:20:23.936Z"
         },
         {
           "placeId": "osm-AMF-l-incanto",
@@ -7425,7 +7566,10 @@
           "website": "https://www.ristorantefranchino.com/",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
-          "curated": true
+          "curated": true,
+          "menuUrl": "https://ristorantefranchino.com/menu/",
+          "menuSource": "https://www.ristorantefranchino.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:24.473Z"
         },
         {
           "placeId": "osm-AMF-pizzeria-ai-galli",
@@ -7697,7 +7841,10 @@
             "https://gitanjali.fr/wp-content/uploads/elementor/thumbs/GitanjaliHeritage_Gobi65-scaled-rebkgm7vnz0ymbn96249h752dzrd8br4v4b7ib8hlc.jpg"
           ],
           "imageSource": "https://gitanjali.fr/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://gitanjali.fr/menu/",
+          "menuSource": "https://gitanjali.fr/",
+          "menuVerifiedAt": "2026-09-18T13:20:24.842Z"
         },
         {
           "placeId": "osm-PAR-restaurant-inter-entreprises-sevres-manufacture",
@@ -7801,7 +7948,10 @@
             "https://assets.joinoko.com/legacy/784893b8aceb4e017dddef37/H5uynmxZetoPv8LN4.png"
           ],
           "imageSource": "https://sevres.bigbang-restaurant.fr/fr/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://sevres.bigbang-restaurant.fr/fr/menu",
+          "menuSource": "https://sevres.bigbang-restaurant.fr/fr/",
+          "menuVerifiedAt": "2026-09-18T13:20:24.329Z"
         },
         {
           "placeId": "osm-PAR-paris-dakar",
@@ -8496,7 +8646,10 @@
             "https://bagatelle.com/app/uploads/2021/01/Design-sans-titre-2024-03-13T140618.950.jpg"
           ],
           "imageSource": "https://bagatelle.com/venues/courchevel/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://bagatelle.com/venues/courchevel/menu",
+          "menuSource": "https://bagatelle.com/venues/courchevel/",
+          "menuVerifiedAt": "2026-09-18T13:20:26.014Z"
         },
         {
           "placeId": "osm-CRV-prends-ta-luge-et-tire-toi",
@@ -8632,7 +8785,10 @@
             "https://www.lek2palace.com/media/cache/jadro_resize/rc/pQAKLSWg1789482782/jadroRoot/medias/5c114a0d69f63/k2p_exterieur_-54_stephane_berthe.jpg"
           ],
           "imageSource": "https://www.lek2palace.com/fr/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.lek2palace.com/media/original/5c11586d7df1e/menu-spa-k2p-en-fr-digital.pdf",
+          "menuSource": "https://www.lek2palace.com",
+          "menuVerifiedAt": "2026-09-18T13:20:25.560Z"
         },
         {
           "placeId": "osm-CRV-le-chalet-de-pierres",
@@ -8847,7 +9003,10 @@
             "https://www.lemonchu-meribel.com/wp-content/uploads/elementor/thumbs/img-1198-rdg1efqm3okswkk4kotfdkd43e3rlenwt5z7qu9ebo.jpeg"
           ],
           "imageSource": "https://www.lemonchu-meribel.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.lemonchu-meribel.com/menu-restaurant-le-monchu/",
+          "menuSource": "https://www.lemonchu-meribel.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:25.563Z"
         },
         {
           "placeId": "osm-CRV-cro-magnon",
@@ -9110,7 +9269,10 @@
             "https://www.lisolastbarth.com/_next/image?url=%2Fimages%2Ffood-2.webp&w=640&q=75"
           ],
           "imageSource": "https://www.lisolastbarth.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.lisolastbarth.com/menu",
+          "menuSource": "https://www.lisolastbarth.com",
+          "menuVerifiedAt": "2026-09-18T13:20:25.682Z"
         },
         {
           "placeId": "osm-SBH-la-petite-plage",
@@ -9326,7 +9488,10 @@
             "https://static.wixstatic.com/media/d552e3_87667dfb334c47e5bd0488f6fdf0faef~mv2.jpg/v1/fill/w_377,h_251,q_90,enc_avif,quality_auto/d552e3_87667dfb334c47e5bd0488f6fdf0faef~mv2.jpg"
           ],
           "imageSource": "https://www.lasusana.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.lasusana.com/_files/ugd/d552e3_c71cbc0bae60475d809f1dc61e6761e8.pdf",
+          "menuSource": "https://www.lasusana.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:25.742Z"
         }
       ]
     },
@@ -9438,7 +9603,10 @@
             "https://www.fourseasons.com/alt/img-opt/~70.490.0,0000-166,6667-2000,0000-2666,6667/publish/content/dam/fourseasons/images/web/HKG/HKG_4784_original.jpg"
           ],
           "imageSource": "https://www.fourseasons.com/hongkong/dining/restaurants/caprice/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.fourseasons.com/hongkong/dining/menus/caprice-connoisseur/",
+          "menuSource": "https://www.fourseasons.com/hongkong/dining/restaurants/caprice/",
+          "menuVerifiedAt": "2026-09-18T13:20:26.060Z"
         },
         {
           "placeId": "curated-HKG-the-chairman",
@@ -9450,7 +9618,10 @@
           "website": "https://www.thechairmangroup.com/",
           "primaryType": "restaurant",
           "source": "VELVET curated · official website",
-          "curated": true
+          "curated": true,
+          "menuUrl": "https://www.thechairmangroup.com/today-menu",
+          "menuSource": "https://www.thechairmangroup.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:27.131Z"
         },
         {
           "placeId": "osm-HKG-",
@@ -9826,7 +9997,10 @@
             "https://www.bennelong.com.au/wp-content/uploads/2026/09/bennelong-newspost-xmas2026-1024x455.jpg"
           ],
           "imageSource": "https://www.bennelong.com.au/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.bennelong.com.au/menu",
+          "menuSource": "https://www.bennelong.com.au/",
+          "menuVerifiedAt": "2026-09-18T13:20:27.880Z"
         },
         {
           "placeId": "curated-SYD-saint-peter",
@@ -9847,7 +10021,10 @@
             "https://images.squarespace-cdn.com/content/v1/56b1581001dbae20b9c6edb1/9ed098f2-fac4-40eb-bf0d-f87a69abb1f1/SAINT+PETER+HOTEL-260.jpg"
           ],
           "imageSource": "https://www.saintpeter.com.au/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.saintpeter.com.au/menu",
+          "menuSource": "https://www.saintpeter.com.au/",
+          "menuVerifiedAt": "2026-09-18T13:20:26.709Z"
         }
       ]
     },
@@ -9876,7 +10053,10 @@
             "https://cdn.prod.website-files.com/683ed7576df9acabbbcd4185/6864ecd3149deaeff2dbdf5e_Copy%20of%20FYN%2024_10_18%20005.avif"
           ],
           "imageSource": "https://www.fynrestaurant.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.fynrestaurant.com/menu",
+          "menuSource": "https://fynrestaurant.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:27.028Z"
         },
         {
           "placeId": "curated-CPT-la-colombe",
@@ -9918,7 +10098,10 @@
             "https://salsify.co.za/wp-content/uploads/2026/01/COY-white-1.2-1024x442.png"
           ],
           "imageSource": "https://salsify.co.za/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://salsify.co.za/menus/",
+          "menuSource": "https://salsify.co.za/",
+          "menuVerifiedAt": "2026-09-18T13:20:28.737Z"
         },
         {
           "placeId": "osm-CPT-ten-67",
@@ -10027,7 +10210,10 @@
             "https://rocomamas.com/_ipx/w_384&f_jpeg/img/home/fire.jpg"
           ],
           "imageSource": "https://rocomamas.com/za",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://rocomamas.com/za/menu",
+          "menuSource": "https://rocomamas.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:28.433Z"
         },
         {
           "placeId": "osm-CPT-thaiyashi",
@@ -10192,7 +10378,10 @@
             "https://www.michaelskitchenandbar.co.za/wp-content/uploads/Friday-Night-980x980.jpg"
           ],
           "imageSource": "https://www.michaelskitchenandbar.co.za/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.michaelskitchenandbar.co.za/menu-2/",
+          "menuSource": "https://www.michaelskitchenandbar.co.za/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.532Z"
         },
         {
           "placeId": "osm-CPT-haru",
@@ -10226,7 +10415,10 @@
             "https://culturenewlands.com/wp-content/uploads/2026/07/culture-line-art-6-605x1024.jpeg"
           ],
           "imageSource": "https://culturenewlands.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://culturenewlands.com/wp-content/uploads/2026/07/Culture-Newlands-Food-Cocktail-2026.pdf",
+          "menuSource": "https://culturenewlands.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.275Z"
         },
         {
           "placeId": "osm-CPT-newlands-cafe",
@@ -10244,7 +10436,10 @@
             "https://www.southernsun.com/skins/skin-prodsouthernsun/assets/desktop/images/newsletter-image.png"
           ],
           "imageSource": "https://www.southernsun.com/southern-sun-newlands/dining?utm_source=openstreetmaps&utm_medium=businesslisting&utm_campaign=rstrnt_the-newlands-cafe",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.southernsun.com/southern-sun-newlands/dining/menus",
+          "menuSource": "https://www.southernsun.com/southern-sun-newlands/restaurants-bars/newlands-cafe?utm_source=openstreetmaps&utm_medium=businesslisting&utm_campaign=rstrnt_the-newlands-cafe",
+          "menuVerifiedAt": "2026-09-18T13:20:27.575Z"
         },
         {
           "placeId": "osm-CPT-kirstenbosch-tea-room",
@@ -10321,7 +10516,10 @@
             "https://images.squarespace-cdn.com/content/v1/67329e304d98ce34497dcd18/243aa4b0-66e0-42f9-a352-9c20a39d280d/Oteque_header_hero.jpg?format=300w"
           ],
           "imageSource": "https://www.oteque.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.oteque.com/s/carta-diagramada-NOV-2025-PDF-site.pdf",
+          "menuSource": "https://www.oteque.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:27.696Z"
         },
         {
           "placeId": "curated-RIO-lasai",
@@ -10363,7 +10561,10 @@
             "https://ororestaurante.com.br/wp-content/uploads/2025/11/spain.png"
           ],
           "imageSource": "https://ororestaurante.com.br/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://ororestaurante.com.br/arquivos/oro-carta-de-vinhos.pdf",
+          "menuSource": "https://ororestaurante.com.br/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.081Z"
         }
       ]
     },
@@ -10425,7 +10626,10 @@
             "https://rosetta.com.mx/wp-content/uploads/2025/06/rosetta_home_02.webp"
           ],
           "imageSource": "https://rosetta.com.mx/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://rosetta.com.mx/menu",
+          "menuSource": "https://rosetta.com.mx/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.169Z"
         }
       ]
     },
@@ -10454,7 +10658,10 @@
             "https://www.belcanto.pt/wp-content/uploads/2025/07/Belcanto_09Jul2025_009A8814_nadia.jpg"
           ],
           "imageSource": "https://www.belcanto.pt/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.780Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.780Z",
+          "menuUrl": "https://www.belcanto.pt/carta/Menu_Bebidas.pdf?v=092026",
+          "menuSource": "https://belcanto.pt/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.174Z"
         },
         {
           "placeId": "curated-LIS-alma",
@@ -10540,7 +10747,10 @@
             "https://irp.cdn-website.com/0191fca8/dms3rep/multi/opt/of7zVEESn2XmydEKCwIQ_PphcnapRdy9GokrBUKV5_Ciel%2BBleu%2B%281%29-v.v2.0000000-1920w.jpg"
           ],
           "imageSource": "https://www.cielbleu.nl/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.cielbleu.nl/menu",
+          "menuSource": "https://www.cielbleu.nl/",
+          "menuVerifiedAt": "2026-09-18T13:20:28.748Z"
         },
         {
           "placeId": "curated-AMS-rijks",
@@ -10557,7 +10767,10 @@
             "https://www.rijksrestaurant.nl/wp-content/uploads/2025/05/rijksrestaurant.jpg"
           ],
           "imageSource": "https://www.rijksrestaurant.nl/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.rijksrestaurant.nl/menu/",
+          "menuSource": "https://www.rijksrestaurant.nl/",
+          "menuVerifiedAt": "2026-09-18T13:20:28.965Z"
         }
       ]
     },
@@ -10627,7 +10840,10 @@
             "https://www.brasserieastoria.se/wp/wp-content/uploads/2026/01/DSC2746-768x960.jpg"
           ],
           "imageSource": "https://www.brasserieastoria.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "menuUrl": "https://www.brasserieastoria.se/menyn/a-la-carte/",
+          "menuSource": "https://www.brasserieastoria.se/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.079Z"
         },
         {
           "placeId": "curated-STO-italiano",
@@ -10806,7 +11022,10 @@
             "https://tabbouli.eu/wp-content/uploads/2026/03/ZziQgTLFCA.jpeg"
           ],
           "imageSource": "https://tabbouli.eu/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "menuUrl": "https://tabbouli.eu/meny/",
+          "menuSource": "https://tabbouli.eu/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.521Z"
         },
         {
           "placeId": "curated-STO-beirut-cafe",
@@ -10832,7 +11051,10 @@
             "https://www.beirutcafe.se/_next/image?url=https%3A%2F%2Fscontent-iad3-1.cdninstagram.com%2Fv%2Ft51.82787-15%2F729867592_18602056231008107_5576608935338160504_n.jpg%3Fstp%3Ddst-jpg_e35_tt6%26_nc_cat%3D104%26ccb%3D7-5%26_nc_sid%3D18de74%26efg%3DeyJlZmdfdGFnIjoiQ0xJUFMuYmVzdF9pbWFnZV91cmxnZW4uQzMifQ%253D%253D%26_nc_ohc%3DbegklylKa5IQ7kNvwG9q0Ua%26_nc_oc%3DAdqRi1ZvEzbDyPhZU5NHQrvdDRQMm_sHkXvdAUYS5Krc_ZPMlDgMsqTrbU043SJfOTM%26_nc_zt%3D23%26_nc_ht%3Dscontent-iad3-1.cdninstagram.com%26edm%3DAM6HXa8EAAAA%26_nc_gid%3DlVyXgh3B3j7l_rSVzlWPdw%26_nc_tpa%3DQ5bMBQJk13BHgio6MFhe1DKQEJJ-6t2vQc8s0BtkldLe3jS1xwsRGlQo-kRYhAMGQAsYvtHClZEW3yaEuA%26oh%3D00_AQLoivvvYO9APoOmq0We3LJZlPHNyMt2WbElShhNHCq8dw%26oe%3D6AB2F640&w=3840&q=75"
           ],
           "imageSource": "https://www.beirutcafe.se/sv",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "menuUrl": "https://www.beirutcafe.se/sv/meny",
+          "menuSource": "https://www.beirutcafe.se/sv",
+          "menuVerifiedAt": "2026-09-18T13:20:29.596Z"
         },
         {
           "placeId": "curated-STO-animo",
@@ -10909,7 +11131,10 @@
             "https://static.thatsup.website/128/5726/responsive-images/Farang_Stockholm_FINAL_JPEG_SRGB72DPI-8___media_library_original_627_470.jpeg?v=1637841321"
           ],
           "imageSource": "https://farang.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "menuUrl": "https://farang.se/meny",
+          "menuSource": "https://farang.se/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.324Z"
         },
         {
           "placeId": "curated-STO-sperling-co",
@@ -10935,7 +11160,10 @@
             "https://sperlingco.se/wp-content/uploads/2025/12/SperlingCo_2025_Emil-Lif-7768.webp"
           ],
           "imageSource": "https://sperlingco.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "menuUrl": "https://sperlingco.se/meny",
+          "menuSource": "https://sperlingco.se/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.262Z"
         },
         {
           "placeId": "curated-STO-boqueria",
@@ -10987,7 +11215,10 @@
             "https://images.squarespace-cdn.com/content/v1/628a529a93e39229b0f2bcf2/1733234813297-1UTA9A9H2ZEOJ2XPMMEC/image-asset.jpeg"
           ],
           "imageSource": "https://www.olliristorante.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "menuUrl": "https://www.olliristorante.se/s/OLLI_group_menu_eng_v19-r542.pdf",
+          "menuSource": "https://www.olliristorante.se/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.402Z"
         },
         {
           "placeId": "curated-STO-villa-valentina",
@@ -11117,7 +11348,10 @@
             "https://strandvagen1.se/wp-content/uploads/2026/04/MNO_0038-1536x2048.jpg"
           ],
           "imageSource": "https://strandvagen1.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "menuUrl": "https://strandvagen1.se/wp-content/uploads/2026/08/S1-ALC-A3-2026-08-17.pdf",
+          "menuSource": "https://strandvagen1.se/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.891Z"
         },
         {
           "placeId": "curated-STO-strandbryggan",
@@ -11142,7 +11376,10 @@
             "https://strandbryggan.se/_ipx/s_2100x1400/assets/img/home/home-3.webp"
           ],
           "imageSource": "https://strandbryggan.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "menuUrl": "https://strandbryggan.se/meny",
+          "menuSource": "https://strandbryggan.se/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.487Z"
         },
         {
           "placeId": "curated-STO-hallwylska",
@@ -11192,7 +11429,10 @@
             "https://vaudevillestockholm.se/wp-content/uploads/2026/01/589178319_18546941842038562_8133944691629134085_n.jpg"
           ],
           "imageSource": "https://vaudevillestockholm.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "menuUrl": "https://vaudevillestockholm.se/menu",
+          "menuSource": "https://vaudevillestockholm.se/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.813Z"
         },
         {
           "placeId": "curated-STO-lebanon-meza-lounge",
@@ -11218,7 +11458,10 @@
             "https://mezalounge.se/wp-content/uploads/2021/07/239A2273-683x1024.jpg"
           ],
           "imageSource": "https://mezalounge.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "menuUrl": "https://mezalounge.se/meny/",
+          "menuSource": "https://mezalounge.se/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.992Z"
         },
         {
           "placeId": "curated-STO-sturehof",
@@ -11244,7 +11487,10 @@
             "https://sturehof.b-cdn.net/wp-content/uploads/2022/05/Group-332-3.jpg"
           ],
           "imageSource": "https://sturehof.com/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "menuUrl": "https://sturehof.com/meny/",
+          "menuSource": "https://sturehof.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.576Z"
         },
         {
           "placeId": "curated-STO-riche",
@@ -11270,7 +11516,10 @@
             "https://riche.b-cdn.net/wp-content/uploads/2022/10/Riche_Ostrondagar2026_1080x1080_Original_110826.jpg"
           ],
           "imageSource": "https://riche.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "menuUrl": "https://riche.se/meny",
+          "menuSource": "https://riche.se/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.582Z"
         },
         {
           "placeId": "curated-STO-villa-dagmar",
@@ -11445,7 +11694,10 @@
             "https://aira.se/wp-content/uploads/2023/09/aira_crustad-1024x1024.jpg"
           ],
           "imageSource": "https://aira.se/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://aira.se/menu/",
+          "menuSource": "https://aira.se/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.809Z"
         },
         {
           "placeId": "curated-STO-ekstedt",
@@ -11465,7 +11717,10 @@
             "https://ekstedt.nu/wp-content/uploads/2025/05/cropped-165A4209-2.webp"
           ],
           "imageSource": "https://ekstedt.nu/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://ekstedt.nu/menu",
+          "menuSource": "https://ekstedt.nu/",
+          "menuVerifiedAt": "2026-09-18T13:20:29.715Z"
         }
       ]
     }
@@ -11476,5 +11731,6 @@
     "restaurants": 770,
     "officialSites": 229,
     "withImages": 172
-  }
+  },
+  "menuLinksVerifiedAt": "2026-09-18T13:20:34.910Z"
 }

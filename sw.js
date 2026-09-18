@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-154-zink-booking";
+const VERSION = "v4-real-155-menu-coverage";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 

@@ -240,6 +240,20 @@ function checkOfficialVenueImages() {
   } else ok("principote-party-gallery", "5 unique originals from Principote's official party page");
 }
 
+function checkMenuCoverage() {
+  const restaurantData = loadJson("data/restaurants.json");
+  const restaurants = Object.values(restaurantData.destinations || {}).flatMap((row) => row.restaurants || []);
+  const explicit = restaurants.filter((r) => /^https?:\/\//i.test(r.menuUrl || ""));
+  const accessible = restaurants.filter((r) => /^https?:\/\//i.test(r.menuUrl || r.website || r.mapsUrl || ""));
+  const venues = [...loadJson("data/venues.json"), ...loadJson("data/unlisted-venues.json")];
+  const venueAccess = venues.filter((v) => /^https?:\/\//i.test(v.website_url || v.source_url || ""));
+  const app = fs.readFileSync(path.join(ROOT, "js", "app.js"), "utf8");
+  if (explicit.length < 80) fail("restaurant-menu-links", `${explicit.length} explicit official links`);
+  else if (accessible.length !== restaurants.length) fail("restaurant-menu-access", `${accessible.length}/${restaurants.length}`);
+  else if (venueAccess.length !== venues.length || !/menuOfficialHint/.test(app)) fail("venue-menu-access", `${venueAccess.length}/${venues.length}`);
+  else ok("menu-coverage", `${explicit.length} direct official menus · ${restaurants.length} restaurant paths · ${venues.length} venue paths`);
+}
+
 function checkLocationFirstHome() {
   const src = fs.readFileSync(path.join(ROOT, "js", "app.js"), "utf8");
   const stockholmVenues = loadJson("data/unlisted-venues.json").filter((v) => v.destination_code === "STO");
@@ -1150,6 +1164,7 @@ async function runApi() {
 const booking = checkBookingUrls();
 checkRestaurants();
 checkOfficialVenueImages();
+checkMenuCoverage();
 checkLocationFirstHome();
 checkAuthShell();
 checkSeoHonesty();
