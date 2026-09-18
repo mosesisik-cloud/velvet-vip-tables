@@ -225,6 +225,14 @@ function checkOfficialVenueImages() {
   );
   if (invalid.length) fail("venue-images-valid", invalid.slice(0, 5).join("; "));
   else ok("venue-images-official", `${venues.length - missing.length}/${venues.length} mediaverifierade · ${missing.length} hålls borta från publicering · ${Object.values(galleries).reduce((n, rows) => n + rows.length, 0)} bilder`);
+
+  const principote = galleries["MYK-102"] || [];
+  const principoteUnique = new Set(principote.map((url) => String(url).replace(/-\d+x\d+(?=\.[a-z]+(?:\?|$))/i, "")));
+  if (principote.length !== 5 || principoteUnique.size !== 5) {
+    fail("principote-party-gallery", `${principote.length} rows · ${principoteUnique.size} unique originals`);
+  } else if (sources["MYK-102"]?.source !== "https://principote.com/wedding-events/parties/") {
+    fail("principote-party-source", String(sources["MYK-102"]?.source || "missing"));
+  } else ok("principote-party-gallery", "5 unique originals from Principote's official party page");
 }
 
 function checkLocationFirstHome() {
