@@ -1061,12 +1061,13 @@ async function apiJSON(path, opts) {
 
 const RESTAURANT_BOOKINGS_KEY = "velvetRestaurantBookings";
 
-function buildBokaBordUrl(baseUrl, { date = "", party = 0, lang = "sv" } = {}) {
+function buildBokaBordUrl(baseUrl, { date = "", party = 0, mealId = "", lang = "sv" } = {}) {
   try {
     const url = new URL(String(baseUrl || ""));
     if (url.protocol !== "https:" || url.hostname !== "app.bokabord.se") return "";
     if (/^\d{4}-\d{2}-\d{2}$/.test(String(date))) url.searchParams.set("date", String(date));
     if (Number(party) > 0) url.searchParams.set("amount", String(Math.max(1, Math.min(20, Number(party)))));
+    if (/^\d+$/.test(String(mealId))) url.searchParams.set("mealid", String(mealId));
     url.searchParams.set("version", "new");
     url.searchParams.set("lang", String(lang) === "sv" ? "sw" : String(lang || "en").slice(0, 2));
     return url.toString();
@@ -2497,6 +2498,7 @@ async function renderRestaurantDetail(placeId) {
       const officialUrl = buildBokaBordUrl(restaurant.bookingUrl, {
         date: values.date,
         party: Number(values.party),
+        mealId: "9778",
         lang: currentLang(),
       });
       const root = document.getElementById("modal-root");
@@ -7912,7 +7914,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=160", { updateViaCache: "none" })
+      .register("sw.js?v=160b", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
