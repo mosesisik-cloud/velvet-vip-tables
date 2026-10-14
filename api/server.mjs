@@ -116,7 +116,7 @@ const PUBLIC_APP = process.env.PUBLIC_URL || "https://b2b.bakemyday.se/velvet";
 fs.mkdirSync(IDV_DIR, { recursive: true });
 
 function emptyDb() {
-  return { tables: [], restaurantBookings: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {}, passkeys: {}, matches: [], bridges: [] };
+  return { tables: [], restaurantBookings: [], idv: {}, reviews: [], chats: {}, promoters: {}, promoterContact: {}, chatsMeta: {}, waSeen: {}, users: {}, payments: [], auth: {}, passkeys: {}, sessions: {}, matches: [], bridges: [] };
 }
 function loadJsonRel(name) {
   for (const p of [
@@ -228,6 +228,7 @@ function load() {
       payments: Array.isArray(raw.payments) ? raw.payments : [],
       auth: raw.auth && typeof raw.auth === "object" ? raw.auth : {},
       passkeys: raw.passkeys && typeof raw.passkeys === "object" ? raw.passkeys : {},
+      sessions: raw.sessions && typeof raw.sessions === "object" ? raw.sessions : {},
       matches: Array.isArray(raw.matches) ? raw.matches : [],
       bridges: Array.isArray(raw.bridges) ? raw.bridges : [],
     };
@@ -598,7 +599,7 @@ function send(res, code, obj, extra = {}) {
   res.writeHead(code, {
     "Content-Type": "application/json; charset=utf-8",
     ...(res._corsOrigin
-      ? { "Access-Control-Allow-Origin": res._corsOrigin, Vary: "Origin" }
+      ? { "Access-Control-Allow-Origin": res._corsOrigin, "Access-Control-Allow-Credentials": "true", Vary: "Origin" }
       : {}),
     "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, x-admin-key",
@@ -889,6 +890,32 @@ function publicPerson(p, db, role) {
 }
 function todayISO() {
   return new Date().toISOString().slice(0, 10);
+}
+const PILOT_RESTAURANT_ID = "curated-STO-zink-italian-cuisine";
+function restaurantRecord(placeId) {
+  const catalog = loadJsonRel("restaurants.json");
+  for (const row of Object.values(catalog?.destinations || {})) {
+    const found = (row?.restaurants || []).find((item) => String(item?.placeId || "") === String(placeId || ""));
+    if (found) return found;
+  }
+  return null;
+}
+function publicRestaurantBooking(booking) {
+  if (!booking) return null;
+  return {
+    id: booking.id,
+    restaurantId: booking.restaurantId,
+    restaurant: booking.restaurant,
+    destination: booking.destination || "",
+    date: booking.date,
+    time: booking.time || "",
+    party: Number(booking.party) || 0,
+    provider: booking.provider || "",
+    status: booking.status,
+    createdAt: booking.createdAt,
+    updatedAt: booking.updatedAt || booking.createdAt,
+    providerConfirmedAt: booking.providerConfirmedAt || "",
+  };
 }
 function tableMemberIds(t) {
   return [t.host?.id, ...((t.joiners || []).map((j) => j.id))].filter(Boolean);
@@ -1350,6 +1377,61 @@ function mintAuthToken(user) {
   }
   save(db);
   return token;
+}
+
+// ---------- Persistent first-party sessions ----------
+// A passkey proves possession only during register/login. Every later API call
+// must be tied to that proof as well; accepting a user id from localStorage is
+// not authentication. The browser receives an opaque HttpOnly cookie and the
+// database stores only its SHA-256 hash. No biometric data or raw cookie is kept.
+const SESSION_COOKIE = "velvet_session";
+const SESSION_TTL_MS = 180 * 24 * 60 * 60 * 1000;
+function sessionTokenHash(token) {
+  return crypto.createHash("sha256").update(String(token || "")).digest("hex");
+}
+function cookieValue(req, name) {
+  const raw = String(req.headers.cookie || "");
+  for (const part of raw.split(";")) {
+    const at = part.indexOf("=");
+    if (at < 0 || part.slice(0, at).trim() !== name) continue;
+    try { return decodeURIComponent(part.slice(at + 1).trim()); } catch { return ""; }
+  }
+  return "";
+}
+function issueSession(db, userId) {
+  if (!db.sessions || typeof db.sessions !== "object") db.sessions = {};
+  const token = b64url(crypto.randomBytes(32));
+  const key = sessionTokenHash(token);
+  const now = Date.now();
+  db.sessions[key] = { userId: String(userId), created: now, lastUsed: now, exp: now + SESSION_TTL_MS };
+  const keys = Object.keys(db.sessions);
+  if (keys.length > 5000) {
+    const stale = keys.filter((id) => Number(db.sessions[id]?.exp || 0) < now);
+    for (const id of stale) delete db.sessions[id];
+  }
+  return token;
+}
+function sessionCookie(token) {
+  const secure = /^https:\/\//i.test(PUBLIC_APP) ? "; Secure" : "";
+  return `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${Math.floor(SESSION_TTL_MS / 1000)}${secure}`;
+}
+function clearSessionCookie() {
+  const secure = /^https:\/\//i.test(PUBLIC_APP) ? "; Secure" : "";
+  return `${SESSION_COOKIE}=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0${secure}`;
+}
+function sessionRecord(req, db) {
+  const token = cookieValue(req, SESSION_COOKIE);
+  if (!token) return null;
+  const key = sessionTokenHash(token);
+  const rec = db.sessions?.[key];
+  if (!rec || Number(rec.exp || 0) < Date.now() || !db.users?.[rec.userId]) return null;
+  return { key, rec, user: db.users[rec.userId] };
+}
+function sessionPublicUser(req, db) {
+  const session = sessionRecord(req, db);
+  if (!session) return null;
+  const person = publicPerson(session.user, db, "user");
+  return { ...session.user, ...person, passkeyId: session.user.passkeyId || "" };
 }
 
 // ---------- WebAuthn / passkeys (Face ID, Touch ID, device screen lock) ----------
@@ -1839,8 +1921,9 @@ const server = http.createServer(async (req, res) => {
           signCount: key.signCount, created: new Date().toISOString(), lastUsed: new Date().toISOString(),
         };
         upsertUser(db, user, { trustedAuth: true });
+        const sessionToken = issueSession(db, user.id);
         save(db);
-        return send(res, 200, { user }, { "Cache-Control": "no-store" });
+        return send(res, 200, { user }, { "Cache-Control": "no-store", "Set-Cookie": sessionCookie(sessionToken) });
       } catch (err) {
         save(db);
         console.error("velvet-passkey-register", err?.message || err);
@@ -1875,8 +1958,9 @@ const server = http.createServer(async (req, res) => {
         const stored = db.users?.[passkey.userId] || { id: passkey.userId, provider: "passkey", name: "", handle: "" };
         const user = { ...stored, connected: true, authVerified: true, deviceBound: true, passkeyId: credentialId };
         upsertUser(db, user, { trustedAuth: true });
+        const sessionToken = issueSession(db, user.id);
         save(db);
-        return send(res, 200, { user }, { "Cache-Control": "no-store" });
+        return send(res, 200, { user }, { "Cache-Control": "no-store", "Set-Cookie": sessionCookie(sessionToken) });
       } catch (err) {
         save(db);
         console.error("velvet-passkey-login", err?.message || err);
@@ -1962,10 +2046,11 @@ const server = http.createServer(async (req, res) => {
         profile.created = new Date().toISOString();
         const db = load();
         upsertUser(db, profile, { trustedAuth: true });
+        const sessionToken = issueSession(db, profile.id);
         save(db);
         const token = mintAuthToken(profile);
         const next = db.idv?.[profile.id]?.status === "verified" ? "#/" : "#/verify";
-        res.writeHead(302, { Location: `${PUBLIC_APP}/?auth=${encodeURIComponent(token)}${next}` });
+        res.writeHead(302, { Location: `${PUBLIC_APP}/?auth=${encodeURIComponent(token)}${next}`, "Set-Cookie": sessionCookie(sessionToken), "Cache-Control": "no-store" });
         res.end();
       } catch (err) {
         console.error("velvet-oauth", provider, err?.message || err);
@@ -1976,11 +2061,24 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && url.pathname === "/auth/session") {
       const token = url.searchParams.get("token") || "";
       const db = load();
-      const rec = db.auth?.[token];
+      const current = sessionPublicUser(req, db);
+      if (current) return send(res, 200, { user: current }, { "Cache-Control": "no-store" });
+      const rec = token ? db.auth?.[token] : null;
       if (!rec || rec.exp < Date.now() || !rec.user) return send(res, 401, { error: "auth" });
       delete db.auth[token];
+      upsertUser(db, rec.user, { trustedAuth: true });
+      const sessionToken = issueSession(db, rec.user.id);
       save(db);
-      return send(res, 200, { user: rec.user });
+      return send(res, 200, { user: sessionPublicUser({ headers: { cookie: `${SESSION_COOKIE}=${sessionToken}` } }, db) || rec.user }, { "Cache-Control": "no-store", "Set-Cookie": sessionCookie(sessionToken) });
+    }
+    if (req.method === "POST" && url.pathname === "/auth/logout") {
+      const db = load();
+      const session = sessionRecord(req, db);
+      if (session) {
+        delete db.sessions[session.key];
+        save(db);
+      }
+      return send(res, 200, { ok: true }, { "Cache-Control": "no-store", "Set-Cookie": clearSessionCookie() });
     }
     if (req.method === "POST" && url.pathname === "/pay/setup") {
       const b = await readBody(req, 2e5);
@@ -2283,10 +2381,80 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true });
     }
 
-    // Restaurangförfrågningar sparas server-side så de överlever byte av telefon.
-    // Detta är en förfrågan, inte en bekräftad reservation.
+    // Zink-piloten kör restaurangens riktiga BokaBord-widget inuti VELVET.
+    // VELVET registrerar endast start/status; själva reservationen skapas och
+    // bekräftas av BokaBord. Inga kontaktuppgifter från widgeten läses av oss.
+    if (req.method === "GET" && url.pathname === "/restaurant-bookings") {
+      const db = load();
+      const user = sessionPublicUser(req, db);
+      if (!user) return send(res, 401, { error: "auth" });
+      const bookings = (db.restaurantBookings || [])
+        .filter((booking) => booking.userId === user.id)
+        .slice(0, 100)
+        .map(publicRestaurantBooking);
+      return send(res, 200, { bookings }, { "Cache-Control": "no-store" });
+    }
+    if (req.method === "POST" && url.pathname === "/restaurant-bookings/external/start") {
+      const b = await readBody(req, 2e5);
+      const db = load();
+      const user = sessionPublicUser(req, db);
+      if (!user) return send(res, 401, { error: "auth" });
+      const restaurantId = String(b.restaurantId || "").trim();
+      if (restaurantId !== PILOT_RESTAURANT_ID) return send(res, 409, { error: "pilot_only", restaurantId: PILOT_RESTAURANT_ID });
+      const restaurant = restaurantRecord(restaurantId);
+      if (!restaurant || restaurant.bookingProvider !== "BokaBord" || !restaurant.bookingDirect) return send(res, 404, { error: "booking_provider" });
+      let official;
+      try { official = new URL(String(restaurant.bookingUrl || "")); } catch { return send(res, 502, { error: "booking_url" }); }
+      if (official.protocol !== "https:" || official.hostname !== "app.bokabord.se") return send(res, 502, { error: "booking_origin" });
+      const date = String(b.date || "").trim();
+      const party = Math.max(1, Math.min(20, Number(b.party) || 0));
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < todayISO()) return send(res, 400, { error: "date" });
+      if (!party) return send(res, 400, { error: "party" });
+      official.searchParams.set("date", date);
+      official.searchParams.set("amount", String(party));
+      official.searchParams.set("version", "new");
+      official.searchParams.set("lang", String(b.lang || "sv") === "sv" ? "sw" : String(b.lang || "en").slice(0, 2));
+      const now = new Date().toISOString();
+      const booking = {
+        id: `RB-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString("hex").toUpperCase()}`,
+        restaurantId,
+        restaurant: String(restaurant.name || "Zink Italian Cuisine").slice(0, 120),
+        destination: "Stockholm",
+        date,
+        time: "",
+        party,
+        provider: "BokaBord",
+        userId: user.id,
+        status: "in_progress",
+        createdAt: now,
+        updatedAt: now,
+      };
+      db.restaurantBookings = [booking, ...(db.restaurantBookings || [])].slice(0, 5000);
+      save(db);
+      return send(res, 201, { ok: true, booking: publicRestaurantBooking(booking), officialUrl: official.toString() }, { "Cache-Control": "no-store" });
+    }
+    const restaurantProviderConfirmed = url.pathname.match(/^\/restaurant-bookings\/([^/]+)\/provider-confirmed$/);
+    if (req.method === "POST" && restaurantProviderConfirmed) {
+      const db = load();
+      const user = sessionPublicUser(req, db);
+      if (!user) return send(res, 401, { error: "auth" });
+      const booking = (db.restaurantBookings || []).find((item) => item.id === decodeURIComponent(restaurantProviderConfirmed[1]));
+      if (!booking || booking.userId !== user.id) return send(res, 404, { error: "not_found" });
+      if (booking.provider !== "BokaBord") return send(res, 409, { error: "provider" });
+      booking.status = "provider_confirmed";
+      booking.providerConfirmedAt = booking.providerConfirmedAt || new Date().toISOString();
+      booking.updatedAt = new Date().toISOString();
+      save(db);
+      return send(res, 200, { ok: true, booking: publicRestaurantBooking(booking) }, { "Cache-Control": "no-store" });
+    }
+
+    // Övriga restaurangförfrågningar sparas server-side så de överlever byte
+    // av telefon. Detta är fortfarande en förfrågan, inte en reservation.
     if (req.method === "POST" && url.pathname === "/restaurant-bookings") {
       const b = await readBody(req, 2e5);
+      const db = load();
+      const user = sessionPublicUser(req, db);
+      if (!user) return send(res, 401, { error: "auth" });
       const email = String(b.email || "").trim().toLowerCase().slice(0, 120);
       const date = String(b.date || "").trim();
       const time = String(b.time || "").trim();
@@ -2295,7 +2463,6 @@ const server = http.createServer(async (req, res) => {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < new Date().toISOString().slice(0, 10)) return send(res, 400, { error: "date" });
       if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return send(res, 400, { error: "time" });
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return send(res, 400, { error: "email" });
-      const db = load();
       const booking = {
         id: `RB-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString("hex").toUpperCase()}`,
         restaurantId: String(b.restaurantId).slice(0, 120),
@@ -2305,7 +2472,7 @@ const server = http.createServer(async (req, res) => {
         name: String(b.name || "").trim().slice(0, 100),
         email,
         note: String(b.note || "").trim().slice(0, 500),
-        userId: String(b.user?.id || "").slice(0, 80),
+        userId: user.id,
         status: "request",
         createdAt: new Date().toISOString(),
       };

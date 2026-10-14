@@ -12,6 +12,9 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 
 ## Vad som är på riktigt i V4
 
+- **V157: riktig pilotinloggning.** En godkänd passkey skapar en 180-dagars, återkallelig HttpOnly-session på VELVET-domänen. API:t litar inte längre på ett lokalt användar-id för restaurangbokningar, och sessionen återställs automatiskt efter omladdning eller om appen öppnas igen.
+- **V157: Zink live webbridge.** Zinks officiella BokaBord-widget körs inuti restaurangvyn. Datum och antal skickas till BokaBord, som äger tillgänglighet, kontaktuppgifter och slutlig bokningsbekräftelse. VELVET sparar `in_progress` och uppdaterar till `provider_confirmed` först när widgeten skickar sin egen `reservationSuccess`-signal.
+
 - **Förfrågan, inte fake-bokning.** Ni fyller i värd, datum, paket och sällskap. Förfrågan går till VELVET-teamet (Gabbe) via e-post. Bekräftelsen säger *förfrågan skickad* — aldrig att bordet är reserverat.
 - **Inga påhittade paketpriser.** Appen visar inte fejkade EUR-paket. Pris kommer från klubbens sajt eller deras svar. Evenemang hämtas från officiella kalendrar.
 - **Google-recensioner.** Betyget på stället är Google (stjärnor + antal) när profilen är matchad. Recensionerna öppnas på Google Maps — vi visar inte en siffra om kanalen inte stämmer. VELVET-research är intern och märkt som inte Google.
@@ -64,6 +67,11 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 - OAuth-callback är `https://b2b.bakemyday.se/velvet-api/auth/callback/<provider>`. Den måste läggas in som godkänd redirect-URL hos varje leverantör.
 - Leverantörens klient-ID och secret läggs på servern via operatörsvyn under Konto. Apple använder ett Services ID och en signerad client-secret-JWT.
 - Om en leverantör ännu saknar serverkonfiguration går knappen tillbaka till kontosidan med ett tydligt fel; den skapar aldrig ett falskt konto.
+- Passkey/OAuth skapar en signerad serveridentitet via en `HttpOnly; Secure; SameSite=Lax`-cookie. Den råa sessionsnyckeln sparas aldrig i databasen, bara SHA-256-hashen.
+
+### Produktionskrav för V157-piloten
+
+Frontend **och** API måste deployas samtidigt till `https://b2b.bakemyday.se`: statiska filer under `/velvet/` och `api/server.mjs` bakom `/velvet-api/`. Face ID kan inte testas skarpt på GitHub Pages eftersom en passkey alltid är bunden till domänen där den skapades. Efter deploy testar Gabriel och Moses var sin telefon genom att skapa varsin passkey på VELVET-domänen och därefter slutföra en Zink-bokning i den inbäddade BokaBord-widgeten.
 
 ## Kör lokalt
 
@@ -113,7 +121,7 @@ Om `user.email` är `…MacBook-Air….local` syns inte inloggningen på GitHub.
 - [ ] Gabbe klickar FormSubmit-bekräftelsen i mejlen (första förfrågan)
 - [ ] 5–8 klubbar med manuellt ja (Ibiza / Mykonos först)
 - [ ] Stripe/Swish-deposition när första klubben tar emot
-- [ ] Konton så förfrågningar överlever byta av telefon
+- [x] Passkey-konton och serverlagrad Zink-bokningshistorik som överlever byte av vy/enhet
 - [ ] Bildlicenser / egna foton — sluta hotlänka klubbsajter i kommersiell drift
 - [ ] iOS/Android när concierge-flödet tar betalt
 

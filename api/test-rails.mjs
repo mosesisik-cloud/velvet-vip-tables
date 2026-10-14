@@ -6,6 +6,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
+import crypto from "node:crypto";
 import { spawn } from "node:child_process";
 import { parseTd3, extractMrzFromText, nameMatch, ageYears, ICAO_SAMPLE, TEST_LIVE, TEST_YOUNG, applyVizNames, icaoFold, editDistance } from "./mrz.mjs";
 import { fileURLToPath } from "node:url";
@@ -216,9 +217,9 @@ function checkRestaurants() {
       fail("zink-direct-booking", JSON.stringify(zink && { bookingUrl: zink.bookingUrl, bookingProvider: zink.bookingProvider, bookingDirect: zink.bookingDirect }));
     } else ok("zink-direct-booking", "official BokaBord flow is primary");
     const app = fs.readFileSync(path.join(ROOT, "js", "app.js"), "utf8");
-    if (!app.includes("const bookingPanel = restaurant.bookingDirect && restaurant.bookingUrl") || !app.includes("Boka hos ${esc(restaurant.name)} nu ↗")) {
-      fail("direct-booking-ui", "direct booking must bypass the local VELVET request form");
-    } else ok("direct-booking-ui", "direct booking bypasses local-only requests");
+    if (!app.includes("const zinkPilot = restaurant.placeId") || !app.includes("/restaurant-bookings/external/start") || !app.includes("restaurant-provider-frame") || !app.includes("Boka hos ${esc(restaurant.name)} nu ↗")) {
+      fail("direct-booking-ui", "direct booking must use the official provider, with the Zink live bridge embedded");
+    } else ok("direct-booking-ui", "Zink live bridge + official fallback bypass local-only requests");
   }
 }
 
@@ -341,24 +342,28 @@ async function waitBoot(child, ms = 8000) {
   });
 }
 
-async function req(base, method, p, body) {
+async function req(base, method, p, body, extraHeaders = {}) {
   const r = await fetch(base + p, {
     method,
-    headers: body ? { "Content-Type": "application/json" } : {},
+    headers: { ...(body ? { "Content-Type": "application/json" } : {}), ...extraHeaders },
     body: body ? JSON.stringify(body) : undefined,
   });
   const text = await r.text();
   let json = null;
   try { json = JSON.parse(text); } catch { json = { raw: text }; }
-  return { status: r.status, json };
+  return { status: r.status, json, headers: r.headers };
 }
 
 async function runApi() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "velvet-rails-"));
   const data = path.join(dir, "store.json");
   const pay = path.join(dir, "pay.json");
+  const pilotSessionToken = "velvet-pilot-session-token";
+  const pilotSessionHash = crypto.createHash("sha256").update(pilotSessionToken).digest("hex");
+  const pilotUser = { id: "U-passkey-pilot", provider: "passkey", name: "Pilot", connected: true, authVerified: true, deviceBound: true };
   fs.writeFileSync(data, JSON.stringify({
-    tables: [], idv: {}, reviews: [], chats: {}, promoters: {}, users: {}, payments: [],
+    tables: [], restaurantBookings: [], idv: {}, reviews: [], chats: {}, promoters: {}, users: { [pilotUser.id]: pilotUser }, payments: [],
+    sessions: { [pilotSessionHash]: { userId: pilotUser.id, created: Date.now(), lastUsed: Date.now(), exp: Date.now() + 86400000 } },
   }));
   fs.writeFileSync(pay, "{}");
   const port = 18787;
@@ -384,6 +389,36 @@ async function runApi() {
     else if (String(cfg.json.destination) !== "Revolut") fail("pay-config", "destination " + cfg.json.destination);
     else if (cfg.json.ready !== false) fail("pay-config", "ready should be false without IBAN/keys, got " + cfg.json.ready);
     else ok("pay-config", "8 methods, destination Revolut, ready=false");
+
+    const pilotDate = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
+    const unauthZink = await req(base, "POST", "/restaurant-bookings/external/start", {
+      restaurantId: "curated-STO-zink-italian-cuisine", date: pilotDate, party: 2, lang: "sv",
+    });
+    if (unauthZink.status !== 401 || unauthZink.json.error !== "auth") fail("zink-auth", JSON.stringify(unauthZink.json));
+    else ok("zink-auth", "anonymous start blocked");
+
+    const pilotHeaders = { Cookie: `velvet_session=${pilotSessionToken}` };
+    const pilotSession = await req(base, "GET", "/auth/session", null, pilotHeaders);
+    if (pilotSession.status !== 200 || pilotSession.json.user?.id !== pilotUser.id) fail("auth-session", JSON.stringify(pilotSession.json));
+    else ok("auth-session", "HttpOnly session resolves server-side identity");
+
+    const zinkStart = await req(base, "POST", "/restaurant-bookings/external/start", {
+      restaurantId: "curated-STO-zink-italian-cuisine", date: pilotDate, party: 2, lang: "sv",
+    }, pilotHeaders);
+    let zinkUrl = null;
+    try { zinkUrl = new URL(zinkStart.json.officialUrl || ""); } catch { /* assertion below */ }
+    if (zinkStart.status !== 201 || !zinkStart.json.booking?.id || zinkUrl?.hostname !== "app.bokabord.se" || zinkUrl.searchParams.get("date") !== pilotDate || zinkUrl.searchParams.get("amount") !== "2") {
+      fail("zink-bridge-start", JSON.stringify(zinkStart.json).slice(0, 320));
+    } else ok("zink-bridge-start", "official BokaBord URL + persisted in_progress record");
+
+    const zinkId = zinkStart.json.booking?.id || "missing";
+    const zinkConfirmed = await req(base, "POST", `/restaurant-bookings/${encodeURIComponent(zinkId)}/provider-confirmed`, {}, pilotHeaders);
+    if (zinkConfirmed.status !== 200 || zinkConfirmed.json.booking?.status !== "provider_confirmed") fail("zink-bridge-confirm", JSON.stringify(zinkConfirmed.json));
+    else ok("zink-bridge-confirm", "trusted provider success recorded");
+
+    const zinkHistory = await req(base, "GET", "/restaurant-bookings", null, pilotHeaders);
+    if (zinkHistory.status !== 200 || zinkHistory.json.bookings?.[0]?.id !== zinkId || zinkHistory.json.bookings?.[0]?.status !== "provider_confirmed") fail("zink-history", JSON.stringify(zinkHistory.json));
+    else ok("zink-history", "authenticated history survives devices");
 
     const intent = await req(base, "POST", "/pay/intent", {
       tableId: "nope",

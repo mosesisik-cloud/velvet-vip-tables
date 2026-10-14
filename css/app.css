@@ -1980,6 +1980,13 @@ body.ob-lock, body.modal-lock { overflow: hidden; }
 .phone-login{display:block;width:min(100%,520px);margin:0 auto 14px;min-height:54px;font-size:16px}
 .restaurant-live-book{margin:18px 0 8px;text-align:center}
 .restaurant-live-note{margin:0 0 18px;text-align:center}
+.restaurant-provider-start{margin-bottom:12px}
+.restaurant-provider-bridge{margin:18px -10px 14px;border:1px solid var(--border);background:#fff;box-shadow:0 18px 54px rgba(0,0,0,.28)}
+.restaurant-provider-head{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:12px 14px;background:var(--bg-elev);color:var(--text);border-bottom:1px solid var(--border)}
+.restaurant-provider-head div{display:grid;gap:2px}.restaurant-provider-head span{font-size:8px;font-weight:750;letter-spacing:.18em;color:var(--gold)}.restaurant-provider-head strong{font-size:13px}.restaurant-provider-head a{font-size:10px;color:var(--gold)}
+.restaurant-provider-bridge iframe{display:block;width:100%;height:760px;border:0;background:#fff}
+.restaurant-booking-history{display:grid;gap:12px;margin-top:34px}.restaurant-booking-history>h2{margin:0 0 4px}.restaurant-history-card .booking-status.is-confirmed{color:#7ad69b}
+@media(max-width:760px){.restaurant-provider-bridge{margin-inline:-14px}.restaurant-provider-bridge iframe{height:720px}.restaurant-provider-head{padding-inline:10px}}
 .restaurant-book-divider{display:flex;align-items:center;gap:10px;margin:20px 0;color:var(--muted);font-size:12px;text-align:center;text-transform:uppercase;letter-spacing:.08em}
 .restaurant-book-divider::before,.restaurant-book-divider::after{content:"";height:1px;flex:1;background:var(--line)}
 .crew-empty{text-align:center;padding:28px;color:var(--text-dim)}.crew-empty span{font-size:32px}

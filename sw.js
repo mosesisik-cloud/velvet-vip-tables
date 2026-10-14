@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-156-menu-reader";
+const VERSION = "v4-real-157-auth-zink";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
