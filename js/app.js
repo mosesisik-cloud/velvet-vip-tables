@@ -1,8 +1,8 @@
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=157";
-import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=157";
-import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=157";
-import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=157";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=158";
+import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=158";
+import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=158";
+import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=158";
 
 // ---------- Data ----------
 let DESTINATIONS = [];
@@ -1056,6 +1056,37 @@ async function apiJSON(path, opts) {
     if (!r.ok) return json || null;
     return json;
   } catch { return null; }
+}
+
+const RESTAURANT_BOOKINGS_KEY = "velvetRestaurantBookings";
+
+function buildBokaBordUrl(baseUrl, { date = "", party = 0, lang = "sv" } = {}) {
+  try {
+    const url = new URL(String(baseUrl || ""));
+    if (url.protocol !== "https:" || url.hostname !== "app.bokabord.se") return "";
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(date))) url.searchParams.set("date", String(date));
+    if (Number(party) > 0) url.searchParams.set("amount", String(Math.max(1, Math.min(20, Number(party)))));
+    url.searchParams.set("version", "new");
+    url.searchParams.set("lang", String(lang) === "sv" ? "sw" : String(lang || "en").slice(0, 2));
+    return url.toString();
+  } catch { return ""; }
+}
+
+function loadLocalRestaurantBookings() {
+  try {
+    const rows = JSON.parse(localStorage.getItem(RESTAURANT_BOOKINGS_KEY) || "[]");
+    return Array.isArray(rows) ? rows : [];
+  } catch { return []; }
+}
+
+function upsertLocalRestaurantBooking(booking) {
+  if (!booking?.id) return;
+  try {
+    const rows = loadLocalRestaurantBookings();
+    const previous = rows.find((row) => row.id === booking.id) || {};
+    const next = { ...previous, ...booking, updatedAt: new Date().toISOString() };
+    localStorage.setItem(RESTAURANT_BOOKINGS_KEY, JSON.stringify([next, ...rows.filter((row) => row.id !== booking.id)].slice(0, 50)));
+  } catch { /* servern är primär; den lokala kopian är bara återhämtning */ }
 }
 
 async function loadVenueEvents() {
@@ -2417,16 +2448,14 @@ async function renderRestaurantDetail(placeId) {
   const today = new Date().toISOString().slice(0, 10);
   const zinkPilot = restaurant.placeId === "curated-STO-zink-italian-cuisine" && restaurant.bookingProvider === "BokaBord" && restaurant.bookingUrl;
   const bookingPanel = zinkPilot
-    ? `${loadUser() ? `<form id="restaurant-provider-start" class="restaurant-book-form restaurant-provider-start">
+    ? `<div class="restaurant-provider-intro"><span>01 · VELVET</span><i></i><span>02 · BOKABORD</span><i></i><span>03 · KLART</span></div>
+       <form id="restaurant-provider-start" class="restaurant-book-form restaurant-provider-start">
          <label>Datum<input name="date" type="date" min="${today}" required></label>
          <label>Antal gäster<select name="party" required>${Array.from({length: 12}, (_, i) => `<option value="${i + 1}" ${i === 1 ? "selected" : ""}>${i + 1} ${i ? "gäster" : "gäst"}</option>`).join("")}</select></label>
-         <button class="btn btn-gold btn-block" type="submit">Se riktiga tider hos Zink</button>
-       </form>` : `<button class="btn btn-gold btn-block restaurant-live-book" id="restaurant-provider-login" type="button">Logga in med Face ID för att boka</button>`}
-       <p class="stepper-hint restaurant-live-note">Riktig pilot med Zinks officiella BokaBord. Bokningen görs i deras system här i VELVET och bekräftas av BokaBord — inte av en lokal demo.</p>
-       <div class="restaurant-provider-bridge" id="restaurant-provider-bridge" hidden>
-         <div class="restaurant-provider-head"><div><span>LIVE WEBBRIDGE</span><strong>Zink × BokaBord</strong></div><a id="restaurant-provider-external" href="${esc(restaurant.bookingUrl)}" target="_blank" rel="noopener">Öppna separat ↗</a></div>
-         <iframe id="restaurant-provider-frame" title="Boka bord på Zink via BokaBord" allow="payment" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-       </div>
+         <button class="btn btn-gold btn-block restaurant-live-book" type="submit">Boka direkt i VELVET</button>
+       </form>
+       <p class="stepper-hint restaurant-live-note">VELVET öppnar Zinks riktiga BokaBord i appen. Du ser lediga tider och slutför den riktiga bokningen utan att lämna VELVET.</p>
+       ${loadUser() ? `<p class="restaurant-book-member">✓ Inloggad · bokningen synkas till Mina bokningar</p>` : `<p class="restaurant-book-member">Du kan boka nu. Logga in med Face ID för att även synka bokningen mellan dina enheter.</p>`}
        <div id="restaurant-provider-result" aria-live="polite"></div>
        ${restaurant.phone ? `<a class="restaurant-official-book" href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">Ring restaurangen: ${esc(restaurant.phone)}</a>` : ""}`
     : restaurant.bookingDirect && restaurant.bookingUrl
@@ -2458,22 +2487,74 @@ async function renderRestaurantDetail(placeId) {
       </aside>
     </div>
   </section>`;
-  document.getElementById("restaurant-provider-login")?.addEventListener("click", () => {
-    try { sessionStorage.setItem("velvet_after_login", `#/restaurant/${restaurant.placeId}`); } catch {}
-    openOnboarding({ dismissable: true, phase: "auth" });
-  });
   const providerForm = document.getElementById("restaurant-provider-start");
   let providerBookingId = "";
   let providerValues = null;
+  let providerServerTracked = false;
+  const openProviderModal = (officialUrl) => {
+    const root = document.getElementById("modal-root");
+    if (!root) return;
+    if (modalTeardown) modalTeardown();
+    const opener = document.activeElement;
+    root.innerHTML = `<div class="restaurant-provider-modal" id="restaurant-provider-modal">
+      <section class="restaurant-provider-shell" role="dialog" aria-modal="true" aria-labelledby="restaurant-provider-title" tabindex="-1">
+        <header class="restaurant-provider-head">
+          <button class="restaurant-provider-close" id="restaurant-provider-close" type="button" aria-label="Stäng bokningen">←</button>
+          <div><span>DU ÄR KVAR I VELVET</span><strong id="restaurant-provider-title">Boka Zink – Italian Cuisine</strong></div>
+          <b class="restaurant-provider-status" id="restaurant-provider-status">LIVE · BOKABORD</b>
+        </header>
+        <div class="restaurant-provider-frame-wrap">
+          <iframe id="restaurant-provider-frame" src="${esc(officialUrl)}" title="Boka bord på Zink via BokaBord" allow="payment" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+        </div>
+        <footer class="restaurant-provider-foot"><span>Den riktiga reservationen skapas och bekräftas av Zinks bokningssystem.</span><a href="${esc(officialUrl)}" target="_blank" rel="noopener">Problem med vyn? Öppna separat ↗</a></footer>
+      </section>
+    </div>`;
+    const modal = document.getElementById("restaurant-provider-modal");
+    const shell = root.querySelector(".restaurant-provider-shell");
+    const untrap = trapFocus(shell);
+    document.body.classList.add("modal-lock");
+    setAppInert(true);
+    const close = () => {
+      untrap();
+      document.removeEventListener("keydown", onKey);
+      root.innerHTML = "";
+      document.body.classList.remove("modal-lock");
+      setAppInert(false);
+      if (modalTeardown === close) modalTeardown = null;
+      restoreFocus(opener);
+    };
+    const onKey = (event) => { if (event.key === "Escape") close(); };
+    document.addEventListener("keydown", onKey);
+    document.getElementById("restaurant-provider-close")?.addEventListener("click", close);
+    modal?.addEventListener("click", (event) => { if (event.target === modal) close(); });
+    modalTeardown = close;
+    shell?.focus();
+  };
   const providerMessage = async (event) => {
     const frame = document.getElementById("restaurant-provider-frame");
     if (event.origin !== "https://app.bokabord.se" || !frame || event.source !== frame.contentWindow) return;
     const signal = typeof event.data === "string" ? event.data : event.data?.type;
     if (signal !== "reservationSuccess" || !providerBookingId) return;
-    const confirmed = await apiJSON(`/restaurant-bookings/${encodeURIComponent(providerBookingId)}/provider-confirmed`, { method: "POST" });
+    const confirmed = providerServerTracked
+      ? await apiJSON(`/restaurant-bookings/${encodeURIComponent(providerBookingId)}/provider-confirmed`, { method: "POST" })
+      : null;
+    upsertLocalRestaurantBooking({
+      id: providerBookingId,
+      restaurantId: restaurant.placeId,
+      restaurant: restaurant.name,
+      destination: destination.destination,
+      date: providerValues?.date || "",
+      party: Number(providerValues?.party) || 0,
+      provider: "BokaBord",
+      status: "provider_confirmed",
+      providerConfirmedAt: new Date().toISOString(),
+      serverSynced: providerServerTracked && !!confirmed?.booking?.id,
+    });
+    const status = document.getElementById("restaurant-provider-status");
+    if (status) { status.textContent = "✓ BOKNING BEKRÄFTAD"; status.classList.add("is-confirmed"); }
     const result = document.getElementById("restaurant-provider-result");
     if (result) {
-      result.innerHTML = `<div class="restaurant-book-success"><div class="big">✓</div><h3>BokaBord har bekräftat flödet</h3><p>${esc(String(providerValues?.party || ""))} gäster · ${esc(providerValues?.date || "")}</p><small>VELVET-referens ${esc(confirmed?.booking?.id || providerBookingId)}. Den officiella bekräftelsen och restaurangens bokningskod visas av BokaBord i fönstret ovan och skickas av dem till dina kontaktuppgifter.</small><p><a class="btn btn-ghost btn-sm" href="#/bookings" data-nav>Visa mina bokningar</a></p></div>`;
+      result.innerHTML = `<div class="restaurant-book-success"><div class="big">✓</div><h3>Bokningen är bekräftad av BokaBord</h3><p>${esc(String(providerValues?.party || ""))} gäster · ${esc(providerValues?.date || "")}</p><small>VELVET-referens ${esc(confirmed?.booking?.id || providerBookingId)}. Zinks bokningskod visas av BokaBord och skickas till kontaktuppgifterna du angav där.</small><p><a class="btn btn-ghost btn-sm" href="#/bookings" data-nav>Visa mina bokningar</a></p></div>`;
     }
   };
   if (providerForm) {
@@ -2484,29 +2565,39 @@ async function renderRestaurantDetail(placeId) {
       const submit = providerForm.querySelector('button[type="submit"]');
       if (submit) { submit.disabled = true; submit.textContent = "Öppnar Zinks tider…"; }
       providerValues = Object.fromEntries(new FormData(providerForm));
-      const started = await apiJSON("/restaurant-bookings/external/start", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ restaurantId: restaurant.placeId, date: providerValues.date, party: Number(providerValues.party), lang: currentLang() }),
+      const directUrl = buildBokaBordUrl(restaurant.bookingUrl, {
+        date: providerValues.date,
+        party: Number(providerValues.party),
+        lang: currentLang(),
       });
-      if (!started?.booking?.id || !/^https:\/\/app\.bokabord\.se\//i.test(started.officialUrl || "")) {
-        if (submit) { submit.disabled = false; submit.textContent = "Se riktiga tider hos Zink"; }
-        if (started?.error === "auth") {
-          try { sessionStorage.setItem("velvet_after_login", `#/restaurant/${restaurant.placeId}`); } catch {}
-          openOnboarding({ dismissable: true, phase: "auth" });
-        } else {
-          showToast("Zinks bokningssystem kunde inte öppnas just nu. Använd länken till BokaBord.");
-        }
+      const started = loadUser() ? await apiJSON("/restaurant-bookings/external/start", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ restaurantId: restaurant.placeId, date: providerValues.date, party: Number(providerValues.party), lang: currentLang() }),
+        }) : null;
+      const serverUrl = /^https:\/\/app\.bokabord\.se\//i.test(started?.officialUrl || "") ? started.officialUrl : "";
+      const officialUrl = serverUrl || directUrl;
+      if (!officialUrl) {
+        if (submit) { submit.disabled = false; submit.textContent = "Boka direkt i VELVET"; }
+        showToast("Zinks bokningssystem kunde inte öppnas just nu.");
         return;
       }
-      providerBookingId = started.booking.id;
-      const bridge = document.getElementById("restaurant-provider-bridge");
-      const frame = document.getElementById("restaurant-provider-frame");
-      const external = document.getElementById("restaurant-provider-external");
-      if (external) external.href = started.officialUrl;
-      if (frame) frame.src = started.officialUrl;
-      if (bridge) { bridge.hidden = false; bridge.scrollIntoView({ behavior: "smooth", block: "start" }); }
-      if (submit) { submit.disabled = false; submit.textContent = "Ändra datum eller antal"; }
+      providerServerTracked = !!started?.booking?.id;
+      providerBookingId = started?.booking?.id || `RB-LOCAL-${Date.now().toString(36).toUpperCase()}`;
+      upsertLocalRestaurantBooking({
+        id: providerBookingId,
+        restaurantId: restaurant.placeId,
+        restaurant: restaurant.name,
+        destination: destination.destination,
+        date: providerValues.date,
+        party: Number(providerValues.party),
+        provider: "BokaBord",
+        status: "in_progress",
+        createdAt: new Date().toISOString(),
+        serverSynced: providerServerTracked,
+      });
+      openProviderModal(officialUrl);
+      if (submit) { submit.disabled = false; submit.textContent = "Boka direkt i VELVET"; }
     });
   }
   document.getElementById("restaurant-book-form")?.addEventListener("submit", async (event) => {
@@ -2528,10 +2619,7 @@ async function renderRestaurantDetail(placeId) {
       ? { ...payload, ...remote.booking, serverSynced: true }
       : { ...payload, id: `RB-${Date.now().toString(36).toUpperCase()}`, status: "local-pending", createdAt: new Date().toISOString(), serverSynced: false };
     try {
-      const stored = JSON.parse(localStorage.getItem("velvetRestaurantBookings") || "[]");
-      const rows = Array.isArray(stored) ? stored : [];
-      rows.unshift(booking);
-      localStorage.setItem("velvetRestaurantBookings", JSON.stringify(rows.slice(0, 50)));
+      upsertLocalRestaurantBooking(booking);
     } catch { /* servern är primär; lokal kopia är bara bekvämlighet */ }
     form.hidden = true;
     document.getElementById("restaurant-book-result").innerHTML = `<div class="restaurant-book-success"><div class="big">${synced ? "✓" : "!"}</div><h3>${synced ? "Förfrågan skickad" : "Förfrågan sparad lokalt"}</h3><p>${esc(values.party)} gäster · ${esc(values.date)} kl. ${esc(values.time)}</p><small>Referens ${esc(booking.id)} · ${synced ? "restaurangen behöver bekräfta bordet." : "servern kunde inte nås; försök igen när anslutningen är tillbaka."}</small></div>`;
@@ -4130,7 +4218,10 @@ function showConfirmation(b, opener) {
 async function renderBookings() {
   const bookings = loadBookings();
   const restaurantRemote = loadUser() ? await apiJSON("/restaurant-bookings") : null;
-  const restaurantBookings = Array.isArray(restaurantRemote?.bookings) ? restaurantRemote.bookings : [];
+  const remoteRestaurantBookings = Array.isArray(restaurantRemote?.bookings) ? restaurantRemote.bookings : [];
+  const remoteRestaurantIds = new Set(remoteRestaurantBookings.map((booking) => booking.id));
+  const restaurantBookings = [...remoteRestaurantBookings, ...loadLocalRestaurantBookings().filter((booking) => !remoteRestaurantIds.has(booking.id))]
+    .sort((a, b) => String(b.updatedAt || b.createdAt || "").localeCompare(String(a.updatedAt || a.createdAt || "")));
   const totalBookings = bookings.length + restaurantBookings.length;
   view().innerHTML = `
   <section class="section">
@@ -4170,7 +4261,7 @@ async function renderBookings() {
       </div>`).join("")}
     ${restaurantBookings.length ? `<div class="restaurant-booking-history"><span class="eyebrow">RESTAURANGBOKNINGAR</span><h2>Zink-piloten</h2>${restaurantBookings.map((booking) => {
       const confirmed = booking.status === "provider_confirmed";
-      const status = confirmed ? "Bekräftad av BokaBord" : booking.status === "in_progress" ? "Påbörjad hos BokaBord" : "Förfrågan skickad";
+      const status = confirmed ? "Bekräftad av BokaBord" : booking.status === "in_progress" ? "Påbörjad i VELVET" : "Förfrågan skickad";
       return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${confirmed ? "Den officiella bokningskoden skickas av BokaBord." : "Slutför bokningen i Zinks officiella BokaBord-flöde."}</div></div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${confirmed ? "Visa Zink" : "Fortsätt hos Zink"}</a></div>`;
     }).join("")}</div>` : ""}
   </section>`;
@@ -7769,7 +7860,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=157", { updateViaCache: "none" })
+      .register("sw.js?v=158", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });

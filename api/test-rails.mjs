@@ -217,9 +217,9 @@ function checkRestaurants() {
       fail("zink-direct-booking", JSON.stringify(zink && { bookingUrl: zink.bookingUrl, bookingProvider: zink.bookingProvider, bookingDirect: zink.bookingDirect }));
     } else ok("zink-direct-booking", "official BokaBord flow is primary");
     const app = fs.readFileSync(path.join(ROOT, "js", "app.js"), "utf8");
-    if (!app.includes("const zinkPilot = restaurant.placeId") || !app.includes("/restaurant-bookings/external/start") || !app.includes("restaurant-provider-frame") || !app.includes("Boka hos ${esc(restaurant.name)} nu ↗")) {
-      fail("direct-booking-ui", "direct booking must use the official provider, with the Zink live bridge embedded");
-    } else ok("direct-booking-ui", "Zink live bridge + official fallback bypass local-only requests");
+    if (!app.includes("const zinkPilot = restaurant.placeId") || !app.includes("/restaurant-bookings/external/start") || !app.includes("restaurant-provider-frame") || !app.includes("buildBokaBordUrl") || !app.includes("Boka direkt i VELVET") || !app.includes("restaurant-provider-modal")) {
+      fail("direct-booking-ui", "direct booking must use the official provider in a full VELVET in-app flow");
+    } else ok("direct-booking-ui", "Zink full-screen BokaBord bridge + public fallback");
   }
 }
 
