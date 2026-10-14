@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-159-webbridge";
+const VERSION = "v4-real-159b-webbridge";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
