@@ -2438,7 +2438,7 @@ async function renderRestaurantDetail(placeId) {
   const zinkPilot = restaurant.placeId === "curated-STO-zink-italian-cuisine" && restaurant.bookingProvider === "BokaBord" && restaurant.bookingUrl;
   const bookingPanel = zinkPilot
     ? `<div class="restaurant-provider-intro"><span>01 · DATUM</span><i></i><span>02 · TID</span><i></i><span>03 · BEKRÄFTA</span></div>
-       <div class="webbridge-badge"><span aria-hidden="true">↔</span><div><strong>VELVET WebBridge</strong><small>Livekoppling till Zinks bokningssystem</small></div><b>LIVE</b></div>
+       <div class="webbridge-badge"><span aria-hidden="true">↔</span><div><strong>VELVET WebBridge</strong><small>Säker koppling till Zinks bokningssystem</small></div><b>PILOT</b></div>
        <form id="restaurant-webbridge-search" class="restaurant-book-form restaurant-provider-start">
          <label>Datum<input name="date" type="date" min="${today}" required></label>
          <label>Antal gäster<select name="party" required>${Array.from({length: 8}, (_, i) => `<option value="${i + 1}" ${i === 1 ? "selected" : ""}>${i + 1} ${i ? "gäster" : "gäst"}</option>`).join("")}</select></label>
@@ -7837,7 +7837,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=159b", { updateViaCache: "none" })
+      .register("sw.js?v=159c", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
