@@ -35,7 +35,7 @@ export function currentLang() { return lang; }
 const D = {
   sv: {
     skip: "Hoppa till huvudinnehållet",
-    ribbon: "Förhandsversion · VELVET-teamet tar förfrågan mot klubben — ingen reservation förrän återkoppling",
+    ribbon: "Förhandsversion · Endast flöden markerade LIVE kan skapa en riktig reservation",
     navDestinations: "Destinationer",
     navRestaurants: "Restauranger",
     restaurantsTitle: "Topprestauranger i {name}",
@@ -833,7 +833,7 @@ const D = {
   },
   en: {
     skip: "Skip to main content",
-    ribbon: "Preview · VELVET sends your request to the club — no reservation until we confirm",
+    ribbon: "Preview · Only flows marked LIVE can create a real reservation",
     navDestinations: "Destinations",
     navRestaurants: "Restaurants",
     restaurantsTitle: "Top restaurants in {name}",
@@ -1631,7 +1631,7 @@ const D = {
   },
   es: {
     skip: "Saltar al contenido",
-    ribbon: "Vista previa · VELVET envía la solicitud al club — no hay reserva hasta confirmación",
+    ribbon: "Vista previa · Solo los flujos marcados LIVE pueden crear una reserva real",
     navDestinations: "Destinos",
     navRestaurants: "Restaurantes",
     restaurantsTitle: "Mejores restaurantes de {name}",
@@ -2429,7 +2429,7 @@ const D = {
   },
   fr: {
     skip: "Aller au contenu",
-    ribbon: "Aperçu · VELVET envoie la demande au club — pas de réservation tant que ce n’est pas confirmé",
+    ribbon: "Aperçu · Seuls les parcours marqués LIVE peuvent créer une vraie réservation",
     navDestinations: "Destinations",
     navRestaurants: "Restaurants",
     restaurantsTitle: "Meilleurs restaurants à {name}",
