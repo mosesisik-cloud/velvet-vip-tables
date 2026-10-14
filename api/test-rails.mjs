@@ -217,9 +217,11 @@ function checkRestaurants() {
       fail("zink-direct-booking", JSON.stringify(zink && { bookingUrl: zink.bookingUrl, bookingProvider: zink.bookingProvider, bookingDirect: zink.bookingDirect }));
     } else ok("zink-direct-booking", "official BokaBord flow is primary");
     const app = fs.readFileSync(path.join(ROOT, "js", "app.js"), "utf8");
-    if (!app.includes("const zinkPilot = restaurant.placeId") || !app.includes("/restaurant-bookings/external/start") || !app.includes("restaurant-provider-frame") || !app.includes("buildBokaBordUrl") || !app.includes("Boka direkt i VELVET") || !app.includes("restaurant-provider-modal")) {
-      fail("direct-booking-ui", "direct booking must use the official provider in a full VELVET in-app flow");
-    } else ok("direct-booking-ui", "Zink full-screen BokaBord bridge + public fallback");
+    if (!app.includes("const zinkPilot = restaurant.placeId") || !app.includes("/restaurant-bookings/webbridge/availability") || !app.includes("/restaurant-bookings/webbridge/book") || !app.includes("Bekräfta riktig bokning") || !app.includes("VELVET WebBridge")) {
+      fail("direct-booking-ui", "Zink must use the native VELVET WebBridge flow");
+    } else if (app.includes("restaurant-provider-frame") || app.includes("buildBokaBordUrl")) {
+      fail("direct-booking-ui", "legacy provider iframe or redirect builder remains");
+    } else ok("direct-booking-ui", "Zink native WebBridge UI without iframe or redirect");
   }
 }
 
@@ -253,11 +255,14 @@ function checkMenuCoverage() {
   const venues = [...loadJson("data/venues.json"), ...loadJson("data/unlisted-venues.json")];
   const venueAccess = venues.filter((v) => /^https?:\/\//i.test(v.website_url || v.source_url || ""));
   const app = fs.readFileSync(path.join(ROOT, "js", "app.js"), "utf8");
+  const nativeMenus = loadJson("data/restaurant-menus.json").restaurants || {};
+  const zinkMenu = nativeMenus["curated-STO-zink-italian-cuisine"];
   if (explicit.length < 80) fail("restaurant-menu-links", `${explicit.length} explicit official links`);
   else if (accessible.length !== restaurants.length) fail("restaurant-menu-access", `${accessible.length}/${restaurants.length}`);
   else if (venueAccess.length !== venues.length || !/menuOfficialHint/.test(app)) fail("venue-menu-access", `${venueAccess.length}/${venues.length}`);
   else if (!app.includes('renderMenuReader("restaurant", id)') || !app.includes('renderMenuReader("venue", id)') || !app.includes("menu-browser")) fail("menu-reader", "missing in-app routes for restaurants or venues");
-  else ok("menu-coverage", `${explicit.length} direct official menus · ${restaurants.length} restaurant paths · ${venues.length} venue paths`);
+  else if (!Array.isArray(zinkMenu?.items) || zinkMenu.items.length < 40 || !app.includes("RESTAURANT_MENUS")) fail("menu-native-zink", `${zinkMenu?.items?.length || 0} native items`);
+  else ok("menu-coverage", `${explicit.length} direct official menus · ${zinkMenu.items.length} native Zink items · ${restaurants.length} restaurant paths · ${venues.length} venue paths`);
 }
 
 function checkLocationFirstHome() {
@@ -391,34 +396,34 @@ async function runApi() {
     else ok("pay-config", "8 methods, destination Revolut, ready=false");
 
     const pilotDate = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
-    const unauthZink = await req(base, "POST", "/restaurant-bookings/external/start", {
-      restaurantId: "curated-STO-zink-italian-cuisine", date: pilotDate, party: 2, lang: "sv",
+    const invalidAvailability = await req(base, "POST", "/restaurant-bookings/webbridge/availability", {
+      restaurantId: "curated-STO-zink-italian-cuisine", date: "not-a-date", party: 2, lang: "sv",
+    });
+    if (invalidAvailability.status !== 400 || invalidAvailability.json.error !== "date") fail("zink-availability-validation", JSON.stringify(invalidAvailability.json));
+    else ok("zink-availability-validation", "invalid input rejected before provider call");
+
+    const unauthZink = await req(base, "POST", "/restaurant-bookings/webbridge/book", {
+      restaurantId: "curated-STO-zink-italian-cuisine", date: pilotDate, time: "18:00", party: 2, confirm: true, terms: true,
+      firstName: "Test", lastName: "Guest", email: "test@example.com", phone: "+46701234567",
     });
     if (unauthZink.status !== 401 || unauthZink.json.error !== "auth") fail("zink-auth", JSON.stringify(unauthZink.json));
-    else ok("zink-auth", "anonymous start blocked");
+    else ok("zink-auth", "anonymous final booking blocked");
 
     const pilotHeaders = { Cookie: `velvet_session=${pilotSessionToken}` };
     const pilotSession = await req(base, "GET", "/auth/session", null, pilotHeaders);
     if (pilotSession.status !== 200 || pilotSession.json.user?.id !== pilotUser.id) fail("auth-session", JSON.stringify(pilotSession.json));
     else ok("auth-session", "HttpOnly session resolves server-side identity");
 
-    const zinkStart = await req(base, "POST", "/restaurant-bookings/external/start", {
-      restaurantId: "curated-STO-zink-italian-cuisine", date: pilotDate, party: 2, lang: "sv",
+    const unconfirmedZink = await req(base, "POST", "/restaurant-bookings/webbridge/book", {
+      restaurantId: "curated-STO-zink-italian-cuisine", date: pilotDate, time: "18:00", party: 2, confirm: false, terms: true,
+      firstName: "Test", lastName: "Guest", email: "test@example.com", phone: "+46701234567",
     }, pilotHeaders);
-    let zinkUrl = null;
-    try { zinkUrl = new URL(zinkStart.json.officialUrl || ""); } catch { /* assertion below */ }
-    if (zinkStart.status !== 201 || !zinkStart.json.booking?.id || zinkUrl?.hostname !== "app.bokabord.se" || zinkUrl.searchParams.get("date") !== pilotDate || zinkUrl.searchParams.get("amount") !== "2") {
-      fail("zink-bridge-start", JSON.stringify(zinkStart.json).slice(0, 320));
-    } else ok("zink-bridge-start", "official BokaBord URL + persisted in_progress record");
-
-    const zinkId = zinkStart.json.booking?.id || "missing";
-    const zinkConfirmed = await req(base, "POST", `/restaurant-bookings/${encodeURIComponent(zinkId)}/provider-confirmed`, {}, pilotHeaders);
-    if (zinkConfirmed.status !== 200 || zinkConfirmed.json.booking?.status !== "provider_confirmed") fail("zink-bridge-confirm", JSON.stringify(zinkConfirmed.json));
-    else ok("zink-bridge-confirm", "trusted provider success recorded");
+    if (unconfirmedZink.status !== 400 || unconfirmedZink.json.error !== "confirmation_required") fail("zink-explicit-confirm", JSON.stringify(unconfirmedZink.json));
+    else ok("zink-explicit-confirm", "provider booking cannot run without explicit final confirmation");
 
     const zinkHistory = await req(base, "GET", "/restaurant-bookings", null, pilotHeaders);
-    if (zinkHistory.status !== 200 || zinkHistory.json.bookings?.[0]?.id !== zinkId || zinkHistory.json.bookings?.[0]?.status !== "provider_confirmed") fail("zink-history", JSON.stringify(zinkHistory.json));
-    else ok("zink-history", "authenticated history survives devices");
+    if (zinkHistory.status !== 200 || !Array.isArray(zinkHistory.json.bookings)) fail("zink-history", JSON.stringify(zinkHistory.json));
+    else ok("zink-history", "authenticated history is available without submitting a test reservation");
 
     const intent = await req(base, "POST", "/pay/intent", {
       tableId: "nope",

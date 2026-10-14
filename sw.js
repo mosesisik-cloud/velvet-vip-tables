@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-158-in-app-booking";
+const VERSION = "v4-real-159-webbridge";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -34,6 +34,7 @@ const SHELL_ASSETS = [
   "./data/unlisted-venues.json",
   "./data/club-rankings.json",
   "./data/restaurants.json",
+  "./data/restaurant-menus.json",
   "./data/venue-images.json",
   "./data/venue-layouts.json",
   "./data/venue-youtube.json",

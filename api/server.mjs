@@ -106,6 +106,155 @@ async function srBookSlot(slug, { date, time, party, guest, note, lang }) {
   return { ok: true, confirmation: String(j.message || ""), reservationId: j.reservation_id, token: String(j.token || ""), shift: shift.name, date, time, party };
 }
 
+// ---------- BokaBord WebBridge (Zink pilot) ----------
+// Webbläsaren ser aldrig leverantörens sida. Servern läser samma publika
+// widgetdata som Zinks egen bokningsknapp använder och skickar bara tillbaka
+// normaliserade tider och en bekräftad bokningsreferens.
+const BOKABORD_ORIGIN = "https://app.bokabord.se";
+const ZINK_WIDGET_HASH = "e9d3e6917bc7f05c0df1ae157d9aed5b";
+const ZINK_WIDGET_URL = `${BOKABORD_ORIGIN}/reservation/?app_type=bokabord&hash=${ZINK_WIDGET_HASH}`;
+let zinkWidgetCache = null;
+
+function assignedJson(html, variable) {
+  const match = String(html || "").match(new RegExp(`var\\s+${variable}\\s*=\\s*(\\{[^\\n]+\\});`));
+  if (!match) return null;
+  try { return JSON.parse(match[1]); } catch { return null; }
+}
+
+async function zinkWidgetContext(force = false) {
+  if (!force && zinkWidgetCache && Date.now() - zinkWidgetCache.at < 5 * 60 * 1000) return zinkWidgetCache;
+  const response = await fetch(ZINK_WIDGET_URL, {
+    headers: { "User-Agent": "Mozilla/5.0 (compatible; VELVET-WebBridge/1.0)", Accept: "text/html" },
+    redirect: "follow",
+  });
+  if (!response.ok) throw new Error(`bokabord_widget_http_${response.status}`);
+  const html = await response.text();
+  const meals = assignedJson(html, "meals");
+  const settings = assignedJson(html, "settings");
+  if (!meals || !settings) throw new Error("bokabord_widget_contract");
+  const setCookie = response.headers.get("set-cookie") || "";
+  const cookie = setCookie.split(/,(?=[^;,]+=)/).map((part) => part.split(";")[0]).filter(Boolean).join("; ");
+  zinkWidgetCache = { at: Date.now(), meals, settings, cookie };
+  return zinkWidgetCache;
+}
+
+async function bokabordJson(pathname, payload, cookie = "") {
+  const response = await fetch(BOKABORD_ORIGIN + pathname, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      Accept: "application/json, text/plain, */*",
+      Origin: BOKABORD_ORIGIN,
+      Referer: ZINK_WIDGET_URL,
+      "User-Agent": "Mozilla/5.0 (compatible; VELVET-WebBridge/1.0)",
+      ...(cookie ? { Cookie: cookie } : {}),
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = await response.json().catch(() => null);
+  if (!response.ok || !data) throw new Error(`bokabord_http_${response.status}`);
+  return data;
+}
+
+function zinkMealFor(context, date, requestedId = "") {
+  const rows = Object.values(context.meals || {}).filter((meal) => meal && Number(meal.status) === 1);
+  const open = rows.filter((meal) => !meal.calendar || Number(meal.calendar[date]) === 1);
+  const requested = open.find((meal) => String(meal.id) === String(requestedId || ""));
+  return requested || open.find((meal) => /middag|dinner/i.test(meal.name || "")) || open[0] || null;
+}
+
+function normalizeBokabordTimes(value) {
+  const rows = Array.isArray(value) ? value : Object.values(value || {});
+  return [...new Set(rows.map((row) => Array.isArray(row) ? row[0] : row?.time || row).map(String).filter((time) => /^([01]\d|2[0-3]):[0-5]\d$/.test(time)))].sort();
+}
+
+async function zinkAvailability({ date, party, mealId = "", email = "", lang = "sv" }) {
+  const context = await zinkWidgetContext();
+  const meal = zinkMealFor(context, date, mealId);
+  if (!meal) return { meal: null, times: [], reason: "closed" };
+  const response = await bokabordJson("/booking-widget/api/getTimes", {
+    testmode: 0,
+    date_code: "",
+    date,
+    amount: party,
+    mealid: String(meal.id),
+    mc_code: "",
+    email: String(email || "").slice(0, 120),
+    hd_meal: "",
+    hash: ZINK_WIDGET_HASH,
+    int_test: "N",
+    lang: lang === "sv" ? "sw" : String(lang || "en").slice(0, 2),
+  }, context.cookie);
+  if (response.success !== true) throw new Error("bokabord_availability_rejected");
+  return {
+    meal: { id: String(meal.id), name: String(meal.name || "Bord"), startsAt: String(meal.tstart || ""), endsAt: String(meal.tend || "") },
+    times: normalizeBokabordTimes(response.times),
+    full: normalizeBokabordTimes(response.full),
+    context,
+  };
+}
+
+function phoneForBokabord(value) {
+  const raw = String(value || "").trim();
+  const digits = raw.replace(/\D/g, "");
+  if (raw.startsWith("+") && digits.length >= 8) {
+    const dial = digits.startsWith("46") ? "+46" : `+${digits.slice(0, Math.max(1, digits.length - 9))}`;
+    return { phone: digits.slice(dial.replace("+", "").length), countryCode: dial };
+  }
+  return { phone: digits.replace(/^0/, ""), countryCode: "+46" };
+}
+
+async function zinkBook({ date, time, party, meal, guest, note, lang, context }) {
+  const phone = phoneForBokabord(guest.phone);
+  const response = await bokabordJson("/reservation/api/booking/saveBooking", {
+    mealid: String(meal.id),
+    firstname: guest.firstName,
+    lastname: guest.lastName,
+    email: guest.email,
+    phone: phone.phone,
+    isl: "n",
+    ol: "",
+    country_code: phone.countryCode,
+    dial_code: phone.countryCode,
+    amount: party,
+    date,
+    offer_ID: 0,
+    time,
+    bookingid: 0,
+    comment: note,
+    waitlist: false,
+    waitlist_end: "",
+    length: 0,
+    saveinfo: false,
+    hd_meal: "",
+    ap_label: "",
+    testmode: 0,
+    children_amount: 0,
+    mc_code: "",
+    from_url: "",
+    hash: ZINK_WIDGET_HASH,
+    date_code: "",
+    products: [],
+    giftcard: {},
+    segment: "",
+    terms: { general: true, restaurant: true, bokabord: false },
+    temp_sid: context?.settings?.temp_sid || "",
+    waitb: context?.settings?.waitb || "",
+    linked_meals: [],
+    lid: context?.settings?.lid || "",
+    city: "",
+    widget_lang: lang === "sv" ? "sw" : String(lang || "en").slice(0, 2),
+    important_tags: "",
+    is_bokabord_web: "",
+    statistic_id: "",
+    query_params: {},
+  }, context?.cookie || "");
+  const providerReference = response.bookingid || response.booking_id || response.id || response.reference || response.code || "";
+  const hasErrors = Array.isArray(response.errors) ? response.errors.length > 0 : !!response.errors;
+  const accepted = response.success === true && !hasErrors && !response.error;
+  return { accepted, providerReference: String(providerReference || ""), response };
+}
+
 
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
@@ -892,14 +1041,6 @@ function todayISO() {
   return new Date().toISOString().slice(0, 10);
 }
 const PILOT_RESTAURANT_ID = "curated-STO-zink-italian-cuisine";
-function restaurantRecord(placeId) {
-  const catalog = loadJsonRel("restaurants.json");
-  for (const row of Object.values(catalog?.destinations || {})) {
-    const found = (row?.restaurants || []).find((item) => String(item?.placeId || "") === String(placeId || ""));
-    if (found) return found;
-  }
-  return null;
-}
 function publicRestaurantBooking(booking) {
   if (!booking) return null;
   return {
@@ -911,6 +1052,7 @@ function publicRestaurantBooking(booking) {
     time: booking.time || "",
     party: Number(booking.party) || 0,
     provider: booking.provider || "",
+    providerReference: booking.providerReference || "",
     status: booking.status,
     createdAt: booking.createdAt,
     updatedAt: booking.updatedAt || booking.createdAt,
@@ -2381,9 +2523,8 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true });
     }
 
-    // Zink-piloten kör restaurangens riktiga BokaBord-widget inuti VELVET.
-    // VELVET registrerar endast start/status; själva reservationen skapas och
-    // bekräftas av BokaBord. Inga kontaktuppgifter från widgeten läses av oss.
+    // Zink-piloten kör hela gästreseflödet i VELVET. WebBridge hämtar tider
+    // och skapar reservationen server-till-server mot Zinks BokaBord-widget.
     if (req.method === "GET" && url.pathname === "/restaurant-bookings") {
       const db = load();
       const user = sessionPublicUser(req, db);
@@ -2394,58 +2535,100 @@ const server = http.createServer(async (req, res) => {
         .map(publicRestaurantBooking);
       return send(res, 200, { bookings }, { "Cache-Control": "no-store" });
     }
-    if (req.method === "POST" && url.pathname === "/restaurant-bookings/external/start") {
+    if (req.method === "POST" && url.pathname === "/restaurant-bookings/webbridge/availability") {
+      const b = await readBody(req, 2e5);
+      const restaurantId = String(b.restaurantId || "").trim();
+      if (restaurantId !== PILOT_RESTAURANT_ID) return send(res, 409, { error: "pilot_only", restaurantId: PILOT_RESTAURANT_ID });
+      const date = String(b.date || "").trim();
+      const party = Number(b.party) || 0;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < todayISO()) return send(res, 400, { error: "date" });
+      if (!Number.isInteger(party) || party < 1 || party > 8) return send(res, 400, { error: "party" });
+      try {
+        const availability = await zinkAvailability({ date, party, mealId: b.mealId, lang: String(b.lang || "sv") });
+        return send(res, 200, {
+          ok: true,
+          restaurantId,
+          date,
+          party,
+          meal: availability.meal,
+          times: availability.times,
+          error: availability.times.length ? null : "no_availability",
+          source: "Zink · BokaBord live",
+        }, { "Cache-Control": "no-store" });
+      } catch (error) {
+        console.error("VELVET WebBridge availability", error);
+        return send(res, 502, { error: "provider_unavailable", times: [] }, { "Cache-Control": "no-store" });
+      }
+    }
+    if (req.method === "POST" && url.pathname === "/restaurant-bookings/webbridge/book") {
       const b = await readBody(req, 2e5);
       const db = load();
       const user = sessionPublicUser(req, db);
       if (!user) return send(res, 401, { error: "auth" });
       const restaurantId = String(b.restaurantId || "").trim();
-      if (restaurantId !== PILOT_RESTAURANT_ID) return send(res, 409, { error: "pilot_only", restaurantId: PILOT_RESTAURANT_ID });
-      const restaurant = restaurantRecord(restaurantId);
-      if (!restaurant || restaurant.bookingProvider !== "BokaBord" || !restaurant.bookingDirect) return send(res, 404, { error: "booking_provider" });
-      let official;
-      try { official = new URL(String(restaurant.bookingUrl || "")); } catch { return send(res, 502, { error: "booking_url" }); }
-      if (official.protocol !== "https:" || official.hostname !== "app.bokabord.se") return send(res, 502, { error: "booking_origin" });
       const date = String(b.date || "").trim();
-      const party = Math.max(1, Math.min(20, Number(b.party) || 0));
+      const time = String(b.time || "").trim();
+      const party = Number(b.party) || 0;
+      const firstName = String(b.firstName || "").trim().slice(0, 80);
+      const lastName = String(b.lastName || "").trim().slice(0, 80);
+      const email = String(b.email || "").trim().toLowerCase().slice(0, 120);
+      const phone = String(b.phone || "").trim().slice(0, 40);
+      const note = String(b.note || "").trim().slice(0, 300);
+      if (restaurantId !== PILOT_RESTAURANT_ID) return send(res, 409, { error: "pilot_only" });
+      if (b.confirm !== true || b.terms !== true) return send(res, 400, { error: "confirmation_required" });
       if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < todayISO()) return send(res, 400, { error: "date" });
-      if (!party) return send(res, 400, { error: "party" });
-      official.searchParams.set("date", date);
-      official.searchParams.set("amount", String(party));
-      official.searchParams.set("version", "new");
-      official.searchParams.set("lang", String(b.lang || "sv") === "sv" ? "sw" : String(b.lang || "en").slice(0, 2));
+      if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return send(res, 400, { error: "time" });
+      if (!Number.isInteger(party) || party < 1 || party > 8) return send(res, 400, { error: "party" });
+      if (!firstName || !lastName) return send(res, 400, { error: "name" });
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return send(res, 400, { error: "email" });
+      if (phone.replace(/\D/g, "").length < 7) return send(res, 400, { error: "phone" });
+      const existing = (db.restaurantBookings || []).find((item) => item.userId === user.id && item.restaurantId === restaurantId && item.date === date && item.time === time && item.party === party && item.status === "confirmed");
+      if (existing) return send(res, 200, { ok: true, duplicate: true, booking: publicRestaurantBooking(existing) }, { "Cache-Control": "no-store" });
+      let availability;
+      try {
+        availability = await zinkAvailability({ date, party, mealId: b.mealId, email, lang: String(b.lang || "sv") });
+      } catch (error) {
+        console.error("VELVET WebBridge recheck", error);
+        return send(res, 502, { error: "provider_unavailable" }, { "Cache-Control": "no-store" });
+      }
+      if (!availability.meal || !availability.times.includes(time)) return send(res, 409, { error: "slot_gone" }, { "Cache-Control": "no-store" });
       const now = new Date().toISOString();
       const booking = {
         id: `RB-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(3).toString("hex").toUpperCase()}`,
         restaurantId,
-        restaurant: String(restaurant.name || "Zink Italian Cuisine").slice(0, 120),
+        restaurant: "Zink Italian Cuisine",
         destination: "Stockholm",
         date,
-        time: "",
+        time,
         party,
         provider: "BokaBord",
         userId: user.id,
-        status: "in_progress",
+        status: "submitting",
         createdAt: now,
         updatedAt: now,
       };
       db.restaurantBookings = [booking, ...(db.restaurantBookings || [])].slice(0, 5000);
       save(db);
-      return send(res, 201, { ok: true, booking: publicRestaurantBooking(booking), officialUrl: official.toString() }, { "Cache-Control": "no-store" });
-    }
-    const restaurantProviderConfirmed = url.pathname.match(/^\/restaurant-bookings\/([^/]+)\/provider-confirmed$/);
-    if (req.method === "POST" && restaurantProviderConfirmed) {
-      const db = load();
-      const user = sessionPublicUser(req, db);
-      if (!user) return send(res, 401, { error: "auth" });
-      const booking = (db.restaurantBookings || []).find((item) => item.id === decodeURIComponent(restaurantProviderConfirmed[1]));
-      if (!booking || booking.userId !== user.id) return send(res, 404, { error: "not_found" });
-      if (booking.provider !== "BokaBord") return send(res, 409, { error: "provider" });
-      booking.status = "provider_confirmed";
-      booking.providerConfirmedAt = booking.providerConfirmedAt || new Date().toISOString();
-      booking.updatedAt = new Date().toISOString();
-      save(db);
-      return send(res, 200, { ok: true, booking: publicRestaurantBooking(booking) }, { "Cache-Control": "no-store" });
+      try {
+        const result = await zinkBook({ date, time, party, meal: availability.meal, guest: { firstName, lastName, email, phone }, note, lang: String(b.lang || "sv"), context: availability.context });
+        booking.updatedAt = new Date().toISOString();
+        if (!result.accepted) {
+          booking.status = "provider_rejected";
+          save(db);
+          return send(res, 409, { error: "provider_rejected" }, { "Cache-Control": "no-store" });
+        }
+        booking.status = "confirmed";
+        booking.providerReference = result.providerReference;
+        booking.providerConfirmedAt = booking.updatedAt;
+        save(db);
+        return send(res, 201, { ok: true, booking: publicRestaurantBooking(booking) }, { "Cache-Control": "no-store" });
+      } catch (error) {
+        booking.status = "provider_error";
+        booking.updatedAt = new Date().toISOString();
+        save(db);
+        console.error("VELVET WebBridge booking", error);
+        return send(res, 502, { error: "provider_unavailable" }, { "Cache-Control": "no-store" });
+      }
     }
 
     // Övriga restaurangförfrågningar sparas server-side så de överlever byte

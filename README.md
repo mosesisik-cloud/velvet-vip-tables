@@ -70,9 +70,17 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 - Om en leverantör ännu saknar serverkonfiguration går knappen tillbaka till kontosidan med ett tydligt fel; den skapar aldrig ett falskt konto.
 - Passkey/OAuth skapar en signerad serveridentitet via en `HttpOnly; Secure; SameSite=Lax`-cookie. Den råa sessionsnyckeln sparas aldrig i databasen, bara SHA-256-hashen.
 
-### Produktionskrav för V157–V158-piloten
+### V159 · Zink WebBridge
 
-Frontend **och** API måste deployas samtidigt till `https://b2b.bakemyday.se`: statiska filer under `/velvet/` och `api/server.mjs` bakom `/velvet-api/`. Face ID kan inte testas skarpt på GitHub Pages eftersom en passkey alltid är bunden till domänen där den skapades. Efter deploy testar Gabriel och Moses var sin telefon genom att skapa varsin passkey på VELVET-domänen och därefter slutföra en Zink-bokning i den inbäddade BokaBord-widgeten.
+- Zinks tillgänglighet hämtas server-till-server från restaurangens publika BokaBord-widget.
+- Datum, tider, kontaktuppgifter och slutlig bekräftelse visas i VELVETs eget gränssnitt. Ingen leverantörssida eller iframe öppnas.
+- En bokning markeras aldrig som bekräftad förrän BokaBord har svarat med `success: true`.
+- Zinks verifierade 2026-meny finns direkt i VELVET från `data/restaurant-menus.json`.
+- Testerna validerar flödet men skapar aldrig en reservation. En skarp bokning kräver att en inloggad gäst själv trycker **Bekräfta riktig bokning**.
+
+### Produktionskrav för V157–V159-piloten
+
+Frontend **och** API måste deployas samtidigt till `https://b2b.bakemyday.se`: statiska filer under `/velvet/` och `api/server.mjs` bakom `/velvet-api/`. GitHub Pages visar gränssnittet men kan inte själv köra WebBridge-anropen. Face ID kan inte testas skarpt på GitHub Pages eftersom en passkey alltid är bunden till domänen där den skapades. Efter deploy testar Gabriel och Moses var sin telefon genom att skapa varsin passkey på VELVET-domänen och genomföra en kontrollerad Zink-bokning med riktiga kontaktuppgifter.
 
 ## Kör lokalt
 
