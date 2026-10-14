@@ -12,6 +12,7 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 
 ## Vad som är på riktigt i V4
 
+- **V160: inga döda tider i publicerad preview.** Om produktions-API:t ännu saknar den nya WebBridge-routen öppnar VELVET automatiskt Zinks officiella livebokning i en skyddad helskärmsvy inne i appen. Native tider används automatiskt så snart API-deployen är klar.
 - **V158: riktig bokning utan att lämna VELVET.** Zink-piloten öppnar restaurangens officiella BokaBord/WaiterAid-widget i en helskärmsvy inne i VELVET. Datum och antal följer med, lediga tider kommer direkt från Zink och BokaBords egen `reservationSuccess` är den enda signal som får markera bokningen som bekräftad. Om VELVET-API:t ännu inte är deployat kan bokningen ändå slutföras hos BokaBord; den sparas då lokalt tills serversynk finns.
 - **V157: riktig pilotinloggning.** En godkänd passkey skapar en 180-dagars, återkallelig HttpOnly-session på VELVET-domänen. API:t litar inte längre på ett lokalt användar-id för restaurangbokningar, och sessionen återställs automatiskt efter omladdning eller om appen öppnas igen.
 - **V157: Zink live webbridge.** Zinks officiella BokaBord-widget körs inuti restaurangvyn. Datum och antal skickas till BokaBord, som äger tillgänglighet, kontaktuppgifter och slutlig bokningsbekräftelse. VELVET sparar `in_progress` och uppdaterar till `provider_confirmed` först när widgeten skickar sin egen `reservationSuccess`-signal.

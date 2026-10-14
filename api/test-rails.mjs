@@ -219,9 +219,9 @@ function checkRestaurants() {
     const app = fs.readFileSync(path.join(ROOT, "js", "app.js"), "utf8");
     if (!app.includes("const zinkPilot = restaurant.placeId") || !app.includes("/restaurant-bookings/webbridge/availability") || !app.includes("/restaurant-bookings/webbridge/book") || !app.includes("Bekräfta riktig bokning") || !app.includes("VELVET WebBridge")) {
       fail("direct-booking-ui", "Zink must use the native VELVET WebBridge flow");
-    } else if (app.includes("restaurant-provider-frame") || app.includes("buildBokaBordUrl")) {
-      fail("direct-booking-ui", "legacy provider iframe or redirect builder remains");
-    } else ok("direct-booking-ui", "Zink native WebBridge UI without iframe or redirect");
+    } else if (!app.includes("if (openProviderFallback(values))") || !app.includes('event.origin !== "https://app.bokabord.se"') || app.includes("Problem med vyn? Öppna separat")) {
+      fail("direct-booking-ui", "provider fallback must be scoped to WebBridge failure, origin-checked and stay inside VELVET");
+    } else ok("direct-booking-ui", "native WebBridge with an in-app live fallback when production API is stale");
   }
 }
 
