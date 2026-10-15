@@ -3152,7 +3152,12 @@ body.light-shell .dest-card::after {
 body.light-shell .restaurant-detail .restaurant-book-panel:has(.booking-provider-frame) { position: static; top: auto; min-width: 0; }
 .restaurant-detail-main { min-width: 0; }
 .restaurant-facts dd { min-width: 0; overflow-wrap: anywhere; }
-@media (max-width: 760px) { .restaurant-detail-grid { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 760px) {
+  .restaurant-detail-grid { grid-template-columns: minmax(0, 1fr); }
+  .restaurant-detail-grid > .restaurant-book-panel { grid-column: 1; grid-row: 1; position: relative; z-index: 1; }
+  .restaurant-detail-grid > .restaurant-detail-main { grid-column: 1; grid-row: 2; }
+  #restaurant-book-form button[type="submit"] { scroll-margin-top: 140px; scroll-margin-bottom: 32px; }
+}
 
 .booking-report { margin-top:24px; padding:16px; border:1px solid rgba(255,255,255,.15); border-radius:12px; }
 .booking-report summary { cursor:pointer; }
