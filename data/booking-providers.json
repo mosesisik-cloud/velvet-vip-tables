@@ -1851,5 +1851,39 @@
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported",
     "identityNote": "Official restaurant page at41RueRepubliqueGustavia links this exactZenchefID; phonefallback retained."
+  },
+  "curated-CAP-da-paolino": {
+    "name": "Da Paolino",
+    "city": "Capri",
+    "provider": "SevenRooms",
+    "venueId": "PaolinoLemontrees",
+    "url": "https://www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/",
+    "venueKey": "www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/",
+    "source": "https://paolinocapri.com/en/prenota-un-tavolo/",
+    "checkedAt": "2026-10-16",
+    "verification": "official_link_only",
+    "integrationMode": "external_link",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Official Paolino Lemontrees branch link and initial provider name/address verified. Distinct from Casa Paolino. Default day closed, no live times or full journey verified; seasonal status unknown."
+  },
+  "curated-CER-matsuhisa-cala-di-volpe": {
+    "provider": "SevenRooms",
+    "name": "Matsuhisa Cala di Volpe",
+    "city": "Porto Cervo",
+    "venueId": "matsuhisaportocervo",
+    "venueKey": "www.sevenrooms.com/reservations/matsuhisaportocervo",
+    "url": "https://www.sevenrooms.com/reservations/matsuhisaportocervo",
+    "source": "https://www.marriott.com/en-us/hotels/olblc-hotel-cala-di-volpe-a-luxury-collection-hotel-costa-smeralda/dining/",
+    "checkedAt": "2026-10-16",
+    "verification": "official_link_only",
+    "integrationMode": "external_link",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "cancellationPolicy": {
+      "summary": "Kostnadsfri avbokning senast 24 timmar före besöket. Vid senare avbokning eller uteblivet besök debiteras 150 EUR per person. För grupper med fler än 10 personer gäller 72 timmars avbokningsfrist.",
+      "source": "https://www.sevenrooms.com/reservations/matsuhisaportocervo",
+      "checkedAt": "2026-10-16"
+    }
   }
 }

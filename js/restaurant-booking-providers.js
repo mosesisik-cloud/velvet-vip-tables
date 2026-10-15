@@ -28,6 +28,7 @@ const IDENTITY_PARAMS = new Set(['rid', 'restref', 'restaurantid', 'restaurant_i
 // Evidence is specific to these complete official links, including query order
 // and values. Do not generalize this into provider-wide query acceptance.
 const EXACT_EXTERNAL_LINKS = Object.freeze({
+  'curated-CAP-da-paolino': {provider:'SevenRooms',venueId:'PaolinoLemontrees',url:'https://www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/',source:'https://paolinocapri.com/en/prenota-un-tavolo/',venueKey:'www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/'},
   'osm-PAR-bigbang': {provider:'JoinOko',url:'https://reservation.joinoko.com/784893b8aceb4e017dddef37?lang=fr',source:'https://sevres.bigbang-restaurant.fr/fr/',venueKey:'reservation.joinoko.com/784893b8aceb4e017dddef37'},
   'curated-MCO-pavyllon-monte-carlo': {provider:'SevenRooms',venueId:'pavyllonyannickalleno',url:'https://eu.sevenrooms.com/reservations/pavyllonyannickalleno?venues=pavyllonyannickalleno,legrill,bluebay,lelouisxvalainducasse',source:'https://www.yannick-alleno.com/contact',venueKey:'eu.sevenrooms.com/reservations/pavyllonyannickalleno'},
 });
@@ -48,7 +49,7 @@ export function resolveEmbeddedBooking(registry, restaurantId) {
     const source = new URL(row.source);
     if (url.protocol !== 'https:' || url.username || url.password || url.port || url.hash
       || source.protocol !== 'https:' || source.username || source.password) return null;
-    if (Object.hasOwn(EXACT_EXTERNAL_LINKS,restaurantId) || row.provider === 'JoinOko' || row.venueId === 'pavyllonyannickalleno') {
+    if (Object.hasOwn(EXACT_EXTERNAL_LINKS,restaurantId) || row.provider === 'JoinOko' || row.venueId === 'pavyllonyannickalleno' || String(row.venueId).toLowerCase() === 'paolinolemontrees') {
       const exact=Object.hasOwn(EXACT_EXTERNAL_LINKS,restaurantId) ? EXACT_EXTERNAL_LINKS[restaurantId] : null;
       if (!exact || Object.entries(exact).some(([key,value])=>row[key]!==value)
         || row.integrationMode!=='external_link' || row.verification!=='official_link_only'
