@@ -7988,7 +7988,7 @@ async function init() {
   }
   const existing = loadUser();
   if (existing) registerUser(existing);
-  if (authTok || authError || passkeyRequested) {
+  if (authTok || authError || authProvider || passkeyRequested) {
     ["auth", "auth_error", "provider", "passkey"].forEach((key) => bootParams.delete(key));
     const rest = bootParams.toString();
     history.replaceState(null, "", location.pathname + (rest ? `?${rest}` : "") + (location.hash || "#/"));

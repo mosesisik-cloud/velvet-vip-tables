@@ -68,6 +68,9 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 
 ### Skarp inloggning och verifiering
 
+Aktivering, servervariabler och testplan: [social inloggning](docs/social-login-setup.md).
+
+
 - **Face ID / Touch ID / skärmlås** använder WebAuthn-passkeys. Servern skapar en engångsutmaning och verifierar enhetens signatur; biometrisk data lämnar aldrig telefonen.
 - **Google, Apple, Facebook, Instagram, TikTok och Snapchat** går genom respektive leverantörs riktiga OAuth-flöde. Det finns ingen simulerad login eller verifieringsbadge.
 - OAuth-callback är `https://b2b.bakemyday.se/velvet-api/auth/callback/<provider>`. Den måste läggas in som godkänd redirect-URL hos varje leverantör.

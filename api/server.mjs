@@ -1,3 +1,4 @@
+import { verifyIdentityToken, newOAuthTransaction, validOAuthTransaction, oauthCookie, configuredOAuth } from "./oauth-security.mjs";
 import { BokabordAvailability } from './providers/bokabord-availability.mjs';
 import { BookingRegister } from './booking-register.mjs';
 import { AvailabilitySearch } from './availability-search.mjs';
@@ -1262,14 +1263,14 @@ function loadPay() {
       stripe: { ...base.stripe, ...(raw.stripe || {}) },
       paypal: { ...base.paypal, ...(raw.paypal || {}) },
       whatsapp: { ...base.whatsapp, ...(raw.whatsapp || {}) },
-      oauth: {
+      oauth: configuredOAuth({
         facebook: { ...base.oauth.facebook, ...(raw.oauth?.facebook || {}) },
         instagram: { ...base.oauth.instagram, ...(raw.oauth?.instagram || {}) },
         tiktok: { ...base.oauth.tiktok, ...(raw.oauth?.tiktok || {}) },
         snapchat: { ...base.oauth.snapchat, ...(raw.oauth?.snapchat || {}) },
         google: { ...base.oauth.google, ...(raw.oauth?.google || {}) },
         apple: { ...base.oauth.apple, ...(raw.oauth?.apple || {}) },
-      },
+      }),
     };
   } catch {
     return emptyPay();
@@ -1350,7 +1351,7 @@ function oauthFlags(p) {
 function oauthRedirect(provider) {
   return `${process.env.PUBLIC_URL ? process.env.PUBLIC_URL.replace(/\/velvet\/?$/, "") : "https://b2b.bakemyday.se"}/velvet-api/auth/callback/${provider}`;
 }
-function oauthAuthorizeUrl(provider, state) {
+function oauthAuthorizeUrl(provider, state, nonce) {
   const p = loadPay();
   const flags = oauthFlags(p);
   if (!flags[provider]) return null;
@@ -1371,28 +1372,23 @@ function oauthAuthorizeUrl(provider, state) {
     return `https://accounts.snapchat.com/login/oauth2/authorize?client_id=${encodeURIComponent(p.oauth.snapchat.id)}&redirect_uri=${encodeURIComponent(redir)}&response_type=code&scope=https://auth.snapchat.com/oauth2/api/user.display_name&state=${encodeURIComponent(state)}`;
   }
   if (provider === "google") {
-    return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(p.oauth.google.id)}&redirect_uri=${encodeURIComponent(redir)}&response_type=code&scope=${encodeURIComponent("openid email profile")}&state=${encodeURIComponent(state)}&prompt=select_account`;
+    return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(p.oauth.google.id)}&redirect_uri=${encodeURIComponent(redir)}&response_type=code&scope=${encodeURIComponent("openid email profile")}&state=${encodeURIComponent(state)}&prompt=select_account&nonce=${encodeURIComponent(nonce)}`;
   }
   if (provider === "apple") {
-    return `https://appleid.apple.com/auth/authorize?client_id=${encodeURIComponent(p.oauth.apple.id)}&redirect_uri=${encodeURIComponent(redir)}&response_type=code&response_mode=form_post&scope=${encodeURIComponent("name email")}&state=${encodeURIComponent(state)}`;
+    return `https://appleid.apple.com/auth/authorize?client_id=${encodeURIComponent(p.oauth.apple.id)}&redirect_uri=${encodeURIComponent(redir)}&response_type=code&response_mode=form_post&scope=${encodeURIComponent("name email")}&state=${encodeURIComponent(state)}&nonce=${encodeURIComponent(nonce)}`;
   }
   return null;
 }
-function decodeJwtPayload(token) {
-  try {
-    const part = String(token || "").split(".")[1] || "";
-    return JSON.parse(Buffer.from(part.replace(/-/g, "+").replace(/_/g, "/"), "base64").toString("utf8"));
-  } catch { return null; }
-}
-async function oauthProfile(provider, code, extra = {}) {
+async function oauthProfile(provider, code, extra = {}, nonce) {
   const p = loadPay();
   const redir = oauthRedirect(provider);
   if (provider === "facebook" || (provider === "instagram" && p.oauth.facebook?.id && !p.oauth.instagram?.id)) {
     const tok = await fetch(`https://graph.facebook.com/v21.0/oauth/access_token?client_id=${encodeURIComponent(p.oauth.facebook.id)}&redirect_uri=${encodeURIComponent(redir)}&client_secret=${encodeURIComponent(p.oauth.facebook.secret)}&code=${encodeURIComponent(code)}`);
     const tj = await tok.json();
-    if (!tj.access_token) throw new Error(tj.error?.message || "fb_token");
+    if (!tok.ok || !tj.access_token) throw new Error("fb_token");
     const me = await fetch(`https://graph.facebook.com/me?fields=id,name,email&access_token=${encodeURIComponent(tj.access_token)}`);
     const u = await me.json();
+    if (!me.ok || typeof u.id !== "string" || !/^\d+$/.test(u.id)) throw new Error("fb_profile");
     return {
       id: `U-${provider}-${u.id}`,
       name: String(u.name || ""),
@@ -1493,17 +1489,13 @@ async function oauthProfile(provider, code, extra = {}) {
       }),
     });
     const tj = await tok.json();
-    if (!tj.access_token) throw new Error(tj.error || "google_token");
-    const me = await fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
-      headers: { Authorization: "Bearer " + tj.access_token },
-    });
-    const u = await me.json();
-    const email = String(u.email || "").toLowerCase();
-    const sub = String(u.sub || "").replace(/[^a-zA-Z0-9_-]/g, "");
-    if (!sub && !email) throw new Error("google_profile");
+    if (!tok.ok || !tj.id_token) throw new Error("google_token");
+    const u = await verifyIdentityToken("google", tj.id_token, p.oauth.google.id, nonce);
+    const email = u.email_verified === true ? String(u.email || "").toLowerCase() : "";
+    const sub = String(u.sub);
     const pic = /^https:\/\//i.test(u.picture || "") ? String(u.picture).slice(0, 400) : "";
     return {
-      id: `U-google-${sub || email.replace(/[^a-z0-9]/g, "").slice(0, 40)}`,
+      id: `U-google-${sub}`,
       name: String(u.name || "").slice(0, 80),
       handle: email || sub,
       email,
@@ -1526,21 +1518,18 @@ async function oauthProfile(provider, code, extra = {}) {
       }),
     });
     const tj = await tok.json();
-    const claims = decodeJwtPayload(tj.id_token);
-    const now = Math.floor(Date.now() / 1000);
-    if (!tj.id_token || !claims?.sub || claims.iss !== "https://appleid.apple.com" || claims.aud !== p.oauth.apple.id || Number(claims.exp || 0) < now) {
-      throw new Error(tj.error || "apple_token");
-    }
+    if (!tok.ok || !tj.id_token) throw new Error("apple_token");
+    const claims = await verifyIdentityToken("apple", tj.id_token, p.oauth.apple.id, nonce);
     let firstName = "", lastName = "";
     try {
       const supplied = typeof extra.user === "string" ? JSON.parse(extra.user) : extra.user;
       firstName = String(supplied?.name?.firstName || "").slice(0, 40);
       lastName = String(supplied?.name?.lastName || "").slice(0, 40);
     } catch { /* Apple only sends name on first consent */ }
-    const email = String(claims.email || "").toLowerCase().slice(0, 120);
+    const email = [true, "true"].includes(claims.email_verified) ? String(claims.email || "").toLowerCase().slice(0, 254) : "";
     return {
       id: `U-apple-${String(claims.sub).replace(/[^a-zA-Z0-9._-]/g, "").slice(0, 80)}`,
-      name: `${firstName} ${lastName}`.trim() || email.split("@")[0] || "Apple-medlem",
+      name: `${firstName} ${lastName}`.trim(),
       handle: email,
       email,
       provider: "apple",
@@ -1550,19 +1539,6 @@ async function oauthProfile(provider, code, extra = {}) {
   }
   throw new Error("provider");
 }
-function mintAuthToken(user) {
-  const db = load();
-  if (!db.auth) db.auth = {};
-  const token = crypto.randomBytes(24).toString("hex");
-  db.auth[token] = { user, exp: Date.now() + 15 * 60 * 1000 };
-  const keys = Object.keys(db.auth);
-  if (keys.length > 80) {
-    for (const k of keys) if (db.auth[k].exp < Date.now()) delete db.auth[k];
-  }
-  save(db);
-  return token;
-}
-
 // ---------- Persistent first-party sessions ----------
 // A passkey proves possession only during register/login. Every later API call
 // must be tied to that proof as well; accepting a user id from localStorage is
@@ -2203,7 +2179,8 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && authLogin) {
       const provider = authLogin[1];
       const state = crypto.randomBytes(18).toString("hex");
-      const dest = oauthAuthorizeUrl(provider, state);
+      const transaction = newOAuthTransaction(provider);
+      const dest = oauthAuthorizeUrl(provider, state, transaction.record.nonce);
       if (!dest) {
         res.writeHead(302, { Location: `${PUBLIC_APP}/?auth_error=not_configured&provider=${encodeURIComponent(provider)}#/account` });
         res.end();
@@ -2211,23 +2188,26 @@ const server = http.createServer(async (req, res) => {
       }
       const db = load();
       if (!db.auth) db.auth = {};
-      db.auth["st:" + state] = { provider, exp: Date.now() + 15 * 60 * 1000 };
+      for (const [key, record] of Object.entries(db.auth)) if (key.startsWith("st:") && record.exp < Date.now()) delete db.auth[key];
+      db.auth["st:" + state] = transaction.record;
       save(db);
-      res.writeHead(302, { Location: dest, "Cache-Control": "no-store" });
+      res.writeHead(302, { Location: dest, "Cache-Control": "no-store", "Set-Cookie": oauthCookie(provider, transaction.browser, PUBLIC_APP) });
       res.end();
       return;
     }
     const authStart = url.pathname.match(/^\/auth\/start\/(facebook|instagram|tiktok|snapchat|google|apple)$/);
     if (req.method === "GET" && authStart) {
       const provider = authStart[1];
-      const state = crypto.randomBytes(12).toString("hex");
-      const dest = oauthAuthorizeUrl(provider, state);
+      const state = crypto.randomBytes(18).toString("hex");
+      const transaction = newOAuthTransaction(provider);
+      const dest = oauthAuthorizeUrl(provider, state, transaction.record.nonce);
       if (!dest) return send(res, 503, { error: "not_configured", configured: false, provider });
       const db = load();
       if (!db.auth) db.auth = {};
-      db.auth["st:" + state] = { provider, exp: Date.now() + 15 * 60 * 1000 };
+      for (const [key, record] of Object.entries(db.auth)) if (key.startsWith("st:") && record.exp < Date.now()) delete db.auth[key];
+      db.auth["st:" + state] = transaction.record;
       save(db);
-      return send(res, 200, { url: dest, provider }, { "Cache-Control": "no-store" });
+      return send(res, 200, { url: dest, provider }, { "Cache-Control": "no-store", "Set-Cookie": oauthCookie(provider, transaction.browser, PUBLIC_APP) });
     }
     if (req.method === "POST" && url.pathname === "/auth/connect") {
       const b = await readBody(req, 2e5);
@@ -2267,42 +2247,33 @@ const server = http.createServer(async (req, res) => {
         res.writeHead(302, { Location: `${PUBLIC_APP}/?auth_error=${encodeURIComponent(reason)}&provider=${encodeURIComponent(provider)}#/account` });
         res.end();
       };
-      if (!code) return fail(incoming.error ? "denied" : "failed");
       const db0 = load();
       const st = db0.auth?.["st:" + state];
-      if (!st || st.provider !== provider || st.exp < Date.now()) return fail("state");
+      if (!validOAuthTransaction(st, provider, cookieValue(req, `velvet_oauth_${provider}`))) return fail("state");
       delete db0.auth["st:" + state];
       save(db0);
+      if (!code) return fail(incoming.error ? "denied" : "failed");
       try {
-        const profile = await oauthProfile(provider, code, incoming);
+        const profile = await oauthProfile(provider, code, incoming, st.nonce);
         profile.created = new Date().toISOString();
         const db = load();
         upsertUser(db, profile, { trustedAuth: true });
         const sessionToken = issueSession(db, profile.id);
         save(db);
-        const token = mintAuthToken(profile);
         const next = db.idv?.[profile.id]?.status === "verified" ? "#/" : "#/verify";
-        res.writeHead(302, { Location: `${PUBLIC_APP}/?auth=${encodeURIComponent(token)}${next}`, "Set-Cookie": sessionCookie(sessionToken), "Cache-Control": "no-store" });
+        res.writeHead(302, { Location: `${PUBLIC_APP}/?provider=${encodeURIComponent(provider)}${next}`, "Set-Cookie": [sessionCookie(sessionToken), oauthCookie(provider, "", PUBLIC_APP, true)], "Cache-Control": "no-store" });
         res.end();
       } catch (err) {
-        console.error("velvet-oauth", provider, err?.message || err);
+        console.error("velvet-oauth", provider, "verification_failed");
         fail("failed");
       }
       return;
     }
     if (req.method === "GET" && url.pathname === "/auth/session") {
-      const token = url.searchParams.get("token") || "";
-      const db = load();
-      const current = sessionPublicUser(req, db);
-      if (current) return send(res, 200, { user: current }, { "Cache-Control": "no-store" });
-      const rec = token ? db.auth?.[token] : null;
-      if (!rec || rec.exp < Date.now() || !rec.user) return send(res, 401, { error: "auth" });
-      delete db.auth[token];
-      upsertUser(db, rec.user, { trustedAuth: true });
-      const sessionToken = issueSession(db, rec.user.id);
-      save(db);
-      return send(res, 200, { user: sessionPublicUser({ headers: { cookie: `${SESSION_COOKIE}=${sessionToken}` } }, db) || rec.user }, { "Cache-Control": "no-store", "Set-Cookie": sessionCookie(sessionToken) });
+      const current = sessionPublicUser(req, load());
+      return send(res, current ? 200 : 401, current ? { user: current } : { error: "auth" }, { "Cache-Control": "no-store" });
     }
+
     if (req.method === "POST" && url.pathname === "/auth/logout") {
       const db = load();
       const session = sessionRecord(req, db);
