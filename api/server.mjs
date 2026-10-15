@@ -2,6 +2,7 @@ import http from "node:http";
 import { BokabordMirror, RESTAURANTS } from "./bokabord-mirror.mjs";
 import { BookingLedger } from "./bokabord-ledger.mjs";
 import { bookingGuest } from "./booking-guest.mjs";
+import { RequestBudget } from "./request-budget.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -1897,19 +1898,14 @@ function bankDetails(table, user, amount, currency) {
 // Enkel per-IP-rate-limit i minnet. Chatt-polling (1 GET / 4 s) ligger långt under
 // GET-taket; POST-taket skyddar /idv, /chats, /tables och /pay mot missbruk.
 // Vid flera instanser/byta till riktig databas: ersätt med Redis-baserad limit.
-const RATE = new Map(); // ip -> { n, reset }
+const RATE = new RequestBudget();
 function rateLimited(req, res) {
   if (String(process.env.VELVET_RATE || "1") === "0") return false;
   const remote = String(req.socket.remoteAddress || "");
   if (remote === "127.0.0.1" || remote === "::1" || remote.endsWith(":127.0.0.1")) return false;
   const ip = String(req.headers["x-forwarded-for"] || remote || "okänd").split(",")[0].trim();
-  const now = Date.now();
-  let e = RATE.get(ip);
-  if (!e || e.reset < now) { e = { n: 0, reset: now + 60_000 }; RATE.set(ip, e); }
-  e.n++;
-  if (RATE.size > 5000) { for (const [k, v] of RATE) { if (v.reset < now) RATE.delete(k); } }
-  const limit = req.method === "POST" ? 30 : 120; // anrop per minut
-  if (e.n > limit) { send(res, 429, { error: "rate_limit", message: "För många anrop — försök igen om en minut." }); return true; }
+  const budget = RATE.take(ip, req.method, new URL(req.url, 'http://x').pathname);
+  if (!budget.allowed) { send(res, 429, { error: "rate_limit", message: "För många anrop — försök igen om en stund." }, {"Retry-After":String(budget.retryAfter)}); return true; }
   return false;
 }
 

@@ -24,7 +24,7 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
   }
   const terms = container.querySelector('[data-terms]');
   const endpoint = '/restaurant-bookings/mirror';
-  const messages = { auth: 'Bokningssessionen kunde inte öppnas. Uppdatera sidan och försök igen.', mirror_disabled: 'Bokningen är tillfälligt otillgänglig.', capacity: 'Många bokar just nu. Försök igen om en liten stund.', session_expired: 'Sessionen har gått ut. Öppna bokningen igen.', session_exists: 'Du har redan en bokning öppen. Stäng den först.', contact_stop: 'Kontaktsteget är nått. Inga uppgifter eller bokningar skickas i testläget.', stale_view: 'Formuläret har uppdaterats. Tryck på Uppdatera för att fortsätta.' };
+  const messages = { rate_limit: 'Många uppdateringar på kort tid. Vänta en minut och tryck på Uppdatera.', busy: 'Formuläret uppdateras redan. Vänta ett ögonblick.', auth: 'Bokningssessionen kunde inte öppnas. Uppdatera sidan och försök igen.', mirror_disabled: 'Bokningen är tillfälligt otillgänglig.', capacity: 'Många bokar just nu. Försök igen om en liten stund.', session_expired: 'Sessionen har gått ut. Öppna bokningen igen.', session_exists: 'Du har redan en bokning öppen. Stäng den först.', contact_stop: 'Kontaktsteget är nått. Inga uppgifter eller bokningar skickas i testläget.', stale_view: 'Formuläret har uppdaterats. Tryck på Uppdatera för att fortsätta.' };
   const post = (path, body) => api(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   async function perform(action) {
     if (disposed) return;
@@ -77,10 +77,12 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
       container.querySelector('[data-submit]').textContent = result.review ? 'Slutför bokningen' : 'Kontrollera bokningen';
       terms.checked = false;
       const handoff = container.querySelector('[data-handoff]'); handoff.replaceChildren(); handoff.hidden = !result.handoff;
-      if (result.handoff) { const link = document.createElement('a'); link.href = result.handoff.url; link.target = '_blank'; link.rel = 'noopener'; link.textContent = 'Fortsätt i restaurangens säkra bokningsformulär'; handoff.append(document.createTextNode('Detta val kräver kortgaranti, tillval eller väntelista som slutförs hos restaurangen. Ingen bokning har skickats från Velvet. '), link); }
+      if (result.handoff) { const link = document.createElement('a'); link.href = result.handoff.url; link.target = '_blank'; link.rel = 'noopener'; link.textContent = 'Fortsätt hos Bokabord';
+        const explanations = {card_required:'Det här valet kräver kortgaranti.',products_required:'Det här valet har tillval som behöver hanteras hos restaurangen.',waitlist:'Den här tiden erbjuder en väntelista.',provider_reservation_required:'Restaurangen behöver hantera reservationen i sitt eget bokningsflöde.'};
+        handoff.append(document.createTextNode(`${explanations[result.handoff.reason] || 'Det här valet behöver slutföras hos restaurangen.'} Fortsätt via Bokabord för att slutföra. Ingen bokning har skickats från Velvet. `), link); }
       if (result.result) status.dataset.bookingStatus = result.result.status;
       if (result.mode === 'prepare') container.querySelector('.booking-intro').hidden = true;
-      status.textContent = result.contact ? (result.mode === 'prepare' ? 'Fyll i dina kontaktuppgifter. Du får kontrollera bokningen innan den skickas.' : 'Kontaktsteget är nått. Testet stoppar här — ingen bokning har skapats.') : result.blocked ? 'Den åtgärden är spärrad i testläget.' : '';
+      status.textContent = result.contact ? (result.mode === 'prepare' ? 'Fyll i dina kontaktuppgifter. Du får kontrollera bokningen innan den skickas.' : 'Kontaktsteget är nått. Testet stoppar här — ingen bokning har skapats.') : result.handoff ? 'Fortsätt hos Bokabord för det här valet.' : result.blocked ? 'Det här steget kunde inte genomföras.' : '';
       if (result.result) {
         status.textContent = result.result.status === 'confirmed' ? `${restaurantName} har bekräftat bokningen. Referens: ${result.result.reference}` : 'Bokningen är inte verifierad. Skicka inte en ny bokning; resultatet måste kontrolleras.';
         container.querySelector('.booking-intro').hidden = true;

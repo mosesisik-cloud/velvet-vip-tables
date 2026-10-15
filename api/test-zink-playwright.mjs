@@ -53,6 +53,7 @@ test('live approval is bound to the displayed revision and requires current term
 
 test('submission requires exact approved details, terms and no marketing or products', () => {
   assert.equal(matchesApprovedBooking(approvedPayload(), approval), true);
+  assert.equal(matchesApprovedBooking({...approvedPayload(),phone:''},{...approval,phone:''}), false);
   assert.equal(matchesApprovedBooking({ ...approvedPayload(), phone: '070-000 00 00' }, approval), true);
   for (const changes of [{ amount: 2 }, { date: '2026-10-20' }, { time: '18:00' }, { firstname: 'Other' }, { lastname: 'Other' }, { email: 'other@example.com' }, { phone: '+46711111111' }, { waitlist: true }, { products: [{}] }, { products: {} }, { products: undefined }, { terms: { general: false } }, { terms: { general: true, restaurant: true, bokabord: false } }]) {
     assert.equal(matchesApprovedBooking({ ...approvedPayload(), ...changes }, approval), false);
@@ -131,4 +132,27 @@ test('batch contact changes validate every field before touching the provider', 
   await assert.rejects(mirror.action('batch','guest',{type:'fill',revision:1,fields:{firstname:'Test',unknown:'bad'}}),/field/);assert.equal(edits.length,0);
   await mirror.action('batch','guest',{type:'fill',revision:1,fields:{firstname:'Test',lastname:'Guest'}});assert.equal(edits.length,2);
  }finally{await mirror.close();}
+});
+
+import { RequestBudget } from './request-budget.mjs';
+test('browsing cannot exhaust booking updates or protected writes; budgets still enforce limits',()=>{
+ let now=0;const budget=new RequestBudget(()=>now);
+ for(let i=0;i<100;i++)assert.equal(budget.take('one','GET','/restaurants').allowed,true);
+ assert.equal(budget.take('one','POST','/restaurant-bookings/mirror').allowed,true);
+ const action='/restaurant-bookings/mirror/12345678-1234-1234-1234-123456789012/action';
+ for(let i=0;i<120;i++)assert.equal(budget.take('one','POST',action).allowed,true);
+ assert.equal(budget.take('one','POST',action).allowed,false);
+ for(let i=1;i<30;i++)assert.equal(budget.take('one','POST','/pay').allowed,true);
+ assert.equal(budget.take('one','POST','/pay').allowed,false);
+ assert.equal(budget.take('two','POST','/pay').allowed,true);
+ now=60000;assert.equal(budget.take('one','POST',action).allowed,true);
+});
+
+test('provider-initiated reservation routes to handoff even when query details exist',async()=>{
+ const mirror=new BokabordMirror({live:true});
+ const s={restaurantId:'curated-STO-zink-italian-cuisine',providerReservationRequired:true,page:{evaluate:async()=>({query:{...approval,hash:'e9d3e6917bc7f05c0df1ae157d9aed5b',products:[]}})}};
+ try{assert.equal(await mirror.bookingDetails(s),null);assert.equal(s.handoffReason,'provider_reservation_required');}
+ finally{await mirror.close();}
+ assert.equal(allowedRequest('POST','https://app.bokabord.se/booking-widget/api/getOffDays'),true);
+ assert.equal(allowedRequest('POST','https://app.bokabord.se/reservation/api/booking/saveBooking'),false);
 });
