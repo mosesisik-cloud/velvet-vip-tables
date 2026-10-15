@@ -627,6 +627,236 @@
       "decision": "accept_external_registry_mapping",
       "next": "Integrator import reviewed external mapping, preserve false availability/tracking; expose observed cancellation terms with source/date and recheck against final provider choice.",
       "publication": "not_changed"
+    },
+    {
+      "issue": 99,
+      "claim": "velvet-root-scorpios-20261016",
+      "owner": "/root/opentable_destinations",
+      "restaurantId": "curated-MYK-scorpios-mykonos",
+      "checkedAt": "2026-10-15T23:13:37.943Z",
+      "status": "complete",
+      "classification": "verified_official_restaurant_provider_route_external_only",
+      "identity": {
+        "name": "Scorpios Mykonos Restaurant",
+        "city": "Mykonos",
+        "country": "Greece",
+        "source": "https://scorpios.com/mykonos-restaurant"
+      },
+      "binding": {
+        "source": "https://scorpios.com/mykonos",
+        "sourceStatus": 200,
+        "control": "<input type=\"radio\" data-space=\"mykonos_restaurant\" name=\"space\" id=\"mykonos_restaurant\" data-venue=\"scorpiosmykonosrestaurant\">",
+        "label": "Restaurant",
+        "bundleUrl": "https://scorpios.com/layout/scripts/bundle.js?1785741448485",
+        "initializationCode": "initialiseSevenRooms(e){const t={venueId:e,allVenues:[],triggerId:this.checkAvailButtonId,type:\"reservations\",styleButton:!1};\"scorpiosmykonosgroup\"==e&&(t.allVenues=this.spaces.filter((e=>e.getAttribute(\"data-space\").startsWith(\"mykonos_\")&&e.hasAttribute(\"data-venue\")&&\"scorpiosmykonosgroup\"!=e.getAttribute(\"data-venue\"))).map((e=>e.getAttribute(",
+        "providerWidgetSource": "https://www.sevenrooms.com/widget/embed.js",
+        "construction": "Observed SevenRooms widget constructs getDomain(env) + /reservations/ + venueId; official selector supplies exact restaurant venueId.",
+        "url": "https://www.sevenrooms.com/reservations/scorpiosmykonosrestaurant",
+        "sourceBindingTest": true
+      },
+      "providerProbe": {
+        "method": "GET",
+        "status": 200,
+        "finalUrl": "https://www.sevenrooms.com/reservations/scorpiosmykonosrestaurant",
+        "title": "Scorpios Mykonos Restaurant Reservations",
+        "renderedInitialForm": false
+      },
+      "excludedExperiences": [
+        "scorpiosmykonosbeach",
+        "scorpiosmykonossunsetbeach",
+        "scorpiosmykonosterrace events",
+        "scorpiosmykonosgroup",
+        "all Bodrum spaces"
+      ],
+      "guard": {
+        "onlyGet": true,
+        "browserJavaScriptExecuted": false,
+        "serviceWorkers": "not started; HTTP document and public script text fetch only",
+        "postRequests": 0,
+        "slotsSelected": 0,
+        "holds": 0,
+        "reservations": 0,
+        "payments": 0
+      },
+      "availability": "unknown",
+      "cancellationPolicyStatus": "unknown",
+      "paymentRequirement": "unknown",
+      "season": "not verified",
+      "limitations": [
+        "Only official configuration and provider HTML title verified; no interactive form or iframe proof.",
+        "No availability, guest-validation, payment, cancellation, confirmation or selected-time journey verified.",
+        "External-only candidate requires normal root integration guards/tests."
+      ],
+      "nextAction": "Root can integrate exact SevenRooms venueId/source/url as external_link with liveAvailabilitySupported false; browser journey needed before native_embed/live promotion.",
+      "files": [
+        "work/issue99-evidence.json",
+        "work/issue99-registry.json"
+      ],
+      "publication": "not_published"
+    },
+    {
+      "issue": 104,
+      "claim": "velvet-root-verde-20261016",
+      "restaurantId": "curated-STT-verde-beach",
+      "checkedAt": "2026-10-15T23:13:04.010Z",
+      "guard": "GET/HEAD only;serviceWorkers:block;no controls clicked",
+      "blocked": 0,
+      "observation": {
+        "url": "https://verde-beach.com/",
+        "title": "Verde Beach",
+        "text": "Aller au contenu\n\nVerde Beach\n\nWishlist\nWishlist\nWishlist\nUn engagement en faveur de lâ€™innovation et de la durabilitÃ©\n\nÃ‰tudes est un cabinet pionnier qui fusionne harmonieusement la crÃ©ativitÃ© et la fonctionnalitÃ© pour redÃ©finir lâ€™excellence architecturale.\n\nÃ€ propos\nUne passion pour la crÃ©ation dâ€™espaces\n\nNotre gamme complÃ¨te de services professionnels sâ€™adresse Ã  une clientÃ¨le diversifiÃ©e, allant des propriÃ©taires aux promotrices ou promoteurs commerciaux.\n\nRÃ©novation et restauration\n\nDÃ©couvrez la fusion de lâ€™imagination et de lâ€™expertise avec Ã‰tudes Architectural Solutions.\n\nSupport continu\n\nDÃ©couvrez la fusion de lâ€™imagination et de lâ€™expertise avec Ã‰tudes Architectural Solutions.\n\nAccÃ¨s Ã  lâ€˜application\n\nDÃ©couvrez la fusion de lâ€™imagination et de lâ€™expertise avec Ã‰tudes Architectural Solutions.\n\nConseil\n\nDÃ©couvrez la fusion de lâ€™imagination et de lâ€™expertise avec Ã‰tudes Architectural Solutions.\n\nGestion de projet\n\nDÃ©couvrez la fusion de lâ€™imagination et de lâ€™expertise avec Ã‰tudes Architectural Solutions.\n\nArchitectural Solutions\n\nVivez lâ€™expÃ©rience de la fusion entre lâ€™imagination et lâ€™expertise avec Ã‰tudes Architectural Solutions.\n\nUn tableau de ressources\n\nNotre suite complÃ¨te de services professionnels sâ€™adresse Ã  une clientÃ¨le diversifiÃ©e, allant des propriÃ©taires au dÃ©veloppeurs commerciaux.\n\nApplication Ã‰tudes Architect\nCollaborez avec dâ€™autres architectes.\nPrÃ©sentez vos projets.\nDÃ©couvrez le monde de lâ€™architecture.\nNewsletter Ã‰tudes\nUn monde dâ€™articles stimulants.\nÃ‰tudes de cas qui cÃ©lÃ¨brent lâ€™architecture.\nAccÃ¨s exclusif aux connaissances en design.\n\nÂ«Â Ã‰tudes nous a fait gagner des milliers dâ€™heures de travail et a rÃ©vÃ©lÃ© des perspectives auxquelles nous nâ€™aurions jamais pensÃ© possible.Â Â»\n\nAnnie Steiner\n\nPDG, Greenprint\n\nRegardez, lisez, Ã©coutez\n\nAucune publication nâ€™a Ã©tÃ© trouvÃ©e.\n\nRejoignez plus de 900 abonnÃ©s/abonnÃ©es\n\nRestez au courant de tout ce que vous devez savoir.\n\nSâ€™inscrire\n\nVerde Beach\n\nÃ€ propos\nÃ‰quipe\nHistoire\nEmplois\nConfidentialitÃ©\nPolitique de confidentialitÃ©\nConditions gÃ©nÃ©rales\nNous contacter\nRÃ©seaux sociaux\nFacebook\nInstagram\nTwitter/X\n\nConÃ§u avec WordPress",
+        "links": [
+          {
+            "text": "Facebook",
+            "url": "https://verde-beach.com/#"
+          }
+        ],
+        "frames": []
+      },
+      "additionalReads": [
+        {
+          "url": "https://verde-beach.com/es/",
+          "finalUrl": "https://verde-beach.com/es/",
+          "title": [
+            "Verde Beach"
+          ],
+          "links": []
+        },
+        {
+          "url": "https://verde-beach.com/contact-us/",
+          "finalUrl": "https://verde-beach.com/contact-us/",
+          "title": [
+            "Verde Beach"
+          ],
+          "links": []
+        },
+        {
+          "url": "https://www.verde-beach.com/",
+          "error": "<urlopen error [Errno 11001] getaddrinfo failed>"
+        }
+      ],
+      "status": "blocked",
+      "identity": {
+        "status": "verified_official_tourism",
+        "name": "Verde Beach",
+        "city": "Saint-Tropez",
+        "locality": "Ramatuelle",
+        "address": "1149 Chemin de l’Épi, Plage de Pampelonne, 83350 Ramatuelle, France",
+        "source": "https://cotedazurfrance.fr/offres/verde-beach-ramatuelle-fr-2911728/",
+        "corroboration": "https://www.ramatuelle-tourisme.com/fr/sorties/restaurant/ramatuelle/plage-verde-5263750/",
+        "limitation": "Restaurant domain currently no longer renders the previously indexed venue page."
+      },
+      "bookingRoute": {
+        "status": "unresolved",
+        "provider": null,
+        "url": null,
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "blocker": "Official domain now renders generic WordPress Etudes architecture placeholder for homepage, /es/ and /contact-us/. No real restaurant booking links/iframes/contact destinations in fresh rendered or raw GET responses. Previously indexed restaurant content is stale relative to live responses. Exact current official source-to-provider binding cannot be verified.",
+      "rejected": [
+        {
+          "source": "https://verde-paris.fr/fr_fr/reservations",
+          "reason": "Search title incorrectly suggests beach; content identifies Paris24AvenueGeorgeV, phone+33142887575, SevenRooms verdeparis; wrong branch."
+        },
+        {
+          "source": "https://misana-group.com/en/reservations/verde-beach",
+          "reason": "Third-party concierge request service; not restaurant-controlled provider binding."
+        },
+        {
+          "source": "indexed old verde-beach.com locale pages",
+          "reason": "Cached booking headings without exact endpoint, superseded by fresh placeholder content."
+        }
+      ],
+      "policy": {
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "season": null,
+        "operatingStatus": "unknown"
+      },
+      "tests": {
+        "officialDomainRendered": true,
+        "exactBookingLinkVerified": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedCheckout": false,
+        "confirmedReservation": false,
+        "guard": "GET/HEAD only and serviceWorkers:block; no controls clicked, no contact/messages/holds/payments"
+      },
+      "decision": "no_registry_fragment_do_not_guess_slug_or_infer_closure",
+      "next": "Keep #104 blocked for source-to-provider verification until restaurant site returns or another restaurant-controlled channel explicitly identifies the exact Ramatuelle booking endpoint. Do not activate Paris or a guessed SevenRooms slug. Official tourism phone is general contact, not independently verified booking route.",
+      "publication": "not_changed"
+    },
+    {
+      "issue": 105,
+      "claim": "velvet-root-hartwood-20261016",
+      "restaurantId": "curated-TUL-hartwood",
+      "checkedAt": "2026-10-16",
+      "identity": {
+        "status": "verified",
+        "name": "Hartwood",
+        "city": "Tulum",
+        "country": "Mexico",
+        "source": "https://www.hartwoodtulum.com/",
+        "proof": "Exact Hartwood Tulum website title and local Reserve a Table link to /reservation. Provider form belongs to wrapper linked by restaurant. Catalog name/city match; detailed postal address not independently established from official text."
+      },
+      "bookingRoute": {
+        "status": "official_request_form",
+        "provider": "Typeform",
+        "url": "https://www.hartwoodtulum.com/reservation",
+        "source": "https://www.hartwoodtulum.com/",
+        "venueId": "f6JtAUPI",
+        "observedEmbed": "https://form.typeform.com/to/f6JtAUPI",
+        "bookingMode": "request_only",
+        "responseTimeHours": {
+          "max": 24
+        },
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported",
+        "proof": "Official wrapper renders reservation policy and Typeform. Public GET response form definition contains contact/date/preferred time/party/notes questions and follow-up email within24h ending. Ending inspected in delivered definition; never submitted/reached live."
+      },
+      "contact": {
+        "email": "reservations@hartwoodtulum.com",
+        "whatsapp": "+529841328700",
+        "source": "https://www.hartwoodtulum.com/reservation",
+        "role": "Form explicitly offers email instead and same-day requests by visit or WhatsApp."
+      },
+      "policy": {
+        "cancellationPolicyStatus": "unknown",
+        "cardGuarantee": null,
+        "prepayment": null,
+        "walkIns": "welcome",
+        "singleGuest": "first come, first served",
+        "formPartyRange": {
+          "min": 2,
+          "max": 23
+        },
+        "hours": "Wednesday-Sunday18:00-22:00; closedMondayTuesday",
+        "source": "https://www.hartwoodtulum.com/reservation",
+        "limitation": "Static preferred times18:00-21:30 are choices, never live inventory. Generic Typeform payment translations/assets are not evidence of this form requiring payment."
+      },
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": true,
+        "liveAvailability": false,
+        "confirmedReservation": false,
+        "simulatedValidation": false,
+        "method": "Playwright serviceWorkers blocked, route guard onlyGET/HEAD. No BOOK NOW click, no inputs, no search or submit. Form-open telemetry POST blocked."
+      },
+      "decision": "accept_external_request_only_wrapper",
+      "guardRecommendation": "Bind exact restaurantID,Typeform,venueId f6JtAUPI, official wrapper URL+source. Do not generally allow arbitrary Typeform links or infer instant availability. Existing response UI must support max-only24h without inventing minimum.",
+      "evidenceFiles": [
+        "work/issue105-home-browser.json",
+        "work/issue105-reservation-browser.json",
+        "work/issue105-form-definition.json"
+      ],
+      "publication": "not_changed",
+      "limitations": [
+        "No full customer journey or form submission tested.",
+        "No real-time inventory; no cancellation fee or card policy observed."
+      ],
+      "next": "Root integrate strict external request-only wrapper mapping and max24h notice; no instant-booking claim."
     }
   ]
 }

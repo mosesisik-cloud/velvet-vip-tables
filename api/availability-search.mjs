@@ -20,7 +20,12 @@ function availabilityGate(row) {
     // public results. Fresh nested objects isolate every snapshot from registry.
     const gate={status:'request_only',reason:'request_only',bookingMode:'request_only'};
     const hours=row.responseTimeHours;
-    if(hours&&Number.isSafeInteger(hours.min)&&Number.isSafeInteger(hours.max)&&hours.min>=0&&hours.max>=hours.min)gate.responseTimeHours={min:hours.min,max:hours.max};
+    // A published upper bound does not imply a minimum response time.
+    if(hours&&typeof hours==='object'&&!Array.isArray(hours)&&Number.isSafeInteger(hours.max)&&hours.max>=0) {
+      const hasMin=Object.hasOwn(hours,'min');
+      if(!hasMin||(Number.isSafeInteger(hours.min)&&hours.min>=0&&hours.min<=hours.max))
+        gate.responseTimeHours=hasMin?{min:hours.min,max:hours.max}:{max:hours.max};
+    }
     if(row.paymentRequirement==='card_guarantee')gate.paymentRequirement='card_guarantee';
     if(row.cancellationPolicyStatus==='unknown')gate.cancellationPolicyStatus='unknown';
     return gate;

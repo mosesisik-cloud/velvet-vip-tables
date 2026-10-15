@@ -1,6 +1,7 @@
 /** Booking shell copy. Restaurant-authored policies remain the provider's own text. */
 const COPY = {
   sv: {
+    requestWindowMax: "Restaurangen behandlar förfrågningar inom {max} timmar.",
     manualEmail: "Mejla om bordsbokning",
     manualPaymentUnknown: "Kortgaranti och förskottsbetalning är inte verifierade. Fråga restaurangen om betalningsvillkoren innan du bokar.",
 
@@ -38,6 +39,7 @@ const COPY = {
     languageUnknown: 'Vi har ännu inte verifierat språkvalet hos denna bokningstjänst. Formuläret öppnas på tjänstens eget språk; välj språk där om alternativet finns.'
   },
   en: {
+    requestWindowMax: "The restaurant processes requests within {max} hours.",
     manualEmail: "Email to request a table",
     manualPaymentUnknown: "Card guarantee and prepayment requirements have not been verified. Ask the restaurant about payment terms before booking.",
 
@@ -75,6 +77,7 @@ const COPY = {
     languageUnknown: 'We have not yet verified language selection for this booking service. The form opens in the service’s own language; choose a language there if the option is available.'
   },
   es: {
+    requestWindowMax: "El restaurante tramita las solicitudes en un plazo de {max} horas.",
     manualEmail: "Enviar un correo para solicitar mesa",
     manualPaymentUnknown: "No se han verificado los requisitos de garantía con tarjeta ni de pago anticipado. Consulta las condiciones de pago con el restaurante antes de reservar.",
 
@@ -112,6 +115,7 @@ const COPY = {
     languageUnknown: 'Todavía no hemos verificado la selección de idioma de este servicio de reservas. El formulario se abre en el idioma del servicio; selecciona otro allí si la opción está disponible.'
   },
   fr: {
+    requestWindowMax: "Le restaurant traite les demandes sous {max} heures.",
     manualEmail: "Envoyer un e-mail pour demander une table",
     manualPaymentUnknown: "Les exigences de garantie par carte et de prépaiement n’ont pas été vérifiées. Demandez les conditions de paiement au restaurant avant de réserver.",
 
@@ -164,10 +168,16 @@ export function requestBookingNotes(booking, language = 'sv') {
   const copy = getBookingCopy(language);
   const notes = [copy.requestNotice];
   const hours = booking.responseTimeHours;
-  if (Number.isFinite(hours?.min) && Number.isFinite(hours?.max) && hours.min >= 0 && hours.max >= hours.min) {
-    notes.push(formatBookingCopy(copy.requestWindow, hours));
+  // A maximum-only response promise must not acquire an invented minimum.
+  // Zero/invalid maxima do not establish an immediate response or confirmation.
+  if (Number.isSafeInteger(hours?.max) && hours.max > 0) {
+    if (!Object.hasOwn(hours, 'min')) notes.push(formatBookingCopy(copy.requestWindowMax, hours));
+    else if (Number.isSafeInteger(hours.min) && hours.min >= 0 && hours.min <= hours.max) {
+      notes.push(formatBookingCopy(copy.requestWindow, hours));
+    }
   }
   if (booking.paymentRequirement === 'card_guarantee') notes.push(copy.requestCard);
+  if (booking.paymentRequirement === 'not_specified') notes.push(copy.manualPaymentUnknown);
   if (booking.cancellationPolicyStatus === 'unknown') notes.push(copy.requestUnknownPolicy);
   return notes;
 }

@@ -29,9 +29,9 @@ for (const url of [
 ]) assert.equal(resolveEmbeddedBooking({ test: { ...row, url } }, 'test'), null);
 assert.equal(resolveEmbeddedBooking(registry, 'not-reviewed'), null);
 assert.equal(resolveEmbeddedBooking(registry, '__proto__'), null);
-assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 47);
+assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 48);
 assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 64);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 66);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 68);
 for (const id of ['osm-IBZ-ama-lur', 'osm-MRB-the-farm', 'osm-STT-gaio', 'osm-STT-l-opera', 'osm-STT-le-cafe']) {
   assert.equal(registry[id].liveAvailabilitySupported, false, 'Initial form evidence must not enable live inventory');
   assert.equal(registry[id].completionTracking, 'unsupported');
@@ -77,7 +77,12 @@ try {
     if (requestOnly) {
       assert.match(container.children[1].textContent, /Bokningsförfrågan/);
       assert.match(container.children[2].textContent, /inte en omedelbart bekräftad/);
-      assert.match(container.children[2].textContent, /24–72 timmar/);
+      if (original.responseTimeHours?.min === 24) assert.match(container.children[2].textContent, /24–72 timmar/);
+      else {
+        assert.deepEqual(original.responseTimeHours, {max:24});
+        assert.match(container.children[2].textContent, /inom 24 timmar/);
+        assert.doesNotMatch(container.children[2].textContent, /24–72|0–24/);
+      }
     } else assert.match(container.children[1].textContent, /egen flik/);
     const link = container.children.find(e => e.tag === 'a');
     assert.match(link.textContent, requestOnly ? /Öppna bokningsförfrågan/ : /Kontrollera tider/);
