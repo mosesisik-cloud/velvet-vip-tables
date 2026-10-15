@@ -53,3 +53,10 @@ Ett godkänt skarpt test genomfördes via Velvet: Middag → 1 gäst → datum/t
 22 Stockholmrestauranger har verifierade Bokabord-widgetar. Frantzén visade enbart väntelista på det kontrollerade datumet. Kortgaranti, obligatoriska tillval och väntelista behöver slutföras i leverantörens säkra formulär; Velvet visar en tydlig länk och skickar ingen reservation för dessa val. Vanliga bokningar utan dessa krav genomförs i Velvet. Övriga bokningsleverantörer omfattas inte av adaptern.
 
 Driftbilden byggs med `deploy/Dockerfile.bokabord` från projektets låsta Playwright-version. Chromium ingår; API-data och försöksjournal måste ligga på beständiga volymer. Frontendens service worker är uppdaterad till version 164. Den lokala förhandsvisningsservern ska fortfarande aldrig publiceras.
+
+
+### Formulärprestanda
+
+Servern återanvänder publikt cachebara JavaScript-, CSS- och typsnittsfiler i minnet, högst 10 MiB och 15 minuter (aldrig längre än leverantörens max-age). HTML, API-svar, tillgänglighet, kontaktuppgifter och bokningar cachas inte. Privata svar och svar med Set-Cookie undantas. Sessionsbilder skapas fortfarande från den aktuella leverantörsvyn och verifieras med SHA-256.
+
+Väntan mellan steg följer Angulars pågående anrop och webbläsarens rendering. Kontaktfälten behåller fokus och kan redigeras under synkning; senaste ändringen köas. Inlämning spärras tills alla ändringar är synkade, även vid nätverksfel. Kör `node scripts/test-bokabord-ui.mjs` med installerad Playwright Chromium för att kontrollera långsamma svar, fokus, senaste inmatning och felhantering utan provideranrop.

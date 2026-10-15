@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import { BookingAssetCache } from './booking-asset-cache.mjs';
 
 // Registry, not user-supplied URLs. Other restaurants can share this adapter.
 export const RESTAURANT_DETAILS = Object.freeze(JSON.parse(fs.readFileSync(new URL('./bokabord-restaurants.json', import.meta.url), 'utf8')));
@@ -39,6 +40,7 @@ export function matchesApprovedBooking(query, approved) {
 }
 export class BokabordMirror {
   sessions = new Map();
+  assets = new BookingAssetCache();
   browserPromise = null;
   pending = 0;
   pendingOwners = new Set();
@@ -88,10 +90,11 @@ export class BokabordMirror {
           if ((r.isNavigationRequest() && r.frame() === s.page?.mainFrame()) || /saveBooking/i.test(r.url())) s.blocked = true;
           return route.abort();
         }
-        return route.continue();
+        return this.assets.handle(route);
       });
       s.page = await context.newPage();
       s.page.on('response', response => {
+        this.assets.capture(response).catch(() => {});
         if (!s.submitted || response.url() !== 'https://app.bokabord.se/reservation/api/booking/saveBooking') return;
         s.resultPromise = (async () => {
         const data = await response.json().catch(() => null);
@@ -104,7 +107,7 @@ export class BokabordMirror {
       context.on('page', page => { if (page !== s.page) page.close().catch(() => {}); });
       await s.page.goto(address, { waitUntil: 'domcontentloaded' });
       await s.page.locator('h1,h2,h3').first().waitFor();
-      await s.page.waitForLoadState('networkidle', { timeout: 2500 }).catch(() => {});
+      await this.settle(s);
       this.sessions.set(s.id, s);
       return await this.snapshot(s);
     } catch (error) { this.sessions.delete(sessionId); await context?.close(); throw error; }
@@ -115,6 +118,15 @@ export class BokabordMirror {
     if (!s || s.owner !== owner) throw new MirrorError('session_expired', 404);
     if (Date.now() - s.touched > TTL) { this.remove(id, owner); throw new MirrorError('session_expired', 404); }
     return s;
+  }
+  async settle(s) {
+    // Wait for Angular's actual work, not unrelated analytics or a fixed delay per edit.
+    await s.page.waitForFunction(() => {
+      const root = document.querySelector('[ng-app]') || document.body;
+      const injector = window.angular?.element(root).injector();
+      return injector && injector.get('$http').pendingRequests.length === 0 && !injector.get('$rootScope').$$phase;
+    }, null, { timeout: 8000 });
+    await s.page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
   }
   async snapshot(s) {
     // No screenshot or personal fields are persisted to disk.
@@ -206,9 +218,7 @@ export class BokabordMirror {
         await s.page.mouse.move(s.width / 2, s.height / 2);
         await s.page.mouse.wheel(0, dy);
       }
-      // Wait for the provider's asynchronous redraw, without waiting indefinitely on analytics.
-      await s.page.waitForLoadState('networkidle', { timeout: 2500 }).catch(() => {});
-      await s.page.waitForTimeout(350); // Angular may schedule a redraw after the network becomes idle.
+      await this.settle(s);
       return await this.snapshot(s);
     } finally { s.armed = false; s.busy = false; }
   }
