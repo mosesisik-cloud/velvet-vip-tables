@@ -1,8 +1,7 @@
 {
-  "fetchedAt": "2026-08-27T11:29:04.755Z",
+  "fetchedAt": "2026-10-15T22:28:02.751Z",
   "minimumRating": 3.8,
-  "maxPerDestination": 30,
-  "mode": "curated-plus-open-place-data-no-invented-ratings",
+  "maxPerDestination": 20,
   "destinations": {
     "IBZ": {
       "destination": "Ibiza",
@@ -11756,13 +11755,5 @@
         }
       ]
     }
-  },
-  "imageAudit": {
-    "generatedAt": "2026-09-18T12:29:00.260Z",
-    "policy": "Only images discovered on the exact restaurant's official website; no generic fallbacks and no duplicate URL ownership.",
-    "restaurants": 770,
-    "officialSites": 229,
-    "withImages": 172
-  },
-  "menuLinksVerifiedAt": "2026-09-18T13:20:34.910Z"
+  }
 }

@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-180-provider-gates";
+const VERSION = "v4-real-182-reviewed-links";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
