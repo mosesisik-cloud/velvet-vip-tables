@@ -3,3 +3,6 @@ api/idv/**
 .DS_Store
 *.log
 scripts/__pycache__/
+
+node_modules/
+api/store.json

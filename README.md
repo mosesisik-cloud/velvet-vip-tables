@@ -10,6 +10,10 @@ Concierge-förhandsversion. Inte en automatisk bokningsmotor. Knappen ljuger int
 
 Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk UI, premium dark/gold.
 
+## Playwright-pilot för Zink (ej publicerad)
+
+En valbar spegling av det riktiga Bokabord-formuläret finns nu bakom `VELVET_BOKABORD_MIRROR=inspect`. Den använder en dold webbläsare på servern och stoppar vid kontaktsteget. Ingen skarp bokning är implementerad i speglingsläget. Se [körinstruktioner och verifiering](docs/bokabord-playwright-pilot.md).
+
 ## Vad som är på riktigt i V4
 
 - **V162: Velvet Concierge för Zink.** När live-API:t inte är aktiverat kan gästen välja en tydligt märkt önsketid direkt i Velvet. Servern skapar en riktig, spårbar bokningsförfrågan med referens-ID. Gabbe/Moses ser kontaktuppgifterna i bokningsvyn och kan markera mottagen, bekräftad eller avböjd. En önsketid visas aldrig som ledig och blir aldrig “bokad” innan Zink har bekräftat.

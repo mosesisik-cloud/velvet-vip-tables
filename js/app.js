@@ -1,3 +1,4 @@
+import { mountBokabordMirror } from "./bokabord-mirror.js";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
 import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=159b";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=159";
@@ -2452,7 +2453,10 @@ async function renderRestaurantDetail(placeId) {
   const nextBookableDay = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
   const zinkPilot = restaurant.placeId === "curated-STO-zink-italian-cuisine" && restaurant.bookingProvider === "BokaBord" && restaurant.bookingUrl;
   const pendingRestaurantBooking = loadPendingRestaurantBooking(restaurant.placeId);
-  const bookingPanel = zinkPilot
+  const mirrorConfig = zinkPilot ? await apiJSON("/restaurant-bookings/mirror/config") : null;
+  const bookingPanel = mirrorConfig?.enabled
+    ? `<div id="bokabord-mirror"></div>`
+    : zinkPilot
     ? `<div class="restaurant-provider-intro"><span>01 · DATUM</span><i></i><span>02 · TID</span><i></i><span>03 · BEKRÄFTA</span></div>
        <div class="webbridge-badge"><span aria-hidden="true">↔</span><div><strong>VELVET WebBridge</strong><small>Säker koppling till Zinks bokningssystem</small></div><b>PILOT</b></div>
        <form id="restaurant-webbridge-search" class="restaurant-book-form restaurant-provider-start">
@@ -2492,6 +2496,8 @@ async function renderRestaurantDetail(placeId) {
       </aside>
     </div>
   </section>`;
+  const mirrorContainer = document.getElementById("bokabord-mirror");
+  if (mirrorContainer) mountBokabordMirror(mirrorContainer, apiJSON);
   const webbridgeForm = document.getElementById("restaurant-webbridge-search");
   const webbridgeResult = document.getElementById("restaurant-webbridge-result");
   if (webbridgeForm && webbridgeResult) {
