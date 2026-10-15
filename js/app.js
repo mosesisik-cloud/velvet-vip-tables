@@ -6442,142 +6442,76 @@ async function renderUserProfile(id) {
 }
 
 async function renderCard() {
+  const requestedHash = location.hash;
   const u = loadUser();
   if (!u) {
-    view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p><button class="btn btn-gold" id="c-login">${esc(t("loginCta"))}</button></p></div></section>`;
-    $("#c-login")?.addEventListener("click", () => openOnboarding({ dismissable: false, phase: "auth" }));
+    view().innerHTML = `<section class="section"><div class="empty-state"><h1>${esc(t("loginTitle"))}</h1><p><button class="btn btn-gold" id="c-login">${esc(t("loginCta"))}</button></p><p><a href="#/account" data-nav>${esc(t("account"))}</a></p></div></section>`;
+    $("#c-login")?.addEventListener("click", () => openOnboarding({ dismissable: true, phase: "auth" }));
     return;
+  }
+  setTitle(uxT('cardSetupTitle'));
+  view().innerHTML = `<section class="section"><p role="status">${esc(uxT('cardSetupLoading'))}</p></section>`;
+  let savedReturn = '';
+  try { savedReturn = loginReturnTo(sessionStorage.getItem('velvet_after_idv')); } catch {}
+  let returnTo = savedReturn && !/^#\/(card|verify)(?:\?|$)/.test(savedReturn) ? savedReturn : '#/account';
+  // Back means viewing the request, not replaying its membership gate.
+  if (returnTo.startsWith('#/book-site/')) {
+    const [path, query = ''] = returnTo.split('?');
+    const params = new URLSearchParams(query);
+    params.delete('go');
+    returnTo = path + (params.toString() ? '?' + params.toString() : '');
   }
   await refreshIdv();
+  if (location.hash !== requestedHash) return;
   if (!isIdvOk()) {
-    rememberAfterIdv("#/card");
-    location.hash = "#/verify";
+    if (!savedReturn) rememberAfterIdv('#/card');
+    location.hash = '#/verify';
     return;
   }
-  const payCfg = await apiJSON("/pay/config");
-  setTitle(t("cardTitle"));
+  const payCfg = await apiJSON('/pay/config');
+  if (location.hash !== requestedHash) return;
+  const setupAvailable = payCfg?.stripe === true;
+  const configKnown = typeof payCfg?.stripe === 'boolean';
   view().innerHTML = `
   <section class="section card-page">
-    <a class="detail-back" href="#/account" data-nav>← ${esc(t("account"))}</a>
-    <h1>${esc(t("cardTitle"))}</h1>
-    <p class="ob-sub" style="margin:0 0 16px;text-align:left">${esc(t("cardSub"))}</p>
-    ${isCardOk() ? `<p class="idv-badge ok">💳 ${esc(cardLabel())} · ${esc(t("payingCustomer"))}</p>` : `<p class="idv-badge no">${esc(t("cardNeed"))}</p>`}
-    <div class="card-face" aria-hidden="true">
-      <span class="card-face-brand" id="card-brand-lab">VELVET</span>
-      <div class="card-face-num" id="card-face-num">•••• •••• •••• ••••</div>
-      <div class="card-face-row">
-        <span id="card-face-name">${esc(displayName(u) || "—")}</span>
-        <span id="card-face-exp">${esc(t("cardExpPh"))}</span>
-      </div>
-    </div>
-    <form class="pay-form" id="card-form">
-      <label>${esc(t("cardName"))}
-        <input type="text" id="card-name" autocomplete="cc-name" maxlength="48" value="${esc(displayName(u))}">
-      </label>
-      <label>${esc(t("cardNumber"))}
-        <input type="text" id="card-num" inputmode="numeric" autocomplete="cc-number" maxlength="23" placeholder="•••• •••• •••• ••••">
-      </label>
-      <div class="card-row">
-        <label>${esc(t("cardExp"))}
-          <input type="text" id="card-exp" inputmode="numeric" autocomplete="cc-exp" maxlength="5" placeholder="${esc(t("cardExpPh"))}">
-        </label>
-        <label>${esc(t("cardCvc"))}
-          <input type="text" id="card-cvc" inputmode="numeric" autocomplete="cc-csc" maxlength="4" placeholder="•••">
-        </label>
-      </div>
-      <div class="field-error hidden" id="card-err" role="alert"></div>
-      ${payCfg?.stripe ? `<p class="events-meta">${esc(t("cardStripeHint"))}</p>
-      <p><button type="button" class="btn btn-gold" id="card-stripe" style="width:100%">${esc(t("cardStripe"))}</button></p>` : ""}
-      <button class="btn btn-gold" type="submit" style="width:100%">${esc(t("cardCta"))}</button>
-    </form>
+    <a class="detail-back" href="${esc(returnTo)}" data-nav>← ${esc(uxT('cardReturn'))}</a>
+    <h1>${esc(uxT('cardSetupTitle'))}</h1>
+    <p class="ob-sub" style="margin:0 0 16px;text-align:left">${esc(uxT('cardSetupIntro'))}</p>
+    ${cardLabel() ? `<p>${esc(uxT('cardStoredDetails'))}: ${esc(cardLabel())}</p><p class="stepper-hint">${esc(uxT('cardStoredHint'))}</p>` : ''}
+    ${setupAvailable
+      ? `<p><button type="button" class="btn btn-gold" id="card-stripe">${esc(uxT('cardSetupAction'))}</button></p>`
+      : `<p role="status">${esc(uxT(configKnown ? 'cardSetupUnavailable' : 'cardSetupReadFailed'))}</p><p><button type="button" class="btn btn-ghost" id="card-retry">${esc(uxT('checkAgain'))}</button></p>`}
+    <div class="field-error hidden" id="card-err" role="alert"></div>
+    <p><a class="btn btn-ghost" href="${esc(returnTo)}" data-nav>${esc(uxT('cardReturn'))}</a> <a href="#/account" data-nav>${esc(t('account'))}</a></p>
   </section>`;
-  const setErr = (msg) => {
-    const err = $("#card-err");
-    if (!err) return;
-    if (!msg) { err.classList.add("hidden"); err.textContent = ""; return; }
-    err.textContent = msg;
-    err.classList.remove("hidden");
-  };
-  const digits = (el) => String(el?.value || "").replace(/\D/g, "");
-  const paintFace = () => {
-    const n = digits($("#card-num"));
-    const brand = cardBrandOf(n);
-    const pretty = n.replace(/(\d{4})(?=\d)/g, "$1 ").trim() || "•••• •••• •••• ••••";
-    const lab = $("#card-brand-lab");
-    const num = $("#card-face-num");
-    const exp = $("#card-face-exp");
-    const nm = $("#card-face-name");
-    if (lab) lab.textContent = brand === "card" ? "VELVET" : brand.toUpperCase();
-    if (num) num.textContent = pretty;
-    if (exp) exp.textContent = ($("#card-exp")?.value || t("cardExpPh"));
-    if (nm) nm.textContent = ($("#card-name")?.value || displayName(u) || "—").slice(0, 28);
-  };
-  $("#card-num")?.addEventListener("input", (e) => {
-    const d = digits(e.target).slice(0, 19);
-    e.target.value = d.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
-    paintFace();
-  });
-  $("#card-exp")?.addEventListener("input", (e) => {
-    let d = digits(e.target).slice(0, 4);
-    if (d.length >= 3) d = d.slice(0, 2) + "/" + d.slice(2);
-    e.target.value = d;
-    paintFace();
-  });
-  $("#card-cvc")?.addEventListener("input", (e) => { e.target.value = digits(e.target).slice(0, 4); });
-  $("#card-name")?.addEventListener("input", paintFace);
-  $("#card-num")?.focus();
-  $("#card-stripe")?.addEventListener("click", async () => {
-    setErr("");
-    const r = await apiJSON("/card/setup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user: u }),
+  $('#card-retry')?.addEventListener('click', renderCard);
+  $('#card-stripe')?.addEventListener('click', async () => {
+    const button = $('#card-stripe');
+    const error = $('#card-err');
+    if (!button || button.disabled) return;
+    button.disabled = true;
+    error.classList.add('hidden');
+    const result = await apiJSON('/card/setup', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user: u }),
     });
-    if (r?.url) { location.href = r.url; return; }
-    setErr(r?.error === "no_processor" ? t("payNoProcessor") : t("cardBad"));
-  });
-  $("#card-form")?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    setErr("");
-    const num = digits($("#card-num"));
-    const exp = digits($("#card-exp"));
-    const cvc = digits($("#card-cvc"));
-    if (!luhnOk(num)) { setErr(t("cardBad")); return; }
-    if (exp.length !== 4) { setErr(t("cardExpired")); return; }
-    const expMonth = Number(exp.slice(0, 2));
-    const expYear = 2000 + Number(exp.slice(2));
-    const now = new Date();
-    if (expMonth < 1 || expMonth > 12 || expYear < now.getFullYear() || (expYear === now.getFullYear() && expMonth < now.getMonth() + 1)) {
-      setErr(t("cardExpired"));
+    if (location.hash !== requestedHash) return;
+    if (typeof result?.url === 'string' && /^https:\/\//i.test(result.url)) {
+      location.href = result.url;
       return;
     }
-    if (cvc.length < 3) { setErr(t("cardBad")); return; }
-    const btn = $("#card-form button[type=submit]");
-    if (btn) { btn.disabled = true; btn.textContent = "…"; }
-    const r = await apiJSON("/card", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user: u,
-        last4: num.slice(-4),
-        brand: cardBrandOf(num),
-        expMonth,
-        expYear,
-      }),
-    });
-    $("#card-num").value = "";
-    $("#card-cvc").value = "";
-    if (r?.error === "idv_required") { location.hash = "#/verify"; return; }
-    if (r?.error === "no_pan") { setErr(t("cardSub")); if (btn) { btn.disabled = false; btn.textContent = t("cardCta"); } return; }
-    if (r?.error || !r?.card) {
-      setErr(r?.error === "expired" ? t("cardExpired") : t("cardBad"));
-      if (btn) { btn.disabled = false; btn.textContent = t("cardCta"); }
+    if (result?.error === 'idv_required') {
+      if (!savedReturn) rememberAfterIdv('#/card');
+      location.hash = '#/verify';
       return;
     }
-    saveUser({ ...loadUser(), cardLast4: r.card.last4, cardBrand: r.card.brand });
-    showToast(t("payingCustomer"));
-    const next = consumeAfterIdv();
-    location.hash = next || "#/account";
+    if (result?.error === 'auth') {
+      button.disabled = false;
+      openOnboarding({ dismissable: true, phase: 'auth', returnTo: requestedHash });
+      return;
+    }
+    error.textContent = uxT(result?.error === 'no_processor' ? 'cardSetupUnavailable' : 'cardSetupFailed');
+    error.classList.remove('hidden');
+    button.disabled = false;
   });
 }
 

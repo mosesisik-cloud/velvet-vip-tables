@@ -2,6 +2,16 @@ import { currentLang } from './i18n.js?v=159b';
 
 // Shared cleanup copy: keys map to Swedish, English, Spanish and French.
 const copy = {
+  cardSetupTitle: ['Anslut kort', 'Connect a card', 'Vincular una tarjeta', 'Associer une carte'],
+  cardSetupIntro: ['Kortet ansluts hos betalningsleverantören. Att ansluta ett kort är inte en betalning eller en bokningsbekräftelse.', 'Your card is connected with the payment provider. Connecting a card is not a payment or a booking confirmation.', 'La tarjeta se vincula con el proveedor de pagos. Vincular una tarjeta no supone un pago ni confirma una reserva.', 'La carte est associée auprès du prestataire de paiement. Associer une carte ne constitue ni un paiement ni une confirmation de réservation.'],
+  cardStoredDetails: ['Sparade kortuppgifter', 'Saved card details', 'Datos de tarjeta guardados', 'Informations de carte enregistrées'],
+  cardStoredHint: ['Dessa sparade uppgifter visar inte att en betalning har genomförts.', 'These saved details do not indicate that a payment has been made.', 'Estos datos guardados no indican que se haya realizado un pago.', 'Ces informations enregistrées ne prouvent pas qu’un paiement a été effectué.'],
+  cardSetupAction: ['Fortsätt till säker kortanslutning', 'Continue to secure card setup', 'Continuar para vincular la tarjeta de forma segura', 'Continuer vers l’association sécurisée de la carte'],
+  cardSetupUnavailable: ['Kortanslutning är inte tillgänglig just nu. Du kan gå tillbaka och fortsätta utforska.', 'Card setup is currently unavailable. You can return and continue exploring.', 'La vinculación de tarjetas no está disponible ahora. Puedes volver y seguir explorando.', 'L’association de carte est indisponible pour le moment. Vous pouvez revenir et continuer à explorer.'],
+  cardSetupReadFailed: ['Tillgängligheten kunde inte kontrolleras. Försök igen.', 'Availability could not be checked. Try again.', 'No se pudo comprobar la disponibilidad. Inténtalo de nuevo.', 'Impossible de vérifier la disponibilité. Réessayez.'],
+  cardSetupFailed: ['Kortanslutningen kunde inte startas. Försök igen. Ingen kortanslutning har bekräftats.', 'Card setup could not be started. Try again. No card connection has been confirmed.', 'No se pudo iniciar la vinculación. Inténtalo de nuevo. No se ha confirmado ninguna tarjeta.', 'Impossible de démarrer l’association. Réessayez. Aucune association de carte n’a été confirmée.'],
+  cardSetupLoading: ['Kontrollerar kortanslutning…', 'Checking card setup…', 'Comprobando la vinculación de tarjetas…', 'Vérification de l’association de carte…'],
+  cardReturn: ['Tillbaka', 'Go back', 'Volver', 'Retour'],
   paymentUnknown: ['Betalningsstatus kunde inte kontrolleras', 'Payment status could not be checked', 'No se pudo comprobar el pago', 'Le statut du paiement n’a pas pu être vérifié'],
   paymentCheckFailed: ['Kontrollen misslyckades. Kontrollera status innan du betalar igen. Dina uppgifter finns kvar.', 'The check failed. Check the status before paying again. Your details are preserved.', 'La comprobación falló. Comprueba el estado antes de pagar de nuevo. Tus datos se conservan.', 'La vérification a échoué. Vérifiez le statut avant de payer à nouveau. Vos informations sont conservées.'],
   checkAgain: ['Kontrollera igen', 'Check again', 'Comprobar de nuevo', 'Vérifier à nouveau'],

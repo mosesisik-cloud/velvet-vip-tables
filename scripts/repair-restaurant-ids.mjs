@@ -42,4 +42,3 @@ if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.m
   if (process.argv.includes('--write') && changes.length) await fs.writeFile(file,JSON.stringify(catalogue,null,2)+'\n');
   console.log(JSON.stringify({written:process.argv.includes('--write'),changed:changes.length,changes},null,2));
 }
-

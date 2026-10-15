@@ -552,7 +552,7 @@
     "label": "Official site",
     "name": "Noxe Barcelona",
     "engine": "sevenrooms",
-    "widgetUrl": "http://www.sevenrooms.com/reservations/salt/marriott-com-hotel-websites?venues=salt,noxe,firebarcelona,wetdeckatwbarcelona"
+    "widgetUrl": "https://www.sevenrooms.com/reservations/noxe/marriott-com-hotel-websites?venues=noxe,salt,firebarcelona,wetdeckatwbarcelona"
   },
   "CER-001": {
     "url": "https://billionairesociety.com/",

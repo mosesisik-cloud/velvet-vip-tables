@@ -23,4 +23,3 @@ for(const name of ['booking-providers.json','restaurant-menus.json']) {
 }
 assert.equal(repairRestaurantIds(catalogue).changes.length,0);
 console.log(`PASS: ${rows.length} globally unique restaurant IDs, deterministic migration and preserved provider/menu references.`);
-

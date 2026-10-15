@@ -22,3 +22,5 @@ jobs:
       - run: node scripts/test-auth-options.mjs
       - run: node scripts/test-route-integrity.mjs
       - run: node scripts/test-restaurant-ids.mjs
+      - run: node scripts/test-card-setup.mjs
+      - run: node scripts/test-external-destinations.mjs
