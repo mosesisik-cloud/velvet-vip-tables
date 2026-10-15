@@ -1,0 +1,13 @@
+# Discovery wave 3 — original website inventory
+
+20 previously unintegrated records were reviewed from the original website inventory, not unverified search candidates. Evidence and decisions are in parent-work `discovery-wave3-results.json`, `discovery-wave3-decisions.json`, follow-up and iframe files.
+
+Integrated 5 provider additions from `discovery-wave3-registry.json` into the next release candidate: Salsify via Dineplan native iframe (original guest/date/time form rendered), FYN and La Colombe via Dineplan external links, Florilège via exact TableCheck external link, and De Kas via Zenchef external link. FYN/La Colombe iframe returned 403, Florilège frame was empty and De Kas remained collapsed. No readiness inferred from an iframe shell. Dineplan hosts are explicitly allowlisted; native embedding additionally requires the exact Salsify restaurant ID and calendar.dineplan.com/m0w4SxVp destination. FYN and La Colombe remain external even if a verification flag is changed. No aggregate availability adapter is claimed.
+
+Definitive phone-only: Den's official reservation instructions explicitly reject internet reservations. L'Isola directly offers reservation email/phone links. Le Girelier and Buenos Aires Marbella use reservation requests requiring restaurant confirmation; these must not be presented as live, instantly confirmed availability. Overall links booking requests to its contact form. Contact details found at Wild Beets, Club 55 and Michael's are not proof these venues lack every online booking channel.
+
+Data corrections completed separately in data/restaurants.json: La Petite Plage's outdated gambling domain and its image URLs removed, website replaced by the verified current official https://www.restaurant-lapetiteplage.com/saint-tropez . Verde Beach's template-domain website/menu/image URLs removed pending verified replacement. Both venue records retained; no closed status asserted. No matching menu-database entries existed. Minimal JSON diff preserved surrounding formatting. Evidence screenshots and titles saved in parent-work discovery-wave3-wrong-sites.json and matching PNGs.
+
+Olivia's site reports stopped/unbound; L'Atelier's current page is workshops/retail. Neither result establishes that the restaurant has closed. Caprice/Chairman access failures and remaining unresolved records remain explicit unknowns.
+
+All browser requests restricted to GET/HEAD/OPTIONS. No reservation, hold, payment, personal details or form submissions. Five real iframe tests used a locally fulfilled parent page at the Velvet origin. The release candidate registry now contains85 mappings (48native,37external), preserving all80 previous mappings. Production release171 remains at80 until the new candidate is deployed.

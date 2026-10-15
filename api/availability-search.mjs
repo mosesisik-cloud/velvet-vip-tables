@@ -64,14 +64,20 @@ export class AvailabilitySearch {
     const run = async () => {
       const rank = row => { const p=this.registry[row.placeId || row.id]?.provider; return p === 'SevenRooms' ? 0 : this.adapters[p] ? 1 : 2; };
       const rows = [...(group[1].restaurants || [])].sort((a,b)=>rank(a)-rank(b));
-      const results = new Array(rows.length); let cursor = 0;
-      await Promise.all(Array.from({length:Math.min(4,rows.length)}, async()=>{
-        while(cursor < rows.length && !controller.signal.aborted) {
-          const i = cursor++, r = rows[i], id = r.placeId || r.id, provider = this.registry[id];
-          results[i] = provider ? await this.venue(id,provider,q,controller.signal) : {restaurantId:id,restaurant:r.name,city:q.city,provider:'',status:'unsupported',slots:[],checkedAt:null};
-          if(!controller.signal.aborted) for(const listener of this.listeners.get(key) || []) listener(results[i]);
-        }
-      }));
+      const results = new Array(rows.length);
+      const pool = async (indices, limit) => {
+        let cursor=0;
+        await Promise.all(Array.from({length:Math.min(limit,indices.length)},async()=>{
+          while(cursor<indices.length&&!controller.signal.aborted) {
+            const i=indices[cursor++],r=rows[i],id=r.placeId||r.id,provider=this.registry[id];
+            results[i]=provider?await this.venue(id,provider,q,controller.signal):{restaurantId:id,restaurant:r.name,city:q.city,provider:'',status:'unsupported',slots:[],checkedAt:null};
+            if(!controller.signal.aborted)for(const listener of this.listeners.get(key)||[])listener(results[i]);
+          }
+        }));
+      };
+      const browserRows=rows.flatMap((r,i)=>rank(r)===1?[i]:[]);
+      const directRows=rows.flatMap((r,i)=>rank(r)!==1?[i]:[]);
+      await Promise.all([pool(directRows,4),pool(browserRows,2)]);
       return {query:q,results,checkedAt:new Date(this.now()).toISOString(),windowMinutes:90};
     };
     const timeout = new Promise((_,reject)=>{deadline=setTimeout(()=>{controller.abort();reject(new Error('search_timeout'));},this.searchTimeoutMs);});

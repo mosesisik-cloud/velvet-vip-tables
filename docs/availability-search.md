@@ -2,7 +2,7 @@
 
 The guest route `#/availability` supports all 39 catalogue destinations and city, date, time, party filters. `/availability` reads current public SevenRooms widget availability for the 30 reviewed mappings. Only bookable provider slots on the requested date within ±90 minutes are returned. Provider failures and unsupported systems are distinct from an empty availability result. Reads have a ten-second provider timeout, bounded concurrency, in-flight deduplication and no completed-response or service-worker availability cache. Slots are not reservations; the provider rechecks them at checkout.
 
-The wider reviewed registry has 80 mappings: 47 native forms and 33 official external links. The existing 22 Bokabord integrations remain separate. Neither original iframe loading nor a handoff proves a completed booking. Search coverage is smaller than booking-link coverage.
+The wider reviewed registry has 85 mappings: 48 native forms and 37 official external links. The existing 22 Bokabord integrations remain separate. Neither original iframe loading nor a handoff proves a completed booking. Search coverage is smaller than booking-link coverage.
 
 `api/booking-register.mjs` persists restaurant booking metadata in SQLite at `VELVET_BOOKINGS_DB` or alongside `VELVET_DATA` as `bookings.sqlite`. WAL and SHM files belong to the database; use SQLite's backup mechanism or stop/checkpoint the process before filesystem backup. Keep this directory private and backed up. The production API data mount persists it across container restarts.
 
@@ -16,3 +16,6 @@ Release 171 adds actual-widget read-only Bokabord availability across the existi
 Clients can request `/availability?progressive=1&...` and poll `/availability/jobs/:id`. Completed venue results appear while other checks continue; pending and failed checks are never presented as sold out. Shared jobs expire after four minutes, storage is bounded to 50 jobs, at most three city searches run concurrently, and a 150-second server deadline aborts unfinished work, retains partial results and releases capacity. UI polling stops at navigation/filter changes and has a separate 180-second deadline. No completed availability cache is used.
 
 SevenRooms search links now stay in Velvet and preserve validated date/time/party context. Modern provider parameters were observed to retain the selection; legacy widgets may ignore date/time defaults, so the chosen context remains visibly stated with a request to verify it in the original form. No selected slot is claimed to be held or reserved.
+
+
+Release172 reduces per-city browser workers from four to two, independently of the four direct-read workers. The Bokabord adapter reuses only public static scripts/styles/fonts, navigates with the actual widget back button, and returns observed slots from the first matching meal with partial coverage explicitly indicated. Queue wait and active work have separate 15/20-second bounds. This does not cache current availability or claim full meal coverage from a partial result. Local narrow Zink timings were4.87s cold and3.46s warm; these are not production SLA measurements.
