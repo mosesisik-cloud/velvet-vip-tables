@@ -28,9 +28,9 @@ for (const url of [
 ]) assert.equal(resolveEmbeddedBooking({ test: { ...row, url } }, 'test'), null);
 assert.equal(resolveEmbeddedBooking(registry, 'not-reviewed'), null);
 assert.equal(resolveEmbeddedBooking(registry, '__proto__'), null);
-assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 33);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 54);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 42);
+assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 34);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 57);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 44);
 for (const original of Object.values(registry).filter(row => row.provider !== 'SevenRooms')) {
   const wrongVenue = new URL(original.url); wrongVenue.pathname += '/wrong-restaurant';
   const wrongHost = new URL(original.url); wrongHost.hostname += '.evil.example';
@@ -51,7 +51,7 @@ try {
   for (const original of Object.values(registry).filter(row => row.integrationMode === 'external_link')) {
     const container = { replaceChildren(...children) { this.children = children; } };
     mountEmbeddedBooking(container, original);
-    assert.deepEqual(container.children.map(e => e.tag), ['p', 'p', 'a']);
+    assert.deepEqual(container.children.map(e => e.tag), ['p', 'p', 'a', 'p']);
     assert.match(container.children[1].textContent, /egen flik/);
     assert.match(container.children[2].textContent, /Kontrollera tider/);
     assert.equal(container.children[2].rel, 'noopener noreferrer');

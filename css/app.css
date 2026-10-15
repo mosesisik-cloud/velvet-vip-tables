@@ -3116,6 +3116,14 @@ body.light-shell .dest-card::after {
 .restaurant-detail .detail-panel.restaurant-book-panel { background: #faf9f6; color: #292b2d; border: 1px solid #e4e1da; padding: 24px; }
 .restaurant-book-panel > .eyebrow { color: #73716a; font-size: 12px; letter-spacing: .03em; }
 .restaurant-book-panel > h2 { color: #292b2d; font: 400 30px/1.2 Georgia, serif; margin: 8px 0 18px; }
+/* Light booking surfaces need dark copy; inputs retain their own dark theme. */
+.restaurant-book-panel label { color: #414b51; }
+.restaurant-book-panel .stepper-hint,
+.restaurant-book-panel .restaurant-live-note,
+.restaurant-book-panel .webbridge-badge small { color: #505b62; }
+.restaurant-book-panel .restaurant-provider-intro { color: #414b51; font-size: 11px; line-height: 1.5; white-space: normal; }
+.restaurant-book-panel .restaurant-official-book { color: #315c48; text-decoration: underline; text-underline-offset: 3px; }
+.restaurant-book-panel .restaurant-official-book:focus-visible { outline-color: #315c48; }
 #bokabord-mirror .booking-source { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding-bottom: 14px; border-bottom: 1px solid #e4e1da; font-size: 12px; color: #6b6a64; }
 #bokabord-mirror .booking-intro { color: #595a55; font-size: 15px; line-height: 1.6; margin: 18px 0; }
 #bokabord-mirror [data-start], #bokabord-mirror [data-submit] { width: 100%; background: #283f35; color: white; border: 0; border-radius: 6px; padding: 14px 18px; min-height: 48px; font-size: 15px; font-weight: 600; clip-path: none; text-transform: none; letter-spacing: 0; }
@@ -3153,7 +3161,95 @@ body.light-shell .restaurant-detail .restaurant-book-panel:has(.booking-provider
 .booking-report label { display:grid; gap:5px; font-size:13px; }
 .booking-report input { width:100%; min-width:0; padding:10px; border:1px solid #555; border-radius:6px; background:#141414; color:white; }
 
+/* Task-oriented shell: preserve the navy palette, simplify hierarchy. */
+.nav { gap: 20px; overflow: visible; }
+.nav-links { gap: 24px; }
+.nav-links a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; line-height: 1.3; letter-spacing: 0; text-transform: none; }
+.nav-links a.active::before { display: none; }
+.nav-links a[aria-current="page"] { color: var(--gold-bright); }
+.nav-dest { min-height: 44px; border-radius: 6px; }
+.nav-dest-name { display: inline; max-width: 160px; }
+.explore-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 16px; padding: 8px 20px; border-bottom: 1px solid var(--border); background: var(--bg); }
+.explore-nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 8px 4px; font-size: 14px; color: var(--text-dim); border-bottom: 2px solid transparent; }
+.explore-nav a:hover, .explore-nav a[aria-current="page"] { color: var(--text); border-bottom-color: var(--gold); }
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible { outline: 2px solid var(--gold-bright); outline-offset: 4px; }
+.home-clean .hero, body.light-shell .home-clean.hero { min-height: auto; padding-block: clamp(32px, 6vw, 72px); }
+body.light-shell .home-clean .hero h1, body.light-shell .home-clean.hero h1 { max-width: 850px; font-size: clamp(36px, 5.2vw, 68px); line-height: 1.08; letter-spacing: -.04em; }
+.home-clean .hero-kicker, .home-clean.hero .hero-kicker { margin-bottom: 16px; }
+.home-clean .hero > p, .home-clean.hero > p { max-width: 640px; font-size: 16px; line-height: 1.6; }
+.home-intent { display: flex; flex-direction: row; flex-wrap: wrap; align-items: stretch; gap: 12px; margin: 16px 0; }
+.home-intent a, .home-intent .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 12px 20px; border: 1px solid var(--border); border-radius: 6px; font-size: 15px; line-height: 1.4; letter-spacing: 0; text-transform: none; clip-path: none; }
+.home-clean .home-category-links { margin-bottom: 12px; gap: 12px; }
+.home-clean .home-category-links a { display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; letter-spacing: 0; text-transform: none; }
+.home-clean .home-discovery { border-radius: 6px; clip-path: none; }
+.home-clean .home-discovery button { min-height: 48px; font-size: 15px; letter-spacing: 0; text-transform: none; border-radius: 4px; clip-path: none; }
+.home-intent a:first-child { background: var(--gold); border-color: var(--gold); color: #101b26; font-weight: 700; }
+.home-intent a:hover { border-color: var(--gold-bright); }
+.home-clean .section-head::before { display: none; }
+.home-clean .section-head { align-items: end; gap: 16px; }
+.home-clean .section-head h2 { font-size: clamp(26px, 3.5vw, 38px); line-height: 1.2; }
+.home-clean .section-head .sub { margin-top: 8px; font-size: 14px; }
+body.light-shell .venue-card, body.light-shell .restaurant-card, body.light-shell .dest-card { border-radius: 10px; }
+body.light-shell .venue-card::after, body.light-shell .restaurant-card::after, body.light-shell .dest-card::after { display: none; }
+.venue-media, .restaurant-media, .dest-cover { clip-path: none; }
+.venue-name, .restaurant-card h3 { line-height: 1.3; }
+.detail-disclosure { margin-top: 20px; padding: 0 20px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg-card); }
+.detail-disclosure > summary { min-height: 56px; padding: 16px 0; cursor: pointer; color: var(--text); font-size: 16px; font-weight: 600; }
+.detail-disclosure[open] { padding-bottom: 20px; }
+.detail-disclosure[open] > summary { margin-bottom: 16px; border-bottom: 1px solid var(--border); }
+.detail-disclosure .detail-panel { margin-top: 16px; box-shadow: none; }
+.social-grid-onetap .social-btn.social-btn-compact { min-height: 44px; font-size: 13px; }
+.social-grid-onetap .social-btn-compact > span:last-child { display: inline; }
+.social-grid-onetap .social-btn.social-btn-compact:hover { color: #101b26; }
+.filters input, .filters select, .form-group input, .form-group select, .form-group textarea { font-size: 16px; line-height: 1.4; border-radius: 6px; }
+.link-gold { display: inline-flex; align-items: center; min-height: 44px; font-size: 13px; letter-spacing: 0; text-transform: none; }
+@media (max-width: 1100px) {
+  .nav { gap: 12px; padding: 10px 20px; }
+  .nav-links { max-height: calc(100dvh - 80px); overflow-y: auto; overscroll-behavior: contain; gap: 0; }
+  .nav-links a { min-height: 48px; font-size: 16px; }
+  .explore-nav { justify-content: flex-start; gap: 0 14px; padding-inline: 20px; }
+}
+@media (max-width: 600px) {
+  .nav { gap: 8px; padding-inline: 12px; }
+  .nav-side { gap: 4px; min-width: 0; }
+  /* Account remains reachable through the main menu; remove the duplicate icon. */
+  .nav-user { display: none; }
+  .nav-search, .nav-toggle { flex: 0 0 44px; width: 44px; height: 44px; }
+  .nav-logo { font-size: 18px; letter-spacing: .12em; }
+  .nav-dest { gap: 5px; padding: 8px; min-width: 0; }
+  .nav-dest-name { display: inline; max-width: 112px; font-size: 13px; }
+  .nav-dest-caret { display: none; }
+  .explore-nav { padding-inline: 16px; }
+  .explore-nav a { font-size: 13px; }
+  /* Grid prevents the old column flex layout treating a 140px basis as height. */
+  .home-intent { display: grid; grid-template-columns: minmax(0, 1fr); width: 100%; gap: 8px; }
+  .home-intent a { flex: none; width: 100%; }
+  .home-clean .section-head { align-items: flex-start; flex-wrap: wrap; }
+  .home-clean .hero, body.light-shell .home-clean.hero { padding-inline: 20px; }
+  .detail-disclosure { padding-inline: 16px; }
+}
+@media (max-width: 380px) {
+  .nav { flex-wrap: wrap; }
+  .nav-side { flex-wrap: wrap; justify-content: flex-end; flex: 1 1 auto; }
+  .nav-dest-name { max-width: 100px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-links.open, .home-clean *, .detail-disclosure *, .explore-nav *, .nav-side * { animation: none; transition: none; scroll-behavior: auto; }
+}
 .booking-selection-summary { padding:12px 14px; border:1px solid var(--border); border-radius:8px; font-size:14px; line-height:1.6; }
+
+.explore-nav[hidden] { display: none; }
+.search-group-label { padding: 14px 18px 6px; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .06em; }
+
+/* The booking shortcut follows the title in DOM order and lands below the header. */
+.restaurant-detail-actions #restaurant-book-jump { min-height: 48px; padding: 12px 20px; }
+#restaurant-booking-panel, #restaurant-booking-heading { scroll-margin-top: 120px; }
+#restaurant-booking-heading:focus { outline: 2px solid #315c48; outline-offset: 6px; }
+@media (max-width: 600px) {
+  .restaurant-detail-actions { width: 100%; }
+  .restaurant-detail-actions #restaurant-book-jump { flex: 1 1 100%; }
+  .restaurant-detail-actions .btn { min-height: 44px; }
+}
 
 /* Give the original booking form room to use its own desktop layout. */
 .restaurant-detail-grid:has(.booking-provider-frame) { grid-template-columns:minmax(0,1fr); }
@@ -3169,4 +3265,21 @@ body.light-shell .restaurant-detail .restaurant-book-panel:has(.booking-provider
     width: calc(100vw - 16px);
     margin-left: calc((100% - 100vw + 16px) / 2);
   }
+}
+
+/* Error and keyboard states on the light booking panel. */
+.restaurant-book-panel .field-error { color: #9b2924; border-color: #ba625b; background: #fff0ed; }
+.restaurant-book-panel .webbridge-state.is-error { color: #9b2924; border-color: #ba625b; background: #fff0ed; }
+.restaurant-book-panel .webbridge-state.is-error p { color: #7e2824; font-size: 13px; line-height: 1.5; }
+.restaurant-book-panel .webbridge-book-form legend,
+.restaurant-book-panel .webbridge-book-form label:not(.webbridge-terms),
+.restaurant-book-panel .webbridge-terms,
+.restaurant-book-panel .webbridge-final-note { color: #505b62; }
+.restaurant-book-panel :is(input, select, textarea, button, a, summary):focus-visible { outline: 2px solid #315c48; outline-offset: 4px; }
+.restaurant-book-panel .webbridge-times input:focus-visible + span { outline-color: #315c48; }
+
+/* Keep reading/focus order aligned with the booking-first mobile layout. */
+@media (min-width: 761px) {
+  .restaurant-detail-grid:not(:has(.booking-provider-frame)) > .restaurant-book-panel { grid-column:2; grid-row:1; }
+  .restaurant-detail-grid:not(:has(.booking-provider-frame)) > .restaurant-detail-main { grid-column:1; grid-row:1; }
 }

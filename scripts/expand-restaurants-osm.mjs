@@ -1,9 +1,11 @@
 import fs from "node:fs/promises";
+import { restaurantSourceId, assertUniqueRestaurantIds } from "./restaurant-identity.mjs";
 
 const root = new URL("../", import.meta.url);
 const read = async (file) => JSON.parse(await fs.readFile(new URL(file, root), "utf8"));
 const destinations = [...await read("data/destinations.json"), ...await read("data/extra-destinations.json")];
 const catalog = await read("data/restaurants.json");
+const knownIds = assertUniqueRestaurantIds(catalog);
 const endpoints = [
   "https://overpass.private.coffee/api/interpreter",
   "https://overpass.kumi.systems/api/interpreter",
@@ -15,7 +17,6 @@ for (const code of Object.keys(catalog.destinations)) {
   if (!catalogCodes.has(code)) delete catalog.destinations[code];
 }
 
-const slug = (value) => String(value).normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const distance = (a, b) => {
   const p = Math.PI / 180;
   const x = (b.lng - a.lng) * p * Math.cos((a.lat + b.lat) * p / 2);
@@ -52,15 +53,22 @@ for (const d of destinations.filter((x, i, all) => catalogCodes.has(x.code) && a
       const name = tags.name?.trim();
       if (!name || !Number.isFinite(lat) || !Number.isFinite(lng)) return null;
       const website = tags.website || tags["contact:website"] || "";
-      return { name, lat, lng, website: /^https?:\/\//i.test(website) ? website : "", cuisine: tags.cuisine || "", km: distance(d, { lat, lng }) };
+      return { name, osmType: element.type, osmId: element.id, lat, lng, website: /^https?:\/\//i.test(website) ? website : "", cuisine: tags.cuisine || "", km: distance(d, { lat, lng }) };
     }).filter(Boolean).sort((a, b) => a.km - b.km || a.name.localeCompare(b.name));
     for (const place of candidates) {
       if (row.restaurants.length >= wanted) break;
       const key = place.name.toLocaleLowerCase();
       if (existing.has(key)) continue;
+      const placeId = restaurantSourceId(d.code, place);
+      if (knownIds.has(placeId)) continue;
+      knownIds.add(placeId);
       existing.add(key);
       row.restaurants.push({
-        placeId: `osm-${d.code}-${slug(place.name)}`,
+        placeId,
+        osmType: place.osmType,
+        osmId: place.osmId,
+        lat: place.lat,
+        lng: place.lng,
         name: place.name,
         rating: null,
         reviewCount: 0,
@@ -83,4 +91,5 @@ for (const d of destinations.filter((x, i, all) => catalogCodes.has(x.code) && a
 catalog.fetchedAt = new Date().toISOString();
 catalog.maxPerDestination = wanted;
 catalog.mode = "curated-plus-open-place-data-no-invented-ratings";
+assertUniqueRestaurantIds(catalog);
 await fs.writeFile(new URL("data/restaurants.json", root), `${JSON.stringify(catalog, null, 2)}\n`);

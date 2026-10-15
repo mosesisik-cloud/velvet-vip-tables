@@ -1,10 +1,12 @@
+import { bookingLanguage } from './booking-language.js';
+import { getBookingCopy, formatBookingCopy } from './booking-copy.js';
 // Only reviewed restaurant -> provider mappings are enabled. Discovery results
 // must never be used as booking destinations without checking the venue.
 let registryPromise;
 let reviewedRegistry = {};
 export const hasEmbeddedBooking = id => !!resolveEmbeddedBooking(reviewedRegistry, id);
 const PROVIDER_HOSTS = Object.freeze({
-  Meitre: ['lasusana.meitre.com', 'oro.meitre.com', 'fasano.meitre.com'],
+  Meitre: ['lahuella.meitre.com', 'lasusana.meitre.com', 'oro.meitre.com', 'fasano.meitre.com'],
   Elyra: ['widget.elyrasystems.com'], Guestplan: ['angelicabooking.guestplan.io'],
   Dineplan: ['calendar.dineplan.com', 'account.dineplan.com', 'www.dineplan.com'],
   CoverManager: ['www.covermanager.com'],
@@ -66,47 +68,53 @@ export async function getEmbeddedBooking(restaurantId) {
   return resolveEmbeddedBooking(await registryPromise, restaurantId);
 }
 
-export function mountEmbeddedBooking(container, booking) {
+export function mountEmbeddedBooking(container, booking, language = 'sv') {
+  const copy = getBookingCopy(language);
+  const localized = bookingLanguage(booking, language);
+  const text = key => formatBookingCopy(copy[key], {provider:booking.provider, name:booking.name});
+  const languageNote = document.createElement('p');
+  languageNote.className = 'booking-language-note';
+  languageNote.textContent = copy[localized.notice];
   // The cross-origin provider owns every field, availability response, consent,
   // payment and confirmation. Velvet does not infer success from iframe loads
   // or untrusted postMessages, and does not store contact or card details.
   const source = document.createElement('p');
   source.className = 'booking-source';
-  source.textContent = `Bokning via ${booking.provider} · Utan Velvet-konto`;
+  source.textContent = text('source');
   const intro = document.createElement('p');
   intro.className = 'booking-intro';
   if (booking.integrationMode === 'external_link') {
-    intro.textContent = 'Lediga tider och bokningen visas hos ' + booking.provider + ' i en egen flik. Eventuella kontokrav och villkor visas där.';
+    intro.textContent = text('externalIntro');
     const link = document.createElement('a');
-    link.href = booking.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    link.href = localized.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
     link.className = 'btn btn-gold';
-    link.textContent = 'Kontrollera tider hos ' + booking.provider + ' ↗';
-    container.replaceChildren(source, intro, link);
+    link.textContent = text('externalLink');
+    container.replaceChildren(source, intro, link, languageNote);
     return;
   }
-  intro.textContent = 'Restaurangens eget bokningsformulär öppnas här.';
+  intro.textContent = copy.originalIntro;
   const start = document.createElement('button');
-  start.className = 'btn btn-gold'; start.type = 'button'; start.textContent = 'Hitta ett bord';
+  start.className = 'btn btn-gold'; start.type = 'button'; start.textContent = copy.findTable;
   const stage = document.createElement('div'); stage.className = 'booking-provider-stage';
   const status = document.createElement('p'); status.setAttribute('role', 'status');
   const fallback = document.createElement('a');
-  fallback.href = booking.url; fallback.target = '_blank'; fallback.rel = 'noopener noreferrer';
+  fallback.href = localized.url; fallback.target = '_blank'; fallback.rel = 'noopener noreferrer';
   fallback.className = 'restaurant-official-book';
-  fallback.textContent = 'Öppna bokningen i en egen flik ↗';
-  container.replaceChildren(source, intro, start, status, stage, fallback);
+  fallback.textContent = copy.fallbackLink;
+  container.replaceChildren(source, intro, languageNote, start, status, stage, fallback);
   start.addEventListener('click', () => {
     if (stage.firstChild) return;
     start.remove();
-    intro.textContent = 'Lediga tider, villkor och bokningsbekräftelse visas av restaurangen i formuläret.';
-    status.textContent = 'Öppnar bokningen…';
+    intro.textContent = copy.activeIntro;
+    status.textContent = copy.opening;
     const frame = document.createElement('iframe');
     frame.className = 'booking-provider-frame';
-    frame.title = `Boka bord hos ${booking.name} via ${booking.provider}`;
+    frame.title = text('frameTitle');
     frame.allow = 'payment';
     frame.referrerPolicy = 'strict-origin-when-cross-origin';
     frame.addEventListener('load', () => { status.textContent = ''; });
-    frame.addEventListener('error', () => { status.textContent = 'Om formuläret inte visas kan du öppna bokningen i en egen flik.'; });
-    frame.src = booking.url;
+    frame.addEventListener('error', () => { status.textContent = copy.loadError; });
+    frame.src = localized.url;
     stage.append(frame);
     requestAnimationFrame(() => {
       if (stage.isConnected) {

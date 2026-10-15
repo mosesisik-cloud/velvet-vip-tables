@@ -1,3 +1,4 @@
+import {bookingLanguage} from '../js/booking-language.js';
 import { chromium } from '../node_modules/playwright/index.mjs';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
@@ -6,7 +7,7 @@ import { resolveEmbeddedBooking } from '../js/restaurant-booking-providers.js';
 const registry = JSON.parse(await fs.readFile(new URL('../data/booking-providers.json', import.meta.url)));
 const base = process.env.VELVET_UI_TEST_URL || 'http://127.0.0.1:4179/';
 const origin = new URL(base).origin;
-const providerUrls = new Set(Object.keys(registry).map(id => resolveEmbeddedBooking(registry,id).url));
+const providerUrls = new Set(Object.keys(registry).map(id => bookingLanguage(resolveEmbeddedBooking(registry,id),'sv').url));
 const browser = await chromium.launch();
 try {
  const context = await browser.newContext({viewport:{width:390,height:844},serviceWorkers:'block'});
@@ -25,6 +26,7 @@ try {
   if (new URL(request.url()).origin !== origin) return route.abort();
   return route.continue();
  });
+ await context.addInitScript(()=>localStorage.setItem('velvet_lang','sv'));
  const page=await context.newPage();
  await page.goto(base+'#/restaurant/curated-STO-brasserie-astoria');
  const firstPanel=page.locator('#restaurant-provider-booking');
@@ -44,6 +46,7 @@ try {
  let embedded=0,external=0;
  for(const [id] of Object.entries(registry)) {
   const booking=resolveEmbeddedBooking(registry,id);
+  booking.url=bookingLanguage(booking,'sv').url;
   await page.goto(base+'#/restaurant/'+id);
   const panel=page.locator('#restaurant-provider-booking');
   await page.waitForFunction(url => document.querySelector('#restaurant-provider-booking a')?.getAttribute('href') === url, booking.url);
