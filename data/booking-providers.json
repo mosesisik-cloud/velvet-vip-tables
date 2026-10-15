@@ -1706,5 +1706,91 @@
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported",
     "locality": "Public"
+  },
+  "osm-IBZ-ama-lur": {
+    "name": "Ama Lur",
+    "city": "Ibiza",
+    "provider": "CoverManager",
+    "url": "https://www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+    "venueKey": "www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+    "source": "https://amaluribiza.com/reservas/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_link_only",
+    "integrationMode": "external_link",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Exact named official source link; no booking completed. Conservative external until full provider journey verification."
+  },
+  "osm-MRB-the-farm": {
+    "name": "The Farm",
+    "city": "Marbella",
+    "provider": "CoverManager",
+    "url": "https://www.covermanager.com/reservation/module_restaurant/restaurante-thefarm/english",
+    "venueKey": "www.covermanager.com/reservation/module_restaurant/restaurante-thefarm/english",
+    "source": "https://thefarm-marbella.com/contact/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_link_only",
+    "integrationMode": "external_link",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Exact named official source link; no booking completed. Conservative external until full provider journey verification."
+  },
+  "osm-STT-l-opera": {
+    "name": "L’Opéra",
+    "city": "Saint-Tropez",
+    "provider": "SevenRooms",
+    "url": "https://www.sevenrooms.com/explore/loperasainttropez/reservations/create/search/",
+    "venueKey": "www.sevenrooms.com/explore/loperasainttropez/reservations/create/search/",
+    "source": "https://www.opera-saint-tropez.com/fr/reservation/",
+    "checkedAt": "2026-10-15",
+    "verification": "embedded_form_loaded",
+    "integrationMode": "native_embed",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Initial original SevenRooms guest/date/time form verified. Provider explicitly processes requests in24-72hours, requires card guarantee; not instant confirmed reservation. No slots selected.",
+    "venueId": "loperasainttropez",
+    "bookingMode": "request_only",
+    "responseTimeHours": {
+      "min": 24,
+      "max": 72
+    },
+    "paymentRequirement": "card_guarantee",
+    "cancellationPolicyStatus": "unknown"
+  },
+  "osm-STT-le-cafe": {
+    "name": "Le Café",
+    "city": "Saint-Tropez",
+    "provider": "SevenRooms",
+    "url": "https://www.sevenrooms.com/explore/lecafesainttropez/reservations/create/search/",
+    "venueKey": "www.sevenrooms.com/explore/lecafesainttropez/reservations/create/search/",
+    "source": "https://www.lecafe.fr/saint-tropez-restaurant/contact",
+    "checkedAt": "2026-10-15",
+    "verification": "embedded_form_loaded",
+    "integrationMode": "native_embed",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Initial original SevenRooms guest/date/time form verified. Provider explicitly processes requests in24-72hours, requires card guarantee; not instant confirmed reservation. No slots selected.",
+    "venueId": "lecafesainttropez",
+    "bookingMode": "request_only",
+    "responseTimeHours": {
+      "min": 24,
+      "max": 72
+    },
+    "paymentRequirement": "card_guarantee",
+    "cancellationPolicyStatus": "unknown"
+  },
+  "osm-STT-gaio": {
+    "name": "GAÏO",
+    "city": "Saint-Tropez",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=352811",
+    "venueKey": "bookings.zenchef.com/results?rid=352811",
+    "source": "https://www.gaio.club/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_link_only",
+    "integrationMode": "external_link",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Exact named official source link; no booking completed. Conservative external until full provider journey verification."
   }
 }

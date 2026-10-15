@@ -29,9 +29,14 @@ for (const url of [
 ]) assert.equal(resolveEmbeddedBooking({ test: { ...row, url } }, 'test'), null);
 assert.equal(resolveEmbeddedBooking(registry, 'not-reviewed'), null);
 assert.equal(resolveEmbeddedBooking(registry, '__proto__'), null);
-assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 41);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 62);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 57);
+assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 43);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 64);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 60);
+for (const id of ['osm-IBZ-ama-lur', 'osm-MRB-the-farm', 'osm-STT-gaio', 'osm-STT-l-opera', 'osm-STT-le-cafe']) {
+  assert.equal(registry[id].liveAvailabilitySupported, false, 'Initial form evidence must not enable live inventory');
+  assert.equal(registry[id].completionTracking, 'unsupported');
+  assert.ok(resolveEmbeddedBooking(registry, id));
+}
 for (const id of ['osm-DXB-carluccio-s', 'osm-SBH-bagatelle', 'osm-SBH-la-guerite', 'osm-SBH-la-petite-plage', 'osm-SBH-le-cafe', 'osm-SBH-sella']) {
   const imported = registry[id];
   assert.equal(imported.integrationMode, 'external_link');
@@ -40,7 +45,7 @@ for (const id of ['osm-DXB-carluccio-s', 'osm-SBH-bagatelle', 'osm-SBH-la-guerit
   assert.equal(imported.verification, 'official_link_only');
   if (id.startsWith('osm-SBH-')) assert.equal(imported.city, 'St. Barts', 'Locality must not replace the search destination');
 }
-for (const id of ['osm-SBH-la-petite-plage', 'osm-SBH-le-cafe']) {
+for (const id of ['osm-SBH-la-petite-plage', 'osm-SBH-le-cafe', 'osm-STT-l-opera', 'osm-STT-le-cafe']) {
   assert.equal(registry[id].bookingMode, 'request_only');
   assert.deepEqual(registry[id].responseTimeHours, {min:24,max:72});
   assert.equal(registry[id].paymentRequirement, 'card_guarantee');
