@@ -29,9 +29,24 @@ for (const url of [
 ]) assert.equal(resolveEmbeddedBooking({ test: { ...row, url } }, 'test'), null);
 assert.equal(resolveEmbeddedBooking(registry, 'not-reviewed'), null);
 assert.equal(resolveEmbeddedBooking(registry, '__proto__'), null);
-assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 36);
+assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 41);
 assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 62);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 51);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 57);
+for (const id of ['osm-DXB-carluccio-s', 'osm-SBH-bagatelle', 'osm-SBH-la-guerite', 'osm-SBH-la-petite-plage', 'osm-SBH-le-cafe', 'osm-SBH-sella']) {
+  const imported = registry[id];
+  assert.equal(imported.integrationMode, 'external_link');
+  assert.equal(imported.liveAvailabilitySupported, false);
+  assert.equal(imported.completionTracking, 'unsupported');
+  assert.equal(imported.verification, 'official_link_only');
+  if (id.startsWith('osm-SBH-')) assert.equal(imported.city, 'St. Barts', 'Locality must not replace the search destination');
+}
+for (const id of ['osm-SBH-la-petite-plage', 'osm-SBH-le-cafe']) {
+  assert.equal(registry[id].bookingMode, 'request_only');
+  assert.deepEqual(registry[id].responseTimeHours, {min:24,max:72});
+  assert.equal(registry[id].paymentRequirement, 'card_guarantee');
+  assert.equal(registry[id].cancellationPolicyStatus, 'unknown');
+  assert.equal(registry[id].cancellationPolicy, undefined, 'Card guarantee must not fabricate cancellation terms');
+}
 for (const original of Object.values(registry).filter(row => row.provider !== 'SevenRooms' || row.integrationMode === 'external_link')) {
   const wrongVenue = new URL(original.url); wrongVenue.pathname += '/wrong-restaurant';
   const wrongHost = new URL(original.url); wrongHost.hostname += '.evil.example';
@@ -52,11 +67,17 @@ try {
   for (const original of Object.values(registry).filter(row => row.integrationMode === 'external_link')) {
     const container = { replaceChildren(...children) { this.children = children; } };
     mountEmbeddedBooking(container, original);
-    assert.deepEqual(container.children.map(e => e.tag), ['p', 'p', 'a', 'p']);
-    assert.match(container.children[1].textContent, /egen flik/);
-    assert.match(container.children[2].textContent, /Kontrollera tider/);
-    assert.equal(container.children[2].rel, 'noopener noreferrer');
-    assert.equal(container.children[2].href, bookingLanguage(original, 'sv').url);
+    const requestOnly = original.bookingMode === 'request_only';
+    assert.deepEqual(container.children.map(e => e.tag), requestOnly ? ['p', 'p', 'p', 'a', 'p'] : ['p', 'p', 'a', 'p']);
+    if (requestOnly) {
+      assert.match(container.children[1].textContent, /Bokningsförfrågan/);
+      assert.match(container.children[2].textContent, /inte en omedelbart bekräftad/);
+      assert.match(container.children[2].textContent, /24–72 timmar/);
+    } else assert.match(container.children[1].textContent, /egen flik/);
+    const link = container.children.find(e => e.tag === 'a');
+    assert.match(link.textContent, requestOnly ? /Öppna bokningsförfrågan/ : /Kontrollera tider/);
+    assert.equal(link.rel, 'noopener noreferrer');
+    assert.equal(link.href, bookingLanguage(original, 'sv').url);
   }
 } finally { globalThis.document = originalDocument; }
 
