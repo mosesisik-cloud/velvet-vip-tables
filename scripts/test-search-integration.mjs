@@ -16,6 +16,14 @@ try {
   await page.locator('.availability-card').first().waitFor({timeout:30000});assert.ok(await page.locator('.availability-slot').count()>0);
   await fs.mkdir('../../outputs',{recursive:true});await page.screenshot({path:'../../outputs/velvet-city-search-desktop.png',fullPage:true});
   await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:'../../outputs/velvet-city-search-mobile.png',fullPage:true});
+  const chosenTime=await page.locator('.availability-slot').first().textContent();
+  await context.route('https://**sevenrooms.com/**',route=>route.fulfill({contentType:'text/html',body:'<label>Original provider<input></label>'}));
+  await page.locator('.availability-slot').first().click();
+  await page.locator('.booking-provider-frame').waitFor();
+  const frameUrl=new URL(await page.locator('.booking-provider-frame').getAttribute('src'));
+  assert.equal(frameUrl.searchParams.get('default_date') || frameUrl.searchParams.get('date'),'2026-10-19');
+  assert.equal(frameUrl.searchParams.get('default_party_size') || frameUrl.searchParams.get('party_size'),'2');
+  assert.ok((await page.locator('.booking-selection-summary').textContent()).includes(chosenTime.match(/\d{2}:\d{2}/)[0]));
   // The local report is not a reservation and cannot set provider-confirmed status.
   const report=await context.request.post('http://127.0.0.1:18789/restaurant-bookings/report',{headers:{Origin:'http://127.0.0.1:4181'},data:{restaurantId:'curated-STO-brasserie-astoria',date:'2026-10-19',time:'17:00',party:2,reference:'LOCAL-TEST-ONLY',status:'provider_confirmed'}});
   assert.equal(report.status(),200);assert.equal((await report.json()).booking.status,'guest_reported');

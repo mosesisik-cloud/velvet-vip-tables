@@ -3152,3 +3152,5 @@ body.light-shell .restaurant-detail .restaurant-book-panel:has(.booking-provider
 .booking-report form { display:grid; gap:12px; }
 .booking-report label { display:grid; gap:5px; font-size:13px; }
 .booking-report input { width:100%; min-width:0; padding:10px; border:1px solid #555; border-radius:6px; background:#141414; color:white; }
+
+.booking-selection-summary { padding:12px 14px; border:1px solid var(--border); border-radius:8px; font-size:14px; line-height:1.6; }

@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-170-availability";
+const VERSION = "v4-real-171-progressive-booking";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
