@@ -1,0 +1,938 @@
+{
+  "batch": 9,
+  "checkedAt": "2026-10-15",
+  "counts": {
+    "reviewed": 20,
+    "identityVerified": 10,
+    "embeddedOriginalForms": 1,
+    "officialExternalLinks": 2,
+    "liveAvailability": 1,
+    "manualBookingRoutes": 7,
+    "walkIn": 0,
+    "closed": 0,
+    "unresolved": 11,
+    "registryAdditions": 1
+  },
+  "records": [
+    {
+      "restaurantId": "osm-MIA-fuku",
+      "name": "Fuku",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official Fuku sandwich branch at 135 Miracle Mile Coral Gables opened March 2026. Manifest only says Fuku/Miami and supplies no locator; cannot establish whether it means this venue or another Fuku."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://eatfuku.com/find-fuku/coral-gables/",
+          "kind": "official",
+          "supports": "Official Fuku sandwich branch at 135 Miracle Mile Coral Gables opened March 2026. Manifest only says Fuku/Miami and supplies no locator; cannot establish whether it means this venue or another Fuku."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Fuku\" Miami restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-MIA-genuine-pizza",
+      "name": "Genuine Pizza",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Historical operator blog mentions Genuine Pizza and Harrys Pizzeria. Multiple/rebranded sites exist; no current exact branch established from generic manifest name."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://thegenuinekitchen.wordpress.com/",
+          "kind": "official",
+          "supports": "Historical operator blog mentions Genuine Pizza and Harrys Pizzeria. Multiple/rebranded sites exist; no current exact branch established from generic manifest name."
+        },
+        {
+          "url": "https://www.opentable.com/r/genuine-pizza-by-michael-schwartz-aventura-mall-aventura",
+          "kind": "secondary",
+          "supports": "Aventura candidate is a different city and cannot be assigned merely from name."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Genuine Pizza\" Miami restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-MIA-le-petit-cafe",
+      "name": "Le petit café",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Search produced namesakes in Brooklyn and Paris rather than a verified Miami venue. These booking links must not be assigned to this ID."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.lepetitny.com/contact-us",
+          "kind": "official",
+          "supports": "Search produced namesakes in Brooklyn and Paris rather than a verified Miami venue. These booking links must not be assigned to this ID."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Le petit café\" Miami restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-MIA-lulu",
+      "name": "Lulu",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Earlier indexed Spanish restaurant page names 3105 Commodore Plaza, Miami, but live root now displays unrelated gambling content. lulucoconutgrove.food now displays unrelated Turkish content. Neither is approved as an official booking destination."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.luluinthegrove.com/",
+          "kind": "secondary",
+          "supports": "Earlier indexed Spanish restaurant page names 3105 Commodore Plaza, Miami, but live root now displays unrelated gambling content. lulucoconutgrove.food now displays unrelated Turkish content. Neither is approved as an official booking destination."
+        },
+        {
+          "url": "https://lulucoconutgrove.food/",
+          "kind": "secondary",
+          "supports": "Live page is unrelated content; old restaurant-domain evidence is stale."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Lulu\" Miami restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-MIA-miller-s-ale-house",
+      "name": "Miller's Ale House",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Manifest specifies Coral Gables branch, but official location URL returns 404. No current restaurant address/booking route verified; 404 alone does not prove closure."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://millersalehouse.com/locations/coral-gables/",
+          "kind": "official",
+          "supports": "Manifest specifies Coral Gables branch, but official location URL returns 404. No current restaurant address/booking route verified; 404 alone does not prove closure."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Miller's Ale House\" Miami restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-MIA-monty-s",
+      "name": "Monty's",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official Montys Sunset is at 300 Alton Road, Miami Beach, while Montys also has Coconut Grove identity. Generic manifest lacks locator; no Miami Beach booking link assigned to Miami ID."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.montyssobe.com/",
+          "kind": "official",
+          "supports": "Official Montys Sunset is at 300 Alton Road, Miami Beach, while Montys also has Coconut Grove identity. Generic manifest lacks locator; no Miami Beach booking link assigned to Miami ID."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Monty's\" Miami restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-MIA-panorama-restaurant-sky-lounge",
+      "name": "Panorama Restaurant & Sky Lounge",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Manifest legacy Sonesta restaurant URL failed to fetch. Secondary historical guide places Panorama at 2889 McFarlane Road, eighth floor. Current official identity/operator not resolved."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.sonesta.com/CoconutGrove/index.cfm?fa=restaurant1.home",
+          "kind": "official",
+          "supports": "Manifest legacy Sonesta restaurant URL failed to fetch. Secondary historical guide places Panorama at 2889 McFarlane Road, eighth floor. Current official identity/operator not resolved."
+        },
+        {
+          "url": "https://websites.kw-ic.com/Portals/61/Documents/One%20Park%20Grove%20Restaurant%20List%202.18.2022.pdf",
+          "kind": "secondary",
+          "supports": "Historical Panorama location; not proof of current operation."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Panorama Restaurant & Sky Lounge\" Miami restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-MIA-poke-305-grove",
+      "name": "Poke 305 Grove",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Operator profile lists 3415 Main Highway among multiple locations. Manifest Clover root is a generic POS homepage, not a restaurant-specific table booking link. Current Grove table-booking policy unverified."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.linkedin.com/company/poke-305",
+          "kind": "official",
+          "supports": "Operator profile lists 3415 Main Highway among multiple locations. Manifest Clover root is a generic POS homepage, not a restaurant-specific table booking link. Current Grove table-booking policy unverified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Poke 305 Grove\" Miami restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-MIA-pummarola-coral-gable",
+      "name": "Pummarola Coral Gable",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Coral Gables",
+        "address": "141 Aragon Avenue, Coral Gables, FL 33134",
+        "notes": "Manifest explicitly names Coral Gables. Operator site identifies Coral Gables; Florida licensing source confirms exact address. No table-reservation route verified. Pizza class booking and food ordering must not be used as table booking."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.pummarola.us/",
+          "kind": "official",
+          "supports": "Manifest explicitly names Coral Gables. Operator site identifies Coral Gables; Florida licensing source confirms exact address. No table-reservation route verified. Pizza class booking and food ordering must not be used as table booking."
+        },
+        {
+          "url": "https://www2.myfloridalicense.com/abt/documents/CityFeeDistribution3rdQtr2025-2026.pdf",
+          "kind": "official",
+          "supports": "Government licensing address for Pummarola at 141 Aragon Avenue, Coral Gables."
+        },
+        {
+          "url": "https://www.pummarola.us/bookonline",
+          "kind": "official",
+          "supports": "Booking page is pizza classes, not table reservations."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Pummarola Coral Gable\" Miami restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-MIA-the-cheesecake-factory",
+      "name": "The Cheesecake Factory",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official chain allows online reservations for rewards members, up to six guests and 30 days ahead. Manifest lacks branch. Coconut Creek is not Coconut Grove; no branch or account booking route assigned."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.thecheesecakefactory.com/",
+          "kind": "official",
+          "supports": "Official chain allows online reservations for rewards members, up to six guests and 30 days ahead. Manifest lacks branch. Coconut Creek is not Coconut Grove; no branch or account booking route assigned."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"The Cheesecake Factory\" Miami restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "curated-SBH-bonito-saint-barth",
+      "name": "Bonito Saint Barth",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "Rue Lubin Brin, Gustavia, 97133 Saint-Barthélemy",
+        "notes": "Official Bonito site confirms address and booking@bonitosbh.com / +590 590 27 96 96. Browser shows Make a Reservation heading but no provider widget or specific online booking link."
+      },
+      "status": "manual_email",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.bonitosbh.com/",
+          "kind": "official",
+          "supports": "Official Bonito site confirms address and booking@bonitosbh.com / +590 590 27 96 96. Browser shows Make a Reservation heading but no provider widget or specific online booking link."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "official site inspected in browser; reservation contacts visible, no booking widget identified",
+        "mobile": "not_tested",
+        "languages": [
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Likely duplicate venue represented by curated-SBH-bonito-saint-barth and osm-SBH-bonito; IDs preserved, no merge.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Bonito Saint Barth\" St. Barts restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "curated-SBH-le-toiny-restaurant",
+      "name": "Le Toiny Restaurant",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Toiny",
+        "address": "Anse de Toiny, 97133 Saint-Barthélemy",
+        "notes": "Official hotel identifies La Table and Beach Club and directs restaurant reservations to restaurant@letoiny.com. Restaurant-specific manual contact retained; no hotel reservation engine substituted."
+      },
+      "status": "manual_email",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://letoiny.com/",
+          "kind": "official",
+          "supports": "Official hotel identifies La Table and Beach Club and directs restaurant reservations to restaurant@letoiny.com. Restaurant-specific manual contact retained; no hotel reservation engine substituted."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "en",
+          "fr",
+          "es"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Generic manifest name does not distinguish La Table dinner from Beach Club; specify dining concept in manual request.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Le Toiny Restaurant\" St. Barts restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "curated-SBH-tamarin-st-barth",
+      "name": "Tamarin St Barth",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Saline",
+        "address": "Route de Saline, 97133 Saint-Barthélemy",
+        "notes": "Official contact page explicitly asks all reservation requests by email to info@tamarinstbarth.com. Telephone +590 590 29 27 74 is also listed."
+      },
+      "status": "manual_email",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://tamarinstbarth.com/contact/",
+          "kind": "official",
+          "supports": "Official contact page explicitly asks all reservation requests by email to info@tamarinstbarth.com. Telephone +590 590 29 27 74 is also listed."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "en",
+          "fr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Tamarin St Barth\" St. Barts restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-bagatelle",
+      "name": "Bagatelle",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "24 rue Samuel Fahlberg, Gustavia Harbor, 97133 Saint-Barthélemy",
+        "notes": "Official Bagatelle booking page embeds canonical SevenRooms venue bagatellestbarth. Direct page confirms Bagatelle St. Barth. Search 23 October 2026 /2 guests returned 19:00 and 19:30; no time selected. Official hours say CLOSED all days while future inventory exists; seasonal status not inferred."
+      },
+      "status": "official_external_link",
+      "provider": "SevenRooms",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/bagatellestbarth",
+      "sources": [
+        {
+          "url": "https://bagatelle.com/venues/st-barths/booking/",
+          "kind": "official",
+          "supports": "Official branch identity/address, canonical SevenRooms iframe src, manual contact fallbacks and group card/deposit terms. All-days-CLOSED hours conflict with future search inventory."
+        },
+        {
+          "url": "https://www.sevenrooms.com/reservations/bagatellestbarth",
+          "kind": "official",
+          "supports": "Exact iframe src from official booking page, canonical page title and current search results."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": true,
+        "liveAvailability": true,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "official iframe inspected; canonical provider search 2026-10-23 /2 guests offered19:00,19:30; no time selection",
+        "mobile": "390x844 screenshot of same availability results readable; no checkout tested",
+        "languages": [
+          "en"
+        ],
+        "cancellation": "For group deposit bookings, notify at least 12 hours before reservation or deposit is non-refundable.",
+        "cardGuarantee": "For 6+ guests a credit card is required, managed through Stripe with SevenRooms.",
+        "prepayment": "For 15+ guests, fixed menu and 50% deposit upon acceptance."
+      },
+      "limitations": [
+        "Seasonal closed-hours display is not treated as permanent closure.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": {
+        "provider": "SevenRooms",
+        "name": "Bagatelle",
+        "city": "Gustavia",
+        "venueId": "bagatellestbarth",
+        "venueKey": "www.sevenrooms.com/reservations/bagatellestbarth",
+        "url": "https://www.sevenrooms.com/reservations/bagatellestbarth",
+        "source": "https://bagatelle.com/venues/st-barths/booking/",
+        "checkedAt": "2026-10-15",
+        "verification": "official_link_only",
+        "providerTitle": "Bagatelle St. Barth Reservations",
+        "integrationMode": "external_link"
+      },
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Bagatelle\" St. Barts restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-bart-s-food-lounge",
+      "name": "Bart's Food Lounge",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact-name OSM-derived candidate on Rue du Général de Gaulle. No restaurant-owned current identity, operation or reservation source verified."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.cartogiraffe.com/france/saint-barth%C3%A9lemy/saint-barth%C3%A9lemy/bart%2Bs%2Bfood%2Blounge/",
+          "kind": "secondary",
+          "supports": "Exact-name OSM-derived candidate on Rue du Général de Gaulle. No restaurant-owned current identity, operation or reservation source verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Bart's Food Lounge\" St. Barts restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-black-ginger",
+      "name": "Black Ginger",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "Rue Samuel Fahlberg, Gustavia 97133 Saint-Barthélemy",
+        "notes": "Official Black Ginger St Barth page has name, guests, date/time, phone/email request form and says reservations effective only after staff confirmation. Not the Phuket Black Ginger."
+      },
+      "status": "official_external_link",
+      "provider": "Contact Form 7 / direct request",
+      "bookingUrl": "https://blackgingersbh.com/en/reservations/",
+      "sources": [
+        {
+          "url": "https://blackgingersbh.com/en/reservations/",
+          "kind": "official",
+          "supports": "Official Black Ginger St Barth page has name, guests, date/time, phone/email request form and says reservations effective only after staff confirmation. Not the Phuket Black Ginger."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "original Contact Form 7 request form inspected; guest/date/time are free-text fields; explicit staff confirmation required; no submission",
+        "mobile": "390x844 screenshot inspected at request fields and Send Request; readable narrow layout; no submission",
+        "languages": [
+          "en",
+          "fr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Prepared as evidence only: provider is not admitted by an existing reviewed registry adapter; no allowlist expanded.",
+        "Request form was read but not submitted; no table inventory proven.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Black Ginger\" St. Barts restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-bonito",
+      "name": "Bonito",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "Rue Lubin Brin, Gustavia, 97133 Saint-Barthélemy",
+        "notes": "Official Bonito site confirms address and booking@bonitosbh.com / +590 590 27 96 96. Browser shows Make a Reservation heading but no provider widget or specific online booking link."
+      },
+      "status": "manual_email",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.bonitosbh.com/",
+          "kind": "official",
+          "supports": "Official Bonito site confirms address and booking@bonitosbh.com / +590 590 27 96 96. Browser shows Make a Reservation heading but no provider widget or specific online booking link."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "official site inspected in browser; reservation contacts visible, no booking widget identified",
+        "mobile": "not_tested",
+        "languages": [
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Likely duplicate venue represented by curated-SBH-bonito-saint-barth and osm-SBH-bonito; IDs preserved, no merge.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Bonito\" St. Barts restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-eddy-s",
+      "name": "Eddy's",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "12 rue Samuel Fahlberg, Gustavia 97133 Saint-Barthélemy",
+        "notes": "Official site labels reservation contact and gives +590 590 27 54 17; also eddysghetto@gmail.com. No table inventory found."
+      },
+      "status": "manual_phone",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://eddysghetto.com/",
+          "kind": "official",
+          "supports": "Official site labels reservation contact and gives +590 590 27 54 17; also eddysghetto@gmail.com. No table inventory found."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Eddy's\" St. Barts restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-fishcorner",
+      "name": "FishCorner",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "41 rue de la République, Gustavia, 97133 Saint-Barthélemy",
+        "notes": "Official booking page says nothing available to book online and explicitly directs reservations to +590 590 51 36 33. Empty Wix booking section is not live table availability."
+      },
+      "status": "manual_phone",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.fishcornerstbarth.com/en/book-online",
+          "kind": "official",
+          "supports": "Official booking page says nothing available to book online and explicitly directs reservations to +590 590 51 36 33. Empty Wix booking section is not live table availability."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"FishCorner\" St. Barts restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-l-isoletta",
+      "name": "L'Isoletta",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "Rue du Roi Oscar II, Gustavia, Saint-Barthélemy",
+        "notes": "Official contact page says reserve by +590 590 52 02 02 or visit; reservations@isolettastbarth.com also listed. No provider inventory found."
+      },
+      "status": "manual_phone",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.isolettastbarth.com/contact",
+          "kind": "official",
+          "supports": "Official contact page says reserve by +590 590 52 02 02 or visit; reservations@isolettastbarth.com also listed. No provider inventory found."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"L'Isoletta\" St. Barts restaurant official reservation"
+      }
+    }
+  ]
+}

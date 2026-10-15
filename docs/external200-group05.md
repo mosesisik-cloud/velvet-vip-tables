@@ -1,0 +1,36 @@
+# External200 group 5
+
+Checked 2026-10-15. Exactly 20 manifest IDs researched. Status counts: {"walk_in":1,"unresolved":13,"closed_reported":1,"unresolved_branch":5}. Checks: {"officialExternalLink":0,"embeddedOriginalForm":0,"liveAvailability":0,"simulatedValidation":0,"confirmedReservation":0}.
+
+No registry addition approved: missing official branch/booking evidence.
+
+Manual routes are enquiries, not confirmed table acceptance. Closed-reported means secondary closure evidence, not official current closure verification. Candidate addresses/cities are explicitly separate from verified identity.
+
+## Per-record review
+
+- **osm-DXB-rowley-s — Rowley's**: walk_in. Official Dubai page explicitly says walk-ins/no reservations; independent from London Rowleys booking site. [Source](https://rowleysrestaurants.com/pages-dubai/)
+- **osm-DXB-shang-palace — Shang Palace**: unresolved. Official hotel page confirms venue and phone (971 4) 405 2703. Its linked shangpalacedubai.com website returned 404. No current exact provider form verified. [Source](https://www.shangri-la.com/dubai/shangrila/dining/restaurants/shang-palace/)
+- **osm-DXB-the-rivington-grill — The Rivington Grill**: closed_reported. Closure reported for Souk Al Bahar June 5 2016 quoting operator; other reports cover Madinat closure. Not officially reverified as closed today. Suppress booking activation pending current official reconciliation. [Source](https://www.thenationalnews.com/lifestyle/food/rivington-grill-in-souk-al-bahar-is-closing-its-doors-1.177881)
+- **osm-HKG-hku-hill-view-restaurant — HKU Hill View Restaurant**: unresolved. HKU 2017/18 guide identifies Hill View canteen at Student Village II. Historical official identity only; current access/operation and table booking not verified. [Source](https://www.cedars.hku.hk/nonlocal/publication/prepguide1718.pdf)
+- **osm-HKG-kennedy-cafe — 堅離地冰室 Kennedy Cafe**: unresolved. Exact bilingual name found on food delivery listing at 22 Belchers Street. Delivery order UI is not table booking; current official reservation policy unverified. [Source](https://www.foodpanda.hk/zh/restaurant/pzck/kennedy-cafe-kennedy-town)
+- **osm-HKG-ktm-bar-kitchen — KTM Bar Kitchen**: unresolved. Government licence list confirms historical address; 2025 licence renewal record found, not a booking channel or current October 2026 operation proof. [Source](https://www.fehd.gov.hk/english/events/covid19/List_TypeC.pdf)
+- **osm-HKG-mangzane — Mangzane**: unresolved. Exact Mangzane Hong Kong search found only OSM-derived nearby-name lists; no authoritative current identity or booking route. [Source](https://hk.geoview.info/xi_ning_jie_sai_ning_street%2C26725136w)
+- **osm-HKG-piccollo — Piccollo**: unresolved. Search Piccollo Kennedy Town found Piccolio/Piccolo candidates, spelling mismatch and no official mapping. Glasgow Piccollo rejected. No integration. [Source](https://www.playtimes.com.hk/kennedy-town-neighbourhood-guide/)
+- **osm-HKG-sun-hing — 祥香茶餐廳 Sun Hing**: unresolved. Chinese name 祥香茶餐廳 maps historically to Cheung Heung at 107 Belchers Street, not 新興食家 Sun Hing. Secondary historical shop page reports closure/change; source English name inconsistent. [Source](https://www.cfs.gov.hk/sc_chi/programme/programme_rafs/files/Choice_444_Coffeetea_table_2.pdf)
+- **osm-HKG-sun-hing-restaurant — 新興食家 Sun Hing Restaurant**: unresolved. Exact Chinese name identifies dim sum venue at 8 Smithfield. Not same as 祥香茶餐廳. No official table-booking policy or live form verified. [Source](https://tabelog.com/hongkong/A5222/A522201/52002619/dtlmap/)
+- **osm-HKG-sushi-take-out — Sushi Take Out**: unresolved_branch. Search found large multi-branch Sushi Take-Out chain; map-derived Kennedy Town candidate exists but source lacks street/coordinates. Takeaway purchase not table reservation. [Source](https://www.openrice.com/en/hongkong/r-sushi-take-out-tseung-kwan-o-japanese-sushi-sashimi-r541537)
+- **osm-HKG-thai-heng-thai-food-restaurant — 泰興泰國菜館 Thai Heng Thai Food Restaurant**: unresolved. Exact Chinese name only found on OSM-derived Catchick Street list. Search also found differently named 金泰興; no official equivalence established. [Source](https://eatoutmap.com/en/hong-kong/kennedy-town/near/kennedy-town)
+- **osm-HKG-the-farm-cafe — 農場冰室 The Farm Cafe**: unresolved. Exact 農場冰室 search found OSM-derived Catchick Street entry, no official current venue or booking policy. [Source](https://eatoutmap.com/en/hong-kong/kennedy-town/near/kennedy-town)
+- **osm-HKG-the-seafood-kitchen — The Seafood Kitchen**: unresolved_branch. Search found Sham Shui Po seafood venue whereas OSM-derived result places source name on Catchick Street. No coordinates to reconcile; do not attach different branch. [Source](https://www.foodpanda.hk/chain/cl5qp/the-seafood-kitchen)
+- **osm-HKG-u051914a323f9 — 粥君好**: unresolved. Exact 粥君好 search finds historical dining coupon list and government record at 32A Belchers Street. No official current reservation policy found. [Source](https://www.hkelectric.com/documents/en/CustomerServices/SmartPowerServices/Documents/Participating%20Eateries.pdf)
+- **osm-HKG-u19c6d6df7171 — 豪景茶餐廳**: unresolved. Government participating eatery list identifies Ho King Restaurant; historical phone in FEHD is not evidence of accepting table reservations. [Source](https://www.wastereduction.gov.hk/sites/default/files/food_wise/signees/Food_Wise_Eateries_Scheme-ListofParticipatingEateries_EN.pdf)
+- **osm-HKG-u1b0ea4f52786 — 東北餃子**: unresolved_branch. 東北餃子 search found Kennedy Town delivery listing and 18A-20A Belchers Street candidate, but generic name occurs elsewhere; no original source branch anchor or official booking route. [Source](https://www.foodpanda.hk/zh/restaurant/entp/northeast-dumplings-kennedy-town)
+- **osm-HKG-u47ee089214ae — 誠記**: unresolved_branch. Government list identifies 誠記 at Smithfield CF11-12; generic name also occurs elsewhere. No source street anchor or official reservation policy. [Source](https://www.wastereduction.gov.hk/sites/default/files/food_wise/signees/Food_Wise_Eateries_Scheme-ListofParticipatingEateries_TC.pdf)
+- **osm-HKG-u7fb07f941a89 — 友明**: unresolved. Exact 友明 Kennedy Town query found directory candidate CF5 Smithfield cooked food centre only; no current official identity/booking route. [Source](https://www.edining.hk/search3.php?aim=&cat=&district=%E8%A5%BF%E7%92%B0)
+- **osm-HKG-u8ac58ca2b549 — 厚興瑜記**: unresolved_branch. 厚興瑜記 search found corporate name-change entry and multiple roast-chicken outlets. Corporate registration is not a branch address or reservation policy. [Source](https://www.cr.gov.hk/docs/wrpt/RNC063_2025.03.10-2025.03.16.pdf)
+
+## Validation and limits
+
+Exact IDs and count checked against manifest. No production/shared registry changes made. No booking/hold/payment/contact created. Missing conditions remain null (unknown); desktop/mobile not_tested means no browser test. Source restaurants.json supplied generic city addresses without coordinates, so branch ambiguity prevents activation.
+
+Manual booking review — **osm-DXB-shang-palace**: Manual-route re-review: official hotel page publishes phone under basic information, without explicit reservation-by-phone invitation. Linked standalone site 404. Table reservation acceptance is unknown.

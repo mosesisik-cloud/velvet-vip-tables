@@ -1,0 +1,866 @@
+{
+  "batch": 5,
+  "checkedAt": "2026-10-15",
+  "records": [
+    {
+      "restaurantId": "osm-DXB-rowley-s",
+      "name": "Rowley's",
+      "manifestCity": "Dubai",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Dubai",
+        "address": "Level P3, Central Park Towers, DIFC",
+        "notes": "Official Dubai page explicitly says walk-ins/no reservations; independent from London Rowleys booking site."
+      },
+      "status": "walk_in",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://rowleysrestaurants.com/pages-dubai/",
+          "kind": "official",
+          "supports": "Official Dubai page explicitly says walk-ins/no reservations; independent from London Rowleys booking site."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-DXB-shang-palace",
+      "name": "Shang Palace",
+      "manifestCity": "Dubai",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Dubai",
+        "address": "Level 1, Shangri-La Dubai, Sheikh Zayed Road",
+        "notes": "Official hotel page confirms venue and phone (971 4) 405 2703. Its linked shangpalacedubai.com website returned 404. No current exact provider form verified. Manual-route re-review: official hotel page publishes phone under basic information, without explicit reservation-by-phone invitation. Linked standalone site 404. Table reservation acceptance is unknown."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.shangri-la.com/dubai/shangrila/dining/restaurants/shang-palace/",
+          "kind": "official",
+          "supports": "Official hotel page confirms venue and phone (971 4) 405 2703. Its linked shangpalacedubai.com website returned 404. No current exact provider form verified. Manual-route re-review: official hotel page publishes phone under basic information, without explicit reservation-by-phone invitation. Linked standalone site 404. Table reservation acceptance is unknown."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent.",
+        "Manual-route re-review: official hotel page publishes phone under basic information, without explicit reservation-by-phone invitation. Linked standalone site 404. Table reservation acceptance is unknown."
+      ],
+      "registryAddition": null,
+      "contact": {
+        "phone": "+971 4 405 2703",
+        "email": null,
+        "tableReservationAcceptance": "unknown"
+      }
+    },
+    {
+      "restaurantId": "osm-DXB-the-rivington-grill",
+      "name": "The Rivington Grill",
+      "manifestCity": "Dubai",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Closure reported for Souk Al Bahar June 5 2016 quoting operator; other reports cover Madinat closure. Not officially reverified as closed today. Suppress booking activation pending current official reconciliation.",
+        "candidateCity": "Dubai",
+        "candidateAddress": "Level 3, Souk Al Bahar"
+      },
+      "status": "closed_reported",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.thenationalnews.com/lifestyle/food/rivington-grill-in-souk-al-bahar-is-closing-its-doors-1.177881",
+          "kind": "secondary",
+          "supports": "Closure reported for Souk Al Bahar June 5 2016 quoting operator; other reports cover Madinat closure. Not officially reverified as closed today. Suppress booking activation pending current official reconciliation."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-hku-hill-view-restaurant",
+      "name": "HKU Hill View Restaurant",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "HKU 2017/18 guide identifies Hill View canteen at Student Village II. Historical official identity only; current access/operation and table booking not verified.",
+        "candidateCity": "Hong Kong",
+        "candidateAddress": "111 Pokfulam Road, Jockey Club Student Village II"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.cedars.hku.hk/nonlocal/publication/prepguide1718.pdf",
+          "kind": "official",
+          "supports": "HKU 2017/18 guide identifies Hill View canteen at Student Village II. Historical official identity only; current access/operation and table booking not verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-kennedy-cafe",
+      "name": "堅離地冰室 Kennedy Cafe",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact bilingual name found on food delivery listing at 22 Belchers Street. Delivery order UI is not table booking; current official reservation policy unverified.",
+        "candidateCity": "Hong Kong",
+        "candidateAddress": "22 Belchers Street, Kennedy Town"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.foodpanda.hk/zh/restaurant/pzck/kennedy-cafe-kennedy-town",
+          "kind": "secondary",
+          "supports": "Exact bilingual name found on food delivery listing at 22 Belchers Street. Delivery order UI is not table booking; current official reservation policy unverified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-ktm-bar-kitchen",
+      "name": "KTM Bar Kitchen",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Government licence list confirms historical address; 2025 licence renewal record found, not a booking channel or current October 2026 operation proof.",
+        "candidateCity": "Hong Kong",
+        "candidateAddress": "G/F, Sincere Western House, 71 Cadogan Street, Kennedy Town"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.fehd.gov.hk/english/events/covid19/List_TypeC.pdf",
+          "kind": "official",
+          "supports": "Government licence list confirms historical address; 2025 licence renewal record found, not a booking channel or current October 2026 operation proof."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-mangzane",
+      "name": "Mangzane",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact Mangzane Hong Kong search found only OSM-derived nearby-name lists; no authoritative current identity or booking route.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://hk.geoview.info/xi_ning_jie_sai_ning_street%2C26725136w",
+          "kind": "secondary",
+          "supports": "Exact Mangzane Hong Kong search found only OSM-derived nearby-name lists; no authoritative current identity or booking route."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-piccollo",
+      "name": "Piccollo",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Search Piccollo Kennedy Town found Piccolio/Piccolo candidates, spelling mismatch and no official mapping. Glasgow Piccollo rejected. No integration.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.playtimes.com.hk/kennedy-town-neighbourhood-guide/",
+          "kind": "secondary",
+          "supports": "Search Piccollo Kennedy Town found Piccolio/Piccolo candidates, spelling mismatch and no official mapping. Glasgow Piccollo rejected. No integration."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-sun-hing",
+      "name": "祥香茶餐廳 Sun Hing",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Chinese name 祥香茶餐廳 maps historically to Cheung Heung at 107 Belchers Street, not 新興食家 Sun Hing. Secondary historical shop page reports closure/change; source English name inconsistent.",
+        "candidateCity": "Hong Kong",
+        "candidateAddress": "107 Belchers Street, Kennedy Town"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.cfs.gov.hk/sc_chi/programme/programme_rafs/files/Choice_444_Coffeetea_table_2.pdf",
+          "kind": "official",
+          "supports": "Chinese name 祥香茶餐廳 maps historically to Cheung Heung at 107 Belchers Street, not 新興食家 Sun Hing. Secondary historical shop page reports closure/change; source English name inconsistent."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-sun-hing-restaurant",
+      "name": "新興食家 Sun Hing Restaurant",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact Chinese name identifies dim sum venue at 8 Smithfield. Not same as 祥香茶餐廳. No official table-booking policy or live form verified.",
+        "candidateCity": "Hong Kong",
+        "candidateAddress": "G/F, Markfield Building, 8 Smithfield"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://tabelog.com/hongkong/A5222/A522201/52002619/dtlmap/",
+          "kind": "secondary",
+          "supports": "Exact Chinese name identifies dim sum venue at 8 Smithfield. Not same as 祥香茶餐廳. No official table-booking policy or live form verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-sushi-take-out",
+      "name": "Sushi Take Out",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Search found large multi-branch Sushi Take-Out chain; map-derived Kennedy Town candidate exists but source lacks street/coordinates. Takeaway purchase not table reservation.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.openrice.com/en/hongkong/r-sushi-take-out-tseung-kwan-o-japanese-sushi-sashimi-r541537",
+          "kind": "secondary",
+          "supports": "Search found large multi-branch Sushi Take-Out chain; map-derived Kennedy Town candidate exists but source lacks street/coordinates. Takeaway purchase not table reservation."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-thai-heng-thai-food-restaurant",
+      "name": "泰興泰國菜館 Thai Heng Thai Food Restaurant",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact Chinese name only found on OSM-derived Catchick Street list. Search also found differently named 金泰興; no official equivalence established.",
+        "candidateCity": "Hong Kong",
+        "candidateAddress": "Catchick Street, Kennedy Town"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://eatoutmap.com/en/hong-kong/kennedy-town/near/kennedy-town",
+          "kind": "secondary",
+          "supports": "Exact Chinese name only found on OSM-derived Catchick Street list. Search also found differently named 金泰興; no official equivalence established."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-the-farm-cafe",
+      "name": "農場冰室 The Farm Cafe",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact 農場冰室 search found OSM-derived Catchick Street entry, no official current venue or booking policy.",
+        "candidateCity": "Hong Kong",
+        "candidateAddress": "Catchick Street, Kennedy Town"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://eatoutmap.com/en/hong-kong/kennedy-town/near/kennedy-town",
+          "kind": "secondary",
+          "supports": "Exact 農場冰室 search found OSM-derived Catchick Street entry, no official current venue or booking policy."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-the-seafood-kitchen",
+      "name": "The Seafood Kitchen",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Search found Sham Shui Po seafood venue whereas OSM-derived result places source name on Catchick Street. No coordinates to reconcile; do not attach different branch.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.foodpanda.hk/chain/cl5qp/the-seafood-kitchen",
+          "kind": "secondary",
+          "supports": "Search found Sham Shui Po seafood venue whereas OSM-derived result places source name on Catchick Street. No coordinates to reconcile; do not attach different branch."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-u051914a323f9",
+      "name": "粥君好",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact 粥君好 search finds historical dining coupon list and government record at 32A Belchers Street. No official current reservation policy found.",
+        "candidateCity": "Hong Kong",
+        "candidateAddress": "32A Belchers Street"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.hkelectric.com/documents/en/CustomerServices/SmartPowerServices/Documents/Participating%20Eateries.pdf",
+          "kind": "secondary",
+          "supports": "Exact 粥君好 search finds historical dining coupon list and government record at 32A Belchers Street. No official current reservation policy found."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-u19c6d6df7171",
+      "name": "豪景茶餐廳",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Hong Kong",
+        "address": "G/F, 53 Belchers Street, Kennedy Town",
+        "notes": "Government participating eatery list identifies Ho King Restaurant; historical phone in FEHD is not evidence of accepting table reservations."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.wastereduction.gov.hk/sites/default/files/food_wise/signees/Food_Wise_Eateries_Scheme-ListofParticipatingEateries_EN.pdf",
+          "kind": "official",
+          "supports": "Government participating eatery list identifies Ho King Restaurant; historical phone in FEHD is not evidence of accepting table reservations."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-u1b0ea4f52786",
+      "name": "東北餃子",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "東北餃子 search found Kennedy Town delivery listing and 18A-20A Belchers Street candidate, but generic name occurs elsewhere; no original source branch anchor or official booking route.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.foodpanda.hk/zh/restaurant/entp/northeast-dumplings-kennedy-town",
+          "kind": "secondary",
+          "supports": "東北餃子 search found Kennedy Town delivery listing and 18A-20A Belchers Street candidate, but generic name occurs elsewhere; no original source branch anchor or official booking route."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-u47ee089214ae",
+      "name": "誠記",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Government list identifies 誠記 at Smithfield CF11-12; generic name also occurs elsewhere. No source street anchor or official reservation policy.",
+        "candidateCity": "Hong Kong",
+        "candidateAddress": "CF11-12, 2/F, 12K Smithfield, Kennedy Town"
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.wastereduction.gov.hk/sites/default/files/food_wise/signees/Food_Wise_Eateries_Scheme-ListofParticipatingEateries_TC.pdf",
+          "kind": "official",
+          "supports": "Government list identifies 誠記 at Smithfield CF11-12; generic name also occurs elsewhere. No source street anchor or official reservation policy."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-u7fb07f941a89",
+      "name": "友明",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact 友明 Kennedy Town query found directory candidate CF5 Smithfield cooked food centre only; no current official identity/booking route.",
+        "candidateCity": "Hong Kong",
+        "candidateAddress": "CF5, 2/F, Smithfield Municipal Services Building"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.edining.hk/search3.php?aim=&cat=&district=%E8%A5%BF%E7%92%B0",
+          "kind": "secondary",
+          "supports": "Exact 友明 Kennedy Town query found directory candidate CF5 Smithfield cooked food centre only; no current official identity/booking route."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-u8ac58ca2b549",
+      "name": "厚興瑜記",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "厚興瑜記 search found corporate name-change entry and multiple roast-chicken outlets. Corporate registration is not a branch address or reservation policy.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.cr.gov.hk/docs/wrpt/RNC063_2025.03.10-2025.03.16.pdf",
+          "kind": "official",
+          "supports": "厚興瑜記 search found corporate name-change entry and multiple roast-chicken outlets. Corporate registration is not a branch address or reservation policy."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    }
+  ]
+}
