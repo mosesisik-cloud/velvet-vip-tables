@@ -3,13 +3,13 @@ import {createDelicityAvailability} from '../api/providers/delicity-availability
 const id='osm-MCO-sushi-arson',zone='495b2d0e-e62a-4897-8db3-21506f59413b';
 const row={restaurantId:id,name:'Sushi Arson',city:'Nice',provider:'Delicity',url:'https://booking.delicity.com/sushi-arson'};
 const q={date:'2026-10-17',time:'19:00',party:2};
-const metadata={establishment:{establishmentId:337,slug:'sushi-arson'},merchant:{slug:'sushi-arson',address:{city:'Nice'}},settings:{enabled:true,onlineEnabled:true,minGuests:1,maxGuests:4},zones:[{id:zone,establishmentId:337,archivedAt:null}]};
+const metadata={establishment:{establishmentId:337,slug:'sushi-arson'},merchant:{slug:'sushi-arson',address:{city:'Nice'}},settings:{enabled:true,onlineEnabled:true,minGuests:1,maxGuests:4,bookingWindowDays:60},zones:[{id:zone,establishmentId:337,archivedAt:null}]};
 const slot=(time,extra={})=>({available:true,hour:time,startIso:`2026-10-17T${time}:00.000+02:00`,seats:20,...extra});
-function fixture({meta=metadata,result={slots:[slot('19:00')]},registry={[id]:row},fail=false}={}){
+function fixture({meta=metadata,result={slots:[slot('19:00')]},registry={[id]:row},fail=false,now=()=>Date.parse('2026-10-15T12:00:00Z'),expectedQuery=q}={}){
  const calls=[];
- const adapter=createDelicityAvailability({registry,fetcher:async(address,options)=>{
+ const adapter=createDelicityAvailability({registry,now,fetcher:async(address,options)=>{
   const url=new URL(address);calls.push(url);assert.equal(options.method,'GET');assert.equal(options.redirect,'error');assert.equal(url.origin,'https://gateway.delicity.io');assert.ok(options.signal);
-  if(url.pathname.endsWith('/availability')){assert.equal(url.searchParams.get('date'),q.date);assert.equal(url.searchParams.get('guests'),String(q.party));assert.equal(url.searchParams.get('zoneId'),zone);}
+  if(url.pathname.endsWith('/availability')){assert.equal(url.searchParams.get('date'),expectedQuery.date);assert.equal(url.searchParams.get('guests'),String(expectedQuery.party));assert.equal(url.searchParams.get('zoneId'),zone);}
   return {ok:!fail,json:async()=>url.pathname.endsWith('/availability')?result:meta};
  }});return{adapter,calls};
 }
@@ -25,7 +25,30 @@ for(const response of [{slots:[]},{slots:[slot('19:00',{available:false,seats:20
 for(const response of [{slots:null},{slots:[slot('19:00')],guests:3},{slots:[slot('19:00')],date:'2026-10-18'}]){f=fixture({result:response});assert.equal((await f.adapter(row,q)).status,'error');}
 f=fixture({fail:true});assert.equal((await f.adapter(row,q)).status,'error');
 f=fixture();const controller=new AbortController();controller.abort();assert.equal((await f.adapter(row,{...q,signal:controller.signal})).status,'error');assert.equal(f.calls.length,0);
-console.log('PASS Delicity: exact registry/venue binding, GET only, date/party/time scope, availability flags, unknown policy, failures and abort.');
+for(const windowDays of [undefined,null,'60',-1,1.5,NaN,Infinity,367]){
+ f=fixture({meta:{...metadata,settings:{...metadata.settings,bookingWindowDays:windowDays}}});
+ const result=await f.adapter(row,q);assert.equal(result.status,'unsupported');assert.equal(result.reason,'booking_window_unknown');assert.equal(f.calls.length,1,'unknown window must not query availability');
+}
+// Inclusive last calendar day; winter/summer UTC offsets and both DST changes.
+for(const [instant,date,windowDays,allowed] of [
+ ['2026-10-15T12:00:00Z','2026-12-14',60,true],
+ ['2026-10-15T12:00:00Z','2026-12-15',60,false],
+ ['2026-10-15T22:30:00Z','2026-10-15',60,false], // already Oct16 in Paris
+ ['2026-10-15T22:30:00Z','2026-10-16',0,true],
+ ['2026-10-15T22:30:00Z','2026-10-17',0,false],
+ ['2026-12-31T23:30:00Z','2027-01-01',0,true],
+ ['2026-03-28T23:30:00Z','2026-03-30',1,true], // spring forward
+ ['2026-10-24T22:30:00Z','2026-10-26',1,true], // fall back
+ ['2026-10-24T22:30:00Z','2026-10-27',1,false]
+]){
+ const query={...q,date};
+ f=fixture({now:()=>Date.parse(instant),expectedQuery:query,result:{slots:[]},meta:{...metadata,settings:{...metadata.settings,bookingWindowDays:windowDays}}});
+ const result=await f.adapter(row,query);
+ assert.equal(result.status,allowed?'unavailable':'unsupported',`${instant} / ${date}`);
+ assert.equal(f.calls.length,allowed?2:1,'out-of-window must stop after metadata');
+ if(!allowed)assert.equal(result.reason,'outside_booking_window');
+}
+console.log('PASS Delicity: registry/venue binding, GET only, scope, unknown policy, abort and Paris calendar booking window (inclusive boundaries, midnight, DST, invalid metadata).');
 if(process.argv.includes('--live')){
  const adapter=createDelicityAvailability({registry:{[id]:row}});
  const live=await adapter(row,{...q,date:new Date(Date.now()+2*86400000).toISOString().slice(0,10)});
