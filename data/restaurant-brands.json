@@ -2026,5 +2026,169 @@
     "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
     "identityEvidence": "Official NARISAWA English site displays this wordmark; reservation page lists Minami Aoyama 2-6-15, Minato-ku, Tokyo.",
     "identitySource": "https://www.narisawa-yoshihiro-en.com/reservation"
+  },
+  "osm-HVA-spice": {
+    "src": "media/brands/restaurant-secondpass-osm-hva-spice.png",
+    "source": "https://www.spicehvar.com/",
+    "sourceAsset": "https://www.spicehvar.com/images/spice_logo_black.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official header mark for Spice, Trg sv. Stjepana 30, Hvar.",
+    "assetTreatment": "Faithful PNG export; transparent exterior padding trimmed where present; original colours and composition preserved."
+  },
+  "osm-PAR-le-cafe-de-la-paix": {
+    "src": "media/brands/restaurant-secondpass-osm-par-le-cafe-de-la-paix.svg",
+    "source": "https://www.cafedelapaix.fr/fr/",
+    "sourceAsset": "https://www.cafedelapaix.fr/assets/themes/theme-apiandyou//public/images/logo_colored.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Café de la Paix Paris restaurant header, beside Opéra Garnier."
+  },
+  "osm-MRB-taberna-el-bordon-marbella": {
+    "src": "media/brands/restaurant-secondpass-osm-mrb-taberna-el-bordon-marbella.png",
+    "source": "https://elbordontaberna.com/?lang=es",
+    "sourceAsset": "https://cdn.website.dish.co/media/6c/15/8005263/Taberna-El-Bordon-Marbella-el-bordon-n-png.jpg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Restaurant-operated page identifies Taberna El Bordón Marbella, Málaga, and displays its white guitar wordmark.",
+    "assetTreatment": "Faithful PNG export; transparent exterior padding trimmed where present; original colours and composition preserved."
+  },
+  "osm-MCO-sushi-arson": {
+    "src": "media/brands/restaurant-secondpass-osm-mco-sushi-arson.png",
+    "source": "https://sushiarson.com",
+    "sourceAsset": "https://delicity.b-cdn.net/public/merchants/sushi-arson/logo/kKQnmFBoyrsnka2aNwCc7CQX68_base.png?width=300&aspect_ratio=1:1",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official app payload merchant.logo belongs to Sushi Arson, 2 Place Arson, Nice; this is the restaurant merchant mark, not its browser icon.",
+    "assetTreatment": "Faithful PNG export; transparent exterior padding trimmed where present; original colours and composition preserved."
+  },
+  "osm-SBH-natural-delights": {
+    "src": "media/brands/restaurant-secondpass-osm-sbh-natural-delights.png",
+    "source": "https://naturaldelights-stbarth.fr/",
+    "sourceAsset": "https://naturaldelights-stbarth.fr/wp-content/uploads/2018/03/natural-deligths-st-bart-favicon.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Natural Delights St Barth site displays this complete lime-shaped wordmark as img#logo in the header; filename contains favicon but the image includes the full restaurant name and island.",
+    "assetTreatment": "Faithful PNG export; transparent exterior padding trimmed where present; original colours and composition preserved."
+  },
+  "osm-CPT-kirstenbosch-tea-room": {
+    "src": "media/brands/restaurant-secondpass-osm-cpt-kirstenbosch-tea-room.png",
+    "source": "https://fynkos.co.za/",
+    "sourceAsset": "https://fynkos.co.za/wp-content/uploads/2024/08/LD2950-FYNKOS-KTR-WEBSITE-logo-update.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "SANBI identifies Fynkos Kirstenbosch Tea Room at Gate 2 and links this restaurant website; the website uses the Fynkos illustrated F wordmark.",
+    "assetTreatment": "Faithful PNG export; transparent exterior padding trimmed where present; original colours and composition preserved.",
+    "identitySource": "https://www.sanbi.org/gardens/kirstenboch/venues/restaurants/"
+  },
+  "curated-MCO-le-louis-xv": {
+    "src": "media/brands/restaurant-secondpass-curated-mco-le-louis-xv.png",
+    "source": "https://www.montecarlosbm.com/en/restaurant-monaco/le-louis-xv-alain-ducasse-hotel-de-paris",
+    "sourceAsset": "https://asset.montecarlosbm.com/styles/establishment_page_mobile_logo_2x_webp/s3/media/orphea/louis_xv_mobile_400x80_0.png.webp?itok=GBg8LQcf",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Monaco SBM official venue page uses the restaurant-specific Le Louis XV Alain Ducasse à l’Hôtel de Paris mark.",
+    "assetTreatment": "Faithful PNG export; transparent exterior padding trimmed where present; original colours and composition preserved."
+  },
+  "osm-BAL-the-bench": {
+    "src": "media/brands/restaurant-secondpass-osm-bal-the-bench.png",
+    "source": "https://thebenchcanggu.com/",
+    "sourceAsset": "https://images.squarespace-cdn.com/content/v1/64e49c01ad4b471cc45f86ce/1f11ccec-7b46-4188-8894-dcbc0f6a6c05/the+bench+logo.png?format=1500w",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official The Bench Canggu website identifies the sports bar near Batu Bolong Beach and displays The Bench wordmark in its header.",
+    "assetTreatment": "Faithful PNG export; transparent exterior padding trimmed where present; original colours and composition preserved."
+  },
+  "osm-BDR-gemibas-restaurant": {
+    "src": "media/brands/restaurant-osm-bdr-gemibas-restaurant-second-pass.svg",
+    "source": "https://www.gemibasi.com/",
+    "sourceAsset": "https://www.gemibasi.com/logo-mavi.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no recoloring or redraw.",
+    "identityEvidence": "Official Gemibaşı site identifies its fish restaurant at Bodrum Marina, Neyzen Tevfik Caddesi; its own app bundle uses this SVG in header and footer.",
+    "identitySource": "https://www.gemibasi.com/assets/index-CbPUWMnc.js"
+  },
+  "osm-CPT-thaiyashi": {
+    "src": "media/brands/restaurant-osm-cpt-thaiyashi-second-pass.png",
+    "source": "https://www.thaiyashi.co.za/",
+    "sourceAsset": "https://arachne-delivast-public.s3.amazonaws.com/thaiyashi/logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Lossless PNG export with empty border trimmed and proportional downscale where needed; original colors and geometry preserved.",
+    "identityEvidence": "Official Thaiyashi app configuration identifies Dean Street Arcade, Newlands, Cape Town and explicitly assigns this original image as navigation.logo.",
+    "identitySource": "https://www.thaiyashi.co.za/thaiyashi/assets/index.DtleXVhx.js"
+  },
+  "osm-CAP-lo-sfizio": {
+    "src": "media/brands/restaurant-osm-cap-lo-sfizio-second-pass.png",
+    "source": "https://www.losfiziocapri.com/",
+    "sourceAsset": "https://www.losfiziocapri.com/inc/img/lo-sfizio-capri.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Lossless PNG export with empty border trimmed and proportional downscale where needed; original colors and geometry preserved.",
+    "identityEvidence": "Official Lo Sfizio header uses this restaurant-pizzeria logo and footer gives Via Tiberio 7/e, 80073 Capri."
+  },
+  "osm-CRV-le-panoramic": {
+    "src": "media/brands/restaurant-osm-crv-le-panoramic-second-pass.png",
+    "source": "https://www.vonston.com/panoramic",
+    "sourceAsset": "https://static.wixstatic.com/media/e1bb25_7324d45e478046cda6aca95cc05f6673~mv2.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Lossless PNG export with empty border trimmed and proportional downscale where needed; original colors and geometry preserved.",
+    "identityEvidence": "Official operator page identifies Le Panoramic at La Saulire, 73120 Courchevel and displays its own PANORAMIC COURCHEVEL 1850 round restaurant mark, distinct from operator Vonston/La Mangeoire."
+  },
+  "osm-BKK-kem-kon-kaosan": {
+    "src": "media/brands/restaurant-osm-bkk-kem-kon-kaosan-second-pass.png",
+    "source": "https://www.kem-kon.com/our-menu/khaosan",
+    "sourceAsset": "https://lh7-us.googleusercontent.com/sitesv-images-rt/AMxu72vM5UD-wHoChTjZQ9ATyI0hyQm6-OY-utEYdlFTc8oZEyzGRiwTIHzuyWRZUFQu6JEoJVISiELhbYBRvokyZu7mxL4I-plJM0MXpxfGw8Ju-i04mHb9oZxiPh7tLbKamJjeysCkbenghJgEF5LNQ6rcTM_OvFSgQBlIBJMcQ6yl0qRYZb1LSyqQtuBn=w16383",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Lossless PNG export with empty border trimmed and proportional downscale where needed; original colors and geometry preserved.",
+    "identityEvidence": "Official Kem-Kon page explicitly titled Menu Kem-Kon at Khaosan uses the shared Kem-Kon plant-signature site header logo; exact Khaosan branch is expressly listed, rather than inferred from Bangkok corporate address."
+  },
+  "osm-IBZ-overall": {
+    "src": "media/brands/restaurant-osm-ibz-overall-second-pass.png",
+    "source": "https://overallibiza.com/4/",
+    "sourceAsset": "https://i-p.rmcdn.net/616c08396441c3002044fb2b/5411284/image-d63d07ef-8bb4-4375-b81e-5cb9e08c7abb.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Lossless PNG export with empty border trimmed and proportional downscale where needed; original colors and geometry preserved.",
+    "identityEvidence": "Official Overall Ibiza site embeds its standalone The Overall wordmark in its published restaurant HTML fragments, also using the same mark on its ST.G/IBZ anniversary image."
+  },
+  "curated-PAR-arpege": {
+    "src": "media/brands/restaurant-curated-PAR-arpege-second-pass.svg",
+    "source": "https://www.alain-passard.com/",
+    "sourceAsset": "https://www.alain-passard.com/wp-content/themes/arpege/assets/images/logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original downloaded asset, unchanged color, geometry and margins.",
+    "identityEvidence": "Official Alain Passard site identifies Arpège, 84 rue de Varenne, Paris; its actual header CSS uses this Arpège mark."
+  },
+  "osm-BAL-seaweed": {
+    "src": "media/brands/restaurant-osm-BAL-seaweed-second-pass.jpg",
+    "source": "https://linktr.ee/seaweedcanggubali",
+    "sourceAsset": "https://ugc.production.linktr.ee/0e6d8758-1d51-4475-87d0-8de2504402a9_IMG-20241104-WA0000.jpeg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original downloaded asset, unchanged color, geometry and margins.",
+    "identityEvidence": "Catalog official Linktree is Seaweedcanggu Restaurant, links @seaweedcanggu; its profile image visibly reads Seaweed Eat Drink Love Canggu."
+  },
+  "osm-DXB-shang-palace": {
+    "src": "media/brands/restaurant-osm-DXB-shang-palace-second-pass.png",
+    "source": "https://www.shangri-la.com/dubai/shangrila/dining/restaurants/shang-palace/",
+    "sourceAsset": "https://sitecore-cd.shangri-la.com/-/media/Shangri-La/dubai_shangrila/dining/Logos/Shang-Palace.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original PNG unchanged. Official Sitecore CDN serves the exact restaurant logo path referenced by the Dubai restaurant page.",
+    "identityEvidence": "Official page is Shang Palace at Shangri-La Dubai; restaurant-logo field names this dedicated Shang Palace logo under dubai_shangrila/dining/Logos."
+  },
+  "osm-MIA-la-cabrera-coconut-grove": {
+    "src": "media/brands/restaurant-osm-MIA-la-cabrera-coconut-grove-second-pass.svg",
+    "source": "https://www.lacabreramiami.com/",
+    "sourceAsset": "https://www.lacabreramiami.com/imgs/logo-provisorio.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original SVG artwork preserved; legacy external DOCTYPE declaration removed for safe local rendering.",
+    "identityEvidence": "Official Miami page explicitly identifies Coconut Grove at 2895 McFarlane Rd, FL 33133 and uses this shared La Cabrera restaurant logo in its header; both Miami branches are explicitly named."
   }
 }
