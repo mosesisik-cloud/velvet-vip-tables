@@ -1,0 +1,98 @@
+{
+  "curated-MIA-mila-miami": {
+    "provider": "OpenTable",
+    "name": "MILA Miami",
+    "city": "Miami",
+    "url": "https://www.opentable.com/r/mila-miami-restaurant-miami-2",
+    "source": "https://mila-miami.com/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false
+  },
+  "osm-MIA-mayfair-grill": {
+    "provider": "OpenTable",
+    "name": "Mayfair Grill",
+    "city": "Miami",
+    "url": "https://www.opentable.com/r/mayfair-grill-miami",
+    "source": "https://www.mayfair-grill.com",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false
+  },
+  "osm-MIA-la-cabrera-coconut-grove": {
+    "provider": "OpenTable",
+    "name": "La Cabrera - Coconut Grove",
+    "city": "Miami",
+    "url": "https://www.opentable.com/restref/client/?restref=1377148&lang=en-US",
+    "source": "https://lacabreramiami.com/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false
+  },
+  "curated-SYD-saint-peter": {
+    "provider": "OpenTable",
+    "name": "Saint Peter",
+    "city": "Sydney",
+    "url": "https://www.opentable.com.au/booking/restref/availability?rid=60911&restRef=60911",
+    "source": "https://www.saintpeter.com.au/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false
+  },
+  "curated-LON-core-by-clare-smyth": {
+    "provider": "OpenTable",
+    "name": "CORE by Clare Smyth",
+    "city": "London",
+    "url": "https://www.opentable.co.uk/r/core-by-clare-smyth-london",
+    "source": "https://corebyclaresmyth.com/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false
+  },
+  "curated-LON-the-ledbury": {
+    "provider": "OpenTable",
+    "name": "The Ledbury",
+    "city": "London",
+    "url": "https://www.opentable.co.uk/the-ledbury",
+    "source": "https://www.theledbury.com/?page=restaurant",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false
+  },
+  "curated-ASP-cache-cache-aspen": {
+    "provider": "OpenTable",
+    "name": "Cache Cache Aspen",
+    "city": "Aspen",
+    "url": "https://www.opentable.com/r/cache-cache-aspen",
+    "source": "https://cachecache.com/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false
+  },
+  "curated-ASP-bosq": {
+    "provider": "OpenTable",
+    "name": "Bosq",
+    "city": "Aspen",
+    "url": "https://www.opentable.com/r/bosq-reservations-aspen?restref=264196&lang=en-US",
+    "source": "https://www.bosqaspen.com/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false
+  }
+}

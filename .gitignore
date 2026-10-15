@@ -10,3 +10,5 @@ api/store.json
 *.approval.json.attempt
 zink-booking-approval.json*
 api/mirror-attempts/
+
+api/*.sqlite*

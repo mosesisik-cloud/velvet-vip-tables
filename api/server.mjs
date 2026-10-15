@@ -1,3 +1,5 @@
+import { BookingRegister } from './booking-register.mjs';
+import { AvailabilitySearch } from './availability-search.mjs';
 import http from "node:http";
 import { BokabordMirror, RESTAURANTS } from "./bokabord-mirror.mjs";
 import { BookingLedger } from "./bokabord-ledger.mjs";
@@ -15,12 +17,16 @@ import { parseTd3, extractMrzFromText, nameMatch, publicFields, legalName, ageYe
 import { bookingAdapter, handoffUrl, packetText, publicBridge, officialEventUrl, destInventory } from "./book-bridge.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
+const availabilitySearch = new AvailabilitySearch({
+  registry: JSON.parse(fs.readFileSync(path.join(fs.existsSync(path.join(__dir, 'public-data')) ? path.join(__dir, 'public-data') : path.join(__dir, '../data'), 'booking-providers.json'), 'utf8')),
+  restaurants: JSON.parse(fs.readFileSync(path.join(fs.existsSync(path.join(__dir, 'public-data')) ? path.join(__dir, 'public-data') : path.join(__dir, '../data'), 'restaurants.json'), 'utf8')),
+});
 const mirrorMode = process.env.VELVET_BOKABORD_MIRROR || 'disabled';
 const mirrorLedger = new BookingLedger(path.join(__dir, 'mirror-attempts'));
 const bokabordMirror = new BokabordMirror({
   prepare: mirrorMode === 'live', live: mirrorMode === 'live',
-  reserveSubmission: (approval, session) => mirrorLedger.reserve(approval, session),
-  recordResult: session => mirrorLedger.record(session),
+  reserveSubmission: (approval, session) => { mirrorLedger.reserve(approval, session); for (const row of mirrorLedger.list()) bookingRegister.upsert(row); },
+  recordResult: session => { mirrorLedger.record(session); for (const row of mirrorLedger.list()) bookingRegister.upsert(row); },
 });
 
 // ---------- SevenRooms live-inventarie (offentligt widget-API, ingen nyckel) ----------
@@ -276,6 +282,7 @@ async function zinkBook({ date, time, party, meal, guest, note, lang, context })
 
 
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
+const bookingRegister = new BookingRegister(process.env.VELVET_BOOKINGS_DB || path.join(path.dirname(DATA), 'bookings.sqlite'));
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);
@@ -744,6 +751,7 @@ function save(db) {
   const tmp = DATA + ".tmp";
   fs.writeFileSync(tmp, JSON.stringify(db, null, 2));
   fs.renameSync(tmp, DATA);
+  for (const row of db.restaurantBookings || []) bookingRegister.upsert(row);
 }
 function safeId(id) {
   return String(id || "").replace(/[^a-zA-Z0-9._-]/g, "_").slice(0, 80) || "unknown";
@@ -1918,6 +1926,13 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && (url.pathname === "/health" || url.pathname === "/")) {
       return send(res, 200, { ok: true, service: "velvet-api" });
     }
+    if (req.method === 'GET' && url.pathname === '/availability') {
+      try {
+        return send(res, 200, await availabilitySearch.search(Object.fromEntries(url.searchParams)), { 'Cache-Control': 'no-store' });
+      } catch (error) {
+        return send(res, error.message === 'search_busy' ? 429 : 400, { error: error.message === 'search_busy' ? 'search_busy' : 'invalid_search' }, { 'Cache-Control': 'no-store' });
+      }
+    }
     if (url.pathname === "/restaurant-bookings/mirror/config") {
       return send(res, 200, { enabled: ['inspect','live'].includes(mirrorMode), mode: mirrorMode, guestBooking: mirrorMode === 'live', restaurantIds: Object.keys(RESTAURANTS) }, { "Cache-Control": "no-store" });
     }
@@ -2591,15 +2606,25 @@ const server = http.createServer(async (req, res) => {
 
     // Zink-piloten kör hela gästreseflödet i VELVET. WebBridge hämtar tider
     // och skapar reservationen server-till-server mot Zinks BokaBord-widget.
+    if (req.method === 'POST' && url.pathname === '/restaurant-bookings/report') {
+      if (!req.headers.origin || !corsOriginFor(req)) return send(res, 403, {error:'origin'});
+      const owner = sessionPublicUser(req, load())?.id || bookingGuest(req, res, true);
+      const body = await readBody(req, 10000);
+      const restaurant = availabilitySearch.registry[body.restaurantId];
+      if (!restaurant) return send(res, 400, {error:'restaurant'});
+      try {
+        const booking = bookingRegister.report(owner, body.restaurantId, restaurant, body);
+        return send(res, 200, {booking:publicRestaurantBooking(booking)}, {'Cache-Control':'no-store'});
+      } catch { return send(res, 400, {error:'invalid_report'}); }
+    }
     if (req.method === "GET" && url.pathname === "/restaurant-bookings") {
       const db = load();
       const user = sessionPublicUser(req, db);
       const guest = bookingGuest(req, res);
       if (!user && !guest) return send(res, 401, { error: "auth" });
       const operator = !!user && isOperator(user);
-      const bookings = [...mirrorLedger.list(), ...(db.restaurantBookings || [])]
-        .filter((booking) => operator || (user && booking.userId === user.id) || (guest && booking.userId === guest))
-        .slice(0, 100)
+      for (const booking of [...mirrorLedger.list(), ...(db.restaurantBookings || [])]) bookingRegister.upsert(booking);
+      const bookings = bookingRegister.list([user?.id, guest], operator)
         .map(operator ? operatorRestaurantBooking : publicRestaurantBooking);
       return send(res, 200, { bookings, operator }, { "Cache-Control": "no-store" });
     }

@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-169-sevenrooms";
+const VERSION = "v4-real-170-availability";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -159,7 +159,7 @@ self.addEventListener("fetch", (event) => {
 
   // Provider pages and private booking state must never enter Velvet caches.
   if (url.origin !== self.location.origin && request.mode === "navigate") return;
-  if (url.origin === self.location.origin && /\/restaurant-bookings(?:\/|$)/.test(url.pathname)) {
+  if (url.origin === self.location.origin && /\/(?:restaurant-bookings|availability)(?:\/|$)/.test(url.pathname)) {
     event.respondWith(fetch(request, { cache: "no-store" }));
     return;
   }
