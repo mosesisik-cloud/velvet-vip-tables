@@ -1,6 +1,9 @@
 /** Booking shell copy. Restaurant-authored policies remain the provider's own text. */
 const COPY = {
   sv: {
+    manualEmail: "Mejla om bordsbokning",
+    manualPaymentUnknown: "Kortgaranti och förskottsbetalning är inte verifierade. Fråga restaurangen om betalningsvillkoren innan du bokar.",
+
     requestHeading: "Bokningsförfrågan",
     requestNotice: "Detta är en bokningsförfrågan, inte en omedelbart bekräftad bokning. Bordet är bekräftat först när restaurangen bekräftar din förfrågan.",
     requestWindow: "Restaurangen behandlar förfrågningar inom {min}–{max} timmar.",
@@ -32,6 +35,9 @@ const COPY = {
     languageUnknown: 'Vi har ännu inte verifierat språkvalet hos denna bokningstjänst. Formuläret öppnas på tjänstens eget språk; välj språk där om alternativet finns.'
   },
   en: {
+    manualEmail: "Email to request a table",
+    manualPaymentUnknown: "Card guarantee and prepayment requirements have not been verified. Ask the restaurant about payment terms before booking.",
+
     requestHeading: "Booking request",
     requestNotice: "This is a booking request, not an immediately confirmed reservation. Your table is confirmed only when the restaurant confirms your request.",
     requestWindow: "The restaurant processes requests within {min}–{max} hours.",
@@ -63,6 +69,9 @@ const COPY = {
     languageUnknown: 'We have not yet verified language selection for this booking service. The form opens in the service’s own language; choose a language there if the option is available.'
   },
   es: {
+    manualEmail: "Enviar un correo para solicitar mesa",
+    manualPaymentUnknown: "No se han verificado los requisitos de garantía con tarjeta ni de pago anticipado. Consulta las condiciones de pago con el restaurante antes de reservar.",
+
     requestHeading: "Solicitud de reserva",
     requestNotice: "Esto es una solicitud de reserva, no una reserva confirmada de inmediato. La mesa solo queda confirmada cuando el restaurante confirma tu solicitud.",
     requestWindow: "El restaurante tramita las solicitudes en un plazo de {min}–{max} horas.",
@@ -94,6 +103,9 @@ const COPY = {
     languageUnknown: 'Todavía no hemos verificado la selección de idioma de este servicio de reservas. El formulario se abre en el idioma del servicio; selecciona otro allí si la opción está disponible.'
   },
   fr: {
+    manualEmail: "Envoyer un e-mail pour demander une table",
+    manualPaymentUnknown: "Les exigences de garantie par carte et de prépaiement n’ont pas été vérifiées. Demandez les conditions de paiement au restaurant avant de réserver.",
+
     requestHeading: "Demande de réservation",
     requestNotice: "Il s’agit d’une demande de réservation, sans confirmation immédiate. Votre table est confirmée uniquement lorsque le restaurant confirme votre demande.",
     requestWindow: "Le restaurant traite les demandes sous {min}–{max} heures.",
