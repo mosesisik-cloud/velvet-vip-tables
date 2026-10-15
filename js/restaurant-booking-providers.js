@@ -28,6 +28,7 @@ const IDENTITY_PARAMS = new Set(['rid', 'restref', 'restaurantid', 'restaurant_i
 // Evidence is specific to these complete official links, including query order
 // and values. Do not generalize this into provider-wide query acceptance.
 const EXACT_EXTERNAL_LINKS = Object.freeze({
+  'curated-LIS-cura': {provider:'Restaurant website',url:'https://www.fourseasons.com/lisbon/dining/restaurants/cura/',source:'https://www.fourseasons.com/lisbon/dining/restaurants/cura/',venueKey:'www.fourseasons.com/lisbon/dining/restaurants/cura/'},
   'curated-TUL-hartwood': {provider:'Typeform',venueId:'f6JtAUPI',url:'https://www.hartwoodtulum.com/reservation',source:'https://www.hartwoodtulum.com/',venueKey:'www.hartwoodtulum.com/reservation',bookingMode:'request_only',cancellationPolicyStatus:'unknown'},
   'curated-CAP-da-paolino': {provider:'SevenRooms',venueId:'PaolinoLemontrees',url:'https://www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/',source:'https://paolinocapri.com/en/prenota-un-tavolo/',venueKey:'www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/'},
   'osm-PAR-bigbang': {provider:'JoinOko',url:'https://reservation.joinoko.com/784893b8aceb4e017dddef37?lang=fr',source:'https://sevres.bigbang-restaurant.fr/fr/',venueKey:'reservation.joinoko.com/784893b8aceb4e017dddef37'},

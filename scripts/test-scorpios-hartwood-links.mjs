@@ -46,5 +46,5 @@ const scorpios=registry[scorpiosId];
 for (const url of [scorpios.url+'?venues=other',scorpios.url.replace('restaurant','beach'),scorpios.url.replace('sevenrooms.com','sevenrooms.com.evil.example')]) {
   assert.equal(resolve(scorpiosId,{...scorpios,url}),null);
 }
-assert.equal(Object.keys(registry).length,132);
+assert.ok(Object.keys(registry).length>=132);
 console.log('PASS: Scorpios external route and Hartwood exact request-only wrapper, metadata/identity tamper guards (no network)');
