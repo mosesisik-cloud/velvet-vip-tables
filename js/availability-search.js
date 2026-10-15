@@ -33,6 +33,21 @@ export function availabilityState(restaurants, params = new URLSearchParams(), i
 export function availabilityCacheMatches(saved, query, now = Date.now()) {
   return !!saved && saved.query === query && Number.isFinite(saved.savedAt) && now >= saved.savedAt && now - saved.savedAt < SEARCH_MAX_AGE && Array.isArray(saved.data?.results);
 }
+// Result-level unknown flags apply to the whole result; a slot-level unknown
+// must remain visible even when another option has a known card requirement.
+export function availabilityTermsNotes(row, tr) {
+  const options = [row, ...(Array.isArray(row.slots) ? row.slots.filter(Boolean) : [])];
+  const notes = [];
+  if (options.some(option => option.requiresPrepayment || option.paymentRequirement === 'prepayment')) notes.push(tr('prepaymentNote'));
+  else if (options.some(option => option.requiresCard || option.paymentRequirement === 'card')) notes.push(tr('cardNote'));
+  if (options.some(option => option.paymentRequirement === 'mixed')) notes.push(tr('mixedNote'));
+  const unknownPayment = options.some(option => option.paymentRequirement === 'not_specified');
+  const unknownCancellation = options.some(option => option.cancellationPolicyStatus === 'unknown');
+  if (unknownPayment) notes.push(tr('paymentUnknownNote'));
+  if (unknownCancellation) notes.push(tr('cancellationUnknownNote'));
+  if (unknownPayment || unknownCancellation) notes.push(tr('finalTermsNote'));
+  return notes;
+}
 /** Mounts guest search. Call destroy before replacing its route to cancel requests. */
 export function mountAvailabilitySearch(container, { restaurants, apiBase = '', initialCity = '', lang } = {}) {
   const { language, locale, text: tr } = availabilityCopy(lang);
@@ -118,7 +133,7 @@ export function mountAvailabilitySearch(container, { restaurants, apiBase = '', 
     const cards = available.map(row => {
       const name = row.restaurant || row.name || tr('restaurant');
       const slots = row.slots.filter(validSlot).map(slot => `<a href="${escapeHTML(bookingLink(row,slot,query))}" class="availability-slot" aria-label="${escapeHTML(tr('bookAt', {name,time:slot.time}))}">${escapeHTML(slot.time)}<span aria-hidden="true"> ↗</span></a>`).join('');
-      return `<article class="availability-card" data-result-key="${escapeHTML(row.restaurantId)}"><div class="availability-card-head"><div><p class="availability-city">${escapeHTML(row.city || query.get('city'))}</p><h2><a href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${placeBrandHTML({placeId:row.restaurantId,name})}</a></h2><p class="availability-provider">${escapeHTML(tr('via', {provider:row.provider || tr('bookingSystem')}))}</p></div><span class="availability-badge">${escapeHTML(tr('available'))}</span></div><div class="availability-slots" aria-label="${escapeHTML(tr('slotsFor', {name}))}">${slots}</div><p class="availability-card-note">${row.partial ? escapeHTML(tr('partialNote')) + ' ' : ''}${row.slots.some(slot => slot.requiresPrepayment) ? escapeHTML(tr('prepaymentNote')) + ' ' : row.slots.some(slot => slot.requiresCard) ? escapeHTML(tr('cardNote')) + ' ' : ''}${row.slots.some(slot => slot.paymentRequirement === 'mixed') ? escapeHTML(tr('mixedNote')) + ' ' : ''}${escapeHTML(tr('continueNote'))}</p></article>`;
+      return `<article class="availability-card" data-result-key="${escapeHTML(row.restaurantId)}"><div class="availability-card-head"><div><p class="availability-city">${escapeHTML(row.city || query.get('city'))}</p><h2><a href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${placeBrandHTML({placeId:row.restaurantId,name})}</a></h2><p class="availability-provider">${escapeHTML(tr('via', {provider:row.provider || tr('bookingSystem')}))}</p></div><span class="availability-badge">${escapeHTML(tr('available'))}</span></div><div class="availability-slots" aria-label="${escapeHTML(tr('slotsFor', {name}))}">${slots}</div><p class="availability-card-note">${row.partial ? escapeHTML(tr('partialNote')) + ' ' : ''}${availabilityTermsNotes(row, tr).map(escapeHTML).join(' ')} ${escapeHTML(tr('continueNote'))}</p></article>`;
     }).join('');
     const labels = {pending:tr('pending'),unsupported:tr('unsupported'),error:tr('error'),unavailable:tr('unavailable')};
     const markup = cards + (rest.length ? `<details class="availability-other" ${available.length ? '' : 'open'}><summary>${escapeHTML(tr('other', {count:rest.length}))}</summary><ul>${rest.map(row => `<li><div><a href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${escapeHTML(row.restaurant || row.name || tr('restaurant'))}</a><p>${escapeHTML(labels[row.status] || tr('unconfirmed'))}</p></div><a class="availability-detail" href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${escapeHTML(tr('show'))} <span aria-hidden="true">→</span></a></li>`).join('')}</ul></details>` : '');
