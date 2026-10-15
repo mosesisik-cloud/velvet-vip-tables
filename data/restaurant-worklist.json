@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-15T22:55:05.065Z",
+  "generatedAt": "2026-10-15T23:07:29.838Z",
   "scope": "770 stable catalog IDs. Declared evidence and test reports are separate from publication; no live booking or test execution inferred.",
   "warnings": [
     "Branding is a local snapshot; ongoing branding work may be pending. Asset presence does not establish live publication or visual QA.",
@@ -14,7 +14,7 @@
     },
     {
       "file": "data/booking-providers.json",
-      "sha256": "791d42d3b0b20a3600ed201fc642fade142c26ad5029379a8fce60892fbba066"
+      "sha256": "d36b7d7d737cf3dc503302e63bad67aa0444e118ad3c8ff09cedf565eaaa3f9a"
     },
     {
       "file": "data/external200-group01.json",
@@ -70,7 +70,7 @@
     },
     {
       "file": "data/restaurant-route-evidence.json",
-      "sha256": "3bc26b3e16861c210a11189e03aef948abd9b233a72364f284dd7ee71a04f541"
+      "sha256": "418cf0bac146b76b1d19b040c9c68981dadc2227e2854ac7caa9d9d9f3167a3d"
     },
     {
       "file": "data/restaurants.json",
@@ -85,13 +85,13 @@
     "url": "https://b2b.bakemyday.se/velvet/data/booking-providers.json",
     "status": "fetched",
     "error": null,
-    "checkedAt": "2026-10-15T22:55:05.065Z"
+    "checkedAt": "2026-10-15T23:07:29.838Z"
   },
   "publicBrandComparison": {
     "url": "https://b2b.bakemyday.se/velvet/data/restaurant-brands.json",
     "status": "fetched",
     "error": null,
-    "checkedAt": "2026-10-15T22:55:05.065Z"
+    "checkedAt": "2026-10-15T23:07:29.838Z"
   },
   "counts": {
     "restaurants": 770,
@@ -119,7 +119,7 @@
       "Resy": 3,
       "Revasi": 1,
       "Rezervem": 1,
-      "SevenRooms": 46,
+      "SevenRooms": 48,
       "TableCheck": 5,
       "Tableo": 1,
       "TABLFY": 1,
@@ -128,17 +128,18 @@
       "TURK direct reservation": 1,
       "Yerim Hazir": 1,
       "Zenchef": 12,
-      "unknown": 612
+      "unknown": 610
     },
     "implementation": {
       "bokabord_mirror_configured": 22,
-      "not_integrated": 620,
-      "external_link": 64,
+      "not_integrated": 618,
+      "external_link": 66,
       "native_embed": 64
     },
     "publication": {
-      "unknown": 642,
-      "exact_public_registry_match": 128
+      "unknown": 640,
+      "exact_public_registry_match": 128,
+      "absent_public_registry": 2
     },
     "owners": {
       "01a14080-83ed-7991-ac52-7f57761f13e7": 570,
@@ -146,15 +147,16 @@
     },
     "bookingRoutes": {
       "reviewed_provider_link": 150,
-      "official_external_link": 7,
+      "official_external_link": 9,
       "unresolved": 104,
       "manual_whatsapp": 1,
       "manual_phone": 6,
       "manual_email": 5,
       "manual_message": 2,
-      "unknown": 427,
+      "unknown": 424,
       "takeaway": 1,
       "unresolved_branch": 63,
+      "blocked": 1,
       "walk_in": 1,
       "closed_reported": 2,
       "closed": 1
@@ -8658,6 +8660,473 @@
       }
     },
     {
+      "restaurantId": "curated-CAP-da-paolino",
+      "name": "Da Paolino",
+      "city": "Capri",
+      "cityCode": "CAP",
+      "country": "Italy",
+      "provider": "SevenRooms",
+      "source": "https://paolinocapri.com/en/prenota-un-tavolo/",
+      "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
+      "blocker": "Mapping not published",
+      "next": "Verify publication against reviewed mapping",
+      "checked": "2026-10-16",
+      "status": {
+        "identity": "reviewed_mapping",
+        "bookingRoute": "official_external_link",
+        "implementation": "external_link",
+        "tests": {
+          "status": "reported_checks",
+          "confirmedReservation": "reported_not_confirmed",
+          "basis": "data/restaurant-route-evidence.json",
+          "reported": {
+            "officialLinkObserved": true,
+            "providerInitialFormRendered": true,
+            "embeddedOriginalForm": false,
+            "liveAvailability": false,
+            "simulatedCheckout": false,
+            "confirmedReservation": false,
+            "guard": "Both live pages serviceWorkers:block and GET/HEAD only; no date/time/guest/slot/control clicks"
+          }
+        },
+        "publication": {
+          "status": "absent_public_registry",
+          "basis": "https://b2b.bakemyday.se/velvet/data/booking-providers.json"
+        },
+        "logo": {
+          "status": "verified",
+          "assetStatus": "local_asset_present",
+          "owner": "01a14138-697b-7681-aac3-72cf68a8f205",
+          "source": "https://paolinocapri.com/it_it/",
+          "checkedAt": "2026-10-16",
+          "publication": {
+            "status": "exact_public_manifest_match",
+            "basis": "https://b2b.bakemyday.se/velvet/data/restaurant-brands.json"
+          }
+        }
+      },
+      "priority": 1,
+      "evidence": {
+        "catalog": {
+          "file": "data/restaurants.json",
+          "website": null,
+          "address": "Capri, Italy",
+          "locationSource": null,
+          "locationVerifiedAt": null
+        },
+        "mapping": {
+          "file": "data/booking-providers.json",
+          "record": {
+            "name": "Da Paolino",
+            "city": "Capri",
+            "provider": "SevenRooms",
+            "venueId": "PaolinoLemontrees",
+            "url": "https://www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/",
+            "venueKey": "www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/",
+            "source": "https://paolinocapri.com/en/prenota-un-tavolo/",
+            "checkedAt": "2026-10-16",
+            "verification": "official_link_only",
+            "integrationMode": "external_link",
+            "liveAvailabilitySupported": false,
+            "completionTracking": "unsupported",
+            "notes": "Official Paolino Lemontrees branch link and initial provider name/address verified. Distinct from Casa Paolino. Default day closed, no live times or full journey verified; seasonal status unknown."
+          }
+        },
+        "audit": null,
+        "externalWorklist": null,
+        "routeReview": {
+          "file": "data/restaurant-route-evidence.json",
+          "record": {
+            "issue": 62,
+            "claim": "velvet-root-paolino-20261016",
+            "restaurantId": "curated-CAP-da-paolino",
+            "checkedAt": "2026-10-15T23:02:30.834Z",
+            "networkGuard": "Service workers blocked, GET/HEAD only; no clicks",
+            "blocked": [
+              {
+                "method": "POST",
+                "url": "https://paolinocapri.com/wp-content/plugins/translatepress-multilingual/includes/trp-ajax.php"
+              },
+              {
+                "method": "POST",
+                "url": "https://paolinocapri.com/wp-content/plugins/translatepress-multilingual/includes/trp-ajax.php"
+              },
+              {
+                "method": "POST",
+                "url": "https://idb.iubenda.com/csdata"
+              },
+              {
+                "method": "POST",
+                "url": "https://paolinocapri.com/wp-admin/admin-ajax.php"
+              },
+              {
+                "method": "POST",
+                "url": "https://paolinocapri.com/wp-admin/admin-ajax.php"
+              }
+            ],
+            "observation": {
+              "url": "https://paolinocapri.com/en/prenota-un-tavolo/",
+              "title": "Prenota un tavolo – Da Paolino",
+              "text": "HOME\nHISTORY\nCASA PAOLINO\nPRESS\nEVENTS\nBOOK A TABLE\nBook a table\nCHOOSE WHICH OF THE TWO RESTAURANTS YOU WOULD LIKE TO BOOK\nPaolino Lemontress\n\nPaolino Lemontrees is already open\n\nSince 1976, the original lemon garden—famous all over the world—has preserved and passed down the true Caprese tradition.\n\nCasa Paolino\n\nCasa Paolino is already open\n\nJust steps away from the island’s center, Casa Paolino comes to life: a new restaurant born from the desire to reinterpret tradition in a more modern and intimate way. By Paolino Lemontrees Capri®\n\nSee All Availability\n\nDiscover available dates for Paolino Lemontrees and Casa Paolino, and find the atmosphere that best suits your moment.\n\nPaolino Lemontrees – Via Palazzo a Mare, 11, 80073 Capri NA\n\n\nView Larger Map\n\nCasa Paolino – Via Campo di Teste 4, 80073 Capri NA\n\n\nView Larger Map\n\n \n\nFor Private Events\nevents@paolinocapri.com\n\n(only for events requests)\n\nDress Code: Elegant – Casual\nNo Flip Flop\nNo Tank Top Men\n\nInstagram\n \nFacebook\n \nTripadvisor\n\n2025 · DA PAOLINO RESTAURANT - DESIGN BY INTO THE NET\n\nLa società PAOLINO SRL, PARTITA IVA 06527251216, ha ricevuto nel corso del 2024 aiuti di stato pubblicati sul RNA – sezione Trasparenza\n\nEnglish\nNotice\n\nWe and selected third parties use cookies or similar technologies for technical purposes and, with your consent, for functionality, experience and “marketing (personalised ads)” as specified in the cookie policy.\n\nYou can freely give, deny, or withdraw your consent at any time by accessing the preferences panel. Denying consent may make related features unavailable.\n\nUse the “Accept” button to consent. Use the “Reject” button to continue without accepting.\n\nLearn more and customise\nReject\nAccept",
+              "links": [
+                {
+                  "text": "Home",
+                  "url": "https://paolinocapri.com/en/"
+                },
+                {
+                  "text": "History",
+                  "url": "https://paolinocapri.com/en/our-story/"
+                },
+                {
+                  "text": "Casa Paolino",
+                  "url": "https://paolinocapri.com/en/casa-paolino/"
+                },
+                {
+                  "text": "Home",
+                  "url": "https://paolinocapri.com/en/"
+                },
+                {
+                  "text": "History",
+                  "url": "https://paolinocapri.com/en/our-story/"
+                },
+                {
+                  "text": "Casa Paolino",
+                  "url": "https://paolinocapri.com/en/casa-paolino/"
+                },
+                {
+                  "text": "",
+                  "url": "https://paolinocapri.com/en"
+                },
+                {
+                  "text": "Press",
+                  "url": "https://paolinocapri.com/en/press/"
+                },
+                {
+                  "text": "Events",
+                  "url": "https://paolinocapri.com/en/eventi/"
+                },
+                {
+                  "text": "Book a table",
+                  "url": "https://paolinocapri.com/en/prenota-un-tavolo/"
+                },
+                {
+                  "text": "Press",
+                  "url": "https://paolinocapri.com/en/press/"
+                },
+                {
+                  "text": "Events",
+                  "url": "https://paolinocapri.com/en/eventi/"
+                },
+                {
+                  "text": "Book a table",
+                  "url": "https://paolinocapri.com/en/prenota-un-tavolo/"
+                },
+                {
+                  "text": "Home",
+                  "url": "https://paolinocapri.com/en/"
+                },
+                {
+                  "text": "History",
+                  "url": "https://paolinocapri.com/en/our-story/"
+                },
+                {
+                  "text": "Casa Paolino",
+                  "url": "https://paolinocapri.com/en/casa-paolino/"
+                },
+                {
+                  "text": "Press",
+                  "url": "https://paolinocapri.com/en/press/"
+                },
+                {
+                  "text": "Book a table",
+                  "url": "https://paolinocapri.com/en/prenota-un-tavolo/"
+                },
+                {
+                  "text": "Events",
+                  "url": "https://paolinocapri.com/en/eventi/"
+                },
+                {
+                  "text": "Paolino Lemontress",
+                  "url": "https://www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/"
+                },
+                {
+                  "text": "Casa Paolino",
+                  "url": "https://www.sevenrooms.com/explore/casapaolino/reservations/create/search/"
+                },
+                {
+                  "text": "See All Availability",
+                  "url": "https://www.sevenrooms.com/explore/PaolinoCapri/reservations/create/search?venues=PaolinoLemontrees%2Ccasapaolino"
+                },
+                {
+                  "text": "wine@paolinocapri.com",
+                  "url": "mailto:wine@paolinocapri.com"
+                },
+                {
+                  "text": "booking@paolinocapri.com",
+                  "url": "https://paolinocapri.com/en/_wp_link_placeholder/"
+                },
+                {
+                  "text": "winebar@paolinocapri.com",
+                  "url": ""
+                },
+                {
+                  "text": "booking@paolinocapri.com",
+                  "url": ""
+                },
+                {
+                  "text": "events@paolinocapri.com",
+                  "url": "https://paolinocapri.com/en/_wp_link_placeholder/"
+                },
+                {
+                  "text": "events@paolinocapri.com",
+                  "url": "mailto:events@paolinocapri.com"
+                },
+                {
+                  "text": "booking@paolinocapri.com",
+                  "url": "mailto:booking@paolinocapri.com"
+                },
+                {
+                  "text": "info@paolinocapri.com",
+                  "url": "https://paolinocapri.com/en/info@paolinocapri.com/"
+                },
+                {
+                  "text": "",
+                  "url": "https://paolinocapri.com/en/"
+                },
+                {
+                  "text": "Book a table",
+                  "url": "https://paolinocapri.com/en/prenota-un-tavolo/"
+                },
+                {
+                  "text": "events@paolinocapri.com",
+                  "url": "mailto:events@paolinocapri.com"
+                },
+                {
+                  "text": "winebar@paolinocapri.com",
+                  "url": "mailto:winebar@paolinocapri.com"
+                },
+                {
+                  "text": "Subscribe to the Newsletter",
+                  "url": "https://paolinocapri.com/en/prenota-un-tavolo/"
+                },
+                {
+                  "text": "events@paolinocapri.com",
+                  "url": "mailto:events@paolinocapri.com"
+                },
+                {
+                  "text": "booking@paolinocapri.com",
+                  "url": "https://paolinocapri.com/en/_wp_link_placeholder/"
+                },
+                {
+                  "text": "events@paolinocapri.com",
+                  "url": "mailto:events@paolinocapri.com"
+                },
+                {
+                  "text": "winebar@paolinocapri.com",
+                  "url": "mailto:winebar@paolinocapri.com"
+                },
+                {
+                  "text": "Book a table",
+                  "url": "https://paolinocapri.com/en/prenota-un-tavolo/"
+                },
+                {
+                  "text": "winebar@paolinocapri.com",
+                  "url": "mailto:winebar@paolinocapri.com"
+                },
+                {
+                  "text": "Book a table",
+                  "url": "https://paolinocapri.com/en/prenota-un-tavolo/"
+                },
+                {
+                  "text": "winebar@paolinocapri.com",
+                  "url": "mailto:winebar@paolinocapri.com"
+                },
+                {
+                  "text": "winebar@paolinocapri.com",
+                  "url": ""
+                },
+                {
+                  "text": "info@paolinocapri.com",
+                  "url": "mailto:info@paolinocapri.com"
+                },
+                {
+                  "text": "Instagram",
+                  "url": "https://www.instagram.com/paolinolemontreescapri/"
+                },
+                {
+                  "text": "Facebook",
+                  "url": "https://www.facebook.com/paolinocapri/"
+                },
+                {
+                  "text": "Tripadvisor",
+                  "url": "https://www.tripadvisor.it/Restaurant_Review-g187783-d1087375-Reviews-Da_Paolino_Lemon_Trees-Capri_Island_of_Capri_Province_of_Naples_Campania.html"
+                },
+                {
+                  "text": "2025 · Da Paolino RESTAURANT  - DESIGN BY INTO THE NET",
+                  "url": "https://intothenet.it/"
+                },
+                {
+                  "text": "English",
+                  "url": "https://paolinocapri.com/en/prenota-un-tavolo/#"
+                },
+                {
+                  "text": "Italian",
+                  "url": "https://paolinocapri.com/it_it/prenota-un-tavolo/"
+                },
+                {
+                  "text": "English",
+                  "url": "https://paolinocapri.com/en/prenota-un-tavolo/#"
+                },
+                {
+                  "text": "all wines",
+                  "url": "https://paolinocapri.com/en/wines/"
+                },
+                {
+                  "text": "artist series",
+                  "url": "https://paolinocapri.com/en/product-category/artist-series/"
+                },
+                {
+                  "text": "all wines",
+                  "url": "https://paolinocapri.com/en/wines/"
+                },
+                {
+                  "text": "pinot noir",
+                  "url": "https://paolinocapri.com/en/product-category/pinot-noir/"
+                },
+                {
+                  "text": "all wines",
+                  "url": "https://paolinocapri.com/en/wines/"
+                },
+                {
+                  "text": "chardonnay",
+                  "url": "https://paolinocapri.com/en/product-category/chardonnay/"
+                },
+                {
+                  "text": "all wines",
+                  "url": "https://paolinocapri.com/en/wines/"
+                },
+                {
+                  "text": "nebbiolo",
+                  "url": "https://paolinocapri.com/en/product-category/nebbiolo/"
+                }
+              ],
+              "frames": [
+                {
+                  "src": "https://www.openstreetmap.org/export/embed.html?bbox=14.230685234069826%2C40.55549899377414%2C14.235507845878603%2C40.5585679698871&layer=mapnik&marker=40.55703553724859%2C14.233099222183228",
+                  "title": ""
+                },
+                {
+                  "src": "https://www.openstreetmap.org/export/embed.html?bbox=14.24539178609848%2C40.54809904460085%2C14.247784316539766%2C40.54963371983219&layer=mapnik&marker=40.54886740565328%2C14.246588051319122",
+                  "title": ""
+                },
+                {
+                  "src": "https://www.sevenrooms.com/reservations/PaolinoLemontrees%20",
+                  "title": ""
+                },
+                {
+                  "src": "https://www.sevenrooms.com/reservations/casapaolino%20",
+                  "title": ""
+                },
+                {
+                  "src": "",
+                  "title": "GPP Locator"
+                }
+              ]
+            },
+            "providerObservation": {
+              "url": "https://www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/",
+              "title": "Reservation at Paolino Lemontrees",
+              "text": "​\nItaliano\n​\nAccedi\nPaolino Lemontrees - Reservations\n\nPaolino Lemontrees\n\nVia Palazzo a Mare, 11, Marina Grande, Campania\n\nOspiti\n\n2 Ospiti\n\nData\n\n15 ott\n\nOrario\n\nTutti gli orari\n\nPer altre prenotazioni cliccare \"Avvisami\"\n\nSiamo chiusi il gio 15 ott. Prenota una di queste prossime date.\nSiamo chiusi il gio 15 ott. Prenota una di queste prossime date.\nAltre date con disponibilità\n \n\nInformazioni su Paolino Lemontrees\n\nDal 1976, l’originale giardino di limoni famoso in tutto il mondo tramanda la vera tradizione caprese\nPaolino Lemontrees\nVia Palazzo a Mare, 11\nMarina Grande, Campania\n80073\n+39 081 837 6102\n\nOfferto da"
+            },
+            "identity": {
+              "status": "verified",
+              "name": "Da Paolino / Paolino Lemontrees",
+              "city": "Capri",
+              "address": "Via Palazzo a Mare, 11, 80073 Capri, Italy",
+              "source": "https://paolinocapri.com/en/prenota-un-tavolo/",
+              "match": "Official original lemon-garden restaurant explicitly separate from Casa Paolino. Provider name, address, postal code and telephone match."
+            },
+            "bookingRoute": {
+              "status": "official_external_link",
+              "provider": "SevenRooms",
+              "venueId": "PaolinoLemontrees",
+              "url": "https://www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/",
+              "source": "https://paolinocapri.com/en/prenota-un-tavolo/",
+              "integrationMode": "external_link",
+              "liveAvailabilitySupported": false,
+              "completionTracking": "unsupported"
+            },
+            "tests": {
+              "officialLinkObserved": true,
+              "providerInitialFormRendered": true,
+              "embeddedOriginalForm": false,
+              "liveAvailability": false,
+              "simulatedCheckout": false,
+              "confirmedReservation": false,
+              "guard": "Both live pages serviceWorkers:block and GET/HEAD only; no date/time/guest/slot/control clicks"
+            },
+            "policy": {
+              "cancellation": null,
+              "cardGuarantee": null,
+              "prepayment": null
+            },
+            "rejectedDestinations": [
+              {
+                "url": "https://www.sevenrooms.com/explore/casapaolino/reservations/create/search/",
+                "reason": "Different restaurant Casa Paolino at Via Campo di Teste4"
+              },
+              {
+                "url": "https://www.sevenrooms.com/explore/PaolinoCapri/reservations/create/search?venues=PaolinoLemontrees%2Ccasapaolino",
+                "reason": "Multivenue selector, not exact original restaurant endpoint"
+              },
+              {
+                "url": "https://www.sevenrooms.com/reservations/PaolinoLemontrees%20",
+                "reason": "Legacy hidden iframe src has encoded trailing space; use exact visible official booking link instead"
+              }
+            ],
+            "limitations": [
+              "Provider initially displayed closed for default15Oct, no available times observed. This is not permanent/seasonal closure proof. No future-date search performed.",
+              "Search-engine extraction included hidden stale2025/2026 seasonal content absent from live visible body. Do not infer current operating season or publish stale hours.",
+              "Italian provider form observed despite English official page; selected Velvet language handling not tested.",
+              "Existing external SevenRooms resolver allows reservations/experiences only; exact explore URL requires bounded guard support before activation. Do not label as embedded_form_loaded just to pass resolver.",
+              "Initial-form identity is verified, not full guest journey, payment, policy, booking or live availability."
+            ],
+            "decision": "accept_official_external_link_pending_exact_explore_resolver_guard",
+            "status": "complete",
+            "next": "Root implement exact reviewed external explore destination guard and localized external shell; preserve venueId case/trailing slash as observed or independently verify normalization. No live slots/confirmation claim.",
+            "publication": "not_changed"
+          }
+        },
+        "brandReview": {
+          "file": "docs/restaurant-brand-review.json",
+          "record": {
+            "placeId": "curated-CAP-da-paolino",
+            "name": "Da Paolino",
+            "status": "verified",
+            "reason": "Official Paolino Capri site identifies the Capri restaurant; selected mark explicitly includes Capri. Logo visually verified on a light/dark contact sheet.",
+            "evidence": [
+              "https://paolinocapri.com/it_it/",
+              "https://paolinocapri.com/wp-content/uploads/2023/07/Logo-Paolino-Capri.png"
+            ],
+            "checkedAt": "2026-10-16",
+            "identityEvidence": "Official Paolino Capri site identifies the Capri restaurant; selected mark explicitly includes Capri."
+          }
+        },
+        "logo": {
+          "file": "data/restaurant-brands.json",
+          "record": {
+            "src": "media/brands/restaurant-curated-cap-da-paolino.png",
+            "source": "https://paolinocapri.com/it_it/",
+            "sourceAsset": "https://paolinocapri.com/wp-content/uploads/2023/07/Logo-Paolino-Capri.png",
+            "verifiedAt": "2026-10-16",
+            "surface": "light",
+            "identityEvidence": "Official Paolino Capri site identifies the Capri restaurant; selected mark explicitly includes Capri.",
+            "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+          }
+        }
+      }
+    },
+    {
       "restaurantId": "curated-CAP-il-riccio",
       "name": "Il Riccio",
       "city": "Capri",
@@ -10823,6 +11292,180 @@
             "identityEvidence": "Official PRU restaurant site gives 60/1 Moo 6, Srisoonthorn Road, Cherngtalay, Thalang, Phuket."
           }
         }
+      }
+    },
+    {
+      "restaurantId": "curated-CER-matsuhisa-cala-di-volpe",
+      "name": "Matsuhisa Cala di Volpe",
+      "city": "Porto Cervo",
+      "cityCode": "CER",
+      "country": "Italy",
+      "provider": "SevenRooms",
+      "source": "https://www.marriott.com/en-us/hotels/olblc-hotel-cala-di-volpe-a-luxury-collection-hotel-costa-smeralda/dining/",
+      "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
+      "blocker": "Mapping not published",
+      "next": "Verify publication against reviewed mapping",
+      "checked": "2026-10-16",
+      "status": {
+        "identity": "reviewed_mapping",
+        "bookingRoute": "official_external_link",
+        "implementation": "external_link",
+        "tests": {
+          "status": "reported_checks",
+          "confirmedReservation": "reported_not_confirmed",
+          "basis": "data/restaurant-route-evidence.json",
+          "reported": {
+            "officialExternalLink": true,
+            "originalStandaloneForm": true,
+            "embeddedOriginalForm": false,
+            "liveAvailability": false,
+            "confirmedReservation": false,
+            "simulatedValidation": false,
+            "method": "Browser context serviceWorkers block and route guard GET/HEAD only. No control changes or Search click; all POSTs blocked."
+          }
+        },
+        "publication": {
+          "status": "absent_public_registry",
+          "basis": "https://b2b.bakemyday.se/velvet/data/booking-providers.json"
+        },
+        "logo": {
+          "status": "needs_official_source",
+          "assetStatus": "unknown",
+          "owner": "01a14138-697b-7681-aac3-72cf68a8f205",
+          "source": "https://www.marriott.com/en-us/hotels/olblc-hotel-cala-di-volpe-a-luxury-collection-hotel-costa-smeralda/dining/",
+          "checkedAt": "2026-10-16",
+          "publication": {
+            "status": "unknown",
+            "basis": "https://b2b.bakemyday.se/velvet/data/restaurant-brands.json"
+          }
+        }
+      },
+      "priority": 1,
+      "evidence": {
+        "catalog": {
+          "file": "data/restaurants.json",
+          "website": null,
+          "address": "Porto Cervo, Italy",
+          "locationSource": null,
+          "locationVerifiedAt": null
+        },
+        "mapping": {
+          "file": "data/booking-providers.json",
+          "record": {
+            "provider": "SevenRooms",
+            "name": "Matsuhisa Cala di Volpe",
+            "city": "Porto Cervo",
+            "venueId": "matsuhisaportocervo",
+            "venueKey": "www.sevenrooms.com/reservations/matsuhisaportocervo",
+            "url": "https://www.sevenrooms.com/reservations/matsuhisaportocervo",
+            "source": "https://www.marriott.com/en-us/hotels/olblc-hotel-cala-di-volpe-a-luxury-collection-hotel-costa-smeralda/dining/",
+            "checkedAt": "2026-10-16",
+            "verification": "official_link_only",
+            "integrationMode": "external_link",
+            "liveAvailabilitySupported": false,
+            "completionTracking": "unsupported",
+            "cancellationPolicy": {
+              "summary": "Kostnadsfri avbokning senast 24 timmar före besöket. Vid senare avbokning eller uteblivet besök debiteras 150 EUR per person. För grupper med fler än 10 personer gäller 72 timmars avbokningsfrist.",
+              "source": "https://www.sevenrooms.com/reservations/matsuhisaportocervo",
+              "checkedAt": "2026-10-16"
+            }
+          }
+        },
+        "audit": null,
+        "externalWorklist": null,
+        "routeReview": {
+          "file": "data/restaurant-route-evidence.json",
+          "record": {
+            "issue": 65,
+            "claim": "velvet-root-matsuhisa-20261016",
+            "restaurantId": "curated-CER-matsuhisa-cala-di-volpe",
+            "checkedAt": "2026-10-16",
+            "identity": {
+              "status": "verified",
+              "name": "Matsuhisa at Cala di Volpe",
+              "city": "Porto Cervo",
+              "country": "Italy",
+              "address": "Hotel Cala di Volpe, Costa Smeralda, Porto Cervo, Italy07020",
+              "source": "https://www.marriott.com/en-us/hotels/olblc-hotel-cala-di-volpe-a-luxury-collection-hotel-costa-smeralda/dining/",
+              "proof": "Marriott hotel restaurant-specific Matsuhisa heading and Book a Table link, not sibling restaurants. Exact provider page title matches."
+            },
+            "bookingRoute": {
+              "status": "official_external_link",
+              "provider": "SevenRooms",
+              "url": "https://www.sevenrooms.com/reservations/matsuhisaportocervo",
+              "source": "https://www.marriott.com/en-us/hotels/olblc-hotel-cala-di-volpe-a-luxury-collection-hotel-costa-smeralda/dining/",
+              "observedOfficialUrl": "https://www.sevenrooms.com/reservations/matsuhisaportocervo/marriott-com-hotel-websites?venues=matsuhisaportocervo,legrand,caladivolpebbq,aiduemari,beefbaritaly",
+              "normalizationProof": "Both original official tracked URL and query-free same-venue route GET200 independently render exact Matsuhisa title, identical cancellation text and date/party/time form. Query-free endpoint actively verified, not inferred alone. No canonical tag claimed.",
+              "bookingMode": "unknown",
+              "instantConfirmation": "not_verified",
+              "requestOnlyEvidence": null,
+              "liveAvailabilitySupported": false,
+              "completionTracking": "unsupported"
+            },
+            "contact": {
+              "phone": "+39 0789 976632",
+              "phoneRole": "Official Marriott FAQ explicitly offers table booking by this phone; provider asks groups over10 to call."
+            },
+            "policy": {
+              "source": "https://www.sevenrooms.com/reservations/matsuhisaportocervo",
+              "cancellation": {
+                "freeCancellationHours": 24,
+                "lateCancellationOrNoShowFee": {
+                  "amount": 150,
+                  "currency": "EUR",
+                  "unit": "person"
+                },
+                "groupsOver10CancellationHours": 72,
+                "sourceText": "Free Cancellation24H (no show or late cancellation will be charged EUR150 pp.; group cancellation of more than10 persons72H)"
+              },
+              "cardGuarantee": null,
+              "prepayment": null,
+              "season": null,
+              "dress": "Formal or smart casual, long trousers for gentlemen, no beach attire; no pets.",
+              "children": "0-3years subject to availability19:30-20:30.",
+              "limitations": "Fee policy visible does not establish a card guarantee step or prepayment. Current season not established."
+            },
+            "checks": {
+              "officialExternalLink": true,
+              "originalStandaloneForm": true,
+              "embeddedOriginalForm": false,
+              "liveAvailability": false,
+              "confirmedReservation": false,
+              "simulatedValidation": false,
+              "method": "Browser context serviceWorkers block and route guard GET/HEAD only. No control changes or Search click; all POSTs blocked."
+            },
+            "evidenceFiles": [
+              "work/issue65-provider-browser.json",
+              "work/issue65-canonical-browser.json"
+            ],
+            "limitations": [
+              "Marriott source inspected via read-only web page retrieval with exact restaurant-section link.",
+              "Initial form only, no availability search, time selection, checkout, holds, payments or reservation.",
+              "Server UTC probe timestamp was15Oct23:02Z; EuropeStockholm date16Oct2026.",
+              "No immediate confirmation or request processing window verified."
+            ],
+            "decision": "accept_external_registry_mapping",
+            "next": "Integrator import reviewed external mapping, preserve false availability/tracking; expose observed cancellation terms with source/date and recheck against final provider choice.",
+            "publication": "not_changed"
+          }
+        },
+        "brandReview": {
+          "file": "docs/restaurant-brand-review.json",
+          "record": {
+            "placeId": "curated-CER-matsuhisa-cala-di-volpe",
+            "name": "Matsuhisa Cala di Volpe",
+            "status": "needs_official_source",
+            "reason": "Targeted web search reviewed; exact official restaurant identity and usable original logo could not be verified.",
+            "evidence": [
+              "https://www.marriott.com/en-us/hotels/olblc-hotel-cala-di-volpe-a-luxury-collection-hotel-costa-smeralda/dining/",
+              "https://matsuhisaathens.com/wp-content/uploads/2025/12/Matsuhisha_a_la_carte.pdf",
+              "https://www.caladivolpe.it/home_it/"
+            ],
+            "searchQuery": "Matsuhisa Cala di Volpe official",
+            "checkedAt": "2026-10-16"
+          }
+        },
+        "logo": null
       }
     },
     {
@@ -43628,85 +44271,6 @@
       }
     },
     {
-      "restaurantId": "curated-CAP-da-paolino",
-      "name": "Da Paolino",
-      "city": "Capri",
-      "cityCode": "CAP",
-      "country": "Italy",
-      "provider": null,
-      "source": null,
-      "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
-      "blocker": "No active reviewed provider mapping",
-      "next": "Verify exact restaurant identity and official booking route",
-      "checked": null,
-      "status": {
-        "identity": "unknown",
-        "bookingRoute": "unknown",
-        "implementation": "not_integrated",
-        "tests": {
-          "status": "unknown",
-          "confirmedReservation": "unknown",
-          "basis": null
-        },
-        "publication": {
-          "status": "unknown",
-          "basis": null
-        },
-        "logo": {
-          "status": "verified",
-          "assetStatus": "local_asset_present",
-          "owner": "01a14138-697b-7681-aac3-72cf68a8f205",
-          "source": "https://paolinocapri.com/it_it/",
-          "checkedAt": "2026-10-16",
-          "publication": {
-            "status": "exact_public_manifest_match",
-            "basis": "https://b2b.bakemyday.se/velvet/data/restaurant-brands.json"
-          }
-        }
-      },
-      "priority": 3,
-      "evidence": {
-        "catalog": {
-          "file": "data/restaurants.json",
-          "website": null,
-          "address": "Capri, Italy",
-          "locationSource": null,
-          "locationVerifiedAt": null
-        },
-        "mapping": null,
-        "audit": null,
-        "externalWorklist": null,
-        "routeReview": null,
-        "brandReview": {
-          "file": "docs/restaurant-brand-review.json",
-          "record": {
-            "placeId": "curated-CAP-da-paolino",
-            "name": "Da Paolino",
-            "status": "verified",
-            "reason": "Official Paolino Capri site identifies the Capri restaurant; selected mark explicitly includes Capri. Logo visually verified on a light/dark contact sheet.",
-            "evidence": [
-              "https://paolinocapri.com/it_it/",
-              "https://paolinocapri.com/wp-content/uploads/2023/07/Logo-Paolino-Capri.png"
-            ],
-            "checkedAt": "2026-10-16",
-            "identityEvidence": "Official Paolino Capri site identifies the Capri restaurant; selected mark explicitly includes Capri."
-          }
-        },
-        "logo": {
-          "file": "data/restaurant-brands.json",
-          "record": {
-            "src": "media/brands/restaurant-curated-cap-da-paolino.png",
-            "source": "https://paolinocapri.com/it_it/",
-            "sourceAsset": "https://paolinocapri.com/wp-content/uploads/2023/07/Logo-Paolino-Capri.png",
-            "verifiedAt": "2026-10-16",
-            "surface": "light",
-            "identityEvidence": "Official Paolino Capri site identifies the Capri restaurant; selected mark explicitly includes Capri.",
-            "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
-          }
-        }
-      }
-    },
-    {
       "restaurantId": "osm-CAP-al-grottino",
       "name": "Al Grottino",
       "city": "Capri",
@@ -75468,10 +76032,10 @@
       "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
       "blocker": "No active reviewed provider mapping",
       "next": "Verify exact restaurant identity and official booking route",
-      "checked": null,
+      "checked": "2026-10-15T23:03:13.521Z",
       "status": {
         "identity": "unknown",
-        "bookingRoute": "unknown",
+        "bookingRoute": "blocked",
         "implementation": "not_integrated",
         "tests": {
           "status": "unknown",
@@ -75506,7 +76070,123 @@
         "mapping": null,
         "audit": null,
         "externalWorklist": null,
-        "routeReview": null,
+        "routeReview": {
+          "file": "data/restaurant-route-evidence.json",
+          "record": {
+            "issue": 64,
+            "claim": "velvet-root-billionaire-20261016",
+            "owner": "/root/opentable_destinations",
+            "restaurantId": "curated-CER-billionaire-porto-cervo",
+            "catalogName": "Billionaire Porto Cervo",
+            "city": "Porto Cervo",
+            "checkedAt": "2026-10-15T23:03:13.521Z",
+            "status": "blocked",
+            "classification": "historical_brand_replaced_multiple_successor_experiences",
+            "identity": {
+              "historicalBrand": "Billionaire",
+              "currentVenue": "Twiga Porto Cervo",
+              "address": "Via Rocce sul Pevero, Localita Golfo Pevero (SS) 07021",
+              "replacementEvidence": "https://www.portocervofficial.it/twiga-porto-cervo-billionaire-luglio-2025/",
+              "replacementEvidenceType": "local tourism publication; explicit replacement report dated 2025-06-24",
+              "currentOfficialEvidence": "https://twigaworld.com/porto-cervo/cuisine/cuisine-vesta/"
+            },
+            "legacyChecks": [
+              {
+                "url": "https://billionairesociety.com/",
+                "status": 200,
+                "note": "Current locations menu only Dubai and St Moritz; no Porto Cervo route found."
+              },
+              {
+                "url": "https://billionairesociety.com/portocervo-en/",
+                "status": 404
+              },
+              {
+                "url": "https://billionairesociety.com/portocervo-it/",
+                "status": 404
+              },
+              {
+                "url": "https://billionairesociety.com/portocervo-en/club/booking/",
+                "status": 404
+              }
+            ],
+            "rejectedAlternative": {
+              "url": "https://micalusi.com/ristorante-porto-cervo/",
+              "status": 200,
+              "note": "Old partner restaurant page separates dinner from downstairs Billionaire club, but its Porto Cervo booking URL gives404; do not use generic Rome footer contacts.",
+              "bookingUrl": "https://micalusi.com/prenotazione_porto_cervo/",
+              "bookingStatus": 404
+            },
+            "officialRouteSource": "https://twigaworld.com/porto-cervo/calendar/book-now/",
+            "officialRouteStatus": 200,
+            "extractedSourceConfiguration": [
+              {
+                "variable": "reserveLinks",
+                "value": "{\"milano\":{\"clubbing\":{\"tickets\":\"\",\"table\":\"https:\\/\\/twigaworld.com\\/milano\\/calendar\\/booking\\/\"},\"fine-dining\":{\"table\":\"https:\\/\\/www.sevenrooms.com\\/reservations\\/twigamilano\"},\"beach-club\":{\"book\":\"\"}},\"montecarlo\":{\"clubbing\":{\"tickets\":\"https:\\/\\/twigaworld.com\\/montecarlo\\/calendar\\/book-now\\/\",\"table\":\"https:\\/\\/twigaworld.com\\/montecarlo\\/calendar\\/booking\\/\"},\"fine-dining\":{\"table\":\"https:\\/\\/www.sevenrooms.com\\/reservations\\/vestamontecarlo\"},\"beach-club\":{\"book\":\"\"}},\"versilia\":{\"clubbing\":{\"tickets\":\"\",\"table\":\"\"},\"fine-dining\":{\"table\":\"https:\\/\\/www.sevenrooms.com\\/reservations\\/vestaversilia\"},\"beach-club\":{\"book\":\"https:\\/\\/wa.me\\/393420778681\"}},\"baia-beniamin\":{\"clubbing\":{\"tickets\":\"\",\"table\":\"\"},\"fine-dining\":{\"table\":\"https:\\/\\/www.sevenrooms.com\\/reservations\\/twigabaiabeniamin\"},\"beach-club\":{\"book\":\"https:\\/\\/wa.me\\/393403716481\"}},\"porto-cervo\":{\"clubbing\":{\"tickets\":\"https:\\/\\/twigaworld.com\\/porto-cervo\\/calendar\\/book-now\\/\",\"table\":\"https:\\/\\/twigaworld.com\\/porto-cervo\\/calendar\\/booking\\/\"},\"fine-dining-vesta\":{\"table\":\"https:\\/\\/www.sevenrooms.com\\/reservations\\/vestaportocervo\"},\"fine-dining-cfc\":{\"table\":\"https:\\/\\/www.sevenrooms.com\\/reservations\\/casafiorichiariportocervo\"},\"beach-club\":{\"book\":\"\"}}}"
+              }
+            ],
+            "successorExperiences": [
+              {
+                "experience": "fine-dining-vesta",
+                "provider": "SevenRooms",
+                "venueId": "vestaportocervo",
+                "url": "https://www.sevenrooms.com/reservations/vestaportocervo",
+                "verification": "official_link_only"
+              },
+              {
+                "experience": "fine-dining-cfc",
+                "provider": "SevenRooms",
+                "venueId": "casafiorichiariportocervo",
+                "url": "https://www.sevenrooms.com/reservations/casafiorichiariportocervo",
+                "verification": "official_link_only"
+              },
+              {
+                "experience": "clubbing",
+                "provider": "official_site / Xceed loader observed",
+                "url": "https://twigaworld.com/porto-cervo/calendar/booking/",
+                "ticketUrl": "https://twigaworld.com/porto-cervo/calendar/book-now/",
+                "verification": "official_link_only"
+              }
+            ],
+            "providerGetProbes": [
+              {
+                "url": "https://www.sevenrooms.com/reservations/vestaportocervo",
+                "status": 200,
+                "finalUrl": "https://www.sevenrooms.com/explore/vestaportocervo/reservations/create/search",
+                "title": "SevenRooms",
+                "verifiedInitialForm": false
+              },
+              {
+                "url": "https://www.sevenrooms.com/reservations/casafiorichiariportocervo",
+                "status": 200,
+                "finalUrl": "https://www.sevenrooms.com/explore/casafiorichiariportocervo/reservations/create/search",
+                "title": "SevenRooms",
+                "verifiedInitialForm": false
+              }
+            ],
+            "guard": {
+              "methods": [
+                "GET"
+              ],
+              "javascriptExecuted": false,
+              "postRequests": 0,
+              "holds": 0,
+              "reservations": 0,
+              "payments": 0
+            },
+            "limitations": [
+              "No single exact current dinner venue matches historical Billionaire name; choosing Vesta or Casa Fiori Chiari automatically would misroute users.",
+              "HTTP GET of provider document does not verify rendered initial form, iframe, availability, cancellation policy, payment or confirmation.",
+              "404 is not proof of permanent closure. Rebrand evidence is separate from route verification."
+            ],
+            "registryRecommendation": "Do not add a direct provider mapping under old name. Root should first reconcile historical catalog identity to successor venue and present explicit dinner-experience selection. Official Twiga Porto Cervo booking selector is a truthful external route only after that reconciliation.",
+            "nextAction": "Review successor-name metadata and choice UI; then separately validate selected exact SevenRooms experience with GET/HEAD guard.",
+            "publication": "not published",
+            "sharedFilesChanged": [],
+            "files": [
+              "work/issue64-evidence.json"
+            ]
+          }
+        },
         "brandReview": {
           "file": "docs/restaurant-brand-review.json",
           "record": {
@@ -75517,75 +76197,6 @@
             "evidence": [
               "https://billionairesociety.com/"
             ],
-            "checkedAt": "2026-10-16"
-          }
-        },
-        "logo": null
-      }
-    },
-    {
-      "restaurantId": "curated-CER-matsuhisa-cala-di-volpe",
-      "name": "Matsuhisa Cala di Volpe",
-      "city": "Porto Cervo",
-      "cityCode": "CER",
-      "country": "Italy",
-      "provider": null,
-      "source": null,
-      "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
-      "blocker": "No active reviewed provider mapping",
-      "next": "Verify exact restaurant identity and official booking route",
-      "checked": null,
-      "status": {
-        "identity": "unknown",
-        "bookingRoute": "unknown",
-        "implementation": "not_integrated",
-        "tests": {
-          "status": "unknown",
-          "confirmedReservation": "unknown",
-          "basis": null
-        },
-        "publication": {
-          "status": "unknown",
-          "basis": null
-        },
-        "logo": {
-          "status": "needs_official_source",
-          "assetStatus": "unknown",
-          "owner": "01a14138-697b-7681-aac3-72cf68a8f205",
-          "source": "https://www.marriott.com/en-us/hotels/olblc-hotel-cala-di-volpe-a-luxury-collection-hotel-costa-smeralda/dining/",
-          "checkedAt": "2026-10-16",
-          "publication": {
-            "status": "unknown",
-            "basis": "https://b2b.bakemyday.se/velvet/data/restaurant-brands.json"
-          }
-        }
-      },
-      "priority": 3,
-      "evidence": {
-        "catalog": {
-          "file": "data/restaurants.json",
-          "website": null,
-          "address": "Porto Cervo, Italy",
-          "locationSource": null,
-          "locationVerifiedAt": null
-        },
-        "mapping": null,
-        "audit": null,
-        "externalWorklist": null,
-        "routeReview": null,
-        "brandReview": {
-          "file": "docs/restaurant-brand-review.json",
-          "record": {
-            "placeId": "curated-CER-matsuhisa-cala-di-volpe",
-            "name": "Matsuhisa Cala di Volpe",
-            "status": "needs_official_source",
-            "reason": "Targeted web search reviewed; exact official restaurant identity and usable original logo could not be verified.",
-            "evidence": [
-              "https://www.marriott.com/en-us/hotels/olblc-hotel-cala-di-volpe-a-luxury-collection-hotel-costa-smeralda/dining/",
-              "https://matsuhisaathens.com/wp-content/uploads/2025/12/Matsuhisha_a_la_carte.pdf",
-              "https://www.caladivolpe.it/home_it/"
-            ],
-            "searchQuery": "Matsuhisa Cala di Volpe official",
             "checkedAt": "2026-10-16"
           }
         },
