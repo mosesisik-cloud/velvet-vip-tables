@@ -15,7 +15,16 @@ const minutes = t => Number(t.slice(0,2))*60 + Number(t.slice(3,5));
 // Explicit policy beats adapter/provider support. Undefined remains compatible
 // with reviewed legacy SevenRooms rows; external_link alone is not a live gate.
 function availabilityGate(row) {
-  if(row?.bookingMode==='request_only')return {status:'request_only',reason:'request_only'};
+  if(row?.bookingMode==='request_only') {
+    // Project only reviewed UI metadata; never spread registry contents into
+    // public results. Fresh nested objects isolate every snapshot from registry.
+    const gate={status:'request_only',reason:'request_only',bookingMode:'request_only'};
+    const hours=row.responseTimeHours;
+    if(hours&&Number.isSafeInteger(hours.min)&&Number.isSafeInteger(hours.max)&&hours.min>=0&&hours.max>=hours.min)gate.responseTimeHours={min:hours.min,max:hours.max};
+    if(row.paymentRequirement==='card_guarantee')gate.paymentRequirement='card_guarantee';
+    if(row.cancellationPolicyStatus==='unknown')gate.cancellationPolicyStatus='unknown';
+    return gate;
+  }
   if(row?.liveAvailabilitySupported===false)return {status:'unsupported',reason:'live_availability_disabled'};
   return null;
 }
@@ -74,6 +83,12 @@ export class AvailabilitySearch {
   }
   applyGate(result) {
     const gate=availabilityGate(this.registry[result.restaurantId]);
+    if(gate?.status==='request_only') {
+      // A stored job may have older terms. Replace, rather than merge, those
+      // fields so invalid/removed registry metadata cannot survive in cache.
+      const {bookingMode,responseTimeHours,paymentRequirement,cancellationPolicyStatus,...rest}=result;
+      return {...rest,...gate,slots:[],checkedAt:null};
+    }
     return gate?{...result,...gate,slots:[],checkedAt:null}:result;
   }
   async search(input, onResult = () => {}) {
