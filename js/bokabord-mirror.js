@@ -31,7 +31,7 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
     if (busy) { if (action?.type === 'fill') for (const [field,value] of Object.entries(action.fields)) pendingFields.set(field,value); return; }
     let succeeded = false;
     busy = true; container.setAttribute('aria-busy','true');
-    status.textContent = action?.type === 'fill' ? 'Sparar uppgifterna…' : state ? 'Uppdaterar…' : 'Öppnar bokningen…';
+    if (action?.type !== 'fill') status.textContent = state ? 'Uppdaterar…' : 'Öppnar bokningen…';
     controls();
     try {
       const result = state ? await post(`${endpoint}/${state.id}/action`, { ...action, revision: state.revision }) : await post(endpoint, { restaurantId, resume:true, width: Math.max(320, Math.round(container.clientWidth)) });
