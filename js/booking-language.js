@@ -7,7 +7,7 @@ export function bookingLanguage(booking, requested = 'en') {
   if (booking.provider === 'TableCheck') {
     const result = tableCheckBookingLanguage(url.href, requested);
     if (result) return {...result, notice: result.fallback ? 'languageEnglishFallback' : 'languageVenueDependent'};
-  } else if (booking.provider === 'SevenRooms') {
+  } else if (booking.provider === 'SevenRooms' && !url.pathname.startsWith('/experiences/')) {
     url.searchParams.set('lang', requested);
     notice = 'languageVenueDependent'; // Venue configuration can override the request.
   } else if (booking.provider === 'Meitre') {

@@ -1,3 +1,4 @@
+import {bookingLanguage} from '../js/booking-language.js';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { resolveEmbeddedBooking } from '../js/restaurant-booking-providers.js';
@@ -28,10 +29,10 @@ for (const url of [
 ]) assert.equal(resolveEmbeddedBooking({ test: { ...row, url } }, 'test'), null);
 assert.equal(resolveEmbeddedBooking(registry, 'not-reviewed'), null);
 assert.equal(resolveEmbeddedBooking(registry, '__proto__'), null);
-assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 34);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 57);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 44);
-for (const original of Object.values(registry).filter(row => row.provider !== 'SevenRooms')) {
+assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 36);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 59);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 49);
+for (const original of Object.values(registry).filter(row => row.provider !== 'SevenRooms' || row.integrationMode === 'external_link')) {
   const wrongVenue = new URL(original.url); wrongVenue.pathname += '/wrong-restaurant';
   const wrongHost = new URL(original.url); wrongHost.hostname += '.evil.example';
   const wrongId = new URL(original.url); wrongId.searchParams.set('rid', '000000');
@@ -55,7 +56,7 @@ try {
     assert.match(container.children[1].textContent, /egen flik/);
     assert.match(container.children[2].textContent, /Kontrollera tider/);
     assert.equal(container.children[2].rel, 'noopener noreferrer');
-    assert.equal(container.children[2].href, original.url);
+    assert.equal(container.children[2].href, bookingLanguage(original, 'sv').url);
   }
 } finally { globalThis.document = originalDocument; }
 

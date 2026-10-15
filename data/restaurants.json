@@ -1768,20 +1768,12 @@
           "reviewCount": 0,
           "address": "Saint-Tropez, France",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=L'Escale%2C%20Saint-Tropez",
-          "website": "https://escale-st-tropez.com/",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
           "curated": true,
           "cuisine": "japanese",
-          "images": [
-            "https://escale-st-tropez.com/img/img_s03.jpg",
-            "https://escale-st-tropez.com/img/img_s01.jpg",
-            "https://escale-st-tropez.com/img/img_s04.jpg",
-            "https://escale-st-tropez.com/img/img_s02.jpg",
-            "https://escale-st-tropez.com/img/img_s05.jpg"
-          ],
-          "imageSource": "https://escale-st-tropez.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "images": [],
+          "websiteVerification": "removed_wrong_content"
         },
         {
           "placeId": "osm-STT-la-petite-plage",
@@ -4782,17 +4774,11 @@
           "reviewCount": 0,
           "address": "Barcelona, Spain",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=L'anfora%2C%20Barcelona",
-          "website": "http://www.restaurantlanfora.com",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
           "curated": true,
-          "images": [
-            "https://www.restaurantlanfora.com/images/def-promo-hosting.png",
-            "https://www.restaurantlanfora.com/images/def-promo-whoisprivacy.png",
-            "https://www.restaurantlanfora.com/images/def-promo-ssl.png"
-          ],
-          "imageSource": "http://www.restaurantlanfora.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "images": [],
+          "websiteVerification": "removed_wrong_content"
         },
         {
           "placeId": "osm-BCN-restaurant-wanoya",
@@ -9916,7 +9902,10 @@
             "https://finkgroup.com.au/wp-content/uploads/2024/08/Fink-Sustainability.jpg"
           ],
           "imageSource": "https://finkgroup.com.au/a-farewell-to-quay/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "operatingStatus": "permanently_closed",
+          "operatingStatusSource": "https://finkgroup.com.au/a-farewell-to-quay/",
+          "operatingStatusCheckedAt": "2026-10-15"
         },
         {
           "placeId": "curated-SYD-bennelong",

@@ -6,6 +6,8 @@ let registryPromise;
 let reviewedRegistry = {};
 export const hasEmbeddedBooking = id => !!resolveEmbeddedBooking(reviewedRegistry, id);
 const PROVIDER_HOSTS = Object.freeze({
+  'FoodBooking / GloriaFood': ['www.foodbooking.com'],
+  TABLFY: ['www.lumabali.com'],
   Meitre: ['lahuella.meitre.com', 'lasusana.meitre.com', 'oro.meitre.com', 'fasano.meitre.com'],
   Elyra: ['widget.elyrasystems.com'], Guestplan: ['angelicabooking.guestplan.io'],
   Dineplan: ['calendar.dineplan.com', 'account.dineplan.com', 'www.dineplan.com'],
@@ -13,15 +15,15 @@ const PROVIDER_HOSTS = Object.freeze({
   Revasi: ['revasi.net'],
   'Restaurant website': ['booking.baolicannes.com'],
   'Prenota Web': ['franchino.prenota-web.it'],
-  OpenTable: ['www.opentable.com', 'www.opentable.co.uk', 'www.opentable.com.au', 'www.opentable.sg'],
+  OpenTable: ['www.opentable.it', 'www.opentable.com', 'www.opentable.co.uk', 'www.opentable.com.au', 'www.opentable.sg'],
   TableCheck: ['www.tablecheck.com'], Zenchef: ['bookings.zenchef.com'],
   'ResDiary / Dish Cult': ['booking.resdiary.com'], Tableo: ['app.tableo.com'],
   Restoo: ['palomaibiza.myrestoo.net'], 'Eat App': ['eatapp.co'],
   TheFork: ['widget.thefork.com', 'module.lafourchette.com'],
   Resy: ['resy.com'], Tock: ['www.exploretock.com'], OMAKASE: ['omakase.in'],
 });
-const EMBED_PROVIDERS = new Set(['Meitre', 'Elyra', 'Guestplan', 'TableCheck', 'Zenchef', 'ResDiary / Dish Cult', 'Tableo', 'Restoo', 'Eat App']);
-const IDENTITY_PARAMS = new Set(['rid', 'restref', 'restaurantid', 'restaurant_id', 'venue', 'venue_id', 'id']);
+const EMBED_PROVIDERS = new Set(['TABLFY', 'Meitre', 'Elyra', 'Guestplan', 'TableCheck', 'Zenchef', 'ResDiary / Dish Cult', 'Tableo', 'Restoo', 'Eat App']);
+const IDENTITY_PARAMS = new Set(['rid', 'restref', 'restaurantid', 'restaurant_id', 'venue', 'venue_id', 'id', 'restaurant_uid', 'reservation']);
 function venueKey(url) {
   const identity = [...url.searchParams].filter(([key]) => IDENTITY_PARAMS.has(key.toLowerCase()))
     .map(([key, value]) => [key.toLowerCase(), value]).sort(([a, av], [b, bv]) => a.localeCompare(b) || av.localeCompare(bv));
@@ -40,6 +42,14 @@ export function resolveEmbeddedBooking(registry, restaurantId) {
     if (url.protocol !== 'https:' || url.username || url.password || url.port || url.hash
       || source.protocol !== 'https:' || source.username || source.password) return null;
     if (row.provider === 'SevenRooms') {
+      if (row.integrationMode === 'external_link') {
+        if (!['official_link_only','official_link_no_current_offers'].includes(row.verification)
+          || !['www.sevenrooms.com','sevenrooms.com','eu.sevenrooms.com'].includes(url.hostname)
+          || url.search || row.venueKey !== venueKey(url) || !/^[a-z0-9_-]+$/i.test(row.venueId)) return null;
+        const path = url.pathname.split('/').filter(Boolean);
+        if (path.length !== 2 || !['reservations','experiences'].includes(path[0]) || path[1] !== row.venueId) return null;
+        return {...row, restaurantId, url:url.href, integrationMode:'external_link'};
+      }
       if (!/^[a-z0-9_-]+$/i.test(row.venueId) || row.verification !== 'embedded_form_loaded'
         || !['www.sevenrooms.com', 'sevenrooms.com', 'eu.sevenrooms.com'].includes(url.hostname) || url.search) return null;
       const parts = url.pathname.split('/').filter(Boolean);
@@ -51,6 +61,7 @@ export function resolveEmbeddedBooking(registry, restaurantId) {
     }
     if (!Object.hasOwn(PROVIDER_HOSTS, row.provider) || !PROVIDER_HOSTS[row.provider].includes(url.hostname)
       || !row.venueKey || row.venueKey !== venueKey(url)) return null;
+    if (row.provider === 'FoodBooking / GloriaFood' && (url.pathname !== '/ordering/restaurant/menu' || url.searchParams.get('reservation') !== 'true')) return null;
     // Dineplan cross-site guest selection failed; use the original standalone flow.
     if (row.provider === 'Dineplan' && row.integrationMode === 'native_embed') return null;
     const embedded = row.integrationMode === 'native_embed' && row.verification === 'embedded_form_loaded' && EMBED_PROVIDERS.has(row.provider);
@@ -85,6 +96,7 @@ export function mountEmbeddedBooking(container, booking, language = 'sv') {
   intro.className = 'booking-intro';
   if (booking.integrationMode === 'external_link') {
     intro.textContent = text('externalIntro');
+    if (booking.availabilityNote) intro.textContent += ' ' + booking.checkedAt + ': ' + booking.availabilityNote;
     const link = document.createElement('a');
     link.href = localized.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
     link.className = 'btn btn-gold';
