@@ -186,10 +186,18 @@ async function zinkAvailability({ date, party, mealId = "", email = "", lang = "
     lang: lang === "sv" ? "sw" : String(lang || "en").slice(0, 2),
   }, context.cookie);
   if (response.success !== true) throw new Error("bokabord_availability_rejected");
+  const times = normalizeBokabordTimes(response.times);
+  const full = normalizeBokabordTimes(response.full);
+  const tooLate = normalizeBokabordTimes(response.too_late);
+  // Den publika widget-endpointen kan svara success:true men lämna samtliga
+  // listor tomma för serveranrop som saknar en aktiverad partnerintegration.
+  // Det får aldrig presenteras som att restaurangen faktiskt är fullbokad.
+  const integrationRequired = !times.length && !full.length && !tooLate.length && !String(response.msg || "").trim();
   return {
     meal: { id: String(meal.id), name: String(meal.name || "Bord"), startsAt: String(meal.tstart || ""), endsAt: String(meal.tend || "") },
-    times: normalizeBokabordTimes(response.times),
-    full: normalizeBokabordTimes(response.full),
+    times,
+    full,
+    reason: integrationRequired ? "integration_required" : (times.length ? null : "no_availability"),
     context,
   };
 }
@@ -1057,6 +1065,17 @@ function publicRestaurantBooking(booking) {
     createdAt: booking.createdAt,
     updatedAt: booking.updatedAt || booking.createdAt,
     providerConfirmedAt: booking.providerConfirmedAt || "",
+    requestMode: booking.requestMode || "",
+  };
+}
+function operatorRestaurantBooking(booking) {
+  return {
+    ...publicRestaurantBooking(booking),
+    userId: booking.userId || "",
+    name: booking.name || "",
+    email: booking.email || "",
+    phone: booking.phone || "",
+    note: booking.note || "",
   };
 }
 function tableMemberIds(t) {
@@ -2529,11 +2548,12 @@ const server = http.createServer(async (req, res) => {
       const db = load();
       const user = sessionPublicUser(req, db);
       if (!user) return send(res, 401, { error: "auth" });
+      const operator = isOperator(user);
       const bookings = (db.restaurantBookings || [])
-        .filter((booking) => booking.userId === user.id)
+        .filter((booking) => operator || booking.userId === user.id)
         .slice(0, 100)
-        .map(publicRestaurantBooking);
-      return send(res, 200, { bookings }, { "Cache-Control": "no-store" });
+        .map(operator ? operatorRestaurantBooking : publicRestaurantBooking);
+      return send(res, 200, { bookings, operator }, { "Cache-Control": "no-store" });
     }
     if (req.method === "POST" && url.pathname === "/restaurant-bookings/webbridge/availability") {
       const b = await readBody(req, 2e5);
@@ -2552,7 +2572,7 @@ const server = http.createServer(async (req, res) => {
           party,
           meal: availability.meal,
           times: availability.times,
-          error: availability.times.length ? null : "no_availability",
+          error: availability.times.length ? null : (availability.reason || "no_availability"),
           source: "Zink · BokaBord live",
         }, { "Cache-Control": "no-store" });
       } catch (error) {
@@ -2639,6 +2659,7 @@ const server = http.createServer(async (req, res) => {
       const user = sessionPublicUser(req, db);
       if (!user) return send(res, 401, { error: "auth" });
       const email = String(b.email || "").trim().toLowerCase().slice(0, 120);
+      const phone = String(b.phone || "").trim().slice(0, 40);
       const date = String(b.date || "").trim();
       const time = String(b.time || "").trim();
       const party = Math.max(1, Math.min(20, Number(b.party) || 0));
@@ -2654,15 +2675,37 @@ const server = http.createServer(async (req, res) => {
         date, time, party,
         name: String(b.name || "").trim().slice(0, 100),
         email,
+        phone,
         note: String(b.note || "").trim().slice(0, 500),
         userId: user.id,
         status: "request",
+        requestMode: b.requestMode === "concierge" ? "concierge" : "standard",
         createdAt: new Date().toISOString(),
       };
       if (!booking.name) return send(res, 400, { error: "name" });
       db.restaurantBookings = [booking, ...(db.restaurantBookings || [])].slice(0, 5000);
       save(db);
       return send(res, 201, { ok: true, booking: { id: booking.id, restaurant: booking.restaurant, destination: booking.destination, date, time, party, status: booking.status, createdAt: booking.createdAt } });
+    }
+
+    const restaurantStatusM = url.pathname.match(/^\/restaurant-bookings\/([^/]+)\/status$/);
+    if (req.method === "POST" && restaurantStatusM) {
+      const db = load();
+      const user = sessionPublicUser(req, db);
+      if (!user) return send(res, 401, { error: "auth" });
+      if (!isOperator(user)) return send(res, 403, { error: "operator" });
+      const b = await readBody(req, 2e5);
+      const status = String(b.status || "");
+      if (!["received", "confirmed", "declined", "cancelled"].includes(status)) return send(res, 400, { error: "status" });
+      const booking = (db.restaurantBookings || []).find((item) => item.id === decodeURIComponent(restaurantStatusM[1]));
+      if (!booking) return send(res, 404, { error: "not_found" });
+      booking.status = status;
+      booking.updatedAt = new Date().toISOString();
+      booking.providerReference = String(b.providerReference || booking.providerReference || "").trim().slice(0, 100);
+      booking.operatorNote = String(b.note || "").trim().slice(0, 300);
+      if (status === "confirmed") booking.providerConfirmedAt = booking.updatedAt;
+      save(db);
+      return send(res, 200, { ok: true, booking: operatorRestaurantBooking(booking) }, { "Cache-Control": "no-store" });
     }
 
     if (req.method === "POST" && url.pathname === "/users") {
