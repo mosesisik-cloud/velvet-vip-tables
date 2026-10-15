@@ -1,0 +1,64 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { BookingRegister } from '../api/booking-register.mjs';
+import { AvailabilitySearch, validateSearch } from '../api/availability-search.mjs';
+const temporary = fs.mkdtempSync(path.join(os.tmpdir(),'velvet-booking-register-test-'));
+const file = path.join(temporary,'private','bookings.sqlite');
+const restaurant = {name:'Test restaurant',city:'Stockholm',provider:'SevenRooms'};
+const report = {date:'2026-10-19',time:'17:00',party:2,reference:'ABC-123'};
+const sensitive = {cardNumber:'4242424242424242',pan:'4242424242424242',cvc:'999',cvv:'999',payment:{number:'4242424242424242'},email:'private@example.test',phone:'+46700000000',providerPayload:{token:'sensitive'}};
+let db;
+try {
+ db = new BookingRegister(file);
+ assert.deepEqual(db.list([]),[]);
+ const created=db.report('guest:alice','venue-one',restaurant,{...report,...sensitive,status:'provider_confirmed',userId:'guest:bob',providerConfirmedAt:'2026-10-19T12:00:00Z',providerReference:'FORGED',id:'CHOSEN-ID'});
+ assert.equal(created.status,'guest_reported');assert.equal(created.requestMode,'guest_reported');assert.equal(created.userId,'guest:alice');assert.equal(created.providerReference,'ABC-123');assert.ok(created.id.startsWith('GR-'));
+ for(const field of [...Object.keys(sensitive),'providerConfirmedAt']) assert.equal(Object.hasOwn(created,field),false,field);
+ const duplicate=db.report('guest:alice','venue-one',restaurant,{...report,time:'22:00',party:8});
+ assert.deepEqual(duplicate,created,'same owner/venue/reference is immutable idempotent guest report');
+ assert.equal(db.list(['guest:alice']).length,1);assert.deepEqual(db.list(['guest:bob']),[]);
+ const other=db.report('guest:bob','venue-one',restaurant,report);
+ assert.notEqual(other.id,created.id,'distinct guest owner never collides');
+ assert.deepEqual(db.list(['guest:alice']).map(x=>x.id),[created.id]);
+ assert.deepEqual(db.list(['guest:bob']).map(x=>x.id),[other.id]);
+ assert.equal(db.list(['guest:alice','guest:alice']).length,1);
+ assert.equal(db.list(['guest:alice','guest:bob']).length,2);
+ assert.equal(db.list([],true).length,2,'trusted operator query sees all owners');
+ assert.deepEqual(db.list(["guest:alice' OR 1=1 --"]),[],'owner query parameterized');
+ const original=db.list(['guest:alice'])[0];
+ db.upsert({...original,userId:'guest:bob',status:'provider_confirmed',providerReference:'OVERWRITE'});
+ assert.deepEqual(db.list(['guest:alice'])[0],original,'upsert cannot move or overwrite another owner ID');
+ const confirmed={...original,id:'RB-internal',status:'provider_confirmed',providerReference:'REAL-PROVIDER-REF',providerConfirmedAt:'2026-10-19T12:00:00Z',...sensitive};
+ const stored=db.upsert(confirmed);
+ for(const field of Object.keys(sensitive))assert.equal(Object.hasOwn(stored,field),false,field);
+ assert.equal(stored.status,'provider_confirmed','trusted internal records preserve provider status');
+ for (const invalid of [{date:'2026-02-30'},{date:'not-a-date'},{time:'24:00'},{time:'17:61'},{party:0},{party:101},{party:1.5},{reference:'x'},{reference:'<script>x</script>'},{reference:'a'.repeat(101)}]) assert.throws(()=>db.report('guest:alice','venue-one',restaurant,{...report,...invalid}),/invalid_report/);
+ const beforeRestart=db.list([],true);db.close();db=null;
+ db=new BookingRegister(file);assert.deepEqual(db.list([],true),beforeRestart,'all fields/statuses persist across close/reopen');
+ assert.deepEqual(db.report('guest:alice','venue-one',restaurant,report),created,'idempotency persists across restart');
+ assert.equal(db.list(['guest:bob']).length,1,'owner isolation persists across restart');
+ db.close();db=null;
+ const raw=fs.readFileSync(file);for(const value of ['4242424242424242','private@example.test','sensitive'])assert.equal(raw.includes(Buffer.from(value)),false,'sensitive input absent from SQLite file');
+ console.log('PASS booking register: durable restart, guest isolation, trusted-only confirmation, field allowlist, idempotency, validation, conflict protection');
+
+ const now=()=>Date.parse('2026-10-15T12:00:00Z');const date='2026-10-19';const q={city:'Test',date,time:'19:00',party:2};
+ for(const invalid of [{date:'2024-01-01'},{date:'2028-01-01'},{party:21},{party:NaN},{city:'x'.repeat(101)}])assert.throws(()=>validateSearch({...q,...invalid},new Date(now())));
+ const venue={name:'A',city:'Test',provider:'SevenRooms',venueId:'a',url:'https://www.sevenrooms.com/reservations/a'};
+ const restaurants={destinations:{TST:{destination:'Test',restaurants:[{placeId:'a',name:'A'},{placeId:'b',name:'B'}]}}};
+ const response=times=>({ok:true,json:async()=>({status:200,data:{availability:{[date]:[{times}], '2026-10-20':[{times:[{type:'book',time:'19:00'}]}]}}})});
+ const service=new AvailabilitySearch({registry:{a:venue,b:{...venue,provider:'Other'}},restaurants,now,fetcher:async()=>response([{type:'book',time:'17:29'},{type:'book',time:'17:30'},{type:'book',time:'20:30'},{type:'book',time:'20:31'},{type:'request',time:'19:00'},{type:'book',time:'24:00'},{type:'book',time:'17:30'}])});
+ const results=await service.search(q);assert.deepEqual(results.results[0].slots.map(x=>x.time),['17:30','20:30'],'only unique bookable slots in inclusive +/-90min window');assert.equal(results.results[1].status,'unsupported');
+ const url=new URL(results.results[0].slots[0].bookingUrl);assert.equal(url.searchParams.get('default_date'),date);assert.equal(url.searchParams.get('default_party_size'),'2');
+ for(const fetcher of [async()=>{throw new Error('network');},async()=>({ok:true,json:async()=>{throw new Error('invalid JSON');}}),async()=>({ok:true,json:async()=>({status:200,data:{}})})]){service.fetcher=fetcher;assert.equal((await service.search(q)).results[0].status,'error');assert.equal(service.active,0);assert.equal(service.inflight.size,0);}
+ let release;const gate=new Promise(resolve=>{release=resolve;});let requests=0;service.fetcher=async()=>{requests++;await gate;return response([]);};
+ const pending=[service.search(q),service.search({...q,time:'18:00'}),service.search({...q,time:'20:00'})];
+ await assert.rejects(service.search({...q,time:'21:00'}),/search_busy/);
+ const same=service.search(q);assert.equal(requests,3,'deduplicate equal inflight search even when at capacity');release();await Promise.all([...pending,same]);assert.equal(service.active,0);assert.equal(service.inflight.size,0);
+ let maliciousCalls=0;service.registry.a={...venue,url:'https://evil.example/reservations/a'};service.fetcher=async()=>{maliciousCalls++;return response([]);};assert.equal((await service.search(q)).results[0].status,'unsupported');assert.equal(maliciousCalls,0);
+ for(const badUrl of ['https://user:pass@www.sevenrooms.com/reservations/a','https://www.sevenrooms.com:8443/reservations/a','https://www.sevenrooms.com/reservations/other','https://www.sevenrooms.com/reservations/a?venue=other','https://www.sevenrooms.com/reservations/a#other','https://www.sevenrooms.com/other/a']){service.registry.a={...venue,url:badUrl};assert.equal((await service.search(q)).results[0].status,'unsupported',badUrl);}
+ assert.equal(maliciousCalls,0,'invalid registry URLs never fetched');
+ service.registry.a=venue;service.fetcher=async()=>response([{type:'book',time:'19:00',require_credit_card:true},{type:'book',time:'19:00',require_credit_card:false}]);assert.equal((await service.search(q)).results[0].slots[0].requiresCard,true,'same-time noncard result cannot erase card requirement');
+ console.log('PASS availability backend: input validation, strict slot filtering, date separation, unsupported hosts/providers, network/JSON errors, inflight dedupe, concurrency and cleanup');
+} finally {db?.close();fs.rmSync(temporary,{recursive:true,force:true});}

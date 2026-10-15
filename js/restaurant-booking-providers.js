@@ -3,18 +3,49 @@
 let registryPromise;
 let reviewedRegistry = {};
 export const hasEmbeddedBooking = id => !!resolveEmbeddedBooking(reviewedRegistry, id);
+const PROVIDER_HOSTS = Object.freeze({
+  OpenTable: ['www.opentable.com', 'www.opentable.co.uk', 'www.opentable.com.au'],
+  TableCheck: ['www.tablecheck.com'], Zenchef: ['bookings.zenchef.com'],
+  'ResDiary / Dish Cult': ['booking.resdiary.com'], Tableo: ['app.tableo.com'],
+  Restoo: ['palomaibiza.myrestoo.net'], 'Eat App': ['eatapp.co'],
+  TheFork: ['widget.thefork.com', 'module.lafourchette.com'],
+  Resy: ['resy.com'], Tock: ['www.exploretock.com'], OMAKASE: ['omakase.in'],
+});
+const EMBED_PROVIDERS = new Set(['TableCheck', 'Zenchef', 'ResDiary / Dish Cult', 'Tableo', 'Restoo', 'Eat App']);
+const IDENTITY_PARAMS = new Set(['rid', 'restref', 'restaurantid', 'restaurant_id', 'venue', 'venue_id', 'id']);
+function venueKey(url) {
+  const identity = [...url.searchParams].filter(([key]) => IDENTITY_PARAMS.has(key.toLowerCase()))
+    .map(([key, value]) => [key.toLowerCase(), value]).sort(([a, av], [b, bv]) => a.localeCompare(b) || av.localeCompare(bv));
+  return url.host + url.pathname + (identity.length ? '?' + identity.map(([key, value]) => key + '=' + encodeURIComponent(value)).join('&') : '');
+}
+
+// Kept under the original exported name for existing detail/list callers. The
+// returned integrationMode explicitly distinguishes embedded and external flows.
 export function resolveEmbeddedBooking(registry, restaurantId) {
-  const row = registry?.[restaurantId];
-  if (!row || row.provider !== 'SevenRooms' || !/^[a-z0-9_-]+$/i.test(row.venueId)) return null;
+  if (!registry || !Object.hasOwn(registry, restaurantId)) return null;
+  const row = registry[restaurantId];
+  if (!row) return null;
   try {
     const url = new URL(row.url);
-    if (url.protocol !== 'https:' || !['www.sevenrooms.com', 'sevenrooms.com', 'eu.sevenrooms.com'].includes(url.hostname)
-      || url.username || url.password || url.port || url.search || url.hash) return null;
-    const parts = url.pathname.split('/').filter(Boolean);
-    if (!['reservations', 'explore'].includes(parts[0]) || parts[1] !== row.venueId) return null;
-    if (parts[0] === 'reservations' && parts.length !== 2) return null;
-    if (parts[0] === 'explore' && parts.slice(2).join('/') !== 'reservations/create/search') return null;
-    return { ...row, url: url.href };
+    const source = new URL(row.source);
+    if (url.protocol !== 'https:' || url.username || url.password || url.port || url.hash
+      || source.protocol !== 'https:' || source.username || source.password) return null;
+    if (row.provider === 'SevenRooms') {
+      if (!/^[a-z0-9_-]+$/i.test(row.venueId) || row.verification !== 'embedded_form_loaded'
+        || !['www.sevenrooms.com', 'sevenrooms.com', 'eu.sevenrooms.com'].includes(url.hostname) || url.search) return null;
+      const parts = url.pathname.split('/').filter(Boolean);
+      if (!['reservations', 'explore'].includes(parts[0]) || parts[1] !== row.venueId) return null;
+      if (parts[0] === 'reservations' && parts.length !== 2) return null;
+      if (parts[0] === 'explore' && parts.slice(2).join('/') !== 'reservations/create/search') return null;
+      if (row.integrationMode && row.integrationMode !== 'native_embed') return null;
+      return { ...row, restaurantId, url: url.href, integrationMode: 'native_embed' };
+    }
+    if (!Object.hasOwn(PROVIDER_HOSTS, row.provider) || !PROVIDER_HOSTS[row.provider].includes(url.hostname)
+      || !row.venueKey || row.venueKey !== venueKey(url)) return null;
+    const embedded = row.integrationMode === 'native_embed' && row.verification === 'embedded_form_loaded' && EMBED_PROVIDERS.has(row.provider);
+    if (!embedded && (row.integrationMode !== 'external_link' || !['official_restaurant_link_verified', 'official_link_only', 'provider_page_loaded'].includes(row.verification))) return null;
+    if (row.provider === 'Resy') { url.searchParams.delete('date'); url.searchParams.delete('seats'); }
+    return { ...row, restaurantId, url: url.href, integrationMode: embedded ? 'native_embed' : 'external_link' };
   } catch { return null; }
 }
 
@@ -35,6 +66,15 @@ export function mountEmbeddedBooking(container, booking) {
   source.textContent = `Bokning via ${booking.provider} · Utan Velvet-konto`;
   const intro = document.createElement('p');
   intro.className = 'booking-intro';
+  if (booking.integrationMode === 'external_link') {
+    intro.textContent = 'Lediga tider och bokningen visas hos ' + booking.provider + ' i en egen flik. Eventuella kontokrav och villkor visas där.';
+    const link = document.createElement('a');
+    link.href = booking.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    link.className = 'btn btn-gold';
+    link.textContent = 'Kontrollera tider hos ' + booking.provider + ' ↗';
+    container.replaceChildren(source, intro, link);
+    return;
+  }
   intro.textContent = 'Restaurangens eget bokningsformulär öppnas här.';
   const start = document.createElement('button');
   start.className = 'btn btn-gold'; start.type = 'button'; start.textContent = 'Hitta ett bord';

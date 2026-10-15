@@ -8,7 +8,8 @@
     "source": "https://www.amazonicorestaurant.com/monte-carlo/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Amazónico Monte-Carlo"
+    "providerTitle": "Reservation at Amazónico Monte-Carlo",
+    "integrationMode": "native_embed"
   },
   "osm-BAL-yuki-canggu": {
     "provider": "SevenRooms",
@@ -19,7 +20,8 @@
     "source": "https://www.yuki-bali.com/reservations",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at YUKI BALI"
+    "providerTitle": "Reservation at YUKI BALI",
+    "integrationMode": "native_embed"
   },
   "osm-IBZ-finca-la-plaza": {
     "provider": "SevenRooms",
@@ -30,7 +32,8 @@
     "source": "https://www.fincalaplaza.com/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Finca La Plaza"
+    "providerTitle": "Reservation at Finca La Plaza",
+    "integrationMode": "native_embed"
   },
   "osm-CER-iyo-poltu-quatu": {
     "provider": "SevenRooms",
@@ -41,7 +44,8 @@
     "source": "https://www.iyo-poltuquatu.com/booking-iyo/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at IYO Poltu Quatu"
+    "providerTitle": "Reservation at IYO Poltu Quatu",
+    "integrationMode": "native_embed"
   },
   "osm-BAL-masonry": {
     "provider": "SevenRooms",
@@ -52,7 +56,8 @@
     "source": "https://masonrybali.com/canggu/bookings",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Masonry Restaurant Canggu"
+    "providerTitle": "Reservation at Masonry Restaurant Canggu",
+    "integrationMode": "native_embed"
   },
   "osm-HVA-dalmatino": {
     "provider": "SevenRooms",
@@ -63,7 +68,8 @@
     "source": "https://dalmatino-hvar.com/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Dalmatino Hvar"
+    "providerTitle": "Reservation at Dalmatino Hvar",
+    "integrationMode": "native_embed"
   },
   "curated-LIS-belcanto": {
     "provider": "SevenRooms",
@@ -74,7 +80,8 @@
     "source": "https://www.belcanto.pt/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Belcanto"
+    "providerTitle": "Reservation at Belcanto",
+    "integrationMode": "native_embed"
   },
   "curated-STO-villa-valentina": {
     "provider": "SevenRooms",
@@ -85,7 +92,8 @@
     "source": "https://www.villavalentina.se/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Villa Valentina"
+    "providerTitle": "Reservation at Villa Valentina",
+    "integrationMode": "native_embed"
   },
   "curated-STO-strandvagen-1": {
     "provider": "SevenRooms",
@@ -96,7 +104,8 @@
     "source": "https://strandvagen1.se/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Strandvägen 1"
+    "providerTitle": "Reservation at Strandvägen 1",
+    "integrationMode": "native_embed"
   },
   "curated-STO-strandbryggan": {
     "provider": "SevenRooms",
@@ -107,7 +116,8 @@
     "source": "https://strandbryggan.se/boka-bord",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Strandbryggan"
+    "providerTitle": "Reservation at Strandbryggan",
+    "integrationMode": "native_embed"
   },
   "curated-MYK-zuma-mykonos": {
     "provider": "SevenRooms",
@@ -118,7 +128,8 @@
     "source": "https://www.zumarestaurant.com/en/mykonos/book-a-table",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Zuma Mykonos "
+    "providerTitle": "Reservation at Zuma Mykonos ",
+    "integrationMode": "native_embed"
   },
   "curated-DXB-zuma-dubai": {
     "provider": "SevenRooms",
@@ -129,7 +140,8 @@
     "source": "https://www.zumarestaurant.com/en/dubai",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at zuma dubai"
+    "providerTitle": "Reservation at zuma dubai",
+    "integrationMode": "native_embed"
   },
   "curated-DXB-coya-dubai": {
     "provider": "SevenRooms",
@@ -140,7 +152,8 @@
     "source": "https://coyarestaurant.com/dubai/en/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at COYA Dubai"
+    "providerTitle": "Reservation at COYA Dubai",
+    "integrationMode": "native_embed"
   },
   "curated-HKT-pru": {
     "provider": "SevenRooms",
@@ -151,7 +164,8 @@
     "source": "https://www.prurestaurant.com/reservation/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at PRU"
+    "providerTitle": "Reservation at PRU",
+    "integrationMode": "native_embed"
   },
   "osm-BAL-meimei": {
     "provider": "SevenRooms",
@@ -162,7 +176,8 @@
     "source": "https://meimeibali.com/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at MEIMEI"
+    "providerTitle": "Reservation at MEIMEI",
+    "integrationMode": "native_embed"
   },
   "curated-LAS-sw-steakhouse": {
     "provider": "SevenRooms",
@@ -173,7 +188,8 @@
     "source": "https://www.wynnlasvegas.com/dining/fine-dining/sw-steakhouse?external_browser_redirect=true",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at SW Steakhouse"
+    "providerTitle": "Reservation at SW Steakhouse",
+    "integrationMode": "native_embed"
   },
   "curated-LAS-joel-robuchon-las-vegas": {
     "provider": "SevenRooms",
@@ -184,7 +200,8 @@
     "source": "https://jrobuchon.com/our_locations/restaurant-de-joel-robuchon-las-vegas/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Joël Robuchon"
+    "providerTitle": "Reservation at Joël Robuchon",
+    "integrationMode": "native_embed"
   },
   "curated-LAS-spago-las-vegas": {
     "provider": "SevenRooms",
@@ -195,7 +212,8 @@
     "source": "https://bellagio.mgmresorts.com/en/restaurants/spago-by-wolfgang-puck.html?icid=GMB_Restaurants_Spago_Reservations",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Spago Las Vegas"
+    "providerTitle": "Reservation at Spago Las Vegas",
+    "integrationMode": "native_embed"
   },
   "curated-CER-zuma-porto-cervo": {
     "provider": "SevenRooms",
@@ -206,7 +224,8 @@
     "source": "https://www.zumarestaurant.com/en/porto-cervo/book-a-table",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Zuma Porto Cervo"
+    "providerTitle": "Reservation at Zuma Porto Cervo",
+    "integrationMode": "native_embed"
   },
   "curated-MRB-nobu-marbella": {
     "provider": "SevenRooms",
@@ -217,7 +236,8 @@
     "source": "https://www.noburestaurants.com/marbella/home",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Nobu Marbella"
+    "providerTitle": "Reservation at Nobu Marbella",
+    "integrationMode": "native_embed"
   },
   "curated-CAP-il-riccio": {
     "provider": "SevenRooms",
@@ -228,7 +248,8 @@
     "source": "https://www.jumeirah.com/en/stay/italy/jumeirah-capri-palace/dining/il-riccio-restaurant",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Il Riccio Restaurant Reservations"
+    "providerTitle": "Il Riccio Restaurant Reservations",
+    "integrationMode": "native_embed"
   },
   "curated-SIN-les-amis": {
     "provider": "SevenRooms",
@@ -239,7 +260,8 @@
     "source": "https://www.lesamis.com.sg/reservation/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Les Amis Restaurant Reservations"
+    "providerTitle": "Les Amis Restaurant Reservations",
+    "integrationMode": "native_embed"
   },
   "curated-MCO-le-louis-xv": {
     "provider": "SevenRooms",
@@ -250,7 +272,8 @@
     "source": "https://www.ducasse-paris.com/en/addresses/le-louis-xv-alain-ducasse-a-lhotel-de-paris/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Le Louis XV - Alain Ducasse à l'Hôtel de Paris"
+    "providerTitle": "Reservation at Le Louis XV - Alain Ducasse à l'Hôtel de Paris",
+    "integrationMode": "native_embed"
   },
   "curated-BDR-zuma-bodrum": {
     "provider": "SevenRooms",
@@ -261,7 +284,8 @@
     "source": "https://www.zumarestaurant.com/en/bodrum/book-a-table",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Zuma Bodrum"
+    "providerTitle": "Reservation at Zuma Bodrum",
+    "integrationMode": "native_embed"
   },
   "curated-STO-brasserie-astoria": {
     "provider": "SevenRooms",
@@ -272,7 +296,8 @@
     "source": "https://www.brasserieastoria.se/en/om-oss/reservation/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Brasserie Astoria Stockholm Reservations"
+    "providerTitle": "Brasserie Astoria Stockholm Reservations",
+    "integrationMode": "native_embed"
   },
   "curated-STO-florentine": {
     "provider": "SevenRooms",
@@ -283,7 +308,8 @@
     "source": "https://www.florentinerestaurants.com/stockholm",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Florentine Stockholm"
+    "providerTitle": "Reservation at Florentine Stockholm",
+    "integrationMode": "native_embed"
   },
   "curated-SYD-bennelong": {
     "provider": "SevenRooms",
@@ -294,6 +320,524 @@
     "source": "https://www.bennelong.com.au/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Bennelong "
+    "providerTitle": "Reservation at Bennelong ",
+    "integrationMode": "native_embed"
+  },
+  "curated-MIA-mila-miami": {
+    "provider": "OpenTable",
+    "name": "MILA Miami",
+    "city": "Miami",
+    "url": "https://www.opentable.com/r/mila-miami-restaurant-miami-2",
+    "source": "https://mila-miami.com/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false,
+    "integrationMode": "external_link",
+    "venueKey": "www.opentable.com/r/mila-miami-restaurant-miami-2"
+  },
+  "osm-MIA-mayfair-grill": {
+    "provider": "OpenTable",
+    "name": "Mayfair Grill",
+    "city": "Miami",
+    "url": "https://www.opentable.com/r/mayfair-grill-miami",
+    "source": "https://www.mayfair-grill.com",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false,
+    "integrationMode": "external_link",
+    "venueKey": "www.opentable.com/r/mayfair-grill-miami"
+  },
+  "osm-MIA-la-cabrera-coconut-grove": {
+    "provider": "OpenTable",
+    "name": "La Cabrera - Coconut Grove",
+    "city": "Miami",
+    "url": "https://www.opentable.com/restref/client/?restref=1377148&lang=en-US",
+    "source": "https://lacabreramiami.com/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false,
+    "integrationMode": "external_link",
+    "venueKey": "www.opentable.com/restref/client/?restref=1377148"
+  },
+  "curated-SYD-saint-peter": {
+    "provider": "OpenTable",
+    "name": "Saint Peter",
+    "city": "Sydney",
+    "url": "https://www.opentable.com.au/booking/restref/availability?rid=60911&restRef=60911",
+    "source": "https://www.saintpeter.com.au/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false,
+    "integrationMode": "external_link",
+    "venueKey": "www.opentable.com.au/booking/restref/availability?restref=60911&rid=60911"
+  },
+  "curated-LON-core-by-clare-smyth": {
+    "provider": "OpenTable",
+    "name": "CORE by Clare Smyth",
+    "city": "London",
+    "url": "https://www.opentable.co.uk/r/core-by-clare-smyth-london",
+    "source": "https://corebyclaresmyth.com/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false,
+    "integrationMode": "external_link",
+    "venueKey": "www.opentable.co.uk/r/core-by-clare-smyth-london"
+  },
+  "curated-LON-the-ledbury": {
+    "provider": "OpenTable",
+    "name": "The Ledbury",
+    "city": "London",
+    "url": "https://www.opentable.co.uk/the-ledbury",
+    "source": "https://www.theledbury.com/?page=restaurant",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false,
+    "integrationMode": "external_link",
+    "venueKey": "www.opentable.co.uk/the-ledbury"
+  },
+  "curated-ASP-cache-cache-aspen": {
+    "provider": "OpenTable",
+    "name": "Cache Cache Aspen",
+    "city": "Aspen",
+    "url": "https://www.opentable.com/r/cache-cache-aspen",
+    "source": "https://cachecache.com/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false,
+    "integrationMode": "external_link",
+    "venueKey": "www.opentable.com/r/cache-cache-aspen"
+  },
+  "curated-ASP-bosq": {
+    "provider": "OpenTable",
+    "name": "Bosq",
+    "city": "Aspen",
+    "url": "https://www.opentable.com/r/bosq-reservations-aspen?restref=264196&lang=en-US",
+    "source": "https://www.bosqaspen.com/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_restaurant_link_verified",
+    "mode": "external",
+    "availability": "unknown",
+    "completionTracking": false,
+    "integrationMode": "external_link",
+    "venueKey": "www.opentable.com/r/bosq-reservations-aspen?restref=264196"
+  },
+  "osm-STT-salama": {
+    "provider": "Zenchef",
+    "name": "Salama",
+    "city": "Saint-Tropez",
+    "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=352861&lang=fr&showCollapsed=1",
+    "source": "https://www.salama-saint-tropez.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "provider_page_loaded",
+    "providerTitle": "SALAMA Saint-Tropez - Réservation en ligne",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "bookings.zenchef.com/results?rid=352861"
+  },
+  "osm-IBZ-las-dos-lunas": {
+    "provider": "Tableo",
+    "name": "Las Dos Lunas",
+    "city": "Ibiza",
+    "url": "https://app.tableo.com/widget/lasdosLunas/?bgColor=%23222222&textColor=%23ffffff&formControlBgColor=%23ffffff&formControlColor=%23000000&buttonBgColor=%23d4ae38&buttonTextColor=%23ffffff&fontSize=14px",
+    "source": "https://lasdoslunas.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "providerTitle": "Las dos Lunas",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "app.tableo.com/widget/lasdosLunas/"
+  },
+  "osm-MIA-sushi-by-scratch-restaurant": {
+    "provider": "Tock",
+    "name": "Sushi by Scratch Restaurant",
+    "city": "Miami",
+    "url": "https://www.exploretock.com/sushi-by-scratch-restaurants-miami/",
+    "source": "https://www.exploretock.com/sushi-by-scratch-restaurants-miami/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "providerTitle": "Just a moment...",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "www.exploretock.com/sushi-by-scratch-restaurants-miami/"
+  },
+  "osm-CER-su-entu": {
+    "provider": "TheFork",
+    "name": "Su Entu",
+    "city": "Porto Cervo",
+    "url": "https://widget.thefork.com/83da438b-14a5-487b-b0a6-3e5f9faba29b",
+    "source": "https://www.su-entu.it/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "providerTitle": "thefork.com",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "widget.thefork.com/83da438b-14a5-487b-b0a6-3e5f9faba29b"
+  },
+  "osm-BAL-sazon": {
+    "provider": "TableCheck",
+    "name": "Sazón",
+    "city": "Bali",
+    "url": "https://www.tablecheck.com/en/regent-bali-canggu-sazon/reserve",
+    "source": "https://sazonbali.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "providerTitle": "Sazón - Regent Bali Canggu - TableCheck",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "www.tablecheck.com/en/regent-bali-canggu-sazon/reserve"
+  },
+  "curated-RIO-oteque": {
+    "provider": "Tock",
+    "name": "Oteque",
+    "city": "Rio de Janeiro",
+    "url": "https://www.exploretock.com/oteque",
+    "source": "https://www.oteque.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "providerTitle": "Just a moment...",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "www.exploretock.com/oteque"
+  },
+  "curated-TYO-narisawa": {
+    "provider": "OMAKASE",
+    "name": "NARISAWA",
+    "city": "Tokyo",
+    "url": "https://omakase.in/en/r/ne143874",
+    "source": "https://www.narisawa-yoshihiro-en.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "providerTitle": "Attention Required! | Cloudflare",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "omakase.in/en/r/ne143874"
+  },
+  "curated-RIO-lasai": {
+    "provider": "Tock",
+    "name": "Lasai",
+    "city": "Rio de Janeiro",
+    "url": "https://www.exploretock.com/lasai",
+    "source": "https://lasai.com.br/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "providerTitle": "Just a moment...",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "www.exploretock.com/lasai"
+  },
+  "curated-CDM-quintonil": {
+    "provider": "Tock",
+    "name": "Quintonil",
+    "city": "Mexico City",
+    "url": "https://www.exploretock.com/quintonil",
+    "source": "https://quintonil.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "providerTitle": "Just a moment...",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "www.exploretock.com/quintonil"
+  },
+  "curated-STO-almaza": {
+    "provider": "TheFork",
+    "name": "Restaurang Almaza",
+    "city": "Stockholm",
+    "url": "https://module.lafourchette.com/sv_SE/module/398057-4483d",
+    "source": "https://www.restaurangalmaza.se/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "providerTitle": "lafourchette.com",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "module.lafourchette.com/sv_SE/module/398057-4483d"
+  },
+  "curated-AMS-ciel-bleu": {
+    "provider": "TableCheck",
+    "name": "Ciel Bleu",
+    "city": "Amsterdam",
+    "url": "https://www.tablecheck.com/en/okura-nl-cielbleu/reserve/message",
+    "source": "https://www.cielbleu.nl/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "providerTitle": "Ciel Bleu Restaurant** - TableCheck",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "www.tablecheck.com/en/okura-nl-cielbleu/reserve/message"
+  },
+  "curated-STO-lebanon-meza-lounge": {
+    "provider": "TheFork",
+    "name": "Lebanon Meza Lounge",
+    "city": "Stockholm",
+    "url": "https://widget.thefork.com/sv/487687a4-4938-4d1f-8b1a-53c3cc49ae2f?step=date&utm_source=mezalounge.se",
+    "source": "https://mezalounge.se/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "providerTitle": "thefork.com",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "widget.thefork.com/sv/487687a4-4938-4d1f-8b1a-53c3cc49ae2f"
+  },
+  "curated-IBZ-la-paloma-ibiza": {
+    "provider": "Restoo",
+    "name": "La Paloma Ibiza",
+    "city": "Ibiza",
+    "url": "https://palomaibiza.myrestoo.net/en/reservar",
+    "source": "https://palomaibiza.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "providerTitle": "Booking at La Paloma Ibiza, Sant Llorenç de Balàfia.",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "palomaibiza.myrestoo.net/en/reservar"
+  },
+  "curated-HKT-suay-cherngtalay": {
+    "provider": "TableCheck",
+    "name": "Suay Cherngtalay",
+    "city": "Phuket",
+    "url": "https://www.tablecheck.com/en/suay-restaurant-phuket/reserve/message",
+    "source": "https://www.suayrestaurant.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "providerTitle": "SUAY Cherngtalay - TableCheck",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "www.tablecheck.com/en/suay-restaurant-phuket/reserve/message"
+  },
+  "curated-BKK-sorn": {
+    "provider": "TableCheck",
+    "name": "Sorn",
+    "city": "Bangkok",
+    "url": "https://www.tablecheck.com/en/sorn-fine-southern-cuisine/reserve/experiences?menu_lists=6ab4d39faf04e7f6886dccc9&utm_source=website",
+    "source": "https://sornfinesouthern.com/reservations/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "providerTitle": "Sorn ศรณ์ - TableCheck",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "www.tablecheck.com/en/sorn-fine-southern-cuisine/reserve/experiences"
+  },
+  "curated-BAL-aperitif-restaurant": {
+    "provider": "ResDiary / Dish Cult",
+    "name": "Apéritif Restaurant",
+    "city": "Bali",
+    "url": "https://booking.resdiary.com/widget/Standard/aperitifbali/12124",
+    "source": "https://www.aperitif.com/reservations/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "providerTitle": "ResDiary Widget",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "booking.resdiary.com/widget/Standard/aperitifbali/12124"
+  },
+  "curated-BAL-mozaic-ubud": {
+    "provider": "ResDiary / Dish Cult",
+    "name": "Mozaic Ubud",
+    "city": "Bali",
+    "url": "https://booking.resdiary.com/widget/Standard/MozaicBali/1918",
+    "source": "https://www.mozaic-bali.com/mozaic-gastronomic-restaurant-bali-reservations",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "providerTitle": "ResDiary Widget",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "booking.resdiary.com/widget/Standard/MozaicBali/1918"
+  },
+  "curated-BCN-cocina-hermanos-torres": {
+    "provider": "TheFork",
+    "name": "Cocina Hermanos Torres",
+    "city": "Barcelona",
+    "url": "https://module.lafourchette.com/en_GB/module/399277-70e69",
+    "source": "https://cocinahermanostorres.com/en/reserve/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "providerTitle": "lafourchette.com",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "module.lafourchette.com/en_GB/module/399277-70e69"
+  },
+  "osm-CAP-da-tonino": {
+    "provider": "TheFork",
+    "name": "Da Tonino",
+    "city": "Capri",
+    "url": "https://widget.thefork.com/it/09420ac9-a0a0-41df-ba2e-e73f378b4bc6",
+    "source": "https://www.ristorantedatonino.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "providerTitle": "thefork.com",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "widget.thefork.com/it/09420ac9-a0a0-41df-ba2e-e73f378b4bc6"
+  },
+  "curated-MIA-cote-miami": {
+    "provider": "Resy",
+    "name": "COTE Miami",
+    "city": "Miami",
+    "url": "https://resy.com/cities/mia/cote-mia",
+    "source": "https://www.cotekoreansteakhouse.com/locations/cotemiami",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "provider_page_loaded",
+    "providerTitle": "Book Your COTE Miami Reservation Now on Resy",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "resy.com/cities/mia/cote-mia"
+  },
+  "osm-PAR-le-cafe-de-la-paix": {
+    "provider": "Zenchef",
+    "name": "Le Café de la Paix",
+    "city": "Paris",
+    "url": "https://bookings.zenchef.com/results?rid=352690&fullscreen=1&lang=fr",
+    "source": "https://www.cafedelapaix.fr/fr/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "providerTitle": "Café de la Paix - Réservation en ligne",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "bookings.zenchef.com/results?rid=352690"
+  },
+  "curated-LAX-n-naka": {
+    "provider": "Tock",
+    "name": "n/naka",
+    "city": "Los Angeles",
+    "url": "https://www.exploretock.com/n-naka/",
+    "source": "https://n-naka.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "providerTitle": "Just a moment...",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "www.exploretock.com/n-naka/"
+  },
+  "osm-PAR-la-source": {
+    "provider": "Eat App",
+    "name": "La Source",
+    "city": "Paris",
+    "url": "https://eatapp.co/fr/reserve/la-source-49-boulevard-de-la-tour-maubourg?source=iframe",
+    "source": "https://cafelasource.fr/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "providerTitle": "Réservez une table chez La Source avec Eat App • Eat App",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "eatapp.co/fr/reserve/la-source-49-boulevard-de-la-tour-maubourg"
+  },
+  "curated-NYC-atomix": {
+    "provider": "Tock",
+    "name": "Atomix",
+    "city": "New York",
+    "url": "https://www.exploretock.com/atomixnyc",
+    "source": "https://www.atomixnyc.com/about",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "providerTitle": "Just a moment...",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "www.exploretock.com/atomixnyc"
+  },
+  "curated-NYC-le-bernardin": {
+    "provider": "Resy",
+    "name": "Le Bernardin",
+    "city": "New York",
+    "url": "https://resy.com/cities/new-york-ny/venues/le-bernardin?date=2025-04-01&seats=2",
+    "source": "https://www.le-bernardin.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "provider_page_loaded",
+    "providerTitle": "Book Your Le Bernardin Reservation Now on Resy",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "resy.com/cities/new-york-ny/venues/le-bernardin"
+  },
+  "curated-NYC-eleven-madison-park": {
+    "provider": "Resy",
+    "name": "Eleven Madison Park",
+    "city": "New York",
+    "url": "https://resy.com/cities/new-york-ny/venues/eleven-madison-park",
+    "source": "https://www.elevenmadisonpark.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "external_link",
+    "verification": "provider_page_loaded",
+    "providerTitle": "Book Your Eleven Madison Park Reservation Now on Resy",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "resy.com/cities/new-york-ny/venues/eleven-madison-park"
+  },
+  "osm-STT-au-caprice-des-deux": {
+    "provider": "Zenchef",
+    "name": "Au Caprice des Deux",
+    "city": "Saint-Tropez",
+    "url": "https://bookings.zenchef.com/results?rid=361007&fullscreen=1",
+    "source": "https://www.aucapricedesdeux.com/",
+    "checkedAt": "2026-10-15",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "providerTitle": "Au Caprice des Deux - Restaurant Bistronomique à Saint-Tropez - Réservation en ligne",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
+    "venueKey": "bookings.zenchef.com/results?rid=361007"
   }
 }

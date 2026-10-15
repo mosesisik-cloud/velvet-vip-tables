@@ -1,3 +1,5 @@
+import { mountBookingReport } from './booking-report.js';
+import { mountAvailabilitySearch } from './availability-search.js';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
 import { mountBokabordMirror } from "./bokabord-mirror.js";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
@@ -2389,7 +2391,7 @@ async function renderRestaurants() {
   const selectedDestination = uniqueDestinations.find((d) => d.code === requestedDestination || d.name.toLowerCase() === requestedDestination.toLowerCase()) || null;
   const groups = uniqueDestinations.filter((d) => !selectedDestination || d.code === selectedDestination.code).map((d) => ({ d, restaurants: publishableRestaurants(rows[d.code]?.restaurants || []) })).filter((x) => x.restaurants.length);
   view().innerHTML = `<section class="section restaurant-directory"><div class="section-head"><div><h1>${esc(t("navRestaurants"))}${selectedDestination ? ` i ${esc(selectedDestination.name)}` : ""}</h1><div class="sub">${esc(t("restaurantsSub"))}</div></div><span class="count">${groups.reduce((n, x) => n + x.restaurants.length, 0)}</span></div>
-    <div class="filters restaurant-filters"><select id="restaurant-dest-filter" aria-label="${esc(t("filterDest"))}"><option value="">${esc(t("allDest"))}</option>${uniqueDestinations.filter((d) => publishableRestaurants(rows[d.code]?.restaurants || []).length).map((d) => `<option value="${esc(d.code)}" ${selectedDestination?.code === d.code ? "selected" : ""}>${esc(d.name)}</option>`).join("")}</select></div>
+    <p><a class="btn btn-gold" href="#/availability" data-nav>Sök lediga bord</a></p><div class="filters restaurant-filters"><select id="restaurant-dest-filter" aria-label="${esc(t("filterDest"))}"><option value="">${esc(t("allDest"))}</option>${uniqueDestinations.filter((d) => publishableRestaurants(rows[d.code]?.restaurants || []).length).map((d) => `<option value="${esc(d.code)}" ${selectedDestination?.code === d.code ? "selected" : ""}>${esc(d.name)}</option>`).join("")}</select></div>
     <div class="restaurant-jump">${groups.map(({ d }) => `<a href="#restaurant-${esc(d.code)}">${esc(d.name)}</a>`).join("")}</div>
     ${groups.map(({ d, restaurants }) => `<section class="restaurant-city" id="restaurant-${esc(d.code)}"><div class="section-head"><div><h2>${esc(d.name)}</h2><div class="sub">${esc(d.country)}</div></div><a href="#/destination/${encodeURIComponent(d.code)}" data-nav>${esc(t("explore"))} →</a></div><div class="restaurant-grid">${restaurants.map(restaurantCardHTML).join("")}</div></section>`).join("")}
     <p class="restaurant-source">VELVET curated · ${esc(t("restaurantsSub"))}</p></section>`;
@@ -2507,7 +2509,12 @@ async function renderRestaurantDetail(placeId) {
     </div>
   </section>`;
   const providerContainer = document.getElementById("restaurant-provider-booking");
-  if (providerContainer && embeddedBooking) mountEmbeddedBooking(providerContainer, embeddedBooking);
+  if (providerContainer && embeddedBooking) {
+    mountEmbeddedBooking(providerContainer, embeddedBooking);
+    const reportContainer = document.createElement('div');
+    providerContainer.after(reportContainer);
+    mountBookingReport(reportContainer, {restaurantId:restaurant.placeId,apiBase:apiBase()});
+  }
   const mirrorContainer = document.getElementById("bokabord-mirror");
   if (mirrorContainer) mountBokabordMirror(mirrorContainer, apiJSON, { restaurantId: restaurant.placeId, restaurantName: restaurant.name });
   const webbridgeForm = document.getElementById("restaurant-webbridge-search");
@@ -4391,13 +4398,13 @@ async function renderBookings() {
       const declined = booking.status === "declined" || booking.status === "provider_error" || booking.status === "provider_rejected";
       const received = booking.status === "received";
       const requested = booking.status === "request" || booking.status === "local-pending";
-      const status = confirmed ? "Bekräftad av restaurangen" : declined ? "Inte bekräftad" : received ? "Mottagen av restaurangen" : requested ? "Väntar på Velvet Concierge" : booking.status === "unknown" ? "Resultatet behöver kontrolleras" : "Behandlas";
-      const delivery = confirmed
+      const status = booking.status === "guest_reported" ? "Bekräftelse uppgiven av gästen" : confirmed ? "Bekräftad av restaurangen" : declined ? "Inte bekräftad" : received ? "Mottagen av restaurangen" : requested ? "Väntar på Velvet Concierge" : booking.status === "unknown" ? "Resultatet behöver kontrolleras" : "Behandlas";
+      const delivery = booking.status === "guest_reported" ? "Sparad från gästens uppgifter. Velvet har ännu inte verifierat bekräftelsen hos bokningssystemet." : confirmed
         ? "Restaurangen har bekräftat bokningen."
         : declined ? "Restaurangen kunde inte bekräfta den önskade tiden."
           : received ? "Velvet har lämnat förfrågan till restaurangen och väntar på svar."
             : "Detta är en riktig förfrågan, men ännu ingen bekräftad reservation.";
-      const operatorControls = restaurantOperator && !confirmed && !declined && booking.status !== 'unknown' && booking.status !== 'payment_required'
+      const operatorControls = restaurantOperator && booking.status !== 'guest_reported' && !confirmed && !declined && booking.status !== 'unknown' && booking.status !== 'payment_required'
         ? `<div class="restaurant-operator-status"><select data-restaurant-status="${esc(booking.id)}"><option value="received">Mottagen av Zink</option><option value="confirmed">Bekräftad av Zink</option><option value="declined">Avböjd</option></select><input data-restaurant-reference="${esc(booking.id)}" placeholder="Zinks bokningsreferens"><button class="btn btn-gold btn-sm" type="button" data-restaurant-status-submit="${esc(booking.id)}">Uppdatera status</button></div>`
         : "";
       return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${esc(delivery)}</div>${restaurantOperator && booking.name ? `<div class="booking-delivery">${esc(booking.name)} · ${esc(booking.email || "")} · ${esc(booking.phone || "")}</div>` : ""}${operatorControls}</div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${confirmed ? "Visa restaurangen" : "Till bokningen"}</a></div>`;
@@ -7613,6 +7620,24 @@ async function renderBookSite(id) {
   }
 }
 
+let activeAvailabilitySearch = null;
+async function renderAvailabilitySearch() {
+  setTitle('Sök lediga bord');
+  const requestedHash = location.hash;
+  view().innerHTML = '<section class="section"><p role="status">Hämtar destinationer…</p></section>';
+  try {
+    const response = await fetch('data/restaurants.json', {cache:'no-cache'});
+    if (!response.ok) throw new Error('catalog');
+    const restaurants = await response.json();
+    if (location.hash !== requestedHash) return;
+    const params = new URLSearchParams(requestedHash.split('?')[1] || '');
+    view().innerHTML = '<section class="section" id="availability-root"></section>';
+    activeAvailabilitySearch = mountAvailabilitySearch(document.getElementById('availability-root'), {restaurants,apiBase:apiBase(),initialCity:params.get('city') || ''});
+  } catch {
+    if(location.hash === requestedHash) view().innerHTML = '<section class="section"><h1>Sök lediga bord</h1><p>Destinationerna kunde inte hämtas. Försök igen.</p></section>';
+  }
+}
+
 // ---------- Router ----------
 const routes = {
   "": renderHome,
@@ -7620,6 +7645,7 @@ const routes = {
   "#/destinations": renderDestinations,
   "#/venues": renderVenues,
   "#/restaurants": renderRestaurants,
+  "#/availability": renderAvailabilitySearch,
   "#/map": renderMapView,
   "#/bookings": renderBookings,
   "#/open": () => { renderOpenTables(); },
@@ -7654,6 +7680,7 @@ const paramRoutes = [
 const safeDecode = (s) => { try { return decodeURIComponent(s); } catch { return s; } };
 
 function route() {
+  activeAvailabilitySearch?.destroy(); activeAvailabilitySearch = null;
   document.body.classList.remove("has-dock");
   // Stäng ev. öppen modal vid ruttbyte (t.ex. bakåtknapp med öppen modal)
   if (modalTeardown) modalTeardown();

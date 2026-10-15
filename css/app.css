@@ -3139,3 +3139,16 @@ body.light-shell .dest-card::after {
 /* Keep the original provider UI at its native viewport size. */
 .booking-provider-stage { width:100%; min-width:0; }
 .booking-provider-frame { display:block; width:100%; height:min(900px, 85dvh); min-height:540px; border:0; background:#fff; color-scheme:light; }
+
+/* A tall provider checkout must scroll with the page, including policy dialogs. */
+body.light-shell .restaurant-detail .restaurant-book-panel:has(.booking-provider-frame) { position: static; top: auto; min-width: 0; }
+.restaurant-detail-main { min-width: 0; }
+.restaurant-facts dd { min-width: 0; overflow-wrap: anywhere; }
+@media (max-width: 760px) { .restaurant-detail-grid { grid-template-columns: minmax(0, 1fr); } }
+
+.booking-report { margin-top:24px; padding:16px; border:1px solid rgba(255,255,255,.15); border-radius:12px; }
+.booking-report summary { cursor:pointer; }
+.booking-report p { font-size:13px; line-height:1.6; opacity:.8; }
+.booking-report form { display:grid; gap:12px; }
+.booking-report label { display:grid; gap:5px; font-size:13px; }
+.booking-report input { width:100%; min-width:0; padding:10px; border:1px solid #555; border-radius:6px; background:#141414; color:white; }

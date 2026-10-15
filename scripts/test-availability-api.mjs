@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import { AvailabilitySearch, validateSearch } from '../api/availability-search.mjs';
+const date = new Date(Date.now()+86400000).toISOString().slice(0,10);
+for (const q of [{city:'x',date:'2026-02-30',time:'17:00',party:2},{city:'x',date,time:'24:00',party:2},{city:'x',date,time:'17:00',party:0}]) assert.throws(()=>validateSearch(q));
+const registry = {a:{name:'A',city:'Test',provider:'SevenRooms',venueId:'a',url:'https://www.sevenrooms.com/reservations/a'}};
+const restaurants={destinations:{TST:{destination:'Test',restaurants:[{placeId:'a',name:'A'},{placeId:'b',name:'B'}]}}};
+let requests=0;
+const service = new AvailabilitySearch({registry,restaurants,fetcher:async(url)=>{requests++;assert.equal(url.hostname,'www.sevenrooms.com');return {ok:true,json:async()=>({status:200,data:{availability:{[date]:[{times:[{type:'book',time_iso:date+' 17:00:00',require_credit_card:true},{type:'request',time:'17:30'},{type:'book',time:'23:00'}]}]}}})};}});
+const q={city:'Test',date,time:'17:00',party:2};
+const [a,b]=await Promise.all([service.search(q),service.search(q)]);
+assert.equal(requests,1);assert.deepEqual(a,b);assert.equal(a.results[0].slots.length,1);assert.equal(a.results[0].status,'available');assert.equal(a.results[1].status,'unsupported');
+await service.search(q);assert.equal(requests,2,'completed availability never served from cache');
+service.fetcher=async()=>({ok:false});assert.equal((await service.search(q)).results[0].status,'error');
+service.fetcher=async()=>({ok:true,json:async()=>({status:200,data:{availability:{}}})});assert.equal((await service.search(q)).results[0].status,'unavailable');
+await assert.rejects(service.search({...q,city:'Unknown'}));
+console.log('Availability validation, live-only results, errors, date/time filtering and in-flight deduplication passed.');
