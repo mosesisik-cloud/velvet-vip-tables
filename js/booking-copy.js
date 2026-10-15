@@ -3,6 +3,12 @@ const COPY = {
   sv: {
     requestWindowMax: "Restaurangen behandlar förfrågningar inom {max} timmar.",
     manualEmail: "Mejla om bordsbokning",
+    manualPhone: "Ring om bordsbokning",
+    manualPhoneNotice: "Ring restaurangen för att fråga om bord. Velvet visar inga lediga tider och bekräftar ingen bokning; restaurangen måste bekräfta bordet.",
+    club55PhoneOnly: "Club 55 tar endast emot bordsbokningar per telefon, inte via nätet eller mejl. Numret gäller restaurangen, inte solbäddar.",
+    denDirectPhone: "Den tar endast emot bokningar direkt från gästen per telefon, inte via nätet eller mellanhänder. Bokningen är klar först när du får restaurangens bekräftelse via mejl. Velvet visar inga lediga tider.",
+    denCallWindow: "Bokningssamtal: måndag–lördag 12:00–17:00, lokal tid i Tokyo (Asia/Tokyo). Middagstid: 18:00–20:00. Bokning upp till två kalendermånader framåt, samma datum, för högst fyra gäster. Kontrollera aktuella stängningsdagar på restaurangens sida.",
+    denCancellation: "Den anger att avbokning eller minskat antal gäster samma dag debiteras hela menypriset. Meddela avbokning eller ändring senast två dagar före besöket; för måndagsbokningar senast lördag. Kontrollera villkoren för din bokning med restaurangen.",
     manualPaymentUnknown: "Kortgaranti och förskottsbetalning är inte verifierade. Fråga restaurangen om betalningsvillkoren innan du bokar.",
 
     requestHeading: "Bokningsförfrågan",
@@ -41,6 +47,12 @@ const COPY = {
   en: {
     requestWindowMax: "The restaurant processes requests within {max} hours.",
     manualEmail: "Email to request a table",
+    manualPhone: "Call to request a table",
+    manualPhoneNotice: "Call the restaurant to ask for a table. Velvet shows no availability and confirms no reservation; the restaurant must confirm your table.",
+    club55PhoneOnly: "Club 55 accepts table reservations only by telephone, not online or by email. This is the restaurant number, not the sunbed line.",
+    denDirectPhone: "Den accepts reservations only by telephone directly from the guest, not online or through intermediaries. Your reservation is complete only when you receive the restaurant's confirmation email. Velvet shows no availability.",
+    denCallWindow: "Reservation calls: Monday–Saturday 12:00–17:00, Tokyo local time (Asia/Tokyo). Dining hours: 18:00–20:00. Book up to two calendar months ahead, same date, for up to four guests. Check the restaurant's page for current closure dates.",
+    denCancellation: "Den states that same-day cancellations or reductions in party size incur the full menu price. Notify the restaurant of cancellation or changes no later than two days before your visit; for Monday reservations, by Saturday. Confirm the terms for your booking with the restaurant.",
     manualPaymentUnknown: "Card guarantee and prepayment requirements have not been verified. Ask the restaurant about payment terms before booking.",
 
     requestHeading: "Booking request",
@@ -79,6 +91,12 @@ const COPY = {
   es: {
     requestWindowMax: "El restaurante tramita las solicitudes en un plazo de {max} horas.",
     manualEmail: "Enviar un correo para solicitar mesa",
+    manualPhone: "Llamar para solicitar mesa",
+    manualPhoneNotice: "Llama al restaurante para solicitar mesa. Velvet no muestra disponibilidad ni confirma reservas; el restaurante debe confirmar tu mesa.",
+    club55PhoneOnly: "Club 55 acepta reservas de mesa solo por teléfono, no por internet ni por correo electrónico. Este número es del restaurante, no de las tumbonas.",
+    denDirectPhone: "Den acepta reservas únicamente por teléfono y directamente del comensal, no por internet ni mediante intermediarios. La reserva se completa al recibir el correo de confirmación del restaurante. Velvet no muestra disponibilidad.",
+    denCallWindow: "Llamadas para reservar: lunes–sábado 12:00–17:00, hora local de Tokio (Asia/Tokyo). Horario de cena: 18:00–20:00. Reservas hasta dos meses naturales antes, el mismo día del mes, para un máximo de cuatro personas. Consulta los cierres actuales en la página del restaurante.",
+    denCancellation: "Den indica que las cancelaciones o reducciones de comensales el mismo día se cobran al precio completo del menú. Comunica las cancelaciones o cambios al menos dos días antes de la visita; para reservas del lunes, a más tardar el sábado. Confirma las condiciones de tu reserva con el restaurante.",
     manualPaymentUnknown: "No se han verificado los requisitos de garantía con tarjeta ni de pago anticipado. Consulta las condiciones de pago con el restaurante antes de reservar.",
 
     requestHeading: "Solicitud de reserva",
@@ -117,6 +135,12 @@ const COPY = {
   fr: {
     requestWindowMax: "Le restaurant traite les demandes sous {max} heures.",
     manualEmail: "Envoyer un e-mail pour demander une table",
+    manualPhone: "Appeler pour demander une table",
+    manualPhoneNotice: "Appelez le restaurant pour demander une table. Velvet n’affiche aucune disponibilité et ne confirme aucune réservation ; le restaurant doit confirmer votre table.",
+    club55PhoneOnly: "Club 55 accepte les réservations de table uniquement par téléphone, ni en ligne ni par e-mail. Ce numéro est celui du restaurant, pas celui des transats.",
+    denDirectPhone: "Den accepte les réservations uniquement par téléphone, directement auprès du client, ni en ligne ni par un intermédiaire. La réservation est finalisée à réception de l’e-mail de confirmation du restaurant. Velvet n’affiche aucune disponibilité.",
+    denCallWindow: "Appels pour réserver : lundi–samedi 12:00–17:00, heure locale de Tokyo (Asia/Tokyo). Dîner : 18:00–20:00. Réservations jusqu’à deux mois calendaires à l’avance, au même quantième, pour quatre personnes maximum. Consultez les dates de fermeture actuelles sur le site du restaurant.",
+    denCancellation: "Den indique que les annulations ou réductions du nombre de convives le jour même sont facturées au prix intégral du menu. Prévenez le restaurant au plus tard deux jours avant la visite ; pour une réservation le lundi, au plus tard le samedi. Confirmez les conditions de votre réservation auprès du restaurant.",
     manualPaymentUnknown: "Les exigences de garantie par carte et de prépaiement n’ont pas été vérifiées. Demandez les conditions de paiement au restaurant avant de réserver.",
 
     requestHeading: "Demande de réservation",
