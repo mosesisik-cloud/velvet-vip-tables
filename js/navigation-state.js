@@ -9,7 +9,7 @@ export function primarySection(hash = '#/') {
 }
 
 export function isDiscoveryList(hash = '') {
-  return /^#\/(venues|restaurants|availability|destinations|map)(\?|$)/.test(hash);
+  return /^#\/(venues|restaurants|availability|destinations|map|favorites)(\?|$)/.test(hash) || /^#\/destination\/[^/?]+(?:\?|$)/.test(hash);
 }
 
 export function safeDiscoveryReturn(hash) {

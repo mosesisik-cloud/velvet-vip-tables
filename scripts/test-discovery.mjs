@@ -15,13 +15,33 @@ assert.equal(availabilityCacheMatches(record, record.query, 0), false);
 
 // A small DOM boundary fake tests request cancellation and restoration without a browser or real API.
 class Element {
-  listeners = new Map(); attributes = {}; innerHTML = ''; textContent = '';
+  listeners = new Map(); attributes = {}; children = []; textContent = ''; parent = null;
+  get innerHTML() { return this.children.map(node => node.outerHTML).join(''); }
+  set innerHTML(value) {
+    this.children = [...value.matchAll(/<(article|details|p)\b[^>]*>[\s\S]*?<\/\1>/g)].map(match => {
+      const node = new Element(); node.outerHTML = match[0]; node.parent = this;
+      node.tagName = match[1].toUpperCase(); node.dataset = {resultKey:match[0].match(/data-result-key="([^"]*)"/)?.[1]};
+      node.className = match[0].match(/class="([^"]*)"/)?.[1] || ''; return node;
+    });
+  }
+  get firstElementChild() { return this.children[0] || null; }
+  get nextElementSibling() { return this.parent?.children[this.parent.children.indexOf(this)+1] || null; }
+  insertBefore(node, expected) {
+    node.remove(); node.parent = this;
+    const index = expected ? this.children.indexOf(expected) : this.children.length;
+    this.children.splice(index,0,node);
+  }
+  remove() { if(this.parent) this.parent.children=this.parent.children.filter(node=>node!==this); this.parent=null; }
   addEventListener(name, fn) { this.listeners.set(name, fn); }
   removeEventListener(name) { this.listeners.delete(name); }
   setAttribute(name, value) { this.attributes[name] = value; }
   replaceChildren() { this.innerHTML=''; }
   reportValidity() { return true; }
 }
+globalThis.document = { createElement(tag) {
+  assert.equal(tag,'template'); const template = new Element();
+  Object.defineProperty(template,'content',{get(){return {children:this.children}}}); return template;
+} };
 const store = new Map();
 globalThis.sessionStorage = {getItem:key=>store.get(key) || null, setItem:(key,value)=>store.set(key,value)};
 globalThis.location = {hash:'#/availability?city=Stockholm&date=2030-10-20&time=20%3A15&party=4'};
@@ -60,6 +80,39 @@ slow.form.values.city='Paris';slow.form.listeners.get('change')();
 resolveSlow({ok:true,json:async()=>response});await pending;
 assert.equal(aborted,true);assert.equal(slow.results.innerHTML,'','A late previous-city response cannot overwrite edited search');
 pendingMount.destroy();
+
+// Progressive job responses keep already rendered cards and carry the chosen booking context.
+store.clear();
+location.hash = '#/availability?city=Stockholm&date=2030-10-20&time=20%3A15&party=4';
+const providerResponse = {...response, complete:false, searchId:'job_test', results:[{...response.results[0],provider:'SevenRooms',slots:[{time:'20:15',bookingUrl:'https://www.sevenrooms.com/reservations/zink'}]},{restaurantId:'pending',restaurant:'Pending',status:'pending'}]};
+let calls=[];
+globalThis.fetch = async url=>{calls.push(url);return {ok:true,json:async()=> calls.length===1 ? providerResponse : {...providerResponse,complete:true,results:[providerResponse.results[0]]}}};
+const streaming=fixture(); const streamMount=mountAvailabilitySearch(streaming.container,{restaurants:catalogue});
+const streamingDone=streaming.form.listeners.get('submit')({preventDefault(){}});
+await new Promise(setImmediate);
+const stableCard=streaming.results.children[0];
+assert.match(streaming.status.textContent,/Söker vidare/);
+assert.match(streaming.results.innerHTML,/#\/restaurant\/zink\?date=2030-10-20&amp;time=20%3A15&amp;party=4/);
+await streamingDone;
+assert.match(calls[0],/progressive=1/);
+assert.match(calls[1],/\/availability\/jobs\/job_test$/);
+assert.equal(streaming.results.children[0],stableCard,'Progressive updates preserve unchanged cards');
+streamMount.destroy();
+
+// Back from a running search resumes the existing job, instead of launching another search.
+store.clear(); calls=[];
+globalThis.fetch = async url=>{calls.push(url);return {ok:true,json:async()=>providerResponse}};
+const interrupted=fixture();const interruptedMount=mountAvailabilitySearch(interrupted.container,{restaurants:catalogue});
+const interruptedDone=interrupted.form.listeners.get('submit')({preventDefault(){}});
+await new Promise(setImmediate);interruptedMount.destroy();await interruptedDone;
+globalThis.fetch = async url=>{calls.push(url);return {ok:true,json:async()=>({...providerResponse,complete:true,results:[providerResponse.results[0]]})}};
+const resumed=fixture();const resumedMount=mountAvailabilitySearch(resumed.container,{restaurants:catalogue});
+await new Promise(setImmediate);
+assert.equal(calls.length,2);
+assert.match(calls[1],/\/availability\/jobs\/job_test$/);
+assert.match(resumed.results.innerHTML,/Zink/);
+assert.equal(resumed.results.attributes['aria-busy'],'false');
+resumedMount.destroy();
 
 // Run production discovery functions in isolation: actual catalogue, old venue IDs, mixed shared IDs.
 const app=await fs.readFile(new URL('../js/app.js',import.meta.url),'utf8');

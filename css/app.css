@@ -3220,3 +3220,7 @@ body.light-shell .venue-card::after, body.light-shell .restaurant-card::after, b
 @media (prefers-reduced-motion: reduce) {
   .nav-links.open, .home-clean *, .detail-disclosure * { animation: none; transition: none; scroll-behavior: auto; }
 }
+.booking-selection-summary { padding:12px 14px; border:1px solid var(--border); border-radius:8px; font-size:14px; line-height:1.6; }
+
+.explore-nav[hidden] { display: none; }
+.search-group-label { padding: 14px 18px 6px; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .06em; }

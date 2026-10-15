@@ -1,4 +1,5 @@
 import { primarySection, isDiscoveryList, safeDiscoveryReturn } from './navigation-state.js';
+import { parseBookingSelection, withBookingSelection } from './booking-selection.js';
 import { mountBookingReport } from './booking-report.js';
 import { uxT } from './ux-copy.js';
 import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo } from './ux-booking.js';
@@ -2037,7 +2038,7 @@ function renderHome() {
   let knownGeo = loadGeo();
   if (!knownGeo && (isPreviewHost() || /^(?:localhost|127\.0\.0\.1)$/i.test(location.hostname))) {
     knownGeo = locateByTimezone();
-    if (knownGeo) saveGeo(knownGeo.lat, knownGeo.lng);
+    // A timezone suggestion is not a measured position; do not persist it as GPS.
   }
   const geoNearest = knownGeo ? nearestDestination(knownGeo.lat, knownGeo.lng) : null;
   const localDest = homeDestination() || geoNearest?.d || null;
@@ -2071,8 +2072,8 @@ function renderHome() {
 
   <section class="section home-nearby" id="home-nearby">
     <div class="home-location-bar">
-      <div><span class="home-location-pin" aria-hidden="true">⌖</span><strong>${esc(localDest ? `${t("geoNearest")} ${localDest.name}` : t("nearMe"))}</strong><small>${esc(localDest ? t("explorePlacesHint") : t("geoHint"))}</small></div>
-      <button type="button" class="btn btn-gold btn-sm" id="home-locate">${esc(localDest ? t("geoRetry") : t("geoUse"))}</button>
+      <div><span class="home-location-pin" aria-hidden="true">⌖</span><strong>${esc(localDest ? t("localPlaces").replace("{name}", localDest.name) : t("nearMe"))}</strong><small>${esc(localDest ? t("explorePlacesHint") : t("geoHint"))}</small></div>
+      <button type="button" class="btn btn-gold btn-sm" id="home-locate">${esc(t("geoUse"))}</button>
     </div>
     ${localDest ? `<div class="section-head"><div><h2>${esc(t("localPlaces").replace("{name}", localDest.name))}</h2><div class="sub">${esc(t("explorePlacesHint"))}</div></div><a class="link-gold" href="#/destination/${encodeURIComponent(localDest.code)}" data-nav>${esc(t("explore"))} →</a></div>
       <div class="vibe-rail home-local-rail">${localVenues.length ? localVenues.map((v, i) => venueCard(v, { vibe: true, eager: i < 3 })).join("") : `<p class="events-meta">${esc(t("noHits"))}</p>`}</div>` : ""}
@@ -2322,12 +2323,13 @@ async function mountHomeRestaurants() {
   let data = null;
   try { const res = await fetch("data/restaurants.json", { cache: "no-store" }); if (res.ok) data = await res.json(); } catch {}
   const rows = data?.destinations || {};
-  const total = Object.values(rows).reduce((sum, destination) => sum + (destination.restaurants || []).length, 0);
+  const total = Object.values(rows).reduce((sum, destination) => sum + publishableRestaurants(destination.restaurants || []).length, 0);
   const counter = document.getElementById("home-restaurants-count");
-  if (counter && total) counter.textContent = `${total.toLocaleString(currentLang())} restauranger i ${Object.keys(rows).length} destinationer`;
+  if (counter && total) counter.textContent = `${total.toLocaleString(currentLang())} restauranger i ${Object.values(rows).filter(d => publishableRestaurants(d.restaurants || []).length).length} destinationer`;
   const localCode = homeDestination()?.code || (() => { const g = loadGeo(); return g ? nearestDestination(g.lat, g.lng)?.d?.code : ""; })();
   const featuredCodes = [localCode, "TYO", "HKG", "SYD", "CPT", "RIO", "CDM", "LIS", "AMS"].filter((code, i, all) => code && all.indexOf(code) === i);
-  const featured = featuredCodes.flatMap((code) => publishableRestaurants(rows[code]?.restaurants || []).slice(0, 1));
+  const localRestaurants = publishableRestaurants(rows[localCode]?.restaurants || []);
+  const featured = localRestaurants.length ? localRestaurants.slice(0, 6) : featuredCodes.flatMap((code) => publishableRestaurants(rows[code]?.restaurants || []).slice(0, 1)).slice(0, 6);
   root.innerHTML = featured.length
     ? `<div class="restaurant-grid">${featured.map(restaurantCardHTML).join("")}</div>`
     : `<div class="empty-state"><p>${esc(t("restaurantsEmpty"))}</p></div>`;
@@ -2407,7 +2409,8 @@ async function renderRestaurantDetail(placeId) {
     const match = (row.restaurants || []).find((item) => item.placeId === placeId);
     if (match) { restaurant = match; destination = { code, ...row }; break; }
   }
-  const embeddedBooking = restaurant ? await getEmbeddedBooking(restaurant.placeId) : null;
+  const bookingSelection = parseBookingSelection(new URLSearchParams(restaurantRoute.split('?')[1] || ''));
+  const embeddedBooking = restaurant ? withBookingSelection(await getEmbeddedBooking(restaurant.placeId), bookingSelection) : null;
   if (location.hash !== restaurantRoute) return;
   if (!restaurant || (!hasVerifiedRestaurantImages(restaurant) && !embeddedBooking)) {
     view().innerHTML = `<section class="section"><div class="empty-state"><h1>Restaurangen hittades inte</h1><p><a class="btn btn-gold" href="#/restaurants" data-nav>Till restauranger</a></p></div></section>`;
@@ -2480,6 +2483,12 @@ async function renderRestaurantDetail(placeId) {
   const providerContainer = document.getElementById("restaurant-provider-booking");
   if (providerContainer && embeddedBooking) {
     mountEmbeddedBooking(providerContainer, embeddedBooking);
+    if (bookingSelection) {
+      const selected = document.createElement('p'); selected.className = 'booking-selection-summary';
+      selected.textContent = `Ditt sökval: ${bookingSelection.date} kl. ${bookingSelection.time} · ${bookingSelection.party} gäster. Kontrollera att samma val visas i restaurangens formulär.`;
+      providerContainer.prepend(selected);
+      if (embeddedBooking.provider === 'SevenRooms') providerContainer.querySelector('button')?.click();
+    }
     const reportContainer = document.createElement('div');
     providerContainer.after(reportContainer);
     mountBookingReport(reportContainer, {restaurantId:restaurant.placeId,apiBase:apiBase()});
@@ -7595,7 +7604,11 @@ function paintExploreNav(hash) {
   if (!nav) return;
   nav.hidden = primarySection(hash) !== '#/';
   nav.setAttribute('aria-label', t('navExplore'));
-  const selected = destByCodeOrName(new URLSearchParams(hash.split('?')[1] || '').get('dest')) || homeDestination();
+  const params = new URLSearchParams(hash.split('?')[1] || '');
+  const cityRoute = hash.match(/^#\/destination\/([^?]+)/);
+  const venueRoute = hash.match(/^#\/venue\/([^?]+)/);
+  const venue = venueRoute && VENUES.find(v => v.venue_id === safeDecode(venueRoute[1]));
+  const selected = destByCodeOrName(cityRoute ? safeDecode(cityRoute[1]) : params.get('dest') || params.get('city') || venue?.destination_code) || homeDestination();
   const links = [
     ['#/restaurants' + (selected ? '?dest=' + encodeURIComponent(selected.code) : ''), 'navRestaurants'],
     ['#/venues', 'navVenues'],
@@ -7614,6 +7627,8 @@ async function route() {
     routeScroll.set(renderedRoute, window.scrollY);
     if (isDiscoveryList(renderedRoute)) {
       try { sessionStorage.setItem('velvet_discovery_return', renderedRoute); } catch {}
+    } else if (/^#\/(venue|restaurant)\//.test(incoming) && !/^#\/(venue|restaurant|book-site|menu)\//.test(renderedRoute)) {
+      try { sessionStorage.removeItem('velvet_discovery_return'); } catch {}
     }
   }
   renderedRoute = incoming;
@@ -7679,7 +7694,7 @@ async function route() {
     let returnTo;
     try { returnTo = safeDiscoveryReturn(sessionStorage.getItem('velvet_discovery_return')); } catch {}
     const back = main.querySelector('.detail-back, .back-link');
-    if (returnTo && back) { back.href = returnTo; back.textContent = '← ' + t('searchResultsBack'); }
+    if (returnTo && back) { back.href = returnTo; back.textContent = '← ' + t(returnTo.startsWith('#/destination/') ? 'navDestinations' : returnTo.startsWith('#/favorites') ? 'navFav' : 'searchResultsBack'); }
   }
   main.focus({ preventScroll: true });
   requestAnimationFrame(() => {
@@ -7690,7 +7705,9 @@ async function route() {
 // Mjuk crossfade mellan vyer vid ruttbyte (View Transitions API, progressive
 // enhancement). Vid reduced-motion eller saknat stöd → omedelbart byte som förr.
 // Endast hashchange går via denna; programmatiska route()-anrop förblir direkta.
-function routeWithTransition() {
+function routeWithTransition(event) {
+  // replaceState updates search filters without rendering; retain that exact URL on departure.
+  if (event?.oldURL) renderedRoute = new URL(event.oldURL).hash || "#/";
   const reduce = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (typeof document.startViewTransition !== "function" || reduce || document.visibilityState === "hidden") { route().catch(() => {}); return; }
   let vt;
@@ -7738,14 +7755,18 @@ function initMobileNav() {
     toggle.setAttribute("aria-expanded", String(open));
     toggle.setAttribute("aria-label", t(open ? "navMenuClose" : "navMenuOpen"));
   };
-  toggle.addEventListener("click", () => setOpen(!links.classList.contains("open")));
+  toggle.addEventListener("click", () => {
+    const opening = !links.classList.contains("open");
+    setOpen(opening);
+    if (opening) links.querySelector('a')?.focus();
+  });
   // Stäng vid länkklick (även samma route, då hashchange inte triggas)
   links.addEventListener("click", (e) => {
     if (e.target.closest("a") || e.target.closest("[data-nav-lang]")) setOpen(false);
   });
   window.addEventListener("hashchange", () => setOpen(false));
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && links.classList.contains("open")) setOpen(false);
+    if (e.key === "Escape" && links.classList.contains("open")) { setOpen(false); toggle.focus(); }
   });
 }
 

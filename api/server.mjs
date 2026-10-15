@@ -1,7 +1,8 @@
+import { BokabordAvailability } from './providers/bokabord-availability.mjs';
 import { BookingRegister } from './booking-register.mjs';
 import { AvailabilitySearch } from './availability-search.mjs';
 import http from "node:http";
-import { BokabordMirror, RESTAURANTS } from "./bokabord-mirror.mjs";
+import { BokabordMirror, RESTAURANTS, RESTAURANT_DETAILS } from "./bokabord-mirror.mjs";
 import { BookingLedger } from "./bokabord-ledger.mjs";
 import { bookingGuest } from "./booking-guest.mjs";
 import { RequestBudget } from "./request-budget.mjs";
@@ -17,10 +18,13 @@ import { parseTd3, extractMrzFromText, nameMatch, publicFields, legalName, ageYe
 import { bookingAdapter, handoffUrl, packetText, publicBridge, officialEventUrl, destInventory } from "./book-bridge.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
+const bokabordAvailability = new BokabordAvailability();
 const availabilitySearch = new AvailabilitySearch({
+  adapters: { BokaBord: (row, query) => bokabordAvailability.searchVenue(row, query) },
   registry: JSON.parse(fs.readFileSync(path.join(fs.existsSync(path.join(__dir, 'public-data')) ? path.join(__dir, 'public-data') : path.join(__dir, '../data'), 'booking-providers.json'), 'utf8')),
   restaurants: JSON.parse(fs.readFileSync(path.join(fs.existsSync(path.join(__dir, 'public-data')) ? path.join(__dir, 'public-data') : path.join(__dir, '../data'), 'restaurants.json'), 'utf8')),
 });
+for (const [id,row] of Object.entries(RESTAURANT_DETAILS)) availabilitySearch.registry[id] = {...row, provider:'BokaBord', city:'Stockholm'};
 const mirrorMode = process.env.VELVET_BOKABORD_MIRROR || 'disabled';
 const mirrorLedger = new BookingLedger(path.join(__dir, 'mirror-attempts'));
 const bokabordMirror = new BokabordMirror({
@@ -1926,11 +1930,16 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && (url.pathname === "/health" || url.pathname === "/")) {
       return send(res, 200, { ok: true, service: "velvet-api" });
     }
+    const availabilityJob = url.pathname.match(/^\/availability\/jobs\/([a-f0-9-]{36})$/);
+    if (req.method === 'GET' && availabilityJob) {
+      const job=availabilitySearch.status(availabilityJob[1]);
+      return send(res, job ? 200 : 404, job || {error:'search_expired'}, {'Cache-Control':'no-store'});
+    }
     if (req.method === 'GET' && url.pathname === '/availability') {
       try {
-        return send(res, 200, await availabilitySearch.search(Object.fromEntries(url.searchParams)), { 'Cache-Control': 'no-store' });
+        return send(res, 200, url.searchParams.get('progressive') === '1' ? availabilitySearch.start(Object.fromEntries(url.searchParams)) : await availabilitySearch.search(Object.fromEntries(url.searchParams)), { 'Cache-Control': 'no-store' });
       } catch (error) {
-        return send(res, error.message === 'search_busy' ? 429 : 400, { error: error.message === 'search_busy' ? 'search_busy' : 'invalid_search' }, { 'Cache-Control': 'no-store' });
+        return send(res, error.message === 'search_busy' ? 429 : error.message === 'search_timeout' ? 503 : 400, { error: error.message === 'search_busy' ? 'search_busy' : 'invalid_search' }, { 'Cache-Control': 'no-store' });
       }
     }
     if (url.pathname === "/restaurant-bookings/mirror/config") {
@@ -3891,7 +3900,21 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
+// Reconcile existing durable bookings even before anybody opens history.
+for (const row of [...mirrorLedger.list(), ...(load().restaurantBookings || [])]) bookingRegister.upsert(row);
+
 server.listen(PORT, "0.0.0.0", () => {
   console.log("velvet-api " + PORT);
   scheduleDailyCrawl();
 });
+
+let shuttingDown = false;
+async function shutdown() {
+  if (shuttingDown) return; shuttingDown = true;
+  server.close();
+  const forced = setTimeout(() => process.exit(1), 8000); forced.unref();
+  await Promise.allSettled([bokabordAvailability.close(), bokabordMirror.close()]);
+  bookingRegister.close(); clearTimeout(forced); process.exit(0);
+}
+process.once('SIGTERM', shutdown);
+process.once('SIGINT', shutdown);

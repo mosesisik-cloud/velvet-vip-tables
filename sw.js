@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-170-availability";
+const VERSION = "v4-UX172";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -21,7 +21,15 @@ const SHELL_ASSETS = [
   "./offline.html",
   "./manifest.json",
   "./css/app.css",
+  "./css/availability-search.css",
   "./js/app.js",
+  "./js/navigation-state.js",
+  "./js/booking-selection.js",
+  "./js/booking-report.js",
+  "./js/availability-search.js",
+  "./js/restaurant-booking-providers.js",
+  "./js/ux-booking.js",
+  "./js/ux-copy.js",
   "./js/bokabord-mirror.js",
   "./js/i18n.js",
   "./js/mrz.js",
@@ -29,6 +37,8 @@ const SHELL_ASSETS = [
   "./js/face-idv.js",
   "./fonts/inter-latin.woff2",
   "./fonts/playfair-display-latin.woff2",
+  "./fonts/space-grotesk-latin.woff2",
+  "./fonts/syne-latin.woff2",
   "./data/destinations.json",
   "./data/venues.json",
   "./data/extra-destinations.json",
@@ -40,6 +50,13 @@ const SHELL_ASSETS = [
   "./data/venue-layouts.json",
   "./data/venue-youtube.json",
   "./data/booking-urls.json",
+  "./data/booking-providers.json",
+  "./data/venue-packages.json",
+  "./data/venue-menus.json",
+  "./data/venue-events.json",
+  "./data/venue-facts.json",
+  "./data/venue-image-sources.json",
+  "./data/google-places.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/icon-maskable-512.png",
@@ -97,6 +114,11 @@ async function networkFirst(request) {
   } catch (err) {
     const cached = await caches.match(request);
     if (cached) return cached;
+    // The shell is precached without version queries. Imported modules and CSS
+    // use ?v=…; match only public shell entries when the exact request is absent.
+    const shell = await caches.open(SHELL_CACHE);
+    const shellAsset = await shell.match(request, { ignoreSearch: true });
+    if (shellAsset) return shellAsset;
     throw err;
   }
 }

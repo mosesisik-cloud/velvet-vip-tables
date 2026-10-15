@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 
 export function validateSearch(input, now = new Date()) {
   const city = String(input.city || '').trim();
@@ -12,20 +13,21 @@ export function validateSearch(input, now = new Date()) {
 }
 const minutes = t => Number(t.slice(0,2))*60 + Number(t.slice(3,5));
 export class AvailabilitySearch {
-  constructor({registry, restaurants, fetcher = fetch, now = () => Date.now()}) {
+  constructor({registry, restaurants, fetcher = fetch, now = () => Date.now(), adapters = {}, searchTimeoutMs = 150000}) {
     this.registry = registry; this.restaurants = restaurants; this.fetcher = fetcher; this.now = now;
-    this.inflight = new Map(); this.active = 0;
+    this.inflight = new Map(); this.listeners = new Map(); this.active = 0; this.adapters=adapters; this.jobs=new Map(); this.searchTimeoutMs=Math.max(10,Math.min(180000,searchTimeoutMs));
   }
-  async venue(id, row, q) {
+  async venue(id, row, q, signal) {
     const base = {restaurantId:id, restaurant:row.name, city:row.city, provider:row.provider, slots:[], checkedAt:new Date(this.now()).toISOString()};
     try {
+      if (this.adapters[row.provider]) return await this.adapters[row.provider]({...row,restaurantId:id},{...q,signal});
       const url = new URL(row.url);
       if (row.provider !== 'SevenRooms' || !['www.sevenrooms.com','sevenrooms.com','eu.sevenrooms.com'].includes(url.hostname) || url.protocol !== 'https:' || url.username || url.password || url.port || url.search || url.hash || !/^[a-z0-9_-]+$/i.test(row.venueId)) return {...base,status:'unsupported'};
       const parts = url.pathname.split('/').filter(Boolean);
       if (parts[1] !== row.venueId || !((parts[0] === 'reservations' && parts.length === 2) || (parts[0] === 'explore' && parts.slice(2).join('/') === 'reservations/create/search'))) return {...base,status:'unsupported'};
       const endpoint = new URL('/api-yoa/availability/ng/widget/range',url);
       endpoint.search = new URLSearchParams({venue:row.venueId,party_size:String(q.party),halo_size_interval:'100',start_date:q.date,num_days:'1',channel:'SEVENROOMS_WIDGET',exclude_pdr:'true',intent:'user_search'});
-      const response = await this.fetcher(endpoint,{headers:{Accept:'application/json',Referer:row.url},signal:AbortSignal.timeout(10000)});
+      const response = await this.fetcher(endpoint,{headers:{Accept:'application/json',Referer:row.url},signal:signal ? AbortSignal.any([signal,AbortSignal.timeout(10000)]) : AbortSignal.timeout(10000)});
       if (!response.ok) throw new Error('provider_error');
       const data = await response.json();
       if (data.status !== 200 || !data.data?.availability || typeof data.data.availability !== 'object') throw new Error('provider_format');
@@ -48,28 +50,54 @@ export class AvailabilitySearch {
       return {...base,status:slots.size?'available':'unavailable',slots:[...slots.values()].sort((a,b)=>a.time.localeCompare(b.time))};
     } catch { return {...base,status:'error'}; }
   }
-  async search(input) {
+  async search(input, onResult = () => {}) {
     const q = validateSearch(input,new Date(this.now()));
     const cityKey = q.city.toLocaleLowerCase();
     const group = Object.entries(this.restaurants.destinations || {}).find(([code,g]) => [code,g.destination].some(v=>String(v).toLocaleLowerCase()===cityKey));
     if (!group) throw new Error('unknown_city');
     q.city = group[1].destination;
     const key = JSON.stringify(q);
-    if (this.inflight.has(key)) return this.inflight.get(key);
+    if (this.inflight.has(key)) { this.listeners.get(key)?.add(onResult); return this.inflight.get(key); }
     if (this.active >= 3) throw new Error('search_busy');
-    this.active++;
+    this.active++; this.listeners.set(key,new Set([onResult]));
+    const controller=new AbortController(); let deadline;
     const run = async () => {
-      const rows = group[1].restaurants || [];
+      const rank = row => { const p=this.registry[row.placeId || row.id]?.provider; return p === 'SevenRooms' ? 0 : this.adapters[p] ? 1 : 2; };
+      const rows = [...(group[1].restaurants || [])].sort((a,b)=>rank(a)-rank(b));
       const results = new Array(rows.length); let cursor = 0;
       await Promise.all(Array.from({length:Math.min(4,rows.length)}, async()=>{
-        while(cursor < rows.length) {
+        while(cursor < rows.length && !controller.signal.aborted) {
           const i = cursor++, r = rows[i], id = r.placeId || r.id, provider = this.registry[id];
-          results[i] = provider ? await this.venue(id,provider,q) : {restaurantId:id,restaurant:r.name,city:q.city,provider:'',status:'unsupported',slots:[],checkedAt:null};
+          results[i] = provider ? await this.venue(id,provider,q,controller.signal) : {restaurantId:id,restaurant:r.name,city:q.city,provider:'',status:'unsupported',slots:[],checkedAt:null};
+          if(!controller.signal.aborted) for(const listener of this.listeners.get(key) || []) listener(results[i]);
         }
       }));
       return {query:q,results,checkedAt:new Date(this.now()).toISOString(),windowMinutes:90};
     };
-    const pending = run().finally(()=>{this.inflight.delete(key);this.active--;});
+    const timeout = new Promise((_,reject)=>{deadline=setTimeout(()=>{controller.abort();reject(new Error('search_timeout'));},this.searchTimeoutMs);});
+    const pending = Promise.race([run(),timeout]).finally(()=>{clearTimeout(deadline);this.inflight.delete(key);this.listeners.delete(key);this.active--;});
     this.inflight.set(key,pending); return pending;
   }
+  start(input) {
+    const q=validateSearch(input,new Date(this.now()));
+    const group=Object.entries(this.restaurants.destinations || {}).find(([code,g])=>[code,g.destination].some(v=>String(v).toLowerCase()===q.city.toLowerCase()));
+    if(!group)throw new Error('unknown_city');q.city=group[1].destination;
+    const key=JSON.stringify(q),now=this.now();
+    for(const [id,job] of this.jobs)if(now-job.created>240000)this.jobs.delete(id);
+    for(const job of this.jobs.values())if(job.key===key&&!job.complete)return this.snapshot(job);
+    if(this.active>=3)throw new Error('search_busy');
+    while(this.jobs.size>=50){const old=[...this.jobs.values()].find(j=>j.complete);if(!old)throw new Error('search_busy');this.jobs.delete(old.searchId);}
+    const job={searchId:randomUUID(),key,created:now,complete:false,query:q,checkedAt:null,results:(group[1].restaurants||[]).map(r=>{
+      const id=r.placeId||r.id,row=this.registry[id];
+      return {restaurantId:id,restaurant:r.name,city:q.city,provider:row?.provider||'',status:row&&(row.provider==='SevenRooms'||this.adapters[row.provider])?'pending':'unsupported',slots:[],checkedAt:null};
+    })};
+    this.jobs.set(job.searchId,job);
+    this.search(q,result=>{const i=job.results.findIndex(r=>r.restaurantId===result.restaurantId);if(i>=0)job.results[i]=result;job.checkedAt=new Date(this.now()).toISOString();})
+      .then(result=>{job.results=result.results;job.checkedAt=result.checkedAt;job.complete=true;})
+      .catch(()=>{job.results=job.results.map(r=>r.status==='pending'?{...r,status:'error'}:r);job.complete=true;job.error='search_failed';});
+    return this.snapshot(job);
+  }
+  snapshot(job){return {searchId:job.searchId,complete:job.complete,results:job.results.map(r=>({...r})),query:job.query,checkedAt:job.checkedAt,windowMinutes:90,...(job.error?{error:job.error}:{})};}
+  status(id){const job=this.jobs.get(id);if(!job||this.now()-job.created>240000)return null;return this.snapshot(job);}
+
 }

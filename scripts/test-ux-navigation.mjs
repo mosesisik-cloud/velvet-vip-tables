@@ -8,3 +8,6 @@ assert.equal(primarySection('#/integritet'), null);
 assert.equal(safeDiscoveryReturn('#/availability?city=Stockholm'), '#/availability?city=Stockholm');
 for (const invalid of ['https://evil.test', '//evil.test', '#/pay/secret', '#/venuesmalformed', null]) assert.equal(safeDiscoveryReturn(invalid), null);
 console.log('PASS navigation sections and safe discovery return targets');
+
+assert.equal(safeDiscoveryReturn('#/destination/MIA'), '#/destination/MIA');
+assert.equal(safeDiscoveryReturn('#/favorites'), '#/favorites');

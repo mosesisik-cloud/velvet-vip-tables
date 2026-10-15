@@ -4,14 +4,18 @@ let registryPromise;
 let reviewedRegistry = {};
 export const hasEmbeddedBooking = id => !!resolveEmbeddedBooking(reviewedRegistry, id);
 const PROVIDER_HOSTS = Object.freeze({
-  OpenTable: ['www.opentable.com', 'www.opentable.co.uk', 'www.opentable.com.au'],
+  Meitre: ['lasusana.meitre.com', 'oro.meitre.com', 'fasano.meitre.com'],
+  Elyra: ['widget.elyrasystems.com'], Guestplan: ['angelicabooking.guestplan.io'],
+  CoverManager: ['www.covermanager.com'],
+  Revasi: ['revasi.net'],
+  OpenTable: ['www.opentable.com', 'www.opentable.co.uk', 'www.opentable.com.au', 'www.opentable.sg'],
   TableCheck: ['www.tablecheck.com'], Zenchef: ['bookings.zenchef.com'],
   'ResDiary / Dish Cult': ['booking.resdiary.com'], Tableo: ['app.tableo.com'],
   Restoo: ['palomaibiza.myrestoo.net'], 'Eat App': ['eatapp.co'],
   TheFork: ['widget.thefork.com', 'module.lafourchette.com'],
   Resy: ['resy.com'], Tock: ['www.exploretock.com'], OMAKASE: ['omakase.in'],
 });
-const EMBED_PROVIDERS = new Set(['TableCheck', 'Zenchef', 'ResDiary / Dish Cult', 'Tableo', 'Restoo', 'Eat App']);
+const EMBED_PROVIDERS = new Set(['Meitre', 'Elyra', 'Guestplan', 'TableCheck', 'Zenchef', 'ResDiary / Dish Cult', 'Tableo', 'Restoo', 'Eat App']);
 const IDENTITY_PARAMS = new Set(['rid', 'restref', 'restaurantid', 'restaurant_id', 'venue', 'venue_id', 'id']);
 function venueKey(url) {
   const identity = [...url.searchParams].filter(([key]) => IDENTITY_PARAMS.has(key.toLowerCase()))
