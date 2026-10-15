@@ -3100,3 +3100,5 @@ body.light-shell .dest-card::after {
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 }
+/* Preserve booking-stage visibility when button utility classes set display. */
+#bokabord-mirror [hidden] { display: none !important; }
