@@ -1,17 +1,17 @@
-/* VELVET service worker â€” PWA-offlinestÃ¶d.
+/* VELVET service worker — PWA-offlinestöd.
  * Strategi:
- *  - html/css/js/json: network-first (iPhone-PWA fick annars kraschat JS fÃ¶r evigt).
- *    OBS: bumpa VERSION vid varje deploy som Ã¤ndrar skalet â€” annars serveras gammal version.
+ *  - html/css/js/json: network-first (iPhone-PWA fick annars kraschat JS för evigt).
+ *    OBS: bumpa VERSION vid varje deploy som ändrar skalet — annars serveras gammal version.
  *  - venue-events.json och /velvet-api/events: network-first (daglig crawl).
  *  - Google Fonts + Leaflet (unpkg) + CARTO-tiles: stale-while-revalidate i runtime-cache.
- *  - Venue-foton och Pexels (hero) cachas INTE â€” <img>/<video> gÃ¥r mot nÃ¤tet
- *    sÃ¥ PWA:n inte lagrar tredjepartsbilder utan licens.
- *  - Navigationer utan cache och utan nÃ¤t â†’ offline.html i VELVET-stil.
+ *  - Venue-foton och Pexels (hero) cachas INTE — <img>/<video> går mot nätet
+ *    så PWA:n inte lagrar tredjepartsbilder utan licens.
+ *  - Navigationer utan cache och utan nät → offline.html i VELVET-stil.
  *  - Video (hero) och range-requests cachas ALDRIG (206:or kraschar Cache API och fyller kvoten).
  */
 "use strict";
 
-const VERSION = "v4-real-173-booking-terms";
+const VERSION = "v4-real-174-provider-expansion";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -46,7 +46,7 @@ const SHELL_ASSETS = [
   "./icons/apple-touch-icon.png",
 ];
 
-// Cross-origin som fÃ¥r ligga i runtime-cachen. Inte klubbfoton, inte Pexels.
+// Cross-origin som får ligga i runtime-cachen. Inte klubbfoton, inte Pexels.
 function isRuntimeCdn(hostname) {
   return (
     hostname === "fonts.googleapis.com" ||
@@ -67,7 +67,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(SHELL_CACHE);
     // addAll avbryter HELA installen vid en enda 404 (typsnitt saknades live
-    // â†’ anvÃ¤ndare fastnade pÃ¥ kraschat app.js och sÃ¥g tom katalog).
+    // → användare fastnade på kraschat app.js och såg tom katalog).
     await Promise.all(SHELL_ASSETS.map((url) => cache.add(url).catch(() => undefined)));
     await self.skipWaiting();
   })());
@@ -101,7 +101,7 @@ async function networkFirst(request) {
   }
 }
 
-// Cache-first: skalet Ã¤ndras bara vid deploy (dÃ¥ bumpas VERSION).
+// Cache-first: skalet ändras bara vid deploy (då bumpas VERSION).
 async function cacheFirst(request) {
   const cached = await caches.match(request, { ignoreSearch: false });
   if (cached) return cached;
@@ -113,7 +113,7 @@ async function cacheFirst(request) {
   return response;
 }
 
-// Stale-while-revalidate: svara direkt frÃ¥n cache, uppdatera i bakgrunden.
+// Stale-while-revalidate: svara direkt från cache, uppdatera i bakgrunden.
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(RUNTIME_CACHE);
   const cached = await cache.match(request);
@@ -131,8 +131,8 @@ async function staleWhileRevalidate(request) {
   return Response.error();
 }
 
-// Navigationer: alltid nÃ¤tet fÃ¶rst. Cache-first hÃ¤r var varfÃ¶r iPhone-ikonen
-// fastnade pÃ¥ kraschat JS â€” ny deploy nÃ¥dde aldrig hemskÃ¤rmen.
+// Navigationer: alltid nätet först. Cache-first här var varför iPhone-ikonen
+// fastnade på kraschat JS — ny deploy nådde aldrig hemskärmen.
 async function handleNavigation(request) {
   try {
     const fresh = await fetch(request, { cache: "no-store" });
@@ -152,7 +152,7 @@ self.addEventListener("fetch", (event) => {
   const request = event.request;
   if (request.method !== "GET") return;
 
-  // Video/range-requests: rÃ¶r inte (hero-videon streamas med 206:or).
+  // Video/range-requests: rör inte (hero-videon streamas med 206:or).
   if (request.headers.has("range")) return;
   const url = new URL(request.url);
   if (request.destination === "video" || /\.(mp4|webm|m3u8)(\?|$)/i.test(url.pathname)) return;
@@ -170,12 +170,12 @@ self.addEventListener("fetch", (event) => {
   }
 
   if (url.origin === self.location.origin) {
-    // Daglig crawl + API: alltid nÃ¤tet fÃ¶rst, cache bara som offline-backup.
+    // Daglig crawl + API: alltid nätet först, cache bara som offline-backup.
     if (/venue-events\.json(\?|$)/i.test(url.pathname) || /venue-menus\.json(\?|$)/i.test(url.pathname) || /google-places\.json(\?|$)/i.test(url.pathname) || /venue-facts\.json(\?|$)/i.test(url.pathname) || /\/velvet-api\//i.test(url.pathname) || /\/events(\/|$)/i.test(url.pathname) || /\/places(\/|$)/i.test(url.pathname) || /\/facts(\/|$)/i.test(url.pathname) || /\/inventory(\/|$)/i.test(url.pathname) || /\/menus(\/|$)/i.test(url.pathname)) {
       event.respondWith(networkFirst(request));
       return;
     }
-    // html/css/js/json: nÃ¤tet fÃ¶rst sÃ¥ en kraschad deploy inte lÃ¥ser iPhone-PWA.
+    // html/css/js/json: nätet först så en kraschad deploy inte låser iPhone-PWA.
     if (/\.(html|css|js|json|webmanifest)(\?|$)/i.test(url.pathname)) {
       event.respondWith(networkFirst(request));
       return;
@@ -184,12 +184,12 @@ self.addEventListener("fetch", (event) => {
       event.respondWith(cacheFirst(request));
       return;
     }
-    // Ã–vrigt same-origin (t.ex. framtida bilder) â†’ SWR
+    // Övrigt same-origin (t.ex. framtida bilder) → SWR
     event.respondWith(staleWhileRevalidate(request));
     return;
   }
 
-  // Cross-origin: bara typsnitt, Leaflet och kartplattor. Klubbfoton och Pexels gÃ¥r mot nÃ¤tet.
+  // Cross-origin: bara typsnitt, Leaflet och kartplattor. Klubbfoton och Pexels går mot nätet.
   if (isRuntimeCdn(url.hostname)) {
     event.respondWith(staleWhileRevalidate(request));
   }

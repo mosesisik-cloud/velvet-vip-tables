@@ -9,6 +9,8 @@ const PROVIDER_HOSTS = Object.freeze({
   Dineplan: ['calendar.dineplan.com', 'account.dineplan.com', 'www.dineplan.com'],
   CoverManager: ['www.covermanager.com'],
   Revasi: ['revasi.net'],
+  'Restaurant website': ['booking.baolicannes.com'],
+  'Prenota Web': ['franchino.prenota-web.it'],
   OpenTable: ['www.opentable.com', 'www.opentable.co.uk', 'www.opentable.com.au', 'www.opentable.sg'],
   TableCheck: ['www.tablecheck.com'], Zenchef: ['bookings.zenchef.com'],
   'ResDiary / Dish Cult': ['booking.resdiary.com'], Tableo: ['app.tableo.com'],
