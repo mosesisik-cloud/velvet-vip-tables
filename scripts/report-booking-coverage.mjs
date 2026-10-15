@@ -31,7 +31,7 @@ const walkin=new Set(['walk_in_only']);
 const categories=['integrated_native','integrated_external','integrated_bokabord','manual_request','walkin','closed','unresolved','unaudited'];
 const conflicts=[];
 const ledger=rows.map(r=>{const history=events.get(r.placeId)||[];const latest=history.at(-1);const provider=registry[r.placeId];const bb=bokabord[r.placeId];let category;
- if(r.operatingStatus==='permanently_closed'||latest?.status==='permanently_closed'){category='closed';if(provider||bb)conflicts.push({id:r.placeId,reason:'Closed record still has registry mapping'});}
+ if(r.operatingStatus==='permanently_closed'||r.operatingStatus==='seasonally_closed'||latest?.status==='permanently_closed'){category='closed';if(provider||bb)conflicts.push({id:r.placeId,reason:'Closed record still has registry mapping'});}
  else if(bb)category='integrated_bokabord';
  else if(provider?.integrationMode==='native_embed')category='integrated_native';
  else if(provider?.integrationMode==='external_link')category='integrated_external';
