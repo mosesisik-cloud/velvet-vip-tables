@@ -1469,6 +1469,7 @@ function rememberAfterIdv(hash) {
   try { sessionStorage.setItem("velvet_after_idv", hash); } catch { /* private mode */ }
 }
 const PENDING_BRIDGE_KEY = "velvet_pending_bridge_v1";
+const PENDING_RESTAURANT_BOOKING_KEY = "velvet_pending_restaurant_booking_v1";
 function savePendingBridge(rec) {
   try { sessionStorage.setItem(PENDING_BRIDGE_KEY, JSON.stringify(rec)); } catch { /* private mode */ }
 }
@@ -1481,6 +1482,19 @@ function loadPendingBridge(venueId) {
 }
 function clearPendingBridge() {
   try { sessionStorage.removeItem(PENDING_BRIDGE_KEY); } catch { /* private mode */ }
+}
+function savePendingRestaurantBooking(rec) {
+  try { sessionStorage.setItem(PENDING_RESTAURANT_BOOKING_KEY, JSON.stringify(rec)); } catch { /* private mode */ }
+}
+function loadPendingRestaurantBooking(restaurantId) {
+  try {
+    const rec = JSON.parse(sessionStorage.getItem(PENDING_RESTAURANT_BOOKING_KEY) || "null");
+    if (!rec || (restaurantId && rec.restaurantId !== restaurantId)) return null;
+    return rec;
+  } catch { return null; }
+}
+function clearPendingRestaurantBooking() {
+  try { sessionStorage.removeItem(PENDING_RESTAURANT_BOOKING_KEY); } catch { /* private mode */ }
 }
 function consumeAfterIdv() {
   try {
@@ -2437,6 +2451,7 @@ async function renderRestaurantDetail(placeId) {
   const today = new Date().toISOString().slice(0, 10);
   const nextBookableDay = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
   const zinkPilot = restaurant.placeId === "curated-STO-zink-italian-cuisine" && restaurant.bookingProvider === "BokaBord" && restaurant.bookingUrl;
+  const pendingRestaurantBooking = loadPendingRestaurantBooking(restaurant.placeId);
   const bookingPanel = zinkPilot
     ? `<div class="restaurant-provider-intro"><span>01 · DATUM</span><i></i><span>02 · TID</span><i></i><span>03 · BEKRÄFTA</span></div>
        <div class="webbridge-badge"><span aria-hidden="true">↔</span><div><strong>VELVET WebBridge</strong><small>Säker koppling till Zinks bokningssystem</small></div><b>PILOT</b></div>
@@ -2512,13 +2527,26 @@ async function renderRestaurantDetail(placeId) {
           </form>`;
         document.getElementById("restaurant-concierge-request")?.addEventListener("submit", async (requestEvent) => {
           requestEvent.preventDefault();
-          if (!loadUser()) {
-            try { sessionStorage.setItem("velvet_after_login", `#/restaurant/${restaurant.placeId}`); } catch {}
-            openOnboarding({ dismissable: true, phase: "auth" });
-            return;
-          }
           const form = requestEvent.currentTarget;
           const requestValues = Object.fromEntries(new FormData(form));
+          if (!loadUser()) {
+            const returnTo = `#/restaurant/${restaurant.placeId}`;
+            savePendingRestaurantBooking({
+              restaurantId: restaurant.placeId,
+              mode: "concierge",
+              date: values.date,
+              party: Number(values.party),
+              time: requestValues.time,
+              name: requestValues.name,
+              email: requestValues.email,
+              phone: requestValues.phone,
+              note: requestValues.note || "",
+              terms: requestValues.terms === "on",
+            });
+            try { sessionStorage.setItem("velvet_after_login", returnTo); } catch {}
+            openOnboarding({ dismissable: true, phase: "auth", returnTo });
+            return;
+          }
           const requestSubmit = form.querySelector('button[type="submit"]');
           if (requestSubmit) { requestSubmit.disabled = true; requestSubmit.textContent = "Skickar till Velvet…"; }
           const payload = {
@@ -2551,10 +2579,25 @@ async function renderRestaurantDetail(placeId) {
             return;
           }
           const booking = { ...payload, ...remote.booking, serverSynced: true };
+          clearPendingRestaurantBooking();
           upsertLocalRestaurantBooking(booking);
           webbridgeForm.hidden = true;
           webbridgeResult.innerHTML = `<div class="restaurant-book-success webbridge-requested"><div class="big">✓</div><h3>Förfrågan är registrerad i Velvet</h3><p>${esc(String(booking.party))} gäster · ${esc(booking.date)} · önskad tid ${esc(booking.time)}</p><small>Referens: ${esc(booking.id)} · Väntar på bekräftelse från Zink.</small><p><a class="btn btn-ghost btn-sm" href="#/bookings" data-nav>Följ bokningen</a></p></div>`;
         });
+        const restored = loadPendingRestaurantBooking(restaurant.placeId);
+        if (restored && restored.mode === "concierge") {
+          const form = document.getElementById("restaurant-concierge-request");
+          const set = (name, value) => { const input = form?.elements?.namedItem(name); if (input && value != null) input.value = String(value); };
+          set("time", restored.time);
+          set("name", restored.name);
+          set("email", restored.email);
+          set("phone", restored.phone);
+          set("note", restored.note);
+          const terms = form?.elements?.namedItem("terms");
+          if (terms) terms.checked = !!restored.terms;
+          clearPendingRestaurantBooking();
+          form?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
         return;
       }
       const user = loadUser() || {};
@@ -2574,13 +2617,28 @@ async function renderRestaurantDetail(placeId) {
       </div>`;
       document.getElementById("restaurant-webbridge-book")?.addEventListener("submit", async (bookEvent) => {
         bookEvent.preventDefault();
-        if (!loadUser()) {
-          try { sessionStorage.setItem("velvet_after_login", `#/restaurant/${restaurant.placeId}`); } catch {}
-          openOnboarding({ dismissable: true, phase: "auth" });
-          return;
-        }
         const form = bookEvent.currentTarget;
         const bookValues = Object.fromEntries(new FormData(form));
+        if (!loadUser()) {
+          const returnTo = `#/restaurant/${restaurant.placeId}`;
+          savePendingRestaurantBooking({
+            restaurantId: restaurant.placeId,
+            mode: "live",
+            date: values.date,
+            party: Number(values.party),
+            mealId: availability.meal?.id || "",
+            time: bookValues.time,
+            firstName: bookValues.firstName,
+            lastName: bookValues.lastName,
+            email: bookValues.email,
+            phone: bookValues.phone,
+            note: bookValues.note || "",
+            terms: bookValues.terms === "on",
+          });
+          try { sessionStorage.setItem("velvet_after_login", returnTo); } catch {}
+          openOnboarding({ dismissable: true, phase: "auth", returnTo });
+          return;
+        }
         const bookSubmit = form.querySelector('button[type="submit"]');
         if (bookSubmit) { bookSubmit.disabled = true; bookSubmit.textContent = "Skapar bokningen…"; }
         const response = await apiJSON("/restaurant-bookings/webbridge/book", {
@@ -2609,10 +2667,33 @@ async function renderRestaurantDetail(placeId) {
           return;
         }
         upsertLocalRestaurantBooking({ ...response.booking, serverSynced: true });
+        clearPendingRestaurantBooking();
         webbridgeForm.hidden = true;
         webbridgeResult.innerHTML = `<div class="restaurant-book-success webbridge-confirmed"><div class="big">✓</div><h3>Bordet är bekräftat</h3><p>${esc(String(response.booking.party))} gäster · ${esc(response.booking.date)} kl. ${esc(response.booking.time)}</p><small>Zinks bokningsreferens: ${esc(response.booking.providerReference || response.booking.id)}</small><p><a class="btn btn-ghost btn-sm" href="#/bookings" data-nav>Visa mina bokningar</a></p></div>`;
       });
+      const restored = loadPendingRestaurantBooking(restaurant.placeId);
+      if (restored && restored.mode === "live") {
+        const form = document.getElementById("restaurant-webbridge-book");
+        const set = (name, value) => { const input = form?.elements?.namedItem(name); if (input && value != null) input.value = String(value); };
+        set("time", restored.time);
+        set("firstName", restored.firstName);
+        set("lastName", restored.lastName);
+        set("email", restored.email);
+        set("phone", restored.phone);
+        set("note", restored.note);
+        const terms = form?.elements?.namedItem("terms");
+        if (terms) terms.checked = !!restored.terms;
+        clearPendingRestaurantBooking();
+        form?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
     });
+    if (pendingRestaurantBooking && loadUser()) {
+      const date = webbridgeForm.elements.namedItem("date");
+      const party = webbridgeForm.elements.namedItem("party");
+      if (date && pendingRestaurantBooking.date) date.value = pendingRestaurantBooking.date;
+      if (party && pendingRestaurantBooking.party) party.value = String(pendingRestaurantBooking.party);
+      requestAnimationFrame(() => webbridgeForm.requestSubmit());
+    }
   }
   document.getElementById("restaurant-book-form")?.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -5130,7 +5211,7 @@ function openOnboarding(opts = {}) {
             ${SOCIALS.map((s) => socialCompactButton(s, "data-soc")).join("")}
           </div>
           <p class="stepper-hint social-honesty">🔒 ${esc(socialTrustCopy().explain)}</p>
-          <div class="ob-actions"><button class="btn btn-ghost" id="ob-skip-auth">${esc(t("skipLogin"))}</button></div>
+          <div class="ob-actions"><button class="btn btn-ghost" id="ob-skip-auth">${esc(dismissable && opts.returnTo ? "Avbryt – stanna på bokningen" : t("skipLogin"))}</button></div>
           `}
         </div>
       </div>`;
@@ -5160,7 +5241,16 @@ function openOnboarding(opts = {}) {
       const closeLang = $("#ob-close");
       if (closeLang) closeLang.addEventListener("click", () => { if (dismissable) close(); else skip(); });
       const skipA = $("#ob-skip-auth");
-      if (skipA) skipA.addEventListener("click", () => { phase = "country"; render(); });
+      if (skipA) skipA.addEventListener("click", () => {
+        if (dismissable) {
+          const returnTo = /^#\//.test(opts.returnTo || "") ? opts.returnTo : "";
+          close();
+          if (returnTo && location.hash !== returnTo) location.hash = returnTo;
+          return;
+        }
+        phase = "country";
+        render();
+      });
       $("#ob-phone-login")?.addEventListener("click", async () => { if (await loginWithPasskey()) close(false); });
       return;
     }
@@ -7932,7 +8022,7 @@ function registerServiceWorker() {
   }
   window.addEventListener("load", () => {
     navigator.serviceWorker
-      .register("sw.js?v=162", { updateViaCache: "none" })
+      .register("sw.js?v=163", { updateViaCache: "none" })
       .then((reg) => { try { reg.update(); } catch {} })
       .catch((err) => console.warn("VELVET: service worker kunde inte registreras", err));
   });
