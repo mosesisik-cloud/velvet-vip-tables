@@ -1,0 +1,61 @@
+{
+  "STO-101": {
+    "src": "media/brands/venue-sto-101.svg",
+    "source": "https://berns.se/nightlife/",
+    "sourceAsset": "https://berns.se/wp-content/themes/berns/assets/images/Main_Logo_Berns_v2.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  },
+  "STO-102": {
+    "src": "media/brands/venue-sto-102.png",
+    "source": "https://entrgroup.se/nightlife/the-spy-bar/",
+    "sourceAsset": "https://entrgroup.se/wp-content/uploads/2024/04/spybar_original_neg-2.png",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  },
+  "IBZ-001": {
+    "src": "media/brands/venue-ibz-001.svg",
+    "source": "https://www.hiibiza.com/",
+    "sourceAsset": "https://www.hiibiza.com/logo.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "light"
+  },
+  "IBZ-002": {
+    "src": "media/brands/venue-ibz-002.svg",
+    "source": "https://www.theushuaiaexperience.com/club/en",
+    "sourceAsset": "https://www.theushuaiaexperience.com/club/en",
+    "verifiedAt": "2026-10-15",
+    "surface": "light",
+    "extraction": "Official inline SVG wordmark extracted without geometry or color changes; HTML viewbox attribute normalized to viewBox where needed."
+  },
+  "IBZ-003": {
+    "src": "media/brands/venue-ibz-003.svg",
+    "source": "https://www.unvrs.com/",
+    "sourceAsset": "https://www.unvrs.com/logo.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "light"
+  },
+  "IBZ-004": {
+    "src": "media/brands/venue-ibz-004.svg",
+    "source": "https://pacha.com/",
+    "sourceAsset": "https://pacha.com/",
+    "verifiedAt": "2026-10-15",
+    "surface": "light",
+    "extraction": "Official inline SVG wordmark extracted without geometry or color changes; HTML viewbox attribute normalized to viewBox where needed."
+  },
+  "IBZ-005": {
+    "src": "media/brands/venue-ibz-005.svg",
+    "source": "https://obeachibiza.com/",
+    "sourceAsset": "https://obeachibiza.com/wp-content/themes/ocean-beach-wp-theme-six/src/svg/logo.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  },
+  "IBZ-101": {
+    "src": "media/brands/venue-ibz-101.svg",
+    "source": "https://www.amnesia.es/",
+    "sourceAsset": "https://www.amnesia.es/assets/images/sprite.svg#logo",
+    "verifiedAt": "2026-10-15",
+    "surface": "light",
+    "extraction": "Official sprite symbol #logo extracted as a standalone SVG without geometry or color changes."
+  }
+}

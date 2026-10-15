@@ -1,0 +1,280 @@
+{
+  "curated-STO-italiano": {
+    "src": "media/brands/restaurant-italiano.svg",
+    "source": "https://italiano.se/",
+    "sourceAsset": "https://italiano.se/",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 0
+  },
+  "curated-STO-ciccios": {
+    "src": "media/brands/restaurant-ciccios.svg",
+    "source": "https://www.ciccios.se/",
+    "sourceAsset": "https://www.ciccios.se/",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 0,
+    "assetTreatment": "Transparent outer padding trimmed; original artwork preserved"
+  },
+  "curated-STO-ag": {
+    "src": "media/brands/restaurant-ag.svg",
+    "source": "https://restaurangag.se/",
+    "sourceAsset": "https://restaurangag.se/",
+    "verifiedAt": "2026-10-15",
+    "surface": "light",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 0
+  },
+  "curated-STO-frantzen": {
+    "src": "media/brands/restaurant-frantzen.png",
+    "source": "https://www.restaurantfrantzen.com/",
+    "sourceAsset": "https://www.restaurantfrantzen.com/wp/wp-content/uploads/2021/10/logo-1.png",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  },
+  "curated-STO-zink-italian-cuisine": {
+    "src": "media/brands/restaurant-zink-italian-cuisine.svg",
+    "source": "https://zinkitalian.se/",
+    "sourceAsset": "https://zinkitalian.se/",
+    "verifiedAt": "2026-10-15",
+    "surface": "light",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 5,
+    "assetTreatment": "Transparent outer padding trimmed; original artwork preserved"
+  },
+  "curated-STO-brasserie-astoria": {
+    "src": "media/brands/restaurant-brasserie-astoria.png",
+    "source": "https://www.brasserieastoria.se/",
+    "sourceAsset": "https://www.brasserieastoria.se/wp/wp-content/themes/frantzentheme-child/images/Astoria_logo_clean_vit.png",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark",
+    "assetTreatment": "Transparent outer padding trimmed; original artwork preserved"
+  },
+  "curated-STO-almaza": {
+    "src": "media/brands/restaurant-almaza.png",
+    "source": "https://www.restaurangalmaza.se/",
+    "sourceAsset": "https://www.restaurangalmaza.se/wp-content/uploads/2018/03/Almaza-svart-liten.png",
+    "verifiedAt": "2026-10-15",
+    "surface": "light",
+    "assetTreatment": "Transparent outer padding trimmed; original artwork preserved"
+  },
+  "curated-STO-tabbouli": {
+    "src": "media/brands/restaurant-tabbouli.svg",
+    "source": "https://tabbouli.eu/",
+    "sourceAsset": "https://tabbouli.eu/",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 0,
+    "assetTreatment": "Transparent outer padding trimmed; original artwork preserved"
+  },
+  "curated-STO-hillenberg": {
+    "src": "media/brands/restaurant-hillenberg.svg",
+    "source": "https://hillenberg.se/",
+    "sourceAsset": "https://hillenberg.se/wp-content/uploads/2026/07/hillenberg.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  },
+  "curated-STO-animo": {
+    "src": "media/brands/restaurant-animo.png",
+    "source": "https://www.animorestaurant.se/en",
+    "sourceAsset": "https://static.wixstatic.com/media/f66b98_5530da948106494185e09c4cf65fa52a~mv2.png/v1/fill/w_320,h_356,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/f66b98_5530da948106494185e09c4cf65fa52a~mv2.png",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark",
+    "assetTreatment": "Transparent outer padding trimmed; original artwork preserved"
+  },
+  "curated-STO-farang": {
+    "src": "media/brands/restaurant-farang.svg",
+    "source": "https://farang.se/",
+    "sourceAsset": "https://farang.se/",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 0
+  },
+  "curated-STO-beirut-cafe": {
+    "src": "media/brands/restaurant-beirut-cafe.png",
+    "source": "https://www.beirutcafe.se/sv",
+    "sourceAsset": "https://cdn.sanity.io/images/kxcaq62a/production/0a3b3921ebd3e607343bfb06f3fe77a1589a7eb1-93x88.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark",
+    "assetTreatment": "Faithful PNG export of official SVG"
+  },
+  "curated-STO-basta": {
+    "src": "media/brands/restaurant-basta.svg",
+    "source": "https://www.restaurangbasta.se/restauranger/stockholm",
+    "sourceAsset": "https://cdn.prod.website-files.com/62db99bf22fdbe8a3df362a1/62dbc2c6e724d7090c414fb0_Basta%20logo.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "light",
+    "assetTreatment": "Transparent outer padding trimmed; original artwork preserved"
+  },
+  "curated-STO-olli": {
+    "src": "media/brands/restaurant-olli.png",
+    "source": "https://www.olliristorante.se/",
+    "sourceAsset": "https://images.squarespace-cdn.com/content/v1/628a529a93e39229b0f2bcf2/c4477ceb-20e0-4f30-aa81-8db309eb1d29/olli_logo_presented_beige+copy.png",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark",
+    "assetTreatment": "Transparent outer padding trimmed; original artwork preserved"
+  },
+  "curated-STO-florentine": {
+    "src": "media/brands/restaurant-florentine.svg",
+    "source": "https://www.florentinerestaurants.com/stockholm",
+    "sourceAsset": "https://cdn.prod.website-files.com/63728bf3f3f63c22f5b62cb0/63f02d52848cba426b0433c0_logowhite.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  },
+  "curated-STO-brasserie-astrid": {
+    "src": "media/brands/restaurant-brasserie-astrid.svg",
+    "source": "https://brasserieastrid.se/restaurang",
+    "sourceAsset": "https://static.thatsup.website/587/77445/astrid-logotyp-2026-1.svg?v=1778140417",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  },
+  "curated-STO-villa-valentina": {
+    "src": "media/brands/restaurant-villa-valentina.svg",
+    "source": "https://www.villavalentina.se/",
+    "sourceAsset": "https://cdn.prod.website-files.com/69de817fa43b7efc02084f7f/69f8c02f562cc849eceb457d_Varl%C4%B1k%201.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  },
+  "curated-STO-boqueria": {
+    "src": "media/brands/restaurant-boqueria.svg",
+    "source": "https://www.boqueria.se/en/",
+    "sourceAsset": "https://www.boqueria.se/en/",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 0
+  },
+  "curated-STO-strandbryggan": {
+    "src": "media/brands/restaurant-strandbryggan.png",
+    "source": "https://strandbryggan.se/",
+    "sourceAsset": "https://strandbryggan.se/_ipx/s_2000x714/assets/img/logo/strandbryggan-logo.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "light",
+    "assetTreatment": "Faithful PNG export of official SVG"
+  },
+  "curated-STO-sperling-co": {
+    "src": "media/brands/restaurant-sperling-co.svg",
+    "source": "https://sperlingco.se/",
+    "sourceAsset": "https://sperlingco.se/wp-content/uploads/2025/06/full-logo.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  },
+  "curated-STO-hallwylska": {
+    "src": "media/brands/restaurant-hallwylska.png",
+    "source": "https://hallwylskarestaurang.com/",
+    "sourceAsset": "https://hallwylskarestaurang.com/img/logo/logo.png",
+    "verifiedAt": "2026-10-15",
+    "surface": "light"
+  },
+  "curated-STO-sturehof": {
+    "src": "media/brands/restaurant-sturehof.svg",
+    "source": "https://sturehof.com/",
+    "sourceAsset": "https://sturehof.b-cdn.net/wp-content/themes/sturehof-theme/assets/images/logos/sturehof.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "light"
+  },
+  "curated-STO-riche": {
+    "src": "media/brands/restaurant-riche.svg",
+    "source": "https://riche.se/",
+    "sourceAsset": "https://riche.b-cdn.net/wp-content/themes/riche-theme/assets/images/logos/riche.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "light"
+  },
+  "curated-STO-strandvagen-1": {
+    "src": "media/brands/restaurant-strandvagen-1.svg",
+    "source": "https://strandvagen1.se/",
+    "sourceAsset": "https://strandvagen1.se/wp-content/uploads/2026/02/s1-black-short-logo.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "light"
+  },
+  "curated-STO-villa-dagmar": {
+    "src": "media/brands/restaurant-villa-dagmar.png",
+    "source": "https://hotelvilladagmar.com/food-drink/restaurangen/",
+    "sourceAsset": "https://hotelvilladagmar.com/nitropack_static/SRrmpURUvrvNrtGVYqqFBOTQqoyCEqdD/assets/images/optimized/rev-ee4b402/hotelvilladagmar.com/wp-content/uploads/2019/10/logo-top.png",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  },
+  "curated-STO-paraden": {
+    "src": "media/brands/restaurant-paraden.svg",
+    "source": "https://paradenkvarterskrog.com/",
+    "sourceAsset": "https://static.thatsup.website/367/29424/paraden-logo.svg?v=1707207793",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  },
+  "curated-STO-tete": {
+    "src": "media/brands/restaurant-tete.avif",
+    "source": "https://www.restaurangtete.se/",
+    "sourceAsset": "https://cdn.prod.website-files.com/686a33f636db05eba371603a/68adb2a3958d615bd50368f8_symbol.avif",
+    "verifiedAt": "2026-10-15",
+    "surface": "light"
+  },
+  "curated-STO-noema": {
+    "src": "media/brands/restaurant-noema.svg",
+    "source": "https://noemastockholm.se/en/",
+    "sourceAsset": "https://noemastockholm.se/en/",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 1
+  },
+  "curated-STO-kommendoren": {
+    "src": "media/brands/restaurant-kommendoren.png",
+    "source": "https://www.kommendoren.se/",
+    "sourceAsset": "https://www.kommendoren.se/img/logo.png",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  },
+  "curated-STO-ekstedt": {
+    "src": "media/brands/restaurant-ekstedt.png",
+    "source": "https://ekstedt.nu/",
+    "sourceAsset": "https://ekstedt.nu/wp-content/uploads/2025/05/logo-ekstedt.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark",
+    "assetTreatment": "Faithful PNG export of official SVG"
+  },
+  "curated-STO-aira": {
+    "src": "media/brands/restaurant-aira.svg",
+    "source": "https://aira.se/",
+    "sourceAsset": "https://aira.se/",
+    "verifiedAt": "2026-10-15",
+    "surface": "light",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 0,
+    "assetTreatment": "Transparent outer padding trimmed; original artwork preserved"
+  },
+  "curated-STO-balzac": {
+    "src": "media/brands/restaurant-balzac.svg",
+    "source": "https://balzac.se/",
+    "sourceAsset": "https://static.thatsup.website/548/64331/logobalzacbrasserie-1.svg?v=1756126037",
+    "verifiedAt": "2026-10-15",
+    "surface": "light"
+  },
+  "curated-STO-vau-de-ville": {
+    "src": "media/brands/restaurant-vau-de-ville.svg",
+    "source": "https://vaudevillestockholm.se/",
+    "sourceAsset": "https://vaudevillestockholm.se/",
+    "verifiedAt": "2026-10-15",
+    "surface": "light",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 0
+  },
+  "curated-STO-copine": {
+    "src": "media/brands/restaurant-copine.png",
+    "source": "https://www.jimjacobrestauranger.se/copine",
+    "sourceAsset": "https://static.wixstatic.com/media/526c09_2eac724d94594787ae5781dce083bd17~mv2.png/v1/fill/w_201,h_200,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Copine_logo_white_edited_edited.png",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark",
+    "assetTreatment": "Transparent outer padding trimmed; original artwork preserved"
+  },
+  "curated-STO-lebanon-meza-lounge": {
+    "src": "media/brands/restaurant-lebanon-meza-lounge.svg",
+    "source": "https://mezalounge.se/",
+    "sourceAsset": "https://mezalounge.se/wp-content/uploads/2021/05/LML_logo.svg",
+    "verifiedAt": "2026-10-15",
+    "surface": "dark"
+  }
+}
