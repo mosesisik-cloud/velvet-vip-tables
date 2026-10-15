@@ -5,7 +5,6 @@ import assert from 'node:assert/strict';
 import { chromium } from '../node_modules/playwright/index.mjs';
 
 const id = 'curated-MRB-mamzel-marbella';
-const bookingUrl = 'https://www.sevenrooms.com/reservations/mamzelmarbella';
 const root = path.resolve(import.meta.dirname, '..');
 const restaurants = JSON.parse(await readFile(path.join(root, 'data/restaurants.json'), 'utf8'));
 const row = restaurants.destinations.MRB.restaurants.find((item) => item.placeId === id);
@@ -14,9 +13,9 @@ assert.equal(row.address, 'Urbanización Rio Verde Alto 1, 29600 Marbella, Mála
 assert.equal(row.website, 'https://mamzelmarbella.com/');
 assert.equal(row.phone, '+34 951 55 23 88');
 assert.equal(row.email, 'reservations@mamzelmarbella.com');
-assert.equal(row.bookingUrl, bookingUrl);
-assert.equal(row.bookingProvider, 'SevenRooms');
-assert.equal(row.bookingDirect, true);
+assert.notEqual(row.bookingDirect, true);
+assert.equal(row.bookingUrl, undefined);
+assert.equal(row.bookingProvider, undefined);
 assert.equal(row.operatingStatus, undefined);
 
 const types = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.css': 'text/css', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp' };
@@ -41,22 +40,24 @@ try {
   await context.addInitScript(() => localStorage.setItem('velvet_lang', 'en'));
   await context.route('**/*', (route) => {
     const request = route.request();
-    const local = new URL(request.url()).origin === new URL(base).origin;
+    let local = false;
+    try { local = new URL(request.url()).origin === new URL(base).origin; } catch { local = false; }
     if (local && (request.method() === 'GET' || request.method() === 'HEAD')) return route.continue();
     return route.abort();
   });
   const page = await context.newPage();
   await page.goto(base + '#/restaurant/' + id, { waitUntil: 'domcontentloaded' });
-  const panel = page.locator('.restaurant-book-panel');
-  const link = panel.locator('a.restaurant-live-book');
-  await link.waitFor({ timeout: 15000 });
-  assert.equal(await link.getAttribute('href'), bookingUrl);
-  assert.equal(await page.locator('#restaurant-book-form').count(), 0);
-  assert.equal(await panel.getByRole('heading', { name: 'Permanently closed', exact: true }).count(), 0);
-  assert.match(await page.locator('.restaurant-facts').innerText(), /Rio Verde Alto 1/);
-  assert.match(await page.locator('.restaurant-facts').innerText(), /29600/);
+  const form = page.locator('#restaurant-book-form');
+  await form.waitFor({ timeout: 15000 });
+  assert.equal(await page.locator('a.restaurant-live-book').count(), 0);
+  assert.equal(await form.count(), 1);
+  const facts = await page.locator('.restaurant-facts').innerText();
+  assert.match(facts, /Rio Verde Alto 1/);
+  assert.match(facts, /29600/);
+  assert.match(facts, /\+34 951 55 23 88/);
+  assert.match(facts, /reservations@mamzelmarbella\.com/);
   await context.close();
-  console.log('PASS issue 97: Mamzel Marbella official SevenRooms link, no request form');
+  console.log('PASS issue 97: Mamzel contact facts only, synthetic request form remains, no direct booking link');
 } finally {
   await browser.close();
   server.closeAllConnections();
