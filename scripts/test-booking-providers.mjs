@@ -67,11 +67,17 @@ try {
   for (const original of Object.values(registry).filter(row => row.integrationMode === 'external_link')) {
     const container = { replaceChildren(...children) { this.children = children; } };
     mountEmbeddedBooking(container, original);
-    assert.deepEqual(container.children.map(e => e.tag), ['p', 'p', 'a', 'p']);
-    assert.match(container.children[1].textContent, /egen flik/);
-    assert.match(container.children[2].textContent, /Kontrollera tider/);
-    assert.equal(container.children[2].rel, 'noopener noreferrer');
-    assert.equal(container.children[2].href, bookingLanguage(original, 'sv').url);
+    const requestOnly = original.bookingMode === 'request_only';
+    assert.deepEqual(container.children.map(e => e.tag), requestOnly ? ['p', 'p', 'p', 'a', 'p'] : ['p', 'p', 'a', 'p']);
+    if (requestOnly) {
+      assert.match(container.children[1].textContent, /Bokningsförfrågan/);
+      assert.match(container.children[2].textContent, /inte en omedelbart bekräftad/);
+      assert.match(container.children[2].textContent, /24–72 timmar/);
+    } else assert.match(container.children[1].textContent, /egen flik/);
+    const link = container.children.find(e => e.tag === 'a');
+    assert.match(link.textContent, requestOnly ? /Öppna bokningsförfrågan/ : /Kontrollera tider/);
+    assert.equal(link.rel, 'noopener noreferrer');
+    assert.equal(link.href, bookingLanguage(original, 'sv').url);
   }
 } finally { globalThis.document = originalDocument; }
 

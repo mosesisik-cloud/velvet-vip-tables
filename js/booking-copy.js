@@ -1,6 +1,13 @@
 /** Booking shell copy. Restaurant-authored policies remain the provider's own text. */
 const COPY = {
   sv: {
+    requestHeading: "Bokningsförfrågan",
+    requestNotice: "Detta är en bokningsförfrågan, inte en omedelbart bekräftad bokning. Bordet är bekräftat först när restaurangen bekräftar din förfrågan.",
+    requestWindow: "Restaurangen behandlar förfrågningar inom {min}–{max} timmar.",
+    requestOpen: "Öppna bokningsförfrågan",
+    requestCard: "Kortgaranti krävs. Kontrollera belopp och villkor i originalformuläret.",
+    requestUnknownPolicy: "Avbokningsfrist och eventuell avgift är inte verifierade. Läs villkoren innan du skickar förfrågan; kontakta restaurangen om de saknas.",
+
     closedHeading: "Permanent stängd",
     closedMessage: "Restaurangen är permanent stängd och tar inte emot bokningar.",
     closedSource: "Information från restaurangen ↗",
@@ -25,6 +32,13 @@ const COPY = {
     languageUnknown: 'Vi har ännu inte verifierat språkvalet hos denna bokningstjänst. Formuläret öppnas på tjänstens eget språk; välj språk där om alternativet finns.'
   },
   en: {
+    requestHeading: "Booking request",
+    requestNotice: "This is a booking request, not an immediately confirmed reservation. Your table is confirmed only when the restaurant confirms your request.",
+    requestWindow: "The restaurant processes requests within {min}–{max} hours.",
+    requestOpen: "Open booking request",
+    requestCard: "A card guarantee is required. Check the amount and terms in the original form.",
+    requestUnknownPolicy: "The cancellation deadline and any fee have not been verified. Read the terms before sending your request; contact the restaurant if they are missing.",
+
     closedHeading: "Permanently closed",
     closedMessage: "This restaurant is permanently closed and is not accepting bookings.",
     closedSource: "Information from the restaurant ↗",
@@ -49,6 +63,13 @@ const COPY = {
     languageUnknown: 'We have not yet verified language selection for this booking service. The form opens in the service’s own language; choose a language there if the option is available.'
   },
   es: {
+    requestHeading: "Solicitud de reserva",
+    requestNotice: "Esto es una solicitud de reserva, no una reserva confirmada de inmediato. La mesa solo queda confirmada cuando el restaurante confirma tu solicitud.",
+    requestWindow: "El restaurante tramita las solicitudes en un plazo de {min}–{max} horas.",
+    requestOpen: "Abrir solicitud de reserva",
+    requestCard: "Se requiere una garantía con tarjeta. Consulta el importe y las condiciones en el formulario original.",
+    requestUnknownPolicy: "El plazo de cancelación y las posibles tarifas no se han verificado. Lee las condiciones antes de enviar la solicitud; contacta con el restaurante si no aparecen.",
+
     closedHeading: "Cerrado permanentemente",
     closedMessage: "Este restaurante ha cerrado permanentemente y no acepta reservas.",
     closedSource: "Información del restaurante ↗",
@@ -73,6 +94,13 @@ const COPY = {
     languageUnknown: 'Todavía no hemos verificado la selección de idioma de este servicio de reservas. El formulario se abre en el idioma del servicio; selecciona otro allí si la opción está disponible.'
   },
   fr: {
+    requestHeading: "Demande de réservation",
+    requestNotice: "Il s’agit d’une demande de réservation, sans confirmation immédiate. Votre table est confirmée uniquement lorsque le restaurant confirme votre demande.",
+    requestWindow: "Le restaurant traite les demandes sous {min}–{max} heures.",
+    requestOpen: "Ouvrir la demande de réservation",
+    requestCard: "Une garantie par carte est requise. Vérifiez le montant et les conditions dans le formulaire original.",
+    requestUnknownPolicy: "Le délai d’annulation et les frais éventuels n’ont pas été vérifiés. Lisez les conditions avant d’envoyer votre demande ; contactez le restaurant si elles sont absentes.",
+
     closedHeading: "Fermé définitivement",
     closedMessage: "Ce restaurant est définitivement fermé et ne prend plus de réservations.",
     closedSource: "Informations du restaurant ↗",
@@ -105,4 +133,17 @@ export function getBookingCopy(language) {
 /** Returns plain text, not escaped HTML: use textContent or the caller's HTML escaper. */
 export function formatBookingCopy(template, values = {}) {
   return String(template).replace(/\{([a-zA-Z]+)\}/g, (match, key) => Object.hasOwn(values, key) ? String(values[key]) : match);
+}
+
+/** Plain text request disclosures; never infer provider submission or confirmation. */
+export function requestBookingNotes(booking, language = 'sv') {
+  const copy = getBookingCopy(language);
+  const notes = [copy.requestNotice];
+  const hours = booking.responseTimeHours;
+  if (Number.isFinite(hours?.min) && Number.isFinite(hours?.max) && hours.min >= 0 && hours.max >= hours.min) {
+    notes.push(formatBookingCopy(copy.requestWindow, hours));
+  }
+  if (booking.paymentRequirement === 'card_guarantee') notes.push(copy.requestCard);
+  if (booking.cancellationPolicyStatus === 'unknown') notes.push(copy.requestUnknownPolicy);
+  return notes;
 }
