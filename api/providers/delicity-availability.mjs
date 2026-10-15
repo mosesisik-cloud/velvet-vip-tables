@@ -30,6 +30,14 @@ export function createDelicityAvailability({registry,fetcher=fetch,now=()=>Date.
       if(metadata.establishment?.establishmentId!==337||metadata.establishment.slug!=='sushi-arson'||metadata.merchant?.address?.city!=='Nice'||metadata.merchant?.slug!=='sushi-arson')throw Error('identity_changed');
       const settings=metadata.settings;
       if(settings?.enabled!==true||settings.onlineEnabled!==true||!Array.isArray(metadata.zones)||!metadata.zones.some(z=>z.id===ZONE&&z.establishmentId===337&&!z.archivedAt))return {...base,status:'unsupported'};
+      // The provider calendar includes today + bookingWindowDays. Count local
+      // calendar dates, not elapsed 24-hour periods (Paris DST days vary in length).
+      const windowDays=settings.bookingWindowDays;
+      if(!Number.isInteger(windowDays)||windowDays<0||windowDays>366)return {...base,status:'unsupported',reason:'booking_window_unknown'};
+      const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Europe/Paris',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(now()));
+      const localDate=['year','month','day'].map(type=>parts.find(part=>part.type===type).value).join('-');
+      const daysAhead=(+parsed-Date.parse(localDate+'T12:00:00Z'))/86400000;
+      if(daysAhead<0||daysAhead>windowDays)return {...base,status:'unsupported',reason:'outside_booking_window'};
       // Outside known guest limits is unsupported, not falsely fully booked.
       if(q.party<settings.minGuests||q.party>settings.maxGuests||q.party>4||!Number.isInteger(settings.minGuests)||!Number.isInteger(settings.maxGuests))return {...base,status:'unsupported'};
       const url=new URL(API+'337/availability');

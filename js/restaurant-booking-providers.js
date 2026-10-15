@@ -1,5 +1,5 @@
 import { bookingLanguage } from './booking-language.js';
-import { getBookingCopy, formatBookingCopy } from './booking-copy.js';
+import { getBookingCopy, formatBookingCopy, requestBookingNotes } from './booking-copy.js?v=180';
 // Only reviewed restaurant -> provider mappings are enabled. Discovery results
 // must never be used as booking destinations without checking the venue.
 let registryPromise;
@@ -82,6 +82,11 @@ export async function getEmbeddedBooking(restaurantId) {
 
 export function mountEmbeddedBooking(container, booking, language = 'sv') {
   const copy = getBookingCopy(language);
+  const requestOnly = booking.bookingMode === 'request_only';
+  const requestNotice = document.createElement('p');
+  requestNotice.className = 'booking-request-notice';
+  requestNotice.textContent = requestOnly ? requestBookingNotes(booking, language).join(' ') : '';
+  const notices = requestOnly ? [requestNotice] : [];
   const localized = bookingLanguage(booking, language);
   const text = key => formatBookingCopy(copy[key], {provider:booking.provider, name:booking.name});
   const languageNote = document.createElement('p');
@@ -96,29 +101,29 @@ export function mountEmbeddedBooking(container, booking, language = 'sv') {
   const intro = document.createElement('p');
   intro.className = 'booking-intro';
   if (booking.integrationMode === 'external_link') {
-    intro.textContent = text('externalIntro');
+    intro.textContent = requestOnly ? copy.requestHeading : text('externalIntro');
     if (booking.availabilityNote) intro.textContent += ' ' + booking.checkedAt + ': ' + booking.availabilityNote;
     const link = document.createElement('a');
     link.href = localized.url; link.target = '_blank'; link.rel = 'noopener noreferrer';
     link.className = 'btn btn-gold';
-    link.textContent = text('externalLink');
-    container.replaceChildren(source, intro, link, languageNote);
+    link.textContent = requestOnly ? copy.requestOpen + ' ↗' : text('externalLink');
+    container.replaceChildren(source, intro, ...notices, link, languageNote);
     return;
   }
-  intro.textContent = copy.originalIntro;
+  intro.textContent = requestOnly ? copy.requestHeading : copy.originalIntro;
   const start = document.createElement('button');
-  start.className = 'btn btn-gold'; start.type = 'button'; start.textContent = copy.findTable;
+  start.className = 'btn btn-gold'; start.type = 'button'; start.textContent = requestOnly ? copy.requestOpen : copy.findTable;
   const stage = document.createElement('div'); stage.className = 'booking-provider-stage';
   const status = document.createElement('p'); status.setAttribute('role', 'status');
   const fallback = document.createElement('a');
   fallback.href = localized.url; fallback.target = '_blank'; fallback.rel = 'noopener noreferrer';
   fallback.className = 'restaurant-official-book';
-  fallback.textContent = copy.fallbackLink;
-  container.replaceChildren(source, intro, languageNote, start, status, stage, fallback);
+  fallback.textContent = requestOnly ? copy.requestOpen + " ↗" : copy.fallbackLink;
+  container.replaceChildren(source, intro, ...notices, languageNote, start, status, stage, fallback);
   start.addEventListener('click', () => {
     if (stage.firstChild) return;
     start.remove();
-    intro.textContent = copy.activeIntro;
+    intro.textContent = requestOnly ? copy.requestHeading : copy.activeIntro;
     status.textContent = copy.opening;
     const frame = document.createElement('iframe');
     frame.className = 'booking-provider-frame';
