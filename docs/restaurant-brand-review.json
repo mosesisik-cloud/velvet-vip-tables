@@ -2,11 +2,11 @@
   "recordedAt": "2026-10-16",
   "scope": "All 770 catalogue restaurants; not_yet_verified means web identity review is still pending.",
   "summary": {
-    "verified": 228,
-    "no_usable_logo": 61,
+    "verified": 246,
+    "source_unavailable": 71,
     "needs_official_source": 369,
-    "source_unavailable": 65,
-    "identity_ambiguous": 47
+    "identity_ambiguous": 54,
+    "no_usable_logo": 30
   },
   "restaurants": [
     {
@@ -444,11 +444,12 @@
     {
       "placeId": "osm-IBZ-wow-ibiza",
       "name": "WOW ibiza",
-      "status": "no_usable_logo",
-      "reason": "Page fetched and image/SVG candidates inspected. No original restaurant-specific logo verified; names, photos and group marks retained as fallback only.",
+      "status": "source_unavailable",
+      "reason": "Official URL returns an empty HTML body; no header or original logo can be verified.",
       "evidence": [
         "https://www.wow-ibiza.com/"
       ],
+      "nextAction": "Obtain a current official site proving continuity of WOW Ibiza before using a possible House of WOW rebrand.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -496,11 +497,13 @@
     {
       "placeId": "osm-IBZ-overall",
       "name": "Overall",
-      "status": "no_usable_logo",
-      "reason": "Page fetched and image/SVG candidates inspected. No original restaurant-specific logo verified; names, photos and group marks retained as fallback only.",
+      "status": "verified",
+      "reason": "Official Overall Ibiza site embeds its standalone The Overall wordmark in its published restaurant HTML fragments, also using the same mark on its ST.G/IBZ anniversary image.",
       "evidence": [
-        "https://overallibiza.com/4/"
+        "https://overallibiza.com/4/",
+        "https://i-p.rmcdn.net/616c08396441c3002044fb2b/5411284/image-d63d07ef-8bb4-4375-b81e-5cb9e08c7abb.png"
       ],
+      "nextAction": "Ready for integrator review and registry merge.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -642,14 +645,14 @@
     {
       "placeId": "osm-DXB-shang-palace",
       "name": "Shang Palace",
-      "status": "no_usable_logo",
-      "reason": "Page fetched and image/SVG candidates inspected. No original restaurant-specific logo verified; names, photos and group marks retained as fallback only.",
+      "status": "verified",
+      "reason": "Official page is Shang Palace at Shangri-La Dubai; restaurant-logo field names this dedicated Shang Palace logo under dubai_shangrila/dining/Logos.",
       "evidence": [
-        "https://www.shangri-la.com/dubai/shangrila/dining/restaurants/shang-palace/"
+        "https://www.shangri-la.com/dubai/shangrila/dining/restaurants/shang-palace/",
+        "https://sitecore-cd.shangri-la.com/-/media/Shangri-La/dubai_shangrila/dining/Logos/Shang-Palace.png"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Shang Palace\" Dubai restaurant official website",
-      "searchEvidenceFile": "work/brand-expansion/search-discovery-1.json"
+      "nextAction": "Ready for independent review and integration.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "curated-MRB-mamzel-marbella",
@@ -900,11 +903,12 @@
     {
       "placeId": "osm-MCO-la-veranda",
       "name": "La Veranda",
-      "status": "no_usable_logo",
-      "reason": "Official Four Seasons La Veranda dining page inspected; Four Seasons hotel mark is not accepted as the restaurant logo.",
+      "status": "identity_ambiguous",
+      "reason": "Provided Four Seasons page identifies La Veranda in Cap-Ferrat, while catalog destination is Monaco. Only hotel branding was found.",
       "evidence": [
         "https://www.fourseasons.com/capferrat/dining/restaurants/la_veranda/"
       ],
+      "nextAction": "Resolve the exact location and obtain a restaurant-specific mark; do not use Four Seasons brand.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -1050,14 +1054,15 @@
     {
       "placeId": "osm-BDR-gemibas-restaurant",
       "name": "Gemibaşı Restaurant",
-      "status": "no_usable_logo",
-      "reason": "Page fetched and image/SVG candidates inspected. No original restaurant-specific logo verified; names, photos and group marks retained as fallback only.",
+      "status": "verified",
+      "reason": "Official Gemibaşı site identifies its fish restaurant at Bodrum Marina, Neyzen Tevfik Caddesi; its own app bundle uses this SVG in header and footer.",
       "evidence": [
-        "https://www.gemibasi.com/"
+        "https://www.gemibasi.com/",
+        "https://www.gemibasi.com/logo-mavi.svg",
+        "https://www.gemibasi.com/assets/index-CbPUWMnc.js"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Gemibaşı Restaurant\" Bodrum restaurant official website",
-      "searchEvidenceFile": "work/brand-expansion/search-discovery-1.json"
+      "nextAction": "Ready for integrator review and registry merge.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-BDR-kalamare",
@@ -1438,11 +1443,14 @@
     {
       "placeId": "osm-MIA-la-cabrera-coconut-grove",
       "name": "La Cabrera - Coconut Grove",
-      "status": "no_usable_logo",
-      "reason": "Page fetched and image/SVG candidates inspected. No original restaurant-specific logo verified; names, photos and group marks retained as fallback only.",
+      "status": "verified",
+      "reason": "Official Miami page explicitly identifies Coconut Grove at 2895 McFarlane Rd, FL 33133 and uses this shared La Cabrera restaurant logo in its header; both Miami branches are explicitly named.",
       "evidence": [
-        "https://lacabreramiami.com/"
+        "https://lacabreramiami.com/",
+        "https://www.lacabreramiami.com/",
+        "https://www.lacabreramiami.com/imgs/logo-provisorio.svg"
       ],
+      "nextAction": "Ready for independent review and integration.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -1832,14 +1840,14 @@
     {
       "placeId": "osm-HVA-spice",
       "name": "Spice",
-      "status": "no_usable_logo",
-      "reason": "Page fetched and image/SVG candidates inspected. No original restaurant-specific logo verified; names, photos and group marks retained as fallback only.",
+      "status": "verified",
+      "reason": "Official header mark for Spice, Trg sv. Stjepana 30, Hvar.",
       "evidence": [
-        "https://www.spicehvar.com/"
+        "https://www.spicehvar.com/",
+        "https://www.spicehvar.com/images/spice_logo_black.png"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Spice\" Hvar restaurant official website",
-      "searchEvidenceFile": "work/brand-expansion/search-discovery-1.json"
+      "nextAction": "Ready for integrator review; publish only with shared registry validation.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-HVA-paladini",
@@ -1945,10 +1953,11 @@
       "placeId": "osm-ATH-u18fed1f38720",
       "name": "Τα Βλάχικα",
       "status": "no_usable_logo",
-      "reason": "Page fetched and image/SVG candidates inspected. No original restaurant-specific logo verified; names, photos and group marks retained as fallback only.",
+      "reason": "Official WordPress page uses text-only Ta Vlachika site title; custom background and gallery are photos and the only small cropped identity images are favicons. No standalone original restaurant logo verified.",
       "evidence": [
         "http://www.vlachika.gr/"
       ],
+      "nextAction": "Obtain a restaurant-issued original wordmark or an official menu containing a separable logo.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -2029,13 +2038,12 @@
       "placeId": "osm-IST-guvenc-konyal",
       "name": "Güvenç Konyalı",
       "status": "no_usable_logo",
-      "reason": "Official restaurant-operated eatbu page identifies Sirkeci, Istanbul, but no original restaurant logo asset verified.",
+      "reason": "Official Sirkeci Eatbu page renders restaurant name as HTML text; visible images are maps and platform assets, and no original restaurant logo or downloadable menu is exposed.",
       "evidence": [
         "https://guvenckonyali.eatbu.com/?lang=en"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Güvenç Konyalı\" Istanbul restaurant official website",
-      "searchEvidenceFile": "work/brand-expansion/search-discovery-1.json"
+      "nextAction": "Obtain a restaurant-supplied original logo for the Sirkeci location.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-IST-durum-durak",
@@ -2095,10 +2103,12 @@
       "placeId": "osm-CAP-panorama",
       "name": "Panorama",
       "status": "no_usable_logo",
-      "reason": "Page fetched and image/SVG candidates inspected. No original restaurant-specific logo verified; names, photos and group marks retained as fallback only.",
+      "reason": "Official homepage and food-menu page contain restaurant content but no safely identified downloadable original restaurant logo.",
       "evidence": [
-        "https://www.panoramacapri.com/"
+        "https://www.panoramacapri.com/",
+        "https://www.panoramacapri.com/food-menu"
       ],
+      "nextAction": "Obtain an official original logo asset; do not reconstruct the name from typography.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -2184,14 +2194,14 @@
     {
       "placeId": "osm-CAP-lo-sfizio",
       "name": "Lo Sfizio",
-      "status": "no_usable_logo",
-      "reason": "Page fetched and image/SVG candidates inspected. No original restaurant-specific logo verified; names, photos and group marks retained as fallback only.",
+      "status": "verified",
+      "reason": "Official Lo Sfizio header uses this restaurant-pizzeria logo and footer gives Via Tiberio 7/e, 80073 Capri.",
       "evidence": [
-        "https://www.losfiziocapri.com/"
+        "https://www.losfiziocapri.com/",
+        "https://www.losfiziocapri.com/inc/img/lo-sfizio-capri.png"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Lo Sfizio\" Capri restaurant official website",
-      "searchEvidenceFile": "work/brand-expansion/search-discovery-1.json"
+      "nextAction": "Ready for integrator review and registry merge.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "curated-AMF-don-alfonso-1890",
@@ -2321,10 +2331,11 @@
       "placeId": "curated-PAR-plenitude",
       "name": "Plénitude",
       "status": "no_usable_logo",
-      "reason": "Official Plénitude Cheval Blanc Paris page inspected; no separate restaurant logo verified, hotel/group mark excluded.",
+      "reason": "Current official page uses Cheval Blanc hotel symbol and Paris decorative illustration; Plenitude is HTML typography. Header/inline SVG and menu content contain no separately verifiable restaurant mark.",
       "evidence": [
         "https://www.chevalblanc.com/en/maison/paris/restaurants-and-bars/plenitude/"
       ],
+      "nextAction": "Obtain an official Plenitude-specific logo; do not substitute Cheval Blanc.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -2340,11 +2351,13 @@
     {
       "placeId": "osm-PAR-le-cafe-de-la-paix",
       "name": "Le Café de la Paix",
-      "status": "no_usable_logo",
-      "reason": "Page fetched and image/SVG candidates inspected. No original restaurant-specific logo verified; names, photos and group marks retained as fallback only.",
+      "status": "verified",
+      "reason": "Official Café de la Paix Paris restaurant header, beside Opéra Garnier.",
       "evidence": [
-        "https://www.cafedelapaix.fr/fr/"
+        "https://www.cafedelapaix.fr/fr/",
+        "https://www.cafedelapaix.fr/assets/themes/theme-apiandyou//public/images/logo_colored.svg"
       ],
+      "nextAction": "Ready for integrator review; publish only with shared registry validation.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -2565,10 +2578,11 @@
       "placeId": "curated-CRV-le-1947-a-cheval-blanc",
       "name": "Le 1947 à Cheval Blanc",
       "status": "no_usable_logo",
-      "reason": "Official Yannick Alléno Le 1947 Courchevel page inspected; only Cheval Blanc branding selected by extraction, withheld as hotel/group mark.",
+      "reason": "Official Yannick Alleno restaurant page identifies Le 1947 Courchevel, but its restaurant_logo_img asset is Cheval Blanc hotel branding. Inline SVG/header resources do not establish a separate Le 1947 mark.",
       "evidence": [
         "https://www.yannick-alleno.com/les-etablissements-du-groupe/cheval-blanc-1947"
       ],
+      "nextAction": "Locate an original Le 1947-specific press or menu asset from Cheval Blanc; retain fallback meanwhile.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -2795,30 +2809,36 @@
       "placeId": "curated-PDE-fasano-punta-del-este",
       "name": "Fasano Punta del Este",
       "status": "no_usable_logo",
-      "reason": "Page fetched and image/SVG candidates inspected. No original restaurant-specific logo verified; names, photos and group marks retained as fallback only.",
+      "reason": "Restaurant page and associated CSS expose the general Fasano hotel/group mark only. Restaurant photos and menu link do not establish a distinct original restaurant asset.",
       "evidence": [
         "https://fasano.com.br/gastronomia/fasano-punta-del-este/"
       ],
+      "nextAction": "Request an original restaurant-specific Fasano Punta del Este logo.",
       "checkedAt": "2026-10-16"
     },
     {
       "placeId": "curated-TYO-den",
       "name": "Den",
       "status": "no_usable_logo",
-      "reason": "Page fetched and image/SVG candidates inspected. No original restaurant-specific logo verified; names, photos and group marks retained as fallback only.",
+      "reason": "Header and footer DEN are HTML h1 text. Official common.css/top.css implement letter styling and animation without a logo background asset.",
       "evidence": [
-        "https://www.jimbochoden.com/"
+        "https://www.jimbochoden.com/",
+        "https://www.jimbochoden.com/wp-content/themes/den/css/common.css",
+        "https://www.jimbochoden.com/wp-content/themes/den/css/top.css"
       ],
+      "nextAction": "Request original brand artwork if available; retain text fallback.",
       "checkedAt": "2026-10-16"
     },
     {
       "placeId": "curated-HKG-caprice",
       "name": "Caprice",
       "status": "no_usable_logo",
-      "reason": "Official Four Seasons Caprice dining page inspected; hotel mark excluded, no restaurant-specific logo verified.",
+      "reason": "Four Seasons Caprice dining page and Connaisseur menu inspected. Available header mark is Four Seasons Hotels and Resorts; menu renders as HTML text, without a separate Caprice logo.",
       "evidence": [
-        "https://www.fourseasons.com/hongkong/dining/restaurants/caprice/"
+        "https://www.fourseasons.com/hongkong/dining/restaurants/caprice/",
+        "https://www.fourseasons.com/hongkong/dining/menus/caprice-connoisseur/"
       ],
+      "nextAction": "Obtain a Caprice-specific original asset from the restaurant or official hotel press material.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -3011,10 +3031,12 @@
       "placeId": "osm-CPT-newlands-cafe",
       "name": "Newlands Café",
       "status": "no_usable_logo",
-      "reason": "Official Southern Sun dining page inspected; only hotel/group marks found, not a Newlands Cafe logo.",
+      "reason": "Dining and menus pages identify Newlands Cafe but their logo images are explicitly labelled Southern Sun Newlands or Southern Sun, not the cafe.",
       "evidence": [
-        "https://www.southernsun.com/southern-sun-newlands/dining?utm_source=openstreetmaps&utm_medium=businesslisting&utm_campaign=rstrnt_the-newlands-cafe"
+        "https://www.southernsun.com/southern-sun-newlands/dining?utm_source=openstreetmaps&utm_medium=businesslisting&utm_campaign=rstrnt_the-newlands-cafe",
+        "https://www.southernsun.com/southern-sun-newlands/dining/menus"
       ],
+      "nextAction": "Obtain the cafe-specific original mark; hotel logo remains excluded.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -3113,11 +3135,12 @@
     {
       "placeId": "osm-IBZ-olivia-s-ibiza-kitchen",
       "name": "Olivia's Ibiza Kitchen",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "source_unavailable",
+      "reason": "Official domain returns a website-stopped notice; restaurant assets cannot be verified.",
       "evidence": [
         "https://www.oliviasibiza.com/"
       ],
+      "nextAction": "Find a current restaurant-operated source proving this exact venue.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -3306,13 +3329,13 @@
       "placeId": "osm-DXB-asado",
       "name": "Asado",
       "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "reason": "Asado official Palace Downtown page exposes hotel/Emaar logos. Linked Asado menu PDF inspected; tiny 35x33 signature icons and menu text do not provide a usable restaurant wordmark.",
       "evidence": [
-        "https://www.addresshotels.com/en/restaurant/palace-downtown/asado/"
+        "https://www.addresshotels.com/en/restaurant/palace-downtown/asado/",
+        "https://www.addresshotels.com/wp-content/uploads/2023/03/Asado-Ala_Carte_ENAR_MAR01_2023.pdf"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Asado\" Dubai official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Locate a full original Asado restaurant logo, rather than hotel branding or low-resolution dish-signature icon.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "curated-MRB-nobu-marbella",
@@ -3404,25 +3427,24 @@
       "placeId": "osm-MRB-el-patio-de-mariscal",
       "name": "El Patio de Mariscal",
       "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "reason": "All original Wix image candidates visually inspected: food, wood background, TripAdvisor award, social icons and a photographed embroidered M. None is a standalone restaurant logo.",
       "evidence": [
         "https://elpatiodemariscal.wixsite.com/elpatiodemariscal"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"El Patio de Mariscal\" Marbella official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Obtain an original digital El Patio de Mariscal mark, not a photograph or recreated lettering.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-MRB-taberna-el-bordon-marbella",
       "name": "Taberna El Bordón Marbella",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "verified",
+      "reason": "Restaurant-operated page identifies Taberna El Bordón Marbella, Málaga, and displays its white guitar wordmark.",
       "evidence": [
-        "https://elbordontaberna.com/?lang=es"
+        "https://elbordontaberna.com/?lang=es",
+        "https://cdn.website.dish.co/media/6c/15/8005263/Taberna-El-Bordon-Marbella-el-bordon-n-png.jpg"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Taberna El Bordón Marbella\" Marbella official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Ready for integrator review; publish only with shared registry validation.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "curated-STT-gigi-ramatuelle",
@@ -3569,11 +3591,12 @@
     {
       "placeId": "osm-MCO-le-cap",
       "name": "Le Cap",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "identity_ambiguous",
+      "reason": "Catalog address says Monaco, but linked official restaurant is Le Cap at Grand-Hotel du Cap-Ferrat, Saint-Jean-Cap-Ferrat. Page only exposes Four Seasons hotel logo. No publication until canonical identity/location clarified.",
       "evidence": [
         "https://www.fourseasons.com/capferrat/dining/restaurants/le_cap/"
       ],
+      "nextAction": "Catalog owner must resolve Monaco versus Saint-Jean-Cap-Ferrat; then obtain a Le Cap-specific original logo.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -3818,13 +3841,13 @@
       "placeId": "osm-HKT-uf6b9db1d32b4",
       "name": "ร้านอาหาร ระย้า",
       "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "reason": "Official Raya story page uses text and restaurant/plant photos. Its linked ThaiQRMenu endpoint currently reports no menu data; no usable original logo found.",
       "evidence": [
-        "https://www.rayarestaurant.net/our-story"
+        "https://www.rayarestaurant.net/our-story",
+        "https://www.thaiqrmenu.com/?id=DClRj96vnG8RlWiwzZMm"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"ร้านอาหาร ระย้า\" Phuket official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Obtain the original Raya Phuket logo or a restored official menu asset.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-HKT-u85f393ba80c7",
@@ -3883,21 +3906,24 @@
     {
       "placeId": "osm-BKK-kem-kon",
       "name": "Kem-Kon (เข้ม-ข้น)",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "source_unavailable",
+      "reason": "Official Google Sites header contains an original image URL, but the exact linked image returns HTTP 403; no visual verification possible.",
       "evidence": [
         "https://www.kem-kon.com/"
       ],
+      "nextAction": "Retry the official header image through an accessible official source.",
       "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-BKK-kem-kon-kaosan",
       "name": "Kem-Kon Kaosan",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "verified",
+      "reason": "Official Kem-Kon page explicitly titled Menu Kem-Kon at Khaosan uses the shared Kem-Kon plant-signature site header logo; exact Khaosan branch is expressly listed, rather than inferred from Bangkok corporate address.",
       "evidence": [
-        "https://www.kem-kon.com/"
+        "https://www.kem-kon.com/our-menu/khaosan",
+        "https://lh7-us.googleusercontent.com/sitesv-images-rt/AMxu72vM5UD-wHoChTjZQ9ATyI0hyQm6-OY-utEYdlFTc8oZEyzGRiwTIHzuyWRZUFQu6JEoJVISiELhbYBRvokyZu7mxL4I-plJM0MXpxfGw8Ju-i04mHb9oZxiPh7tLbKamJjeysCkbenghJgEF5LNQ6rcTM_OvFSgQBlIBJMcQ6yl0qRYZb1LSyqQtuBn=w16383"
       ],
+      "nextAction": "Ready for integrator review and registry merge.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -3976,20 +4002,23 @@
       "placeId": "osm-BAL-zin-cafe-canggu",
       "name": "ZIN Cafe Canggu",
       "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "reason": "Official cafe page uses the generic ZIN group header mark; cafe menu is a modal and page media are photos. No distinct cafe mark verified.",
       "evidence": [
         "https://zin.world/zin-cafe/"
       ],
+      "nextAction": "Obtain a cafe-specific original ZIN Cafe Canggu asset.",
       "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-BAL-the-bench",
       "name": "The Bench",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "verified",
+      "reason": "Official The Bench Canggu website identifies the sports bar near Batu Bolong Beach and displays The Bench wordmark in its header.",
       "evidence": [
-        "https://www.instagram.com/thebenchcanggu?utm_medium=copy_link"
+        "https://thebenchcanggu.com/",
+        "https://images.squarespace-cdn.com/content/v1/64e49c01ad4b471cc45f86ce/1f11ccec-7b46-4188-8894-dcbc0f6a6c05/the+bench+logo.png?format=1500w"
       ],
+      "nextAction": "Ready for integrator review; publish only with shared registry validation.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -4157,11 +4186,13 @@
     {
       "placeId": "osm-MIA-miller-s-ale-house",
       "name": "Miller's Ale House",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "identity_ambiguous",
+      "reason": "Catalog exact Coral Gables location URL redirects to generic Millers Ale House homepage. A chain header SVG exists, but no current exact Coral Gables restaurant page was verified.",
       "evidence": [
+        "https://millersalehouse.com/locations/coral-gables/",
         "https://millersalehouse.com/"
       ],
+      "nextAction": "Verify the exact catalog branch/address and current official location URL before accepting the chain mark.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -4285,10 +4316,11 @@
       "placeId": "osm-BCN-el-brot-de-l-all-i-oli",
       "name": "El Brot de l'All i Oli",
       "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "reason": "Visually inspected original Wix assets: generic mortar/garlic illustration, flag icons and social icons. Site identifies Cornella; none is a distinctive named restaurant logo.",
       "evidence": [
         "https://www.elbrotdelallioli.com/"
       ],
+      "nextAction": "Obtain original restaurant wordmark and confirm catalogue Barcelona-area location is Cornella.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -4709,13 +4741,12 @@
       "placeId": "osm-IST-gumus-kanat",
       "name": "Gümüş Kanat",
       "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "reason": "Official restaurant-operated page identifies Istanbul address but header uses span.logo-name.only-text; other icons are platform/social assets.",
       "evidence": [
         "https://gumuskanat.eatbu.com/?lang=tr"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Gümüş Kanat\" Istanbul official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Obtain original restaurant artwork; retain text fallback.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-IST-efendim-fas-l-rest",
@@ -4741,22 +4772,23 @@
       "placeId": "osm-IST-felek",
       "name": "Felek",
       "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "reason": "Current Felek Mangalbasi history page identifies Bakirkoy Istanbul and explicitly describes continuity from Felek Fasil; nav-logo and footer-logo are HTML text, not supplied artwork. No original graphic logo established.",
       "evidence": [
         "https://www.felekmangalbasi.com/tarihce"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Felek\" Istanbul official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Seek a restaurant-issued original graphic asset; do not recreate its CSS typography.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "curated-CAP-il-riccio",
       "name": "Il Riccio",
       "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "reason": "Official restaurant menu contains an authentic Il Riccio wordmark; PDF object inspection shows no standalone logo image or path object; separate image objects contain full-page seafood decorations.",
       "evidence": [
-        "https://www.jumeirah.com/en/stay/italy/jumeirah-capri-palace/dining/il-riccio-restaurant"
+        "https://www.jumeirah.com/en/stay/italy/jumeirah-capri-palace/dining/il-riccio-restaurant",
+        "https://cdn.jumeirah.com/api/public/content/74018dc677644526a3cd89b83567046d?v=11834af8"
       ],
+      "nextAction": "Obtain the original standalone wordmark from the restaurant; no reconstruction from the PDF text is included.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -4772,14 +4804,13 @@
     {
       "placeId": "osm-CAP-donna-rachele",
       "name": "Donna Rachele",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "source_unavailable",
+      "reason": "Official page identifies Donna Rachele Capri but serves an empty Flazio application shell; browser loading timed out and no original asset was safely exposed.",
       "evidence": [
         "https://donnarachele.com/"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Donna Rachele\" Capri official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Revisit the fully rendered official website when available and inspect its header.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-CAP-capri-pasta",
@@ -4913,10 +4944,11 @@
       "placeId": "osm-AMF-relish-lounge-bar-ristorante",
       "name": "Relish Lounge Bar & Ristorante",
       "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "reason": "Official/catalog Facebook profile identifies Relish at Furore. Current profile image visually inspected: photograph of restaurant entrance and sign, not standalone logo artwork.",
       "evidence": [
         "https://www.facebook.com/relishloungebar/"
       ],
+      "nextAction": "Obtain the original Relish graphic used for signage; do not crop or reconstruct the photographed sign.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -4988,14 +5020,14 @@
     {
       "placeId": "curated-PAR-arpege",
       "name": "Arpège",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "verified",
+      "reason": "Official Alain Passard site identifies Arpège, 84 rue de Varenne, Paris; its actual header CSS uses this Arpège mark.",
       "evidence": [
-        "https://www.alain-passard.com/"
+        "https://www.alain-passard.com/",
+        "https://www.alain-passard.com/wp-content/themes/arpege/assets/images/logo.svg"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Arpège\" Paris official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Ready for independent review and integration.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-PAR-mat-cafe",
@@ -5275,13 +5307,12 @@
       "placeId": "osm-CRV-la-soucoupe",
       "name": "La Soucoupe",
       "status": "no_usable_logo",
-      "reason": "Official restaurant page uses text title (no-logo class). Structured image candidate visually inspected but not accepted as a sufficiently clear restaurant wordmark.",
+      "reason": "Official structured data logo candidate is a bovine graphic whose lower inscription is already cut off in the 640x480 source file. Header explicitly uses no-logo text.",
       "evidence": [
         "https://www.lasoucoupecourchevel.com/"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"La Soucoupe\" Courchevel official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Obtain an uncropped original restaurant logo; do not repair or invent the missing artwork.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-CRV-waikiki",
@@ -5318,14 +5349,14 @@
     {
       "placeId": "osm-CRV-le-panoramic",
       "name": "Le Panoramic",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "verified",
+      "reason": "Official operator page identifies Le Panoramic at La Saulire, 73120 Courchevel and displays its own PANORAMIC COURCHEVEL 1850 round restaurant mark, distinct from operator Vonston/La Mangeoire.",
       "evidence": [
-        "https://www.vonston.com/panoramic"
+        "https://www.vonston.com/panoramic",
+        "https://static.wixstatic.com/media/e1bb25_7324d45e478046cda6aca95cc05f6673~mv2.png"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Le Panoramic\" Courchevel official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Ready for integrator review and registry merge.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-CRV-cro-magnon",
@@ -5340,14 +5371,13 @@
     {
       "placeId": "curated-SBH-le-toiny-restaurant",
       "name": "Le Toiny Restaurant",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "identity_ambiguous",
+      "reason": "Official current hotel site distinguishes restaurant La Table from Beach Club and provides a La Table logo. Older catalog name Le Toiny Restaurant cannot safely be assigned either current outlet without explicit identity continuity.",
       "evidence": [
         "https://letoiny.com/"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Le Toiny Restaurant\" St. Barts official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Confirm catalog restaurant is the current La Table before using its own logo.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-SBH-l-isoletta",
@@ -5376,14 +5406,14 @@
     {
       "placeId": "osm-SBH-natural-delights",
       "name": "Natural Delights",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "verified",
+      "reason": "Official Natural Delights St Barth site displays this complete lime-shaped wordmark as img#logo in the header; filename contains favicon but the image includes the full restaurant name and island.",
       "evidence": [
-        "https://naturaldelights-stbarth.fr/"
+        "https://naturaldelights-stbarth.fr/",
+        "https://naturaldelights-stbarth.fr/wp-content/uploads/2018/03/natural-deligths-st-bart-favicon.png"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Natural Delights\" St. Barts official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Ready for integrator review; publish only with shared registry validation.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-SBH-bart-s-food-lounge",
@@ -5622,11 +5652,14 @@
     {
       "placeId": "osm-CPT-thaiyashi",
       "name": "Thaiyashi",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "verified",
+      "reason": "Official Thaiyashi app configuration identifies Dean Street Arcade, Newlands, Cape Town and explicitly assigns this original image as navigation.logo.",
       "evidence": [
-        "https://www.thaiyashi.co.za/"
+        "https://www.thaiyashi.co.za/",
+        "https://arachne-delivast-public.s3.amazonaws.com/thaiyashi/logo.png",
+        "https://www.thaiyashi.co.za/thaiyashi/assets/index.DtleXVhx.js"
       ],
+      "nextAction": "Ready for integrator review and registry merge.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -5656,11 +5689,12 @@
     {
       "placeId": "osm-CPT-the-sushi-box",
       "name": "The Sushi Box",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "identity_ambiguous",
+      "reason": "Official app JS exposes genuine Sushi Box restaurant logo, but catalog provides Cape Town only and the chain has multiple outlets. Exact branch not established.",
       "evidence": [
         "https://sushibox.co.za/"
       ],
+      "nextAction": "Resolve catalog branch/address against official store list before applying the chain logo.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -5676,14 +5710,15 @@
     {
       "placeId": "osm-CPT-kirstenbosch-tea-room",
       "name": "Kirstenbosch Tea Room",
-      "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "status": "verified",
+      "reason": "SANBI identifies Fynkos Kirstenbosch Tea Room at Gate 2 and links this restaurant website; the website uses the Fynkos illustrated F wordmark.",
       "evidence": [
-        "https://fynkos.co.za/"
+        "https://fynkos.co.za/",
+        "https://fynkos.co.za/wp-content/uploads/2024/08/LD2950-FYNKOS-KTR-WEBSITE-logo-update.png",
+        "https://www.sanbi.org/gardens/kirstenboch/venues/restaurants/"
       ],
-      "checkedAt": "2026-10-16",
-      "searchQuery": "\"Kirstenbosch Tea Room\" Cape Town official restaurant website",
-      "searchEvidence": "work/brand-expansion/research-2/search-results.json"
+      "nextAction": "Ready for integrator review; publish only with shared registry validation.",
+      "checkedAt": "2026-10-16"
     },
     {
       "placeId": "osm-CPT-mc-donalds",
@@ -5723,10 +5758,11 @@
       "placeId": "curated-LIS-cura",
       "name": "CURA",
       "status": "no_usable_logo",
-      "reason": "Official/catalog source inspected; no usable restaurant-specific logo was conclusively verified. Retain text fallback.",
+      "reason": "Official CURA Lisbon dining page and official Four Seasons press material reviewed; restaurant identity confirmed, available page header is Four Seasons hotel mark and restaurant name is text.",
       "evidence": [
         "https://www.fourseasons.com/lisbon/dining/restaurants/cura/"
       ],
+      "nextAction": "Find a restaurant-specific original CURA artwork from official press/menu assets; preserve text fallback.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -5995,11 +6031,12 @@
     {
       "placeId": "osm-DXB-acai-co",
       "name": "Acai & Co.",
-      "status": "no_usable_logo",
-      "reason": "Catalog-linked or discovered page fetched and logo candidates reviewed; no exact, usable restaurant-specific asset approved.",
+      "status": "source_unavailable",
+      "reason": "Catalog domain now serves a tiny script redirect to /lander; landing response contains no restaurant content or verifiable Dubai identity.",
       "evidence": [
         "https://acaiandco.com/"
       ],
+      "nextAction": "Find a replacement official Acai & Co Dubai source with address and original logo.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -6242,11 +6279,13 @@
     {
       "placeId": "curated-MCO-le-louis-xv",
       "name": "Le Louis XV",
-      "status": "no_usable_logo",
-      "reason": "Official Louis XV Monaco page verified, but candidates show Ducasse Paris parent branding, not the restaurant.",
+      "status": "verified",
+      "reason": "Monaco SBM official venue page uses the restaurant-specific Le Louis XV Alain Ducasse à l’Hôtel de Paris mark.",
       "evidence": [
-        "https://www.ducasse-paris.com/en/addresses/le-louis-xv-alain-ducasse-a-lhotel-de-paris/"
+        "https://www.montecarlosbm.com/en/restaurant-monaco/le-louis-xv-alain-ducasse-hotel-de-paris",
+        "https://asset.montecarlosbm.com/styles/establishment_page_mobile_logo_2x_webp/s3/media/orphea/louis_xv_mobile_400x80_0.png.webp?itok=GBg8LQcf"
       ],
+      "nextAction": "Ready for integrator review; publish only with shared registry validation.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -6300,11 +6339,12 @@
     {
       "placeId": "osm-MCO-le-bavastro",
       "name": "Le Bavastro",
-      "status": "no_usable_logo",
-      "reason": "Catalog-linked or discovered page fetched and logo candidates reviewed; no exact, usable restaurant-specific asset approved.",
+      "status": "identity_ambiguous",
+      "reason": "Official catalog-linked lebavastro.com contains restaurant logo URLs, but its embedded restaurant address is 4 Rue Bavastro, Nice, while catalog says Monaco. Logo withheld despite original availability.",
       "evidence": [
         "https://lebavastro.com/"
       ],
+      "nextAction": "Catalog owner must verify and correct exact Nice identity before logo approval; then inspect original logo image.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -6381,11 +6421,11 @@
       "placeId": "osm-BDR-bodrum-belediyesi-carsi-kafe",
       "name": "Bodrum Belediyesi (Carsi Kafe)",
       "status": "no_usable_logo",
-      "reason": "Official municipal venue page found; displayed logo is Bodrum municipality operator, not cafe-specific.",
+      "reason": "Municipal operator page confirms Carsi Cafe but uses Bodrum Belediye AS operator logo and venue photos. No distinct cafe mark found.",
       "evidence": [
         "https://www.bodrumbelediyeas.com.tr/tesis.php?slug=carsi-cafe"
       ],
-      "searchQuery": "\"Çarşı Kafe\" Bodrum Belediyesi",
+      "nextAction": "Obtain a Carsi Cafe-specific original asset, not municipal branding.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -6412,11 +6452,12 @@
       "placeId": "osm-BDR-musto-bistro",
       "name": "Musto bistro",
       "status": "no_usable_logo",
-      "reason": "Official Musto Bodrum page identifies venue, but header uses text and discovered images are food/interior photographs.",
+      "reason": "Official header and h1 render MUSTO RESTAURANT BISTRO as live HTML text with decorative star; no restaurant logo image identified.",
       "evidence": [
-        "https://www.mustobistro.com/"
+        "https://www.mustobistro.com/",
+        "https://www.mustobistro.com/menu.html"
       ],
-      "searchQuery": "\"Musto\" Bodrum bistro official",
+      "nextAction": "Keep text fallback until original restaurant artwork is provided.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -6447,11 +6488,11 @@
       "placeId": "osm-BDR-trafo",
       "name": "Trafo",
       "status": "no_usable_logo",
-      "reason": "Official municipal venue page found; displayed logo is Bodrum municipality operator, not restaurant-specific.",
+      "reason": "Official municipal Trafo venue page inspected including header and image assets. Displayed mark is Bodrum Belediye A.S., the municipal operator; venue image is a photograph.",
       "evidence": [
         "https://www.bodrumbelediyeas.com.tr/tesis.php?slug=trafo-bodrum-cafe-restaurant"
       ],
-      "searchQuery": "\"Trafo\" Bodrum restaurant official",
+      "nextAction": "Obtain a Trafo-specific original logo; do not substitute municipal operator branding.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -6734,12 +6775,13 @@
     {
       "placeId": "osm-BAL-seaweed",
       "name": "SeaWeed",
-      "status": "no_usable_logo",
-      "reason": "Restaurant Linktree account found; detected assets are Linktree platform logos, which are not restaurant branding.",
+      "status": "verified",
+      "reason": "Catalog official Linktree is Seaweedcanggu Restaurant, links @seaweedcanggu; its profile image visibly reads Seaweed Eat Drink Love Canggu.",
       "evidence": [
-        "https://linktr.ee/seaweedcanggubali"
+        "https://linktr.ee/seaweedcanggubali",
+        "https://ugc.production.linktr.ee/0e6d8758-1d51-4475-87d0-8de2504402a9_IMG-20241104-WA0000.jpeg"
       ],
-      "searchQuery": "\"SeaWeed\" Bali restaurant official",
+      "nextAction": "Ready for independent review and integration.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -6928,10 +6970,12 @@
       "placeId": "curated-LAS-spago-las-vegas",
       "name": "Spago Las Vegas",
       "status": "no_usable_logo",
-      "reason": "Official Spago venue page verified, but candidates were Bellagio/hotel and partner branding, not Spago.",
+      "reason": "Both Bellagio and the linked official Wolfgang Puck Las Vegas venue page inspected. Exposed marks belong to Bellagio/Wolfgang Puck or other restaurants, not verified Spago branch artwork.",
       "evidence": [
-        "https://bellagio.mgmresorts.com/en/restaurants/spago-by-wolfgang-puck.html?icid=GMB_Restaurants_Spago_Reservations"
+        "https://bellagio.mgmresorts.com/en/restaurants/spago-by-wolfgang-puck.html?icid=GMB_Restaurants_Spago_Reservations",
+        "https://wolfgangpuck.com/restaurants/spago-las-vegas/"
       ],
+      "nextAction": "Locate a Spago original explicitly used by the Las Vegas official page or its current official menu.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -7211,11 +7255,11 @@
       "placeId": "osm-HVA-kod-kapetana",
       "name": "Kod Kapetana",
       "status": "no_usable_logo",
-      "reason": "Catalog-linked or discovered page fetched and logo candidates reviewed; no exact, usable restaurant-specific asset approved.",
+      "reason": "Official restaurant-hosted Eatbu/Dish site identifies Kod Kapetana Hvar but logo anchor contains only span.logo-name text. Other media are venue photos or platform icons.",
       "evidence": [
         "https://kod-kapetana-hvar.eatbu.hr/?lang=hr"
       ],
-      "searchQuery": "\"Kod Kapetana\" Hvar official",
+      "nextAction": "Obtain original Kod Kapetana restaurant artwork from its official operator; no typeset recreation.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -7303,10 +7347,11 @@
       "placeId": "curated-ATH-island-athens-riviera",
       "name": "Island Athens Riviera",
       "status": "no_usable_logo",
-      "reason": "Catalog-linked or discovered page fetched and logo candidates reviewed; no exact, usable restaurant-specific asset approved.",
+      "reason": "Official Club Restaurant page and its app chunks use an Island resort header component with separate pageTitle text. No independently identified Club Restaurant asset; resort substitute excluded.",
       "evidence": [
         "https://islandclubrestaurant.gr/"
       ],
+      "nextAction": "Obtain an official Club Restaurant-specific original logo.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -7356,10 +7401,12 @@
       "placeId": "osm-ATH-napul-e-italian-comfort-food-wine",
       "name": "Napul'è Italian Comfort Food & Wine",
       "status": "no_usable_logo",
-      "reason": "Catalog-linked or discovered page fetched and logo candidates reviewed; no exact, usable restaurant-specific asset approved.",
+      "reason": "Official Wix page names Napulè in Vari; header is styled live NAPULÈ text and image candidates are photographs rather than verified logo artwork.",
       "evidence": [
-        "https://www.napuleitaliancomfortfood.com/"
+        "https://www.napuleitaliancomfortfood.com/",
+        "https://www.napuleitaliancomfortfood.com/menus"
       ],
+      "nextAction": "Obtain original Napulè wordmark artwork without recreating its typography.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -7775,11 +7822,12 @@
     {
       "placeId": "curated-LON-the-ledbury",
       "name": "The Ledbury",
-      "status": "no_usable_logo",
-      "reason": "Catalog-linked or discovered page fetched and logo candidates reviewed; no exact, usable restaurant-specific asset approved.",
+      "status": "source_unavailable",
+      "reason": "Official Ledbury page references elements/ledbury.png as its logo; direct retrieval returned HTTP 404. Other live images are Michelin badge and map pin, which are not restaurant identity.",
       "evidence": [
         "https://www.theledbury.com/?page=restaurant"
       ],
+      "nextAction": "Retry the referenced original when restored or locate another official Ledbury logo asset; do not use Michelin badge.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -7846,11 +7894,12 @@
       "placeId": "osm-PAR-i-chiban",
       "name": "I Chiban",
       "status": "no_usable_logo",
-      "reason": "Catalog-linked or discovered page fetched and logo candidates reviewed; no exact, usable restaurant-specific asset approved.",
+      "reason": "Official Sevres Eatbu page uses HTML title. Its Menu-1.pdf cover is a photographed worn menu with lettering and fish illustration; no clean standalone original logo.",
       "evidence": [
-        "https://ichiban-sevres.eatbu.com/?lang=fr"
+        "https://ichiban-sevres.eatbu.com/?lang=fr",
+        "https://cdn.website.dish.co/media/b7/91/8137224/Menu-1.pdf"
       ],
-      "searchQuery": "\"I Chiban\" Sevres restaurant",
+      "nextAction": "Obtain original digital I Chiban Sevres artwork; do not crop or reconstruct photographed menu.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -7892,11 +7941,12 @@
     {
       "placeId": "osm-PAR-bonheur-ruan",
       "name": "Bonheur Ruan",
-      "status": "no_usable_logo",
-      "reason": "Catalog-linked or discovered page fetched and logo candidates reviewed; no exact, usable restaurant-specific asset approved.",
+      "status": "identity_ambiguous",
+      "reason": "A genuine header wordmark was found, but official venue address is 99 Grande Rue, 92310 Sèvres; catalog currently describes Paris without a street address.",
       "evidence": [
         "https://www.bonheur-ruan.fr"
       ],
+      "nextAction": "Confirm or correct catalog identity/location before attaching this Sèvres restaurant logo.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -8024,10 +8074,12 @@
       "placeId": "curated-LAX-spago-beverly-hills",
       "name": "Spago Beverly Hills",
       "status": "no_usable_logo",
-      "reason": "Official Spago Beverly Hills page verified; candidates were Wolfgang Puck parent and other restaurants.",
+      "reason": "Official Beverly Hills page inspected. Its downloadable spago-logo-square.png belongs to related-venue Bodrum card, not the local header. Official Beverly Hills private-events PDF has the correct Beverly Hills mark composited over a food photograph; no clean original verified.",
       "evidence": [
-        "https://wolfgangpuck.com/restaurants/spago-beverly-hills/"
+        "https://wolfgangpuck.com/restaurants/spago-beverly-hills/",
+        "https://wolfgangpuck.com/wp-content/uploads/2025/05/SBH_Private-Events_Brochure_050925.pdf"
       ],
+      "nextAction": "Obtain standalone Spago Beverly Hills original artwork or separable original vector from official restaurant materials; reject Bodrum-card shortcut.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -8390,11 +8442,11 @@
       "placeId": "osm-HKG-bresola",
       "name": "Bresola",
       "status": "no_usable_logo",
-      "reason": "Official Bresola Kennedy Town website found; header is text and candidate images are photos, not verified logo artwork.",
+      "reason": "All original Wix header/gallery candidates visually inspected: social icons, interior, facade signage photograph, food collage and people. Header BRESOLA is HTML text.",
       "evidence": [
         "https://www.bresola.net/"
       ],
-      "searchQuery": "\"Bresola\" Hong Kong restaurant",
+      "nextAction": "Obtain original Bresola Kennedy Town digital logo, not photographed signage.",
       "checkedAt": "2026-10-16"
     },
     {
@@ -8595,11 +8647,13 @@
     {
       "placeId": "osm-MCO-sushi-arson",
       "name": "Sushi Arson",
-      "status": "no_usable_logo",
-      "reason": "Catalog-linked or discovered page fetched and logo candidates reviewed; no exact, usable restaurant-specific asset approved.",
+      "status": "verified",
+      "reason": "Official app payload merchant.logo belongs to Sushi Arson, 2 Place Arson, Nice; this is the restaurant merchant mark, not its browser icon.",
       "evidence": [
-        "https://sushiarson.com"
+        "https://sushiarson.com",
+        "https://delicity.b-cdn.net/public/merchants/sushi-arson/logo/kKQnmFBoyrsnka2aNwCc7CQX68_base.png?width=300&aspect_ratio=1:1"
       ],
+      "nextAction": "Ready for integrator review; publish only with shared registry validation.",
       "checkedAt": "2026-10-16"
     },
     {
