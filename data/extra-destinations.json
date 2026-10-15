@@ -1214,5 +1214,21 @@
     "lat": 6.25,
     "lng": -75.56,
     "listed": false
+  },
+  {
+    "code": "NCE",
+    "name": "Nice",
+    "country": "France",
+    "region": "Europe",
+    "listed": false,
+    "note": "Sökbar restaurangdestination; ingen separat bedömning av klubb- eller säsongsutbud."
+  },
+  {
+    "code": "MER",
+    "name": "Méribel",
+    "country": "France",
+    "region": "Europe",
+    "listed": false,
+    "note": "Sökbar restaurangdestination; ingen separat bedömning av klubb- eller säsongsutbud."
   }
 ]

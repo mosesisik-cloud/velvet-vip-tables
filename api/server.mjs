@@ -1,3 +1,4 @@
+import { createDelicityAvailability } from './providers/delicity-availability.mjs';
 import { verifyIdentityToken, newOAuthTransaction, validOAuthTransaction, oauthCookie, configuredOAuth } from "./oauth-security.mjs";
 import { BokabordAvailability } from './providers/bokabord-availability.mjs';
 import { BookingRegister } from './booking-register.mjs';
@@ -25,6 +26,7 @@ const availabilitySearch = new AvailabilitySearch({
   registry: JSON.parse(fs.readFileSync(path.join(fs.existsSync(path.join(__dir, 'public-data')) ? path.join(__dir, 'public-data') : path.join(__dir, '../data'), 'booking-providers.json'), 'utf8')),
   restaurants: JSON.parse(fs.readFileSync(path.join(fs.existsSync(path.join(__dir, 'public-data')) ? path.join(__dir, 'public-data') : path.join(__dir, '../data'), 'restaurants.json'), 'utf8')),
 });
+availabilitySearch.adapters.Delicity = createDelicityAvailability({registry:availabilitySearch.registry});
 for (const [id,row] of Object.entries(RESTAURANT_DETAILS)) availabilitySearch.registry[id] = {...row, provider:'BokaBord', city:'Stockholm'};
 const mirrorMode = process.env.VELVET_BOKABORD_MIRROR || 'disabled';
 const mirrorLedger = new BookingLedger(path.join(__dir, 'mirror-attempts'));

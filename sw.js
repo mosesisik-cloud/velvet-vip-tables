@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-177-provider-coverage";
+const VERSION = "v4-real-178-place-brands";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -23,6 +23,10 @@ const SHELL_ASSETS = [
   "./css/app.css",
   "./css/availability-search.css",
   "./js/app.js",
+  "./js/place-brand.js",
+  "./css/place-brand.css",
+  "./data/venue-brands.json",
+  "./data/restaurant-brands.json",
   "./js/navigation-state.js",
   "./js/booking-selection.js",
   "./js/booking-report.js",

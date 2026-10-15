@@ -1,3 +1,5 @@
+import { MEMBER_ACCOUNTS_ENABLED } from "./release-features.js";
+import { loadPlaceBrands, placeBrandHTML } from './place-brand.js?v=178';
 import {getBookingCopy, formatBookingCopy} from './booking-copy.js';
 import { restaurantCopy } from './restaurant-copy.js?v=175';
 import { primarySection, isDiscoveryList, safeDiscoveryReturn } from './navigation-state.js';
@@ -6,7 +8,7 @@ import { parseBookingSelection, withBookingSelection } from './booking-selection
 import { mountBookingReport } from './booking-report.js';
 import { uxT } from './ux-copy.js?v=175';
 import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo, resolveAuthReturn, joinResponse } from './ux-booking.js?v=175';
-import { mountAvailabilitySearch } from './availability-search.js?v=174';
+import { mountAvailabilitySearch } from './availability-search.js?v=178';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
 import { mountBokabordMirror } from "./bokabord-mirror.js";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
@@ -294,7 +296,7 @@ function venueIntroHTML(v) {
   return `<section class="venue-intro-shell${yt ? " has-video" : " has-scenes"}" aria-label="${esc(t("introAria").replace("{name}", v.name))}">
     ${media}
     <div class="venue-intro-shade" aria-hidden="true"></div>
-    <div class="venue-intro-copy"><span>${esc(t("velvetPresents"))}</span><h1>${esc(v.name)}</h1><p>${esc(v.destination)} · ${esc(v.category || "VIP experience")}</p></div>
+    <div class="venue-intro-copy"><span>${esc(t("velvetPresents"))}</span><h1>${placeBrandHTML(v, "detail")}</h1><p>${esc(v.destination)} · ${esc(v.category || "VIP experience")}</p></div>
     ${yt ? "" : `<div class="venue-intro-progress" aria-hidden="true"><span></span></div>`}
   </section>`;
 }
@@ -825,6 +827,7 @@ function socialCompactButton(s, attr) {
 }
 function mountAuthChoices(root, { onPasskey = () => {} } = {}) {
   if (!root) return;
+  if (!MEMBER_ACCOUNTS_ENABLED) { root.innerHTML = `<p>${esc(uxT("accountsLater"))}</p>`; return; }
   const environment = { hostname: location.hostname, secureContext: window.isSecureContext === true,
     publicKeyCredential: !!window.PublicKeyCredential, credentials: !!navigator.credentials };
   const text = key => authCopy(key, currentLang());
@@ -933,6 +936,7 @@ function profileReady(u) {
   return !!(u && u.provider && u.id);
 }
 async function loginWithSocial(provider) {
+  if (!MEMBER_ACCOUNTS_ENABLED) return {unavailable:true};
   if (!SOCIALS.some((s) => s.id === provider)) return { ok: false };
   try { sessionStorage.setItem("velvet_oauth_from", location.hash || "#/"); } catch {}
   // Readiness check prevents an old/non-deployed API from turning a click into
@@ -960,6 +964,7 @@ function base64UrlToBytes(value) {
   return Uint8Array.from(raw, (c) => c.charCodeAt(0));
 }
 async function loginWithPasskey() {
+  if (!MEMBER_ACCOUNTS_ENABLED) { showToast(uxT("accountsLater")); return null; }
   const ownedHost = location.hostname === "b2b.bakemyday.se";
   const localHost = /^(?:localhost|127\.0\.0\.1)$/i.test(location.hostname);
   if (!ownedHost && !localHost) {
@@ -1128,8 +1133,8 @@ function paintUser() {
   const lab = document.getElementById("nav-user-label");
   const btn = document.getElementById("nav-user");
   const label = displayName(u);
-  if (lab) lab.textContent = u ? (label.slice(0, 1).toUpperCase() || "•") : "In";
-  if (btn) btn.title = u ? `${t("loggedInAs")} ${label}` : t("loginTitle");
+  if (lab) lab.textContent = u ? (label.slice(0, 1).toUpperCase() || "•") : "⚙";
+  if (btn) btn.title = u ? `${t("loggedInAs")} ${label}` : uxT("guestSettings");
 }
 function apiBase() {
   if (location.hostname === "b2b.bakemyday.se") return `${location.origin}/velvet-api`;
@@ -1927,7 +1932,7 @@ function conciergeFields(b) {
     host_card: card,
     host_idv: b.host?.idvStatus || (b.host?.idv === "verified" ? "verified" : ""),
     guests: (b.guests || []).map((g) => `${g.name}${g.email ? ` <${g.email}>` : ""}`).join(", "),
-    note: "Förfrågan från VELVET-appen. INTE en bekräftad bokning — återkoppla till värden. Värden är passverifierad betalande kund (kort sista fyra, inget PAN).",
+    note: "Förfrågan från VELVET-appen. INTE en bekräftad bokning — återkoppla till värden. Gästförfrågan; identitet och betalning är inte verifierade.",
   };
 }
 async function sendConciergeRequest(b) {
@@ -2138,9 +2143,10 @@ function renderHome() {
     </div>
     <div class="hero-cta home-intent">
       <a class="btn btn-gold" href="#/availability${localDest ? `?city=${encodeURIComponent(localDest.name)}` : ""}" data-nav>${esc(t("navFindTable"))}</a>
-      <a class="btn btn-ghost" href="#/destinations" data-nav>${esc(t("seeDest"))}</a>
+      <a class="btn btn-ghost" href="#/destinations" data-nav>${esc(loadUser() ? t("seeDest") : uxT("exploreAsGuest"))}</a>
       <a class="btn btn-ghost" href="#/open" data-nav>${esc(t("navSocial"))}</a>
     </div>
+    ${!loadUser() ? `<p class="hero-guest-hint">${esc(uxT("guestExploreShort"))}</p>` : ""}
     <p class="hero-credit"><a href="${esc(HERO_VIDEO.credit)}" target="_blank" rel="noopener">${esc(t("videoPexels"))}</a></p>
   </section>
 
@@ -2363,7 +2369,7 @@ function restaurantCardHTML(r) {
   return `<article class="restaurant-card">
     ${restaurantMediaHTML(r)}
     <div class="restaurant-card-top">
-      <div><h3>${esc(r.name)}</h3><p>${esc(r.address || "")}</p></div>
+      <div><h3>${placeBrandHTML(r)}</h3><p>${esc(r.address || "")}</p></div>
       ${stars}
     </div>
     ${reviews > 0 ? `<p class="restaurant-review-count">${esc(reviews.toLocaleString(currentLang()))} ${esc(t("restaurantReviews"))}</p>` : ""}
@@ -2538,7 +2544,7 @@ async function renderRestaurantDetail(placeId) {
   view().innerHTML = `<section class="section restaurant-detail">
     <a class="back-link" href="#/restaurants?dest=${encodeURIComponent(destination.code)}" data-nav>← ${esc(rt("restaurantsIn", {name: destination.destination}))}</a>
     <div class="restaurant-detail-hero">
-      <div><div class="eyebrow">${esc(restaurant.cuisine || rt("restaurant"))}</div><h1>${esc(restaurant.name)}</h1><p class="restaurant-lead">${esc(restaurant.description || rt("restaurantIn", {name: destination.destination}))}</p>
+      <div><div class="eyebrow">${esc(restaurant.cuisine || rt("restaurant"))}</div><h1>${placeBrandHTML(restaurant, "detail")}</h1><p class="restaurant-lead">${esc(restaurant.description || rt("restaurantIn", {name: destination.destination}))}</p>
         <div class="restaurant-detail-actions">${permanentlyClosed ? "" : `<button type="button" class="btn btn-gold" id="restaurant-book-jump" aria-controls="restaurant-booking-panel">${esc(uxT("jumpBooking"))}</button>`}${favBtnHTML(restaurantFavId(restaurant.placeId), restaurant.name)}${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">${esc(rt("website"))} ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuViewHref)}" data-nav>${esc(rt("menu"))}</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">${esc(rt("map"))} ↗</a>` : ""}</div>
       </div>
       <div class="restaurant-detail-rating">${Number.isFinite(rating) && rating > 0 ? `<strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span><small>${esc(String(restaurant.reviewCount || 0))} ${esc(rt("reviews"))} · ${esc(restaurant.reviewSource || "Google")}</small>` : `<small>${esc(rt("noRating"))}</small>`}</div>
@@ -3063,7 +3069,7 @@ function venueCard(v, { eager = false, rank = 0, vibe = false } = {}) {
       ${venueMediaHTML(v, "venue-media", { eager, extra: rankMark })}
       <div class="venue-top">
         <div>
-          <div class="venue-name">${esc(v.name)}</div>
+          <div class="venue-name">${placeBrandHTML(v)}</div>
           <div class="venue-loc">${esc(v.destination)}</div>
         </div>
         ${vibe ? "" : `<div class="prio">${googleRatingHTML(v, { compact: true })}</div>`}
@@ -3613,7 +3619,7 @@ function renderVenueDetail(id) {
     <div class="detail-hero">
       <div class="detail-hero-main">
         <div class="detail-kicker">${esc(v.destination)}${dest ? ` · ${esc(dest.country)}` : ""} · ${esc(v.category)}</div>
-        <h1 class="detail-name">${esc(v.name)}</h1>
+        <h1 class="detail-name">${placeBrandHTML(v, "detail")}</h1>
         <div class="venue-tags detail-tags">
           <span class="tag ${st.cls}">${st.label}</span>
           ${v.shareable_format ? `<span class="tag tag-verified">${esc(t("shareableCost"))}</span>` : ""}
@@ -3837,50 +3843,8 @@ function renderVenueDetail(id) {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 async function openBookingModal(v, preselectedPackageId = "") {
-  const me0 = loadUser();
-  if (!me0) {
-    openOnboarding({ dismissable: false, phase: "auth" });
-    return;
-  }
-  await refreshIdv();
-  if (!isPayingMember()) {
-    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    rememberAfterIdv(`#/venue/${encodeURIComponent(v.venue_id)}`);
-    const needCard = isIdvOk();
-    const root = document.getElementById("modal-root");
-    root.innerHTML = `
-    <div class="modal-overlay" id="overlay">
-      <div class="modal" role="dialog" aria-modal="true" aria-label="${esc(t("verifyTitle"))}" tabindex="-1">
-        <button class="modal-close" id="m-close" aria-label="${esc(t("close"))}">✕</button>
-        <h2>${esc(needCard ? t("cardTitle") : t("verifyTitle"))}</h2>
-        <p class="modal-sub">${esc(t("bookNeedVerify"))}</p>
-        <p style="color:var(--text-dim);margin:12px 0 20px">${esc(t("bookCredentials"))}</p>
-        <a class="btn btn-gold" href="${needCard ? "#/card" : "#/verify"}" data-nav id="m-go-verify" style="width:100%">${esc(needCard ? t("cardCta") : t("verifyCta"))}</a>
-      </div>
-    </div>`;
-    const close = () => { root.innerHTML = ""; restoreFocus(opener); };
-    $("#m-close")?.addEventListener("click", close);
-    $("#overlay")?.addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });
-    $("#m-go-verify")?.addEventListener("click", close);
-    return;
-  }
-  const tooYoung = venueTooYoung(v);
-  if (tooYoung) {
-    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    const root = document.getElementById("modal-root");
-    root.innerHTML = `
-    <div class="modal-overlay" id="overlay">
-      <div class="modal" role="dialog" aria-modal="true" aria-label="${esc(t("verifyAge"))}" tabindex="-1">
-        <button class="modal-close" id="m-close" aria-label="${esc(t("close"))}">✕</button>
-        <h2>${esc(t("verifyAge"))}</h2>
-        <p class="modal-sub">${esc(t("venueTooYoung").replace("{min}", String(tooYoung.min)).replace("{age}", String(tooYoung.age)))}</p>
-      </div>
-    </div>`;
-    const close = () => { root.innerHTML = ""; restoreFocus(opener); };
-    $("#m-close")?.addEventListener("click", close);
-    $("#overlay")?.addEventListener("click", (e) => { if (e.target.id === "overlay") close(); });
-    return;
-  }
+  // Guests may inspect packages and the request form. Account/eligibility checks
+  // belong to submission, never to opening the catalogue or booking options.
   const pkgs = packagesFor(v);
   let sel = pkgs.find((p) => p.id === preselectedPackageId) || pkgs[0];
   let party = 4;
@@ -3905,7 +3869,7 @@ async function openBookingModal(v, preselectedPackageId = "") {
       <p class="req-summary" id="m-summary" aria-live="polite"></p>
 
       <div class="req-pane" data-pane="1">
-        <div class="verify-perks" style="margin:0 0 16px">
+        <div class="verify-perks" style="margin:0 0 16px" ${!MEMBER_ACCOUNTS_ENABLED ? "hidden" : ""}>
           <p class="verify-perks-title">${esc(t("bookSentAs"))}</p>
           <p style="margin:0;color:var(--text)">${esc((loadUser()?.legalName || displayName(loadUser()) || host0.name))}${cardLabel() ? ` · ${esc(cardLabel())}` : ""}${loadUser()?.handle ? ` · @${esc(loadUser().handle)}` : ""}</p>
           <p class="stepper-hint" style="margin:8px 0 0">${esc(t("bookCredentials"))}</p>
@@ -3959,8 +3923,8 @@ async function openBookingModal(v, preselectedPackageId = "") {
         </div>
 
         <div class="form-group">
-          <label class="chk-row"><input type="checkbox" id="m-open"> ${t("openSeats")}</label>
-          <p class="stepper-hint">${t("openSeatsHint")}</p>
+          <label class="chk-row" ${!MEMBER_ACCOUNTS_ENABLED ? "hidden" : ""}><input type="checkbox" id="m-open" ${!MEMBER_ACCOUNTS_ENABLED ? "disabled" : ""}> ${t("openSeats")}</label>
+          <p class="stepper-hint" ${!MEMBER_ACCOUNTS_ENABLED ? "hidden" : ""}>${t("openSeatsHint")}</p>
           <div class="stepper" id="m-open-row" role="group" aria-label="${t("openSeatsCount")}">
             <button type="button" id="m-open-minus" aria-label="−">−</button>
             <span class="stepper-val" id="m-open-val">2</span>
@@ -4225,6 +4189,21 @@ async function openBookingModal(v, preselectedPackageId = "") {
     if (!$("#m-consent").checked) { setErr("err-confirm", t("errConsent")); $("#m-consent").focus(); return; }
 
     const me = loadUser();
+    if (MEMBER_ACCOUNTS_ENABLED && !me) {
+      setErr("err-confirm", t("loginNeedJoin"));
+      return;
+    }
+    if (MEMBER_ACCOUNTS_ENABLED) await refreshIdv();
+    if (MEMBER_ACCOUNTS_ENABLED && !isPayingMember()) {
+      setErr("err-confirm", t("bookNeedVerify"));
+      return;
+    }
+    const ageGate = venueTooYoung(v);
+    if (ageGate) {
+      setErr("err-confirm", t("venueTooYoung").replace("{min}", String(ageGate.min)).replace("{age}", String(ageGate.age)));
+      return;
+    }
+
     const openOnPreview = !!$("#m-open")?.checked;
     if (openOnPreview && !me) {
       setErr("err-confirm", t("loginNeedJoin"));
@@ -4268,7 +4247,7 @@ async function openBookingModal(v, preselectedPackageId = "") {
     const sent = await sendConciergeRequest(booking);
     booking.delivery = sent;
     saveBookings([...loadBookings(), booking]);
-    const remote = await publishTable(booking);
+    const remote = MEMBER_ACCOUNTS_ENABLED && me ? await publishTable(booking) : {error:"guest_request"};
     booking.published = publicationConfirmed(remote, booking.id);
     // Keep local records honest even when the public table API is unavailable.
     if (openOn && !booking.published) booking.status = "local-pending";
@@ -5051,6 +5030,7 @@ function countryList() {
 function openOnboarding(opts = {}) {
   const root = document.getElementById("onboarding-root");
   if (!root || root.innerHTML) return; // redan öppen
+  if (opts.phase === "auth" && !MEMBER_ACCOUNTS_ENABLED) { showToast(uxT("accountsLater")); return; }
   if (opts.phase === "auth") {
     try {
       const returnTo = loginReturnTo(opts.returnTo || location.hash);
@@ -5061,7 +5041,7 @@ function openOnboarding(opts = {}) {
   const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   const langPicked = () => { try { return !!localStorage.getItem("velvet_lang_picked"); } catch { return false; } };
   let phase = opts.phase
-    || (dismissable ? "country" : (!langPicked() ? "lang" : (!loadUser() ? "auth" : "country")));
+    || (dismissable || langPicked() ? "country" : "lang");
   let step = 1;
   let country = null;
   let untrap = null;
@@ -5230,9 +5210,9 @@ function openOnboarding(opts = {}) {
               </button>`).join("")}
           </div>` : `
           <h1 class="ob-title">${esc(t("loginTitle"))}</h1>
-          <p class="ob-sub">${esc(t("loginSub"))}</p>
+          <p class="ob-sub">${esc(uxT("guestExploreHint"))}</p>
           <div id="ob-auth-choices"></div>
-          <div class="ob-actions"><button class="btn btn-ghost" id="ob-skip-auth">${esc(dismissable && opts.returnTo ? "Avbryt – stanna på bokningen" : t("skipLogin"))}</button></div>
+          <div class="ob-actions"><button class="btn btn-ghost" id="ob-skip-auth">${esc(dismissable && opts.returnTo ? "Avbryt – stanna på bokningen" : uxT("continueExploring"))}</button></div>
           `}
         </div>
       </div>`;
@@ -5244,7 +5224,7 @@ function openOnboarding(opts = {}) {
           applyLang(el.dataset.lang);
           try { localStorage.setItem("velvet_lang_picked", "1"); } catch {}
           paintNavLang();
-          phase = loadUser() ? "country" : "auth";
+          phase = "country";
           render();
         });
       });
@@ -5499,7 +5479,7 @@ async function renderOpenTables() {
       </label>
     </div>
     ${d ? `<div class="avail-chips" role="list">${dateChipsHTML(night.date, d)}</div>` : ""}
-    ${!u ? `<p class="price-disclaimer"><button class="btn btn-gold btn-sm" id="open-login">${esc(t("loginTitle"))}</button></p>` : ""}
+    ${MEMBER_ACCOUNTS_ENABLED && !u ? `<p class="price-disclaimer"><button class="btn btn-gold btn-sm" id="open-login">${esc(t("loginTitle"))}</button></p>` : ""}
     <div class="night-board" id="night-board"><p class="events-meta">${esc(t("tablesLoading"))}</p></div>
   </section>`;
   $("#night-dest")?.addEventListener("change", (e) => {
@@ -5567,7 +5547,7 @@ async function renderTable(id) {
         ${others.map((p) => rateRowHTML(p, tb.id, reviews.find((r) => r.from === me.id && r.to === p.id))).join("")}
       </div>` : ""}
     <div class="book-site-actions" style="margin-top:22px;max-width:420px">
-      ${!me ? `<button class="btn btn-gold" id="party-login">${esc(t("loginTitle"))}</button>` : ""}
+      ${MEMBER_ACCOUNTS_ENABLED && !me ? `<button class="btn btn-gold" id="party-login">${esc(t("loginTitle"))}</button>` : ""}
       ${me && canJoin && !over ? `<button class="btn btn-gold" id="party-join">${esc(t("takeSeat"))}</button>` : ""}
       ${me && seatBlocked && !over ? `<p class="price-disclaimer">${esc(t("seatPref").replace("{who}", openForLabel(tb.openFor).toLowerCase()))}</p>` : ""}
       ${already && me && !over && members.some((m) => m.id === me.id && !m.paid) ? `<a class="btn btn-gold" href="#/pay/${encodeURIComponent(tb.id)}" data-nav>${esc(t("payShare"))}</a>` : ""}
@@ -6533,7 +6513,7 @@ async function renderAccount() {
   if (u) mine = await apiJSON(`/users/${encodeURIComponent(u.id)}`) || await apiJSON(`/reviews/${encodeURIComponent(u.id)}`) || mine;
   view().innerHTML = `
   <section class="section">
-    <div class="section-head"><div><h2>${esc(t("account"))}</h2></div></div>
+    <div class="section-head"><div><h2>${esc(u ? t("account") : uxT("guestSettings"))}</h2></div></div>
     ${u ? `
       <div class="profile-head" style="margin-bottom:16px">
         ${avatarHTML(u, "lg")}
@@ -6569,6 +6549,8 @@ async function renderAccount() {
           </div>`).join("")}` : ""}
       ${isOperatorUser(u) ? `<p style="margin-top:16px"><a class="btn btn-gold btn-sm" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
+      <p>${esc(uxT("guestExploreHint"))}</p>
+      <p><a class="btn btn-gold" href="#/" data-nav>${esc(uxT("continueExploring"))}</a></p>
       <div id="account-auth-choices"></div>`}
     <h3 style="margin:28px 0 12px">${esc(t("chooseLang"))}</h3>
     <div class="lang-grid">
@@ -7347,7 +7329,7 @@ async function renderBookSite(id) {
       ${venueMediaHTML(v, "venue-hero-media", { eager: true, playable: false })}
       <div class="book-site-copy">
         <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)}${engineName ? ` · ${esc(engineName)}` : ""}${host ? ` · ${esc(host)}` : ""}</p>
-        <h1>${esc(v.name)}</h1>
+        <h1>${placeBrandHTML(v, "detail")}</h1>
         <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(uxT("bridgeIntro").replace("{name}", v.name))}</p>
         ${adapter.vipHow ? `<p class="events-meta">${esc(t("bridgeReadLive"))}: ${esc(adapter.vipHow)}</p>` : `<p class="events-meta">${esc(t("bridgeReadLive"))}</p>`}
         <div class="book-desk-card">
@@ -7672,6 +7654,9 @@ async function route() {
   }
   // Okänd rutt → 404-vy (ingen nav-länk markeras som aktiv)
   if (!fn) { fn = () => render404(h); active = null; }
+  if (!MEMBER_ACCOUNTS_ENABLED && !loadUser() && /^#\/(verify|card|promoters|promoter|pay|payout)(?:\/|$)/.test(h)) {
+    fn = () => { view().innerHTML = `<section class="section"><h1>${esc(uxT("guestSettings"))}</h1><p>${esc(uxT("accountsLater"))}</p><a class="btn btn-gold" href="#/" data-nav>${esc(uxT("continueExploring"))}</a></section>`; };
+  }
   paintExploreNav(raw);
   await fn();
   if (revision !== routeRevision || (location.hash || "#/") !== raw) return;
@@ -7836,6 +7821,7 @@ async function init() {
     [d, v] = await Promise.all([
       fetchJSON("data/destinations.json"),
       fetchJSON("data/venues.json"),
+      loadPlaceBrands(),
     ]);
     // Riktiga bilder från ställenas hemsidor — saknas filen visas emblem istället
     try {
@@ -8003,10 +7989,6 @@ async function init() {
     paintUser();
     initNavLang();
     document.getElementById("nav-user")?.addEventListener("click", () => {
-      if (!loadUser()) {
-        openOnboarding({ dismissable: true, phase: "auth" });
-        return;
-      }
       location.hash = "#/account";
     });
     initMobileNav();
@@ -8031,7 +8013,7 @@ async function init() {
       : authError === "denied" ? `${provider}: inloggningen avbröts.` : `${provider}: inloggningen kunde inte slutföras.`;
     setTimeout(() => showToast(msg), 150);
   }
-  if (passkeyRequested && !loadUser()) {
+  if (MEMBER_ACCOUNTS_ENABLED && passkeyRequested && !loadUser()) {
     setTimeout(() => loginWithPasskey(), 250);
   }
 }

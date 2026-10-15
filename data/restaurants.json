@@ -2092,24 +2092,6 @@
           "cuisine": "indian"
         },
         {
-          "placeId": "osm-MCO-sushi-arson",
-          "name": "Sushi Arson",
-          "rating": null,
-          "reviewCount": 0,
-          "address": "Monaco, Monaco",
-          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Sushi%20Arson%2C%20Monaco",
-          "website": "https://sushiarson.com",
-          "primaryType": "restaurant",
-          "source": "OpenStreetMap",
-          "curated": true,
-          "cuisine": "sushi",
-          "images": [
-            "https://delicity.b-cdn.net/public/merchants/sushi-arson/seo/ISm2hBZWlzzpAaeB_base.jpg?width=1200&aspect_ratio=16:9"
-          ],
-          "imageSource": "https://sushiarson.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
-        },
-        {
           "placeId": "osm-MCO-les-amoureux",
           "name": "Les Amoureux",
           "rating": null,
@@ -2250,52 +2232,6 @@
           "source": "OpenStreetMap",
           "curated": true,
           "cuisine": "coffee_shop"
-        },
-        {
-          "placeId": "osm-MCO-pirouette",
-          "name": "Pirouette",
-          "rating": null,
-          "reviewCount": 0,
-          "address": "Monaco, Monaco",
-          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Pirouette%2C%20Monaco",
-          "website": "https://lesagitateurs.com/pirouette",
-          "primaryType": "restaurant",
-          "source": "OpenStreetMap",
-          "curated": true,
-          "images": [
-            "https://thb.tildacdn.net/tild6436-3362-4936-b136-343164356663/-/empty/Carte_13_piruett_pag.jpg",
-            "https://thb.tildacdn.net/tild6138-3739-4531-b337-616165303136/-/empty/013_pirouette-11-202.jpg",
-            "https://thb.tildacdn.net/tild6138-3062-4932-b661-386334353837/-/empty/pirouette-25-03-2024.jpg",
-            "https://thb.tildacdn.net/tild3238-6637-4238-b637-343433623631/-/empty/039_les-agitateurs-0.jpg",
-            "https://thb.tildacdn.net/tild3931-6630-4230-b630-633835363230/-/empty/Capture_decran_2024-.jpg"
-          ],
-          "imageSource": "https://lesagitateurs.com/pirouette",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
-        },
-        {
-          "placeId": "osm-MCO-gigi-tavola",
-          "name": "Gigi Tavola",
-          "rating": null,
-          "reviewCount": 0,
-          "address": "Monaco, Monaco",
-          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Gigi%20Tavola%2C%20Monaco",
-          "website": "https://www.gigitavola.com/",
-          "primaryType": "restaurant",
-          "source": "OpenStreetMap",
-          "curated": true,
-          "cuisine": "italian;mediterranean;pizza;pasta;burger;meat",
-          "images": [
-            "https://www.gigitavola.com/wp-content/uploads/2023/07/gigi_restaurant_pizza_sans_gluten-031-copie-1024x683.jpg",
-            "https://www.gigitavola.com/wp-content/uploads/2023/07/IMG_7767-1024x683.jpg",
-            "https://www.gigitavola.com/wp-content/uploads/2024/02/IMG_9158-683x1024.jpg",
-            "https://www.gigitavola.com/wp-content/uploads/2023/07/gigi_restaurant_pizza_sans_gluten-065-e1689154880709.jpg",
-            "https://www.gigitavola.com/wp-content/uploads/2023/07/gigi_restaurant_pizza_sans_gluten-031-copie-768x512.jpg"
-          ],
-          "imageSource": "https://www.gigitavola.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
-          "menuUrl": "https://www.gigitavola.com/carte-avec-sans-gluten",
-          "menuSource": "https://www.gigitavola.com/",
-          "menuVerifiedAt": "2026-09-18T13:20:20.017Z"
         },
         {
           "placeId": "osm-MCO-les-copains",
@@ -8911,30 +8847,6 @@
           "curated": true
         },
         {
-          "placeId": "osm-CRV-le-monchu-meribel",
-          "name": "Le Monchu Méribel",
-          "rating": null,
-          "reviewCount": 0,
-          "address": "Courchevel, France",
-          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Monchu%20M%C3%A9ribel%2C%20Courchevel",
-          "website": "https://www.lemonchu-meribel.com/",
-          "primaryType": "restaurant",
-          "source": "OpenStreetMap",
-          "curated": true,
-          "images": [
-            "https://www.lemonchu-meribel.com/wp-content/uploads/2025/08/resize-lounge-600x780.jpg",
-            "https://www.lemonchu-meribel.com/wp-content/uploads/elementor/thumbs/resize-lounge-ravbemiovdwi490d6zp6szspnvyaurs4xpxz1i9u4k.jpg",
-            "https://www.lemonchu-meribel.com/wp-content/uploads/elementor/thumbs/img-0937-rdg1ang0kpe85423ojwiu0r9yirjlamtyfdt5pvhdw.jpeg",
-            "https://www.lemonchu-meribel.com/wp-content/uploads/elementor/thumbs/dessert-2-rdg1ci6k1xxl1fd5uur191x04vmlrszrvlpa8d4j44.jpeg",
-            "https://www.lemonchu-meribel.com/wp-content/uploads/elementor/thumbs/img-1198-rdg1efqm3okswkk4kotfdkd43e3rlenwt5z7qu9ebo.jpeg"
-          ],
-          "imageSource": "https://www.lemonchu-meribel.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
-          "menuUrl": "https://www.lemonchu-meribel.com/menu-restaurant-le-monchu/",
-          "menuSource": "https://www.lemonchu-meribel.com/",
-          "menuVerifiedAt": "2026-09-18T13:20:25.563Z"
-        },
-        {
           "placeId": "osm-CRV-cro-magnon",
           "name": "Cro Magnon",
           "rating": null,
@@ -11716,6 +11628,122 @@
           "bookingProvider": "BokaBord",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-15"
+        }
+      ]
+    },
+    "NCE": {
+      "destination": "Nice",
+      "country": "France",
+      "fetchedAt": null,
+      "source": "Official restaurant location verified 2026-10-15",
+      "restaurants": [
+        {
+          "placeId": "osm-MCO-sushi-arson",
+          "name": "Sushi Arson",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "2 Place Arson, 06300 Nice, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Sushi%20Arson%2C%202%20Place%20Arson%2C%2006300%20Nice%2C%20France",
+          "website": "https://sushiarson.com",
+          "primaryType": "restaurant",
+          "source": "OpenStreetMap",
+          "curated": true,
+          "cuisine": "sushi",
+          "images": [
+            "https://delicity.b-cdn.net/public/merchants/sushi-arson/seo/ISm2hBZWlzzpAaeB_base.jpg?width=1200&aspect_ratio=16:9"
+          ],
+          "imageSource": "https://sushiarson.com/",
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "city": "Nice",
+          "locationVerifiedAt": "2026-10-15",
+          "locationSource": "https://sushiarson.com"
+        },
+        {
+          "placeId": "osm-MCO-pirouette",
+          "name": "Pirouette",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "34 rue Bonaparte, 06300 Nice, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Pirouette%2C%2034%20rue%20Bonaparte%2C%2006300%20Nice%2C%20France",
+          "website": "https://lesagitateurs.com/pirouette",
+          "primaryType": "restaurant",
+          "source": "OpenStreetMap",
+          "curated": true,
+          "images": [
+            "https://thb.tildacdn.net/tild6436-3362-4936-b136-343164356663/-/empty/Carte_13_piruett_pag.jpg",
+            "https://thb.tildacdn.net/tild6138-3739-4531-b337-616165303136/-/empty/013_pirouette-11-202.jpg",
+            "https://thb.tildacdn.net/tild6138-3062-4932-b661-386334353837/-/empty/pirouette-25-03-2024.jpg",
+            "https://thb.tildacdn.net/tild3238-6637-4238-b637-343433623631/-/empty/039_les-agitateurs-0.jpg",
+            "https://thb.tildacdn.net/tild3931-6630-4230-b630-633835363230/-/empty/Capture_decran_2024-.jpg"
+          ],
+          "imageSource": "https://lesagitateurs.com/pirouette",
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "city": "Nice",
+          "locationVerifiedAt": "2026-10-15",
+          "locationSource": "https://lesagitateurs.com/pirouette"
+        },
+        {
+          "placeId": "osm-MCO-gigi-tavola",
+          "name": "Gigi Tavola",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "5 Quai des Deux Emmanuels, 06300 Nice, France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Gigi%20Tavola%2C%205%20Quai%20des%20Deux%20Emmanuels%2C%2006300%20Nice%2C%20France",
+          "website": "https://www.gigitavola.com/",
+          "primaryType": "restaurant",
+          "source": "OpenStreetMap",
+          "curated": true,
+          "cuisine": "italian;mediterranean;pizza;pasta;burger;meat",
+          "images": [
+            "https://www.gigitavola.com/wp-content/uploads/2023/07/gigi_restaurant_pizza_sans_gluten-031-copie-1024x683.jpg",
+            "https://www.gigitavola.com/wp-content/uploads/2023/07/IMG_7767-1024x683.jpg",
+            "https://www.gigitavola.com/wp-content/uploads/2024/02/IMG_9158-683x1024.jpg",
+            "https://www.gigitavola.com/wp-content/uploads/2023/07/gigi_restaurant_pizza_sans_gluten-065-e1689154880709.jpg",
+            "https://www.gigitavola.com/wp-content/uploads/2023/07/gigi_restaurant_pizza_sans_gluten-031-copie-768x512.jpg"
+          ],
+          "imageSource": "https://www.gigitavola.com/",
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.gigitavola.com/carte-avec-sans-gluten",
+          "menuSource": "https://www.gigitavola.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:20.017Z",
+          "city": "Nice",
+          "locationVerifiedAt": "2026-10-15",
+          "locationSource": "https://www.gigitavola.com/"
+        }
+      ]
+    },
+    "MER": {
+      "destination": "Méribel",
+      "country": "France",
+      "fetchedAt": null,
+      "source": "Official restaurant location verified 2026-10-15",
+      "restaurants": [
+        {
+          "placeId": "osm-CRV-le-monchu-meribel",
+          "name": "Le Monchu Méribel",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Piste des Rhodos, 73550 Les Allues (Méribel), France",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Monchu%20M%C3%A9ribel%2C%20Piste%20des%20Rhodos%2C%2073550%20Les%20Allues%20%28M%C3%A9ribel%29%2C%20France",
+          "website": "https://www.lemonchu-meribel.com/",
+          "primaryType": "restaurant",
+          "source": "OpenStreetMap",
+          "curated": true,
+          "images": [
+            "https://www.lemonchu-meribel.com/wp-content/uploads/2025/08/resize-lounge-600x780.jpg",
+            "https://www.lemonchu-meribel.com/wp-content/uploads/elementor/thumbs/resize-lounge-ravbemiovdwi490d6zp6szspnvyaurs4xpxz1i9u4k.jpg",
+            "https://www.lemonchu-meribel.com/wp-content/uploads/elementor/thumbs/img-0937-rdg1ang0kpe85423ojwiu0r9yirjlamtyfdt5pvhdw.jpeg",
+            "https://www.lemonchu-meribel.com/wp-content/uploads/elementor/thumbs/dessert-2-rdg1ci6k1xxl1fd5uur191x04vmlrszrvlpa8d4j44.jpeg",
+            "https://www.lemonchu-meribel.com/wp-content/uploads/elementor/thumbs/img-1198-rdg1efqm3okswkk4kotfdkd43e3rlenwt5z7qu9ebo.jpeg"
+          ],
+          "imageSource": "https://www.lemonchu-meribel.com/",
+          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
+          "menuUrl": "https://www.lemonchu-meribel.com/menu-restaurant-le-monchu/",
+          "menuSource": "https://www.lemonchu-meribel.com/",
+          "menuVerifiedAt": "2026-09-18T13:20:25.563Z",
+          "city": "Méribel",
+          "locationVerifiedAt": "2026-10-15",
+          "locationSource": "https://www.lemonchu-meribel.com/"
         }
       ]
     }
