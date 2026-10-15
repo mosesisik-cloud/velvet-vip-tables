@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "issue": 100,
+      "claim": "codex-bc3a8a2e-ca34-4493-8ab2-ff7cb859faef",
+      "restaurantId": "curated-PAR-arpege",
+      "checkedAt": "2026-10-16",
+      "identity": {
+        "status": "verified",
+        "name": "Arpège",
+        "city": "Paris",
+        "country": "France",
+        "address": "84 rue de Varenne, 75007 Paris",
+        "source": "https://www.alain-passard.com/",
+        "corroboration": "https://www.alain-passard.com/contact/",
+        "match": "The official restaurant homepage and dedicated contact page agree on name, street and restaurant contact. The booking page identifies Restaurant Arpège Paris."
+      },
+      "bookingRoute": {
+        "status": "provider_page_loaded",
+        "provider": "Zenchef",
+        "url": "https://bookings.zenchef.com/results?rid=354036&lang=fr",
+        "source": "https://www.alain-passard.com/",
+        "evidence": "Official Réservation and Réserver une table links point to this exact Zenchef URL. The provider page rendered the restaurant name and booking controls.",
+        "mode": "external_link",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "contact": {
+        "phone": "+33147050906",
+        "email": "restaurant@alain-passard.com",
+        "source": "https://www.alain-passard.com/contact/",
+        "role": "Published restaurant reservations contact; no contact initiated."
+      },
+      "providerCandidate": {
+        "provider": "Zenchef",
+        "name": "Arpège",
+        "city": "Paris",
+        "venueId": "354036",
+        "url": "https://bookings.zenchef.com/results?rid=354036&lang=fr",
+        "source": "https://www.alain-passard.com/",
+        "checkedAt": "2026-10-16",
+        "verification": "provider_page_loaded",
+        "providerTitle": "Restaurant Arpège Paris - Réservation en ligne",
+        "integrationMode": "external_link",
+        "venueKey": "bookings.zenchef.com/results?rid=354036",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "policy": {
+        "cancellation": "Provider page says changes/cancellation are free until 48 hours before the visit; final booking-specific terms not tested.",
+        "source": "https://bookings.zenchef.com/results?rid=354036&lang=fr",
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "rejectedDestinations": [
+        {
+          "kind": "separate_office",
+          "reason": "The contact page also lists L’Arrière Cuisine at 57 rue de Bourgogne and bureau@alain-passard.com; these are not the restaurant booking identity."
+        }
+      ],
+      "tests": {
+        "officialIdentityPageRendered": true,
+        "officialBookingLinkObserved": true,
+        "providerPageRendered": true,
+        "embeddedInVelvet": false,
+        "liveAvailability": false,
+        "confirmedReservation": false,
+        "interactionBoundary": "Read-only page navigation; no provider date, party, time or Réserver control used. No guest details entered. No bookings, holds, payments or restaurant messages initiated.",
+        "networkGuard": "No interception installed; no booking form controls used.",
+        "limitations": [
+          "Provider page rendering does not establish available inventory, native embedding or successful checkout.",
+          "No cancellation, card guarantee, payment or confirmation flow tested.",
+          "Web text retrieval could not fetch Zenchef; provider rendering was verified with the browser.",
+          "Existing booking-language helper keeps the official lang=fr URL for Swedish input and reports languageUnknown."
+        ],
+        "resolverCompatibility": {
+          "result": "passed",
+          "assertions": 10,
+          "resolverBlobSha": "237a751f8bc1c3f95877aa0c2bbc8b36ef5bdb76",
+          "languageBlobSha": "8dedce2bff4752bc06c746c44b27356b45007338",
+          "scope": "Read-only in-memory checks of existing resolver and booking-language source: valid external-link candidate accepted; mismatched identity/host/path, unsafe schemes, missing mapping and unverified native embedding rejected.",
+          "limitation": "Compatibility checks do not activate the mapping or verify live availability."
+        }
+      },
+      "implementation": {
+        "status": "not_integrated",
+        "changedFiles": [
+          "data/restaurant-evidence/curated-PAR-arpege.json"
+        ],
+        "reusePlan": "Submit providerCandidate for the single integrator to review and insert using existing resolveEmbeddedBooking external-link flow. No shared registry or resolver changes in this PR.",
+        "nextStep": "Coordinator consolidates evidence and validates the candidate mapping before any integration/release."
+      },
+      "publication": {
+        "status": "not_published",
+        "releaseOwnerOnly": true
+      }
+    }
+  ]
+}
