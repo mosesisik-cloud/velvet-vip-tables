@@ -20,7 +20,7 @@ export function allowedRequest(method, address) {
   if (!['app.bokabord.se', 'app.waiteraid.com', 'www.waiteraid.com'].includes(url.hostname)) return false;
   if (/save|confirm|payment|checkout|login|register|cancel|delete/i.test(url.pathname)) return false;
   if (['GET', 'HEAD'].includes(method)) return true;
-  return method === 'POST' && /^\/(booking-widget|reservation)\/api\/(?:booking\/)?(?:getTimes|getProducts|getCalendar|getDates|getMeals|getSettings|getAvailability)$/.test(url.pathname);
+  return method === 'POST' && /^\/(booking-widget|reservation)\/api\/(?:booking\/)?(?:getTimes|getProducts|getCalendar|getDates|getOffDays|getMeals|getSettings|getAvailability)$/.test(url.pathname);
 }
 export class MirrorError extends Error {
   constructor(code, status = 400) { super(code); this.status = status; }
@@ -28,6 +28,7 @@ export class MirrorError extends Error {
 export function matchesApprovedBooking(query, approved) {
   if (!query || !approved || approved.terms !== true) return false;
   const phone = value => String(value || '').replace(/\D/g, '').replace(/^0046/, '46').replace(/^0/, '46');
+  if (phone(approved.phone).length < 7 || phone(approved.phone).length > 15) return false;
   return String(query.date) === approved.date && String(query.time) === approved.time && Number(query.amount) === approved.party
     && query.firstname === approved.firstname && query.lastname === approved.lastname && query.email === approved.email
     && phone(query.phone) === phone(approved.phone) && query.waitlist === false && query.terms?.general === true
@@ -37,6 +38,19 @@ export function matchesApprovedBooking(query, approved) {
     && (!approved.mealid || Number(query.mealid) === approved.mealid)
     && (approved.comment === undefined || String(query.comment || '') === approved.comment)
     && !query.is_temp_booking && !query.giftcard && !(query.linked_meals?.length) && !query.bookingid;
+}
+// Bokabord also uses its own AJAX queue, outside Angular's $http service.
+export function providerReady() {
+  const angular = window.angular;
+  const root = document.querySelector('[ng-app]') || document.body;
+  const injector = angular?.element(root).injector();
+  const scope = angular?.element(document.body).scope();
+  const loader = [...document.querySelectorAll('#ajaxloader,[ng-if="isAjaxRequest()"]')]
+    .some(el => el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden');
+  const phone = document.querySelector('input.phoneField');
+  const phoneReady = !phone || !phone.getClientRects().length || !!phone.closest('.intl-tel-input');
+  return !!injector && phoneReady && !loader && !scope?.isAjaxRequest?.()
+    && injector.get('$http').pendingRequests.length === 0 && !injector.get('$rootScope').$$phase;
 }
 export class BokabordMirror {
   sessions = new Map();
@@ -87,6 +101,7 @@ export class BokabordMirror {
           return route.continue();
         }
         if (!allowedRequest(r.method(), r.url())) {
+          if (/\/saveBooking(?:\?|$)/i.test(r.url())) s.providerReservationRequired = true;
           if ((r.isNavigationRequest() && r.frame() === s.page?.mainFrame()) || /saveBooking/i.test(r.url())) s.blocked = true;
           return route.abort();
         }
@@ -121,13 +136,12 @@ export class BokabordMirror {
   }
   async settle(s) {
     // Wait for Angular's actual work, not unrelated analytics or a fixed delay per edit.
-    await s.page.waitForFunction(() => {
-      const root = document.querySelector('[ng-app]') || document.body;
-      const injector = window.angular?.element(root).injector();
-      return injector && injector.get('$http').pendingRequests.length === 0 && !injector.get('$rootScope').$$phase;
-    }, null, { timeout: 8000 });
+    await s.page.waitForFunction(providerReady, null, { timeout: 8000 });
     await s.page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+    // A date click can start the provider AJAX queue during the render frames.
+    await s.page.waitForFunction(providerReady, null, { timeout: 8000 });
   }
+
   async snapshot(s) {
     // No screenshot or personal fields are persisted to disk.
     const contact = await s.page.getByRole('heading', { name: 'Kontaktuppgifter', exact: true }).isVisible();
@@ -163,7 +177,7 @@ export class BokabordMirror {
       return { query: booking.getQuery(), card: !!booking.meal?.bullets?.cc || booking.require_noshow === true, products: !!booking.meal?.mandatory_products };
     }).catch(() => null);
     const q = model?.query;
-    s.handoffReason = model?.card ? 'card_required' : model?.products || q?.products?.length ? 'products_required' : q?.waitlist ? 'waitlist' : null;
+    s.handoffReason = s.providerReservationRequired ? 'provider_reservation_required' : model?.card ? 'card_required' : model?.products || q?.products?.length ? 'products_required' : q?.waitlist ? 'waitlist' : null;
     if (s.handoffReason) return null;
     if (!q || q.hash !== RESTAURANT_DETAILS[s.restaurantId].hash || !/^\d{4}-\d{2}-\d{2}$/.test(q.date) || !/^\d{2}:\d{2}$/.test(q.time) || !Array.isArray(q.products) || q.products.length || q.waitlist || q.giftcard || q.linked_meals?.length || q.bookingid) return null;
     return { date: q.date, time: q.time, party: Number(q.amount), firstname: q.firstname || '', lastname: q.lastname || '', email: q.email || '', phone: q.phone || '', comment: q.comment || '', mealid: Number(q.mealid), hash: q.hash, terms: true };
