@@ -1,0 +1,156 @@
+{
+  "curated-STO-ciccios": {
+    "name": "Ciccio’s",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=6efc74a27b57165fbfb16acbebf7d248&lang=sw",
+    "hash": "6efc74a27b57165fbfb16acbebf7d248",
+    "source": "https://www.ciccios.se/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-zink-italian-cuisine": {
+    "name": "Zink – Italian Cuisine",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=e9d3e6917bc7f05c0df1ae157d9aed5b&lang=sw",
+    "hash": "e9d3e6917bc7f05c0df1ae157d9aed5b",
+    "source": "https://zinkitalian.se/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-frantzen": {
+    "name": "Frantzén",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=77779be66a85c01c2efe78905bbf67e9&lang=sw",
+    "hash": "77779be66a85c01c2efe78905bbf67e9",
+    "source": "https://www.restaurantfrantzen.com/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-beirut-cafe": {
+    "name": "Beirut Café",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=ca902bc03574cc4643a6f071e93e2a98&lang=sw",
+    "hash": "ca902bc03574cc4643a6f071e93e2a98",
+    "source": "https://www.beirutcafe.se/sv",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-noema": {
+    "name": "Noema",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=41276418cbba56f9c561ec99032fe9fc&lang=sw",
+    "hash": "41276418cbba56f9c561ec99032fe9fc",
+    "source": "https://noemastockholm.se/en/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-boqueria": {
+    "name": "Boqueria",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=0195100c20f372753761a0bbb861f027&lang=sw",
+    "hash": "0195100c20f372753761a0bbb861f027",
+    "source": "https://www.boqueria.se/en/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-sperling-co": {
+    "name": "Sperling & Co",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=fc8a3ebc31e1b243fda481dc4f0de20d&lang=sw",
+    "hash": "fc8a3ebc31e1b243fda481dc4f0de20d",
+    "source": "https://sperlingco.se/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-animo": {
+    "name": "Animo",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=ced986f291b0ecbf61267c5e8fc8600e&lang=sw",
+    "hash": "ced986f291b0ecbf61267c5e8fc8600e",
+    "source": "https://www.animorestaurant.se/en",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-olli": {
+    "name": "OLLI Ristorante",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=04000879a2ea8d2257cf723029ea1d75&lang=sw",
+    "hash": "04000879a2ea8d2257cf723029ea1d75",
+    "source": "https://www.olliristorante.se/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-brasserie-astrid": {
+    "name": "Brasserie Astrid",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=e3a1940c68c7fcb34cb950162eeaaaef&lang=sw",
+    "hash": "e3a1940c68c7fcb34cb950162eeaaaef",
+    "source": "https://brasserieastrid.se/restaurang",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-vau-de-ville": {
+    "name": "Vau de Ville",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=1994e39a706405442f6b37293d883d0b&lang=sw",
+    "hash": "1994e39a706405442f6b37293d883d0b",
+    "source": "https://vaudevillestockholm.se/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-sturehof": {
+    "name": "Sturehof",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=07415d5b4d24177e713964f3bc75eeaf&lang=sw",
+    "hash": "07415d5b4d24177e713964f3bc75eeaf",
+    "source": "https://sturehof.com/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-paraden": {
+    "name": "Paraden",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=4e28f7fbcfdd14e8bab3e72116f40fdf&lang=sw",
+    "hash": "4e28f7fbcfdd14e8bab3e72116f40fdf",
+    "source": "https://paradenkvarterskrog.com/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-riche": {
+    "name": "Riche",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=4a8d2f702a18092521b0b031fbfb4d4a&lang=sw",
+    "hash": "4a8d2f702a18092521b0b031fbfb4d4a",
+    "source": "https://riche.se/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-villa-dagmar": {
+    "name": "Villa Dagmar",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=a7eea669cf574253557648c3db0db765&lang=sw",
+    "hash": "a7eea669cf574253557648c3db0db765",
+    "source": "https://hotelvilladagmar.com/food-drink/restaurangen/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-kommendoren": {
+    "name": "Kommendören",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=4dcf4bbddfb1d7c4f3f0d2d5186d4f00&lang=sw",
+    "hash": "4dcf4bbddfb1d7c4f3f0d2d5186d4f00",
+    "source": "https://www.kommendoren.se/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-ekstedt": {
+    "name": "Ekstedt",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=cf1ffc30f54f7f3b6158c4be497182ed&lang=sw",
+    "hash": "cf1ffc30f54f7f3b6158c4be497182ed",
+    "source": "https://ekstedt.nu/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-tete": {
+    "name": "Tête",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=ad8c9392995bc61483d48dbf7de0fa0a&lang=sw",
+    "hash": "ad8c9392995bc61483d48dbf7de0fa0a",
+    "source": "https://www.restaurangtete.se/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-aira": {
+    "name": "AIRA",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=5eb41ca79ef5e63bfabfdcbb39e4f6a8&lang=sw",
+    "hash": "5eb41ca79ef5e63bfabfdcbb39e4f6a8",
+    "source": "https://aira.se/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-balzac": {
+    "name": "Brasserie Balzac",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=a0dd019e24669fadaaa6486567307f61&lang=sw",
+    "hash": "a0dd019e24669fadaaa6486567307f61",
+    "source": "https://balzac.se/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-copine": {
+    "name": "Copine",
+    "url": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=153ead326f6097aa89a7e5db04760c97&lang=sw",
+    "hash": "153ead326f6097aa89a7e5db04760c97",
+    "source": "https://www.jimjacobrestauranger.se/copine",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-italiano": {
+    "name": "Italiano",
+    "url": "https://app.bokabord.se/reservation/?hash=db5f54c8e9643fd5e54cd57016fb2544&version=new&lang=sw",
+    "hash": "db5f54c8e9643fd5e54cd57016fb2544",
+    "source": "https://italiano.se/italiano",
+    "verifiedAt": "2026-10-15"
+  }
+}

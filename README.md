@@ -10,9 +10,9 @@ Concierge-förhandsversion. Inte en automatisk bokningsmotor. Knappen ljuger int
 
 Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk UI, premium dark/gold.
 
-## Playwright-pilot för Zink (ej publicerad)
+## Bokabord i Stockholm
 
-En valbar spegling av det riktiga Bokabord-formuläret finns bakom `VELVET_BOKABORD_MIRROR=inspect`. API-serverns pilot stoppar vid kontaktsteget. Den lokala förhandsvisningen stöder också kontaktinmatning och en uttryckligen godkänd engångsbokning, verifierad genom ett skarpt test. Se [körinstruktioner och verifiering](docs/bokabord-playwright-pilot.md).
+22 verifierade Bokabord-restauranger stöds av bildspeglingen. `VELVET_BOKABORD_MIRROR=live` låter inloggade gäster fylla i originalformuläret och godkänna bokningen i Velvet. Kortgaranti, tillval och väntelista slutförs hos leverantören. `inspect` stoppar vid kontaktuppgifter. Se [körinstruktioner och verifiering](docs/bokabord-playwright-pilot.md).
 
 ## Vad som är på riktigt i V4
 

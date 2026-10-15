@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-163-booking-return";
+const VERSION = "v4-real-164-stockholm-bokabord";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -22,6 +22,7 @@ const SHELL_ASSETS = [
   "./manifest.json",
   "./css/app.css",
   "./js/app.js",
+  "./js/bokabord-mirror.js",
   "./js/i18n.js",
   "./js/mrz.js",
   "./js/passport-ocr.js",

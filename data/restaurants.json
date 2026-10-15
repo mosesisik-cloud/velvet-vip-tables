@@ -10788,7 +10788,7 @@
           "address": "Grev Turegatan 20, 114 46 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Zink%20Italian%20Cuisine%2C%20Grev%20Turegatan%2020%2C%20Stockholm",
           "website": "https://zinkitalian.se/",
-          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=e9d3e6917bc7f05c0df1ae157d9aed5b",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=e9d3e6917bc7f05c0df1ae157d9aed5b&lang=sw",
           "bookingProvider": "BokaBord",
           "bookingDirect": true,
           "menuUrl": "https://zinkitalian.se/meny/",
@@ -10814,7 +10814,8 @@
             "https://zinkitalian.se/storage/app/media/bilder/Zink%20mix_11.jpg"
           ],
           "imageSource": "https://zinkitalian.se/bilder",
-          "imageVerifiedAt": "2026-09-18T12:46:00.000Z"
+          "imageVerifiedAt": "2026-09-18T12:46:00.000Z",
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-brasserie-astoria",
@@ -10853,7 +10854,7 @@
           "address": "Nybrogatan 12, 114 39 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Italiano%2C%20Nybrogatan%2012%2C%20114%2039%20Stockholm",
           "website": "https://italiano.se/",
-          "bookingUrl": "https://italiano.se/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?hash=db5f54c8e9643fd5e54cd57016fb2544&version=new&lang=sw",
           "instagram": "https://www.instagram.com/italianorestaurang/",
           "cuisine": "Italienskt",
           "priceClass": "$$$",
@@ -10868,7 +10869,10 @@
             "https://italiano.se/_next/image?url=%2Fimages%2F01-Italiano_Desktop_Landning.jpg&w=828&q=75&dpl=dpl_buesrzf1Y1RMVdr6p6b1MnM4DBxH"
           ],
           "imageSource": "https://italiano.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-ciccios",
@@ -10878,7 +10882,7 @@
           "address": "Nybrogatan 21, 114 39 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Ciccio%E2%80%99s%2C%20Nybrogatan%2021%2C%20114%2039%20Stockholm",
           "website": "https://www.ciccios.se/",
-          "bookingUrl": "https://www.ciccios.se/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=6efc74a27b57165fbfb16acbebf7d248&lang=sw",
           "instagram": "http://instagram.com/ciccios.se",
           "facebook": "https://www.facebook.com/ciccios.se/",
           "cuisine": "Italienskt · New York",
@@ -10894,7 +10898,10 @@
             "https://www.ciccios.se/_next/image?url=%2Fimages%2FCiccios_Site_Bildspel_4.jpg&w=3840&q=75&dpl=dpl_F7kwap9xcjuhkjXadNu1UZpqfQSZ"
           ],
           "imageSource": "https://www.ciccios.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-ag",
@@ -10956,7 +10963,7 @@
           "address": "Klara Norra Kyrkogata 26, 111 22 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Frantz%C3%A9n%2C%20Klara%20Norra%20Kyrkogata%2026%2C%20111%2022%20Stockholm",
           "website": "https://www.restaurantfrantzen.com/",
-          "bookingUrl": "https://www.restaurantfrantzen.com/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=77779be66a85c01c2efe78905bbf67e9&lang=sw",
           "instagram": "https://www.instagram.com/frantzengroup/",
           "facebook": "https://www.facebook.com/restaurantzen.sgp/",
           "cuisine": "Nordiskt · Fine dining",
@@ -10972,7 +10979,10 @@
             "https://www.restaurantfrantzen.com/wp/wp-content/uploads/2026/04/DSC_7577-HDR.jpg"
           ],
           "imageSource": "https://www.restaurantfrantzen.com/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-almaza",
@@ -11035,7 +11045,7 @@
           "address": "Nybrogatan 29–31, 114 39 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Beirut%20Caf%C3%A9%2C%20Nybrogatan%2029%E2%80%9331%2C%20114%2039%20Stockholm",
           "website": "https://www.beirutcafe.se/sv",
-          "bookingUrl": "https://www.beirutcafe.se/sv",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=ca902bc03574cc4643a6f071e93e2a98&lang=sw",
           "instagram": "https://www.instagram.com/beirutcafestockholm/",
           "facebook": "https://www.facebook.com/beirutcafesthlm/",
           "cuisine": "Libanesiskt · Meze",
@@ -11054,7 +11064,10 @@
           "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
           "menuUrl": "https://www.beirutcafe.se/sv/meny",
           "menuSource": "https://www.beirutcafe.se/sv",
-          "menuVerifiedAt": "2026-09-18T13:20:29.596Z"
+          "menuVerifiedAt": "2026-09-18T13:20:29.596Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-animo",
@@ -11064,7 +11077,7 @@
           "address": "Kungstensgatan 9, 114 25 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Animo%2C%20Kungstensgatan%209%2C%20114%2025%20Stockholm",
           "website": "https://www.animorestaurant.se/en",
-          "bookingUrl": "https://www.animorestaurant.se/en",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=ced986f291b0ecbf61267c5e8fc8600e&lang=sw",
           "instagram": "https://www.instagram.com/animo.restaurant",
           "cuisine": "Modernt europeiskt · Cocktailbar",
           "priceClass": "$$$",
@@ -11079,7 +11092,10 @@
             "https://static.wixstatic.com/media/2d5bc9_a0e2f8f2588f4421a70624d4bb8b528d~mv2.jpg"
           ],
           "imageSource": "https://www.animorestaurant.se/en",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-noema",
@@ -11089,7 +11105,7 @@
           "address": "Birger Jarlsgatan 64, 114 29 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Noema%2C%20Birger%20Jarlsgatan%2064%2C%20114%2029%20Stockholm",
           "website": "https://noemastockholm.se/en/",
-          "bookingUrl": "https://noemastockholm.se/en/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=41276418cbba56f9c561ec99032fe9fc&lang=sw",
           "instagram": "https://www.instagram.com/noemastockholm/",
           "facebook": "https://www.facebook.com/noemastockholm",
           "cuisine": "Modernt europeiskt",
@@ -11105,7 +11121,10 @@
             "https://noemastockholm.se/wp-content/uploads/2025/03/2ECD56E6-2DE2-46D6-B7EC-18F99A0FDD70-scaled.jpg"
           ],
           "imageSource": "https://noemastockholm.se/en/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-farang",
@@ -11144,7 +11163,7 @@
           "address": "Sturegatan 6, 114 35 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Sperling%20%26%20Co%2C%20Sturegatan%206%2C%20114%2035%20Stockholm",
           "website": "https://sperlingco.se/",
-          "bookingUrl": "https://sperlingco.se/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=fc8a3ebc31e1b243fda481dc4f0de20d&lang=sw",
           "instagram": "https://www.instagram.com/sperlingoco/",
           "facebook": "https://www.facebook.com/profile.php",
           "cuisine": "Grill · Modern brasserie",
@@ -11163,7 +11182,10 @@
           "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
           "menuUrl": "https://sperlingco.se/meny",
           "menuSource": "https://sperlingco.se/",
-          "menuVerifiedAt": "2026-09-18T13:20:29.262Z"
+          "menuVerifiedAt": "2026-09-18T13:20:29.262Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-boqueria",
@@ -11173,7 +11195,7 @@
           "address": "Jakobsbergsgatan 17, 111 44 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Boqueria%2C%20Jakobsbergsgatan%2017%2C%20111%2044%20Stockholm",
           "website": "https://www.boqueria.se/en/",
-          "bookingUrl": "https://www.boqueria.se/en/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=0195100c20f372753761a0bbb861f027&lang=sw",
           "instagram": "https://www.instagram.com/boqueria.stockholm/",
           "facebook": "https://www.facebook.com/boqueriastockholm",
           "cuisine": "Spanskt · Tapas · Pintxos",
@@ -11189,7 +11211,10 @@
             "https://www.boqueria.se/images/made/images/uploads/misc/Boqueria_are_tapas-4_800_534_80.jpg"
           ],
           "imageSource": "https://www.boqueria.se/en/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-olli",
@@ -11199,7 +11224,7 @@
           "address": "Jakobsbergsgatan 21, 111 44 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=OLLI%20Ristorante%2C%20Jakobsbergsgatan%2021%2C%20111%2044%20Stockholm",
           "website": "https://www.olliristorante.se/",
-          "bookingUrl": "https://www.olliristorante.se/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=04000879a2ea8d2257cf723029ea1d75&lang=sw",
           "instagram": "https://www.instagram.com/squarespace/",
           "facebook": "http://www.facebook.com/2008/",
           "cuisine": "Italienskt",
@@ -11218,7 +11243,10 @@
           "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
           "menuUrl": "https://www.olliristorante.se/s/OLLI_group_menu_eng_v19-r542.pdf",
           "menuSource": "https://www.olliristorante.se/",
-          "menuVerifiedAt": "2026-09-18T13:20:29.402Z"
+          "menuVerifiedAt": "2026-09-18T13:20:29.402Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-villa-valentina",
@@ -11306,7 +11334,7 @@
           "address": "Mälartrappan 5, 116 45 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Brasserie%20Astrid%2C%20M%C3%A4lartrappan%205%2C%20116%2045%20Stockholm",
           "website": "https://brasserieastrid.se/restaurang",
-          "bookingUrl": "https://brasserieastrid.se/restaurang",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=e3a1940c68c7fcb34cb950162eeaaaef&lang=sw",
           "instagram": "https://www.instagram.com/brasserieastrid/",
           "facebook": "https://www.facebook.com/people/",
           "cuisine": "Brasserie · Svenskt",
@@ -11322,7 +11350,10 @@
             "https://static.thatsup.website/587/93898/responsive-images/DSCF0992___media_library_original_4000_2667.jpg?v=1782993494"
           ],
           "imageSource": "https://brasserieastrid.se/restaurang",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-strandvagen-1",
@@ -11414,7 +11445,7 @@
           "address": "Norrmalmstorg 6, 111 46 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Vau%20de%20Ville%2C%20Norrmalmstorg%206%2C%20111%2046%20Stockholm",
           "website": "https://vaudevillestockholm.se/",
-          "bookingUrl": "https://vaudevillestockholm.se/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=1994e39a706405442f6b37293d883d0b&lang=sw",
           "instagram": "https://www.instagram.com/p/",
           "cuisine": "Franskt · Brasserie",
           "priceClass": "$$$",
@@ -11432,7 +11463,10 @@
           "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
           "menuUrl": "https://vaudevillestockholm.se/menu",
           "menuSource": "https://vaudevillestockholm.se/",
-          "menuVerifiedAt": "2026-09-18T13:20:29.813Z"
+          "menuVerifiedAt": "2026-09-18T13:20:29.813Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-lebanon-meza-lounge",
@@ -11471,7 +11505,7 @@
           "address": "Stureplan 2, 114 46 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Sturehof%2C%20Stureplan%202%2C%20114%2046%20Stockholm",
           "website": "https://sturehof.com/",
-          "bookingUrl": "https://sturehof.com/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=07415d5b4d24177e713964f3bc75eeaf&lang=sw",
           "instagram": "https://www.instagram.com/sturehof/",
           "facebook": "https://www.facebook.com/Sturehof/",
           "cuisine": "Svenskt · Fisk · Skaldjur",
@@ -11490,7 +11524,10 @@
           "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
           "menuUrl": "https://sturehof.com/meny/",
           "menuSource": "https://sturehof.com/",
-          "menuVerifiedAt": "2026-09-18T13:20:29.576Z"
+          "menuVerifiedAt": "2026-09-18T13:20:29.576Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-riche",
@@ -11500,7 +11537,7 @@
           "address": "Birger Jarlsgatan 4, 114 34 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Riche%2C%20Birger%20Jarlsgatan%204%2C%20114%2034%20Stockholm",
           "website": "https://riche.se/",
-          "bookingUrl": "https://riche.se/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=4a8d2f702a18092521b0b031fbfb4d4a&lang=sw",
           "instagram": "https://www.instagram.com/restaurantriche/",
           "facebook": "https://www.facebook.com/RicheStockholm/",
           "cuisine": "Franskt · Svenskt · Brasserie",
@@ -11519,7 +11556,10 @@
           "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
           "menuUrl": "https://riche.se/meny",
           "menuSource": "https://riche.se/",
-          "menuVerifiedAt": "2026-09-18T13:20:29.582Z"
+          "menuVerifiedAt": "2026-09-18T13:20:29.582Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-villa-dagmar",
@@ -11529,7 +11569,7 @@
           "address": "Nybrogatan 25–27, 114 39 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Villa%20Dagmar%2C%20Nybrogatan%2025%E2%80%9327%2C%20114%2039%20Stockholm",
           "website": "https://hotelvilladagmar.com/food-drink/restaurangen/",
-          "bookingUrl": "https://hotelvilladagmar.com/food-drink/restaurangen/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=a7eea669cf574253557648c3db0db765&lang=sw",
           "instagram": "https://www.instagram.com/villadagmarsthlm/",
           "facebook": "https://www.facebook.com/Hotel-Villa-Dagmar-Stockholm-1827169634258789/",
           "cuisine": "Medelhavet · Modernt europeiskt",
@@ -11545,7 +11585,10 @@
             "https://hotelvilladagmar.com/nitropack_static/SRrmpURUvrvNrtGVYqqFBOTQqoyCEqdD/assets/images/optimized/rev-445f2d5/hotelvilladagmar.com/wp-content/uploads/2025/06/dsf7675-1550x660.jpg"
           ],
           "imageSource": "https://hotelvilladagmar.com/food-drink/restaurangen/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-paraden",
@@ -11555,7 +11598,7 @@
           "address": "Valhallavägen 147, 115 31 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Paraden%2C%20Valhallav%C3%A4gen%20147%2C%20115%2031%20Stockholm",
           "website": "https://paradenkvarterskrog.com/",
-          "bookingUrl": "https://paradenkvarterskrog.com/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=4e28f7fbcfdd14e8bab3e72116f40fdf&lang=sw",
           "instagram": "https://www.instagram.com/paraden_restaurang/",
           "facebook": "https://www.facebook.com/tr",
           "cuisine": "Kvarterskrog · Europeiskt",
@@ -11571,7 +11614,10 @@
             "https://static.thatsup.website/367/94394/responsive-images/drinkarrad___media_library_original_5842_3895.jpg?v=1783184582"
           ],
           "imageSource": "https://paradenkvarterskrog.com/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-kommendoren",
@@ -11581,7 +11627,7 @@
           "address": "Kommendörsgatan 7, 114 48 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Kommend%C3%B6ren%2C%20Kommend%C3%B6rsgatan%207%2C%20114%2048%20Stockholm",
           "website": "https://www.kommendoren.se/",
-          "bookingUrl": "https://www.kommendoren.se/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=4dcf4bbddfb1d7c4f3f0d2d5186d4f00&lang=sw",
           "instagram": "https://www.instagram.com/kommendoren",
           "facebook": "https://www.facebook.com/kommendoren",
           "cuisine": "Kvarterskrog · Europeiskt",
@@ -11597,7 +11643,10 @@
             "https://www.kommendoren.se/img/gallery/gallery07.jpg"
           ],
           "imageSource": "https://www.kommendoren.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-tete",
@@ -11607,7 +11656,7 @@
           "address": "Regeringsgatan 111, 111 39 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=T%C3%AAte%2C%20Regeringsgatan%20111%2C%20111%2039%20Stockholm",
           "website": "https://www.restaurangtete.se/",
-          "bookingUrl": "https://www.restaurangtete.se/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=ad8c9392995bc61483d48dbf7de0fa0a&lang=sw",
           "instagram": "https://www.instagram.com/restaurangtete/",
           "cuisine": "Franskt · Vinbar",
           "priceClass": "$$$",
@@ -11622,7 +11671,10 @@
             "https://cdn.prod.website-files.com/686a33f636db05eba371603a/6984a9e39cf7a986a69928f2_A%20La%20Carte-p-800.jpeg"
           ],
           "imageSource": "https://www.restaurangtete.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-copine",
@@ -11632,7 +11684,7 @@
           "address": "Kommendörsgatan 23, 114 48 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Copine%2C%20Kommend%C3%B6rsgatan%2023%2C%20114%2048%20Stockholm",
           "website": "https://www.jimjacobrestauranger.se/copine",
-          "bookingUrl": "https://www.jimjacobrestauranger.se/copine",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=153ead326f6097aa89a7e5db04760c97&lang=sw",
           "instagram": "https://www.instagram.com/copine.restaurant/",
           "facebook": "https://www.facebook.com/RestaurangCopine/",
           "cuisine": "Sydeuropeiskt",
@@ -11648,7 +11700,10 @@
             "https://static.wixstatic.com/media/526c09_38eb6e50bb77454eb2a5ce6a67e42689~mv2.jpg/v1/fit/w_960,h_685,q_90,enc_avif,quality_auto/526c09_38eb6e50bb77454eb2a5ce6a67e42689~mv2.jpg"
           ],
           "imageSource": "https://www.jimjacobrestauranger.se/copine",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-balzac",
@@ -11658,7 +11713,7 @@
           "address": "Odengatan 26, 113 51 Stockholm",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Brasserie%20Balzac%2C%20Odengatan%2026%2C%20113%2051%20Stockholm",
           "website": "https://balzac.se/",
-          "bookingUrl": "https://balzac.se/",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=a0dd019e24669fadaaa6486567307f61&lang=sw",
           "instagram": "https://www.instagram.com/brasseriebalzac/",
           "cuisine": "Franskt · Brasserie",
           "priceClass": "$$$",
@@ -11673,7 +11728,10 @@
             "https://static.thatsup.website/548/66020/responsive-images/FUJI6218___media_library_original_4000_2667.jpg?v=1758108814"
           ],
           "imageSource": "https://balzac.se/",
-          "imageVerifiedAt": "2026-09-18T12:29:00.260Z"
+          "imageVerifiedAt": "2026-09-18T12:29:00.260Z",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-aira",
@@ -11697,7 +11755,11 @@
           "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
           "menuUrl": "https://aira.se/menu/",
           "menuSource": "https://aira.se/",
-          "menuVerifiedAt": "2026-09-18T13:20:29.809Z"
+          "menuVerifiedAt": "2026-09-18T13:20:29.809Z",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=5eb41ca79ef5e63bfabfdcbb39e4f6a8&lang=sw",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         },
         {
           "placeId": "curated-STO-ekstedt",
@@ -11720,7 +11782,11 @@
           "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
           "menuUrl": "https://ekstedt.nu/menu",
           "menuSource": "https://ekstedt.nu/",
-          "menuVerifiedAt": "2026-09-18T13:20:29.715Z"
+          "menuVerifiedAt": "2026-09-18T13:20:29.715Z",
+          "bookingUrl": "https://app.bokabord.se/reservation/?app_type=bokabord&hash=cf1ffc30f54f7f3b6158c4be497182ed&lang=sw",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-15"
         }
       ]
     }

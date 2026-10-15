@@ -1,9 +1,41 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { BookingLedger } from './bokabord-ledger.mjs';
 import { allowedRequest, matchesApprovedBooking, BokabordMirror } from './bokabord-mirror.mjs';
 
 const approval = { date: '2026-10-19', time: '17:00', party: 1, firstname: 'Test', lastname: 'Guest', email: 'test@example.com', phone: '+46700000000', terms: true };
 const approvedPayload = () => ({ ...approval, amount: 1, waitlist: false, terms: { general: true, restaurant: false, bokabord: false }, products: [] });
+
+test('durable ledger blocks repeats across restarts and isolates users and restaurants', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'velvet-ledger-'));
+  try {
+    const ledger = new BookingLedger(directory);
+    const session = { owner: 'alice', restaurantId: 'one', restaurant: 'Test restaurant' };
+    ledger.reserve(approval, session);
+    assert.throws(() => new BookingLedger(directory).reserve(approval, session), /EEXIST/);
+    assert.equal(ledger.list()[0].status, 'unknown');
+    session.result = { status: 'confirmed', reference: 'TEST-ONLY' };
+    ledger.record(session);
+    assert.equal(new BookingLedger(directory).list()[0].providerReference, 'TEST-ONLY');
+    ledger.reserve(approval, { ...session, owner: 'bob' });
+    ledger.reserve(approval, { ...session, restaurantId: 'two' });
+    assert.equal(ledger.list().length, 3);
+  } finally { fs.rmSync(directory, {recursive:true,force:true}); }
+});
+
+test('live approval is bound to the displayed revision and requires current terms consent', async () => {
+  const mirror = new BokabordMirror({ prepare: true, live: true, reserveSubmission: async () => {} });
+  mirror.bookingDetails = async () => ({...approval,time:'18:00'});
+  const session = { id:'live',owner:'alice',revision:1,touched:Date.now(),lastSnapshot:{details:approval},context:{close:async()=>{}} };
+  mirror.sessions.set(session.id,session);
+  try {
+    await assert.rejects(mirror.action('live','alice',{type:'submit',revision:1,confirm:true}),/confirmation_required/);
+    await assert.rejects(mirror.action('live','alice',{type:'submit',revision:1,confirm:true,terms:true}),/stale_view/);
+  } finally {await mirror.close();}
+});
 
 test('submission requires exact approved details, terms and no marketing or products', () => {
   assert.equal(matchesApprovedBooking(approvedPayload(), approval), true);
