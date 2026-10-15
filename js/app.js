@@ -1,6 +1,6 @@
-import { restaurantContactPanel } from './restaurant-contact.js?v=188';
+import { restaurantContactPanel } from './restaurant-contact.js?v=190';
 import { MEMBER_ACCOUNTS_ENABLED } from "./release-features.js";
-import { external200BookingPanel } from './external200-booking.js?v=188';
+import { external200BookingPanel } from './external200-booking.js?v=190';
 import { loadPlaceBrands, placeBrandHTML } from './place-brand.js?v=178';
 import {getBookingCopy, formatBookingCopy} from './booking-copy.js?v=188';
 import { restaurantCopy } from './restaurant-copy.js?v=175';

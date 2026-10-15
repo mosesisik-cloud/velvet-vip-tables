@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
-import {external200Routes} from '../js/external200-routes-data.js';
+import {external200Routes} from '../js/external200-routes-data.js?v=190';
 import {external200BookingPanel, external200ContactHref} from '../js/external200-booking.js';
 import {getBookingCopy} from '../js/booking-copy.js';
 import {resolveEmbeddedBooking} from '../js/restaurant-booking-providers.js';
