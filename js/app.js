@@ -14,6 +14,28 @@ import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLiven
 // ---------- Data ----------
 let DESTINATIONS = [];
 let VENUES = [];
+// Shared discovery index; fetch once per page, retry after a failed request.
+let RESTAURANT_INDEX = [];
+let restaurantIndexPromise = null;
+async function ensureRestaurantIndex() {
+  if (!restaurantIndexPromise) restaurantIndexPromise = (async () => {
+    await getEmbeddedBooking(null);
+    const response = await fetch("data/restaurants.json", { cache: "no-cache" });
+    if (!response.ok) throw new Error("restaurant_index_failed");
+    const data = await response.json();
+    RESTAURANT_INDEX = Object.entries(data.destinations || {}).flatMap(([code, row]) =>
+      publishableRestaurants(row.restaurants || []).map(restaurant => ({ ...restaurant, destinationCode: code, destinationName: row.destination || code }))
+    );
+    return RESTAURANT_INDEX;
+  })().catch(() => { restaurantIndexPromise = null; return RESTAURANT_INDEX; });
+  return restaurantIndexPromise;
+}
+const restaurantFavId = id => "restaurant:" + id;
+const favoriteEntry = id => id.startsWith("restaurant:")
+  ? RESTAURANT_INDEX.find(r => restaurantFavId(r.placeId) === id)
+  : VENUES.find(v => v.venue_id === id);
+const favoriteCard = item => item.placeId ? restaurantCardHTML(item) : venueCard(item);
+const favoriteId = item => item.placeId ? restaurantFavId(item.placeId) : item.venue_id;
 let VENUE_IMAGES = {}; // venue_id -> bild från ställets egen hemsida (data/venue-images.json)
 let VENUE_IMAGE_SOURCES = {}; // venue_id -> verifierad officiell källa
 let VENUE_YOUTUBE = {}; // venue_id -> mest visade officiella klipp (data/venue-youtube.json)
@@ -2270,7 +2292,7 @@ function restaurantCardHTML(r) {
       ${stars}
     </div>
     ${reviews > 0 ? `<p class="restaurant-review-count">${esc(reviews.toLocaleString(currentLang()))} ${esc(t("restaurantReviews"))}</p>` : ""}
-    <div class="restaurant-actions">${detail}${site}${maps}</div>
+    <div class="restaurant-actions">${detail}${r.placeId ? favBtnHTML(restaurantFavId(r.placeId), r.name) : ""}${site}${maps}</div>
   </article>`;
 }
 
@@ -2279,7 +2301,7 @@ function restaurantMediaHTML(r) {
   const image = images[0] || "";
   if (image) {
     const fallbacks = esc(encodeURIComponent(JSON.stringify(images.slice(1))));
-    return `<a class="restaurant-media" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav><img src="${esc(image)}" data-fallbacks="${fallbacks}" data-fallback-index="0" alt="${esc(r.name)}" loading="lazy" onerror="const xs=JSON.parse(decodeURIComponent(this.dataset.fallbacks||'%5B%5D'));const i=Number(this.dataset.fallbackIndex||0);if(xs[i]){this.dataset.fallbackIndex=String(i+1);this.src=xs[i]}else{this.closest('.restaurant-card')?.remove()}"><span>Visa restaurang</span></a>`;
+    return `<a class="restaurant-media" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav><img src="${esc(image)}" data-fallbacks="${fallbacks}" data-fallback-index="0" alt="${esc(r.name)}" loading="lazy" onerror="const xs=JSON.parse(decodeURIComponent(this.dataset.fallbacks||'%5B%5D'));const i=Number(this.dataset.fallbackIndex||0);if(xs[i]){this.dataset.fallbackIndex=String(i+1);this.src=xs[i]}else{this.hidden=true;this.closest('.restaurant-media')?.classList.add('restaurant-media-placeholder')}"><span>Visa restaurang</span></a>`;
   }
   const initial = String(r.name || "R").trim().slice(0, 1).toUpperCase();
   return `<a class="restaurant-media restaurant-media-placeholder" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav aria-label="Visa ${esc(r.name)}"><b aria-hidden="true">${esc(initial)}</b><span>${esc(r.name)}</span><small>Officiell originalbild verifieras</small></a>`;
@@ -2309,14 +2331,18 @@ async function mountHomeRestaurants() {
   root.innerHTML = featured.length
     ? `<div class="restaurant-grid">${featured.map(restaurantCardHTML).join("")}</div>`
     : `<div class="empty-state"><p>${esc(t("restaurantsEmpty"))}</p></div>`;
+  bindFavButtons(root);
 }
 
 async function renderRestaurants() {
+  const catalogRoute = location.hash;
   await getEmbeddedBooking(null);
+  if (location.hash !== catalogRoute) return;
   setTitle(t("navRestaurants"));
   view().innerHTML = `<section class="section"><div class="section-head"><div><h1>${esc(t("navRestaurants"))}</h1><div class="sub">${esc(t("restaurantsSub"))}</div></div></div><p class="events-meta restaurant-loading"><span class="spinner spinner-sm"></span> ${esc(t("restaurantsLoading"))}</p></section>`;
   let data = null;
   try { const r = await fetch("data/restaurants.json", { cache: "no-store" }); if (r.ok) data = await r.json(); } catch {}
+  if (location.hash !== catalogRoute) return;
   const rows = data?.destinations || {};
   const uniqueDestinations = DESTINATIONS.filter((d, index, all) => all.findIndex((candidate) => candidate.code === d.code) === index);
   const queryIndex = location.hash.indexOf("?");
@@ -2325,14 +2351,21 @@ async function renderRestaurants() {
   const selectedDestination = uniqueDestinations.find((d) => d.code === requestedDestination || d.name.toLowerCase() === requestedDestination.toLowerCase()) || null;
   const groups = uniqueDestinations.filter((d) => !selectedDestination || d.code === selectedDestination.code).map((d) => ({ d, restaurants: publishableRestaurants(rows[d.code]?.restaurants || []) })).filter((x) => x.restaurants.length);
   view().innerHTML = `<section class="section restaurant-directory"><div class="section-head"><div><h1>${esc(t("navRestaurants"))}${selectedDestination ? ` i ${esc(selectedDestination.name)}` : ""}</h1><div class="sub">${esc(t("restaurantsSub"))}</div></div><span class="count">${groups.reduce((n, x) => n + x.restaurants.length, 0)}</span></div>
-    <p><a class="btn btn-gold" href="#/availability" data-nav>Sök lediga bord</a></p><div class="filters restaurant-filters"><select id="restaurant-dest-filter" aria-label="${esc(t("filterDest"))}"><option value="">${esc(t("allDest"))}</option>${uniqueDestinations.filter((d) => publishableRestaurants(rows[d.code]?.restaurants || []).length).map((d) => `<option value="${esc(d.code)}" ${selectedDestination?.code === d.code ? "selected" : ""}>${esc(d.name)}</option>`).join("")}</select></div>
-    <div class="restaurant-jump">${groups.map(({ d }) => `<a href="#restaurant-${esc(d.code)}">${esc(d.name)}</a>`).join("")}</div>
+    <p><a class="btn btn-gold" href="#/availability${selectedDestination ? `?city=${encodeURIComponent(rows[selectedDestination.code]?.destination || selectedDestination.name)}` : ""}" data-nav>Sök lediga bord</a></p><div class="filters restaurant-filters"><select id="restaurant-dest-filter" aria-label="${esc(t("filterDest"))}"><option value="">${esc(t("allDest"))}</option>${uniqueDestinations.filter((d) => publishableRestaurants(rows[d.code]?.restaurants || []).length).map((d) => `<option value="${esc(d.code)}" ${selectedDestination?.code === d.code ? "selected" : ""}>${esc(d.name)}</option>`).join("")}</select></div>
+    <div class="restaurant-jump">${groups.map(({ d }) => `<button type="button" class="btn btn-ghost btn-sm" data-restaurant-jump="${esc(d.code)}">${esc(d.name)}</button>`).join("")}</div>
     ${groups.map(({ d, restaurants }) => `<section class="restaurant-city" id="restaurant-${esc(d.code)}"><div class="section-head"><div><h2>${esc(d.name)}</h2><div class="sub">${esc(d.country)}</div></div><a href="#/destination/${encodeURIComponent(d.code)}" data-nav>${esc(t("explore"))} →</a></div><div class="restaurant-grid">${restaurants.map(restaurantCardHTML).join("")}</div></section>`).join("")}
     <p class="restaurant-source">VELVET curated · ${esc(t("restaurantsSub"))}</p></section>`;
+  bindFavButtons(view());
+  view().querySelectorAll("[data-restaurant-jump]").forEach(button => button.addEventListener("click", () => {
+    const heading = document.getElementById("restaurant-" + button.dataset.restaurantJump)?.querySelector("h2");
+    if (!heading) return;
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+    heading.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  }));
   document.getElementById("restaurant-dest-filter")?.addEventListener("change", (event) => {
     const code = event.target.value;
     location.hash = code ? `#/restaurants?dest=${encodeURIComponent(code)}` : "#/restaurants";
-    renderRestaurants();
   });
 }
 
@@ -2359,6 +2392,7 @@ async function mountDestinationRestaurants(d) {
     ? `<div class="restaurant-grid">${restaurants.map(restaurantCardHTML).join("")}</div>
        <p class="restaurant-source">${esc(row.source || "Google Places")} · ${esc(t("restaurantsSub"))}${row.fetchedAt ? ` · ${esc(new Date(row.fetchedAt).toLocaleDateString(currentLang()))}` : ""}</p>`
     : `<div class="empty-state restaurant-empty"><p>${esc(t("restaurantsEmpty"))}</p></div>`;
+  bindFavButtons(root);
 }
 
 async function renderRestaurantDetail(placeId) {
@@ -2419,11 +2453,11 @@ async function renderRestaurantDetail(placeId) {
        ${restaurant.phone ? `<a class="restaurant-official-book" href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">Ring restaurangen: ${esc(restaurant.phone)}</a>` : ""}`
     : `<form id="restaurant-book-form" class="restaurant-book-form"><label>Datum<input name="date" type="date" min="${today}" required></label><label>Tid<select name="time" required><option value="">Välj tid</option>${["17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00"].map((time) => `<option>${time}</option>`).join("")}</select></label><label>Antal gäster<select name="party" required>${Array.from({length: 12}, (_, i) => `<option value="${i + 1}">${i + 1} ${i ? "gäster" : "gäst"}</option>`).join("")}</select></label><label>Namn<input name="name" autocomplete="name" required></label><label>E-post<input name="email" type="email" autocomplete="email" required></label><label>Önskemål<textarea name="note" rows="3" placeholder="Allergier, barnstol eller annat"></textarea></label><button class="btn btn-gold btn-block" type="submit">Skicka bokningsförfrågan via VELVET</button>${restaurant.bookingUrl ? `<a class="restaurant-official-book" href="${esc(restaurant.bookingUrl)}" target="_blank" rel="noopener">Eller boka direkt hos restaurangen ↗</a>` : ""}</form><div id="restaurant-book-result" aria-live="polite"></div>`;
   view().innerHTML = `<section class="section restaurant-detail">
-    <a class="back-link" href="#/destination/${encodeURIComponent(destination.code)}" data-nav>← Restauranger i ${esc(destination.destination)}</a>
+    <a class="back-link" href="#/restaurants?dest=${encodeURIComponent(destination.code)}" data-nav>← Restauranger i ${esc(destination.destination)}</a>
     ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} officiella bilder · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">källa ↗</a></div></div>` : `<div class="restaurant-detail-placeholder"><b aria-hidden="true">${esc(String(restaurant.name || "R").slice(0, 1).toUpperCase())}</b><span>${esc(restaurant.name)}</span><small>Ingen generisk bild visas · officiell originalbild verifieras</small></div>`}
     <div class="restaurant-detail-hero">
       <div><div class="eyebrow">${esc(restaurant.cuisine || "Restaurang")}</div><h1>${esc(restaurant.name)}</h1><p class="restaurant-lead">${esc(restaurant.description || `Restaurang i ${destination.destination}.`)}</p>
-        <div class="restaurant-detail-actions">${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuViewHref)}" data-nav>Meny</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">Karta ↗</a>` : ""}</div>
+        <div class="restaurant-detail-actions">${favBtnHTML(restaurantFavId(restaurant.placeId), restaurant.name)}${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuViewHref)}" data-nav>Meny</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">Karta ↗</a>` : ""}</div>
       </div>
       <div class="restaurant-detail-rating">${Number.isFinite(rating) && rating > 0 ? `<strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span><small>${esc(String(restaurant.reviewCount || 0))} recensioner · ${esc(restaurant.reviewSource || "Google")}</small>` : `<small>Inget verifierat betyg publicerat ännu</small>`}</div>
     </div>
@@ -2442,6 +2476,7 @@ async function renderRestaurantDetail(placeId) {
       </aside>
     </div>
   </section>`;
+  bindFavButtons(view());
   const providerContainer = document.getElementById("restaurant-provider-booking");
   if (providerContainer && embeddedBooking) {
     mountEmbeddedBooking(providerContainer, embeddedBooking);
@@ -5248,9 +5283,12 @@ function openOnboarding(opts = {}) {
 }
 
 // ---------- Favoriter & delbar lista ----------
-function renderFavorites() {
+async function renderFavorites() {
+  const favoritesRoute = location.hash;
+  if (loadFavs().some(id => id.startsWith("restaurant:"))) await ensureRestaurantIndex();
+  if (location.hash !== favoritesRoute) return;
   const ids = loadFavs();
-  const list = ids.map((id) => VENUES.find((v) => v.venue_id === id)).filter(Boolean);
+  const list = ids.map(favoriteEntry).filter(Boolean);
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
@@ -5263,7 +5301,7 @@ function renderFavorites() {
         <h3>${esc(t("noFav"))}</h3>
         <p>${esc(t("noFavHint"))}</p>
         <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>${esc(t("explore"))}</a></p>
-      </div>` : `<div class="venue-grid">${list.map(venueCard).join("")}</div>`}
+      </div>` : `<div class="venue-grid">${list.map(favoriteCard).join("")}</div>`}
   </section>`;
   bindVenueCards();
   const share = $("#fav-share");
@@ -5278,7 +5316,8 @@ function renderFavorites() {
   }
 }
 
-function renderSharedList(raw) {
+async function renderSharedList(raw) {
+  const sharedRoute = location.hash;
   let p;
   try { p = b64urlDecode(raw); } catch { p = null; }
   const valid = p && typeof p === "object" && !Array.isArray(p) && Array.isArray(p.ids);
@@ -5287,7 +5326,9 @@ function renderSharedList(raw) {
     return;
   }
   const ids = p.ids.filter((id) => typeof id === "string");
-  const list = ids.map((id) => VENUES.find((v) => v.venue_id === id)).filter(Boolean);
+  if (ids.some(id => id.startsWith("restaurant:"))) await ensureRestaurantIndex();
+  if (location.hash !== sharedRoute) return;
+  const list = ids.map(favoriteEntry).filter(Boolean);
   const title = (typeof p.name === "string" && p.name) ? p.name : t("sharedListName");
   view().innerHTML = `
   <section class="section">
@@ -5300,13 +5341,13 @@ function renderSharedList(raw) {
         <div class="big">🔗</div>
         <h3>${esc(t("listEmpty"))}</h3>
         <p>${esc(t("listEmptyHint"))}</p>
-      </div>` : `<div class="venue-grid">${list.map(venueCard).join("")}</div>`}
+      </div>` : `<div class="venue-grid">${list.map(favoriteCard).join("")}</div>`}
   </section>`;
   bindVenueCards();
   const save = $("#list-save");
   if (save) {
     save.addEventListener("click", () => {
-      saveFavs([...loadFavs(), ...list.map((v) => v.venue_id)]);
+      saveFavs([...loadFavs(), ...list.map(favoriteId)]);
       save.textContent = t("savedCheck");
       syncFavButtons();
     });
@@ -6612,11 +6653,16 @@ function searchHits(q) {
       });
     }
   }
-  return out.slice(0, 12);
+  for (const restaurant of RESTAURANT_INDEX) {
+    if (!fold(restaurant.name + " " + restaurant.destinationName + " " + (restaurant.cuisine || "")).includes(s)) continue;
+    out.push({ kind: t("navRestaurants"), title: restaurant.name, meta: restaurant.destinationName, href: "#/restaurant/" + encodeURIComponent(restaurant.placeId) });
+  }
+  // Exact restaurant/venue names must not be displaced by broad city matches.
+  return out.sort((a, b) => Number(fold(b.title) === s) - Number(fold(a.title) === s)).slice(0, 12);
 }
 
 let searchCloser = null;
-function openSearch() {
+function openSearch(initialQuery = "") {
   if (searchCloser) return;
   if (document.body.classList.contains("modal-lock") || document.body.classList.contains("ob-lock")) return;
   const root = document.getElementById("search-root");
@@ -6694,6 +6740,8 @@ function openSearch() {
   };
   const paint = () => {
     hits = searchHits(input.value);
+    const kinds = [...new Set(hits.map(hit => hit.kind))];
+    hits = kinds.flatMap(kind => hits.filter(hit => hit.kind === kind));
     active = 0;
     const q = input.value.trim();
     if (!hits.length) {
@@ -6705,6 +6753,7 @@ function openSearch() {
       emptyEl.hidden = true;
       statusEl.textContent = t("searchHitsN").replace("{n}", String(hits.length));
       hitsEl.innerHTML = hits.map((h, i) => `
+        ${i === 0 || hits[i - 1].kind !== h.kind ? `<div class="search-group-label" role="presentation">${esc(h.kind)}</div>` : ""}
         <div class="search-hit${i === 0 ? " active" : ""}" id="search-opt-${i}" data-i="${i}" role="option" aria-selected="${i === 0}">
           <div><div>${esc(h.title)}</div><div class="search-hit-k">${esc(h.kind)}</div></div>
           <div class="search-hit-k">${esc(h.meta)}</div>
@@ -6735,7 +6784,9 @@ function openSearch() {
     overlay.style.top = "";
     panel.style.height = "";
   });
+  input.value = typeof initialQuery === "string" ? initialQuery : "";
   paint();
+  ensureRestaurantIndex().then(() => { if (searchCloser === close) paint(); });
   input.focus();
   fitViewport();
 }
