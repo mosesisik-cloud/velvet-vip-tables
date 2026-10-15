@@ -29,9 +29,17 @@ for (const url of [
 ]) assert.equal(resolveEmbeddedBooking({ test: { ...row, url } }, 'test'), null);
 assert.equal(resolveEmbeddedBooking(registry, 'not-reviewed'), null);
 assert.equal(resolveEmbeddedBooking(registry, '__proto__'), null);
-assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 47);
+assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 49);
 assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 64);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 66);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 68);
+for(const id of ['curated-SBH-bonito-saint-barth','osm-SBH-bonito']) {
+  assert.equal(registry[id].venueId,'bonitostbarth');
+  assert.equal(registry[id].url,'https://www.sevenrooms.com/reservations/bonitostbarth');
+  assert.equal(registry[id].city,'St. Barts');
+  assert.equal(registry[id].integrationMode,'external_link');
+  assert.equal(registry[id].liveAvailabilitySupported,false);
+  assert.equal(registry[id].completionTracking,'unsupported');
+}
 for (const id of ['osm-IBZ-ama-lur', 'osm-MRB-the-farm', 'osm-STT-gaio', 'osm-STT-l-opera', 'osm-STT-le-cafe']) {
   assert.equal(registry[id].liveAvailabilitySupported, false, 'Initial form evidence must not enable live inventory');
   assert.equal(registry[id].completionTracking, 'unsupported');

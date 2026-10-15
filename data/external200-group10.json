@@ -342,6 +342,11 @@
         "checkedAt": "2026-10-16",
         "result": "Official site re-read: phone explicitly orders food, not table reservations; keep unresolved booking status.",
         "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     },
     {
@@ -697,6 +702,11 @@
         "checkedAt": "2026-10-16",
         "result": "Official site re-read: dine-in/takeaway buttons lead to meal ordering, not table inventory. Page also contains an unrelated gambling link; no booking route activated.",
         "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     },
     {
@@ -809,6 +819,11 @@
         "checkedAt": "2026-10-16",
         "result": "New KeyParadise listing has phone reservation claim and Instagram candidate nyama_sbh; Instagram fetch throttled. No operator source independently accessible, so keep unresolved.",
         "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     },
     {

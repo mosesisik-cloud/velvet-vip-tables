@@ -912,9 +912,11 @@ export const external200Routes = {
     "source": null
   },
   "osm-MIA-pummarola-coral-gable": {
-    "status": "unresolved",
+    "status": "official_external_link",
     "checkedAt": "2026-10-16",
-    "source": null
+    "source": "https://www.pummarola.us/reservations",
+    "externalUrl": "https://www.pummarola.us/reservations",
+    "bookingMode": "request_only"
   },
   "osm-MIA-the-cheesecake-factory": {
     "status": "unresolved_branch",
@@ -922,9 +924,11 @@ export const external200Routes = {
     "source": null
   },
   "curated-SBH-bonito-saint-barth": {
-    "status": "manual_email",
+    "status": "official_external_link",
     "checkedAt": "2026-10-16",
     "source": "https://www.bonitosbh.com/",
+    "externalUrl": "https://www.sevenrooms.com/reservations/bonitostbarth",
+    "bookingMode": "unknown",
     "contact": {
       "type": "email",
       "value": "booking@bonitosbh.com",
@@ -971,9 +975,11 @@ export const external200Routes = {
     "bookingMode": "request_only"
   },
   "osm-SBH-bonito": {
-    "status": "manual_email",
+    "status": "official_external_link",
     "checkedAt": "2026-10-16",
     "source": "https://www.bonitosbh.com/",
+    "externalUrl": "https://www.sevenrooms.com/reservations/bonitostbarth",
+    "bookingMode": "unknown",
     "contact": {
       "type": "email",
       "value": "booking@bonitosbh.com",
@@ -981,9 +987,11 @@ export const external200Routes = {
     }
   },
   "osm-SBH-eddy-s": {
-    "status": "manual_phone",
+    "status": "official_external_link",
     "checkedAt": "2026-10-16",
     "source": "https://eddysghetto.com/",
+    "externalUrl": "https://eddysghetto.com/",
+    "bookingMode": "request_only",
     "contact": {
       "type": "phone",
       "value": "+590590275417",

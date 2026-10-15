@@ -246,6 +246,11 @@
         "checkedAt": "2026-10-16",
         "query": "HKU Hill View restaurant reservations",
         "result": "Government planning document also names HKU HillView catering. No current access or table-booking policy established."
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     },
     {
@@ -860,6 +865,11 @@
         "checkedAt": "2026-10-16",
         "query": "豪景茶餐廳 訂座 官方",
         "result": "FEHD historical53BelchersStreet phone25481199; no explicit reservation invitation."
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     },
     {

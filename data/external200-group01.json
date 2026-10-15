@@ -196,7 +196,12 @@
       "remainingBlockers": [
         "Confirm whether published WhatsApp accepts table reservations; no message sent."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
+      }
     },
     {
       "restaurantId": "osm-BAL-mexican-grilled-sancwich",
@@ -655,7 +660,12 @@
       "remainingBlockers": [
         "Inspect publicly accessible operator policy when available; no bypass attempted."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
+      }
     },
     {
       "restaurantId": "osm-BAL-warung-varuna",
@@ -725,7 +735,12 @@
       "remainingBlockers": [
         "Verify current operator contact and booking/walk-in policy instead of directory tags."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
+      }
     },
     {
       "restaurantId": "curated-BDR-mimoza-gumusluk",
@@ -1196,7 +1211,12 @@
       "remainingBlockers": [
         "Resolve closure conflict and confirm restaurant-owned reservation route."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
+      }
     },
     {
       "restaurantId": "osm-BDR-garden-steak-kebap",

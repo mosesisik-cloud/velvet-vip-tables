@@ -12,7 +12,7 @@
   "total": {
     "reviewed": 200,
     "officialIdentity": 43,
-    "officialExternalLinks": 15,
+    "officialExternalLinks": 19,
     "embeddedOriginalForms": 4,
     "liveAvailability": 5,
     "simulatedValidation": 0,
@@ -22,8 +22,8 @@
     "takeaway": 1,
     "closed": 1,
     "closedReported": 2,
-    "unresolved": 167,
-    "registryAdditions": 2
+    "unresolved": 166,
+    "registryAdditions": 4
   },
   "groups": [
     {
@@ -166,7 +166,7 @@
       "batch": 9,
       "reviewed": 20,
       "officialIdentity": 10,
-      "officialExternalLinks": 3,
+      "officialExternalLinks": 7,
       "embeddedOriginalForms": 1,
       "liveAvailability": 1,
       "simulatedValidation": 0,
@@ -176,8 +176,8 @@
       "takeaway": 0,
       "closed": 0,
       "closedReported": 0,
-      "unresolved": 11,
-      "registryAdditions": 1
+      "unresolved": 10,
+      "registryAdditions": 3
     },
     {
       "batch": 10,

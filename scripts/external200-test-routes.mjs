@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import {execFileSync} from 'node:child_process';
 import {external200Routes} from '../js/external200-routes-data.js';
 import {external200BookingPanel, external200ContactHref} from '../js/external200-booking.js';
+import {getBookingCopy} from '../js/booking-copy.js';
 import {resolveEmbeddedBooking} from '../js/restaurant-booking-providers.js';
 import {compileExternal200Routes} from './external200-build-routes.mjs';
 import {resolveExternal200ReviewedLink, resolveExternal200ReviewedContact} from '../js/external200-reviewed-links.js';
@@ -31,6 +32,20 @@ assert.equal(external200ContactHref({type:'whatsapp',value:'+628113700916'}),'ht
 assert.equal(external200ContactHref({type:'email',value:'reservations@example.com'}),'mailto:reservations@example.com');
 const decisions=Array.from({length:10},(_,i)=>JSON.parse(fs.readFileSync(`data/external200-group${String(i+1).padStart(2,'0')}.json`)).records).flat();
 const compiled=compileExternal200Routes(decisions,manifest);
+for(const lang of ['sv','en','es','fr']) {
+  const id='osm-MIA-pummarola-coral-gable';
+  const saved=external200Routes[id];
+  try {
+    external200Routes[id]={...saved,bookingMode:'instant',selection:{branch:'Wrong branch'}};
+    const html=external200BookingPanel(id,null,lang);
+    assert.ok(html.includes('Coral Gables') && html.includes('Dine-In Reservation'));
+    assert.doesNotMatch(html,/Wrong branch/);
+    const escape=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    assert.ok(html.includes(escape(getBookingCopy(lang).requestNotice)), 'Request-only notice must survive altered audit mode');
+    assert.ok(html.indexOf('external200-branch-instruction') < html.indexOf('btn btn-gold'), 'Branch instruction precedes CTA');
+    assert.equal(resolveExternal200ReviewedLink(id,saved.source,saved.externalUrl).bookingMode,'request_only');
+  } finally {external200Routes[id]=saved;}
+}
 for(const [id,row] of Object.entries(compiled).filter(([,r])=>r.externalUrl)) {
   const index=decisions.findIndex(r=>r.restaurantId===id);
   const pinned=resolveExternal200ReviewedLink(id,row.source,row.externalUrl);
@@ -92,5 +107,5 @@ for(const [id,row] of Object.entries(compiled)) {
   }
 }
 console.log('PASS external200: exact 200, four languages, provider precedence, no synthetic booking forms, safe manual links.');
-console.log('PASS independent exact source/destination bindings: all 15 links reject changed URL, source, ID, query, host and protocol in compiler and runtime.');
-console.log('PASS all 200 reject combined source/URL/LINE mutations; all 18 manual contacts are independently pinned to ID, type, value and source.');
+console.log(`PASS independent exact source/destination bindings: all ${Object.values(compiled).filter(r=>r.externalUrl).length} links reject changed URL, source, ID, query, host and protocol in compiler and runtime.`);
+console.log(`PASS all 200 reject combined source/URL/LINE mutations; all ${Object.values(compiled).filter(r=>r.contact).length} manual contacts are independently pinned to ID, type, value and source.`);

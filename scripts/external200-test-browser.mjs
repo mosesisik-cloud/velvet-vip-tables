@@ -41,6 +41,15 @@ try {
     assert.equal(await panel.locator('form,iframe').count(),0,id);
    }
    results.push({restaurantId:id,mode,guestShell:'passed',providerPageTested:false});
+   if(id==='osm-MIA-pummarola-coral-gable') {
+    const instruction=panel.locator('.external200-branch-instruction');
+    assert.match(await instruction.innerText(),/Coral Gables.*Dine-In Reservation/);
+    const instructionBox=await instruction.boundingBox();
+    const link=panel.locator('a.btn-gold');
+    assert.equal(await link.getAttribute('href'),'https://www.pummarola.us/reservations');
+    const linkBox=await link.boundingBox();
+    assert.ok(instructionBox.y+instructionBox.height<=linkBox.y,'Branch instructions must precede request link');
+   }
   }
   // Locale changes use the application's existing language state.
   for(const [lang,word] of [['en','verified booking route'],['es','vía de reserva'],['fr','réservation vérifié']]){

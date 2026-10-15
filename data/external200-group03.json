@@ -316,7 +316,12 @@
       "remainingBlockers": [
         "Read operator social source and verify location wording and reservation policy."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
+      }
     },
     {
       "restaurantId": "osm-BKK-oh-ma-ma-restaurant",

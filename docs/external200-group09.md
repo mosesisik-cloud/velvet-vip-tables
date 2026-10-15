@@ -143,3 +143,13 @@ Officialcontact explicitly reservesbyphone and navigation givesreservationsemail
 
 Explicit booking contact: phone +590590520202 ([official source](https://www.isolettastbarth.com/contact)).
 
+## Original-route follow-up, 16 October 2026
+
+The latest decisions are in data/external200-group09.json, with evidence in data/external200-round4-evidence.json. Four records gain an official external path:
+
+- Pummarola Coral Gables: original operator request page at https://www.pummarola.us/reservations. Select only Coral Gables and Dine-In Reservation. Shared unlisted/noindex form; submitted requests and acceptance are untested. Static time choices are not availability. Mobile scales a desktop layout and the cookie banner overlaps fields.
+- curated-SBH-bonito-saint-barth and osm-SBH-bonito: official hydrated homepage supplies SevenRooms bonitostbarth. Both retain their stable IDs, refer to one physical venue and reuse the external SevenRooms adapter. No slot selected or active availability search; initial EUR180 prepayment label is recorded without assuming its basis.
+- Eddy's: official homepage reservation form asks date and guests. External request_only link, with the existing phone alternative. CAPTCHA, submission and delivery untested.
+
+The four-language Pummarola branch instruction appears before the external link and is pinned independently of mutable audit fields. All four new destinations pass exact ID/source/destination checks. Six guarded original-page displays cover desktop/mobile at three physical venues. No simulated checkout or confirmed reservation. L'Isoletta's additional reservations email is recorded as evidence while its existing phone remains active; Le Toiny and Tamarin retain email routes and Bart's Food Lounge stays unresolved.
+
