@@ -1,6 +1,7 @@
 /** Booking shell copy. Restaurant-authored policies remain the provider's own text. */
 const COPY = {
   sv: {
+    requestWindowMax: "Restaurangen behandlar förfrågningar inom {max} timmar.",
     manualEmail: "Mejla om bordsbokning",
     manualPaymentUnknown: "Kortgaranti och förskottsbetalning är inte verifierade. Fråga restaurangen om betalningsvillkoren innan du bokar.",
 
@@ -14,6 +15,9 @@ const COPY = {
     closedHeading: "Permanent stängd",
     closedMessage: "Restaurangen är permanent stängd och tar inte emot bokningar.",
     closedSource: "Information från restaurangen ↗",
+    seasonalHeading: "Stängd för säsongen 2026",
+    seasonalMessage: "Restaurangens bokningssida skriver: \"We are now closed for the 2026 season.\" Den officiella Cannes-sidan anger öppet maj–september, klockan 12.00–18.00. Velvet tar inte emot en bokningsförfrågan så länge det beskedet gäller.",
+    seasonalSource: "Restaurangens bokningssida ↗",
     source: 'Bokning via {provider} · Utan Velvet-konto',
     externalIntro: 'Lediga tider och bokningen visas hos {provider} i en egen flik. Eventuella kontokrav och villkor visas där.',
     externalLink: 'Kontrollera tider hos {provider} ↗',
@@ -35,6 +39,7 @@ const COPY = {
     languageUnknown: 'Vi har ännu inte verifierat språkvalet hos denna bokningstjänst. Formuläret öppnas på tjänstens eget språk; välj språk där om alternativet finns.'
   },
   en: {
+    requestWindowMax: "The restaurant processes requests within {max} hours.",
     manualEmail: "Email to request a table",
     manualPaymentUnknown: "Card guarantee and prepayment requirements have not been verified. Ask the restaurant about payment terms before booking.",
 
@@ -48,6 +53,9 @@ const COPY = {
     closedHeading: "Permanently closed",
     closedMessage: "This restaurant is permanently closed and is not accepting bookings.",
     closedSource: "Information from the restaurant ↗",
+    seasonalHeading: "Closed for the 2026 season",
+    seasonalMessage: "The restaurant's reservation page says: \"We are now closed for the 2026 season.\" The official Cannes page lists hours from May to September, 12:00–18:00. Velvet does not accept a booking request while that notice is in effect.",
+    seasonalSource: "Restaurant reservation page ↗",
     source: 'Booking via {provider} · No Velvet account needed',
     externalIntro: 'Availability and booking open with {provider} in a separate tab. Any account requirements and terms are shown there.',
     externalLink: 'Check availability with {provider} ↗',
@@ -69,6 +77,7 @@ const COPY = {
     languageUnknown: 'We have not yet verified language selection for this booking service. The form opens in the service’s own language; choose a language there if the option is available.'
   },
   es: {
+    requestWindowMax: "El restaurante tramita las solicitudes en un plazo de {max} horas.",
     manualEmail: "Enviar un correo para solicitar mesa",
     manualPaymentUnknown: "No se han verificado los requisitos de garantía con tarjeta ni de pago anticipado. Consulta las condiciones de pago con el restaurante antes de reservar.",
 
@@ -82,6 +91,9 @@ const COPY = {
     closedHeading: "Cerrado permanentemente",
     closedMessage: "Este restaurante ha cerrado permanentemente y no acepta reservas.",
     closedSource: "Información del restaurante ↗",
+    seasonalHeading: "Cerrado por la temporada 2026",
+    seasonalMessage: "La página de reservas del restaurante dice: \"We are now closed for the 2026 season.\" La página oficial de Cannes indica horario de mayo a septiembre, de 12:00 a 18:00. Velvet no acepta una solicitud de reserva mientras ese aviso esté vigente.",
+    seasonalSource: "Página de reservas del restaurante ↗",
     source: 'Reserva a través de {provider} · Sin cuenta de Velvet',
     externalIntro: 'La disponibilidad y la reserva se muestran en {provider}, en otra pestaña. Allí se indican los requisitos de cuenta y las condiciones aplicables.',
     externalLink: 'Consultar disponibilidad en {provider} ↗',
@@ -103,6 +115,7 @@ const COPY = {
     languageUnknown: 'Todavía no hemos verificado la selección de idioma de este servicio de reservas. El formulario se abre en el idioma del servicio; selecciona otro allí si la opción está disponible.'
   },
   fr: {
+    requestWindowMax: "Le restaurant traite les demandes sous {max} heures.",
     manualEmail: "Envoyer un e-mail pour demander une table",
     manualPaymentUnknown: "Les exigences de garantie par carte et de prépaiement n’ont pas été vérifiées. Demandez les conditions de paiement au restaurant avant de réserver.",
 
@@ -116,6 +129,9 @@ const COPY = {
     closedHeading: "Fermé définitivement",
     closedMessage: "Ce restaurant est définitivement fermé et ne prend plus de réservations.",
     closedSource: "Informations du restaurant ↗",
+    seasonalHeading: "Fermé pour la saison 2026",
+    seasonalMessage: "La page de réservation du restaurant indique : \"We are now closed for the 2026 season.\" La page officielle de Cannes indique un horaire de mai à septembre, de 12 h 00 à 18 h 00. Velvet n’accepte pas de demande de réservation tant que cet avis est affiché.",
+    seasonalSource: "Page de réservation du restaurant ↗",
     source: 'Réservation via {provider} · Sans compte Velvet',
     externalIntro: 'Les disponibilités et la réservation s’affichent chez {provider} dans un autre onglet. Les éventuelles exigences de compte et les conditions y sont indiquées.',
     externalLink: 'Consulter les disponibilités chez {provider} ↗',
@@ -152,10 +168,16 @@ export function requestBookingNotes(booking, language = 'sv') {
   const copy = getBookingCopy(language);
   const notes = [copy.requestNotice];
   const hours = booking.responseTimeHours;
-  if (Number.isFinite(hours?.min) && Number.isFinite(hours?.max) && hours.min >= 0 && hours.max >= hours.min) {
-    notes.push(formatBookingCopy(copy.requestWindow, hours));
+  // A maximum-only response promise must not acquire an invented minimum.
+  // Zero/invalid maxima do not establish an immediate response or confirmation.
+  if (Number.isSafeInteger(hours?.max) && hours.max > 0) {
+    if (!Object.hasOwn(hours, 'min')) notes.push(formatBookingCopy(copy.requestWindowMax, hours));
+    else if (Number.isSafeInteger(hours.min) && hours.min >= 0 && hours.min <= hours.max) {
+      notes.push(formatBookingCopy(copy.requestWindow, hours));
+    }
   }
   if (booking.paymentRequirement === 'card_guarantee') notes.push(copy.requestCard);
+  if (booking.paymentRequirement === 'not_specified') notes.push(copy.manualPaymentUnknown);
   if (booking.cancellationPolicyStatus === 'unknown') notes.push(copy.requestUnknownPolicy);
   return notes;
 }

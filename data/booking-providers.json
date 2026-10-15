@@ -1886,6 +1886,39 @@
       "checkedAt": "2026-10-16"
     }
   },
+  "curated-MYK-scorpios-mykonos": {
+    "provider": "SevenRooms",
+    "venueId": "scorpiosmykonosrestaurant",
+    "name": "Scorpios Mykonos",
+    "city": "Mykonos",
+    "url": "https://www.sevenrooms.com/reservations/scorpiosmykonosrestaurant",
+    "source": "https://scorpios.com/mykonos",
+    "checkedAt": "2026-10-16",
+    "verification": "official_link_only",
+    "integrationMode": "external_link",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "venueKey": "www.sevenrooms.com/reservations/scorpiosmykonosrestaurant"
+  },
+  "curated-TUL-hartwood": {
+    "name": "Hartwood",
+    "city": "Tulum",
+    "provider": "Typeform",
+    "venueId": "f6JtAUPI",
+    "venueKey": "www.hartwoodtulum.com/reservation",
+    "url": "https://www.hartwoodtulum.com/reservation",
+    "source": "https://www.hartwoodtulum.com/",
+    "checkedAt": "2026-10-16",
+    "verification": "official_link_only",
+    "integrationMode": "external_link",
+    "bookingMode": "request_only",
+    "responseTimeHours": {
+      "max": 24
+    },
+    "cancellationPolicyStatus": "unknown",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
+  },
   "curated-SBH-bonito-saint-barth": {
     "provider": "SevenRooms",
     "name": "Bonito Saint Barth",

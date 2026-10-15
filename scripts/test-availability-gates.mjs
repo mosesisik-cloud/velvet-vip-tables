@@ -58,3 +58,37 @@ const sanitized=requestService.status(job.searchId).results[0];
 assert.equal(sanitized.responseTimeHours,undefined,'removed/invalid terms cannot survive cached snapshots');
 assert.equal(sanitized.paymentRequirement,undefined);
 assert.equal(sanitized.cancellationPolicyStatus,undefined);
+
+// Hartwood publishes only an upper bound. Preserve it across all six paths,
+// including existing job snapshots, without inventing a minimum.
+async function allRequestPaths() {
+ const direct=await requestService.venue('request',requestRow,q);
+ const initial=requestService.start(q),duplicate=requestService.start(q);
+ await Promise.all([...requestService.inflight.values()]);await new Promise(resolve=>setImmediate(resolve));
+ const completed=requestService.status(initial.searchId);
+ const [search,deduped]=await Promise.all([requestService.search(q),requestService.search(q)]);
+ return {direct,initial:initial.results[0],duplicate:duplicate.results[0],completed:completed.results[0],search:search.results[0],deduped:deduped.results[0]};
+}
+for(const max of [0,48,Number.MAX_SAFE_INTEGER]) {
+ requestRow.responseTimeHours={max,privateNote:'omit'};
+ const results=await allRequestPaths();
+ for(const [path,result] of Object.entries(results)) {
+  assert.equal(result.status,'request_only',path);assert.deepEqual(result.slots,[],path);
+  assert.deepEqual(result.responseTimeHours,{max},path);assert.equal(Object.hasOwn(result.responseTimeHours,'min'),false,path);
+  result.responseTimeHours.max=-1;
+ }
+ assert.equal(requestRow.responseTimeHours.max,max,'max-only results cannot mutate registry');
+ const a=requestService.status(job.searchId),b=requestService.status(job.searchId);
+ assert.deepEqual(a.results[0].responseTimeHours,{max},'old cached min must be purged');
+ a.results[0].responseTimeHours.max=-1;
+ assert.deepEqual(b.results[0].responseTimeHours,{max},'max-only snapshots are independently cloned');
+}
+for(const invalid of [{max:-1},{max:1.5},{max:'48'},{max:Infinity},{max:Number.MAX_SAFE_INTEGER+1},{min:undefined,max:48},{min:null,max:48},{min:49,max:48},{min:-1,max:48},{},null,undefined,[]]) {
+ requestRow.responseTimeHours=invalid;
+ for(const [path,result] of Object.entries(await allRequestPaths())) {
+  assert.equal(result.status,'request_only',path);
+  assert.equal(result.responseTimeHours,undefined,`${path}: invalid max-only metadata must not survive cache`);
+ }
+}
+assert.equal(metadataFetches,0,'all max-only and invalid paths stay offline');
+console.log('PASS max-only response bounds: six paths, no invented minimum, cache purge, clone isolation and invalid rejection; zero upstream calls.');

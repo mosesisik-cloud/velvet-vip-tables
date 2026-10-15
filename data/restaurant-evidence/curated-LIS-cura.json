@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "issue": 95,
+      "claim": "codex-bc3a8a2e-ca34-4493-8ab2-ff7cb859faef",
+      "restaurantId": "curated-LIS-cura",
+      "checkedAt": "2026-10-16",
+      "identity": {
+        "status": "verified",
+        "name": "CURA",
+        "city": "Lisbon",
+        "country": "Portugal",
+        "address": "Rua Rodrigo da Fonseca 88, 1099-039 Lisbon",
+        "source": "https://www.fourseasons.com/lisbon/dining/restaurants/cura/",
+        "match": "Dedicated official restaurant page identifies CURA in Four Seasons Hotel Ritz Lisbon; its FAQ supplies the address."
+      },
+      "bookingRoute": {
+        "status": "official_website_form_observed",
+        "provider": "OpenTable",
+        "url": "https://www.fourseasons.com/lisbon/dining/restaurants/cura/",
+        "source": "https://www.fourseasons.com/lisbon/dining/restaurants/cura/",
+        "evidence": "Reserve A Table opens the hotel's original booking controls. Find A Table opens a modal labelled powered by OpenTable. This is an official website destination, not a verified standalone OpenTable restaurant URL.",
+        "mode": "external_link",
+        "instantConfirmation": false,
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "contact": {
+        "phone": "+351213811401",
+        "phoneRole": "Official Make your reservation contact; no call placed."
+      },
+      "rejectedDestinations": [
+        {
+          "kind": "event_specific",
+          "url": "https://www.opentable.co.uk/booking/experiences-availability?rid=355611&restref=355611&experienceId=816226&utm_source=external&utm_medium=referral&utm_campaign=shared",
+          "reason": "Reserve Now belongs to the October 17 wine event. Do not use as the general restaurant booking destination or infer a standalone URL from its rid."
+        },
+        {
+          "kind": "sibling_navigation",
+          "reason": "Other hotel restaurants have separate Book Now controls; they are outside this restaurant's scope."
+        }
+      ],
+      "tests": {
+        "identityPageRendered": true,
+        "officialBookingLinkObserved": true,
+        "originalWebsiteFormObserved": true,
+        "embeddedInVelvet": false,
+        "liveAvailabilityObservation": {
+          "date": "2026-10-16",
+          "partySize": 2,
+          "requestedTime": "19:00",
+          "displayedTime": "21:00",
+          "displayedSeating": "STANDARD",
+          "context": "One read-only browser search on the official website. Result is transient evidence, not inventory to publish. No result or seating checkbox selected."
+        },
+        "confirmedReservation": false,
+        "limitations": [
+          "Browser inspection used the site's normal UI; no network interception was installed.",
+          "Stopped at search results before selecting a slot, entering guest details, or confirming anything. No booking, hold, payment or restaurant message was intentionally initiated.",
+          "Cancellation, card guarantee, payment, final confirmation and Velvet embedding were not tested.",
+          "The displayed search-time options are not availability.",
+          "A loaded official form is not a working Velvet integration."
+        ]
+      },
+      "implementation": {
+        "status": "not_integrated",
+        "changedFiles": [
+          "data/restaurant-evidence/curated-LIS-cura.json"
+        ],
+        "existingCodeReviewed": "js/restaurant-booking-providers.js: resolveEmbeddedBooking",
+        "reusePlan": "Use the existing reviewed external-link flow after integrator review. Its OpenTable host allowlist excludes fourseasons.com, so this official website URL must not be inserted as an OpenTable mapping. Do not derive a provider URL from an event ID, broaden shared allowlists, or claim native embedding.",
+        "blocker": "No independently verified general standalone provider URL; shared registry integration requires coordinator ownership.",
+        "nextStep": "Booking integrator consolidates this per-restaurant fragment and decides whether to support the official website route or assign further provider-link verification."
+      },
+      "publication": {
+        "status": "not_published",
+        "releaseOwnerOnly": true
+      }
+    }
+  ]
+}

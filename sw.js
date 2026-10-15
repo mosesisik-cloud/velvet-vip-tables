@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-186-italy-links";
+const VERSION = "v4-real-188-request-window";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 

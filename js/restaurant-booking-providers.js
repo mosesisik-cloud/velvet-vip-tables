@@ -1,5 +1,5 @@
 import { bookingLanguage } from './booking-language.js';
-import { getBookingCopy, formatBookingCopy, requestBookingNotes } from './booking-copy.js?v=180';
+import { getBookingCopy, formatBookingCopy, requestBookingNotes } from './booking-copy.js?v=188';
 // Only reviewed restaurant -> provider mappings are enabled. Discovery results
 // must never be used as booking destinations without checking the venue.
 let registryPromise;
@@ -28,6 +28,7 @@ const IDENTITY_PARAMS = new Set(['rid', 'restref', 'restaurantid', 'restaurant_i
 // Evidence is specific to these complete official links, including query order
 // and values. Do not generalize this into provider-wide query acceptance.
 const EXACT_EXTERNAL_LINKS = Object.freeze({
+  'curated-TUL-hartwood': {provider:'Typeform',venueId:'f6JtAUPI',url:'https://www.hartwoodtulum.com/reservation',source:'https://www.hartwoodtulum.com/',venueKey:'www.hartwoodtulum.com/reservation',bookingMode:'request_only',cancellationPolicyStatus:'unknown'},
   'curated-CAP-da-paolino': {provider:'SevenRooms',venueId:'PaolinoLemontrees',url:'https://www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/',source:'https://paolinocapri.com/en/prenota-un-tavolo/',venueKey:'www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/'},
   'osm-PAR-bigbang': {provider:'JoinOko',url:'https://reservation.joinoko.com/784893b8aceb4e017dddef37?lang=fr',source:'https://sevres.bigbang-restaurant.fr/fr/',venueKey:'reservation.joinoko.com/784893b8aceb4e017dddef37'},
   'curated-MCO-pavyllon-monte-carlo': {provider:'SevenRooms',venueId:'pavyllonyannickalleno',url:'https://eu.sevenrooms.com/reservations/pavyllonyannickalleno?venues=pavyllonyannickalleno,legrill,bluebay,lelouisxvalainducasse',source:'https://www.yannick-alleno.com/contact',venueKey:'eu.sevenrooms.com/reservations/pavyllonyannickalleno'},
@@ -49,11 +50,13 @@ export function resolveEmbeddedBooking(registry, restaurantId) {
     const source = new URL(row.source);
     if (url.protocol !== 'https:' || url.username || url.password || url.port || url.hash
       || source.protocol !== 'https:' || source.username || source.password) return null;
-    if (Object.hasOwn(EXACT_EXTERNAL_LINKS,restaurantId) || row.provider === 'JoinOko' || row.venueId === 'pavyllonyannickalleno' || String(row.venueId).toLowerCase() === 'paolinolemontrees') {
+    if (Object.hasOwn(EXACT_EXTERNAL_LINKS,restaurantId) || row.provider === 'JoinOko' || row.provider === 'Typeform' || row.venueId === 'pavyllonyannickalleno' || String(row.venueId).toLowerCase() === 'paolinolemontrees') {
       const exact=Object.hasOwn(EXACT_EXTERNAL_LINKS,restaurantId) ? EXACT_EXTERNAL_LINKS[restaurantId] : null;
       if (!exact || Object.entries(exact).some(([key,value])=>row[key]!==value)
         || row.integrationMode!=='external_link' || row.verification!=='official_link_only'
         || row.liveAvailabilitySupported!==false || row.completionTracking!=='unsupported') return null;
+      if (row.provider === 'Typeform' && (row.responseTimeHours?.max !== 24
+        || Object.keys(row.responseTimeHours).length !== 1)) return null;
       return {...row,restaurantId,url:row.url,integrationMode:'external_link'};
     }
     if (row.provider === 'SevenRooms') {
