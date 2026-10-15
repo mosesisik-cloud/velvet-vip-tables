@@ -1,4 +1,5 @@
 import { MEMBER_ACCOUNTS_ENABLED } from "./release-features.js";
+import { loadPlaceBrands, placeBrandHTML } from './place-brand.js?v=178';
 import {getBookingCopy, formatBookingCopy} from './booking-copy.js';
 import { restaurantCopy } from './restaurant-copy.js?v=175';
 import { primarySection, isDiscoveryList, safeDiscoveryReturn } from './navigation-state.js';
@@ -7,7 +8,7 @@ import { parseBookingSelection, withBookingSelection } from './booking-selection
 import { mountBookingReport } from './booking-report.js';
 import { uxT } from './ux-copy.js?v=175';
 import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo, resolveAuthReturn, joinResponse } from './ux-booking.js?v=175';
-import { mountAvailabilitySearch } from './availability-search.js?v=174';
+import { mountAvailabilitySearch } from './availability-search.js?v=178';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
 import { mountBokabordMirror } from "./bokabord-mirror.js";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
@@ -295,7 +296,7 @@ function venueIntroHTML(v) {
   return `<section class="venue-intro-shell${yt ? " has-video" : " has-scenes"}" aria-label="${esc(t("introAria").replace("{name}", v.name))}">
     ${media}
     <div class="venue-intro-shade" aria-hidden="true"></div>
-    <div class="venue-intro-copy"><span>${esc(t("velvetPresents"))}</span><h1>${esc(v.name)}</h1><p>${esc(v.destination)} · ${esc(v.category || "VIP experience")}</p></div>
+    <div class="venue-intro-copy"><span>${esc(t("velvetPresents"))}</span><h1>${placeBrandHTML(v, "detail")}</h1><p>${esc(v.destination)} · ${esc(v.category || "VIP experience")}</p></div>
     ${yt ? "" : `<div class="venue-intro-progress" aria-hidden="true"><span></span></div>`}
   </section>`;
 }
@@ -2368,7 +2369,7 @@ function restaurantCardHTML(r) {
   return `<article class="restaurant-card">
     ${restaurantMediaHTML(r)}
     <div class="restaurant-card-top">
-      <div><h3>${esc(r.name)}</h3><p>${esc(r.address || "")}</p></div>
+      <div><h3>${placeBrandHTML(r)}</h3><p>${esc(r.address || "")}</p></div>
       ${stars}
     </div>
     ${reviews > 0 ? `<p class="restaurant-review-count">${esc(reviews.toLocaleString(currentLang()))} ${esc(t("restaurantReviews"))}</p>` : ""}
@@ -2543,7 +2544,7 @@ async function renderRestaurantDetail(placeId) {
   view().innerHTML = `<section class="section restaurant-detail">
     <a class="back-link" href="#/restaurants?dest=${encodeURIComponent(destination.code)}" data-nav>← ${esc(rt("restaurantsIn", {name: destination.destination}))}</a>
     <div class="restaurant-detail-hero">
-      <div><div class="eyebrow">${esc(restaurant.cuisine || rt("restaurant"))}</div><h1>${esc(restaurant.name)}</h1><p class="restaurant-lead">${esc(restaurant.description || rt("restaurantIn", {name: destination.destination}))}</p>
+      <div><div class="eyebrow">${esc(restaurant.cuisine || rt("restaurant"))}</div><h1>${placeBrandHTML(restaurant, "detail")}</h1><p class="restaurant-lead">${esc(restaurant.description || rt("restaurantIn", {name: destination.destination}))}</p>
         <div class="restaurant-detail-actions">${permanentlyClosed ? "" : `<button type="button" class="btn btn-gold" id="restaurant-book-jump" aria-controls="restaurant-booking-panel">${esc(uxT("jumpBooking"))}</button>`}${favBtnHTML(restaurantFavId(restaurant.placeId), restaurant.name)}${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">${esc(rt("website"))} ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuViewHref)}" data-nav>${esc(rt("menu"))}</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">${esc(rt("map"))} ↗</a>` : ""}</div>
       </div>
       <div class="restaurant-detail-rating">${Number.isFinite(rating) && rating > 0 ? `<strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span><small>${esc(String(restaurant.reviewCount || 0))} ${esc(rt("reviews"))} · ${esc(restaurant.reviewSource || "Google")}</small>` : `<small>${esc(rt("noRating"))}</small>`}</div>
@@ -3068,7 +3069,7 @@ function venueCard(v, { eager = false, rank = 0, vibe = false } = {}) {
       ${venueMediaHTML(v, "venue-media", { eager, extra: rankMark })}
       <div class="venue-top">
         <div>
-          <div class="venue-name">${esc(v.name)}</div>
+          <div class="venue-name">${placeBrandHTML(v)}</div>
           <div class="venue-loc">${esc(v.destination)}</div>
         </div>
         ${vibe ? "" : `<div class="prio">${googleRatingHTML(v, { compact: true })}</div>`}
@@ -3618,7 +3619,7 @@ function renderVenueDetail(id) {
     <div class="detail-hero">
       <div class="detail-hero-main">
         <div class="detail-kicker">${esc(v.destination)}${dest ? ` · ${esc(dest.country)}` : ""} · ${esc(v.category)}</div>
-        <h1 class="detail-name">${esc(v.name)}</h1>
+        <h1 class="detail-name">${placeBrandHTML(v, "detail")}</h1>
         <div class="venue-tags detail-tags">
           <span class="tag ${st.cls}">${st.label}</span>
           ${v.shareable_format ? `<span class="tag tag-verified">${esc(t("shareableCost"))}</span>` : ""}
@@ -7328,7 +7329,7 @@ async function renderBookSite(id) {
       ${venueMediaHTML(v, "venue-hero-media", { eager: true, playable: false })}
       <div class="book-site-copy">
         <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)}${engineName ? ` · ${esc(engineName)}` : ""}${host ? ` · ${esc(host)}` : ""}</p>
-        <h1>${esc(v.name)}</h1>
+        <h1>${placeBrandHTML(v, "detail")}</h1>
         <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(uxT("bridgeIntro").replace("{name}", v.name))}</p>
         ${adapter.vipHow ? `<p class="events-meta">${esc(t("bridgeReadLive"))}: ${esc(adapter.vipHow)}</p>` : `<p class="events-meta">${esc(t("bridgeReadLive"))}</p>`}
         <div class="book-desk-card">
@@ -7820,6 +7821,7 @@ async function init() {
     [d, v] = await Promise.all([
       fetchJSON("data/destinations.json"),
       fetchJSON("data/venues.json"),
+      loadPlaceBrands(),
     ]);
     // Riktiga bilder från ställenas hemsidor — saknas filen visas emblem istället
     try {
