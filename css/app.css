@@ -3102,3 +3102,36 @@ body.light-shell .dest-card::after {
 }
 /* Preserve booking-stage visibility when button utility classes set display. */
 #bokabord-mirror [hidden] { display: none !important; }
+
+/* Restaurant pages use a quiet editorial treatment; provider controls stay intact. */
+.restaurant-detail { max-width: 1200px; }
+.restaurant-detail .restaurant-gallery figure { height: 360px; min-height: 0; border-radius: 10px; }
+.restaurant-detail .restaurant-gallery-track { gap: 12px; }
+.restaurant-detail .restaurant-detail-hero h1 { font-family: Georgia, serif; font-weight: 400; font-size: clamp(30px, 4vw, 44px); letter-spacing: -.025em; }
+.restaurant-detail .detail-panel.detail-panel { border-radius: 12px; border: 1px solid #303539; background: #11171b; box-shadow: none; }
+.restaurant-detail .restaurant-detail-rating { background: transparent; border: 1px solid #303539; border-radius: 10px; }
+.restaurant-detail .restaurant-detail-rating strong { color: #e1d5be; }
+.restaurant-detail .btn { clip-path: none; border-radius: 6px; text-transform: none; letter-spacing: 0; font-size: 14px; }
+.restaurant-detail .btn.btn-gold { background: #e8ddc8; color: #24231f; box-shadow: none; }
+.restaurant-detail .restaurant-book-panel { background: #faf9f6; color: #292b2d; border: 1px solid #e4e1da; padding: 24px; }
+.restaurant-book-panel > .eyebrow { color: #73716a; font-size: 12px; letter-spacing: .03em; }
+.restaurant-book-panel > h2 { color: #292b2d; font: 400 30px/1.2 Georgia, serif; margin: 8px 0 18px; }
+#bokabord-mirror .booking-source { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding-bottom: 14px; border-bottom: 1px solid #e4e1da; font-size: 12px; color: #6b6a64; }
+#bokabord-mirror .booking-intro { color: #595a55; font-size: 15px; line-height: 1.6; margin: 18px 0; }
+#bokabord-mirror [data-start], #bokabord-mirror [data-submit] { width: 100%; background: #283f35; color: white; border: 0; border-radius: 6px; padding: 14px 18px; min-height: 48px; font-size: 15px; font-weight: 600; clip-path: none; text-transform: none; letter-spacing: 0; }
+#bokabord-mirror [data-status] { min-height: 22px; margin: 10px 0; color: #65665f; font-size: 13px; line-height: 1.5; }
+#bokabord-mirror [data-stage] { border: 1px solid #e4e1da; border-radius: 8px; overflow: hidden; background: #fff; }
+#bokabord-mirror .booking-navigation { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid #e4e1da; padding: 8px 0; }
+#bokabord-mirror .booking-navigation .btn { background: transparent; border: 0; color: #65665f; font-size: 12px; min-height: 40px; padding: 8px; box-shadow: none; }
+#bokabord-mirror .booking-navigation [data-close] { margin-left: auto; }
+#bokabord-mirror [data-consent] { display: block; margin: 18px 0; font-size: 13px; line-height: 1.6; color: #4e514b; }
+#bokabord-mirror a { color: #315c48; text-decoration: underline; }
+#bokabord-mirror input[type=checkbox] { accent-color: #283f35; }
+#bokabord-mirror .booking-accessible { margin-top: 14px; font-size: 12px; color: #73716a; }
+#bokabord-mirror button:disabled { opacity: .55; cursor: wait; }
+#bokabord-mirror button:focus-visible { outline: 2px solid #315c48; outline-offset: 3px; }
+#bokabord-mirror .booking-click { position: absolute; pointer-events: none; width: 30px; height: 30px; border: 2px solid #315c48; background: #315c4820; border-radius: 50%; transform: translate(-50%,-50%); }
+@media(max-width:760px) {
+ .restaurant-detail .restaurant-gallery figure { height: 250px; }
+ .restaurant-detail .restaurant-book-panel { padding: 18px; }
+}

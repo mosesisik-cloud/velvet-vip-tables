@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://static.wixstatic.com">
 <link rel="preconnect" href="https://images.squarespace-cdn.com">
 <link rel="preconnect" href="https://www.facebook.com">
-<link rel="stylesheet" href="css/app.css?v=166">
+<link rel="stylesheet" href="css/app.css?v=167">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebSite","name":"VELVET","url":"https://b2b.bakemyday.se/velvet/","description":"VIP-bord. Delad lyx. Förfrågan via VELVET mot klubbens eget system.","inLanguage":"sv"}
 </script>
@@ -43,7 +43,7 @@
 <div id="app">
   <header class="site-header">
   <div class="preview-ribbon" role="status" data-i18n="ribbon">
-    Förhandsversion · Endast flöden markerade LIVE kan skapa en riktig reservation
+    Velvet · Förhandsversion
   </div>
   <nav class="nav" aria-label="Huvudnavigation" data-i18n-attr="aria-label:navMain">
     <a href="#/" class="nav-logo" data-nav>VELVET<span class="logo-dot">.</span></a>
@@ -91,7 +91,7 @@
       <span class="footer-tag" data-i18n="tagline">VIP-bord. Delad lyx.</span>
     </div>
     <div class="footer-meta">
-      <span data-i18n="footerMeta">V4 · Concierge-förhandsversion · 30 destinationer · 120 handplockade ställen</span>
+      <span data-i18n="footerMeta">Restauranger och destinationer att upptäcka</span>
       · <a href="#/villkor" data-nav data-i18n="legalTerms">Villkor</a>
       · <a href="#/integritet" data-nav data-i18n="legalPrivacy">Integritet</a>
     </div>
@@ -128,7 +128,7 @@
   var ua = navigator.userAgent || "";
   var ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
   if (ios) wipe().catch(function () {});
-  var KEY = "velvet_sw_bust_v166";
+  var KEY = "velvet_sw_bust_v167";
   function bust() {
     try { if (sessionStorage.getItem(KEY)) return; sessionStorage.setItem(KEY, "1"); } catch (e) { return; }
     var done = function () { location.reload(); };
@@ -143,6 +143,6 @@
   });
 })();
 </script>
-<script type="module" src="js/app.js?v=166"></script>
+<script type="module" src="js/app.js?v=167"></script>
 </body>
 </html>

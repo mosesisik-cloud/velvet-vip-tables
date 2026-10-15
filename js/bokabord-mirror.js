@@ -1,6 +1,6 @@
 // Actual provider pixels from an isolated server browser, never a provider iframe.
 export function mountBokabordMirror(container, api, { restaurantId = 'curated-STO-zink-italian-cuisine', restaurantName = 'Zink', onLogin = null } = {}) {
-  container.innerHTML = `<p><strong>BokaBord i Velvet</strong></p><p>Boka utan Velvet-konto i restaurangens originalformulär. Välj datum, tid och sällskap för att fortsätta.</p><button class="btn btn-gold" data-start>Öppna bokningsflödet</button><p role="status" data-status></p><div data-screen hidden><div data-stage style="position:relative"><img data-image alt="Restaurangens aktuella bokningsformulär. Klicka för att välja." style="display:block;width:100%;border-radius:10px;cursor:pointer"><div data-inputs></div></div><div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"><button class="btn" data-up>↑ Upp</button><button class="btn" data-down>↓ Ned</button><button class="btn" data-refresh>Uppdatera</button><button class="btn" data-close>Stäng formuläret</button></div><label data-consent hidden style="margin:16px 0"><input type="checkbox" data-terms> Jag har kontrollerat uppgifterna och godkänner <a href="https://www.waiteraid.com/terms/" target="_blank" rel="noopener">Bokabords villkor</a> och har läst <a href="https://www.waiteraid.com/privacy-policy/" target="_blank" rel="noopener">personuppgiftspolicyn</a>.</label><button class="btn btn-gold" data-submit hidden>Fortsätt bokningen</button><p data-handoff hidden></p><details><summary>Formulärets text</summary><pre data-text style="white-space:pre-wrap;font:inherit"></pre></details></div>`;
+  container.innerHTML = `<div class="booking-source"><span>Bokning via Bokabord</span><span>Utan Velvet-konto</span></div><p class="booking-intro">Välj datum, tid och antal gäster.</p><button class="btn btn-gold" data-start>Hitta ett bord</button><p role="status" aria-live="polite" data-status></p><div data-screen hidden><div data-stage style="position:relative"><img data-image alt="Restaurangens bokningsformulär" style="display:block;width:100%;cursor:pointer"><div data-inputs></div><span class="booking-click" hidden aria-hidden="true" data-click></span></div><div class="booking-navigation"><button class="btn" data-up aria-label="Visa övre delen av formuläret">↑ Upp</button><button class="btn" data-down aria-label="Visa nedre delen av formuläret">↓ Ned</button><button class="btn" data-refresh>Uppdatera</button><button class="btn" data-close>Stäng</button></div><label data-consent hidden><input type="checkbox" data-terms> Jag har kontrollerat uppgifterna och godkänner <a href="https://www.waiteraid.com/terms/" target="_blank" rel="noopener">Bokabords villkor</a> och har läst <a href="https://www.waiteraid.com/privacy-policy/" target="_blank" rel="noopener">personuppgiftspolicyn</a>.</label><button class="btn btn-gold" data-submit hidden>Fortsätt</button><p data-handoff hidden></p><details class="booking-accessible"><summary>Visa formuläret som text</summary><pre data-text style="white-space:pre-wrap;font:inherit"></pre></details></div>`;
   const status = container.querySelector('[data-status]');
   const start = container.querySelector('[data-start]');
   const screen = container.querySelector('[data-screen]');
@@ -12,9 +12,9 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
   function syncPending() {
     clearTimeout(editTimer);
     if (busy || !pendingFields.size || disposed) return;
-    const [field,value] = pendingFields.entries().next().value;
-    pendingFields.delete(field);
-    perform({type:'fill',field,value});
+    const fields = Object.fromEntries(pendingFields);
+    pendingFields.clear();
+    perform({type:'fill',fields});
   }
   function controls() {
     container.querySelectorAll('button').forEach(b => b.disabled = busy || pendingFields.size > 0);
@@ -24,18 +24,17 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
   }
   const terms = container.querySelector('[data-terms]');
   const endpoint = '/restaurant-bookings/mirror';
-  const messages = { auth: 'Bokningssessionen kunde inte öppnas. Uppdatera sidan och försök igen.', mirror_disabled: 'Testservern är inte aktiverad.', capacity: 'Testservern är upptagen. Försök senare.', session_expired: 'Sessionen har gått ut. Öppna ett nytt test.', session_exists: 'Du har redan ett test öppet. Avsluta det eller vänta tio minuter.', contact_stop: 'Kontaktsteget är nått. Inga uppgifter eller bokningar skickas i testläget.', stale_view: 'Vyn ändrades. Avsluta och öppna testet igen.' };
+  const messages = { auth: 'Bokningssessionen kunde inte öppnas. Uppdatera sidan och försök igen.', mirror_disabled: 'Bokningen är tillfälligt otillgänglig.', capacity: 'Många bokar just nu. Försök igen om en liten stund.', session_expired: 'Sessionen har gått ut. Öppna bokningen igen.', session_exists: 'Du har redan en bokning öppen. Stäng den först.', contact_stop: 'Kontaktsteget är nått. Inga uppgifter eller bokningar skickas i testläget.', stale_view: 'Formuläret har uppdaterats. Tryck på Uppdatera för att fortsätta.' };
   const post = (path, body) => api(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   async function perform(action) {
     if (disposed) return;
-    if (busy) { if (action?.type === 'fill') pendingFields.set(action.field, action.value); return; }
+    if (busy) { if (action?.type === 'fill') for (const [field,value] of Object.entries(action.fields)) pendingFields.set(field,value); return; }
     let succeeded = false;
-    busy = true; status.textContent = 'Hämtar bokningsformuläret…';
+    busy = true; container.setAttribute('aria-busy','true');
+    status.textContent = action?.type === 'fill' ? 'Sparar uppgifterna…' : state ? 'Uppdaterar…' : 'Öppnar bokningen…';
     controls();
     try {
-      const current = state ? null : await post(`${endpoint}/current`, {});
-      if (!state && current?.image && current.restaurantId !== restaurantId) { throw new Error('other_restaurant'); }
-      const result = state ? await post(`${endpoint}/${state.id}/action`, { ...action, revision: state.revision }) : (current?.image ? current : await post(endpoint, { restaurantId, width: Math.max(320, Math.round(container.clientWidth)) }));
+      const result = state ? await post(`${endpoint}/${state.id}/action`, { ...action, revision: state.revision }) : await post(endpoint, { restaurantId, resume:true, width: Math.max(320, Math.round(container.clientWidth)) });
       if (!result?.image) throw new Error(result?.error || 'connection');
       if (disposed) { await api(`${endpoint}/${result.id}`, { method: 'DELETE' }); return; }
       // Keep coordinates paired with the image actually decoded on screen.
@@ -65,7 +64,7 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
         input.oninput = () => {
           terms.checked = false;
           pendingFields.set(field.name, input.value);
-          controls(); clearTimeout(editTimer); editTimer = setTimeout(syncPending, 250);
+          controls(); clearTimeout(editTimer); editTimer = setTimeout(syncPending, 150);
         };
         if (!existing) overlay.append(input);
       }
@@ -75,24 +74,24 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
       const ready = (result.contact || result.review) && result.canSubmit;
       container.querySelector('[data-submit]').hidden = !ready;
       container.querySelector('[data-consent]').hidden = !ready;
-      container.querySelector('[data-submit]').textContent = result.review ? 'Slutför bokningen' : 'Fortsätt bokningen';
+      container.querySelector('[data-submit]').textContent = result.review ? 'Slutför bokningen' : 'Kontrollera bokningen';
       terms.checked = false;
       const handoff = container.querySelector('[data-handoff]'); handoff.replaceChildren(); handoff.hidden = !result.handoff;
       if (result.handoff) { const link = document.createElement('a'); link.href = result.handoff.url; link.target = '_blank'; link.rel = 'noopener'; link.textContent = 'Fortsätt i restaurangens säkra bokningsformulär'; handoff.append(document.createTextNode('Detta val kräver kortgaranti, tillval eller väntelista som slutförs hos restaurangen. Ingen bokning har skickats från Velvet. '), link); }
       if (result.result) status.dataset.bookingStatus = result.result.status;
-      if (result.mode === 'prepare') container.querySelector('p:nth-child(2)').textContent = 'Bokabords originalformulär. Uppgifter speglas från serverns webbläsare. Kontrollera uppgifterna och godkänn villkoren innan du fortsätter.';
-      status.textContent = result.contact ? (result.mode === 'prepare' ? 'Fyll i uppgifterna direkt i formuläret. Ändringar synkas när du lämnar fältet. Bokningen är ännu inte skickad.' : 'Kontaktsteget är nått. Testet stoppar här — ingen bokning har skapats.') : result.blocked ? 'Den åtgärden är spärrad i testläget.' : 'Välj direkt i formuläret. Det här är en livevy från restaurangen.';
+      if (result.mode === 'prepare') container.querySelector('.booking-intro').hidden = true;
+      status.textContent = result.contact ? (result.mode === 'prepare' ? 'Fyll i dina kontaktuppgifter. Du får kontrollera bokningen innan den skickas.' : 'Kontaktsteget är nått. Testet stoppar här — ingen bokning har skapats.') : result.blocked ? 'Den åtgärden är spärrad i testläget.' : '';
       if (result.result) {
         status.textContent = result.result.status === 'confirmed' ? `${restaurantName} har bekräftat bokningen. Referens: ${result.result.reference}` : 'Bokningen är inte verifierad. Skicka inte en ny bokning; resultatet måste kontrolleras.';
-        container.querySelector('p:nth-child(2)').textContent = 'Bokabords resultat visas här direkt från serverns webbläsare.';
+        container.querySelector('.booking-intro').hidden = true;
       }
       succeeded = true;
-    } catch (error) { if (action?.type === 'fill' && !pendingFields.has(action.field)) pendingFields.set(action.field, action.value); if (error.message === 'auth' && onLogin) onLogin(); status.textContent = error.message === 'other_restaurant' ? 'Du har ett formulär öppet för en annan restaurang. Stäng det där först, eller vänta tio minuter.' : messages[error.message] || 'Kopplingen kunde inte uppdateras. Uppdatera vyn och kontrollera Mina bokningar innan du försöker boka igen.'; }
-    finally { busy = false; controls(); if (succeeded) syncPending(); }
+    } catch (error) { if (action?.type === 'fill') for (const [field,value] of Object.entries(action.fields)) if (!pendingFields.has(field)) pendingFields.set(field,value); if (error.message === 'auth' && onLogin) onLogin(); status.textContent = error.message === 'other_restaurant' ? 'Du har ett formulär öppet för en annan restaurang. Stäng det där först, eller vänta tio minuter.' : messages[error.message] || 'Kopplingen kunde inte uppdateras. Uppdatera vyn och kontrollera Mina bokningar innan du försöker boka igen.'; }
+    finally { busy = false; container.setAttribute('aria-busy','false'); container.querySelector('[data-click]').hidden=true; controls(); if (succeeded) syncPending(); }
   }
   start.onclick = () => perform();
   container.querySelector('[data-submit]').onclick = () => { if (busy || pendingFields.size) return; if (!terms.checked) { status.textContent = 'Kontrollera uppgifterna och godkänn villkoren först.'; return; } perform({type:'submit',confirm:true,terms:true}); };
-  img.onclick = e => { if (!state || state.contact || state.review || state.result) return; const r = img.getBoundingClientRect(); perform({ type: 'click', x: (e.clientX - r.left) * state.width / r.width, y: (e.clientY - r.top) * state.height / r.height }); };
+  img.onclick = e => { if (busy || !state || state.contact || state.review || state.result) return; const r = img.getBoundingClientRect(); const marker=container.querySelector('[data-click]'); marker.style.left=`${100*(e.clientX-r.left)/r.width}%`; marker.style.top=`${100*(e.clientY-r.top)/r.height}%`; marker.hidden=false; perform({ type: 'click', x: (e.clientX - r.left) * state.width / r.width, y: (e.clientY - r.top) * state.height / r.height }); };
   container.querySelector('[data-up]').onclick = () => perform({ type: 'scroll', dy: -500 });
   container.querySelector('[data-down]').onclick = () => perform({ type: 'scroll', dy: 500 });
   container.querySelector('[data-refresh]').onclick = () => perform({ type: 'refresh' });
@@ -100,7 +99,7 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
     if (busy) return;
     if (state) await api(`${endpoint}/${state.id}`, { method: 'DELETE' });
     clearTimeout(editTimer); pendingFields.clear(); overlay.replaceChildren();
-    state = null; screen.hidden = true; start.hidden = false; img.removeAttribute('src'); status.textContent = 'Testsessionen är stängd.';
+    state = null; screen.hidden = true; start.hidden = false; img.removeAttribute('src'); status.textContent = 'Bokningsformuläret är stängt.';
   }
   container.querySelector('[data-close]').onclick = close;
   const observer = new MutationObserver(() => { if (!container.isConnected) { disposed = true; close(); observer.disconnect(); } });

@@ -136,13 +136,14 @@ export class BokabordMirror {
       for (const box of await s.page.locator('input[type="checkbox"]:visible').all()) await box.uncheck();
       s.contactInitialized = true;
     }
-    const fields = [];
-    if (contact && this.prepare) {
-      for (const [name, selector] of Object.entries(CONTACT_FIELDS)) {
-        const input = s.page.locator(selector);
-        if (await input.count() === 1) fields.push({ name, value: await input.inputValue(), rect: await input.boundingBox() });
-      }
-    }
+    const fields = contact && this.prepare ? await s.page.evaluate(selectors => {
+      return Object.entries(selectors).flatMap(([name, selector]) => {
+        const inputs = [...document.querySelectorAll(selector.replace(':visible',''))].filter(el => el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden');
+        if (inputs.length !== 1) return [];
+        const input = inputs[0], rect = input.getBoundingClientRect();
+        return [{name,value:input.value,rect:{x:rect.x,y:rect.y,width:rect.width,height:rect.height}}];
+      });
+    }, CONTACT_FIELDS) : [];
     const review = await s.page.getByRole('heading', { name: 'Kontrollera din bokning', exact: true }).isVisible();
     const details = this.live ? await this.bookingDetails(s) : null;
     const text = (await s.page.locator('body').innerText()).slice(0, 16_000);
@@ -203,10 +204,13 @@ export class BokabordMirror {
         s.armed = false;
       } else if (action.type === 'fill') {
         if (!await s.page.getByRole('heading', { name: 'Kontaktuppgifter', exact: true }).isVisible()) throw new MirrorError('contact_required');
-        const selector = CONTACT_FIELDS[action.field];
-        if (!selector || typeof action.value !== 'string' || action.value.length > 300) throw new MirrorError('field');
-        await s.page.locator(selector).fill(action.value);
-        await s.page.locator(selector).blur();
+        const entries = action.fields && typeof action.fields === 'object' && !Array.isArray(action.fields) ? Object.entries(action.fields) : [[action.field, action.value]];
+        if (!entries.length || entries.length > 5 || entries.some(([field,value]) => !Object.hasOwn(CONTACT_FIELDS,field) || typeof value !== 'string' || value.length > 300)) throw new MirrorError('field');
+        for (const [field,value] of entries) {
+          const input = s.page.locator(CONTACT_FIELDS[field]);
+          await input.fill(value);
+          await input.blur();
+        }
       } else if (action.type === 'click') {
         if (await s.page.getByRole('heading', { name: 'Kontaktuppgifter', exact: true }).isVisible()) throw new MirrorError('contact_stop', 409);
         const { x, y } = action;

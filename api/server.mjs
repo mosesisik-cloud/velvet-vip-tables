@@ -1937,6 +1937,15 @@ const server = http.createServer(async (req, res) => {
         if (req.method === "POST" && url.pathname === "/restaurant-bookings/mirror/current") return send(res, 200, bokabordMirror.current(owner), { "Cache-Control": "no-store" });
         if (req.method === "POST" && url.pathname === "/restaurant-bookings/mirror") {
           const b = await readBody(req, 4096);
+          if (b.resume === true) {
+            let current;
+            try { current = bokabordMirror.current(owner); }
+            catch (error) { if (error.message !== 'session_expired') throw error; }
+            if (current?.image) {
+              if (current.restaurantId !== b.restaurantId) return send(res, 409, {error:'other_restaurant'});
+              return send(res, 200, current, {"Cache-Control":"no-store"});
+            }
+          }
           return send(res, 201, await bokabordMirror.create(owner, b.restaurantId, b.width), { "Cache-Control": "no-store" });
         }
         const match = url.pathname.match(/^\/restaurant-bookings\/mirror\/([a-f0-9-]{36})(\/action)?$/);
