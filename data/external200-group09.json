@@ -120,6 +120,11 @@
           "blocker": "Historicaloperator brand changes Genuine Pizza/Harrys do not identify catalog branch. Need explicit branch continuity; no replacement restaurant link assigned.",
           "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
         }
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -227,6 +232,11 @@
           "blocker": "Indexed Spanish site/2022guide corroborate 3105 Commodore but currentroot unrelated content previously observed. Visa gives only phone referral. Need current verified operator domain.",
           "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
         }
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -284,6 +294,11 @@
           "blocker": "Municipal 2019record anchors Miller Coral Gables to 101 Miracle Mile. Restaurantji saysclosed; officialbranch URL 404. Historicalmunicipal evidence not currentclosure authority; retain unresolved.",
           "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
         }
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -341,6 +356,11 @@
           "blocker": "Official Montys Raw Bar gives 2550 SBayshore Miami, while Sunset official is 300 Alton Miami Beach. Genericcatalog no branch; no specific booking form on Raw Bar homepage.",
           "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
         }
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -403,6 +423,11 @@
           "blocker": "Coconut Grove BID identifies Hotel Arya(former Sonesta) at 2889 Mc Farlane and Panorama restaurant. Current operator booking route remains unverified; hotel room engine excluded.",
           "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
         }
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -460,6 +485,11 @@
           "blocker": "Operator-linkedpoke 305.com returns 403; no bypass attempted. Grove address candidate exists but Clover generic homepage remains unsuitable for table booking.",
           "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
         }
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {

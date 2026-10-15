@@ -448,6 +448,11 @@
         "checkedAt": "2026-10-16",
         "query": "Piccollo Piccolo Kennedy Town official",
         "result": "Official TrattoriaPiccolo explains PiccoloPizzeria DavisStreet2011 relocated after10years to41CadoganStreet. Source misspelling and missing street anchor still prevent safe ID-to-current-venue mapping; generic contact not reservation proof."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {

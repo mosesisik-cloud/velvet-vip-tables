@@ -159,6 +159,11 @@
         "checkedAt": "2026-10-16",
         "query": "Furley bookings@furleys",
         "result": "Claimed Tripadvisor lists bookings@furleys.co.za and 1 Dean St. Ordinary Chromium visit to furleys.co.za returned unrelated Tubidy music site (HTTP200); old domain/email cannot be treated as current restaurant authority."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -212,6 +217,11 @@
         "checkedAt": "2026-10-16",
         "query": "Gogi cpt_gogi reservations",
         "result": "Secondary article links @cpt_gogi and Shop8 1DeanStreet; official Instagram fetch failed. Other material mentions Observatory too; identity/branch and current reservation route need confirmation."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -316,6 +326,11 @@
         "checkedAt": "2026-10-16",
         "query": "Kobe Sushi official Newlands Plumstead",
         "result": "Official operator lists Newlands and Plumstead food-ordering branches. Generic source record cannot choose branch; food ordering is not table booking."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -623,6 +638,11 @@
         "checkedAt": "2026-10-16",
         "query": "Abd el Wahab Dubai official reservations",
         "result": "Official/landlord SoukAlBahar candidate remains distinct from other Dubai outlets. Source record lacks branch anchor."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -729,6 +749,11 @@
         "checkedAt": "2026-10-16",
         "query": "Al Hallab reservations Dubai official",
         "result": "Official links page supplies four serVme forms. DubaiMall oid1452, Garhoud1454, MOE1679; source record cannot choose branch, so do not activate any."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -974,6 +999,11 @@
         "checkedAt": "2026-10-16",
         "query": "Karam Beirut Dubai official branches booking",
         "result": "DubaiMall landlord confirms LowerGroundFloor candidate but chain has other Dubai branches; no source branch anchor."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {

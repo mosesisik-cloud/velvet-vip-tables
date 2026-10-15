@@ -71,7 +71,12 @@
       "remainingBlockers": [
         "Resolve central/Aspat/Turgutreis branch and official delegation to provider378."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
+      }
     },
     {
       "restaurantId": "osm-BDR-harem",
@@ -536,7 +541,12 @@
       "remainingBlockers": [
         "Recover readable operator channel; third-party listing is insufficient authority for request submission."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
+      }
     },
     {
       "restaurantId": "osm-BDR-musto-bistro",
@@ -691,7 +701,12 @@
       "remainingBlockers": [
         "Resolve central versus Islamhaneleri and retrieve current operator booking authority."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
+      }
     },
     {
       "restaurantId": "osm-BDR-nokta-sebzeli-bodrum-doneri",
@@ -821,7 +836,12 @@
       "remainingBlockers": [
         "Confirm typo match and operator channel when publicly readable; access block not bypassed."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
+      }
     },
     {
       "restaurantId": "osm-BDR-rasit-in-yeri",
@@ -1207,7 +1227,12 @@
       "remainingBlockers": [
         "Confirm table reservation policy with operator source; do not use inactive intermediary form."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
+      }
     },
     {
       "restaurantId": "osm-BDR-yelken-bal-k",

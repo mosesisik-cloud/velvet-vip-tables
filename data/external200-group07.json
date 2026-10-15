@@ -121,6 +121,11 @@
           "blocker": "Operator link-in-bio identifies One Chun on Thepkasattri Road. Michelin lists 48/1 and direct contact, while a secondary guide claims walk-in only. Official Instagram fetch failed; need operator reservation policy before classifying phone/walk-in.",
           "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
         }
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -361,6 +366,11 @@
           "blocker": "Wongnai merchant-labelled OFFICIAL candidate Xorin Old Town gives 42 Talat Yai and+66873962925, but operator site and conflicting earlier phone remain unresolved. Do not promote merchant-label alone to verified booking.",
           "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
         }
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
