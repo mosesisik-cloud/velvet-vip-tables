@@ -1,0 +1,52 @@
+{
+  "restaurantId": "curated-AMF-rossellinis",
+  "issue": 51,
+  "agent": "kimi-01",
+  "checkedAt": "2026-10-16",
+  "status": "ready_for_review",
+  "identity": {
+    "name": "Rossellinis",
+    "address": "Palazzo Avino, Via San Giovanni del Toro 28, 84010 Ravello (SA), Italy",
+    "city": "Ravello (Amalfi Coast)",
+    "officialWebsite": "https://www.palazzoavino.com/en/dining/rossellinis-restaurant/",
+    "operatingStatus": "operating (seasonal; third-party sources indicate approx. mid-March to early November, dinner only - not confirmed on official page)",
+    "sources": [
+      "https://www.palazzoavino.com/en/dining/rossellinis-restaurant/ (official restaurant page, fetched 2026-10-16)",
+      "https://www.palazzoavino.com/contact/ (official contact page: address, T +39 089 81 81 81, info@palazzoavino.com, fetched 2026-10-16)",
+      "https://guide.michelin.com/us/en/campania/ravello/restaurant/rossellinis (cross-check; notes the restaurant manages its own bookings)"
+    ],
+    "duplicates": "No duplicate catalog ID for this physical restaurant (searched worklist for 'rossellini'/'avino')."
+  },
+  "bookingRoute": {
+    "category": "E - verified manual booking route (no online table-booking engine found on official site)",
+    "provider": null,
+    "observed": "Official restaurant page and dining index contain no table-booking widget or provider link; the only 'Book now' link is the hotel room engine (be.synxis.com, chain=24447 hotel=6894) which books rooms, not restaurant tables. Official contact page lists phone and email. Michelin Guide states the establishment manages its own bookings.",
+    "manualRoutes": {
+      "phone": "+39 089 818181 (Palazzo Avino switchboard, official contact page)",
+      "email": "info@palazzoavino.com (official contact page)"
+    },
+    "availability": "unknown",
+    "note": "Do not map the SynXis hotel-room engine as a restaurant booking route."
+  },
+  "proposedRegistryRecord": null,
+  "proposedWorklistNote": "bookingRoute: verified_manual_route; phone +39 089 818181; email info@palazzoavino.com; no online table-booking provider on official site (checked 2026-10-16).",
+  "tests": {
+    "performed": [
+      "Official restaurant page + dining index + contact page fetched and all links inventoried - no table-booking engine found",
+      "Official contact details verified (address, phone, email) - pass",
+      "Duplicate search in worklist - no duplicate",
+      "Identity cross-check vs Michelin Guide - pass"
+    ],
+    "notPerformed": [
+      "No phone/email test contact made (no messages to restaurants allowed)",
+      "No app runtime test (scoped evidence fragment only)"
+    ],
+    "basis": "remote_official_sources_and_readonly_gets"
+  },
+  "limitations": [
+    "Season dates from third-party sources only; not confirmed on official page",
+    "A restaurant-specific booking email may exist but was not published on the checked pages"
+  ],
+  "nextStep": "Integrator reviews and consolidates the manual-route status into data/restaurant-worklist.json. No registry record proposed.",
+  "publication": "not_published"
+}
