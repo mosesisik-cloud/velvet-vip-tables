@@ -8,7 +8,7 @@
     "source": "https://www.amazonicorestaurant.com/monte-carlo/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Amazónico Monte-Carlo",
+    "providerTitle": "Reservation at AmazÃ³nico Monte-Carlo",
     "integrationMode": "native_embed"
   },
   "osm-BAL-yuki-canggu": {
@@ -97,14 +97,14 @@
   },
   "curated-STO-strandvagen-1": {
     "provider": "SevenRooms",
-    "name": "Strandvägen 1",
+    "name": "StrandvÃ¤gen 1",
     "city": "Stockholm",
     "venueId": "strandvagen1",
     "url": "https://www.sevenrooms.com/explore/strandvagen1/reservations/create/search/",
     "source": "https://strandvagen1.se/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Strandvägen 1",
+    "providerTitle": "Reservation at StrandvÃ¤gen 1",
     "integrationMode": "native_embed"
   },
   "curated-STO-strandbryggan": {
@@ -193,14 +193,14 @@
   },
   "curated-LAS-joel-robuchon-las-vegas": {
     "provider": "SevenRooms",
-    "name": "Joël Robuchon Las Vegas",
+    "name": "JoÃ«l Robuchon Las Vegas",
     "city": "Las Vegas",
     "venueId": "jolrobuchonmgmgrand",
     "url": "https://www.sevenrooms.com/reservations/jolrobuchonmgmgrand",
     "source": "https://jrobuchon.com/our_locations/restaurant-de-joel-robuchon-las-vegas/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Joël Robuchon",
+    "providerTitle": "Reservation at JoÃ«l Robuchon",
     "integrationMode": "native_embed"
   },
   "curated-LAS-spago-las-vegas": {
@@ -272,7 +272,7 @@
     "source": "https://www.ducasse-paris.com/en/addresses/le-louis-xv-alain-ducasse-a-lhotel-de-paris/",
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Reservation at Le Louis XV - Alain Ducasse à l'Hôtel de Paris",
+    "providerTitle": "Reservation at Le Louis XV - Alain Ducasse Ã  l'HÃ´tel de Paris",
     "integrationMode": "native_embed"
   },
   "curated-BDR-zuma-bodrum": {
@@ -444,7 +444,7 @@
     "checkedAt": "2026-10-15",
     "integrationMode": "external_link",
     "verification": "provider_page_loaded",
-    "providerTitle": "SALAMA Saint-Tropez - Réservation en ligne",
+    "providerTitle": "SALAMA Saint-Tropez - RÃ©servation en ligne",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported",
     "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
@@ -497,14 +497,14 @@
   },
   "osm-BAL-sazon": {
     "provider": "TableCheck",
-    "name": "Sazón",
+    "name": "SazÃ³n",
     "city": "Bali",
     "url": "https://www.tablecheck.com/en/regent-bali-canggu-sazon/reserve",
     "source": "https://sazonbali.com/",
     "checkedAt": "2026-10-15",
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Sazón - Regent Bali Canggu - TableCheck",
+    "providerTitle": "SazÃ³n - Regent Bali Canggu - TableCheck",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported",
     "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
@@ -624,7 +624,7 @@
     "checkedAt": "2026-10-15",
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Booking at La Paloma Ibiza, Sant Llorenç de Balàfia.",
+    "providerTitle": "Booking at La Paloma Ibiza, Sant LlorenÃ§ de BalÃ fia.",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported",
     "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
@@ -654,7 +654,7 @@
     "checkedAt": "2026-10-15",
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Sorn ศรณ์ - TableCheck",
+    "providerTitle": "Sorn à¸¨à¸£à¸“à¹Œ - TableCheck",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported",
     "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
@@ -662,7 +662,7 @@
   },
   "curated-BAL-aperitif-restaurant": {
     "provider": "ResDiary / Dish Cult",
-    "name": "Apéritif Restaurant",
+    "name": "ApÃ©ritif Restaurant",
     "city": "Bali",
     "url": "https://booking.resdiary.com/widget/Standard/aperitifbali/12124",
     "source": "https://www.aperitif.com/reservations/",
@@ -737,14 +737,14 @@
   },
   "osm-PAR-le-cafe-de-la-paix": {
     "provider": "Zenchef",
-    "name": "Le Café de la Paix",
+    "name": "Le CafÃ© de la Paix",
     "city": "Paris",
     "url": "https://bookings.zenchef.com/results?rid=352690&fullscreen=1&lang=fr",
     "source": "https://www.cafedelapaix.fr/fr/",
     "checkedAt": "2026-10-15",
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Café de la Paix - Réservation en ligne",
+    "providerTitle": "CafÃ© de la Paix - RÃ©servation en ligne",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported",
     "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
@@ -774,7 +774,7 @@
     "checkedAt": "2026-10-15",
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Réservez une table chez La Source avec Eat App • Eat App",
+    "providerTitle": "RÃ©servez une table chez La Source avec Eat App â€¢ Eat App",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported",
     "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
@@ -834,7 +834,7 @@
     "checkedAt": "2026-10-15",
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
-    "providerTitle": "Au Caprice des Deux - Restaurant Bistronomique à Saint-Tropez - Réservation en ligne",
+    "providerTitle": "Au Caprice des Deux - Restaurant Bistronomique Ã  Saint-Tropez - RÃ©servation en ligne",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported",
     "notes": "Read-only test; no reservation, hold, card entry or payment tested.",
@@ -842,7 +842,7 @@
   },
   "curated-IBZ-lio-ibiza": {
     "provider": "CoverManager",
-    "name": "Lío Ibiza",
+    "name": "LÃ­o Ibiza",
     "city": "Ibiza",
     "url": "https://www.covermanager.com/reservation/module_restaurant/lio-ibiza/english?timefix=20:30&hour=20:30",
     "source": "https://www.liogroup.com/ibiza/reservations",
@@ -1035,7 +1035,7 @@
   },
   "osm-MRB-zozoi": {
     "provider": "SevenRooms",
-    "name": "Zozoï",
+    "name": "ZozoÃ¯",
     "city": "Marbella",
     "url": "https://www.sevenrooms.com/reservations/restaurantezozoi",
     "source": "https://zozoi.com/es/reserva-3/",
@@ -1131,7 +1131,7 @@
     }
   },
   "curated-TYO-florilege": {
-    "name": "Florilège",
+    "name": "FlorilÃ¨ge",
     "city": "Tokyo",
     "provider": "TableCheck",
     "url": "https://www.tablecheck.com/shops/florilege/reserve",
@@ -1163,11 +1163,17 @@
     "url": "https://calendar.dineplan.com/m0w4SxVp?type=inline",
     "source": "https://salsify.co.za/reservations/",
     "venueKey": "calendar.dineplan.com/m0w4SxVp",
-    "integrationMode": "native_embed",
-    "verification": "embedded_form_loaded",
+    "integrationMode": "external_link",
+    "verification": "provider_page_loaded",
     "checkedAt": "2026-10-15",
     "liveAvailabilitySupported": false,
-    "completionTracking": "unsupported"
+    "completionTracking": "unsupported",
+    "note": "2026-10-15: Standalone guest/date flow verified; embedded guest selection failed cross-site. Use original booking page. No reservation completed.",
+    "cancellationPolicy": {
+      "summary": "Deposition: 1 000 ZAR per person, att betala inom 24 timmar efter preliminär bokning. Annars avbokas bokningen automatiskt. Avbokning eller ändring minst 24 timmar före besöket ger full återbetalning. Vid senare avbokning eller uteblivet besök förverkas depositionen, med möjlighet till undantag enligt restaurangens bedömning. Om gruppen blir mindre förverkas depositionen för de borttagna gästerna.",
+      "source": "https://salsify.co.za/reservations/",
+      "checkedAt": "2026-10-15"
+    }
   },
   "curated-CPT-la-colombe": {
     "name": "La Colombe",

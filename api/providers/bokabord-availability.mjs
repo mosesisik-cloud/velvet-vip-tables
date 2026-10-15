@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import { BookingAssetCache } from '../booking-asset-cache.mjs';
 import { allowedRequest, providerReady } from '../bokabord-mirror.mjs';
 const registryDefault=JSON.parse(fs.readFileSync(new URL('../bokabord-restaurants.json',import.meta.url),'utf8'));
+// Gift cards share meal-attrs styling but invoke selectGiftcard, never selectMeal.
+export const BOKABORD_MEAL_SELECTOR = 'li[ng-click^="selectMeal("] .meal-attrs';
 const validTime=t=>/^([01]\d|2[0-3]):[0-5]\d$/.test(t);
 const minutes=t=>Number(t.slice(0,2))*60+Number(t.slice(3,5));
 export function selectBookableTimes(rows,targetTime){
@@ -44,19 +46,19 @@ export class BokabordAvailability {
     await context.route('**/*',r=>{const request=r.request();if(!allowedAvailabilityRequest(request.method(),request.url())){if(/saveBooking|payment|checkout|confirm|temp.*booking/i.test(new URL(request.url()).pathname))blockedMutation=true;return r.abort();}return this.assets.handle(r);});
     const page=await context.newPage();page.on?.('response',response=>{this.assets.capture(response).catch(()=>{});});page.setDefaultTimeout(5000);page.setDefaultNavigationTimeout(10000);
     await page.goto(venue.url,{waitUntil:'domcontentloaded'});await page.waitForFunction(providerReady,null,{timeout:6000});
-    const meals=await page.locator('.meal-attrs h3:visible').allTextContents();if(!meals.length||meals.length>40)throw Error('unsupported_meals');totalMeals=meals.length;const prefer=Number(q.time.slice(0,2))>=16?/middag|dinner|set menu/i:/lunch|brunch/i;meals.sort((a,b)=>Number(prefer.test(b))-Number(prefer.test(a)));
+    const meals=await page.locator(BOKABORD_MEAL_SELECTOR+' h3:visible').allTextContents();if(!meals.length||meals.length>40)throw Error('unsupported_meals');totalMeals=meals.length;const prefer=Number(q.time.slice(0,2))>=16?/middag|dinner|set menu/i:/lunch|brunch/i;meals.sort((a,b)=>Number(prefer.test(b))-Number(prefer.test(a)));
     for(let index=0;index<meals.length;index++){try{
      if(index){
       // The public back control preserves the original page and its loaded assets.
       // Never synthesize provider scope changes or navigate a guessed endpoint.
-      for(let back=0;back<4&&!await page.locator('.meal-attrs h3:visible').count();back++){
+      for(let back=0;back<4&&!await page.locator(BOKABORD_MEAL_SELECTOR+' h3:visible').count();back++){
        const control=page.locator('a.go-back-btn:visible');if(!await control.count())break;
        await control.first().click();await page.waitForFunction(providerReady,null,{timeout:6000});
        await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
       }
-      if(!await page.locator('.meal-attrs h3:visible').count()){await page.goto(venue.url,{waitUntil:'domcontentloaded'});await page.waitForFunction(providerReady,null,{timeout:6000});}
+      if(!await page.locator(BOKABORD_MEAL_SELECTOR+' h3:visible').count()){await page.goto(venue.url,{waitUntil:'domcontentloaded'});await page.waitForFunction(providerReady,null,{timeout:6000});}
      }
-     await page.locator('.meal-attrs').getByRole('heading',{name:meals[index].trim(),exact:true}).click();
+     await page.locator(BOKABORD_MEAL_SELECTOR).getByRole('heading',{name:meals[index].trim(),exact:true}).click();
      const amount=page.locator('li[ng-click="selectAmount(amount)"]').filter({hasText:new RegExp('^\\s*'+Number(q.party)+'\\s')});
      await amount.first().waitFor();await amount.first().click();await page.waitForFunction(providerReady,null,{timeout:6000});
      const month=new Intl.DateTimeFormat('sv-SE',{month:'long',year:'numeric',timeZone:'UTC'}).format(parsed);

@@ -13,8 +13,8 @@ for (const [id, row] of Object.entries(registry)) {
 }
 const dineplan = registry['curated-CPT-salsify-at-the-roundhouse'];
 assert.ok(resolveEmbeddedBooking(registry, 'curated-CPT-salsify-at-the-roundhouse'));
-assert.equal(resolveEmbeddedBooking({other: dineplan}, 'other'), null, 'Dineplan embedding is reviewed only for Salsify');
-for (const id of ['curated-CPT-fyn', 'curated-CPT-la-colombe']) {
+assert.equal(resolveEmbeddedBooking(registry, 'curated-CPT-salsify-at-the-roundhouse').integrationMode, 'external_link');
+for (const id of ['curated-CPT-salsify-at-the-roundhouse', 'curated-CPT-fyn', 'curated-CPT-la-colombe']) {
   assert.equal(resolveEmbeddedBooking({[id]: {...registry[id], integrationMode:'native_embed', verification:'embedded_form_loaded'}}, id), null, 'Other Dineplan hosts remain external even if verification flag is altered');
 }
 const row = Object.values(registry)[0];
@@ -29,8 +29,8 @@ for (const url of [
 assert.equal(resolveEmbeddedBooking(registry, 'not-reviewed'), null);
 assert.equal(resolveEmbeddedBooking(registry, '__proto__'), null);
 assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 30);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 48);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 37);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 47);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 38);
 for (const original of Object.values(registry).filter(row => row.provider !== 'SevenRooms')) {
   const wrongVenue = new URL(original.url); wrongVenue.pathname += '/wrong-restaurant';
   const wrongHost = new URL(original.url); wrongHost.hostname += '.evil.example';
