@@ -1,8 +1,10 @@
+import { restaurantCopy } from './restaurant-copy.js?v=175';
 import { primarySection, isDiscoveryList, safeDiscoveryReturn } from './navigation-state.js';
+import { authOptions, authCopy } from './auth-options.js';
 import { parseBookingSelection, withBookingSelection } from './booking-selection.js';
 import { mountBookingReport } from './booking-report.js';
-import { uxT } from './ux-copy.js?v=174';
-import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo, resolveAuthReturn } from './ux-booking.js?v=174';
+import { uxT } from './ux-copy.js?v=175';
+import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo, resolveAuthReturn, joinResponse } from './ux-booking.js?v=175';
 import { mountAvailabilitySearch } from './availability-search.js?v=174';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
 import { mountBokabordMirror } from "./bokabord-mirror.js";
@@ -818,7 +820,66 @@ const SOCIALS = [
   { id: "snapchat", label: "Snapchat", icon: "https://cdn.simpleicons.org/snapchat/111111" },
 ];
 function socialCompactButton(s, attr) {
-  return `<button type="button" class="social-btn social-btn-compact" ${attr}="${s.id}" aria-label="Fortsätt med ${esc(s.label)}" title="${esc(s.label)}"><span class="social-logo-tile social-logo-${esc(s.id)}"><img src="${esc(s.icon)}" alt="" aria-hidden="true"></span><span>${esc(s.label)}</span></button>`;
+  return `<button type="button" class="social-btn social-btn-compact" ${attr}="${s.id}" aria-label="${esc(authCopy('continueWith', currentLang()).replace('{provider}', s.label))}" title="${esc(s.label)}"><span class="social-logo-tile social-logo-${esc(s.id)}"><img src="${esc(s.icon)}" alt="" aria-hidden="true"></span><span>${esc(s.label)}</span></button>`;
+}
+function mountAuthChoices(root, { onPasskey = () => {} } = {}) {
+  if (!root) return;
+  const environment = { hostname: location.hostname, secureContext: window.isSecureContext === true,
+    publicKeyCredential: !!window.PublicKeyCredential, credentials: !!navigator.credentials };
+  const text = key => authCopy(key, currentLang());
+  const capability = authOptions(null, environment);
+  root.innerHTML = `<p>${esc(text('intro'))}</p>
+    ${capability.passkey ? `<button type="button" class="btn btn-gold phone-login" data-auth-passkey>${esc(text('passkey'))}</button><p class="stepper-hint">${esc(text('passkeyHint'))}</p>` : `<p class="stepper-hint">${esc(text(capability.passkeyReason))}</p>`}
+    <div data-auth-providers></div><p data-auth-error role="alert"></p>`;
+  const providers = root.querySelector('[data-auth-providers]');
+  const error = root.querySelector('[data-auth-error]');
+  let revision = 0;
+  let busy = false;
+  const refresh = async () => {
+    const request = ++revision;
+    const restore = providers.contains(document.activeElement);
+    providers.innerHTML = `<p role="status">${esc(text('loading'))}</p>`;
+    error.textContent = '';
+    let timer;
+    const config = await Promise.race([
+      apiJSON('/pay/config').catch(() => null),
+      new Promise(resolve => { timer = setTimeout(() => resolve(null), 5000); }),
+    ]);
+    clearTimeout(timer);
+    if (!root.isConnected || request !== revision) return;
+    const options = authOptions(config, environment);
+    providers.innerHTML = options.providerState === 'error'
+      ? `<p role="status">${esc(text('error'))}</p><button type="button" class="btn btn-ghost" data-auth-retry>${esc(text('retry'))}</button>`
+      : options.providers.length
+        ? `<div class="social-grid social-grid-onetap">${SOCIALS.filter(s => options.providers.includes(s.id)).map(s => socialCompactButton(s, 'data-auth-provider')).join('')}</div>`
+        : `<p role="status">${esc(text('empty'))}</p><button type="button" class="btn btn-ghost" data-auth-retry>${esc(text('retry'))}</button>`;
+    if (busy) providers.querySelectorAll('button').forEach(button => { button.disabled = true; });
+    if (restore) providers.querySelector('button')?.focus();
+  };
+  root.addEventListener('click', async event => {
+    const button = event.target.closest('button');
+    if (!button || !root.contains(button) || busy) return;
+    if (button.hasAttribute('data-auth-retry')) { refresh(); return; }
+    if (!button.hasAttribute('data-auth-provider') && !button.hasAttribute('data-auth-passkey')) return;
+    busy = true;
+    error.textContent = '';
+    root.querySelectorAll('button').forEach(el => { el.disabled = true; });
+    try {
+      if (button.hasAttribute('data-auth-passkey')) {
+        if (await loginWithPasskey()) { onPasskey(); return; }
+      } else {
+        const result = await loginWithSocial(button.dataset.authProvider);
+        if (result?.oauth) return;
+      }
+      if (root.isConnected) error.textContent = text('failed');
+    } catch {
+      if (root.isConnected) error.textContent = text('failed');
+    } finally {
+      busy = false;
+      root.querySelectorAll('button').forEach(el => { el.disabled = false; });
+    }
+  });
+  refresh();
 }
 let userMem = null;
 function loadUser() {
@@ -1215,10 +1276,8 @@ async function joinOpenTable(id, hint) {
         body: JSON.stringify({ user: u }),
       });
       const data = await r.json().catch(() => ({}));
-      if (r.status === 403) return { error: data.error || "idv_required", openFor: data.openFor, minAge: data.minAge, ageYears: data.ageYears };
-      if (r.status === 409) return { error: "full" };
-      if (data.table) return { table: data.table, already: data.already };
-    } catch {}
+      return joinResponse(r.status, data, id);
+    } catch { return {error:'unavailable'}; }
   }
   const list = loadLocalTables();
   const tb = list.find((x) => x.id === id);
@@ -1238,6 +1297,19 @@ async function joinOpenTable(id, hint) {
   if (tb.openLeft === 0) tb.status = "full";
   saveLocalTables(list);
   return { table: decorateLocalTable(tb) };
+}
+
+function handleJoinFailure(result, returnTo, venue, button) {
+  if (result?.table) return false;
+  if (button) button.disabled = false;
+  const error = result?.error;
+  if (error === 'auth') openOnboarding({dismissable:true,phase:'auth',returnTo});
+  else if (error === 'idv_required' || error === 'card_required') {
+    rememberAfterIdv(returnTo); location.hash = error === 'card_required' ? '#/card' : '#/verify';
+  } else if (error === 'too_young') showToast(tooYoungText(result,venue));
+  else if (error === 'seat_pref') showToast(t('seatPref').replace('{who}',openForLabel(result.openFor).toLowerCase()));
+  else showToast(uxT(error === 'full' ? 'joinFull' : error === 'missing' ? 'joinMissing' : 'joinUnavailable'));
+  return true;
 }
 
 function decorateLocalTable(tb) {
@@ -2399,9 +2471,10 @@ async function mountDestinationRestaurants(d) {
 }
 
 async function renderRestaurantDetail(placeId) {
+  const rt = restaurantCopy(currentLang());
   const restaurantRoute = location.hash;
-  setTitle("Restaurang");
-  view().innerHTML = `<section class="section"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm"></span> Laddar restaurang…</p></section>`;
+  setTitle(rt("restaurant"));
+  view().innerHTML = `<section class="section"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm"></span> ${esc(rt("loading"))}</p></section>`;
   let data = null;
   try { const response = await fetch("data/restaurants.json", { cache: "no-store" }); if (response.ok) data = await response.json(); } catch {}
   let restaurant = null;
@@ -2414,7 +2487,7 @@ async function renderRestaurantDetail(placeId) {
   const embeddedBooking = restaurant ? withBookingSelection(await getEmbeddedBooking(restaurant.placeId), bookingSelection) : null;
   if (location.hash !== restaurantRoute) return;
   if (!restaurant || (!hasVerifiedRestaurantImages(restaurant) && !embeddedBooking)) {
-    view().innerHTML = `<section class="section"><div class="empty-state"><h1>Restaurangen hittades inte</h1><p><a class="btn btn-gold" href="#/restaurants" data-nav>Till restauranger</a></p></div></section>`;
+    view().innerHTML = `<section class="section"><div class="empty-state"><h1>${esc(rt("notFound"))}</h1><p><a class="btn btn-gold" href="#/restaurants" data-nav>${esc(rt("backRestaurants"))}</a></p></div></section>`;
     return;
   }
   setTitle(restaurant.name);
@@ -2423,13 +2496,9 @@ async function renderRestaurantDetail(placeId) {
   const socials = [["Instagram", restaurant.instagram], ["Facebook", restaurant.facebook], ["TikTok", restaurant.tiktok]].filter(([, url]) => /^https:\/\//i.test(url || ""));
   const directMenu = /^https:\/\//i.test(restaurant.menuUrl || "");
   const menuHref = directMenu ? restaurant.menuUrl : (/^https:\/\//i.test(restaurant.website || "") ? restaurant.website : restaurant.mapsUrl);
-  const menuViewHref = `#/menu/restaurant/${encodeURIComponent(restaurant.placeId)}`;
-  const menuLabel = directMenu ? "Öppna officiell meny" : (restaurant.website ? "Hitta menyn på officiella sidan" : "Meny och information på Google");
-  const menuNote = directMenu
-    ? "Verifierad länk till restaurangens egen meny. Rätter och priser kan ändras."
-    : restaurant.website
-      ? "Restaurangen har ännu ingen separat verifierad menylänk. Öppna deras egen sida för aktuell meny."
-      : "Ingen officiell webbmeny är verifierad ännu. VELVET hittar aldrig på rätter eller priser.";
+  const menuViewHref = `#/menu/restaurant/${encodeURIComponent(restaurant.placeId)}${bookingSelection ? '?' + new URLSearchParams(bookingSelection).toString() : ''}`;
+  const menuLabel = directMenu ? rt("menuOfficial") : (restaurant.website ? rt("menuWebsite") : rt("menuGoogle"));
+  const menuNote = directMenu ? rt("menuNoteOfficial") : restaurant.website ? rt("menuNoteWebsite") : rt("menuNoteMissing");
   const today = new Date().toISOString().slice(0, 10);
   const nextBookableDay = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
   const zinkPilot = restaurant.placeId === "curated-STO-zink-italian-cuisine" && restaurant.bookingProvider === "BokaBord" && restaurant.bookingUrl;
@@ -2441,44 +2510,51 @@ async function renderRestaurantDetail(placeId) {
     : mirrorConfig?.enabled && mirrorConfig.restaurantIds?.includes(restaurant.placeId)
     ? `<div id="bokabord-mirror"></div>`
     : zinkPilot
-    ? `<div class="restaurant-provider-intro"><span>01 · DATUM</span><i></i><span>02 · TID</span><i></i><span>03 · BEKRÄFTA</span></div>
-       <div class="webbridge-badge"><span aria-hidden="true">↔</span><div><strong>VELVET WebBridge</strong><small>Säker koppling till Zinks bokningssystem</small></div><b>PILOT</b></div>
+    ? `<div class="restaurant-provider-intro"><span>01 · ${esc(rt("date"))}</span><i></i><span>02 · ${esc(rt("time"))}</span><i></i><span>03 · ${esc(rt("confirm"))}</span></div>
+       <div class="webbridge-badge"><span aria-hidden="true">↔</span><div><strong>VELVET WebBridge</strong><small>${esc(rt("providerConnection"))}</small></div><b>PILOT</b></div>
        <form id="restaurant-webbridge-search" class="restaurant-book-form restaurant-provider-start">
-         <label>Datum<input name="date" type="date" min="${today}" value="${bookingSelection?.date >= today ? bookingSelection.date : nextBookableDay}" required></label>
-         <label>Antal gäster<select name="party" required>${Array.from({length: 8}, (_, i) => `<option value="${i + 1}" ${i + 1 === (bookingSelection?.party <= 8 ? bookingSelection.party : 2) ? "selected" : ""}>${i + 1} ${i ? "gäster" : "gäst"}</option>`).join("")}</select></label>
-         <button class="btn btn-gold btn-block restaurant-live-book" type="submit">Visa riktiga lediga tider</button>
+         <label>${esc(rt("date"))}<input name="date" type="date" min="${today}" value="${bookingSelection?.date >= today ? bookingSelection.date : nextBookableDay}" required></label>
+         <label>${esc(rt("guests"))}<select name="party" required>${Array.from({length: 8}, (_, i) => `<option value="${i + 1}" ${i + 1 === (bookingSelection?.party <= 8 ? bookingSelection.party : 2) ? "selected" : ""}>${i + 1} ${esc(rt(i ? "guestPlural" : "guest"))}</option>`).join("")}</select></label>
+         <button class="btn btn-gold btn-block restaurant-live-book" type="submit">${esc(rt("showTimes"))}</button>
        </form>
-       <p class="stepper-hint restaurant-live-note">Tider, gästuppgifter och bekräftelse visas direkt här. Ingen extern sida öppnas.</p>
+       <p class="stepper-hint restaurant-live-note">${esc(rt("inlineBooking"))}</p>
        <div id="restaurant-webbridge-result" aria-live="polite"></div>
-       ${restaurant.phone ? `<a class="restaurant-official-book" href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">Ring restaurangen: ${esc(restaurant.phone)}</a>` : ""}`
+       ${restaurant.phone ? `<a class="restaurant-official-book" href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">${esc(rt("callRestaurant", {phone: restaurant.phone}))}</a>` : ""}`
     : restaurant.bookingDirect && restaurant.bookingUrl
-    ? `<a class="btn btn-gold btn-block restaurant-live-book" href="${esc(restaurant.bookingUrl)}" target="_blank" rel="noopener">Boka hos ${esc(restaurant.name)} nu ↗</a>
-       <p class="stepper-hint restaurant-live-note">Du skickas till ${esc(restaurant.bookingProvider || "restaurangens bokningssystem")} där du ser lediga tider och får en riktig bokningsbekräftelse.</p>
-       ${restaurant.phone ? `<a class="restaurant-official-book" href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">Ring restaurangen: ${esc(restaurant.phone)}</a>` : ""}`
-    : `<form id="restaurant-book-form" class="restaurant-book-form"><label>Datum<input name="date" type="date" min="${today}" required></label><label>Tid<select name="time" required><option value="">Välj tid</option>${["17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00"].map((time) => `<option>${time}</option>`).join("")}</select></label><label>Antal gäster<select name="party" required>${Array.from({length: 12}, (_, i) => `<option value="${i + 1}">${i + 1} ${i ? "gäster" : "gäst"}</option>`).join("")}</select></label><label>Namn<input name="name" autocomplete="name" required></label><label>E-post<input name="email" type="email" autocomplete="email" required></label><label>Önskemål<textarea name="note" rows="3" placeholder="Allergier, barnstol eller annat"></textarea></label><button class="btn btn-gold btn-block" type="submit">Skicka bokningsförfrågan via VELVET</button>${restaurant.bookingUrl ? `<a class="restaurant-official-book" href="${esc(restaurant.bookingUrl)}" target="_blank" rel="noopener">Eller boka direkt hos restaurangen ↗</a>` : ""}</form><div id="restaurant-book-result" aria-live="polite"></div>`;
+    ? `<a class="btn btn-gold btn-block restaurant-live-book" href="${esc(restaurant.bookingUrl)}" target="_blank" rel="noopener">${esc(rt("bookAt", {name: restaurant.name}))} ↗</a>
+       <p class="stepper-hint restaurant-live-note">${esc(rt("externalBooking", {provider: restaurant.bookingProvider || rt("bookingSystem")}))}</p>
+       ${restaurant.phone ? `<a class="restaurant-official-book" href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">${esc(rt("callRestaurant", {phone: restaurant.phone}))}</a>` : ""}`
+    : `<form id="restaurant-book-form" class="restaurant-book-form"><label>${esc(rt("date"))}<input name="date" type="date" min="${today}" required></label><label>${esc(rt("time"))}<select name="time" required><option value="">${esc(rt("chooseTime"))}</option>${["17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00"].map((time) => `<option>${time}</option>`).join("")}</select></label><label>${esc(rt("guests"))}<select name="party" required>${Array.from({length: 12}, (_, i) => `<option value="${i + 1}">${i + 1} ${esc(rt(i ? "guestPlural" : "guest"))}</option>`).join("")}</select></label><label>${esc(rt("name"))}<input name="name" autocomplete="name" required></label><label>${esc(rt("email"))}<input name="email" type="email" autocomplete="email" required></label><label>${esc(rt("requests"))}<textarea name="note" rows="3" placeholder="${esc(rt("requestsPlaceholder"))}"></textarea></label><button class="btn btn-gold btn-block" type="submit">${esc(rt("sendRequest"))}</button>${restaurant.bookingUrl ? `<a class="restaurant-official-book" href="${esc(restaurant.bookingUrl)}" target="_blank" rel="noopener">${esc(rt("bookDirect"))} ↗</a>` : ""}</form><div id="restaurant-book-result" aria-live="polite"></div>`;
   view().innerHTML = `<section class="section restaurant-detail">
-    <a class="back-link" href="#/restaurants?dest=${encodeURIComponent(destination.code)}" data-nav>← Restauranger i ${esc(destination.destination)}</a>
+    <a class="back-link" href="#/restaurants?dest=${encodeURIComponent(destination.code)}" data-nav>← ${esc(rt("restaurantsIn", {name: destination.destination}))}</a>
     <div class="restaurant-detail-hero">
-      <div><div class="eyebrow">${esc(restaurant.cuisine || "Restaurang")}</div><h1>${esc(restaurant.name)}</h1><p class="restaurant-lead">${esc(restaurant.description || `Restaurang i ${destination.destination}.`)}</p>
-        <div class="restaurant-detail-actions"><button type="button" class="btn btn-gold" id="restaurant-book-jump" aria-controls="restaurant-booking-panel">${esc(uxT("jumpBooking"))}</button>${favBtnHTML(restaurantFavId(restaurant.placeId), restaurant.name)}${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuViewHref)}" data-nav>Meny</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">Karta ↗</a>` : ""}</div>
+      <div><div class="eyebrow">${esc(restaurant.cuisine || rt("restaurant"))}</div><h1>${esc(restaurant.name)}</h1><p class="restaurant-lead">${esc(restaurant.description || rt("restaurantIn", {name: destination.destination}))}</p>
+        <div class="restaurant-detail-actions"><button type="button" class="btn btn-gold" id="restaurant-book-jump" aria-controls="restaurant-booking-panel">${esc(uxT("jumpBooking"))}</button>${favBtnHTML(restaurantFavId(restaurant.placeId), restaurant.name)}${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">${esc(rt("website"))} ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuViewHref)}" data-nav>${esc(rt("menu"))}</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">${esc(rt("map"))} ↗</a>` : ""}</div>
       </div>
-      <div class="restaurant-detail-rating">${Number.isFinite(rating) && rating > 0 ? `<strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span><small>${esc(String(restaurant.reviewCount || 0))} recensioner · ${esc(restaurant.reviewSource || "Google")}</small>` : `<small>Inget verifierat betyg publicerat ännu</small>`}</div>
+      <div class="restaurant-detail-rating">${Number.isFinite(rating) && rating > 0 ? `<strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span><small>${esc(String(restaurant.reviewCount || 0))} ${esc(rt("reviews"))} · ${esc(restaurant.reviewSource || "Google")}</small>` : `<small>${esc(rt("noRating"))}</small>`}</div>
     </div>
-    ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} officiella bilder · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">källa ↗</a></div></div>` : `<div class="restaurant-detail-placeholder"><b aria-hidden="true">${esc(String(restaurant.name || "R").slice(0, 1).toUpperCase())}</b><span>${esc(restaurant.name)}</span><small>${esc(uxT("noRestaurantPhoto"))}</small></div>`}
+    ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} ${esc(rt("photos"))} · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">${esc(rt("source"))} ↗</a></div></div>` : `<div class="restaurant-detail-placeholder"><b aria-hidden="true">${esc(String(restaurant.name || "R").slice(0, 1).toUpperCase())}</b><span>${esc(restaurant.name)}</span><small>${esc(uxT("noRestaurantPhoto"))}</small></div>`}
     <div class="restaurant-detail-grid">
-      <div class="restaurant-detail-main">
-        <div class="detail-panel"><h2>Om restaurangen</h2><dl class="restaurant-facts">
-          <div><dt>Plats</dt><dd>${esc(restaurant.address || destination.destination)}</dd></div>
-          ${restaurant.cuisine ? `<div><dt>Kök</dt><dd>${esc(restaurant.cuisine)}</dd></div>` : ""}${restaurant.priceClass ? `<div><dt>Prisklass</dt><dd>${esc(restaurant.priceClass)}</dd></div>` : ""}${restaurant.openingHours ? `<div><dt>Öppettider</dt><dd>${esc(restaurant.openingHours)}</dd></div>` : ""}
-          ${restaurant.phone ? `<div><dt>Telefon</dt><dd><a href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">${esc(restaurant.phone)}</a></dd></div>` : ""}${restaurant.email ? `<div><dt>E-post</dt><dd><a href="mailto:${esc(restaurant.email)}">${esc(restaurant.email)}</a></dd></div>` : ""}
-        </dl></div>
-        <div class="detail-panel restaurant-menu-panel"><span class="eyebrow">Mat & dryck</span><h2>Meny</h2><p>${esc(menuNote)}</p>${menuHref ? `<a class="btn btn-gold" href="${esc(menuViewHref)}" data-nav>${esc(menuLabel)} i VELVET →</a>` : ""}</div>
-        <div class="detail-panel"><h2>Sociala medier & recensioner</h2><div class="restaurant-socials">${socials.length ? socials.map(([name, url]) => `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)} ↗</a>`).join("") : `<span class="events-meta">Inga verifierade sociala länkar ännu.</span>`}</div>${restaurant.reviewUrl ? `<p class="restaurant-review-link"><a class="link-gold" href="${esc(restaurant.reviewUrl)}" target="_blank" rel="noopener">Läs verifierade recensioner på ${esc(restaurant.reviewSource || "Google")} ↗</a></p>` : ""}</div>
-      </div>
       <aside class="detail-panel restaurant-book-panel" id="restaurant-booking-panel" aria-labelledby="restaurant-booking-heading"><span class="eyebrow">${esc(restaurant.name)}</span><h2 id="restaurant-booking-heading" tabindex="-1">${esc(uxT("jumpBooking"))}</h2>
         ${bookingSelection ? `<p class="booking-selection-summary">${esc(uxT('bookingChoice').replace('{date}',bookingSelection.date).replace('{time}',bookingSelection.time).replace('{party}',bookingSelection.party))}</p>` : ''}
+        <section class="booking-cancellation-notice" aria-label="${esc(rt("cancellation"))}">
+          <strong>${esc(rt("cancellation"))}</strong>
+          <p>${esc(rt("cancellationIntro"))}</p>
+          ${embeddedBooking?.cancellationPolicy ? `<p>${esc(embeddedBooking.cancellationPolicy.summary)}</p><p><a href="${esc(embeddedBooking.cancellationPolicy.source)}" target="_blank" rel="noopener noreferrer">${esc(rt("cancellationLink"))} ↗</a> · ${esc(rt("checkedPolicy", {date: embeddedBooking.cancellationPolicy.checkedAt}))}</p>` : `<p>${esc(rt("cancellationMissing"))}</p>`}
+        </section>
+
         ${bookingPanel}
       </aside>
+      <div class="restaurant-detail-main">
+        <div class="detail-panel"><h2>${esc(rt("about"))}</h2><dl class="restaurant-facts">
+          <div><dt>${esc(rt("location"))}</dt><dd>${esc(restaurant.address || destination.destination)}</dd></div>
+          ${restaurant.cuisine ? `<div><dt>${esc(rt("cuisine"))}</dt><dd>${esc(restaurant.cuisine)}</dd></div>` : ""}${restaurant.priceClass ? `<div><dt>${esc(rt("price"))}</dt><dd>${esc(restaurant.priceClass)}</dd></div>` : ""}${restaurant.openingHours ? `<div><dt>${esc(rt("hours"))}</dt><dd>${esc(restaurant.openingHours)}</dd></div>` : ""}
+          ${restaurant.phone ? `<div><dt>${esc(rt("phone"))}</dt><dd><a href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">${esc(restaurant.phone)}</a></dd></div>` : ""}${restaurant.email ? `<div><dt>${esc(rt("email"))}</dt><dd><a href="mailto:${esc(restaurant.email)}">${esc(restaurant.email)}</a></dd></div>` : ""}
+        </dl></div>
+        <div class="detail-panel restaurant-menu-panel"><span class="eyebrow">${esc(rt("food"))}</span><h2>${esc(rt("menu"))}</h2><p>${esc(menuNote)}</p>${menuHref ? `<a class="btn btn-gold" href="${esc(menuViewHref)}" data-nav>${esc(menuLabel)} →</a>` : ""}</div>
+        <div class="detail-panel"><h2>${esc(rt("socialReviews"))}</h2><div class="restaurant-socials">${socials.length ? socials.map(([name, url]) => `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)} ↗</a>`).join("") : `<span class="events-meta">${esc(rt("noSocial"))}</span>`}</div>${restaurant.reviewUrl ? `<p class="restaurant-review-link"><a class="link-gold" href="${esc(restaurant.reviewUrl)}" target="_blank" rel="noopener">${esc(rt("readReviews", {source: restaurant.reviewSource || "Google"}))} ↗</a></p>` : ""}</div>
+      </div>
+
     </div>
   </section>`;
   bindFavButtons(view());
@@ -2740,6 +2816,8 @@ function menuItemsHTML(items) {
 }
 
 async function renderMenuReader(kind, id) {
+  const menuRoute = location.hash;
+  const menuSelection = kind === "restaurant" ? parseBookingSelection(new URLSearchParams(menuRoute.split('?')[1] || '')) : null;
   setTitle("Meny");
   view().innerHTML = `<section class="section"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm"></span> Laddar officiell meny…</p></section>`;
   let name = "Stället";
@@ -2753,6 +2831,7 @@ async function renderMenuReader(kind, id) {
   if (kind === "restaurant") {
     let data = null;
     try { const response = await fetch("data/restaurants.json", { cache: "no-store" }); if (response.ok) data = await response.json(); } catch {}
+    if (location.hash !== menuRoute) return;
     let restaurant = null;
     for (const row of Object.values(data?.destinations || {})) {
       restaurant = (row.restaurants || []).find((item) => item.placeId === id);
@@ -2760,7 +2839,7 @@ async function renderMenuReader(kind, id) {
     }
     if (restaurant) {
       name = restaurant.name;
-      backHref = `#/restaurant/${encodeURIComponent(restaurant.placeId)}`;
+      backHref = `#/restaurant/${encodeURIComponent(restaurant.placeId)}${menuSelection ? '?' + new URLSearchParams(menuSelection).toString() : ''}`;
       const direct = RESTAURANT_MENUS[restaurant.placeId];
       if (direct && Array.isArray(direct.items) && direct.items.length) {
         items = direct.items.filter((item) => item && item.name);
@@ -4452,9 +4531,7 @@ function renderJoin(raw) {
       if (!loadUser()) { openOnboarding({ dismissable: false, phase: "auth" }); return; }
       joinBtn.disabled = true;
       const r = await joinOpenTable(inv.id, inv);
-      if (r.error === "auth") { openOnboarding({ dismissable: false, phase: "auth" }); return; }
-      if (r.error === "idv_required") { location.hash = "#/verify"; return; }
-      if (r.error === "too_young") { showToast(tooYoungText(r, v)); joinBtn.disabled = false; return; }
+      if (handleJoinFailure(r, location.hash, v, joinBtn)) return;
       if (!loadBookings().some((b) => b.id === inv.id)) {
         saveBookings([...loadBookings(), { ...inv, guests: [], joined: true, created: new Date().toISOString() }]);
       }
@@ -5144,13 +5221,7 @@ function openOnboarding(opts = {}) {
           </div>` : `
           <h1 class="ob-title">${esc(t("loginTitle"))}</h1>
           <p class="ob-sub">${esc(t("loginSub"))}</p>
-          <p class="one-tap-copy">${esc(socialTrustCopy().oneTapSub)}</p>
-          <p class="stepper-hint social-honesty auth-real-note">🔒 Riktig säker inloggning · VELVET sparar aldrig ditt lösenord</p>
-          <button type="button" class="btn btn-gold phone-login" id="ob-phone-login">Face ID / Touch ID / skärmlås</button>
-          <div class="social-grid social-grid-onetap">
-            ${SOCIALS.map((s) => socialCompactButton(s, "data-soc")).join("")}
-          </div>
-          <p class="stepper-hint social-honesty">🔒 ${esc(socialTrustCopy().explain)}</p>
+          <div id="ob-auth-choices"></div>
           <div class="ob-actions"><button class="btn btn-ghost" id="ob-skip-auth">${esc(dismissable && opts.returnTo ? "Avbryt – stanna på bokningen" : t("skipLogin"))}</button></div>
           `}
         </div>
@@ -5167,17 +5238,7 @@ function openOnboarding(opts = {}) {
           render();
         });
       });
-      root.querySelectorAll("[data-soc]").forEach((el) => {
-        el.addEventListener("click", async () => {
-          el.disabled = true;
-          let r = null;
-          try { r = await loginWithSocial(el.dataset.soc); }
-          catch (err) { console.warn("VELVET login", err); }
-          if (r?.oauth) return;
-          if (r?.unavailable) { showToast(socialTrustCopy().unavailable); el.disabled = false; return; }
-          el.disabled = false;
-        });
-      });
+      mountAuthChoices(root.querySelector('#ob-auth-choices'), { onPasskey: () => close(false) });
       const closeLang = $("#ob-close");
       if (closeLang) closeLang.addEventListener("click", () => { if (dismissable) close(); else skip(); });
       const skipA = $("#ob-skip-auth");
@@ -5191,7 +5252,6 @@ function openOnboarding(opts = {}) {
         phase = "country";
         render();
       });
-      $("#ob-phone-login")?.addEventListener("click", async () => { if (await loginWithPasskey()) close(false); });
       return;
     }
     const countries = countryList();
@@ -5511,11 +5571,7 @@ async function renderTable(id) {
     const btn = $("#party-join");
     if (btn) btn.disabled = true;
     const r = await joinOpenTable(tb.id, tb);
-    if (r.error === "auth") openOnboarding({ dismissable: false, phase: "auth" });
-    else if (r.error === "idv_required") { rememberAfterIdv(`#/table/${encodeURIComponent(tb.id)}`); location.hash = "#/verify"; }
-    else if (r.error === "too_young") { showToast(tooYoungText(r, VENUES.find((x) => x.venue_id === tb.venue_id))); if (btn) btn.disabled = false; }
-    else if (r.error === "seat_pref") { showToast(t("seatPref").replace("{who}", openForLabel(r.openFor || tb.openFor).toLowerCase())); if (btn) btn.disabled = false; }
-    else renderTable(id);
+    if (!handleJoinFailure(r, `#/table/${encodeURIComponent(tb.id)}`, VENUES.find(x=>x.venue_id===tb.venue_id), btn)) renderTable(id);
   });
   document.querySelectorAll("[data-pay], [data-pay-name]").forEach((btn) => {
     btn.addEventListener("click", async () => {
@@ -5622,6 +5678,7 @@ async function renderPay(tableId) {
       });
       btn.disabled = false;
       if (r?.mode === "redirect" && r.url) {
+        try { sessionStorage.setItem("velvet_payment_return", `#/table/${encodeURIComponent(tb.id)}`); } catch {}
         location.href = r.url;
         return;
       }
@@ -5644,16 +5701,21 @@ async function renderPay(tableId) {
             <button type="button" class="btn btn-ghost btn-sm" id="copy-ref">${esc(t("copyRef"))}</button>
           </p>
           <p style="margin-top:12px"><button type="button" class="btn btn-gold" id="pay-sent">${esc(t("payISent"))}</button></p>
-          <p class="stepper-hint">${esc(t("payAfterBank"))}</p>`;
+          <p class="stepper-hint">${esc(t("payAfterBank"))}</p><p id="bank-status" role="status" aria-live="polite"></p>`;
         $("#copy-iban")?.addEventListener("click", () => copyText(r.bank.iban));
         $("#copy-ref")?.addEventListener("click", () => copyText(r.bank.reference));
         $("#pay-sent")?.addEventListener("click", async () => {
+          const sentButton = document.getElementById('pay-sent');
+          const bankStatus = document.getElementById('bank-status');
+          if (sentButton) sentButton.disabled = true;
+          if (bankStatus) bankStatus.textContent = t('payChecking');
           const s = await apiJSON("/pay/sent", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ tableId: tb.id, user: me, amount, method: btn.dataset.method, reference: r.bank.reference }),
           });
           if (s?.ok) { showToast(t("payWait")); location.hash = `#/table/${encodeURIComponent(tb.id)}`; }
+          else { if (bankStatus) bankStatus.textContent = uxT('paymentCheckFailed'); if (sentButton) sentButton.disabled = false; }
         });
         return;
       }
@@ -5664,6 +5726,7 @@ async function renderPay(tableId) {
 }
 
 async function renderPayReturn() {
+  const returnRoute = location.hash;
   const me = loadUser();
   const sid = new URLSearchParams(location.search).get("session_id") || "";
   view().innerHTML = `
@@ -5678,10 +5741,11 @@ async function renderPayReturn() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user: me, sessionId: sid }),
   }) : null;
+  if (location.hash !== returnRoute) return;
   if (r?.ok && r.card) {
     saveUser({ ...loadUser(), cardLast4: r.card.last4, cardBrand: r.card.brand });
-    showToast(t("payingCustomer"));
-    location.hash = "#/account";
+    showToast(uxT('cardConnected'));
+    location.hash = loginReturnTo(consumeAfterIdv()) || "#/account";
     return;
   }
   if (r?.ok && r.bridge) {
@@ -5694,14 +5758,16 @@ async function renderPayReturn() {
     location.hash = `#/table/${encodeURIComponent(r.table.id)}`;
     return;
   }
+  let back = '#/bookings';
+  try { back = loginReturnTo(sessionStorage.getItem('velvet_payment_return')) || back; } catch {}
   view().innerHTML = `
-  <section class="section">
-    <div class="empty-state">
-      <h3>${esc(t("payPending"))}</h3>
-      <p>${esc(t("payPendingHint"))}</p>
-      <p style="margin-top:20px"><a class="btn btn-gold" href="#/open" data-nav>${esc(t("navOpen"))}</a></p>
-    </div>
-  </section>`;
+  <section class="section"><div class="empty-state">
+    <h1>${esc(r?.error === 'not_paid' ? t('payPending') : uxT('paymentUnknown'))}</h1>
+    <p role="status">${esc(r?.error === 'not_paid' ? t('payPendingHint') : uxT('paymentCheckFailed'))}</p>
+    ${sid ? `<p><button type="button" class="btn btn-gold" id="payment-check-again">${esc(uxT('checkAgain'))}</button></p>` : ''}
+    <p><a class="btn btn-ghost" href="${esc(back)}" data-nav>${esc(t('navBookings'))}</a></p>
+  </div></section>`;
+  document.getElementById('payment-check-again')?.addEventListener('click', () => renderPayReturn());
 }
 
 async function renderPayout() {
@@ -6559,24 +6625,16 @@ async function renderAccount() {
           </div>`).join("")}` : ""}
       ${isOperatorUser(u) ? `<p style="margin-top:16px"><a class="btn btn-gold btn-sm" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
-      <p>${esc(socialTrustCopy().oneTapSub)}</p>
-      <p class="stepper-hint social-honesty auth-real-note">🔒 Riktig säker inloggning · VELVET sparar aldrig ditt lösenord</p>
-      <button type="button" class="btn btn-gold phone-login" id="acc-phone-login" style="margin-top:16px">Face ID / Touch ID / skärmlås</button>
-      <div class="social-grid social-grid-onetap" style="margin-top:16px">
-        ${SOCIALS.map((s) => socialCompactButton(s, "data-account-soc")).join("")}
-      </div>`}
+      <div id="account-auth-choices"></div>`}
     <h3 style="margin:28px 0 12px">${esc(t("chooseLang"))}</h3>
     <div class="lang-grid">
       ${LANGS.map((l) => `<button type="button" class="lang-card${currentLang() === l.id ? " on" : ""}" data-lang="${l.id}"><span class="lang-flag">${l.flag}</span><span>${esc(l.label)}</span></button>`).join("")}
     </div>
   </section>`;
   $("#acc-out")?.addEventListener("click", async () => { await logoutUser(); renderAccount(); });
-  $("#acc-phone-login")?.addEventListener("click", () => loginWithPasskey());
-  document.querySelectorAll("[data-account-soc]").forEach((el) => el.addEventListener("click", async () => {
-    el.disabled = true;
-    const r = await loginWithSocial(el.dataset.accountSoc).catch(() => null);
-    if (!r?.oauth) { showToast(socialTrustCopy().unavailable); el.disabled = false; }
-  }));
+  mountAuthChoices(document.getElementById('account-auth-choices'), {
+    onPasskey: () => { if ((location.hash || '').split('?')[0] === '#/account') renderAccount(); },
+  });
   document.querySelectorAll("[data-lang]").forEach((el) => {
     el.addEventListener("click", () => {
       applyLang(el.dataset.lang);
@@ -7636,6 +7694,13 @@ async function route() {
       try { sessionStorage.removeItem('velvet_discovery_return'); } catch {}
     }
   }
+  if (/^#\/(venue|restaurant)\//.test(incoming)) {
+    try {
+      const target = incoming.split('?')[0];
+      if (!isDiscoveryList(renderedRoute) && sessionStorage.getItem('velvet_discovery_target') !== target) sessionStorage.removeItem('velvet_discovery_return');
+      sessionStorage.setItem('velvet_discovery_target', target);
+    } catch {}
+  }
   renderedRoute = incoming;
   activeAvailabilitySearch?.destroy(); activeAvailabilitySearch = null;
   document.body.classList.remove("has-dock");
@@ -7909,7 +7974,8 @@ async function init() {
       if (Array.isArray(extraV)) v = v.concat(extraV);
     }
   } catch { /* optional */ }
-  DESTINATIONS = d;
+  const seenDestinationCodes = new Set();
+  DESTINATIONS = d.filter(item => item.code && !seenDestinationCodes.has(item.code) && seenDestinationCodes.add(item.code));
   // Samma enhet förekom tidigare både i huvudkatalogen och den sökbara
   // extralistan. Dubbla poster gav dubbla kort och samma foto två gånger.
   const seenVenueSites = new Set();

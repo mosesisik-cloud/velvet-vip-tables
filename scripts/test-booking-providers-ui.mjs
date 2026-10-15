@@ -47,6 +47,13 @@ try {
   await page.goto(base+'#/restaurant/'+id);
   const panel=page.locator('#restaurant-provider-booking');
   await page.waitForFunction(url => document.querySelector('#restaurant-provider-booking a')?.getAttribute('href') === url, booking.url);
+  const policy=page.getByRole('region',{name:'Avbokningsvillkor'});
+  await policy.waitFor();
+  if (booking.cancellationPolicy) {
+    assert.ok((await policy.textContent()).includes(booking.cancellationPolicy.summary));
+    assert.equal(await policy.locator('a').getAttribute('href'), booking.cancellationPolicy.source);
+  } else assert.match(await policy.textContent(), /ingen separat verifierad sammanfattning/);
+  assert.match(await policy.textContent(), /lokal tidszon/);
   const link=panel.locator('a');
   assert.equal(await link.getAttribute('href'),booking.url,id);
   assert.equal(await link.getAttribute('rel'),'noopener noreferrer',id);

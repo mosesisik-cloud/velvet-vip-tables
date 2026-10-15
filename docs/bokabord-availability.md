@@ -46,3 +46,10 @@ Observed on 15 October 2026 for 22 October, two guests around 19:00: Zink seven 
 Two sequential read-only Zink checks for 22 October 2026, party two, 19:00 ±90 minutes both returned seven actual slots and partial meal coverage. Local timings were 4.87 seconds cold and 3.46 seconds warm, with 17 public asset-cache hits on the second check. This is not a production latency guarantee; server CPU and simultaneous searches matter. Broad production revalidation is pending. Safety tests additionally verify HTML, JSON, cookie and private responses are not eligible for caching.
 
 A second narrow scenario (Zink, same date and party, 07:00 ±90 minutes) scanned all five meals, returned unavailable with partial false, and used one main-document navigation in 8.79 seconds. This verified the actual widget back controls without repeated full reloads.
+
+
+## Gift-card entry correction (wave 4)
+
+Gift-card purchase entries reuse `.meal-attrs` styling but invoke `selectGiftcard(...)`, while reservable meals invoke `selectMeal(...)`. The adapter now selects only the latter structurally, including when returning to the meal menu. It does not guess from labels or click gift-card purchase controls.
+
+Narrow read-only rechecks for 22 October 2026, party two, 19:00 ±90 minutes now complete: Sperling & Co unavailable (about four seconds), Ekstedt unavailable (about three seconds). Sperling's actual available times were outside that window; a separate 22:00 search returned 21:45, 22:00 and 22:15 in 2.4 seconds. Ekstedt displayed waitlist rows, which remain excluded. No reservation time was clicked. A DOM regression fixture proves identically styled gift-card entries are excluded.

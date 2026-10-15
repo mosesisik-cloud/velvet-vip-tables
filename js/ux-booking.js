@@ -32,3 +32,12 @@ export function loginReturnTo(candidate) {
 export function resolveAuthReturn({ explicit = '', oauthFrom = '', fallback = '#/account' } = {}) {
   return loginReturnTo(explicit) || loginReturnTo(oauthFrom) || loginReturnTo(fallback) || '#/account';
 }
+
+export function joinResponse(status, data, tableId) {
+  if (status === 401) return {error:'auth'};
+  if (status === 404) return {error:'missing'};
+  if (status === 409) return {error:'full'};
+  if (status === 403) return {error:data?.error || 'idv_required',openFor:data?.openFor,minAge:data?.minAge,ageYears:data?.ageYears};
+  if (status >= 200 && status < 300 && data?.table?.id === tableId) return {table:data.table,already:!!data.already};
+  return {error:'unavailable'};
+}

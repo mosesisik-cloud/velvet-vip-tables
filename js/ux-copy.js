@@ -2,6 +2,13 @@ import { currentLang } from './i18n.js?v=159b';
 
 // Shared cleanup copy: keys map to Swedish, English, Spanish and French.
 const copy = {
+  paymentUnknown: ['Betalningsstatus kunde inte kontrolleras', 'Payment status could not be checked', 'No se pudo comprobar el pago', 'Le statut du paiement n’a pas pu être vérifié'],
+  paymentCheckFailed: ['Kontrollen misslyckades. Kontrollera status innan du betalar igen. Dina uppgifter finns kvar.', 'The check failed. Check the status before paying again. Your details are preserved.', 'La comprobación falló. Comprueba el estado antes de pagar de nuevo. Tus datos se conservan.', 'La vérification a échoué. Vérifiez le statut avant de payer à nouveau. Vos informations sont conservées.'],
+  checkAgain: ['Kontrollera igen', 'Check again', 'Comprobar de nuevo', 'Vérifier à nouveau'],
+  cardConnected: ['Kort anslutet', 'Card connected', 'Tarjeta vinculada', 'Carte associée'],
+  joinFull: ['Sällskapet är fullt. Välj ett annat sällskap.', 'This group is full. Choose another group.', 'El grupo está completo. Elige otro grupo.', 'Ce groupe est complet. Choisissez un autre groupe.'],
+  joinMissing: ['Sällskapet finns inte längre. Gå tillbaka till Kvällar & sällskap.', 'This group is no longer available. Return to Nights & company.', 'Este grupo ya no está disponible. Vuelve a Noches y compañía.', 'Ce groupe n’est plus disponible. Revenez aux soirées et groupes.'],
+  joinUnavailable: ['Det gick inte att bekräfta din plats. Försök igen; ingen plats är bokad ännu.', 'Your place could not be confirmed. Try again; no place is booked yet.', 'No se pudo confirmar tu plaza. Inténtalo de nuevo; aún no está reservada.', 'Votre place n’a pas pu être confirmée. Réessayez ; aucune place n’est réservée.'],
   bookingChoice: ['Ditt sökval: {date} kl. {time} · {party} gäster. Kontrollera valen i bokningsformuläret.', 'Your search: {date} at {time} · {party} guests. Check the choices in the booking form.', 'Tu búsqueda: {date} a las {time} · {party} personas. Comprueba los datos en el formulario de reserva.', 'Votre recherche : {date} à {time} · {party} personnes. Vérifiez les choix dans le formulaire de réservation.'],
   jumpBooking: ['Boka bord', 'Book a table', 'Reservar mesa', 'Réserver une table'],
   noRestaurantPhoto: ['Bilder kommer snart', 'Photos coming soon', 'Fotos próximamente', 'Photos à venir'],

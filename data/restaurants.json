@@ -624,7 +624,7 @@
           "cuisine": "italian"
         },
         {
-          "placeId": "osm-DXB-",
+          "placeId": "osm-DXB-79a095176a2e",
           "name": "باب المنصور",
           "rating": null,
           "reviewCount": 0,
@@ -649,7 +649,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-DXB-",
+          "placeId": "osm-DXB-0d3acecf23cb",
           "name": "ريم البوادي",
           "rating": null,
           "reviewCount": 0,
@@ -2879,7 +2879,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKT-",
+          "placeId": "osm-HKT-d87060cdddb1",
           "name": "ครัวพริกแกง@ภูเก็ต",
           "rating": null,
           "reviewCount": 0,
@@ -2904,7 +2904,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKT-",
+          "placeId": "osm-HKT-ffbde9d55aef",
           "name": "ก๋วยเตี๋ยวเบรคแตก",
           "rating": null,
           "reviewCount": 0,
@@ -2930,7 +2930,7 @@
           "cuisine": "thai"
         },
         {
-          "placeId": "osm-HKT-",
+          "placeId": "osm-HKT-b793641250e3",
           "name": "มาลัย อาหารตามสั่ง",
           "rating": null,
           "reviewCount": 0,
@@ -2943,7 +2943,7 @@
           "cuisine": "thai"
         },
         {
-          "placeId": "osm-HKT-",
+          "placeId": "osm-HKT-515987336015",
           "name": "ไม้หมอน ฟอเรสต์",
           "rating": null,
           "reviewCount": 0,
@@ -3061,7 +3061,7 @@
           "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
         },
         {
-          "placeId": "osm-HKT-",
+          "placeId": "osm-HKT-e1ae9579aa0f",
           "name": "ร้านอาหาร ระย้า",
           "rating": null,
           "reviewCount": 0,
@@ -3092,23 +3092,14 @@
           "reviewCount": 0,
           "address": "Phuket, Thailand",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Ubuntu%20Eat%2C%20Phuket",
-          "website": "https://www.ubuntueat.com",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
           "curated": true,
           "cuisine": "thai;indian;lebanese;kebab;shawarma",
-          "images": [
-            "https://i0.wp.com/ubuntueat.com/wp-content/uploads/2022/03/Copy-of-Copy-of-Kamut-1920-%C3%97-1080px-2-1.jpg?fit=1024%2C576&ssl=1",
-            "https://i0.wp.com/ubuntueat.com/wp-content/uploads/2022/03/Copy-of-Copy-of-Kamut-1920-%C3%97-1080px-3-1.jpg?fit=1024%2C576&ssl=1",
-            "https://i0.wp.com/ubuntueat.com/wp-content/uploads/2024/04/Bengali-Cuisine_Biryani-2.jpg?fit=300%2C300&ssl=1",
-            "https://i0.wp.com/ubuntueat.com/wp-content/uploads/2024/04/Bengali-Cuisine_Biryani-2.jpg?w=900&ssl=1",
-            "https://i0.wp.com/ubuntueat.com/wp-content/uploads/2024/04/Bengali-Cuisine_Biryani-2.jpg?resize=300%2C300&ssl=1"
-          ],
-          "imageSource": "https://ubuntueat.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "images": []
         },
         {
-          "placeId": "osm-HKT-",
+          "placeId": "osm-HKT-a09dba8dc10e",
           "name": "วันจันทร์ บ้านอาหารไทย",
           "rating": null,
           "reviewCount": 0,
@@ -3152,21 +3143,11 @@
           "reviewCount": 0,
           "address": "Phuket, Thailand",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Baraka%2C%20Phuket",
-          "website": "https://baraka-restaurant-phuket.com/",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
           "curated": true,
           "cuisine": "georgian",
-          "images": [
-            "https://www.baraka-restaurant-phuket.com/media/11062b_3b0b781103d2433dafa942c5337d5c19-mv2_jpg/v1/fill/w_980-h_653-al_c-q_85-usm_0.66_1.00_0.01-enc_avif-quality_auto/11062b_3b0b781103d2433dafa942c5337d5c19-mv2.jpg",
-            "https://static.wixstatic.com/media/1cce5b_ef6e1d8cbcf74f6084c52dfcec9bb681~mv2.png",
-            "https://static.wixstatic.com/media/1cce5b_f84c429746074fe49333224593b2ace2~mv2.png/v1/fill/w_560,h_93,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/1cce5b_f84c429746074fe49333224593b2ace2~mv2.png"
-          ],
-          "imageSource": "https://www.baraka-restaurant-phuket.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
-          "menuUrl": "https://www.baraka-restaurant-phuket.com/menu",
-          "menuSource": "https://baraka-restaurant-phuket.com/",
-          "menuVerifiedAt": "2026-09-18T13:20:21.577Z"
+          "images": []
         },
         {
           "placeId": "osm-HKT-yunnan",
@@ -3290,7 +3271,7 @@
           "cuisine": "chinese_chicken_rice"
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-a4bf6221bad4",
           "name": "เม้งโภชนา",
           "rating": null,
           "reviewCount": 0,
@@ -3352,7 +3333,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-24ba493b251f",
           "name": "ลูกชิ้นปลานายง้ำ",
           "rating": null,
           "reviewCount": 0,
@@ -3380,7 +3361,7 @@
           "menuVerifiedAt": "2026-09-18T13:20:20.951Z"
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-c46792d27a0f",
           "name": "ข้าวต้มบวร",
           "rating": null,
           "reviewCount": 0,
@@ -3429,7 +3410,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-0c3246bd32a1",
           "name": "ปาท่องโก๋",
           "rating": null,
           "reviewCount": 0,
@@ -3456,7 +3437,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-133ab2a9ee22",
           "name": "กิมเซี้ย",
           "rating": null,
           "reviewCount": 0,
@@ -3506,7 +3487,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-5a7cb7e38ba4",
           "name": "ร้านพี่เอียด",
           "rating": null,
           "reviewCount": 0,
@@ -3556,7 +3537,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-d20471fe753a",
           "name": "ห้องอาหารไกรสีห์",
           "rating": null,
           "reviewCount": 0,
@@ -3568,7 +3549,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-bce53b348179",
           "name": "แหม่ม ต้มยำกุ้ง บางลำพู",
           "rating": null,
           "reviewCount": 0,
@@ -3581,7 +3562,7 @@
           "cuisine": "thai"
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-b953cdad1162",
           "name": "ครัวญาดา",
           "rating": null,
           "reviewCount": 0,
@@ -3594,7 +3575,7 @@
           "cuisine": "thai"
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-fecb0c767726",
           "name": "ร้านต้มยำกุ้งบางลำพู",
           "rating": null,
           "reviewCount": 0,
@@ -6010,7 +5991,7 @@
           "cuisine": "italian_pizza;italian"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-f9159ed67280",
           "name": "Μπαρμπουνάκι",
           "rating": null,
           "reviewCount": 0,
@@ -6025,7 +6006,7 @@
           "menuVerifiedAt": "2026-09-18T13:20:23.524Z"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-96c66630ff26",
           "name": "Λουιζιδης",
           "rating": null,
           "reviewCount": 0,
@@ -6051,7 +6032,7 @@
           "cuisine": "international"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-4f360c88faed",
           "name": "Ιθάκη",
           "rating": null,
           "reviewCount": 0,
@@ -6063,7 +6044,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-c85a35c26f07",
           "name": "ΛΑΤΙΝΙ",
           "rating": null,
           "reviewCount": 0,
@@ -6123,7 +6104,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-0333fea9a39b",
           "name": "Γιαλός",
           "rating": null,
           "reviewCount": 0,
@@ -6222,7 +6203,7 @@
           "cuisine": "greek"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-aeec56d91d9a",
           "name": "Φωλιά των Κυνηγών",
           "rating": null,
           "reviewCount": 0,
@@ -6235,7 +6216,7 @@
           "cuisine": "barbecue"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-67aa62022d89",
           "name": "Τα Βλάχικα",
           "rating": null,
           "reviewCount": 0,
@@ -6256,7 +6237,7 @@
           "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-ce005d2409ad",
           "name": "Η Βοσκοπούλα",
           "rating": null,
           "reviewCount": 0,
@@ -6280,7 +6261,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-46c19e65e313",
           "name": "Μπαρμπα Χαράλαμπος",
           "rating": null,
           "reviewCount": 0,
@@ -6292,7 +6273,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-d8bfabf45d7e",
           "name": "Ο Τσολιάς",
           "rating": null,
           "reviewCount": 0,
@@ -6304,7 +6285,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-6ccef43195df",
           "name": "Ψαροταβέρνα \"Ο Μπάμπης\"",
           "rating": null,
           "reviewCount": 0,
@@ -6317,7 +6298,7 @@
           "cuisine": "fish"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-0cd5bce9a126",
           "name": "Γευστικόν",
           "rating": null,
           "reviewCount": 0,
@@ -7646,19 +7627,11 @@
           "reviewCount": 0,
           "address": "Paris, France",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Septime%2C%20Paris",
-          "website": "https://timenightclub.com",
           "primaryType": "restaurant",
           "source": "VELVET curated",
           "curated": true,
-          "images": [
-            "https://timenightclub.com/wp-content/uploads/2023/07/night-clubs-birthday-party-vip-nightclub-private-events.jpg",
-            "https://timenightclub.com/wp-content/uploads/2022/03/03112020-TIME-Nightclub-JAKEWESTPHOTO-0144_5963-1024x684.jpg",
-            "https://timenightclub.com/wp-content/uploads/2023/07/night-clubs-birthday-party-vip-nightclub-private-events-768x512.jpg",
-            "https://timenightclub.com/wp-content/uploads/2023/07/night-clubs-birthday-party-vip-nightclub-private-events-600x400.jpg",
-            "https://timenightclub.com/wp-content/uploads/2023/07/night-clubs-birthday-party-vip-nightclub-private-events-680x454.jpg"
-          ],
-          "imageSource": "https://timenightclub.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "images": [],
+          "website": "https://www.septime-charonne.fr/"
         },
         {
           "placeId": "osm-PAR-korner-speciale",
@@ -9603,7 +9576,7 @@
           "menuVerifiedAt": "2026-09-18T13:20:27.131Z"
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-7fd000bd23b5",
           "name": "東北餃子",
           "rating": null,
           "reviewCount": 0,
@@ -9627,7 +9600,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-9052afbb06ca",
           "name": "粥君好",
           "rating": null,
           "reviewCount": 0,
@@ -9639,7 +9612,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-73d8cbcc1544",
           "name": "豪景茶餐廳",
           "rating": null,
           "reviewCount": 0,
@@ -9664,7 +9637,7 @@
           "cuisine": "seafood"
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-a1e3f6e098ab",
           "name": "紅興港式懷舊小食",
           "rating": null,
           "reviewCount": 0,
@@ -9737,7 +9710,7 @@
           "cuisine": "sushi"
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-458b36a8300b",
           "name": "利隆火鍋食店",
           "rating": null,
           "reviewCount": 0,
@@ -9786,7 +9759,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-d748bb1919dc",
           "name": "誠記",
           "rating": null,
           "reviewCount": 0,
@@ -9798,7 +9771,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-b878955bac41",
           "name": "珍品小炒",
           "rating": null,
           "reviewCount": 0,
@@ -9810,7 +9783,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-6887ba5d7fdd",
           "name": "友明",
           "rating": null,
           "reviewCount": 0,
@@ -9871,7 +9844,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-a3627118df8f",
           "name": "厚興瑜記",
           "rating": null,
           "reviewCount": 0,

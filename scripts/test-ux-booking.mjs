@@ -50,3 +50,10 @@ for (const lang of ['sv', 'en', 'es', 'fr']) {
   }
 }
 console.log('Booking UX state, publication, payment, return-route and localization tests passed.');
+
+const {joinResponse} = await import('../js/ux-booking.js');
+for (const status of [401,403,404,409,500]) assert.ok(joinResponse(status,{table:{id:'t'}},'t').error);
+assert.equal(joinResponse(200,{table:{id:'wrong'}},'t').error,'unavailable');
+assert.equal(joinResponse(200,{},'t').error,'unavailable');
+assert.equal(joinResponse(201,{table:{id:'t'}},'t').table.id,'t');
+console.log('PASS join requires matching successful server confirmation; errors cannot become membership.');

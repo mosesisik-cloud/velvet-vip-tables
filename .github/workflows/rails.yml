@@ -19,3 +19,6 @@ jobs:
       - run: node scripts/test-discovery.mjs
       - run: node scripts/test-booking-selection.mjs
       - run: node scripts/test-booking-providers.mjs
+      - run: node scripts/test-auth-options.mjs
+      - run: node scripts/test-route-integrity.mjs
+      - run: node scripts/test-restaurant-ids.mjs

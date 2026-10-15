@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-UX174";
+const VERSION = "v4-UX175";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -31,6 +31,8 @@ const SHELL_ASSETS = [
   "./js/restaurant-booking-providers.js",
   "./js/ux-booking.js",
   "./js/ux-copy.js",
+  "./js/auth-options.js",
+  "./js/restaurant-copy.js",
   "./js/bokabord-mirror.js",
   "./js/i18n.js",
   "./js/mrz.js",
