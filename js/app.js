@@ -1,10 +1,11 @@
+import {getBookingCopy, formatBookingCopy} from './booking-copy.js';
 import { parseBookingSelection, withBookingSelection } from './booking-selection.js';
 import { mountBookingReport } from './booking-report.js';
 import { mountAvailabilitySearch } from './availability-search.js';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
 import { mountBokabordMirror } from "./bokabord-mirror.js";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
-import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=159b";
+import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=176";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=159";
 import { readPassportMrz, jpegFromFile, snapshotVideo, captureStill, focusAt, startCamera, stopCamera, waitForVideo, warmupOcr } from "./passport-ocr.js?v=159";
 import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLivenessTap, matchFaces, facePayload, warmupFaceApi } from "./face-idv.js?v=159";
@@ -2443,7 +2444,7 @@ async function renderRestaurantDetail(placeId) {
   const bookingSelection = parseBookingSelection(new URLSearchParams(restaurantRoute.split('?')[1] || ''));
   const embeddedBooking = restaurant ? withBookingSelection(await getEmbeddedBooking(restaurant.placeId), bookingSelection) : null;
   if (location.hash !== restaurantRoute) return;
-  if (!restaurant || (!hasVerifiedRestaurantImages(restaurant) && !embeddedBooking)) {
+  if (!restaurant) {
     view().innerHTML = `<section class="section"><div class="empty-state"><h1>Restaurangen hittades inte</h1><p><a class="btn btn-gold" href="#/restaurants" data-nav>Till restauranger</a></p></div></section>`;
     return;
   }
@@ -2466,7 +2467,16 @@ async function renderRestaurantDetail(placeId) {
   const pendingRestaurantBooking = loadPendingRestaurantBooking(restaurant.placeId);
   const mirrorConfig = destination.code === 'STO' ? await apiJSON("/restaurant-bookings/mirror/config") : null;
   if (location.hash !== restaurantRoute) return;
-  const bookingPanel = embeddedBooking
+  const bookingCopy = getBookingCopy(currentLang());
+  const permanentlyClosed = restaurant.operatingStatus === 'permanently_closed';
+  let closureSource = '';
+  try {
+    const source = new URL(restaurant.operatingStatusSource);
+    if (source.protocol === 'https:' && !source.username && !source.password) closureSource = source.href;
+  } catch {}
+  const bookingPanel = permanentlyClosed
+    ? `<div class="restaurant-closed-notice" role="status"><p>${esc(bookingCopy.closedMessage)}</p>${closureSource ? `<a href="${esc(closureSource)}" target="_blank" rel="noopener noreferrer">${esc(bookingCopy.closedSource)}</a>` : ''}</div>`
+    : embeddedBooking
     ? `<div id="restaurant-provider-booking"></div>`
     : mirrorConfig?.enabled && mirrorConfig.restaurantIds?.includes(restaurant.placeId)
     ? `<div id="bokabord-mirror"></div>`
@@ -2505,11 +2515,11 @@ async function renderRestaurantDetail(placeId) {
         <div class="detail-panel restaurant-menu-panel"><span class="eyebrow">Mat & dryck</span><h2>Meny</h2><p>${esc(menuNote)}</p>${menuHref ? `<a class="btn btn-gold" href="${esc(menuViewHref)}" data-nav>${esc(menuLabel)} i VELVET →</a>` : ""}</div>
         <div class="detail-panel"><h2>Sociala medier & recensioner</h2><div class="restaurant-socials">${socials.length ? socials.map(([name, url]) => `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)} ↗</a>`).join("") : `<span class="events-meta">Inga verifierade sociala länkar ännu.</span>`}</div>${restaurant.reviewUrl ? `<p class="restaurant-review-link"><a class="link-gold" href="${esc(restaurant.reviewUrl)}" target="_blank" rel="noopener">Läs verifierade recensioner på ${esc(restaurant.reviewSource || "Google")} ↗</a></p>` : ""}</div>
       </div>
-      <aside class="detail-panel restaurant-book-panel"><span class="eyebrow">${esc(restaurant.name)}</span><h2>Boka bord</h2>
-        <section class="booking-cancellation-notice" aria-label="Avbokningsvillkor">
-          <strong>Avbokningsvillkor</strong>
-          <p>Kontrollera sista tid för kostnadsfri avbokning, lokal tidszon och eventuell avgift för sen avbokning eller uteblivet besök innan du bekräftar. Kortgaranti och förskottsbetalning kan ha särskilda villkor.</p>
-          ${embeddedBooking?.cancellationPolicy ? `<p>${esc(embeddedBooking.cancellationPolicy.summary)}</p><p><a href="${esc(embeddedBooking.cancellationPolicy.source)}" target="_blank" rel="noopener noreferrer">Restaurangens avbokningsvillkor ↗</a> · Kontrollerade ${esc(embeddedBooking.cancellationPolicy.checkedAt)}. Jämför med villkoren för just din bokning innan du bekräftar.</p>` : `<p>De aktuella villkoren för ditt val visas av restaurangen i bokningsformuläret. Velvet har ännu ingen separat verifierad sammanfattning. Om villkoren saknas eller är otydliga, kontakta restaurangen före bokning.</p>`}
+      <aside class="detail-panel restaurant-book-panel"><span class="eyebrow">${esc(restaurant.name)}</span><h2>${permanentlyClosed ? esc(bookingCopy.closedHeading) : "Boka bord"}</h2>
+        <section ${permanentlyClosed ? "hidden" : ""} class="booking-cancellation-notice" aria-label="${esc(bookingCopy.policyHeading)}">
+          <strong>${esc(bookingCopy.policyHeading)}</strong>
+          <p>${esc(bookingCopy.policyCheck)}</p>
+          ${embeddedBooking?.cancellationPolicy ? `<p lang="sv">${esc(embeddedBooking.cancellationPolicy.summary)}</p><p><a href="${esc(embeddedBooking.cancellationPolicy.source)}" target="_blank" rel="noopener noreferrer">${esc(bookingCopy.policySource)}</a> · ${esc(formatBookingCopy(bookingCopy.policyChecked,{date:embeddedBooking.cancellationPolicy.checkedAt}))} ${esc(bookingCopy.comparePolicy)}${currentLang() !== 'sv' ? ' (Svenska)' : ''}</p>` : `<p>${esc(bookingCopy.unknownPolicy)}</p>`}
         </section>
         ${bookingPanel}
       </aside>
@@ -2517,7 +2527,7 @@ async function renderRestaurantDetail(placeId) {
   </section>`;
   const providerContainer = document.getElementById("restaurant-provider-booking");
   if (providerContainer && embeddedBooking) {
-    mountEmbeddedBooking(providerContainer, embeddedBooking);
+    mountEmbeddedBooking(providerContainer, embeddedBooking, currentLang());
     if (bookingSelection) {
       const selected = document.createElement('p'); selected.className = 'booking-selection-summary';
       selected.textContent = `Ditt sökval: ${bookingSelection.date} kl. ${bookingSelection.time} · ${bookingSelection.party} gäster. Kontrollera att samma val visas i restaurangens formulär.`;

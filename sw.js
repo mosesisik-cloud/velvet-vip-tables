@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-174-social-auth-1";
+const VERSION = "v4-real-176-booking-language";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 

@@ -8,9 +8,20 @@ export const LANGS = [
 
 const KEY = "velvet_lang";
 
+// A saved choice wins. Otherwise use the visitor's ordered browser preferences.
+// Country is only a fallback: an IP country does not identify a person's language.
+export function resolveLanguage({ saved, languages = [], country = '' } = {}) {
+  const supported = id => LANGS.some(l => l.id === id);
+  if (supported(saved)) return saved;
+  for (const value of languages) {
+    const id = String(value || '').toLowerCase().split(/[-_]/)[0];
+    if (supported(id)) return id;
+  }
+  const countryLanguage = {SE:'sv',GB:'en',US:'en',AU:'en',NZ:'en',IE:'en',ES:'es',MX:'es',AR:'es',CL:'es',CO:'es',PE:'es',FR:'fr',MC:'fr'};
+  return countryLanguage[String(country).toUpperCase()] || 'en';
+}
 function detect() {
-  const n = (navigator.language || "sv").slice(0, 2).toLowerCase();
-  return LANGS.some((l) => l.id === n) ? n : "en";
+  return resolveLanguage({languages: navigator.languages?.length ? navigator.languages : [navigator.language]});
 }
 
 export function getLang() {
