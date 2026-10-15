@@ -1,5 +1,5 @@
-import { external200ContactHref } from './external200-booking.js?v=184';
-import { getBookingCopy } from './booking-copy.js?v=185';
+import { external200ContactHref } from './external200-booking.js?v=188';
+import { getBookingCopy } from './booking-copy.js?v=188';
 // Issue69, reviewed operator evidence 2026-10-16. This binding is independent
 // of mutable catalog email/website fields; no inferred provider or instant slots.
 const contacts = Object.freeze({

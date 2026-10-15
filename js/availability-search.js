@@ -1,4 +1,4 @@
-import { getBookingCopy, requestBookingNotes } from './booking-copy.js?v=180';
+import { getBookingCopy, requestBookingNotes } from './booking-copy.js?v=188';
 import { placeBrandHTML } from './place-brand.js?v=178';
 import { availabilityCopy } from './availability-copy.js?v=180';
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
