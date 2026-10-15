@@ -488,6 +488,11 @@
         "checkedAt": "2026-10-16",
         "query": "Khao Tom Thanon Di Buk official reservation",
         "result": "Pearl directory and Michelin-related reporting found; no operator-authorized booking system or original form."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -680,6 +685,11 @@
         "checkedAt": "2026-10-16",
         "query": "Pint Factory Phuket official Facebook",
         "result": "Tourism directory96SuthatSoi2 differs from old Limelight location; Wanderlog marks latter temporarilyclosed. Branch/relocation unresolved."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -876,6 +886,11 @@
         "checkedAt": "2026-10-16",
         "query": "The Tent Phuket official booking",
         "result": "PhuketNet lists generic phuketthetent@gmail.com; no operator-authorized table-booking invitation."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {

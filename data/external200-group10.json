@@ -400,6 +400,11 @@
         "checkedAt": "2026-10-16",
         "result": "Official bazbar.com returned404 again. Historical menu confirms alias but not current booking acceptance.",
         "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -588,6 +593,11 @@
         "checkedAt": "2026-10-16",
         "result": "Access and saint-barths.com show third-party enquiry forms; operator authorization remains unverified. Do not activate as official.",
         "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -1144,6 +1154,11 @@
         "checkedAt": "2026-10-16",
         "result": "Official chain pages list several outlets; old source omitted coordinates/OSM IDs. Historical Overpass retrieval failed (429 then500), so no branch inferred.",
         "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     }
   ]

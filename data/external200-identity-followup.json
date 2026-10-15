@@ -1,0 +1,1779 @@
+{
+  "checkedAt": "2026-10-16",
+  "scope": "Additional research for existing external200 IDs only",
+  "reviewed": 33,
+  "newApprovedRoutes": 0,
+  "confirmedReservations": 0,
+  "limitation": "Candidate sources and reconstructed OSM matches do not by themselves verify the catalogue branch. No active registry or guest destination changes.",
+  "researchContexts": [
+    {
+      "evidenceFile": "external200-next-groups01-03.json",
+      "checkedAt": "2026-10-16",
+      "owner": "external200/groups01-03",
+      "status": "research_complete_pending_integrator_review",
+      "scope": "10 prioritized unresolved IDs from owned groups1-3; evidence only, no canonical edits",
+      "catalogueRead": "data/restaurants.json",
+      "coordinationRead": "docs/restaurant-coordination.md",
+      "methods": [
+        "Current catalogue field comparison",
+        "Official operator and delegated-provider web search",
+        "Read-only HTML GET for NazikAna, Gemibasi and PapaLee",
+        "Public OSM bbox GET attempted; Overpass502 then OSM API429. No retries after rate limit.",
+        "OSM-derived Mapcarta neighborhood context; no restaurant node recovered"
+      ],
+      "checks": {
+        "providerPost": false,
+        "bookings": false,
+        "holds": false,
+        "messages": false,
+        "liveAvailability": false,
+        "embeddedForms": false
+      }
+    },
+    {
+      "evidenceFile": "external200-next-groups04-06.json",
+      "status": "first_10_review_complete",
+      "owner": "/root/groups_4_6",
+      "checkedAt": "2026-10-16",
+      "scope": "Existing manifest groups04-06 only; no new scope claims",
+      "coordinationRead": "docs/restaurant-coordination.md",
+      "catalogObservation": "Latest local data/restaurants.json inspected after supplied main city-correction handoff. Prioritized records still have only city-level addresses; no imageSource or coordinates. Catalog snapshots preserved below.",
+      "safety": "All browser contexts used serviceWorkers:block and context-wide GET/HEAD-only route guard. No POST/other-method request allowed, no form submissions, bookings, holds, payments or messages. OSM REST reads GET only. Overpass GET attempt returned406 and was not bypassed.",
+      "summary": {
+        "reviewed": 10,
+        "officialProviderLinksLocated": 1,
+        "functioningOriginalForms": 0,
+        "liveAvailability": 0,
+        "newConfirmedManualRoutes": 0,
+        "registryAdditions": 0,
+        "readyForIntegratorIdentityReview": 2
+      },
+      "importReconstructionReview": {
+        "checkedAt": "2026-10-16",
+        "gitCommit": "f5a0de189e90fdba95815208fcd19b6c25d80ef7",
+        "commitDate": "2026-09-02T20:20:43+02:00",
+        "filesRead": [
+          "scripts/expand-restaurants-osm.mjs",
+          "data/destinations.json",
+          "data/extra-destinations.json",
+          "data/restaurants.json"
+        ],
+        "historicalDxb": {
+          "lat": 25.2,
+          "lng": 55.27
+        },
+        "rules": {
+          "query": "[out:json][timeout:20];nwr[amenity=restaurant][name](around:12000,25.2,55.27);out center tags qt 80;",
+          "limitBeforeDistanceSort": 80,
+          "desiredCatalogCount": 30,
+          "deduplication": "trimmed exact name lowercased; not brand, slug, website or cuisine",
+          "sort": "All valid returned elements sorted by equirectangular distance; equal distance sorts name.",
+          "fieldsKept": [
+            "name",
+            "website from website/contact:website",
+            "cuisine"
+          ],
+          "fieldsDiscarded": [
+            "OSM element ID",
+            "coordinates",
+            "street address",
+            "branch identity",
+            "response rank"
+          ],
+          "network": "Historical importer POST was inspected as code only and not run."
+        },
+        "distances": [
+          {
+            "name": "Al Hallab OSM Dubai Mall",
+            "lat": 25.195934,
+            "lng": 55.2776545,
+            "kmFromHistoricalDxb": 0.893051,
+            "inside12km": true
+          },
+          {
+            "name": "Karam Beirut OSM Dubai Mall",
+            "lat": 25.1967106,
+            "lng": 55.2770049,
+            "kmFromHistoricalDxb": 0.794046,
+            "inside12km": true
+          },
+          {
+            "name": "Al Hallab official map Dubai Mall",
+            "lat": 25.1951467,
+            "lng": 55.2790118,
+            "kmFromHistoricalDxb": 1.055162,
+            "inside12km": true
+          },
+          {
+            "name": "Al Hallab official map Garhoud",
+            "lat": 25.2440099,
+            "lng": 55.3394532,
+            "kmFromHistoricalDxb": 8.529965,
+            "inside12km": true
+          },
+          {
+            "name": "Al Hallab official map Mall of Emirates",
+            "lat": 25.1194683,
+            "lng": 55.2001477,
+            "kmFromHistoricalDxb": 11.384738,
+            "inside12km": true
+          },
+          {
+            "name": "Al Hallab official map Bab El Bahr",
+            "lat": 25.1915584,
+            "lng": 55.2725781,
+            "kmFromHistoricalDxb": 0.973846,
+            "inside12km": true
+          }
+        ],
+        "chainEvidence": [
+          {
+            "url": "https://alhallabrestaurant.com/",
+            "kind": "official",
+            "supports": "Operator lists four branches; map href !3d/!4d coordinates extracted using GET from branch-specific directions links, not map viewport @ coordinates. DubaiMall SecondFloor, Garhoud18SheikhRashidRd, MOE L2, BabElBahr29BurjDubaiBoulevard."
+          },
+          {
+            "url": "https://localemirates.com/r/ar/648148-karam-beirut",
+            "kind": "secondary",
+            "supports": "Karam chain alternatives include MOE, AlQuoz, JumeirahIslands, Mirdif, TradeCentre. Not an exhaustive authoritative historical branch set; coordinates not fabricated."
+          }
+        ],
+        "historicalSelectedRows": [
+          {
+            "index1Based": 20,
+            "placeId": "osm-DXB-karam-beirut",
+            "name": "Karam Beirut",
+            "rating": null,
+            "reviewCount": 0,
+            "address": "Dubai, UAE",
+            "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Karam%20Beirut%2C%20Dubai",
+            "website": "https://www.karambeirut.ae",
+            "primaryType": "restaurant",
+            "source": "OpenStreetMap",
+            "curated": true,
+            "cuisine": "turkish;lebanese;kebab"
+          },
+          {
+            "index1Based": 21,
+            "placeId": "osm-DXB-carluccio-s",
+            "name": "Carluccio's",
+            "rating": null,
+            "reviewCount": 0,
+            "address": "Dubai, UAE",
+            "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Carluccio's%2C%20Dubai",
+            "website": "https://carlucciosme.com/locations/the-dubai-mall/",
+            "primaryType": "restaurant",
+            "source": "OpenStreetMap",
+            "curated": true,
+            "cuisine": "italian"
+          },
+          {
+            "index1Based": 26,
+            "placeId": "osm-DXB-al-hallab-and-sweets",
+            "name": "Al Hallab and Sweets",
+            "rating": null,
+            "reviewCount": 0,
+            "address": "Dubai, UAE",
+            "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Al%20Hallab%20and%20Sweets%2C%20Dubai",
+            "website": "",
+            "primaryType": "restaurant",
+            "source": "OpenStreetMap",
+            "curated": true,
+            "cuisine": "lebanese"
+          }
+        ],
+        "conclusions": [
+          "DubaiMall candidates satisfy original12km rule; AlHallab Garhoud, MOE and BabElBahr also fall within12km using current official branch map coordinates. Radius therefore does not eliminate the alternatives.",
+          "Current OSM AlHallab candidate is closer than current official Garhoud/MOE coordinates. That would matter only if exact same-name objects were present together in the historical80-element response. BabElBahr has a distinct operator branch name, so brand-level deduplication cannot be assumed.",
+          "The importer first truncated output to80 qt-ordered elements, THEN sorted distances. It did not select the closest80 globally, and omitted closer nodes could not compete. No original response recovered.",
+          "The committed DXB output places Karam immediately before Carluccio, whose retained URL explicitly names DubaiMall. This is compatible with nearby Mall nodes but not independent proof of the chosen Karam node; prior existing rows and missing response remain unknown.",
+          "Karam exact name+website+full cuisine string is stronger fingerprint than AlHallab exact name+generic cuisine. Both remain candidates. No promotion, route enablement or claim of recovered import linkage.",
+          "No network429 retry, importer rerun, POST or shared-file changes performed."
+        ]
+      }
+    },
+    {
+      "evidenceFile": "external200-next-groups07-09.json",
+      "checkedAt": "2026-10-16",
+      "scope": "Selected10 unresolved from groups07-09 only; separate research proposal, no active data changes",
+      "catalogFetchedAt": "2026-10-15T22:28:02.751Z",
+      "counts": {
+        "researched": 10,
+        "newApprovedLinks": 0,
+        "newVerifiedForms": 0,
+        "newLiveAvailability": 0,
+        "strongHistoricalMatches": 3,
+        "branchPolicyFound": 1
+      },
+      "osmAttempt": {
+        "overpass": "GET bounded Miami exact-name query returned406; no bypass",
+        "node": "GET api.openstreetmap.org node2475858794 returned429; no retry"
+      }
+    },
+    {
+      "evidenceFile": "external200-next-group10.json",
+      "checkedAt": "2026-10-16",
+      "owner": "external200/root",
+      "status": "reviewed_candidates_only"
+    }
+  ],
+  "records": [
+    {
+      "restaurantId": "osm-BDR-nazikana",
+      "name": "nazikANA",
+      "catalogue": {
+        "address": "Bodrum, Türkiye",
+        "website": "",
+        "imageSource": null,
+        "cuisine": null,
+        "source": "OpenStreetMap"
+      },
+      "status": "identity_supported_route_unresolved",
+      "actualCity": "Bodrum",
+      "address": "Eski Hukumet Sok. Carsi Mah. No:5",
+      "bookingSystem": "DISH website; no enabled reservation form",
+      "branchEvidence": "Exact named operator page identifies Cetin Gultekin and street5. Secondary OSM-derived Mapcarta places same distinctive nazikANA nearby central Bodrum. No original import node proved.",
+      "result": "Official page asks contact for reservations but exposes no phone/email; HTML has_reservation_form false. No booking route approved.",
+      "sources": [
+        {
+          "url": "https://nazikanarestaurant.eatbu.com/?lang=tr",
+          "kind": "official"
+        },
+        {
+          "url": "https://mapcarta.com/N1660462981",
+          "kind": "secondary"
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "manifestComparison": {
+        "batch": 2,
+        "manifestName": "nazikANA",
+        "manifestCity": "Bodrum",
+        "catalogueNameChanged": false,
+        "cityInferenceFromPrefix": false
+      },
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups01-03.json",
+      "batch": 2,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-BDR-gemibas-restaurant",
+      "name": "Gemibaşı Restaurant",
+      "catalogue": {
+        "address": "Bodrum, Türkiye",
+        "website": "",
+        "imageSource": null,
+        "cuisine": null,
+        "source": "OpenStreetMap"
+      },
+      "status": "identity_supported_route_unresolved",
+      "actualCity": "Bodrum",
+      "address": "Neyzen Tevfik Cad. No:132, Bodrum Marina",
+      "bookingSystem": null,
+      "branchEvidence": "Official gemibasi.com corroborates Marina132. New restaurant-hosted gemibasirest.eatbu.com instead has Sazlik Sok and Atilla Boyaci; excluded as conflicting venue.",
+      "result": "Main site gives general contacts +905375664799/+902523161220; reservation meta wording alone does not establish procedure. Do not transfer Eatbu contact-for-booking policy across venue identities.",
+      "sources": [
+        {
+          "url": "https://www.gemibasi.com/",
+          "kind": "official"
+        },
+        {
+          "url": "https://gemibasirest.eatbu.com/?lang=tr",
+          "kind": "official"
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "manifestComparison": {
+        "batch": 1,
+        "manifestName": "Gemibaşı Restaurant",
+        "manifestCity": "Bodrum",
+        "catalogueNameChanged": false,
+        "cityInferenceFromPrefix": false
+      },
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups01-03.json",
+      "batch": 1,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "curated-BDR-mimoza-gumusluk",
+      "name": "Mimoza Gümüşlük",
+      "catalogue": {
+        "address": "Bodrum, Türkiye",
+        "website": "",
+        "imageSource": null,
+        "cuisine": null,
+        "source": "VELVET curated"
+      },
+      "status": "operator_source_unreadable",
+      "actualCity": null,
+      "address": null,
+      "bookingSystem": null,
+      "branchEvidence": "Manifest and current catalogue explicitly name Gumusluk, narrowing branch beyond prefix. Secondary guides vary Yali32/104; official Instagram cannot be fetched.",
+      "result": "No new operator-confirmed booking route. Instagram error not evidence of closure.",
+      "sources": [
+        {
+          "url": "https://www.instagram.com/gumuslukmimoza/",
+          "kind": "official"
+        },
+        {
+          "url": "https://mesprestiges.com/tr/bodrum/places/mimoza-gumusluk",
+          "kind": "secondary"
+        },
+        {
+          "url": "https://www.tripadvisor.com.tr/Restaurant_Review-g664076-d3338623-Reviews-Mimoza-Gumusluk_Bodrum_District_Mugla_Province_Turkish_Aegean_Coast.html",
+          "kind": "secondary"
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "manifestComparison": {
+        "batch": 1,
+        "manifestName": "Mimoza Gümüşlük",
+        "manifestCity": "Bodrum",
+        "catalogueNameChanged": false,
+        "cityInferenceFromPrefix": false
+      },
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups01-03.json",
+      "batch": 1,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-BDR-mosyo",
+      "name": "Mösyö",
+      "catalogue": {
+        "address": "Bodrum, Türkiye",
+        "website": "",
+        "imageSource": null,
+        "cuisine": "seafood",
+        "source": "OpenStreetMap"
+      },
+      "status": "operator_source_unreadable",
+      "actualCity": null,
+      "address": null,
+      "bookingSystem": null,
+      "branchEvidence": "Catalogue seafood cuisine is compatible but insufficient branch proof. Existing Belediye Meydani6 candidate remains; operator website inaccessible.",
+      "result": "No new table system; reject similarly named Moya and Mynos sites returned by search.",
+      "sources": [
+        {
+          "url": "https://www.mosyobodrum.com/",
+          "kind": "official"
+        },
+        {
+          "url": "https://www.tripadvisor.co.uk/Restaurant_Review-g298658-d17441456-Reviews-Mosyo-Bodrum_City_Bodrum_District_Mugla_Province_Turkish_Aegean_Coast.html",
+          "kind": "secondary"
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "manifestComparison": {
+        "batch": 2,
+        "manifestName": "Mösyö",
+        "manifestCity": "Bodrum",
+        "catalogueNameChanged": false,
+        "cityInferenceFromPrefix": false
+      },
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups01-03.json",
+      "batch": 2,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-BDR-hadi-balik",
+      "name": "Hadi Balik",
+      "catalogue": {
+        "address": "Bodrum, Türkiye",
+        "website": "",
+        "imageSource": null,
+        "cuisine": null,
+        "source": "OpenStreetMap"
+      },
+      "status": "branch_unresolved",
+      "actualCity": null,
+      "address": null,
+      "bookingSystem": null,
+      "branchEvidence": "OSM-derived Mapcarta places Hadi Balik130m south of central Asmin Hotel, strengthening central historical candidate. Official currently advertises D-Marin Turgutreis21; not demonstrated same branch.",
+      "result": "Turgutreis explicit phone05321114234 and provider378 candidate must not be assigned to unresolved central catalogue record.",
+      "sources": [
+        {
+          "url": "https://mapcarta.com/32581748",
+          "kind": "secondary"
+        },
+        {
+          "url": "https://www.hadibalik.com/hadi-balik-bistro-turgutreis",
+          "kind": "official"
+        },
+        {
+          "url": "https://www.yerimhazir.com/isletme/hadi-balik/378",
+          "kind": "provider_candidate"
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "manifestComparison": {
+        "batch": 2,
+        "manifestName": "Hadi Balik",
+        "manifestCity": "Bodrum",
+        "catalogueNameChanged": false,
+        "cityInferenceFromPrefix": false
+      },
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups01-03.json",
+      "batch": 2,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-BDR-arka-restaurant-pizzeria",
+      "name": "Arka Restaurant & Pizzeria",
+      "catalogue": {
+        "address": "Bodrum, Türkiye",
+        "website": "",
+        "imageSource": null,
+        "cuisine": null,
+        "source": "OpenStreetMap"
+      },
+      "status": "walk_in_policy_verified_branch_unresolved",
+      "actualCity": null,
+      "address": null,
+      "bookingSystem": "No reservations; arrival order/waitlist",
+      "branchEvidence": "Official operator identifies central Cumhuriyet102 and YalikavakCarsi52-1D1. Mapcarta near BodrumPublicBeach names ArkaPizzeria but no exact original node found.",
+      "result": "Policy applies both published branches. Retain branch uncertainty but expose no-reservation policy; no misleading online book button.",
+      "sources": [
+        {
+          "url": "https://arkapizzeria.com/",
+          "kind": "official"
+        },
+        {
+          "url": "https://arkapizzeria.com/home-en",
+          "kind": "official"
+        },
+        {
+          "url": "https://mapcarta.com/W505857236",
+          "kind": "secondary"
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "manifestComparison": {
+        "batch": 1,
+        "manifestName": "Arka Restaurant & Pizzeria",
+        "manifestCity": "Bodrum",
+        "catalogueNameChanged": false,
+        "cityInferenceFromPrefix": false
+      },
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups01-03.json",
+      "batch": 1,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-BDR-trafo",
+      "name": "Trafo",
+      "catalogue": {
+        "address": "Bodrum, Türkiye",
+        "website": "",
+        "imageSource": null,
+        "cuisine": "turkish",
+        "source": "OpenStreetMap"
+      },
+      "status": "identity_verified_booking_policy_unresolved",
+      "actualCity": "Bodrum",
+      "address": "Carsi Mah. Dr. Alim Bey Cad. No:4",
+      "bookingSystem": null,
+      "branchEvidence": "Municipal operator confirms unique Trafo under castle and phone05331688986. Municipality lists alternate1025Sok2 for same venue and same phone.",
+      "result": "Official general contact only; Meyhankoli explicitly inactive. General contact can be shown as such, not a verified booking route.",
+      "sources": [
+        {
+          "url": "https://www.bodrumbelediyeas.com.tr/tesis.php?slug=trafo-bodrum-cafe-restaurant",
+          "kind": "official"
+        },
+        {
+          "url": "https://www.bodrum.bel.tr/tesis.php?id=198%2FTrafo_Bodrum_Cafe__Restaurant",
+          "kind": "official"
+        },
+        {
+          "url": "https://www.meyhankoli.com/restoran/trafo-cafe-5904",
+          "kind": "secondary"
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "manifestComparison": {
+        "batch": 2,
+        "manifestName": "Trafo",
+        "manifestCity": "Bodrum",
+        "catalogueNameChanged": false,
+        "cityInferenceFromPrefix": false
+      },
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups01-03.json",
+      "batch": 2,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-BDR-bodrum-belediyesi-carsi-kafe",
+      "name": "Bodrum Belediyesi (Carsi Kafe)",
+      "catalogue": {
+        "address": "Bodrum, Türkiye",
+        "website": "",
+        "imageSource": null,
+        "cuisine": "breakfast;local;turkish",
+        "source": "OpenStreetMap"
+      },
+      "status": "identity_verified_booking_policy_unresolved",
+      "actualCity": "Bodrum",
+      "address": "Carsi Mah. Carsi Sk. No:2/11",
+      "bookingSystem": null,
+      "branchEvidence": "Municipal operator exact named venue and street2/11; municipal directory confirms food bazaar and same05331370417. Catalogue breakfast/local/Turkish compatible.",
+      "result": "No explicit reservation instruction or online system. Avoid unrelated Carsi Ocakbasi atNo15 despite similar name/location.",
+      "sources": [
+        {
+          "url": "https://www.bodrumbelediyeas.com.tr/tesis.php?slug=carsi-cafe",
+          "kind": "official"
+        },
+        {
+          "url": "https://www.bodrum.bel.tr/tesis.php?id=208%2FCarsi_Cafe",
+          "kind": "official"
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "manifestComparison": {
+        "batch": 1,
+        "manifestName": "Bodrum Belediyesi (Carsi Kafe)",
+        "manifestCity": "Bodrum",
+        "catalogueNameChanged": false,
+        "cityInferenceFromPrefix": false
+      },
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups01-03.json",
+      "batch": 1,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-BDR-otantik-ocakasi",
+      "name": "Otantik Ocakasi",
+      "catalogue": {
+        "address": "Bodrum, Türkiye",
+        "website": "",
+        "imageSource": null,
+        "cuisine": null,
+        "source": "OpenStreetMap"
+      },
+      "status": "secondary_route_only",
+      "actualCity": null,
+      "address": null,
+      "bookingSystem": null,
+      "branchEvidence": "Michelin identifies Ataturk46 and2523130058; exact official operator source still not readable. Name normalization Ocakasi/Ocakbasi is plausible, not an original-node proof.",
+      "result": "Michelin says direct booking; do not relabel secondary instruction official. Earlier operatorFacebook access blocked; not retried.",
+      "sources": [
+        {
+          "url": "https://guide.michelin.com/tr/tr/mugla/bodrum_2806351/restaurant/otantik-ocakbas%C4%B1",
+          "kind": "secondary"
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "manifestComparison": {
+        "batch": 2,
+        "manifestName": "Otantik Ocakasi",
+        "manifestCity": "Bodrum",
+        "catalogueNameChanged": false,
+        "cityInferenceFromPrefix": false
+      },
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups01-03.json",
+      "batch": 2,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-BAL-papa-lee-s-taiwan-noodle-dumpling",
+      "name": "Papa Lee's Taiwan Noodle & Dumpling",
+      "catalogue": {
+        "address": "Bali, Indonesia",
+        "website": "",
+        "imageSource": null,
+        "cuisine": null,
+        "source": "OpenStreetMap"
+      },
+      "status": "brand_route_verified_branch_unresolved",
+      "actualCity": null,
+      "address": null,
+      "bookingSystem": "WhatsApp manual request, brand-level",
+      "branchEvidence": "Official PapaLee site explicitly publishes Seminyak,Canggu,Petitenget and shared Book on WhatsApp6281239037533. No cataloguewebsite/imageSource/branch clue chooses one.",
+      "result": "May expose brand homepage only with branch-uncertain label; do not approve restaurant-specific booking. No WhatsApp opened or message sent.",
+      "sources": [
+        {
+          "url": "https://papaleebali.com/",
+          "kind": "official"
+        },
+        {
+          "url": "https://papaleebali.com/our-brands/",
+          "kind": "official"
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "manifestComparison": {
+        "batch": 1,
+        "manifestName": "Papa Lee's Taiwan Noodle & Dumpling",
+        "manifestCity": "Bali",
+        "catalogueNameChanged": false,
+        "cityInferenceFromPrefix": false
+      },
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups01-03.json",
+      "batch": 1,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-DXB-al-hallab-and-sweets",
+      "priority": 1,
+      "catalog": {
+        "name": "Al Hallab and Sweets",
+        "address": "Dubai, UAE",
+        "website": null,
+        "cuisine": "lebanese",
+        "imageSource": null
+      },
+      "identity": "strong_reconstruction_candidate",
+      "candidate": {
+        "name": "Al Hallab Restaurant and Sweets - The Dubai Mall",
+        "city": "Dubai",
+        "address": "The Dubai Mall",
+        "osmNode": 4558640989,
+        "latitude": 25.195934,
+        "longitude": 55.2776545
+      },
+      "sources": [
+        {
+          "url": "https://www.openstreetmap.org/api/0.6/node/4558640989.json",
+          "kind": "secondary",
+          "supports": "GET succeeds: exact catalog name and cuisine=lebanese; coordinates place candidate in Dubai Mall. Current public object is evidence, not proven import lineage."
+        },
+        {
+          "url": "https://alhallabrestaurant.com/links/",
+          "kind": "official",
+          "supports": "For Reservations > The Dubai Mall points exactly to serVme oid1452."
+        },
+        {
+          "url": "https://thedubaimall.com/en/data/get-all-stores",
+          "kind": "official",
+          "supports": "Mall landlord lists Al Hallab restaurant and sweets with dubaimall@alhallabrestaurant.com and +97143308828."
+        }
+      ],
+      "providerCandidate": {
+        "provider": "serVme",
+        "url": "https://widget.servmeco.com/?oid=1452",
+        "source": "https://alhallabrestaurant.com/links/"
+      },
+      "test": {
+        "type": "guarded_browser_navigation",
+        "serviceWorkers": "block",
+        "allowedMethods": [
+          "GET",
+          "HEAD"
+        ],
+        "result": "Provider UI displays not accepting online reservations, but POST /api/v3/app/access_token was blocked. This may be an initialization failure and is NOT evidence of closed bookings. No interaction performed.",
+        "blockedPaths": [
+          "api.servmeco.com/api/v3/app/access_token",
+          "bam.nr-data.net/events/1/8173fbeef1"
+        ],
+        "liveAvailability": false
+      },
+      "decision": "Review inferred catalog-to-DubaiMall identity. Official provider link is established; do not claim functioning form/availability. Need existing adapter compatibility or reviewed external-link support; no new adapter written.",
+      "registryAddition": null,
+      "importReview": {
+        "status": "candidate_retained",
+        "support": "Historical name+cuisine matches current OSM node and distance is plausible; insufficient uniqueness.",
+        "blocker": "No historical80-element query response or source OSM ID; chain alternatives not conclusively excluded.",
+        "promotion": false
+      },
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups04-06.json",
+      "batch": 4,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved",
+      "independentReview": "Official branch candidate accepted; catalogue-to-branch promotion rejected. Current OSM nodes do not establish original import lineage. Al Hallab operator has multiple branch-specific serVme links. Karam website is shared. Blocked provider initialization is not a no-availability result."
+    },
+    {
+      "restaurantId": "osm-DXB-karam-beirut",
+      "priority": 2,
+      "catalog": {
+        "name": "Karam Beirut",
+        "address": "Dubai, UAE",
+        "website": "https://www.karambeirut.ae",
+        "cuisine": "turkish;lebanese;kebab",
+        "imageSource": null
+      },
+      "identity": "strong_reconstruction_candidate",
+      "candidate": {
+        "name": "Karam Beirut - The Dubai Mall",
+        "city": "Dubai",
+        "address": "Lower Ground Floor, The Dubai Mall",
+        "osmNode": 4530683096,
+        "latitude": 25.1967106,
+        "longitude": 55.2770049
+      },
+      "sources": [
+        {
+          "url": "https://www.openstreetmap.org/api/0.6/node/4530683096.json",
+          "kind": "secondary",
+          "supports": "Exact name, website https://www.karambeirut.ae and complete cuisine string turkish;lebanese;kebab match catalog; level=-1 and location fit landlord."
+        },
+        {
+          "url": "https://thedubaimall.com/en/shop/karam-beirut",
+          "kind": "official",
+          "supports": "Landlord identifies Lower Ground Floor and generic phone/email +97143399789 kb.dxbmall@hhh-me.com."
+        }
+      ],
+      "test": {
+        "type": "guarded_browser_navigation",
+        "serviceWorkers": "block",
+        "allowedMethods": [
+          "GET",
+          "HEAD"
+        ],
+        "url": "https://www.karambeirut.ae",
+        "result": "ERR_NAME_NOT_RESOLVED"
+      },
+      "decision": "Identity reconstruction now substantially stronger; original node lineage not guaranteed. Generic landlord contacts do not establish table bookings. No provider found.",
+      "registryAddition": null,
+      "importReview": {
+        "status": "candidate_retained",
+        "support": "Exact historical retained website+cuisine+name matches current OSM node; historical order consistent with DubaiMall.",
+        "blocker": "No historical80-element query response or source OSM ID; chain alternatives not conclusively excluded.",
+        "promotion": false
+      },
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups04-06.json",
+      "batch": 4,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved",
+      "independentReview": "Official branch candidate accepted; catalogue-to-branch promotion rejected. Current OSM nodes do not establish original import lineage. Al Hallab operator has multiple branch-specific serVme links. Karam website is shared. Blocked provider initialization is not a no-availability result."
+    },
+    {
+      "restaurantId": "osm-DXB-abd-el-wahab-restaurant",
+      "priority": 3,
+      "catalog": {
+        "name": "Abd El Wahab Restaurant",
+        "address": "Dubai, UAE",
+        "website": null,
+        "cuisine": null,
+        "imageSource": null
+      },
+      "identity": "unresolved_branch",
+      "candidate": {
+        "name": "Abd El Wahab - Souk Al Bahar",
+        "city": "Dubai",
+        "address": "Souk Al Bahar, Downtown Dubai"
+      },
+      "sources": [
+        {
+          "url": "https://www.emaarmalls.ae/malls-shop-details/souk-al-bahar/abdulwahab-abdulwahab-loungeabdulwahab-abdulwahab-lounge/",
+          "kind": "official",
+          "supports": "Landlord identifies Souk Al Bahar venue."
+        },
+        {
+          "url": "https://www.tripadvisor.com/Restaurant_Review-g295424-d3896841-Reviews-Abd_El_Wahab_Souk_Al_Bahar-Dubai_Emirate_of_Dubai.html",
+          "kind": "secondary",
+          "supports": "Claimed listing mentions reservations and +97144230988, but is not operator booking proof."
+        }
+      ],
+      "decision": "Catalog has name/city only; Marina also exists. Third-party NightsInDubai request form is not an authorized official integration. Need operator source tying exact branch.",
+      "registryAddition": null,
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups04-06.json",
+      "batch": 4,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-HKG-piccollo",
+      "priority": 4,
+      "catalog": {
+        "name": "Piccollo",
+        "address": "Hong Kong, Hong Kong",
+        "website": null,
+        "cuisine": "pizza",
+        "imageSource": null
+      },
+      "identity": "relocation_candidate",
+      "candidate": {
+        "name": "Trattoria Piccolo",
+        "city": "Hong Kong",
+        "address": "41 Cadogan Street, Kennedy Town"
+      },
+      "sources": [
+        {
+          "url": "https://www.trattoriapiccolo.hk/",
+          "kind": "official",
+          "supports": "Operator states Piccolo Pizzeria opened Davis Street 2011, moved after ten years to Cadogan and renamed Trattoria Piccolo. Pizza cuisine fits catalog; misspelled Piccollo still needs linkage."
+        },
+        {
+          "url": "https://www.facebook.com/trattoriapiccolo.hk",
+          "kind": "official",
+          "supports": "Linked by operator site; web fetch throttled."
+        }
+      ],
+      "test": {
+        "type": "guarded_browser_navigation",
+        "allowedMethods": [
+          "GET",
+          "HEAD"
+        ],
+        "serviceWorkers": "block",
+        "result": "Official site HTTP200, history/location/contact read. POST /api/census/render-batch blocked. Generic phone and WhatsApp shown; no explicit booking CTA."
+      },
+      "decision": "Do not mark generic WhatsApp69962423 as verified booking route. Identity can be reviewed as likely renamed venue, not proven source mapping.",
+      "registryAddition": null,
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups04-06.json",
+      "batch": 5,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-CPT-kobe-sushi",
+      "priority": 5,
+      "catalog": {
+        "name": "Kobe Sushi",
+        "address": "Cape Town, South Africa",
+        "website": null,
+        "cuisine": "sushi",
+        "imageSource": null
+      },
+      "identity": "unresolved_branch",
+      "candidate": {
+        "name": "Kobe Sushi Newlands",
+        "city": "Cape Town",
+        "address": "Dean Street, Newlands"
+      },
+      "sources": [
+        {
+          "url": "https://kobesushi.co.za/?page_id=52",
+          "kind": "official",
+          "supports": "Operator lists Newlands and Plumstead separately; Newlands phone0812554221, Dean Street."
+        },
+        {
+          "url": "https://kobesushi.co.za/",
+          "kind": "official",
+          "supports": "Both branch actions are ORDER; online card payment is for delivery, not table guarantee."
+        },
+        {
+          "url": "https://ashleycooperhouse.co.za/portfolio_page/kobe-sushi-bar/",
+          "kind": "official",
+          "supports": "Landlord historical Newlands candidate."
+        }
+      ],
+      "test": {
+        "type": "guarded_browser_navigation",
+        "allowedMethods": [
+          "GET",
+          "HEAD"
+        ],
+        "serviceWorkers": "block",
+        "result": "HTTP200; two food ordering links. No booking interaction."
+      },
+      "decision": "Catalog sushi cuisine alone does not disambiguate branches. No table reservation policy established.",
+      "registryAddition": null,
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups04-06.json",
+      "batch": 4,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-CPT-gogi-korean",
+      "priority": 6,
+      "catalog": {
+        "name": "Gogi Korean",
+        "address": "Cape Town, South Africa",
+        "website": null,
+        "cuisine": "barbecue;korean",
+        "imageSource": null
+      },
+      "identity": "unresolved_branch",
+      "candidate": {
+        "name": "Gogi Korean BBQ Newlands",
+        "city": "Cape Town",
+        "address": "1 Dean Street, Newlands"
+      },
+      "sources": [
+        {
+          "url": "https://samenuprices.co.za/gogi-korean-bbq-menu-price/",
+          "kind": "secondary",
+          "supports": "Article distinguishes Newlands and Observatory and says bookings essential, without authoritative branch-specific booking channel."
+        },
+        {
+          "url": "https://briefly.co.za/facts-lifehacks/services/227916-gogi-korean-bbq-newlands-menu-updated-2025-prices/",
+          "kind": "secondary",
+          "supports": "Links @cpt_gogi and Newlands candidate."
+        },
+        {
+          "url": "https://www.instagram.com/cpt_gogi/",
+          "kind": "official",
+          "supports": "Identified operator social candidate; fetch failed, account contents not verified this pass."
+        }
+      ],
+      "decision": "Catalog barbecue;korean fits both branches. No official current booking instruction accessible.",
+      "registryAddition": null,
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups04-06.json",
+      "batch": 4,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-CPT-furley-s-bar-grill",
+      "priority": 7,
+      "catalog": {
+        "name": "Furley's Bar & Grill",
+        "address": "Cape Town, South Africa",
+        "website": null,
+        "cuisine": "steak_house",
+        "imageSource": null
+      },
+      "identity": "historical_identity_candidate",
+      "candidate": {
+        "name": "Furley's Bar & Grill",
+        "city": "Cape Town",
+        "address": "1 Dean Street, Newlands"
+      },
+      "sources": [
+        {
+          "url": "https://www.wcla.gov.za/wp-content/uploads/2025/01/Valid-licences-as-at-12-August-2024.pdf",
+          "kind": "official",
+          "supports": "Government historical licence search identifies restaurant; not operator booking channel."
+        },
+        {
+          "url": "https://www.tripadvisor.com.au/Restaurant_Review-g312582-d24051431-Reviews-Furley_s_Bar_Grill-Newlands_Western_Cape.html",
+          "kind": "secondary",
+          "supports": "Claimed listing matches name/steak cuisine and Newlands, lists bookings@furleys.co.za."
+        },
+        {
+          "url": "https://galoresa.online/2022/05/04/cape-town-its-your-turn-to-win-and-we-have-a-fabulous-competition-for-all-the-capetonians/",
+          "kind": "secondary",
+          "supports": "Historical @furleysbarandgrill handle identified."
+        }
+      ],
+      "decision": "Previous ordinary browser found old furleys.co.za now unrelated Tubidy. Do not activate that domain/email; restaurant-specific current operator social/booking evidence needed. US MrFurleys rejected.",
+      "registryAddition": null,
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups04-06.json",
+      "batch": 4,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-HKT-khao-tom-thanon-di-buk",
+      "priority": 8,
+      "catalog": {
+        "name": "Khao Tom Thanon Di Buk",
+        "address": "Phuket, Thailand",
+        "website": null,
+        "cuisine": null,
+        "imageSource": null
+      },
+      "identity": "strong_catalog_candidate",
+      "candidate": {
+        "name": "Khao Tom Dibuk",
+        "city": "Phuket",
+        "address": "185/11 Phang-Nga Road, Talat Yai, Mueang Phuket, 83000"
+      },
+      "sources": [
+        {
+          "url": "https://guide.michelin.com/en/phuket-region/phuket/restaurant/khao-tom-thanon-di-buk",
+          "kind": "secondary",
+          "supports": "Current Michelin listing ties original full slug to shortened name, address, and phone+66815351761. It says restaurant handles own bookings; this is guide evidence, not operator confirmation."
+        },
+        {
+          "url": "https://www.cleverthai.com/guide-to-andaman-coast-thailand/",
+          "kind": "secondary",
+          "supports": "Links candidate operator Facebook profile100057607984101; published different phone+66815359302."
+        }
+      ],
+      "decision": "Current identity stronger, but phone conflict and absent operator booking instructions remain. Do not turn generic Michelin booking template into official manual route.",
+      "registryAddition": null,
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups04-06.json",
+      "batch": 6,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-HKT-the-tent-phuket",
+      "priority": 9,
+      "catalog": {
+        "name": "The Tent Phuket",
+        "address": "Phuket, Thailand",
+        "website": null,
+        "cuisine": "breakfast;coffee_shop;thai;international;drinks",
+        "imageSource": null
+      },
+      "identity": "strong_catalog_candidate",
+      "candidate": {
+        "name": "The Tent Phuket",
+        "city": "Phuket",
+        "address": "16 Thepkasattri Road, Talat Yai"
+      },
+      "sources": [
+        {
+          "url": "https://www.phuket101.net/the-tent-phuket/",
+          "kind": "secondary",
+          "supports": "Distinctive breakfast cafe, old-town identity fits catalog cuisine breakfast;coffee_shop;thai;international;drinks."
+        },
+        {
+          "url": "https://www.wongnai.com/reviews/39073d8f6c8f424daa10338403cc89d3",
+          "kind": "secondary",
+          "supports": "Historical16Thepkasattri address and alternate official social handle thetent.phuket."
+        },
+        {
+          "url": "https://www.facebook.com/thetentphuket",
+          "kind": "secondary",
+          "supports": "Directory-linked operator candidate, fetch throttled; contents not authenticated this pass."
+        }
+      ],
+      "decision": "Two social handle spellings and changing contact numbers need operator reconciliation. No exact booking provider or explicit manual route.",
+      "registryAddition": null,
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups04-06.json",
+      "batch": 6,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-HKT-pint-factory",
+      "priority": 10,
+      "catalog": {
+        "name": "Pint Factory",
+        "address": "Phuket, Thailand",
+        "website": null,
+        "cuisine": null,
+        "imageSource": null
+      },
+      "identity": "relocation_unresolved",
+      "candidate": {
+        "name": "Pint Factory",
+        "city": "Phuket",
+        "address": "96 Suthat Soi 2 (tourism listing) versus Limelight Avenue 2/23 Dibuk"
+      },
+      "sources": [
+        {
+          "url": "https://thailandtourismdirectory.go.th/en/restaurants/90874",
+          "kind": "official",
+          "supports": "Government tourism directory gives96SuthatSoi2."
+        },
+        {
+          "url": "https://www.wongnai.com/articles/pint-factory",
+          "kind": "secondary",
+          "supports": "Owner-message article gives olderLimelight2/23Dibuk, links facebook.com/Pintfactory."
+        },
+        {
+          "url": "https://www.facebook.com/Pintfactory",
+          "kind": "secondary",
+          "supports": "Linked operator candidate; fetch throttled."
+        },
+        {
+          "url": "https://www.thai2night.com/venue/pint-factory-phuket",
+          "kind": "secondary",
+          "supports": "Directory generic table-booking text is not verified operator invitation."
+        }
+      ],
+      "decision": "No branch or relocation proof. Keep unresolved; do not use generic directory booking buttons.",
+      "registryAddition": null,
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-groups04-06.json",
+      "batch": 6,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-HKT-u85f393ba80c7",
+      "batch": 7,
+      "name": "วันจันทร์ บ้านอาหารไทย",
+      "checkedAt": "2026-10-16",
+      "catalog": {
+        "address": "Phuket, Thailand",
+        "website": null,
+        "cuisine": "thai",
+        "source": "OpenStreetMap",
+        "coordinates": null
+      },
+      "candidate": {
+        "branch": "One Chun, Phuket Old Town",
+        "address": "48/1 Thep Krasatti Road, Talat Yai, Mueang Phuket",
+        "actualCity": "Phuket"
+      },
+      "identityStatus": "unresolved_pending_review",
+      "outcome": "strong_candidate_policy_conflict",
+      "evidence": "Operator bio confirms Thai name, Old Town and Thepkasattri Road; Michelin supplies street number. Operator Instagram fetch throttled. Michelin suggests direct booking but another guide says walk-in only; no explicit operator policy found. Share buttons on bio are not restaurant contact channels.",
+      "sources": [
+        {
+          "url": "https://lnk.bio/Onechun_phuket",
+          "kind": "official",
+          "supports": "Thai/English identity and street, menu only"
+        },
+        {
+          "url": "https://guide.michelin.com/us/en/phuket-region/phuket/restaurant/one-chun",
+          "kind": "secondary",
+          "supports": "48/1 address and direct booking suggestion"
+        },
+        {
+          "url": "https://www.thailandaddict.com/en/michelin-one-chun",
+          "kind": "secondary",
+          "supports": "Conflicting walk-in-only claim"
+        },
+        {
+          "url": "https://www.instagram.com/onechun_phuket",
+          "kind": "official_candidate",
+          "supports": "Fetch throttled"
+        }
+      ],
+      "booking": {
+        "approved": false,
+        "provider": null,
+        "url": null,
+        "mode": null
+      },
+      "checks": {
+        "readOnlyResearch": true,
+        "desktopForm": false,
+        "mobileForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false
+      },
+      "blockers": [
+        "Resolve reservation policy using operator evidence; do not turn generic phone or bio sharing WhatsApp into booking contact."
+      ],
+      "limitations": [
+        "No date/time selection, form submission, contact message, payment or booking action performed.",
+        "Latest catalog has destination-only address and no coordinates; candidate fields are not promoted to confirmed identity."
+      ],
+      "proposedRegistryAddition": null,
+      "evidenceFile": "external200-next-groups07-09.json",
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-HKT-xorin",
+      "batch": 7,
+      "name": "Xorin",
+      "checkedAt": "2026-10-16",
+      "catalog": {
+        "address": "Phuket, Thailand",
+        "website": null,
+        "cuisine": "japanese",
+        "source": "OpenStreetMap",
+        "coordinates": null
+      },
+      "candidate": {
+        "branch": "Xorin Phuket Old Town",
+        "address": "42 Talat Yai, Mueang Phuket",
+        "actualCity": "Phuket"
+      },
+      "identityStatus": "unresolved_pending_review",
+      "outcome": "candidate_conflict",
+      "evidence": "Latest catalog cuisine is japanese; directory describes Chinese-style cafe and gives a different phone from merchant-labelled Wongnai. Exact-name alone cannot resolve this mismatch. Linked operator social profiles both throttled.",
+      "sources": [
+        {
+          "url": "https://www.phuket.net/directory/profile/xorin-phuket-old-town/",
+          "kind": "secondary",
+          "supports": "Address, Chinese cafe description, Facebook and Instagram candidates"
+        },
+        {
+          "url": "https://www.wongnai.com/restaurants/2729697vW-xorin-phuket-old-town",
+          "kind": "secondary",
+          "supports": "Merchant-labelled page; +66873962925 conflicts with directory"
+        },
+        {
+          "url": "https://www.facebook.com/profile.php?id=61554264277922",
+          "kind": "official_candidate",
+          "supports": "Fetch throttled"
+        },
+        {
+          "url": "https://www.instagram.com/xorin.phuketoldtown",
+          "kind": "official_candidate",
+          "supports": "Fetch throttled"
+        }
+      ],
+      "booking": {
+        "approved": false,
+        "provider": null,
+        "url": null,
+        "mode": null
+      },
+      "checks": {
+        "readOnlyResearch": true,
+        "desktopForm": false,
+        "mobileForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false
+      },
+      "blockers": [
+        "Need exact source location and operator confirmation; cuisine mismatch retained."
+      ],
+      "limitations": [
+        "No date/time selection, form submission, contact message, payment or booking action performed.",
+        "Latest catalog has destination-only address and no coordinates; candidate fields are not promoted to confirmed identity."
+      ],
+      "proposedRegistryAddition": null,
+      "evidenceFile": "external200-next-groups07-09.json",
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-MIA-akashi-japanese-restaurant",
+      "batch": 8,
+      "name": "Akashi Japanese Restaurant",
+      "checkedAt": "2026-10-16",
+      "catalog": {
+        "address": "Miami, USA",
+        "website": null,
+        "cuisine": "japanese",
+        "source": "OpenStreetMap",
+        "coordinates": null
+      },
+      "candidate": {
+        "branch": "Akashi South Miami versus historical Coconut Grove",
+        "address": null,
+        "actualCity": null
+      },
+      "identityStatus": "unresolved_pending_review",
+      "outcome": "unresolved_branch",
+      "evidence": "Official Akashi page identifies 5830 S Dixie Highway, South Miami. Its Open Table Dinners 2016 text is an award, not a booking link. Historical Coconut Grove and newer Varsol by Akashi at 3423 Main Hwy remain distinct candidates; no documented catalog-to-current-operator continuity.",
+      "sources": [
+        {
+          "url": "https://akashisushi.com/",
+          "kind": "official",
+          "supports": "South Miami address and name; award imagery only"
+        },
+        {
+          "url": "https://facommercial.com/2021/01/15/leased-1000-sf-space-to-varsol-by-akashi/",
+          "kind": "secondary",
+          "supports": "2021 Varsol leasing history"
+        },
+        {
+          "url": "https://www.inspectfl.org/restaurant/varsol-by-akashi-coconut-grove-2337134",
+          "kind": "secondary",
+          "supports": "Varsol at 3423 Main Highway, separate name"
+        }
+      ],
+      "booking": {
+        "approved": false,
+        "provider": null,
+        "url": null,
+        "mode": null
+      },
+      "checks": {
+        "readOnlyResearch": true,
+        "desktopForm": false,
+        "mobileForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false
+      },
+      "blockers": [
+        "Do not attach South Miami or Varsol booking route to generic Akashi ID without continuity proof."
+      ],
+      "limitations": [
+        "No date/time selection, form submission, contact message, payment or booking action performed.",
+        "Latest catalog has destination-only address and no coordinates; candidate fields are not promoted to confirmed identity."
+      ],
+      "proposedRegistryAddition": null,
+      "evidenceFile": "external200-next-groups07-09.json",
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-MIA-focaccia-bistro",
+      "batch": 8,
+      "name": "Focaccia Bistro",
+      "checkedAt": "2026-10-16",
+      "catalog": {
+        "address": "Miami, USA",
+        "website": "http://www.focacciabistro.com",
+        "cuisine": null,
+        "source": "OpenStreetMap",
+        "coordinates": null
+      },
+      "candidate": {
+        "branch": "Historical Focaccia Bistro",
+        "address": "3111 Grand Avenue, Coconut Grove",
+        "actualCity": "Miami"
+      },
+      "identityStatus": "unresolved_pending_review",
+      "outcome": "historical_match_current_operation_unresolved",
+      "evidence": "Exact domain from catalog matches OSM-derived listing with node 2475858794 and 3111 Grand Avenue. Historical 2013 art-event notice independently anchors address. Florida entity listing marks Focaccia Bistro Inc inactive, but corporate inactivity alone does not establish current venue closure. Official domain fetch failed. Direct OSM API returned429; no retry/bypass.",
+      "sources": [
+        {
+          "url": "https://hashtag.org/local/fl/miami/restaurants/focaccia-bistro-node2475858794",
+          "kind": "secondary",
+          "supports": "OSM node and exact catalog domain/address"
+        },
+        {
+          "url": "https://www.soulofmiami.org/2013/01/29/focaccia-bistro-does-art-night-12913/",
+          "kind": "secondary",
+          "supports": "Historical 2013 venue/event address"
+        },
+        {
+          "url": "https://search.sunbiz.org/Inquiry/CorporationSearch/SearchResults?ListNameOrder=FOCACCIA+L220000837640&inquiryDirectionType=CurrentList&inquiryType=EntityName&searchNameOrder=FOCACCIA+L220000837640",
+          "kind": "government",
+          "supports": "Entity FOCACCIA BISTRO INC P11000085035 inactive"
+        },
+        {
+          "url": "https://www.focacciabistro.com/",
+          "kind": "official_legacy",
+          "supports": "Fetch failed"
+        },
+        {
+          "url": "https://api.openstreetmap.org/api/0.6/node/2475858794.json",
+          "kind": "osm",
+          "supports": "HTTP429; no usable node data obtained"
+        }
+      ],
+      "booking": {
+        "approved": false,
+        "provider": null,
+        "url": null,
+        "mode": null
+      },
+      "checks": {
+        "readOnlyResearch": true,
+        "desktopForm": false,
+        "mobileForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false
+      },
+      "blockers": [
+        "Historic exact identity stronger; current operation and official booking route remain unknown."
+      ],
+      "limitations": [
+        "No date/time selection, form submission, contact message, payment or booking action performed.",
+        "Latest catalog has destination-only address and no coordinates; candidate fields are not promoted to confirmed identity."
+      ],
+      "proposedRegistryAddition": null,
+      "evidenceFile": "external200-next-groups07-09.json",
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-MIA-genuine-pizza",
+      "batch": 9,
+      "name": "Genuine Pizza",
+      "checkedAt": "2026-10-16",
+      "catalog": {
+        "address": "Miami, USA",
+        "website": null,
+        "cuisine": null,
+        "source": "OpenStreetMap",
+        "coordinates": null
+      },
+      "candidate": {
+        "branch": "Possible Harrys Coconut Grove successor",
+        "address": "2996 McFarlane Road, Coconut Grove",
+        "actualCity": "Miami"
+      },
+      "identityStatus": "unresolved_pending_review",
+      "outcome": "unresolved_branch_rebrand",
+      "evidence": "OSM-derived Mapcarta area lists Genuine Pizza near Hotel Arya. Official Harrys currently lists Coconut Grove and Miami Beach; operator ordering page gives2996 McFarlane. This is delivery ordering, not table reservations. No exact source node or official branch-specific Genuine-to-Harrys continuity established.",
+      "sources": [
+        {
+          "url": "https://mapcarta.com/N5486787425",
+          "kind": "secondary",
+          "supports": "Genuine Pizza in Coconut Grove vicinity; not precise restaurant locator"
+        },
+        {
+          "url": "https://harryspizzeria.com/",
+          "kind": "official",
+          "supports": "Current Harrys locations and ordering links"
+        },
+        {
+          "url": "https://order.harryspizzeria.com/order/harrys-pizzeria-south-beach-3936-n-miami-ave-eswjq",
+          "kind": "official",
+          "supports": "Operator ordering locations; Grove address"
+        },
+        {
+          "url": "https://thegenuinehospitalitygroup.com/",
+          "kind": "official",
+          "supports": "Group connection to Harrys Coconut Grove"
+        }
+      ],
+      "booking": {
+        "approved": false,
+        "provider": null,
+        "url": null,
+        "mode": null
+      },
+      "checks": {
+        "readOnlyResearch": true,
+        "desktopForm": false,
+        "mobileForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false
+      },
+      "blockers": [
+        "Need exact former branch/rebrand continuity; do not replace ID based on vicinity or brand group."
+      ],
+      "limitations": [
+        "No date/time selection, form submission, contact message, payment or booking action performed.",
+        "Latest catalog has destination-only address and no coordinates; candidate fields are not promoted to confirmed identity."
+      ],
+      "proposedRegistryAddition": null,
+      "evidenceFile": "external200-next-groups07-09.json",
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-MIA-lulu",
+      "batch": 9,
+      "name": "Lulu",
+      "checkedAt": "2026-10-16",
+      "catalog": {
+        "address": "Miami, USA",
+        "website": null,
+        "cuisine": "american",
+        "source": "OpenStreetMap",
+        "coordinates": null
+      },
+      "candidate": {
+        "branch": "Lulu in the Grove",
+        "address": "3105 Commodore Plaza, Coconut Grove",
+        "actualCity": "Miami"
+      },
+      "identityStatus": "unresolved_pending_review",
+      "outcome": "historical_match_current_operation_unresolved",
+      "evidence": "Operator-labelled Linktree search result advertises Reservations but page fetch failed. OpenTable identifies same address yet explicitly says unavailable on its booking network; 2024 guest closure reports are not official closure confirmation. Prior domain integrity problem remains. Los Angeles Hammer Museum LULU rejected.",
+      "sources": [
+        {
+          "url": "https://linktr.ee/luluinthegrovemiami",
+          "kind": "official_candidate",
+          "supports": "Indexed operator identity and Reservations entry; target not retrievable"
+        },
+        {
+          "url": "https://www.opentable.com/r/lulu-coconut-grove?lang=es",
+          "kind": "provider",
+          "supports": "Same address; explicitly outside reservation network"
+        },
+        {
+          "url": "https://www.luluinthegrove.com/es/",
+          "kind": "official_legacy",
+          "supports": "Indexed address; prior root integrity concern remains"
+        }
+      ],
+      "booking": {
+        "approved": false,
+        "provider": null,
+        "url": null,
+        "mode": null
+      },
+      "checks": {
+        "readOnlyResearch": true,
+        "desktopForm": false,
+        "mobileForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false
+      },
+      "blockers": [
+        "No valid current booking destination established; do not publish stale OpenTable or unverified Linktree destination."
+      ],
+      "limitations": [
+        "No date/time selection, form submission, contact message, payment or booking action performed.",
+        "Latest catalog has destination-only address and no coordinates; candidate fields are not promoted to confirmed identity."
+      ],
+      "proposedRegistryAddition": null,
+      "evidenceFile": "external200-next-groups07-09.json",
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-MIA-miller-s-ale-house",
+      "batch": 9,
+      "name": "Miller's Ale House",
+      "checkedAt": "2026-10-16",
+      "catalog": {
+        "address": "Miami, USA",
+        "website": "https://millersalehouse.com/locations/coral-gables/",
+        "cuisine": "american",
+        "source": "OpenStreetMap",
+        "coordinates": null
+      },
+      "candidate": {
+        "branch": "Former Millers Ale House Coral Gables",
+        "address": "101 Miracle Mile",
+        "actualCity": "Coral Gables"
+      },
+      "identityStatus": "unresolved_pending_review",
+      "outcome": "strong_historical_identity_closed_reported",
+      "evidence": "Catalog explicitly pins Coral Gables URL. Florida state WARN record anchors Millers Ale House at101 Miracle Mile. Coral Gables Magazine reports permanent closure and later reporting identifies replacement tenant at same premises. Current original URL fails; replacement operator Coral Gables URL redirects to root and no longer lists this location. No successor reservation route may be assigned.",
+      "sources": [
+        {
+          "url": "https://millersalehouse.com/locations/coral-gables/",
+          "kind": "official_legacy",
+          "supports": "Catalog-specific branch URL; fetch failed"
+        },
+        {
+          "url": "https://reactwarn.floridajobs.org/warnlist/records?page=8&sort=CompanyName&sortdir=ASC&year=2020",
+          "kind": "government",
+          "supports": "2020 company record at101 Miracle Mile Coral Gables"
+        },
+        {
+          "url": "https://coralgablesmagazine.com/comings-goings-in-gables-as-pandemic-rages/",
+          "kind": "secondary",
+          "supports": "Reports permanent closure"
+        },
+        {
+          "url": "https://coralgablesmagazine.com/new-restaurants-peruvian-italian-and-more/",
+          "kind": "secondary",
+          "supports": "Reports successor occupying former Millers space"
+        },
+        {
+          "url": "https://piscoynazca.com/coral-gables/",
+          "kind": "official_other_operator",
+          "supports": "Redirects to root; current replacement-location status not verified"
+        }
+      ],
+      "booking": {
+        "approved": false,
+        "provider": null,
+        "url": null,
+        "mode": null
+      },
+      "checks": {
+        "readOnlyResearch": true,
+        "desktopForm": false,
+        "mobileForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false
+      },
+      "blockers": [
+        "Recommend closed_reported, not officially confirmed closed; actual city is Coral Gables, not Miami."
+      ],
+      "limitations": [
+        "No date/time selection, form submission, contact message, payment or booking action performed.",
+        "Latest catalog has destination-only address and no coordinates; candidate fields are not promoted to confirmed identity."
+      ],
+      "proposedRegistryAddition": null,
+      "evidenceFile": "external200-next-groups07-09.json",
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-MIA-monty-s",
+      "batch": 9,
+      "name": "Monty's",
+      "checkedAt": "2026-10-16",
+      "catalog": {
+        "address": "Miami, USA",
+        "website": null,
+        "cuisine": null,
+        "source": "OpenStreetMap",
+        "coordinates": null
+      },
+      "candidate": {
+        "branch": "Montys Raw Bar Coconut Grove",
+        "address": "2550 S Bayshore Drive",
+        "actualCity": "Miami"
+      },
+      "identityStatus": "unresolved_pending_review",
+      "outcome": "strong_candidate_walk_in_policy",
+      "evidence": "Official contact page explicitly rejects reservations and uses first-come-first-served. Generic ID still lacks locator and Montys Sunset Miami Beach is a competing brand candidate. AutoReserve and Restaurantji booking claims rejected for this candidate because operator policy contradicts them.",
+      "sources": [
+        {
+          "url": "https://www.montysrawbar.com/",
+          "kind": "official",
+          "supports": "Name and2550 S Bayshore Drive Miami"
+        },
+        {
+          "url": "https://www.montysrawbar.com/contact/",
+          "kind": "official",
+          "supports": "Explicit no-reservations/first-come-first-served policy"
+        }
+      ],
+      "booking": {
+        "approved": false,
+        "provider": null,
+        "url": null,
+        "mode": null
+      },
+      "checks": {
+        "readOnlyResearch": true,
+        "desktopForm": false,
+        "mobileForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false
+      },
+      "blockers": [
+        "If branch provenance binds ID to Raw Bar, classify walk_in; do not publish phone as booking contact."
+      ],
+      "limitations": [
+        "No date/time selection, form submission, contact message, payment or booking action performed.",
+        "Latest catalog has destination-only address and no coordinates; candidate fields are not promoted to confirmed identity."
+      ],
+      "proposedRegistryAddition": null,
+      "evidenceFile": "external200-next-groups07-09.json",
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-MIA-panorama-restaurant-sky-lounge",
+      "batch": 9,
+      "name": "Panorama Restaurant & Sky Lounge",
+      "checkedAt": "2026-10-16",
+      "catalog": {
+        "address": "Miami, USA",
+        "website": "https://www.sonesta.com/CoconutGrove/index.cfm?fa=restaurant1.home",
+        "cuisine": null,
+        "source": "OpenStreetMap",
+        "coordinates": null
+      },
+      "candidate": {
+        "branch": "Panorama at former Sonesta, now Arya Hotel",
+        "address": "2889 McFarlane Road, Coconut Grove",
+        "actualCity": "Miami"
+      },
+      "identityStatus": "unresolved_pending_review",
+      "outcome": "strong_historical_identity_current_service_unresolved",
+      "evidence": "Catalog Sonesta/CoconutGrove URL plus district listing explicitly linking former Sonesta to Hotel Arya identify premises. Current hotel page still names Panorama in valet section, with8th-floor Sky Lounge and breakfast. However dining exploration points to CozyStay theme demo, footer has demo New York contacts and unrelated gambling links. No safe restaurant-specific booking link or explicit booking phone verified.",
+      "sources": [
+        {
+          "url": "https://coconutgrove.com/business/hotel-arya-2/",
+          "kind": "official_district",
+          "supports": "Former Sonesta identity, Panorama name and address"
+        },
+        {
+          "url": "https://www.aryahotel.us/",
+          "kind": "official_candidate_integrity_issue",
+          "supports": "Same address and Panorama valet text; template/demo/gambling contamination"
+        }
+      ],
+      "booking": {
+        "approved": false,
+        "provider": null,
+        "url": null,
+        "mode": null
+      },
+      "checks": {
+        "readOnlyResearch": true,
+        "desktopForm": false,
+        "mobileForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false
+      },
+      "blockers": [
+        "Current full-service restaurant operation unclear; reject hotel room engine, demo dining link and frontdesk email as table booking."
+      ],
+      "limitations": [
+        "No date/time selection, form submission, contact message, payment or booking action performed.",
+        "Latest catalog has destination-only address and no coordinates; candidate fields are not promoted to confirmed identity."
+      ],
+      "proposedRegistryAddition": null,
+      "evidenceFile": "external200-next-groups07-09.json",
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-MIA-poke-305-grove",
+      "batch": 9,
+      "name": "Poke 305 Grove",
+      "checkedAt": "2026-10-16",
+      "catalog": {
+        "address": "Miami, USA",
+        "website": "https://www.clover.com/",
+        "cuisine": "thai",
+        "source": "OpenStreetMap",
+        "coordinates": null
+      },
+      "candidate": {
+        "branch": "Historical Poke305 Coconut Grove",
+        "address": "3415 Main Highway",
+        "actualCity": "Miami"
+      },
+      "identityStatus": "unresolved_pending_review",
+      "outcome": "historical_match_current_operation_unresolved",
+      "evidence": "Grove name is branch-specific and company LinkedIn lists3415 Main Highway. Current delivery listing says no longer available, while recent inspection aggregator associates address with Chill-N Nitrogen Ice Cream. Company site unreadable; cannot verify official closure or current table service. Catalog thai cuisine conflicts with poke concept and generic Clover URL is not booking.",
+      "sources": [
+        {
+          "url": "https://www.linkedin.com/company/poke-305",
+          "kind": "official",
+          "supports": "Company profile lists Grove address and operator domain"
+        },
+        {
+          "url": "https://www.poke305.com/",
+          "kind": "official_legacy",
+          "supports": "Fetch failed this pass; prior403"
+        },
+        {
+          "url": "https://www.grubhub.com/restaurant/poke-305-coconut-grove-3415-main-hwy-miami/619120",
+          "kind": "provider",
+          "supports": "No longer available on platform, not closure proof"
+        },
+        {
+          "url": "https://www.inspectfl.org/city/coconut-grove",
+          "kind": "secondary",
+          "supports": "Different current named operator at3415 Main Highway"
+        }
+      ],
+      "booking": {
+        "approved": false,
+        "provider": null,
+        "url": null,
+        "mode": null
+      },
+      "checks": {
+        "readOnlyResearch": true,
+        "desktopForm": false,
+        "mobileForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false
+      },
+      "blockers": [
+        "Need official operation/closure evidence; no generic Clover or new tenant route."
+      ],
+      "limitations": [
+        "No date/time selection, form submission, contact message, payment or booking action performed.",
+        "Latest catalog has destination-only address and no coordinates; candidate fields are not promoted to confirmed identity."
+      ],
+      "proposedRegistryAddition": null,
+      "evidenceFile": "external200-next-groups07-09.json",
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-SBH-le-repaire",
+      "result": "Local directory gives explicit reservation phone and Quai de la Republique, Gustavia. This is not independently confirmed operator authorization; do not promote the contact to a verified booking route.",
+      "sources": [
+        {
+          "url": "https://key-paradise.com/clients/le-repaire/",
+          "kind": "secondary",
+          "supports": "Named venue, address and telephone reservation instruction; directory authority is not restaurant ownership."
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-group10.json",
+      "batch": 10,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-SBH-le-bete-a-z-ailes",
+      "result": "ACCESS supports Bete a Z'ailes/BAZ alias and Rue Samuel Fahlberg, Gustavia; its request form is not established as operator-authorized. Prior official-domain failure remains unresolved. Do not substitute directory reservation form.",
+      "sources": [
+        {
+          "url": "https://www.access.sb/en/st-barts/restaurants/dinner/baz-bar/",
+          "kind": "secondary",
+          "supports": "Alias/address and directory listing; not verified current operator route."
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-group10.json",
+      "batch": 10,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    },
+    {
+      "restaurantId": "osm-SIN-bones-n-barrels",
+      "result": "Official Alexandra page supplies branch address and reservation controls, while operator homepage names several outlets. Generic catalogue name still does not select Alexandra or Sentosa. Branch remains unresolved; no route promoted.",
+      "sources": [
+        {
+          "url": "https://bonesnbarrels.com/alexandra.html",
+          "kind": "official",
+          "supports": "Alexandra Technopark branch at 438 B Alexandra Road; reserve controls."
+        },
+        {
+          "url": "https://www.bonesnbarrels.com/index.html",
+          "kind": "official",
+          "supports": "Multiple outlets; does not establish catalogue branch."
+        }
+      ],
+      "approvedRestaurantBookingRoute": null,
+      "checkedAt": "2026-10-16",
+      "evidenceFile": "external200-next-group10.json",
+      "batch": 10,
+      "integrationDecision": "retain_existing_decision_no_new_route_approved"
+    }
+  ]
+}

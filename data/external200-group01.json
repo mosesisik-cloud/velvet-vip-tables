@@ -320,7 +320,12 @@
       "remainingBlockers": [
         "Resolve Canggu/Seminyak/Petitenget branch and trace its restaurant-specific reservation endpoint."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
+      }
     },
     {
       "restaurantId": "osm-BAL-sari",
@@ -795,7 +800,12 @@
       "remainingBlockers": [
         "Read current operator channel and confirm reservation contact/address; no intermediary form approved."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
+      }
     },
     {
       "restaurantId": "osm-BDR-arka-restaurant-pizzeria",
@@ -876,6 +886,11 @@
         "scope": "both_published_branches",
         "source": "https://arkapizzeria.com/",
         "notes": "Operator explicitly does not accept reservations; arrival order and waiting list when full. Exact catalogue branch unresolved."
+      },
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
       }
     },
     {
@@ -1066,7 +1081,12 @@
       "remainingBlockers": [
         "Published contact alone does not establish reservation acceptance."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
+      }
     },
     {
       "restaurantId": "osm-BDR-cirali",
@@ -1336,7 +1356,12 @@
       "remainingBlockers": [
         "Confirm whether published phone accepts table bookings or inspect enabled reservation control."
       ],
-      "followUpReviewedAt": "2026-10-16"
+      "followUpReviewedAt": "2026-10-16",
+      "additionalResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-identity-followup.json",
+        "decision": "No newly approved booking route; existing status retained. See exact restaurantId in evidence."
+      }
     }
   ],
   "followUpScope": "Read-only follow-up of every assigned record, including official/provider and catalogue searches. Prior browser observations retain their original date."
