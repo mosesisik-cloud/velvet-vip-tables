@@ -1,0 +1,76 @@
+{
+  "restaurantId": "curated-STT-club-55",
+  "issue": 103,
+  "agent": "codex-booking-20261016-c55-7b32a9e4",
+  "checkedAt": "2026-10-16",
+  "status": "ready_for_coordinator_review",
+  "claim": {
+    "confirmationUrl": "https://github.com/mosesisik-cloud/velvet-vip-tables/issues/103#issuecomment-6204263121",
+    "lock": "booking-claims/issue-103",
+    "workingBranch": "booking/103-club55-7b32a9e4"
+  },
+  "identity": {
+    "name": "Le Club 55",
+    "address": "43 Boulevard Patch, 83350 Ramatuelle, France",
+    "locality": "Ramatuelle",
+    "area": "Pampelonne beach, Saint-Tropez peninsula",
+    "catalogDestination": "Saint-Tropez",
+    "verification": "official_sources_verified",
+    "note": "Retain the stable restaurant ID; catalog destination is not the municipality. No shared identity or branding fields changed.",
+    "sources": [
+      "https://www.club55.fr/acces.html",
+      "https://www.club55.fr/le-restaurant.html"
+    ]
+  },
+  "bookingRoute": {
+    "classification": "manual_request",
+    "channel": "telephone",
+    "phone": "+33494555555",
+    "contactUrl": "https://www.club55.fr/en/contact.html",
+    "onlineBookingUrl": null,
+    "provider": null,
+    "officialPolicyQuote": "Reservations are made exclusively by telephone. We do not take reservations online or by email.",
+    "contactFormIsBookingForm": false,
+    "source": "https://www.club55.fr/en/contact.html",
+    "availabilityObserved": false,
+    "reservationConfirmed": false,
+    "callTested": false
+  },
+  "excludedRoute": {
+    "service": "Beach sunbeds",
+    "phone": "+33494555557",
+    "reason": "Separate beach reservation line; do not use for restaurant tables.",
+    "source": "https://www.club55.fr/la-plage.html"
+  },
+  "implementation": {
+    "status": "not_integrated",
+    "changeType": "evidence_only",
+    "runtimeChanged": false,
+    "canonicalWorklistChanged": false,
+    "sharedRegistryChanged": false,
+    "publicationStatus": "not_published",
+    "existingCodeReviewed": "js/restaurant-booking-providers.js: resolveEmbeddedBooking",
+    "integrationNote": "The existing resolver requires reviewed HTTPS provider mappings. A telephone-only route must not be inserted as an external booking provider or embedded form. No new connector is warranted by this evidence."
+  },
+  "verification": {
+    "method": "Read-only web search and text retrieval of official pages; no interactive provider session.",
+    "checks": [
+      "Official access and restaurant pages agree on venue identity and Ramatuelle address.",
+      "Official English contact page explicitly accepts telephone reservations and excludes online/email reservations.",
+      "Official beach page identifies a different sunbed telephone line.",
+      "No online booking destination, available time, hold or confirmed reservation asserted."
+    ],
+    "limitations": [
+      "Web retrieval returned cached pages: contact and restaurant crawled 5 days earlier, access 2 days earlier, beach last week; this is source review on checkedAt, not proof of a same-day live fetch.",
+      "Initial homepage fetch timed out; no closure inference made.",
+      "No telephone call or contact-form submission; phone reachability and acceptance for any date remain untested.",
+      "No runtime behavior changed; browser/application integration tests are not applicable to this evidence-only handoff."
+    ]
+  },
+  "handoff": {
+    "coordinator": "01a14080-83ed-7991-ac52-7f57761f13e7",
+    "nextStep": "Review and consolidate this manual telephone route into the canonical worklist. Any UI exposure belongs to the coordinator/integrator; retain non-integrated and unpublished status until separately evidenced.",
+    "blocker": "No official online reservation route; manual outcome awaits coordinator acceptance.",
+    "lockRelease": "Coordinator only; keep lock pending acceptance."
+  }
+}
