@@ -106,3 +106,19 @@ test('ownership, revision, coordinates and input guard prevent cross-session act
     await assert.rejects(mirror.create('alice', 'unknown'), /pilot_only/);
   } finally { await mirror.close(); }
 });
+
+import { BookingAssetCache } from './booking-asset-cache.mjs';
+test('asset cache reuses public files but never bookings or private responses, expires and stays bounded', () => {
+  let now=0;const cache=new BookingAssetCache({maxBytes:8,now:()=>now});
+  const req=(type,url,method='GET')=>({resourceType:()=>type,url:()=>url,method:()=>method});
+  assert.equal(cache.eligible(req('script','https://app.bokabord.se/app.js')),true);
+  for(const type of ['xhr','fetch','document']) assert.equal(cache.eligible(req(type,'https://app.bokabord.se/api/getTimes')),false);
+  assert.equal(cache.eligible(req('script','https://app.bokabord.se/app.js','POST')),false);
+  const headers={'cache-control':'public, max-age=60','content-type':'application/javascript','content-encoding':'gzip'};
+  for(const extra of [{'set-cookie':'private'}, {'cache-control':'private, max-age=60'}, {vary:'Cookie'}, {vary:'*'}, {'content-type':'application/json'}]) {
+    cache.put('bad',{...headers,...extra},Buffer.from('abc'),200);assert.equal(cache.get('bad'),null);
+  }
+  cache.put('a',headers,Buffer.from('abcd'),200);assert.equal(cache.get('a').headers['content-encoding'],undefined);
+  cache.put('b',headers,Buffer.from('12345'),200);assert.equal(cache.get('a'),null);assert.equal(cache.bytes,5);
+  now=60001;assert.equal(cache.get('b'),null);assert.equal(cache.bytes,0);
+});
