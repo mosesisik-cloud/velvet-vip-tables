@@ -14,7 +14,8 @@ const rows=Object.entries(catalogue.destinations).flatMap(([cityCode,d])=>d.rest
 assert.equal(rows.length,770);const byId=new Map(rows.map(r=>[r.placeId,r]));assert.equal(byId.size,770);
 const normalize=s=>String(s||'').normalize('NFC').trim().toLowerCase();
 const events=new Map();const sourceFiles=[];const missingWaves=[];const unmappedEvidence=[];
-for(let wave=2;wave<=11;wave++) {
+const discoveredWaves=(await fs.readdir(work)).map(name=>/^discovery-wave(\d+)-(?:decisions|results)\.json$/.exec(name)).filter(Boolean).map(match=>Number(match[1]));
+for(let wave=2;wave<=Math.max(2,...discoveredWaves);wave++) {
  let file=path.join(work,`discovery-wave${wave}-decisions.json`),data;
  try{data=await read(file);}catch(error){if(error.code!=='ENOENT')throw error;file=path.join(work,`discovery-wave${wave}-results.json`);try{data=await read(file);}catch(error){if(error.code!=='ENOENT')throw error;missingWaves.push(wave);continue;}}
  sourceFiles.push({wave,file:path.basename(file),records:data.length});

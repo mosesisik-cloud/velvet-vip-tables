@@ -7,6 +7,7 @@ let reviewedRegistry = {};
 export const hasEmbeddedBooking = id => !!resolveEmbeddedBooking(reviewedRegistry, id);
 const PROVIDER_HOSTS = Object.freeze({
   'FoodBooking / GloriaFood': ['www.foodbooking.com'],
+  Delicity: ['booking.delicity.com'],
   TABLFY: ['www.lumabali.com'],
   Meitre: ['lahuella.meitre.com', 'lasusana.meitre.com', 'oro.meitre.com', 'fasano.meitre.com'],
   Elyra: ['widget.elyrasystems.com'], Guestplan: ['angelicabooking.guestplan.io'],
