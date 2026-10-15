@@ -1,0 +1,72 @@
+{
+  "restaurantId": "curated-HKG-the-chairman",
+  "issue": 90,
+  "agent": "codex-worker-2-5351",
+  "checkedDateStockholm": "2026-10-16",
+  "status": "blocked",
+  "identity": {
+    "status": "verified_from_official_web_reader_content",
+    "name": "The Chairman",
+    "address": "3rd Floor, The Wellington, 198 Wellington Street, Central, Hong Kong",
+    "sources": [
+      "https://www.thechairmangroup.com/",
+      "https://www.thechairmangroup.com/index.php?route=about/contactus",
+      "https://www.thechairmangroup.com/newlocation"
+    ],
+    "duplicateCheck": "Exact Chairman name/ID search in data/restaurants.json found only curated-HKG-the-chairman; no exhaustive fuzzy audit."
+  },
+  "bookingRoute": {
+    "category": "H",
+    "status": "exact_booking_destination_unresolved",
+    "officialWebsite": "https://www.thechairmangroup.com/",
+    "bookingUrl": null,
+    "provider": null,
+    "source": "https://www.thechairmangroup.com/importantannouncement",
+    "observation": "Official notice directs legitimate online reservations to the platform on its own website. Its exact link/form is not exposed by the web reader; direct access was blocked.",
+    "manualBookingVerified": false,
+    "originalFormVerified": false,
+    "availabilityVerified": false,
+    "confirmedReservation": false,
+    "languages": "English official informational content observed; booking language options unknown"
+  },
+  "terms": {
+    "source": "https://www.thechairmangroup.com/terms",
+    "summary": "General published terms require restaurant confirmation and any applicable deposit. Card details or a deposit may be requested. Changes/cancellations require 72 hours notice; late cancellation/change or no-show forfeits paid deposit.",
+    "depositAmount": null,
+    "actualCheckoutRequirements": "unknown"
+  },
+  "checks": {
+    "directFetch": {
+      "url": "https://www.thechairmangroup.com/",
+      "httpStatus": 403
+    },
+    "browser": [
+      {
+        "width": 390,
+        "height": 900,
+        "url": "https://www.thechairmangroup.com/",
+        "httpStatus": 403,
+        "rendered": "CloudFront request-blocked error",
+        "bookingLinksObserved": 0,
+        "blockedRequests": []
+      },
+      {
+        "width": 1365,
+        "height": 900,
+        "url": "https://www.thechairmangroup.com/",
+        "httpStatus": 403,
+        "rendered": "CloudFront request-blocked error",
+        "bookingLinksObserved": 0,
+        "blockedRequests": []
+      }
+    ],
+    "safety": "Service workers blocked; only first-party GET/HEAD allowed. No clicks, form entries, challenge bypass, holds, reservations, messages or payments."
+  },
+  "implementation": {
+    "status": "evidence_only",
+    "recommendation": "Keep booking unresolved; no guessed provider or manual booking fallback. Official site is an informational destination, not a verified working booking URL."
+  },
+  "blocker": "Direct access blocked with HTTP 403; web reader exposes official identity and policies but not exact reservation destination.",
+  "nextStep": "Coordinator assigns read-only verification from an ordinarily accessible environment, preserving request guards and confirming the exact official booking link before mapping.",
+  "publication": "not_published"
+}
