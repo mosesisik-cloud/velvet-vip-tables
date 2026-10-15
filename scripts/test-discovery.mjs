@@ -133,4 +133,3 @@ assert.equal(vm.runInContext('favoriteId(favoriteEntry("restaurant:curated-STO-z
 assert.equal(vm.runInContext('favoriteCard(favoriteEntry("old-venue"))',ctx),'venue:old-venue');
 assert.equal(vm.runInContext('favoriteCard(favoriteEntry("restaurant:curated-STO-zink-italian-cuisine"))',ctx),'restaurant:curated-STO-zink-italian-cuisine');
 console.log('Discovery tests passed: URL state, cached back navigation, stale request protection, real Zink search, mixed legacy/restaurant favorites.');
-

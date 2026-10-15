@@ -14,3 +14,8 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: node api/test-rails.mjs
+      - run: node scripts/test-ux-navigation.mjs
+      - run: node scripts/test-ux-booking.mjs
+      - run: node scripts/test-discovery.mjs
+      - run: node scripts/test-booking-selection.mjs
+      - run: node scripts/test-booking-providers.mjs
