@@ -49,3 +49,7 @@ Branch: booking/54-delta-codex-worker-1-ac9f. Commit and PR are recorded in the 
 Booking coordinator: review this fragment, reconcile the geographic label, and assign a restricted inspection to resolve the exact current Tock destination and source anomaly before marking the integration ready. The verified official entry page is a lead, not evidence of a functioning end-to-end route. No direct provider URL is proposed.
 
 Not published. No merge or deployment performed. Claim remains reserved until the coordinator accepts the handoff and handles final status. No next issue claimed.
+
+## Follow-up: Greek entry and homepage
+
+A further read-only HTTP source inspection on 2026-10-16 checked the homepage and https://deltarestaurant.gr/el/portfolio/book-a-table/ (both HTTP 200). Neither response exposed an exploretock restaurant URL in the inspected source. The Greek entry contains the same Tock container with data-tock-locale=en-gb and Europe/Athens timezone. Therefore Greek page navigation must not be treated as proof of a Greek-language provider journey. Provider language switching and functional booking remain unverified. No scripts or booking controls were executed during this check.
