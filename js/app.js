@@ -1,3 +1,4 @@
+import { primarySection, isDiscoveryList, safeDiscoveryReturn } from './navigation-state.js';
 import { mountBookingReport } from './booking-report.js';
 import { mountAvailabilitySearch } from './availability-search.js';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
@@ -2022,73 +2023,43 @@ function renderHome() {
     : [];
   if (localDest && !loadNight().dest) saveNight({ dest: localDest.code, date: loadNight().date });
   view().innerHTML = `
-  <section class="hero">
+  <section class="hero home-clean">
     <div class="hero-media" id="hero-media" aria-hidden="true"></div>
     <div class="hero-kicker">${esc(t("heroKicker"))}</div>
     <h1>${esc(t("heroTitle1"))}<br><em>${esc(t("heroTitle2"))}</em></h1>
     <p>${esc(t("heroP"))}</p>
     <form class="home-discovery" id="home-discovery-form" role="search">
       <span class="home-discovery-pin" aria-hidden="true">⌖</span>
-      <label class="sr-only" for="home-discovery-input">Sök destination eller ställe</label>
-      <input id="home-discovery-input" list="home-destination-list" placeholder="Vart vill du gå?" autocomplete="off">
+      <label class="sr-only" for="home-discovery-input">${esc(t("heroSearchLabel"))}</label>
+      <input id="home-discovery-input" list="home-destination-list" placeholder="${esc(t("heroSearchPlaceholder"))}" autocomplete="off">
       <datalist id="home-destination-list">${pubD.map((d) => `<option value="${esc(d.name)}">${esc(d.country)}</option>`).join("")}</datalist>
-      <button type="submit">Utforska</button>
+      <button type="submit">${esc(t("navSearch"))}</button>
     </form>
-    <div class="home-category-links" aria-label="Populära kategorier">
-      <a href="#/restaurants" data-nav>Restauranger</a><a href="#/venues?cat=nightclub" data-nav>Nattklubbar</a><a href="#/venues?cat=beach" data-nav>Beach clubs</a><a href="#/map" data-nav>Karta</a>
+    <div class="home-category-links" aria-label="${esc(t("popularCategories"))}">
+      <a href="#/restaurants" data-nav>${esc(t("navRestaurants"))}</a><a href="#/venues?cat=nightclub" data-nav>${esc(t("navNightclubs"))}</a><a href="#/venues?cat=beach" data-nav>${esc(t("navBeachClubs"))}</a>
     </div>
-    <div class="hero-cta">
-      <button type="button" class="btn btn-gold" id="walk-start">${esc(t("walkCta"))}</button>
+    <div class="hero-cta home-intent">
+      <a class="btn btn-gold" href="#/availability${localDest ? `?city=${encodeURIComponent(localDest.name)}` : ""}" data-nav>${esc(t("navFindTable"))}</a>
       <a class="btn btn-ghost" href="#/destinations" data-nav>${esc(t("seeDest"))}</a>
+      <a class="btn btn-ghost" href="#/open" data-nav>${esc(t("navSocial"))}</a>
     </div>
     <p class="hero-credit"><a href="${esc(HERO_VIDEO.credit)}" target="_blank" rel="noopener">${esc(t("videoPexels"))}</a></p>
   </section>
 
   <section class="section home-nearby" id="home-nearby">
     <div class="home-location-bar">
-      <div><span class="home-location-pin" aria-hidden="true">⌖</span><strong>${esc(localDest ? `${t("geoNearest")} ${localDest.name}` : t("nearMe"))}</strong><small>${esc(localDest ? `${localVenues.length} ställen visas först` : t("geoHint"))}</small></div>
+      <div><span class="home-location-pin" aria-hidden="true">⌖</span><strong>${esc(localDest ? `${t("geoNearest")} ${localDest.name}` : t("nearMe"))}</strong><small>${esc(localDest ? t("explorePlacesHint") : t("geoHint"))}</small></div>
       <button type="button" class="btn btn-gold btn-sm" id="home-locate">${esc(localDest ? t("geoRetry") : t("geoUse"))}</button>
     </div>
-    ${localDest ? `<div class="section-head"><div><h2>${esc(localDest.name)} först</h2><div class="sub">Restauranger och klubbar närmast din valda plats</div></div><a class="link-gold" href="#/destination/${encodeURIComponent(localDest.code)}" data-nav>${esc(t("explore"))} →</a></div>
+    ${localDest ? `<div class="section-head"><div><h2>${esc(t("localPlaces").replace("{name}", localDest.name))}</h2><div class="sub">${esc(t("explorePlacesHint"))}</div></div><a class="link-gold" href="#/destination/${encodeURIComponent(localDest.code)}" data-nav>${esc(t("explore"))} →</a></div>
       <div class="vibe-rail home-local-rail">${localVenues.length ? localVenues.map((v, i) => venueCard(v, { vibe: true, eager: i < 3 })).join("") : `<p class="events-meta">${esc(t("noHits"))}</p>`}</div>` : ""}
   </section>
-  <section class="section home-verify" id="home-verify">
-    <div class="section-head"><div><h2>Verifiera dig</h2><div class="sub">Ett tryck för att börja · pass och selfie görs bara första gången</div></div></div>
-    ${loadUser() ? `
-      <p class="stepper-hint">${idvStatus() === "verified" ? "✓ Verifieringen är klar på den här enheten" : "Kontot är anslutet · slutför pass och selfie"}</p>
-      <a class="btn btn-gold" href="${idvStatus() === "verified" ? "#/account" : "#/verify"}" data-nav>${idvStatus() === "verified" ? "Öppna konto" : "Fortsätt verifieringen"}</a>
-    ` : `
-      <p class="stepper-hint social-honesty auth-real-note">🔒 Riktig säker inloggning · VELVET sparar aldrig ditt lösenord</p>
-      <button type="button" class="btn btn-gold phone-login" id="home-passkey">Face ID / Touch ID / skärmlås</button>
-      <div class="social-grid social-grid-onetap">
-        ${SOCIALS.map((s) => socialCompactButton(s, "data-home-soc")).join("")}
-      </div>
-    `}
-  </section>
-
   <section class="section home-restaurants" id="home-restaurants-section">
     <div class="section-head">
-      <div><h2>${esc(t("navRestaurants"))}</h2><div class="sub" id="home-restaurants-count">Restauranger i 39 destinationer</div></div>
+      <div><h2>${esc(t("navRestaurants"))}</h2><div class="sub" id="home-restaurants-count">${esc(t("restaurantsSub"))}</div></div>
       <a class="link-gold" href="#/restaurants" data-nav>${esc(t("navRestaurants"))} →</a>
     </div>
     <div id="home-restaurants"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("restaurantsLoading"))}</p></div>
-  </section>
-
-  <section class="section night-section" id="night-home">
-    <div class="section-head">
-      <div><h2>${esc(t("tablesTitle"))}</h2><div class="sub">${esc(t("tablesSub"))}</div></div>
-      <a class="link-gold" href="${openNightHref(loadNight().dest, loadNight().date)}" data-nav>${esc(t("navOpen"))} →</a>
-    </div>
-    <div class="night-pick">
-      <label class="night-dest-label">${esc(t("tablesCity"))}
-        <select id="home-night-dest" aria-label="${esc(t("tablesCity"))}">
-          <option value="">${esc(t("allDest"))}</option>
-          ${orderedPublicDestinations().map((x) => `<option value="${esc(x.code)}" ${loadNight().dest === x.code ? "selected" : ""}>${esc(x.name)}</option>`).join("")}
-        </select>
-      </label>
-    </div>
-    <div class="avail-chips" id="home-night-chips" role="list">${dateChipsHTML(loadNight().date, destByCodeOrName(loadNight().dest))}</div>
-    <div class="night-board" id="home-night-list"></div>
   </section>
 
   <section class="section vibe-section" id="vibe-walk">
@@ -2108,12 +2079,7 @@ function renderHome() {
     <div class="dest-grid dest-grid-walk">${tier1.slice(0, 8).map(destCard).join("")}</div>
   </section>
 
-  <div class="stats">
-    <div class="stat"><div class="stat-num">${pubD.length}</div><div class="stat-label">${esc(t("statDests"))}</div></div>
-    <div class="stat"><div class="stat-num">${pubV.length}</div><div class="stat-label">${esc(t("statVenues"))}</div></div>
-    <div class="stat"><div class="stat-num">${pubV.filter((v) => v.priority_score >= 90).length}</div><div class="stat-label">${esc(t("statPrio"))}</div></div>
-    <div class="stat"><div class="stat-num">${pubV.filter((v) => statusInfo(v.research_status).cls === "tag-verified").length}</div><div class="stat-label">${esc(t("verified"))}</div></div>
-  </div>`;
+`;
   bindDestCards();
   bindVenueCards();
   mountHomeRestaurants();
@@ -2131,46 +2097,15 @@ function renderHome() {
       renderHome();
     }, () => { showToast(t("geoError")); btn.disabled = false; btn.textContent = t("geoUse"); });
   });
-  $("#home-passkey")?.addEventListener("click", () => loginWithPasskey());
-  document.querySelectorAll("[data-home-soc]").forEach((el) => el.addEventListener("click", async () => {
-    el.disabled = true;
-    const r = await loginWithSocial(el.dataset.homeSoc).catch(() => null);
-    if (!r?.oauth) { showToast(socialTrustCopy().unavailable); el.disabled = false; }
-  }));
   paintVibeRail();
-  const paintHomeNight = async () => {
-    const n = loadNight();
-    const dd = destByCodeOrName(n.dest);
-    const chips = $("#home-night-chips");
-    if (chips) chips.innerHTML = dateChipsHTML(n.date, dd);
-    chips?.querySelectorAll("[data-avail-date]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        saveNight({ dest: n.dest, date: btn.dataset.availDate });
-        paintHomeNight();
-      });
-    });
-    const more = document.querySelector(".night-section .link-gold");
-    if (more) more.setAttribute("href", openNightHref(n.dest, n.date));
-    if (dd) await hydrateNight(dd, n.date);
-    const tables = (await listOpenTables()).map((tb) => tb.members ? tb : decorateLocalTable(tb));
-    paintNightList($("#home-night-list"), dd, n.date, { limit: 6, openTables: tables });
-  };
-  $("#home-night-dest")?.addEventListener("change", (e) => {
-    saveNight({ dest: e.target.value, date: loadNight().date });
-    paintHomeNight();
-  });
-  paintHomeNight();
   $("#walk-start")?.addEventListener("click", () => {
     document.getElementById("vibe-walk")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
   $("#home-discovery-form")?.addEventListener("submit", (event) => {
     event.preventDefault();
-    const query = fold($("#home-discovery-input")?.value || "").trim();
+    const query = ($("#home-discovery-input")?.value || "").trim();
     if (!query) { $("#home-discovery-input")?.focus(); return; }
-    const destination = DESTINATIONS.find((d) => fold(d.name) === query) || DESTINATIONS.find((d) => fold(`${d.name} ${d.country}`).includes(query));
-    if (destination) { location.hash = `#/destination/${encodeURIComponent(destination.code)}`; return; }
-    const venue = VENUES.find((v) => fold(`${v.name} ${v.destination} ${v.category}`).includes(query));
-    location.hash = venue ? `#/venue/${encodeURIComponent(venue.venue_id)}` : `#/venues?q=${encodeURIComponent($("#home-discovery-input")?.value || "")}`;
+    openSearch(query);
   });
   document.querySelectorAll("[data-vibe]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -2280,7 +2215,6 @@ function destCard(d) {
   const cover = coverVenueForDest(d);
   return `
   <div class="dest-card" data-code="${esc(d.code)}" role="link" tabindex="0" aria-label="${esc(t("destCardAria").replace("{name}", d.name))}">
-    <span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span>
     <div class="dest-cover${cover ? "" : " img-fail"}">
       ${coverImgHTML(cover && cover.url)}
       <div class="dest-emblem" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
@@ -2289,7 +2223,6 @@ function destCard(d) {
     <h3>${esc(d.name)}</h3>
     <div class="dest-country">${esc(d.country)} · ${esc(d.region)}</div>
     <div class="dest-meta"><span>${esc(t("seasonShort"))} <b>${esc(d.peak_season)}</b></span>${(() => { const km = distanceToDest(d); return km != null ? `<span class="dest-km">~${fmtKm(km)} km</span>` : ""; })()}</div>
-    ${pips(d.luxury)}
   </div>`;
 }
 
@@ -2857,16 +2790,9 @@ function renderDestinationDetail(code) {
       <div class="detail-hero-main">
         <div class="detail-kicker">${esc(d.country)} · ${esc(d.region)} · ${esc(t("seasonShort"))} ${esc(d.peak_season)}</div>
         <h1 class="detail-name">${esc(d.name)}</h1>
-        <div class="venue-tags detail-tags">
-          <span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span>
-          ${useCases.map((u) => `<span class="tag">${esc(u)}</span>`).join("")}
-          ${(() => {
-            const c = (CLUB_RANKINGS.cities || []).find((x) => x.destination_code === d.code);
-            return c ? `<span class="tag src-rank">${esc(t("srcTimeout").replace("{n}", String(c.rank)))}</span>` : "";
-          })()}
-        </div>
-        ${d.note ? `<p class="detail-notes"><span class="dest-note-label">${esc(t("strategicNote"))}</span> ${esc(d.note)}</p>` : ""}
         <div class="detail-links">
+          <a class="btn btn-gold" href="#/availability?city=${encodeURIComponent(d.name)}" data-nav>${esc(t("navFindTable"))}</a>
+          <a class="icon-link" href="#/restaurants?dest=${encodeURIComponent(d.code)}" data-nav>${esc(t("navRestaurants"))}</a>
           <a class="icon-link" href="#/open?dest=${encodeURIComponent(d.code)}" data-nav>${esc(t("navOpen"))}</a>
           <a class="icon-link" href="#/venues" id="dd-list">${esc(t("seeInList"))}</a>
           <a class="icon-link" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
@@ -2876,29 +2802,12 @@ function renderDestinationDetail(code) {
       <div class="dest-emblem dest-emblem-lg" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
     </div>
 
-    ${cityAvailHTML(d, (location.hash.split("?")[1] ? new URLSearchParams(location.hash.split("?")[1]).get("date") : "") || loadNight().date)}
-
-    <div class="detail-grid dest-detail-grid">
-      <div class="detail-panel">
-        <h2 class="detail-panel-title">${esc(t("ratings"))}</h2>
-        <div class="meters">
-          ${scoreMeter(t("scoreLuxury"), d.luxury)}
-          ${scoreMeter(t("scoreParty"), d.party)}
-          ${scoreMeter(t("scoreShare"), d.shareability)}
-        </div>
-      </div>
-      <div class="detail-panel">
-        <h2 class="detail-panel-title">${esc(t("destFacts"))}</h2>
-        <div class="detail-facts" style="margin-top:0; border-top:none; padding-top:0">
-          <div class="fact"><span class="fact-label">${esc(t("countryLabel"))}</span><span class="fact-val">${esc(d.country)}</span></div>
-          <div class="fact"><span class="fact-label">${esc(t("regionLabel"))}</span><span class="fact-val">${esc(d.region)}</span></div>
-          <div class="fact"><span class="fact-label">Tier</span><span class="fact-val"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span></span></div>
-          <div class="fact"><span class="fact-label">${esc(t("peakSeason"))}</span><span class="fact-val">${esc(d.peak_season)}</span></div>
-          <div class="fact"><span class="fact-label">${esc(t("verified"))}</span><span class="fact-val">${verified.length}</span></div>
-          ${(() => { const km = distanceToDest(d); return km != null ? `<div class="fact"><span class="fact-label">${esc(t("distanceFromYou"))}</span><span class="fact-val">~${fmtKm(km)} km</span></div>` : ""; })()}
-        </div>
-      </div>
+    <div class="section-head restaurant-section-head">
+      <div><h2>${esc(t("restaurantsTitle").replace("{name}", d.name))}</h2><div class="sub">${esc(t("restaurantsSub"))}</div></div>
     </div>
+    <div id="destination-restaurants" aria-live="polite"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("restaurantsLoading"))}</p></div>
+
+    <details class="detail-disclosure"><summary>${esc(t("navOpen"))}</summary>${cityAvailHTML(d, (location.hash.split("?")[1] ? new URLSearchParams(location.hash.split("?")[1]).get("date") : "") || loadNight().date)}</details>
 
     ${Number.isFinite(d.lat) && Number.isFinite(d.lng) ? `
     <div class="detail-panel dest-map-panel">
@@ -2907,13 +2816,8 @@ function renderDestinationDetail(code) {
         <div id="map-dest" class="map-canvas map-canvas-mini" role="application" aria-label="${esc(t("mapOf").replace("{name}", d.name))}"></div>
         <div class="map-loading" id="dest-map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("loadingMap"))}</div>
       </div>
-      <p class="map-note">${esc(t("mapNoteApprox").replace("{name}", d.name))} <a class="link-gold" href="#/map" data-nav>${esc(t("wholeMap"))}</a></p>
+      <p class="map-note">${esc(t("cityMapNote"))} <a class="link-gold" href="#/map" data-nav>${esc(t("wholeMap"))}</a></p>
     </div>` : ""}
-
-    <div class="section-head restaurant-section-head">
-      <div><h2>${esc(t("restaurantsTitle").replace("{name}", d.name))}</h2><div class="sub">${esc(t("restaurantsSub"))}</div></div>
-    </div>
-    <div id="destination-restaurants" aria-live="polite"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("restaurantsLoading"))}</p></div>
 
     ${inCity.length ? `
     <div class="section-head" style="margin-top:44px">
@@ -3024,7 +2928,7 @@ function venueCard(v, { eager = false, rank = 0, vibe = false } = {}) {
           <div class="venue-name">${esc(v.name)}</div>
           <div class="venue-loc">${esc(v.destination)}</div>
         </div>
-        ${vibe ? "" : `<div class="prio">${googleRatingHTML(v, { compact: true }) || `<span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">Prio</span>`}</div>`}
+        ${vibe ? "" : `<div class="prio">${googleRatingHTML(v, { compact: true })}</div>`}
       </div>
       <div class="venue-tags">
         <span class="tag">${esc(v.category)}</span>
@@ -3033,13 +2937,9 @@ function venueCard(v, { eager = false, rank = 0, vibe = false } = {}) {
         ${v.shareable_format ? `<span class="tag tag-verified">${esc(t("shareableCost"))}</span>` : ""}
         ${eventsFor(v).length ? `<span class="tag tag-events">🎟 ${esc(t("comingN").replace("{n}", String(eventsFor(v).length)))}</span>` : ""}`}
       </div>
-      ${!vibe && publicNote(v) ? `<div class="venue-note">${esc(publicNote(v))}</div>` : ""}
       ${vibe ? `<div class="vibe-open">${esc(t("openRoom").replace("{name}", v.name))}</div>` : `
       <div class="venue-actions">
-        <button class="btn btn-gold btn-sm" data-book="${esc(v.venue_id)}">${esc(t("sendRequest"))}</button>
-        ${bookingLinkHTML(v)}
-        <a class="icon-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("openMaps"))} ↗</a>
-        ${igLinkHTML(v)}
+        <a class="btn btn-ghost btn-sm" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>${esc(t("seeVenue"))}</a>
       </div>`}
     </div>
     ${photoAttrHTML(v)}
@@ -3569,7 +3469,6 @@ function renderVenueDetail(id) {
   <section class="section detail">
     <a class="detail-back" href="#/venues" data-nav>← ${esc(t("allVenues"))}</a>
 
-    ${venueIntroHTML(v)}
     ${venueGalleryHTML(v)}
     ${photoAttrHTML(v, { official: true })}
 
@@ -3584,48 +3483,26 @@ function renderVenueDetail(id) {
           ${rankingTagHTML(v)}
           ${dest ? `<span class="tag">${esc(t("seasonShort"))} ${esc(dest.peak_season)}</span>` : ""}
         </div>
-        ${publicNote(v) ? `<p class="detail-notes">${esc(publicNote(v))}</p>` : ""}
         <div class="detail-links">
-          ${bookingLinkHTML(v)}
+          ${bookingLinkHTML(v, { gold: true })}
           ${(venueMenu(v)?.source || v.website_url || v.source_url) ? `<a class="icon-link" href="#/menu/venue/${encodeURIComponent(v.venue_id)}" data-nav>Meny</a>` : ""}
           <a class="icon-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
-          ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">${esc(t("website"))} ↗</a>` : ""}
         </div>
-      </div>
-      <div class="prio prio-lg">
-        ${googlePlace(v)?.matched
-          ? `<span class="prio-num">${esc(String(googlePlace(v).rating))}</span><span class="prio-label">Google</span>`
-          : `<span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">VELVET-prio</span>`}
       </div>
     </div>
 
-    ${followSectionHTML(v)}
-
     <div class="detail-grid">
-      ${contactPanelHTML(v)}
-      ${rankingPanelHTML(v)}
       ${factsPanelHTML(v)}
-      ${googleReviewsPanelHTML(v)}
       ${menuPanelHTML(v)}
-      ${eventsSectionHTML(v)}
+      ${googleReviewsPanelHTML(v)}
+      <details class="detail-disclosure"><summary>${esc(t("moreDetails"))}</summary>
+        ${eventsSectionHTML(v)}
+        ${rankingPanelHTML(v)}
+        ${contactPanelHTML(v)}
+        ${followSectionHTML(v)}
+      </details>
+      <details class="detail-disclosure"><summary>${esc(t("otherBookingOptions"))}</summary>
       ${venuePackagesPanelHTML(v)}
-      <div class="detail-panel">
-        <h2 class="detail-panel-title">${esc(t("velvetScore"))}</h2>
-        <p class="events-meta">${esc(t("velvetScoreHint"))}</p>
-        <div class="meters">
-          ${scoreMeter(t("scoreLuxury"), v.luxury_score)}
-          ${scoreMeter(t("scoreParty"), v.party_score)}
-          ${scoreMeter(t("scoreShare"), v.shareability_score)}
-          ${scoreMeter(t("scoreBook"), v.booking_potential)}
-        </div>
-        <div class="detail-facts">
-          <div class="fact"><span class="fact-label">${esc(t("verification"))}</span><span class="fact-val"><span class="tag ${st.cls}">${st.label}</span></span></div>
-          <div class="fact"><span class="fact-label">${esc(t("categoryLabel"))}</span><span class="fact-val">${esc(v.category)}</span></div>
-          <div class="fact"><span class="fact-label">${esc(t("venueIdLabel"))}</span><span class="fact-val">${esc(v.venue_id)}</span></div>
-          ${dest ? `<div class="fact"><span class="fact-label">${esc(t("regionLabel"))}</span><span class="fact-val">${esc(dest.region)}</span></div>` : ""}
-        </div>
-      </div>
-
       <div class="detail-panel detail-cta">
         <h2 class="detail-panel-title">${esc(t("requestShareTitle"))}</h2>
         ${fromCalcHTML(v)}
@@ -3647,13 +3524,14 @@ function renderVenueDetail(id) {
         <h2 class="detail-panel-title">${esc(t("availTitle"))}</h2>
         <p class="events-meta">${esc(t("availHint"))}</p>
         <div class="avail-controls" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0">
-          <input type="date" id="avail-date" min="${todayISO()}" style="flex:1;min-width:150px">
-          <select id="avail-party">${[2, 4, 6, 8, 10, 12].map((n) => `<option value="${n}"${n === 6 ? " selected" : ""}>${esc(t("availParty").replace("{n}", String(n)))}</option>`).join("")}</select>
+          <input type="date" aria-label="${esc(t("dateLabel"))}" id="avail-date" min="${todayISO()}" style="flex:1;min-width:150px">
+          <select aria-label="${esc(t("partyTitle"))}" id="avail-party">${[2, 4, 6, 8, 10, 12].map((n) => `<option value="${n}"${n === 6 ? " selected" : ""}>${esc(t("availParty").replace("{n}", String(n)))}</option>`).join("")}</select>
           <button class="btn btn-gold btn-sm" id="avail-load">${esc(t("availLoad"))}</button>
         </div>
         <div id="avail-result"></div>
       </div>
       ${venuePromotersPanelHTML()}
+      </details>
     </div>
     ${venueDockHTML(v)}
   </section>`;
@@ -4963,30 +4841,7 @@ function mountDestMap(d, venues) {
       .addTo(map)
       .bindPopup(`<div class="map-pop"><div class="map-pop-name">${esc(d.name)}</div><div class="map-pop-meta">${esc(d.country)} · ${esc(d.region)}</div></div>`);
 
-    // Venues i en deterministisk ring runt centrum (~2 km) — stabil mellan renderingar
     const pts = [[d.lat, d.lng]];
-    const n = venues.length;
-    const latRad = d.lat * Math.PI / 180;
-    venues.forEach((v, i) => {
-      const ang = (2 * Math.PI * i) / Math.max(n, 1) + destHue(v.venue_id) / 360;
-      const r = n > 1 ? 0.02 : 0.012;
-      const lat = d.lat + Math.sin(ang) * r * 0.75;
-      const lng = d.lng + (Math.cos(ang) * r) / Math.max(Math.cos(latRad), 0.2);
-      pts.push([lat, lng]);
-      L.circleMarker([lat, lng], {
-        radius: 7, color: "#d4af5f", weight: 1.5,
-        fillColor: "#e8c87e", fillOpacity: 0.55,
-      }).addTo(map).bindPopup(`
-        <div class="map-pop">
-          <div class="map-pop-kicker">${esc(v.category)}</div>
-          <div class="map-pop-name">${esc(v.name)}</div>
-          <div class="map-pop-meta">${esc(t("clubSetsPrice"))}</div>
-          <a class="map-pop-link" href="#/venue/${encodeURIComponent(v.venue_id)}">${esc(t("seeVenue"))}</a>
-          ${bookingUrlFor(v) ? `<br><a class="map-pop-link" href="#/book-site/${encodeURIComponent(v.venue_id)}">${esc(t("bookOnSiteShort"))} ↗</a>` : ""}
-          <br><a class="map-pop-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
-          ${v.instagram_url ? `<br><a class="map-pop-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">${esc(igHandle(v.instagram_url) || "Instagram")} ↗</a>` : ""}
-        </div>`);
-    });
     fitWhenSized(map, () => map.fitBounds(pts, { padding: [30, 30], maxZoom: 13 }));
   }).catch(() => {
     const shell = host && host.closest(".map-shell");
@@ -7648,13 +7503,13 @@ const routes = {
   "#/availability": renderAvailabilitySearch,
   "#/map": renderMapView,
   "#/bookings": renderBookings,
-  "#/open": () => { renderOpenTables(); },
-  "#/verify": () => { renderVerify(); },
-  "#/card": () => { renderCard(); },
+  "#/open": () => renderOpenTables(),
+  "#/verify": () => renderVerify(),
+  "#/card": () => renderCard(),
   "#/account": renderAccount,
-  "#/promoters": () => { renderPromoters(); },
-  "#/payout": () => { renderPayout(); },
-  "#/pay-return": () => { renderPayReturn(); },
+  "#/promoters": () => renderPromoters(),
+  "#/payout": () => renderPayout(),
+  "#/pay-return": () => renderPayReturn(),
   "#/favorites": renderFavorites,
   "#/villkor": () => renderLegal("villkor"),
   "#/integritet": () => renderLegal("integritet"),
@@ -7679,7 +7534,38 @@ const paramRoutes = [
 // Trasiga %-sekvenser i hashen får inte krascha routern
 const safeDecode = (s) => { try { return decodeURIComponent(s); } catch { return s; } };
 
-function route() {
+let routeRevision = 0;
+let renderedRoute = '';
+const routeScroll = new Map();
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+function paintExploreNav(hash) {
+  const nav = document.getElementById('explore-nav');
+  if (!nav) return;
+  nav.hidden = primarySection(hash) !== '#/';
+  nav.setAttribute('aria-label', t('navExplore'));
+  const selected = destByCodeOrName(new URLSearchParams(hash.split('?')[1] || '').get('dest')) || homeDestination();
+  const links = [
+    ['#/restaurants' + (selected ? '?dest=' + encodeURIComponent(selected.code) : ''), 'navRestaurants'],
+    ['#/venues', 'navVenues'],
+    ['#/availability' + (selected ? '?city=' + encodeURIComponent(selected.name) : ''), 'navFindTable'],
+    ['#/destinations', 'navDestinations'],
+    ['#/map', 'navMap'],
+    ['#/open', 'navOpen'],
+  ];
+  nav.innerHTML = links.map(([href, key]) => `<a href="${esc(href)}" data-nav${hash.split('?')[0] === href.split('?')[0] ? ' aria-current="page"' : ''}>${esc(t(key))}</a>`).join('');
+}
+
+async function route() {
+  const revision = ++routeRevision;
+  const incoming = location.hash || '#/';
+  if (renderedRoute && renderedRoute !== incoming) {
+    routeScroll.set(renderedRoute, window.scrollY);
+    if (isDiscoveryList(renderedRoute)) {
+      try { sessionStorage.setItem('velvet_discovery_return', renderedRoute); } catch {}
+    }
+  }
+  renderedRoute = incoming;
   activeAvailabilitySearch?.destroy(); activeAvailabilitySearch = null;
   document.body.classList.remove("has-dock");
   // Stäng ev. öppen modal vid ruttbyte (t.ex. bakåtknapp med öppen modal)
@@ -7706,7 +7592,9 @@ function route() {
   }
   // Okänd rutt → 404-vy (ingen nav-länk markeras som aktiv)
   if (!fn) { fn = () => render404(h); active = null; }
-  fn();
+  paintExploreNav(raw);
+  await fn();
+  if (revision !== routeRevision || (location.hash || "#/") !== raw) return;
   const titles = {
     "#/": null,
     "": null,
@@ -7720,9 +7608,31 @@ function route() {
     "#/integritet": t("legalPrivacy"),
   };
   if (Object.prototype.hasOwnProperty.call(titles, h)) setTitle(titles[h]);
-  window.scrollTo(0, 0);
-  document.querySelectorAll(".nav-links a").forEach((a) => {
-    a.classList.toggle("active", a.getAttribute("href") === active);
+  const main = view();
+  // Every route has one orientation heading, including legacy H2-only screens.
+  if (!main.querySelector('h1')) {
+    const heading = main.querySelector('h2, h3');
+    if (heading) {
+      const h1 = document.createElement('h1');
+      for (const attribute of heading.attributes) h1.setAttribute(attribute.name, attribute.value);
+      h1.replaceChildren(...heading.childNodes);
+      heading.replaceWith(h1);
+    }
+  }
+  document.querySelectorAll('.nav-links a').forEach((a) => {
+    const isActive = active !== null && a.getAttribute('href') === primarySection(raw);
+    a.classList.toggle('active', isActive);
+    if (isActive) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+  if (/^#\/(venue|restaurant)\//.test(raw)) {
+    let returnTo;
+    try { returnTo = safeDiscoveryReturn(sessionStorage.getItem('velvet_discovery_return')); } catch {}
+    const back = main.querySelector('.detail-back, .back-link');
+    if (returnTo && back) { back.href = returnTo; back.textContent = '← ' + t('searchResultsBack'); }
+  }
+  main.focus({ preventScroll: true });
+  requestAnimationFrame(() => {
+    if (revision === routeRevision) window.scrollTo(0, routeScroll.get(raw) || 0);
   });
 }
 
@@ -7731,10 +7641,10 @@ function route() {
 // Endast hashchange går via denna; programmatiska route()-anrop förblir direkta.
 function routeWithTransition() {
   const reduce = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (typeof document.startViewTransition !== "function" || reduce || document.visibilityState === "hidden") { route(); return; }
+  if (typeof document.startViewTransition !== "function" || reduce || document.visibilityState === "hidden") { route().catch(() => {}); return; }
   let vt;
   try { vt = document.startViewTransition(() => route()); }
-  catch { route(); return; }
+  catch { route().catch(() => {}); return; }
   // Snabba ruttbyten/dold flik avbryter pågående övergång → svälj de förväntade rejections
   vt.updateCallbackDone?.catch(() => {});
   vt.ready?.catch(() => {});
@@ -8023,11 +7933,6 @@ async function init() {
   route();
   updateBookingBadge();
   updateFavBadge();
-  // Första besöket (inget val sparat) och ingen direktlänk → visa onboardingen.
-  // Direktlänkar (#/venue/…, #/join/…, …) får aldrig blockeras.
-  if (!passkeyRequested && !homeChoice && (!location.hash || location.hash === "#/")) {
-    openOnboarding({ dismissable: true });
-  }
   if (authError) {
     const provider = SOCIALS.find((s) => s.id === authProvider)?.label || authProvider || "Anslutningen";
     const msg = authError === "not_configured"

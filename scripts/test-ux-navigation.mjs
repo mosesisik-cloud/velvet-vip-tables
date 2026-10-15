@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import { primarySection, safeDiscoveryReturn } from '../js/navigation-state.js';
+for (const route of ['#/', '#/restaurant/zink', '#/venues?dest=Stockholm', '#/destination/STO', '#/availability', '#/open']) assert.equal(primarySection(route), '#/');
+for (const route of ['#/bookings', '#/table/abc', '#/join/payload', '#/pay/abc', '#/pay-return?x=y']) assert.equal(primarySection(route), '#/bookings');
+assert.equal(primarySection('#/list/data'), '#/favorites');
+assert.equal(primarySection('#/verify'), '#/account');
+assert.equal(primarySection('#/integritet'), null);
+assert.equal(safeDiscoveryReturn('#/availability?city=Stockholm'), '#/availability?city=Stockholm');
+for (const invalid of ['https://evil.test', '//evil.test', '#/pay/secret', '#/venuesmalformed', null]) assert.equal(safeDiscoveryReturn(invalid), null);
+console.log('PASS navigation sections and safe discovery return targets');
