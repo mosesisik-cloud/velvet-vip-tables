@@ -1,0 +1,71 @@
+{
+  "restaurantId": "curated-PAR-plenitude",
+  "issue": 101,
+  "agent": "kimi-01",
+  "checkedAt": "2026-10-16",
+  "status": "ready_for_review",
+  "identity": {
+    "name": "Plénitude",
+    "address": "Cheval Blanc Paris, 8 Quai du Louvre, 75001 Paris, France",
+    "city": "Paris",
+    "officialWebsite": "https://www.chevalblanc.com/en/maison/paris/restaurants-and-bars/plenitude/",
+    "operatingStatus": "operating",
+    "sources": [
+      "https://www.chevalblanc.com/en/maison/paris/restaurants-and-bars/plenitude/ (official page, fetched 2026-10-16; contains the SevenRooms link)",
+      "https://www.sevenrooms.com/reservations/plenitude (provider page renders 'Plenitude, 8 Quai du Louvre, Paris, IDF 75001, +33 1 79 35 50 11' with party/date/time search form)",
+      "https://guide.michelin.com/us/en/ile-de-france/paris/restaurant/plenitude-cheval-blanc-paris (cross-check)"
+    ],
+    "duplicates": "No duplicate catalog ID for this physical restaurant (searched worklist for 'plenitude')."
+  },
+  "proposedRegistryRecord": {
+    "targetFile": "data/booking-providers.json",
+    "key": "curated-PAR-plenitude",
+    "record": {
+      "provider": "SevenRooms",
+      "name": "Plénitude",
+      "city": "Paris",
+      "venueId": "plenitude",
+      "url": "https://www.sevenrooms.com/reservations/plenitude",
+      "source": "https://www.chevalblanc.com/en/maison/paris/restaurants-and-bars/plenitude/",
+      "checkedAt": "2026-10-16",
+      "verification": "official_restaurant_link_verified",
+      "providerTitle": "Plenitude",
+      "mode": "external",
+      "availability": "unknown",
+      "completionTracking": false,
+      "integrationMode": "external_link"
+    },
+    "note": "Proposed for the integrator; shared registry NOT modified by this PR. URL appears in the official page HTML (fetched raw). Native iframe embed not tested; classify as external link. Note: a special event venue 'LaTableRuinartXChevalBlancParis' also appears on chevalblanc.com - it is a separate pop-up/experience, not Plénitude, and is not mapped."
+  },
+  "bookingRoute": {
+    "category": "A - official external booking link",
+    "provider": "SevenRooms",
+    "officialUrl": "https://www.sevenrooms.com/reservations/plenitude",
+    "observed": "Official Cheval Blanc page HTML references http://www.sevenrooms.com/reservations/plenitude. Read-only GET of the provider page rendered the venue name, correct address and phone with a party/date/time search form. No date/party selected, no interaction.",
+    "availability": "unknown",
+    "manualRoutes": {
+      "phone": "+33 1 79 35 50 11 (shown on provider page and third-party sources)",
+      "email": "plenitude.paris@chevalblanc.com (third-party listings; not confirmed on the fetched official page)"
+    }
+  },
+  "tests": {
+    "performed": [
+      "Official page fetched; SevenRooms link extracted from HTML - pass",
+      "Read-only GET on provider page - renders correct venue identity + initial search form - pass (initial render only)",
+      "Duplicate search in worklist - no duplicate",
+      "Identity cross-check vs Michelin Guide - pass",
+      "Local JSON validation - pass"
+    ],
+    "notPerformed": [
+      "No iframe embed test, no availability observed, no date/time selection, no holds/bookings/payments/messages",
+      "No app runtime test (scoped evidence fragment only)"
+    ],
+    "basis": "remote_official_sources_and_readonly_gets"
+  },
+  "limitations": [
+    "Live availability unknown",
+    "Reservation email from third-party listings only"
+  ],
+  "nextStep": "Integrator reviews and, if accepted, adds proposedRegistryRecord to data/booking-providers.json and consolidates into the canonical worklist.",
+  "publication": "not_published"
+}
