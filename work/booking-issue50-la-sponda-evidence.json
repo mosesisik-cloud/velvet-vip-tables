@@ -1,0 +1,73 @@
+{
+  "restaurantId": "curated-AMF-la-sponda",
+  "issue": 50,
+  "agent": "kimi-01",
+  "checkedAt": "2026-10-16",
+  "status": "ready_for_review",
+  "identity": {
+    "name": "La Sponda",
+    "address": "Le Sirenuse, Via Cristoforo Colombo 30, 84017 Positano (SA), Italy",
+    "city": "Positano (Amalfi Coast)",
+    "officialWebsite": "https://sirenuse.it/en/la-sponda-restaurant/",
+    "operatingStatus": "operating (seasonal: hotel and restaurant operate approx. March/April-October/November; exact season dates unverified)",
+    "sources": [
+      "https://sirenuse.it/en/la-sponda-restaurant/ (official hotel/restaurant site, fetched 2026-10-16)",
+      "https://sirenuse.it/en/la-sponda-restaurant/book-a-table/ (official booking page, fetched 2026-10-16)",
+      "https://guide.michelin.com/us/en/campania/positano/restaurant/la-sponda (address cross-check)"
+    ],
+    "duplicates": "No duplicate catalog ID for this physical restaurant (searched data/restaurant-worklist.json for 'sponda'/'sirenuse'). curated-AMF-rossellinis is a different restaurant (Palazzo Avino, Ravello), not related."
+  },
+  "proposedRegistryRecord": {
+    "targetFile": "data/booking-providers.json",
+    "key": "curated-AMF-la-sponda",
+    "record": {
+      "provider": "SevenRooms",
+      "name": "La Sponda",
+      "city": "Positano",
+      "venueId": "lasponda",
+      "url": "https://www.sevenrooms.com/reservations/lasponda?venues=lasponda,aldoscocktialbarseafoodgrill,dontworrybar,&lang=en",
+      "source": "https://sirenuse.it/en/la-sponda-restaurant/book-a-table/",
+      "checkedAt": "2026-10-16",
+      "verification": "official_restaurant_link_verified",
+      "providerTitle": "La Sponda Reservations",
+      "mode": "external",
+      "availability": "unknown",
+      "completionTracking": false,
+      "integrationMode": "external_link"
+    },
+    "note": "Proposed for the integrator; shared registry NOT modified by this PR. The URL is the exact SevenRooms embed src used by the official booking page. It is a multi-venue link (lasponda first; aldoscocktialbarseafoodgrill and dontworrybar are sibling hotel venues) - integrator may trim to venues=lasponda if a single-venue view is preferred. Native iframe embed was not tested; classify as external link."
+  },
+  "bookingRoute": {
+    "category": "A - official external booking link (embedded on official site; embed render not tested)",
+    "provider": "SevenRooms",
+    "officialUrl": "https://www.sevenrooms.com/reservations/lasponda?venues=lasponda,aldoscocktialbarseafoodgrill,dontworrybar,&lang=en",
+    "observed": "Official booking page (sirenuse.it/en/la-sponda-restaurant/book-a-table/) references the SevenRooms widget URL above. A read-only GET of the widget URL returned a page titled 'La Sponda Reservations'. No date/party selected, no interaction.",
+    "availability": "unknown",
+    "termsFromOfficialPage": "Reservations open 60 days ahead at 15:00 local (CET); smart casual dress; no children under 6; groups >7 via email; non-resident guests subject to EUR 160/person minimum spend; late cancellation/no-show fee EUR 100/person to card on file; table held 15 minutes; walk-ins only on late cancellation/no-show.",
+    "manualRoutes": {
+      "phone": "+39 089 875066 (official site)",
+      "email": "lasponda@sirenuse.it (official booking page, groups/gifts)",
+      "general": "info@sirenuse.it"
+    }
+  },
+  "tests": {
+    "performed": [
+      "Official booking page fetched and provider link extracted from HTML - pass",
+      "Read-only GET on SevenRooms widget URL - page titled 'La Sponda Reservations' - pass (initial render only)",
+      "Duplicate search in worklist - no duplicate",
+      "Identity cross-check vs Michelin Guide listing - pass"
+    ],
+    "notPerformed": [
+      "No iframe/cross-origin embed test, no availability observed, no date/time selection, no holds/bookings/payments/messages",
+      "JSON validated locally; no app runtime test (scoped evidence fragment only)"
+    ],
+    "basis": "remote_official_sources_and_readonly_gets"
+  },
+  "limitations": [
+    "Widget initial render confirmed by GET only; live availability unknown",
+    "Seasonal closure window for 2026/2027 not verified from official source",
+    "Multi-venue SevenRooms link - integrator decides single-venue trimming"
+  ],
+  "nextStep": "Integrator reviews and, if accepted, adds proposedRegistryRecord to data/booking-providers.json and consolidates evidence into data/restaurant-worklist.json.",
+  "publication": "not_published"
+}
