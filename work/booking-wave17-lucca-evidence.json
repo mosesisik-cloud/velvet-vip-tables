@@ -1,0 +1,109 @@
+{
+  "restaurantId": "curated-BDR-lucca-by-the-sea",
+  "issue": 58,
+  "claimAgent": "gabbe-wave17-01a02152",
+  "evidenceAgent": "wave17_lucca",
+  "checkedAt": "2026-10-16",
+  "inspectionSafety": {
+    "backgroundSideEffects": "unknown",
+    "serviceWorkerBlocking": "not_recorded",
+    "requestWriteInterception": "not_recorded",
+    "networkAudit": "not_recorded",
+    "writeFreeEndToEndCertified": false,
+    "basis": "The reviewer reported official-page navigation and read-only link inspection without opening the WhatsApp contact, entering guest details or submitting a reservation, payment or message. These are reported operator actions only; no logged request interception, service-worker blocking or network audit establishes that background side effects did not occur."
+  },
+  "identity": {
+    "status": "official_branch_verified",
+    "name": "Lucca by the Sea",
+    "city": "Bodrum",
+    "country": "Türkiye",
+    "address": "Göltürkbükü, Cennet Koyu Caddesi, 48483 Bodrum / Muğla / TURKIYE",
+    "website": "https://luccabythesea.com/",
+    "basis": "Branch-named website shows the Bodrum address and links the Lucca group and Lucca Beach as separate venues. Do not substitute the Bebek branch."
+  },
+  "observedRoute": {
+    "mode": "manual_contact",
+    "bookingMode": "request_only",
+    "provider": "WhatsApp",
+    "url": "https://api.whatsapp.com/send?phone=905354528484",
+    "venueKey": null,
+    "publicPhone": "+905354528484",
+    "source": "https://luccabythesea.com/",
+    "ctaLabel": "Reservation",
+    "verification": "official_contact_link_verified",
+    "nativeEmbeddingObserved": false,
+    "liveAvailabilityObserved": false,
+    "confirmedReservation": false,
+    "completionTracking": "unsupported",
+    "note": "Official reservation button opens a shared group contact number. The restaurant name and Bodrum branch must remain explicit in any future inquiry; sending a message would not itself confirm a table."
+  },
+  "evidence": [
+    {
+      "url": "https://luccabythesea.com/",
+      "checkedAt": "2026-10-16",
+      "method": "Browser-rendered accessibility tree and read-only DOM link inspection",
+      "finding": "Exact branch name/address and Reservation CTA verified. Homepage has no forms or iframes in the inspected rendered document."
+    },
+    {
+      "url": "https://luccastyle.com/en/contact-us/",
+      "checkedAt": "2026-10-16",
+      "method": "Official webpage read",
+      "finding": "Group contact page identifies Bebek Mah. Cevdet Paşa Caddesi No: 51, İstanbul. Its online reservation form is not evidence for this Bodrum branch."
+    },
+    {
+      "url": "https://www.mandarinoriental.com/en/bodrum/paradise-bay/dine/lucca-by-the-sea",
+      "checkedAt": "2026-10-16",
+      "method": "Official URL opened and redirect inspected",
+      "finalUrl": "https://www.mandarinoriental.com/en/bodrum/paradise-bay/dine",
+      "finding": "Former branch page now redirects to the hotel's general dining list. Search-cached branch copy refers to 2025 and cannot establish current operations, dates or availability."
+    }
+  ],
+  "proposedRecord": {
+    "registryEntry": null,
+    "reason": "Use the separate reviewed manual-contact path, not booking-providers. Do not add a native_embed or external online-booking entry, or widen provider allowlists for this evidence.",
+    "worklistUpdate": {
+      "restaurantId": "curated-BDR-lucca-by-the-sea",
+      "source": "https://luccabythesea.com/",
+      "provider": null,
+      "checked": "2026-10-16",
+      "identity": "verified",
+      "bookingRoute": "manual_contact_verified",
+      "implementation": "not_integrated",
+      "blocker": "Only an official WhatsApp reservation contact was verified; no branch-specific online booking engine or inventory was observed.",
+      "next": "Coordinator may retain a clearly labelled manual contact route. Obtain current branch-specific online booking evidence before activating an automated connector."
+    },
+    "manualContactCandidate": {
+      "type": "whatsapp",
+      "value": "+905354528484",
+      "source": "https://luccabythesea.com/"
+    },
+    "integrationRequirements": [
+      "Pin the exact restaurantId, contact type, number and source in the reviewed manual-contact module. Do not derive contact ownership from mutable catalogue data.",
+      "The existing contact helper may produce https://wa.me/905354528484 for the verified number; retain the observed api.whatsapp.com CTA separately as source evidence.",
+      "The current manual renderer uses email-specific label/status. Supporting this contact requires a WhatsApp-specific label/status without changing email behavior. No automatic message sending, confirmation or availability support."
+    ]
+  },
+  "limitations": [
+    "The reviewer reported no WhatsApp-contact activation or message submission; only the official CTA destination was read. Background messaging or other service effects were not audited.",
+    "No booking, hold-creating action, payment submission, personal-data entry, reservation confirmation or inventory-test action was observed or reported. Without recorded network/write safeguards, this is not certification that no background booking, hold or other effect occurred.",
+    "No current seasonal operating dates were verified. Do not infer permanent closure from removal of the hotel's old page.",
+    "Manual-contact evidence is not an in-app booking integration. Public website, registry, catalogue and canonical worklist remain unchanged by this evidence task."
+  ],
+  "tests": {
+    "officialBranchPageLoaded": true,
+    "branchAddressRead": true,
+    "exactReservationHrefRead": true,
+    "wrongBranchExcluded": true,
+    "renderedHomeFormCount": 0,
+    "renderedHomeIframeCount": 0,
+    "jsonParse": "passed",
+    "nativeEmbed": "not_tested",
+    "availability": "not_tested",
+    "reservationSubmission": "not_performed",
+    "operatorActionBasis": "Reservation submission was not reported as an operator action. Form/iframe counts are rendered-document observations, not network or service-worker safety checks. Background side effects remain unknown."
+  },
+  "publication": {
+    "status": "not_published",
+    "basis": "Evidence-only fragment. Coordinator owns integration and publication."
+  }
+}
