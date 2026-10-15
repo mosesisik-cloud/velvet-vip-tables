@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-164-stockholm-bokabord";
+const VERSION = "v4-real-165-stockholm-bokabord";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 

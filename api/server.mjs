@@ -1,6 +1,7 @@
 import http from "node:http";
 import { BokabordMirror, RESTAURANTS } from "./bokabord-mirror.mjs";
 import { BookingLedger } from "./bokabord-ledger.mjs";
+import { bookingGuest } from "./booking-guest.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -1922,30 +1923,31 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true, service: "velvet-api" });
     }
     if (url.pathname === "/restaurant-bookings/mirror/config") {
-      return send(res, 200, { enabled: ['inspect','live'].includes(mirrorMode), mode: mirrorMode, restaurantIds: Object.keys(RESTAURANTS) }, { "Cache-Control": "no-store" });
+      return send(res, 200, { enabled: ['inspect','live'].includes(mirrorMode), mode: mirrorMode, guestBooking: mirrorMode === 'live', restaurantIds: Object.keys(RESTAURANTS) }, { "Cache-Control": "no-store" });
     }
     if (url.pathname.startsWith("/restaurant-bookings/mirror")) {
       if (req.headers.origin && !corsOriginFor(req)) return send(res, 403, { error: "origin" });
       if (!['inspect','live'].includes(mirrorMode)) return send(res, 503, { error: "mirror_disabled" });
       const user = sessionPublicUser(req, load());
-      if (!user) return send(res, 401, { error: "auth" });
+      const owner = user?.id || (mirrorMode === 'live' ? bookingGuest(req, res, true) : null);
+      if (!owner) return send(res, 401, { error: "auth" });
       // Pilot access only: remote browsers consume significant server resources.
       if (mirrorMode === 'inspect' && !isOperator(user)) return send(res, 403, { error: "operator" });
       try {
-        if (req.method === "POST" && url.pathname === "/restaurant-bookings/mirror/current") return send(res, 200, bokabordMirror.current(user.id), { "Cache-Control": "no-store" });
+        if (req.method === "POST" && url.pathname === "/restaurant-bookings/mirror/current") return send(res, 200, bokabordMirror.current(owner), { "Cache-Control": "no-store" });
         if (req.method === "POST" && url.pathname === "/restaurant-bookings/mirror") {
           const b = await readBody(req, 4096);
-          return send(res, 201, await bokabordMirror.create(user.id, b.restaurantId, b.width), { "Cache-Control": "no-store" });
+          return send(res, 201, await bokabordMirror.create(owner, b.restaurantId, b.width), { "Cache-Control": "no-store" });
         }
         const match = url.pathname.match(/^\/restaurant-bookings\/mirror\/([a-f0-9-]{36})(\/action)?$/);
         if (!match) return send(res, 404, { error: "not_found" });
         if (req.method === "DELETE" && !match[2]) {
-          await bokabordMirror.remove(match[1], user.id);
+          await bokabordMirror.remove(match[1], owner);
           return send(res, 200, { ok: true });
         }
         if (req.method === "POST" && match[2]) {
           const b = await readBody(req, 4096);
-          return send(res, 200, await bokabordMirror.action(match[1], user.id, b), { "Cache-Control": "no-store" });
+          return send(res, 200, await bokabordMirror.action(match[1], owner, b), { "Cache-Control": "no-store" });
         }
         return send(res, 405, { error: "method" });
       } catch (error) {
@@ -2587,10 +2589,11 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && url.pathname === "/restaurant-bookings") {
       const db = load();
       const user = sessionPublicUser(req, db);
-      if (!user) return send(res, 401, { error: "auth" });
-      const operator = isOperator(user);
+      const guest = bookingGuest(req, res);
+      if (!user && !guest) return send(res, 401, { error: "auth" });
+      const operator = !!user && isOperator(user);
       const bookings = [...mirrorLedger.list(), ...(db.restaurantBookings || [])]
-        .filter((booking) => operator || booking.userId === user.id)
+        .filter((booking) => operator || (user && booking.userId === user.id) || (guest && booking.userId === guest))
         .slice(0, 100)
         .map(operator ? operatorRestaurantBooking : publicRestaurantBooking);
       return send(res, 200, { bookings, operator }, { "Cache-Control": "no-store" });
