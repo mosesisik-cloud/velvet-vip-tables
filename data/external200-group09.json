@@ -5,13 +5,14 @@
     "reviewed": 20,
     "identityVerified": 10,
     "embeddedOriginalForms": 1,
-    "officialExternalLinks": 2,
+    "officialExternalLinks": 3,
     "liveAvailability": 1,
-    "manualBookingRoutes": 7,
+    "manualBookingRoutes": 6,
     "walkIn": 0,
     "closed": 0,
     "unresolved": 11,
-    "registryAdditions": 1
+    "registryAdditions": 1,
+    "verifiedManualContacts": 7
   },
   "records": [
     {
@@ -54,7 +55,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Fuku\" Miami restaurant official reservation"
+        "query": "\"Fuku\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": null,
+          "outcome": "Official Fuku Coral Gables remains 135 Miracle Mile; latest generic catalog cannot establish branch. Resy editorial Find more info is not a restaurant-specific booking link.",
+          "blocker": "Official Fuku Coral Gables remains 135 Miracle Mile; latest generic catalog cannot establish branch. Resy editorial Find more info is not a restaurant-specific booking link.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -102,7 +111,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Genuine Pizza\" Miami restaurant official reservation"
+        "query": "\"Genuine Pizza\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": null,
+          "outcome": "Historicaloperator brand changes Genuine Pizza/Harrys do not identify catalog branch. Need explicit branch continuity; no replacement restaurant link assigned.",
+          "blocker": "Historicaloperator brand changes Genuine Pizza/Harrys do not identify catalog branch. Need explicit branch continuity; no replacement restaurant link assigned.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -145,7 +162,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Le petit café\" Miami restaurant official reservation"
+        "query": "\"Le petit café\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": null,
+          "outcome": "Further Coconut Grove search finds historical Miami Beach 91071st Street namesake, not exact Miami identity. Need street address; no unrelated NYC/Paris link.",
+          "blocker": "Further Coconut Grove search finds historical Miami Beach 91071st Street namesake, not exact Miami identity. Need street address; no unrelated NYC/Paris link.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -193,7 +218,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Lulu\" Miami restaurant official reservation"
+        "query": "\"Lulu\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": null,
+          "outcome": "Indexed Spanish site/2022guide corroborate 3105 Commodore but currentroot unrelated content previously observed. Visa gives only phone referral. Need current verified operator domain.",
+          "blocker": "Indexed Spanish site/2022guide corroborate 3105 Commodore but currentroot unrelated content previously observed. Visa gives only phone referral. Need current verified operator domain.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -214,6 +247,12 @@
           "url": "https://millersalehouse.com/locations/coral-gables/",
           "kind": "official",
           "supports": "Manifest specifies Coral Gables branch, but official location URL returns 404. No current restaurant address/booking route verified; 404 alone does not prove closure."
+        },
+        {
+          "url": "https://www.restaurantji.com/fl/coral-gables/millers-ale-house-coral-gables-/",
+          "kind": "secondary",
+          "supports": "Municipal2019record anchorsMillerCoralGables to101MiracleMile. Restaurantji saysclosed; officialbranch URL404. Historicalmunicipal evidence not currentclosure authority; retain unresolved.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -236,7 +275,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Miller's Ale House\" Miami restaurant official reservation"
+        "query": "\"Miller's Ale House\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": "https://millersalehouse.com/locations/coral-gables/",
+          "outcome": "Municipal 2019record anchors Miller Coral Gables to 101 Miracle Mile. Restaurantji saysclosed; officialbranch URL 404. Historicalmunicipal evidence not currentclosure authority; retain unresolved.",
+          "blocker": "Municipal 2019record anchors Miller Coral Gables to 101 Miracle Mile. Restaurantji saysclosed; officialbranch URL 404. Historicalmunicipal evidence not currentclosure authority; retain unresolved.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -257,6 +304,12 @@
           "url": "https://www.montyssobe.com/",
           "kind": "official",
           "supports": "Official Montys Sunset is at 300 Alton Road, Miami Beach, while Montys also has Coconut Grove identity. Generic manifest lacks locator; no Miami Beach booking link assigned to Miami ID."
+        },
+        {
+          "url": "https://www.montysrawbar.com/",
+          "kind": "official",
+          "supports": "OfficialMontysRawBar gives2550SBayshoreMiami, whileSunset official is300AltonMiamiBeach. Genericcatalog no branch; no specific bookingform onRawBar homepage.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -279,7 +332,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Monty's\" Miami restaurant official reservation"
+        "query": "\"Monty's\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": null,
+          "outcome": "Official Montys Raw Bar gives 2550 SBayshore Miami, while Sunset official is 300 Alton Miami Beach. Genericcatalog no branch; no specific booking form on Raw Bar homepage.",
+          "blocker": "Official Montys Raw Bar gives 2550 SBayshore Miami, while Sunset official is 300 Alton Miami Beach. Genericcatalog no branch; no specific booking form on Raw Bar homepage.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -305,6 +366,12 @@
           "url": "https://websites.kw-ic.com/Portals/61/Documents/One%20Park%20Grove%20Restaurant%20List%202.18.2022.pdf",
           "kind": "secondary",
           "supports": "Historical Panorama location; not proof of current operation."
+        },
+        {
+          "url": "https://coconutgrove.com/business/hotel-arya-2/",
+          "kind": "official",
+          "supports": "CoconutGroveBID identifiesHotelArya(formerSonesta) at2889McFarlane andPanorama restaurant. Current operator bookingroute remains unverified; hotel room engine excluded.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -327,7 +394,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Panorama Restaurant & Sky Lounge\" Miami restaurant official reservation"
+        "query": "\"Panorama Restaurant & Sky Lounge\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": "https://www.sonesta.com/CoconutGrove/index.cfm?fa=restaurant1.home",
+          "outcome": "Coconut Grove BID identifies Hotel Arya(former Sonesta) at 2889 Mc Farlane and Panorama restaurant. Current operator booking route remains unverified; hotel room engine excluded.",
+          "blocker": "Coconut Grove BID identifies Hotel Arya(former Sonesta) at 2889 Mc Farlane and Panorama restaurant. Current operator booking route remains unverified; hotel room engine excluded.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -348,6 +423,12 @@
           "url": "https://www.linkedin.com/company/poke-305",
           "kind": "official",
           "supports": "Operator profile lists 3415 Main Highway among multiple locations. Manifest Clover root is a generic POS homepage, not a restaurant-specific table booking link. Current Grove table-booking policy unverified."
+        },
+        {
+          "url": "https://www.poke305.com/",
+          "kind": "official",
+          "supports": "Operator-linkedpoke305.com returns403; no bypass attempted. Grove address candidate exists but Clover generic homepage remains unsuitable for table booking.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -370,7 +451,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Poke 305 Grove\" Miami restaurant official reservation"
+        "query": "\"Poke 305 Grove\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": "https://www.clover.com/",
+          "outcome": "Operator-linkedpoke 305.com returns 403; no bypass attempted. Grove address candidate exists but Clover generic homepage remains unsuitable for table booking.",
+          "blocker": "Operator-linkedpoke 305.com returns 403; no bypass attempted. Grove address candidate exists but Clover generic homepage remains unsuitable for table booking.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -422,7 +511,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Pummarola Coral Gable\" Miami restaurant official reservation"
+        "query": "\"Pummarola Coral Gable\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": "https://www.pummarola.us",
+          "outcome": "Official Pummarola still promotes pizza-making classes; third-party claims reservations lack officialtable URL. Keep verified Coral Gables identity but table route unresolved.",
+          "blocker": "Official Pummarola still promotes pizza-making classes; third-party claims reservations lack officialtable URL. Keep verified Coral Gables identity but table route unresolved.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -443,6 +540,12 @@
           "url": "https://www.thecheesecakefactory.com/",
           "kind": "official",
           "supports": "Official chain allows online reservations for rewards members, up to six guests and 30 days ahead. Manifest lacks branch. Coconut Creek is not Coconut Grove; no branch or account booking route assigned."
+        },
+        {
+          "url": "https://www.opentable.com/r/the-cheesecake-factory-coconut-grove-miami",
+          "kind": "secondary",
+          "supports": "OpenTableCoconutGrove3015Grand page explicitly not on bookingnetwork and even shows mismatchedmenu. Historicaloperator release confirmsoldGrove branch, not thisgenericID/currentoperation.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -465,7 +568,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"The Cheesecake Factory\" Miami restaurant official reservation"
+        "query": "\"The Cheesecake Factory\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": null,
+          "outcome": "Open Table Coconut Grove 3015 Grand page explicitly not on bookingnetwork and even shows mismatchedmenu. Historicaloperator release confirmsold Grove branch, not thisgeneric ID/current operation.",
+          "blocker": "Open Table Coconut Grove 3015 Grand page explicitly not on bookingnetwork and even shows mismatchedmenu. Historicaloperator release confirmsold Grove branch, not thisgeneric ID/current operation.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -486,6 +597,12 @@
           "url": "https://www.bonitosbh.com/",
           "kind": "official",
           "supports": "Official Bonito site confirms address and booking@bonitosbh.com / +590 590 27 96 96. Browser shows Make a Reservation heading but no provider widget or specific online booking link."
+        },
+        {
+          "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
+          "kind": "secondary",
+          "supports": "FoundSevenRoomsbonitostbarth via secondarydirectory, correctprovider title, but no link in officialBonito HTML. Keep manualverified email; candidate not admitted without operatorlink.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -510,7 +627,27 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Bonito Saint Barth\" St. Barts restaurant official reservation"
+        "query": "\"Bonito Saint Barth\" St. Barts restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "St. Barts, Caribbean",
+          "catalogWebsite": null,
+          "outcome": "Found Seven Roomsbonitostbarth via secondarydirectory, correctprovider title, but no link in official Bonito HTML. Keep manualverified email; candidate not admitted without operator link.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
+      },
+      "contact": {
+        "type": "email",
+        "value": "booking@bonitosbh.com",
+        "bookingExplicit": true,
+        "source": "https://www.bonitosbh.com/",
+        "checkedAt": "2026-10-16"
+      },
+      "candidateBooking": {
+        "provider": "SevenRooms",
+        "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
+        "reason": "Provider title matches; secondary discovery only, official operator link not established; not for activation."
       }
     },
     {
@@ -531,6 +668,12 @@
           "url": "https://letoiny.com/",
           "kind": "official",
           "supports": "Official hotel identifies La Table and Beach Club and directs restaurant reservations to restaurant@letoiny.com. Restaurant-specific manual contact retained; no hotel reservation engine substituted."
+        },
+        {
+          "url": "https://www.thefork.com/restaurant/le-toiny-r215803",
+          "kind": "secondary",
+          "supports": "Officialhotel search result still expressly assignsrestaurant@letoiny.com to bothdiningconcepts. OldTheFork215803 conflicts fullyreserved/FAQavailable and is not linkedofficially; do notadmit.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -557,7 +700,22 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Le Toiny Restaurant\" St. Barts restaurant official reservation"
+        "query": "\"Le Toiny Restaurant\" St. Barts restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "St. Barts, Caribbean",
+          "catalogWebsite": null,
+          "outcome": "Officialhotel search result still expressly assignsrestaurant@letoiny.com to bothdiningconcepts. Old The Fork 215803 conflicts fullyreserved/FAQavailable and is not linkedofficially; do notadmit.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
+      },
+      "contact": {
+        "type": "email",
+        "value": "restaurant@letoiny.com",
+        "bookingExplicit": true,
+        "source": "https://letoiny.com/",
+        "checkedAt": "2026-10-16"
       }
     },
     {
@@ -602,7 +760,22 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Tamarin St Barth\" St. Barts restaurant official reservation"
+        "query": "\"Tamarin St Barth\" St. Barts restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "St. Barts, Caribbean",
+          "catalogWebsite": null,
+          "outcome": "Officialcontact still explicitly emailrequests; opening-hours page hasgenericreservationform but conflictinghours. Keep emailroute; no inventory claim.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
+      },
+      "contact": {
+        "type": "email",
+        "value": "info@tamarinstbarth.com",
+        "bookingExplicit": true,
+        "source": "https://tamarinstbarth.com/contact/",
+        "checkedAt": "2026-10-16"
       }
     },
     {
@@ -649,23 +822,20 @@
         "Seasonal closed-hours display is not treated as permanent closure.",
         "No reservation confirmation, payment, waitlist or contact request submitted."
       ],
-      "registryAddition": {
-        "provider": "SevenRooms",
-        "name": "Bagatelle",
-        "city": "Gustavia",
-        "venueId": "bagatellestbarth",
-        "venueKey": "www.sevenrooms.com/reservations/bagatellestbarth",
-        "url": "https://www.sevenrooms.com/reservations/bagatellestbarth",
-        "source": "https://bagatelle.com/venues/st-barths/booking/",
-        "checkedAt": "2026-10-15",
-        "verification": "official_link_only",
-        "providerTitle": "Bagatelle St. Barth Reservations",
-        "integrationMode": "external_link"
-      },
+      "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Bagatelle\" St. Barts restaurant official reservation"
-      }
+        "query": "\"Bagatelle\" St. Barts restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "St. Barts, Caribbean",
+          "catalogWebsite": null,
+          "outcome": "Bagatelle existingmerged Seven Rooms mapping retained as alreadylive, not newproposal. Priorpoint-in-timeinventory preserved, no newslot selection.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
+      },
+      "registryState": "already_present_in_main"
     },
     {
       "restaurantId": "osm-SBH-bart-s-food-lounge",
@@ -707,7 +877,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Bart's Food Lounge\" St. Barts restaurant official reservation"
+        "query": "\"Bart's Food Lounge\" St. Barts restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "St. Barts, Caribbean",
+          "catalogWebsite": null,
+          "outcome": "Exact-name search still returns OSM-derived Rue Generalde Gaulle only; restaurant absent from current 81-venue directory is not proofclosure. Need currentoperator identity.",
+          "blocker": "Exact-name search still returns OSM-derived Rue Generalde Gaulle only; restaurant absent from current 81-venue directory is not proofclosure. Need currentoperator identity.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -754,8 +932,17 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Black Ginger\" St. Barts restaurant official reservation"
-      }
+        "query": "\"Black Ginger\" St. Barts restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "St. Barts, Caribbean",
+          "catalogWebsite": null,
+          "outcome": "Explicitstaff-confirmation requestform preserved, booking Mode request_only. No CAPTCHA/submit. Browser unavailable for fresh responsive retest.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
+      },
+      "bookingMode": "request_only"
     },
     {
       "restaurantId": "osm-SBH-bonito",
@@ -775,6 +962,12 @@
           "url": "https://www.bonitosbh.com/",
           "kind": "official",
           "supports": "Official Bonito site confirms address and booking@bonitosbh.com / +590 590 27 96 96. Browser shows Make a Reservation heading but no provider widget or specific online booking link."
+        },
+        {
+          "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
+          "kind": "secondary",
+          "supports": "Bonito duplicate stableID retained; samecandidateSevenRooms and officialemail as curatedBonito. Noautomerge or newproviderclaim.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -799,7 +992,27 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Bonito\" St. Barts restaurant official reservation"
+        "query": "\"Bonito\" St. Barts restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "St. Barts, Caribbean",
+          "catalogWebsite": null,
+          "outcome": "Bonito duplicate stable ID retained; samecandidate Seven Rooms and officialemail as curated Bonito. Noautomerge or newproviderclaim.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
+      },
+      "contact": {
+        "type": "email",
+        "value": "booking@bonitosbh.com",
+        "bookingExplicit": true,
+        "source": "https://www.bonitosbh.com/",
+        "checkedAt": "2026-10-16"
+      },
+      "candidateBooking": {
+        "provider": "SevenRooms",
+        "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
+        "reason": "Provider title matches; secondary discovery only, official operator link not established; not for activation."
       }
     },
     {
@@ -843,7 +1056,22 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Eddy's\" St. Barts restaurant official reservation"
+        "query": "\"Eddy's\" St. Barts restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "St. Barts, Caribbean",
+          "catalogWebsite": null,
+          "outcome": "Officialreservationsection explicitly givesphone; structuredcontact added. re CAPTCHA contactform is a request, not availability; noform submission.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
+      },
+      "contact": {
+        "type": "phone",
+        "value": "+590590275417",
+        "bookingExplicit": true,
+        "source": "https://eddysghetto.com/",
+        "checkedAt": "2026-10-16"
       }
     },
     {
@@ -854,20 +1082,26 @@
         "status": "verified",
         "actualCity": "Gustavia",
         "address": "41 rue de la République, Gustavia, 97133 Saint-Barthélemy",
-        "notes": "Official booking page says nothing available to book online and explicitly directs reservations to +590 590 51 36 33. Empty Wix booking section is not live table availability."
+        "notes": "Official restaurant page confirms41Rue de la Republique, Gustavia and links BOOK to Zenchef rid388090. Telephone reservations remain available; no provider UI or current inventory verified."
       },
-      "status": "manual_phone",
-      "provider": null,
-      "bookingUrl": null,
+      "status": "official_external_link",
+      "provider": "Zenchef",
+      "bookingUrl": "https://bookings.zenchef.com/results?pid=1001&rid=388090",
       "sources": [
         {
           "url": "https://www.fishcornerstbarth.com/en/book-online",
           "kind": "official",
           "supports": "Official booking page says nothing available to book online and explicitly directs reservations to +590 590 51 36 33. Empty Wix booking section is not live table availability."
+        },
+        {
+          "url": "https://www.fishcornerstbarth.com/en/book-online",
+          "kind": "official",
+          "supports": "OfficialFishCornerBOOK link now exposesZenchef rid388090 pid1001. Provider fetchrestricted; external-link proposal only, noembed oravailability. Telephonefallback remains verified.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
-        "officialExternalLink": false,
+        "officialExternalLink": true,
         "embeddedOriginalForm": false,
         "liveAvailability": false,
         "simulatedValidation": false,
@@ -882,13 +1116,43 @@
         "prepayment": null
       },
       "limitations": [
-        "No reservation confirmation, payment, waitlist or contact request submitted."
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "Zenchef fetch restricted; no browser, iframe, mobile or live availability validation on2026-10-16."
       ],
-      "registryAddition": null,
+      "registryAddition": {
+        "name": "FishCorner",
+        "city": "Gustavia",
+        "provider": "Zenchef",
+        "url": "https://bookings.zenchef.com/results?pid=1001&rid=388090",
+        "source": "https://www.fishcornerstbarth.com/en/book-online",
+        "venueKey": "bookings.zenchef.com/results?rid=388090",
+        "integrationMode": "external_link",
+        "verification": "official_link_only",
+        "checkedAt": "2026-10-16",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported",
+        "identityNote": "Official restaurant page at41RueRepubliqueGustavia links this exactZenchefID; phonefallback retained."
+      },
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"FishCorner\" St. Barts restaurant official reservation"
-      }
+        "query": "\"FishCorner\" St. Barts restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "St. Barts, Caribbean",
+          "catalogWebsite": null,
+          "outcome": "Official Fish Corner BOOK link now exposes Zenchef rid 388090 pid 1001. Provider fetchrestricted; external-link proposal only, noembed oravailability. Telephonefallback remains verified.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
+      },
+      "contact": {
+        "type": "phone",
+        "value": "+590590513633",
+        "bookingExplicit": true,
+        "source": "https://www.fishcornerstbarth.com/en/book-online",
+        "checkedAt": "2026-10-16"
+      },
+      "bookingMode": "unknown"
     },
     {
       "restaurantId": "osm-SBH-l-isoletta",
@@ -931,8 +1195,24 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"L'Isoletta\" St. Barts restaurant official reservation"
+        "query": "\"L'Isoletta\" St. Barts restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "St. Barts, Caribbean",
+          "catalogWebsite": null,
+          "outcome": "Officialcontact explicitly reservesbyphone and navigation givesreservationsemail; structuredphonecontact added. Generalcontactform nottable inventory.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
+      },
+      "contact": {
+        "type": "phone",
+        "value": "+590590520202",
+        "bookingExplicit": true,
+        "source": "https://www.isolettastbarth.com/contact",
+        "checkedAt": "2026-10-16"
       }
     }
-  ]
+  ],
+  "lastDeepReviewAt": "2026-10-16"
 }

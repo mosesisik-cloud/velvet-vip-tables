@@ -1,0 +1,2406 @@
+{
+  "checkedAt": "2026-10-15T22:35:07.136Z",
+  "meaning": "Local guest shell only; all external requests blocked. No provider inventory or confirmation claim.",
+  "results": [
+    {
+      "restaurantId": "osm-BAL-black-white",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-eternal",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-la-rosa",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-mexican-grilled-sancwich",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-papa-lee-s-taiwan-noodle-dumpling",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-sari",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-seaweed",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-warung-cucu",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-warung-middle",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-warung-nonii",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-warung-varuna",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-BDR-mimoza-gumusluk",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-arka-restaurant-pizzeria",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-bal-k-pisirici",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-battalbey-cig-kofte",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-bodrum-belediyesi-carsi-kafe",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-cirali",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-derin-balik",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-garden-steak-kebap",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-gemibas-restaurant",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-hadi-balik",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-harem",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-izmir-kumru",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-joy-art-cafe",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-kalamare",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-meat-burger-steak-house",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-mezemore",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-mosyo",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-musto-bistro",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-nazikana",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-nokta-sebzeli-bodrum-doneri",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-otantik-ocakasi",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-rasit-in-yeri",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-red-dragon",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-sahil-koftecisi",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-the-place",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-trafo",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-yelken-bal-k",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-zoe-restaurant-cocktail-bar",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-duklong",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-food-stalls",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-grove-table",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-hachiban-ramen",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-kaodaeng-kaeng-rawn",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-mango-vegetarian-vegan",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-oh-ma-ma-restaurant",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-red-ginger",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-street-restaurants",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-sushi-express",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-sushi-ninja",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-taketei",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-tam-kin-kan",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-u127bbd90e852",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-u1eb4b19647a0",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-u7336980ff96c",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-u766eb06f006a",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-u972fd6ebc22d",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-uad3e8810ecbe",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-uc3b438c644de",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-ufbfc075e98d5",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-chippies-prego",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-food-and-connect",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-furley-s-bar-grill",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-gogi-korean",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-jean-s-kitchen",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-kobe-sushi",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-mc-donalds",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-nando-s",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-picnic-cafe-and-deli",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-thai-ping",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-the-trufood-station",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-abd-el-wahab-restaurant",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-acai-co",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-al-hallab-and-sweets",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-asado",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-be-super-natural-kitchen",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-carluccio-s",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-karam-beirut",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-karma-kafe",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-margaux",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-rowley-s",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-shang-palace",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-the-rivington-grill",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-hku-hill-view-restaurant",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-kennedy-cafe",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-ktm-bar-kitchen",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-mangzane",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-piccollo",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-sun-hing",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-sun-hing-restaurant",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-sushi-take-out",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-thai-heng-thai-food-restaurant",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-the-farm-cafe",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-the-seafood-kitchen",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u051914a323f9",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u19c6d6df7171",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u1b0ea4f52786",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u47ee089214ae",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u7fb07f941a89",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u8ac58ca2b549",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u8d6744e930fe",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-ub4100aef7fd9",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-ufc4d4c688c11",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-wah-fung",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-wai-kee-cafe",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-1000009-thai-noodle-restaurant-phuket-9",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-breakfast-place",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-come-back",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-five-loaves",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-khao-tom-thanon-di-buk",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-love2eat",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-nigi-express",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-noy-pochana",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-pint-factory",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-reach",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-sab-nua-restaurant",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-the-barrel-wine-beer-bistro-bar",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-the-tent-phuket",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-toy-tor-toe",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-u0bb8a4bb7e3a",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-u172a3c9fa68f",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-u85f393ba80c7",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-u88caf8193724",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-u9652e72e518c",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-uf6b9db1d32b4",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-xorin",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-yunnan",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-zero-to-nine",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-IST-mikla",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-IST-neolokal",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-IST-turk-fatih-tutak",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-akida-pilav",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-basak-borekcisi",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-bereket-sofras",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-bitas-ev-yemekleri",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-diyarzade-kunefe-katmer-baklava-ve-tatli",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-durum-durak",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-efendim-fas-l-rest",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-elif-borek-salonu",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-emsal-peynircimm",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-gelik",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-gumus-kanat",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-guvenc-konyal",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-has-ad-yman",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-haznedar-meydan-gece-cigercisi",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-iskenderun-kral-durum",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-izmir-bal-kc-s",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-limgarden-kafe-restoran-ev-yemekleri",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-mahmud-usta-kebap",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-oz-baba-doner",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-pasa-doner",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-royal-tavuk",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-safran-karadeniz",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-senkardesler",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-u7e5b2e46dee5",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-urfa-dergah-kebap",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-vargeller-kebap",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-akashi-japanese-restaurant",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-el-taquitos",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-focaccia-bistro",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-fuku",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-genuine-pizza",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-le-petit-cafe",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-lulu",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-miller-s-ale-house",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-monty-s",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-panorama-restaurant-sky-lounge",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-poke-305-grove",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-pummarola-coral-gable",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-the-cheesecake-factory",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-SBH-bonito-saint-barth",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-SBH-le-toiny-restaurant",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-SBH-tamarin-st-barth",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-bagatelle",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-bart-s-food-lounge",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-black-ginger",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-bonito",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-eddy-s",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-fishcorner",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-l-isoletta",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-la-cantina",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-la-creperie",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-la-guerite",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-la-petite-plage",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-laventura",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-le-bar-de-l-oubli",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-le-bete-a-z-ailes",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-le-cafe",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-le-petit-deauville",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-le-repaire",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-mayas-to-go",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-megumi-sushi",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-natural-delights",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-nyama",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-restaurant-le-creperie",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-restaurant-victoria",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-sella",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-shellona",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-victoire",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SIN-bones-n-barrels",
+      "mode": "desktop",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-black-white",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-eternal",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-la-rosa",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-mexican-grilled-sancwich",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-papa-lee-s-taiwan-noodle-dumpling",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-sari",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-seaweed",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-warung-cucu",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-warung-middle",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-warung-nonii",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BAL-warung-varuna",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-BDR-mimoza-gumusluk",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-arka-restaurant-pizzeria",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-bal-k-pisirici",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-battalbey-cig-kofte",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-bodrum-belediyesi-carsi-kafe",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-cirali",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-derin-balik",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-garden-steak-kebap",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-gemibas-restaurant",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-hadi-balik",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-harem",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-izmir-kumru",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-joy-art-cafe",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-kalamare",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-meat-burger-steak-house",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-mezemore",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-mosyo",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-musto-bistro",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-nazikana",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-nokta-sebzeli-bodrum-doneri",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-otantik-ocakasi",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-rasit-in-yeri",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-red-dragon",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-sahil-koftecisi",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-the-place",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-trafo",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-yelken-bal-k",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BDR-zoe-restaurant-cocktail-bar",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-duklong",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-food-stalls",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-grove-table",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-hachiban-ramen",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-kaodaeng-kaeng-rawn",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-mango-vegetarian-vegan",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-oh-ma-ma-restaurant",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-red-ginger",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-street-restaurants",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-sushi-express",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-sushi-ninja",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-taketei",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-tam-kin-kan",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-u127bbd90e852",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-u1eb4b19647a0",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-u7336980ff96c",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-u766eb06f006a",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-u972fd6ebc22d",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-uad3e8810ecbe",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-uc3b438c644de",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-BKK-ufbfc075e98d5",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-chippies-prego",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-food-and-connect",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-furley-s-bar-grill",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-gogi-korean",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-jean-s-kitchen",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-kobe-sushi",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-mc-donalds",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-nando-s",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-picnic-cafe-and-deli",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-thai-ping",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-CPT-the-trufood-station",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-abd-el-wahab-restaurant",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-acai-co",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-al-hallab-and-sweets",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-asado",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-be-super-natural-kitchen",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-carluccio-s",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-karam-beirut",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-karma-kafe",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-margaux",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-rowley-s",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-shang-palace",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-DXB-the-rivington-grill",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-hku-hill-view-restaurant",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-kennedy-cafe",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-ktm-bar-kitchen",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-mangzane",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-piccollo",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-sun-hing",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-sun-hing-restaurant",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-sushi-take-out",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-thai-heng-thai-food-restaurant",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-the-farm-cafe",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-the-seafood-kitchen",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u051914a323f9",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u19c6d6df7171",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u1b0ea4f52786",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u47ee089214ae",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u7fb07f941a89",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u8ac58ca2b549",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-u8d6744e930fe",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-ub4100aef7fd9",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-ufc4d4c688c11",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-wah-fung",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKG-wai-kee-cafe",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-1000009-thai-noodle-restaurant-phuket-9",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-breakfast-place",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-come-back",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-five-loaves",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-khao-tom-thanon-di-buk",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-love2eat",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-nigi-express",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-noy-pochana",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-pint-factory",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-reach",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-sab-nua-restaurant",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-the-barrel-wine-beer-bistro-bar",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-the-tent-phuket",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-toy-tor-toe",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-u0bb8a4bb7e3a",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-u172a3c9fa68f",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-u85f393ba80c7",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-u88caf8193724",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-u9652e72e518c",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-uf6b9db1d32b4",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-xorin",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-yunnan",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-HKT-zero-to-nine",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-IST-mikla",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-IST-neolokal",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-IST-turk-fatih-tutak",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-akida-pilav",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-basak-borekcisi",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-bereket-sofras",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-bitas-ev-yemekleri",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-diyarzade-kunefe-katmer-baklava-ve-tatli",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-durum-durak",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-efendim-fas-l-rest",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-elif-borek-salonu",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-emsal-peynircimm",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-gelik",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-gumus-kanat",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-guvenc-konyal",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-has-ad-yman",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-haznedar-meydan-gece-cigercisi",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-iskenderun-kral-durum",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-izmir-bal-kc-s",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-limgarden-kafe-restoran-ev-yemekleri",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-mahmud-usta-kebap",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-oz-baba-doner",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-pasa-doner",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-royal-tavuk",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-safran-karadeniz",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-senkardesler",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-u7e5b2e46dee5",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-urfa-dergah-kebap",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-IST-vargeller-kebap",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-akashi-japanese-restaurant",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-el-taquitos",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-focaccia-bistro",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-fuku",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-genuine-pizza",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-le-petit-cafe",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-lulu",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-miller-s-ale-house",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-monty-s",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-panorama-restaurant-sky-lounge",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-poke-305-grove",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-pummarola-coral-gable",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-MIA-the-cheesecake-factory",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-SBH-bonito-saint-barth",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-SBH-le-toiny-restaurant",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "curated-SBH-tamarin-st-barth",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-bagatelle",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-bart-s-food-lounge",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-black-ginger",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-bonito",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-eddy-s",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-fishcorner",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-l-isoletta",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-la-cantina",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-la-creperie",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-la-guerite",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-la-petite-plage",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-laventura",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-le-bar-de-l-oubli",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-le-bete-a-z-ailes",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-le-cafe",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-le-petit-deauville",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-le-repaire",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-mayas-to-go",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-megumi-sushi",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-natural-delights",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-nyama",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-restaurant-le-creperie",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-restaurant-victoria",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-sella",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-shellona",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SBH-victoire",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    },
+    {
+      "restaurantId": "osm-SIN-bones-n-barrels",
+      "mode": "mobile",
+      "guestShell": "passed",
+      "providerPageTested": false
+    }
+  ]
+}

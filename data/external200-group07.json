@@ -5,13 +5,14 @@
     "reviewed": 20,
     "identityVerified": 4,
     "embeddedOriginalForms": 1,
-    "officialExternalLinks": 3,
+    "officialExternalLinks": 4,
     "liveAvailability": 1,
     "manualBookingRoutes": 1,
     "walkIn": 0,
     "closed": 0,
     "unresolved": 16,
-    "registryAdditions": 0
+    "registryAdditions": 0,
+    "verifiedManualContacts": 1
   },
   "records": [
     {
@@ -54,7 +55,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"มาลัย อาหารตามสั่ง\" Phuket restaurant official reservation"
+        "query": "\"มาลัย อาหารตามสั่ง\" Phuket restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Phuket, Thailand",
+          "catalogWebsite": null,
+          "outcome": "Exact Thai-name search did not establish a restaurant-owned page; Thai Malai delivery app results are unrelated and rejected. Need operator identity at a street address.",
+          "blocker": "Exact Thai-name search did not establish a restaurant-owned page; Thai Malai delivery app results are unrelated and rejected. Need operator identity at a street address.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -75,6 +84,12 @@
           "url": "https://www.facebook.com/OneChunPhuket",
           "kind": "official",
           "supports": "Candidate One Chun Facebook profile was discovered via the restaurant name, but current address and reservation instructions were not readable/verified."
+        },
+        {
+          "url": "https://lnk.bio/Onechun_phuket",
+          "kind": "official",
+          "supports": "Operator link-in-bio identifies One Chun on Thepkasattri Road. Michelin lists48/1 and direct contact, while a secondary guide claims walk-in only. Official Instagram fetch failed; need operator reservation policy before classifying phone/walk-in.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -97,7 +112,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"วันจันทร์ บ้านอาหารไทย\" Phuket restaurant official reservation"
+        "query": "\"วันจันทร์ บ้านอาหารไทย\" Phuket restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Phuket, Thailand",
+          "catalogWebsite": null,
+          "outcome": "Operator link-in-bio identifies One Chun on Thepkasattri Road. Michelin lists 48/1 and direct contact, while a secondary guide claims walk-in only. Official Instagram fetch failed; need operator reservation policy before classifying phone/walk-in.",
+          "blocker": "Operator link-in-bio identifies One Chun on Thepkasattri Road. Michelin lists 48/1 and direct contact, while a secondary guide claims walk-in only. Official Instagram fetch failed; need operator reservation policy before classifying phone/walk-in.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -140,7 +163,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"ก๋วยเตี๋ยวเบรคแตก\" Phuket restaurant official reservation"
+        "query": "\"ก๋วยเตี๋ยวเบรคแตก\" Phuket restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Phuket, Thailand",
+          "catalogWebsite": null,
+          "outcome": "Tourism Authority 2025 guide lists New Break Taek by old bus terminal; new review gives Phang Nga/0951989328. Neither resolves old-terminal versus Chalong branch or conflicting closure claim. Need exact source OSM node or operator page.",
+          "blocker": "Tourism Authority 2025 guide lists New Break Taek by old bus terminal; new review gives Phang Nga/0951989328. Neither resolves old-terminal versus Chalong branch or conflicting closure claim. Need exact source OSM node or operator page.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -183,7 +214,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"ครัวพริกแกง@ภูเก็ต\" Phuket restaurant official reservation"
+        "query": "\"ครัวพริกแกง@ภูเก็ต\" Phuket restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Phuket, Thailand",
+          "catalogWebsite": null,
+          "outcome": "Thai-name search still yields directory 58 Suthat and Yandex Suthat Soi 1, no operator booking source. Delivery option is not evidence of reservable tables.",
+          "blocker": "Thai-name search still yields directory 58 Suthat and Yandex Suthat Soi 1, no operator booking source. Delivery option is not evidence of reservable tables.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -197,17 +236,23 @@
         "notes": "Official Raya/ระย้า site confirms exact name/address and reservation.raya@gmail.com; also publishes 076-218155 / 092-252-4883. No online table inventory found."
       },
       "status": "manual_email",
-      "provider": null,
-      "bookingUrl": null,
+      "provider": "Raya direct request",
+      "bookingUrl": "https://www.rayarestaurant.net/",
       "sources": [
         {
           "url": "https://www.rayarestaurant.net/",
           "kind": "official",
           "supports": "Official Raya/ระย้า site confirms exact name/address and reservation.raya@gmail.com; also publishes 076-218155 / 092-252-4883. No online table inventory found."
+        },
+        {
+          "url": "https://www.rayarestaurant.net/",
+          "kind": "official",
+          "supports": "Official reservation section now exposes name/email/phone/date/party request form,24h advance notice, same-day telephone and WhatsApp. Safe external request route; no submit or inventory test.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
-        "officialExternalLink": false,
+        "officialExternalLink": true,
         "embeddedOriginalForm": false,
         "liveAvailability": false,
         "simulatedValidation": false,
@@ -228,8 +273,38 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"ร้านอาหาร ระย้า\" Phuket restaurant official reservation"
-      }
+        "query": "\"ร้านอาหาร ระย้า\" Phuket restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Phuket, Thailand",
+          "catalogWebsite": null,
+          "outcome": "Official reservation section now exposes name/email/phone/date/party request form, 24h advance notice, same-day telephone and Whats App. Safe external request route; no submit or inventory test.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
+      },
+      "contact": {
+        "type": "email",
+        "value": "reservation.raya@gmail.com",
+        "bookingExplicit": true,
+        "source": "https://www.rayarestaurant.net/",
+        "checkedAt": "2026-10-16"
+      },
+      "bookingMode": "request_only",
+      "alternativeContacts": [
+        {
+          "type": "phone",
+          "value": "+6676218155",
+          "bookingExplicit": true,
+          "source": "https://www.rayarestaurant.net/"
+        },
+        {
+          "type": "whatsapp",
+          "value": "+66922524883",
+          "bookingExplicit": true,
+          "source": "https://www.rayarestaurant.net/"
+        }
+      ]
     },
     {
       "restaurantId": "osm-HKT-xorin",
@@ -249,6 +324,12 @@
           "url": "https://www.phuket.net/directory/profile/xorin-phuket-old-town/",
           "kind": "secondary",
           "supports": "Xorin Old Town candidate at 42 Talat Yai; directory phone differs from Wongnai and recent press. Official social profile and current booking policy not verified."
+        },
+        {
+          "url": "https://www.wongnai.com/restaurants/2729697vW-xorin-phuket-old-town",
+          "kind": "secondary",
+          "supports": "Wongnai merchant-labelled OFFICIAL candidate Xorin OldTown gives42TalatYai and+66873962925, but operator site and conflicting earlier phone remain unresolved. Do not promote merchant-label alone to verified booking.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -271,7 +352,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Xorin\" Phuket restaurant official reservation"
+        "query": "\"Xorin\" Phuket restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Phuket, Thailand",
+          "catalogWebsite": null,
+          "outcome": "Wongnai merchant-labelled OFFICIAL candidate Xorin Old Town gives 42 Talat Yai and+66873962925, but operator site and conflicting earlier phone remain unresolved. Do not promote merchant-label alone to verified booking.",
+          "blocker": "Wongnai merchant-labelled OFFICIAL candidate Xorin Old Town gives 42 Talat Yai and+66873962925, but operator site and conflicting earlier phone remain unresolved. Do not promote merchant-label alone to verified booking.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -314,7 +403,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Yunnan\" Phuket restaurant official reservation"
+        "query": "\"Yunnan\" Phuket restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Phuket, Thailand",
+          "catalogWebsite": null,
+          "outcome": "Thepkasattri-specific search did not establish operator identity; Patong/Kathu Nanai candidate cannot replace Old Town candidate. Need original coordinates or official address.",
+          "blocker": "Thepkasattri-specific search did not establish operator identity; Patong/Kathu Nanai candidate cannot replace Old Town candidate. Need original coordinates or official address.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -330,7 +427,14 @@
       "status": "unresolved",
       "provider": null,
       "bookingUrl": null,
-      "sources": [],
+      "sources": [
+        {
+          "url": "https://www.facebook.com/profile.php?id=61557504632782",
+          "kind": "official",
+          "supports": "Waze found Zero to Nine59SrisenaRoad/0910418232 and linked Facebook61557504632782; Facebook fetch throttled. Candidate retained, not verified reservation route.",
+          "checkedAt": "2026-10-16"
+        }
+      ],
       "checks": {
         "officialExternalLink": false,
         "embeddedOriginalForm": false,
@@ -352,7 +456,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Zero to nine\" Phuket restaurant official reservation"
+        "query": "\"Zero to nine\" Phuket restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Phuket, Thailand",
+          "catalogWebsite": null,
+          "outcome": "Waze found Zero to Nine 59 Srisena Road/0910418232 and linked Facebook 61557504632782; Facebook fetch throttled. Candidate retained, not verified reservation route.",
+          "blocker": "Waze found Zero to Nine 59 Srisena Road/0910418232 and linked Facebook 61557504632782; Facebook fetch throttled. Candidate retained, not verified reservation route.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -398,7 +510,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Mikla\" Istanbul restaurant official reservation"
+        "query": "\"Mikla\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Previous original-form/CAPTCHA evidence preserved. Existing direct custom form remains external only; no new safe time/Continue interaction performed.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -453,8 +573,17 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Neolokal\" Istanbul restaurant official reservation"
-      }
+        "query": "\"Neolokal\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Previous request-only Rezervem evidence preserved. Prior time-selection hold side-effects remain unverified; no new interaction attempted.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
+      },
+      "bookingMode": "request_only"
     },
     {
       "restaurantId": "curated-IST-turk-fatih-tutak",
@@ -510,7 +639,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"TURK Fatih Tutak\" Istanbul restaurant official reservation"
+        "query": "\"TURK Fatih Tutak\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Previous desktop time results and mobile client exception preserved with their 2026-10-15 observation date. Direct custom provider not an existing adapter; no fresh availability claim.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -553,7 +690,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Akida Pilav\" Istanbul restaurant official reservation"
+        "query": "\"Akida Pilav\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "New exact-name search again leads to OSM-derived 18 Sokak/Sumer entries; no operator site or reservation number. Need original node/address, not auto-generated restaurant text.",
+          "blocker": "New exact-name search again leads to OSM-derived 18 Sokak/Sumer entries; no operator site or reservation number. Need original node/address, not auto-generated restaurant text.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -601,7 +746,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"başak börekcisi\" Istanbul restaurant official reservation"
+        "query": "\"başak börekcisi\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Official eatbu page still gives Merv 125/A and lists delivery/takeaway, no table reservation control. Closure conflict with directory not resolved; do not use DISH hosting as proof of a booking adapter.",
+          "blocker": "Official eatbu page still gives Merv 125/A and lists delivery/takeaway, no table reservation control. Closure conflict with directory not resolved; do not use DISH hosting as proof of a booking adapter.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -644,7 +797,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Bereket Sofrası\" Istanbul restaurant official reservation"
+        "query": "\"Bereket Sofrası\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Sumer candidate also on Migros delivery; operator eatbu candidate remains Kagithane 57/B. Different branches: walk-in statement cannot be transplanted.",
+          "blocker": "Sumer candidate also on Migros delivery; operator eatbu candidate remains Kagithane 57/B. Different branches: walk-in statement cannot be transplanted.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -687,7 +848,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"BiTas Ev Yemekleri\" Istanbul restaurant official reservation"
+        "query": "\"BiTas Ev Yemekleri\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Current Yemeksepeti merchant page gives Sevket Dag 4 and recent delivery reviews; no table reservation function. Similar Bitas Corba/Sultangazi and Bitas Kavurma/Kadikoy rejected.",
+          "blocker": "Current Yemeksepeti merchant page gives Sevket Dag 4 and recent delivery reviews; no table reservation function. Similar Bitas Corba/Sultangazi and Bitas Kavurma/Kadikoy rejected.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -703,7 +872,14 @@
       "status": "unresolved",
       "provider": null,
       "bookingUrl": null,
-      "sources": [],
+      "sources": [
+        {
+          "url": "https://qrdos.tr/diyarzade-kunefe",
+          "kind": "secondary",
+          "supports": "Diyarzade candidates conflict:Bilge13(Gungoren),Menderes7(OSM),2Turna28A(Kucukcekmece). QRmenu/food delivery not reservations; linked Instagram fetch failed. Need exact branch.",
+          "checkedAt": "2026-10-16"
+        }
+      ],
       "checks": {
         "officialExternalLink": false,
         "embeddedOriginalForm": false,
@@ -725,7 +901,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"DİYARZADE KÜNEFE, KATMER, BAKLAVA, VE TATLI\" Istanbul restaurant official reservation"
+        "query": "\"DİYARZADE KÜNEFE, KATMER, BAKLAVA, VE TATLI\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Diyarzade candidates conflict:Bilge 13(Gungoren), Menderes 7(OSM), 2 Turna 28 A(Kucukcekmece). QRmenu/food delivery not reservations; linked Instagram fetch failed. Need exact branch.",
+          "blocker": "Diyarzade candidates conflict:Bilge 13(Gungoren), Menderes 7(OSM), 2 Turna 28 A(Kucukcekmece). QRmenu/food delivery not reservations; linked Instagram fetch failed. Need exact branch.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -768,7 +952,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Dürüm Durak\" Istanbul restaurant official reservation"
+        "query": "\"Dürüm Durak\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Official site explicitly lists Bahcelievler, Beylikduzu, Halkali and QR menu links; no unique branch in latest catalog. QRmenus not booking providers.",
+          "blocker": "Official site explicitly lists Bahcelievler, Beylikduzu, Halkali and QR menu links; no unique branch in latest catalog. QRmenus not booking providers.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -816,7 +1008,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Efendim Fasıl Rest.\" Istanbul restaurant official reservation"
+        "query": "\"Efendim Fasıl Rest.\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "No official rebrand confirmation found for Efendim Fasil to Uras. Old eatbu page alone cannot establish current operation; need operator ownership/address continuity.",
+          "blocker": "No official rebrand confirmation found for Efendim Fasil to Uras. Old eatbu page alone cannot establish current operation; need operator ownership/address continuity.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -859,7 +1059,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Elif Börek Salonu\" Istanbul restaurant official reservation"
+        "query": "\"Elif Börek Salonu\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Further search yields Elif Borek Ve Pide Merv 120 and AI/OSM page only. No operator policy; street-level namesake ambiguity remains.",
+          "blocker": "Further search yields Elif Borek Ve Pide Merv 120 and AI/OSM page only. No operator policy; street-level namesake ambiguity remains.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -902,8 +1110,17 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Emsal Peynircimm\" Istanbul restaurant official reservation"
+        "query": "\"Emsal Peynircimm\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Yandex still categorizes Pelinli 5 candidate as dairy retailer with no phone. Need evidence that catalog entry is a dining restaurant before any booking route.",
+          "blocker": "Yandex still categorizes Pelinli 5 candidate as dairy retailer with no phone. Need evidence that catalog entry is a dining restaurant before any booking route.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     }
-  ]
+  ],
+  "lastDeepReviewAt": "2026-10-16"
 }

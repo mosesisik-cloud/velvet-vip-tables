@@ -32,3 +32,7 @@ La Guerite returned closed for 23 October / 3 guests. Le Cafe and La Petite Plag
 Unknown cancellation/prepayment conditions remain null. Original forms rendered on standalone pages are not claimed as working embeds. The two Creperie IDs remain separate unresolved identities; the candidate domain is repurposed. Le Repaire, Bar de l’Oubli and Megumi contact numbers do not count as verified manual table-booking routes.
 
 Offline validation: node scripts/external200-validate.mjs. Optional read-only browser rendering: node scripts/external200-browser-probe.mjs --live. Browser observations: data/external200-browser-evidence.json.
+
+## Follow-up 16 October 2026
+
+All twenty decisions re-examined against latest catalogue and available official sources. Four existing provider destinations render on desktop/mobile; this is not a new inventory test. No additional verified booking link was found. Operator-confirmed Shellona closure is applied to its catalogue ID. Removed the rejected Creperie casino-domain website/image from its catalogue ID; stable IDs remain unchanged. Third-party enquiry forms for Repaire/Cantina and blocked Nyama social evidence are not promoted to official booking routes. Each record has a concrete follow-up result. The initial no-click render rerun lacked a network guard; provider-JavaScript side effects cannot be certified absent. Subsequent probe uses context-wide GET/HEAD-only interception and disables service workers.

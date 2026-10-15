@@ -1,1 +1,17 @@
-{}
+{
+  "osm-DXB-shang-palace": {
+    "provider": "SevenRooms",
+    "name": "Shang Palace Dubai",
+    "city": "Dubai",
+    "venueId": "shangpalacedubai",
+    "url": "https://www.sevenrooms.com/reservations/shangpalacedubai",
+    "source": "https://www.shangri-la.com/ru/dubai/shangrila/offer-detail/dining/experience-shang-palace/",
+    "checkedAt": "2026-10-16",
+    "verification": "official_link_only",
+    "providerTitle": "Shang Palace Dubai Reservations",
+    "integrationMode": "external_link",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "venueKey": "www.sevenrooms.com/reservations/shangpalacedubai"
+  }
+}

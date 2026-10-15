@@ -28,3 +28,5 @@ jobs:
       - run: node scripts/test-place-brand.mjs
       - run: node scripts/test-delicity-availability.mjs
       - run: node scripts/test-availability-gates.mjs
+      - run: node scripts/external200-validate.mjs
+      - run: node scripts/external200-test-routes.mjs

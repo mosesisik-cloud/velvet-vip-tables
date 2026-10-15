@@ -1,6 +1,6 @@
 {
   "batch": 1,
-  "checkedAt": "2026-10-15",
+  "checkedAt": "2026-10-16",
   "scope": "Exactly manifest group; read-only audit, no bookings, holds, payments or messages.",
   "records": [
     {
@@ -21,6 +21,11 @@
           "url": "https://www.carikulinerindonesia.com/11065390/the-black-white-kitchen-kuta-utara",
           "kind": "secondary",
           "supports": "Different expanded name; Dalung candidate only."
+        },
+        {
+          "url": "https://www.tripadvisor.co.id/Restaurant_Review-g311298-d15829267-Reviews-Black_and_White_Canggu-Canggu_North_Kuta_Badung_Regency_Bali.html",
+          "kind": "secondary",
+          "supports": "Claimed Canggu candidate at Pantai Nelayan; no authoritative restaurant-specific booking route."
         }
       ],
       "checks": {
@@ -43,6 +48,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Black White Bali restaurant / official / reservations",
           "result": "Exact name search returned The Black & White Kitchen in Dalung, but there is no street address or coordinate in the input to establish that it is this record. Do not attach this candidate."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Black White Canggu official",
+          "queryIsSummary": true,
+          "result": "Claimed Black and White Canggu listing at Pantai Nelayan is a closer candidate than Dalung; no operator-owned reservation source found."
         }
       ],
       "limitations": [
@@ -50,7 +62,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Resolve the manifest place against Pantai Nelayan candidate before enabling its contact."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BAL-eternal",
@@ -70,6 +86,11 @@
           "url": "https://ametisvilla.com/pdf/factsheet2018.pdf",
           "kind": "official",
           "supports": "Historical Eternal Dine & Lounge at Ametis; not current-operation proof."
+        },
+        {
+          "url": "https://www.ametisvilla.com/festivepage.html",
+          "kind": "official",
+          "supports": "Historical festive package explicitly valid2017/2018; does not prove current Eternal operation."
         }
       ],
       "checks": {
@@ -92,6 +113,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Eternal Bali restaurant / official / reservations",
           "result": "Historical official Ametis factsheet names Eternal Dine & Lounge; it is a 2018 document and does not establish current trading name, booking channel or status."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Eternal Ametis restaurant reservations",
+          "queryIsSummary": true,
+          "result": "Official festive page still references Eternal but explicitly dates its package to 2017/2018; hotel-room booking is not current restaurant inventory."
         }
       ],
       "limitations": [
@@ -99,7 +127,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Obtain current operator confirmation of Eternal name/operation and table reservation channel."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BAL-la-rosa",
@@ -137,7 +169,8 @@
       "contact": {
         "type": "whatsapp",
         "value": "+6287817661749",
-        "bookingExplicit": false
+        "bookingExplicit": false,
+        "source": "https://linktr.ee/larosa_canggu"
       },
       "attempts": [
         {
@@ -145,6 +178,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "La Rosa Bali restaurant / official / reservations",
           "result": "Operator Linktree identifies La Rosa beachfront cafe at Batu Bolong and publishes WhatsApp contact. It does not explicitly establish a table-reservation service; no online inventory found."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "La Rosa Canggu reservation official",
+          "queryIsSummary": true,
+          "result": "Operator Linktree rechecked; cafe identity and WhatsApp remain published without an explicit table-booking offer."
         }
       ],
       "limitations": [
@@ -152,7 +192,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Confirm whether published WhatsApp accepts table reservations; no message sent."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BAL-mexican-grilled-sancwich",
@@ -188,6 +232,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Mexican Grilled Sancwich Bali restaurant / official / reservations",
           "result": "Search for the exact misspelled name Mexican Grilled Sancwich found no identity-matching official restaurant page. Generic menu results were rejected."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Mexican Grilled Sancwich Bali",
+          "queryIsSummary": true,
+          "result": "Repeated exact misspelled-name search produced no distinct operator or provider match."
         }
       ],
       "limitations": [
@@ -195,7 +246,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Recover original place spelling or street/OSM feature; do not assign generic Mexican venues."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BAL-papa-lee-s-taiwan-noodle-dumpling",
@@ -220,6 +275,11 @@
           "url": "https://www.chope.co/bali-restaurants/restaurant/papa-lees-teppanyaki-seminyak",
           "kind": "secondary",
           "supports": "Different Teppanyaki product; excluded."
+        },
+        {
+          "url": "https://chickenramencompany.com/papa-lee-seminyak/",
+          "kind": "official",
+          "supports": "Operator Seminyak branch candidate; does not settle stable catalogue branch."
         }
       ],
       "checks": {
@@ -242,6 +302,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Papa Lee's Taiwan Noodle & Dumpling Bali restaurant / official / reservations",
           "result": "Official Papa Lee site lists Seminyak, Canggu and Petitenget locations. Input contains no street address to select a branch; Teppanyaki is a different brand and its Chope page must not be substituted."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Papa Lee Canggu reservation",
+          "queryIsSummary": true,
+          "result": "Additional operator-group page identifies Seminyak at Raya Seminyak14 with reservation label; multiple branches still prevent exact mapping."
         }
       ],
       "limitations": [
@@ -249,7 +316,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Resolve Canggu/Seminyak/Petitenget branch and trace its restaurant-specific reservation endpoint."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BAL-sari",
@@ -291,6 +362,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Sari Bali restaurant / official / reservations",
           "result": "Official Sari Kitchen and Community in Canggu is a plausible candidate. The generic input name Sari and island-only address cannot establish that this is the same place."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Sari Canggu reservation",
+          "queryIsSummary": true,
+          "result": "Official Sari Kitchen remains a candidate with WhatsApp reservation wording; similarly named Sari Sedana and La Sari are accommodation, not a safe replacement."
         }
       ],
       "limitations": [
@@ -298,7 +376,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Establish that short manifest name is Sari Kitchen before exposing its WhatsApp."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BAL-seaweed",
@@ -351,7 +433,8 @@
       "contact": {
         "type": "whatsapp",
         "value": "+628113700916",
-        "bookingExplicit": true
+        "bookingExplicit": true,
+        "source": "https://linktr.ee/seaweedcanggubali"
       },
       "attempts": [
         {
@@ -364,6 +447,13 @@
           "date": "2026-10-15",
           "method": "read_only_http_get",
           "result": "Wix homepage HTTP 200; official street-level address and WhatsApp link read. No widget or availability interaction."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Seaweed Canggu reservations",
+          "queryIsSummary": true,
+          "result": "Wix homepage read-only HTTP200; booking-widget resources alone do not demonstrate an enabled booking form. Existing operator WhatsApp route remains manual."
         }
       ],
       "limitations": [
@@ -371,7 +461,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "No date/party inventory or working original form verified; use explicit manual request route only."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BAL-warung-cucu",
@@ -418,6 +512,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "warung cucu Bali restaurant / official / reservations",
           "result": "Search found Warung Cucu on Batu Bolong and Warung Cucu 58 in Gianyar. Input has no branch discriminator; directory reservation/contact information cannot resolve it."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Warung Cucu Canggu instagram",
+          "queryIsSummary": true,
+          "result": "Repeated exact-name/operator searches did not resolve Batu Bolong versus Gianyar candidate or identify operator booking source."
         }
       ],
       "limitations": [
@@ -425,7 +526,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Resolve branch using original source feature; then verify operator contact authority."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BAL-warung-middle",
@@ -467,6 +572,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Warung Middle Bali restaurant / official / reservations",
           "result": "Waze and directories consistently place Warung Middle at Canggu beach, but no operator source or booking system was found. Directory booking tags are not enough to assert a reservation route."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Warung Middle Canggu",
+          "queryIsSummary": true,
+          "result": "Bank Mandiri merchant list independently places Warung Middle on Pantai Batu Bolong; directories still lack operator booking channel."
         }
       ],
       "limitations": [
@@ -474,7 +586,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Identify a current operator-controlled page or explicitly published reservation policy."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BAL-warung-nonii",
@@ -521,6 +637,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Warung Nonii Bali restaurant / official / reservations",
           "result": "Directory identifies Waroeng Nonii and points to Instagram @waroengnonii. Direct Instagram read failed; official identity and booking channel remain unverified."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Warung Nonii Canggu official",
+          "queryIsSummary": true,
+          "result": "Other Bali continues to identify @waroengnonii and Batu Bolong; official social content not readable in audit."
         }
       ],
       "limitations": [
@@ -528,7 +651,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Inspect publicly accessible operator policy when available; no bypass attempted."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BAL-warung-varuna",
@@ -580,6 +707,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Warung Varuna Bali restaurant / official / reservations",
           "result": "Directories identify Varuna at 89x Pantai Batu Bolong but disagree on phone and reservation support. Candidate Facebook read was throttled. Do not infer walk-in-only from third-party no-booking tag."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Warung Varuna official Canggu",
+          "queryIsSummary": true,
+          "result": "Tripadvisor and Wanderlog retain conflicting phone numbers and street suffixes; neither establishes current reservation policy."
         }
       ],
       "limitations": [
@@ -587,7 +721,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Verify current operator contact and booking/walk-in policy instead of directory tags."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "curated-BDR-mimoza-gumusluk",
@@ -639,6 +777,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Mimoza Gümüşlük Bodrum restaurant / official / reservations",
           "result": "Gumusluk venue identified by multiple secondary sources, but street number differs (32 versus 104). Candidate official domain could not be read. Phone booking is reported, not officially confirmed in this audit."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Mimoza Gumusluk resmi rezervasyon",
+          "queryIsSummary": true,
+          "result": "Non-www official domain retry failed. Amex merchant guide corroborates Yali104 and02523943139; secondary sources disagree on street number/contact."
         }
       ],
       "limitations": [
@@ -646,7 +791,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Read current operator channel and confirm reservation contact/address; no intermediary form approved."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-arka-restaurant-pizzeria",
@@ -656,7 +805,7 @@
         "status": "unresolved",
         "actualCity": null,
         "address": null,
-        "notes": "Arka has central Bodrum and Yalikavak branches, and central address changed from Dr Ekrem Uslu to Cumhuriyet 102. Official website read failed; city-only input cannot resolve old/current branch."
+        "notes": "Official operator publishes central Bodrum (Cumhuriyet 102) and Yalikavak (Carsi 52-1D1) branches. Both follow arrival order and a waiting list rather than reservations. Catalogue provenance does not identify which branch this stable ID denotes."
       },
       "status": "unresolved_branch",
       "provider": null,
@@ -676,6 +825,11 @@
           "url": "https://mekanlar.com/mekan/arka-ristorante-pizzeria-yalikavak-bodrum",
           "kind": "secondary",
           "supports": "Yalikavak branch."
+        },
+        {
+          "url": "https://arkapizzeria.com/",
+          "kind": "official",
+          "supports": "Readable on 2026-10-16: both branch addresses and explicit no-reservations / arrival-order policy."
         }
       ],
       "checks": {
@@ -698,6 +852,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Arka Restaurant & Pizzeria Bodrum restaurant / official / reservations",
           "result": "Arka has central Bodrum and Yalikavak branches, and central address changed from Dr Ekrem Uslu to Cumhuriyet 102. Official website read failed; city-only input cannot resolve old/current branch."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Arka Bodrum rezervasyon resmi",
+          "queryIsSummary": true,
+          "result": "Official root domain now readable. It explicitly declines reservations for its Bodrum and Yalikavak operation and uses arrival order/waitlist."
         }
       ],
       "limitations": [
@@ -705,7 +866,17 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Exact branch remains unresolved; never route to third-party reservation forms contrary to operator policy."
+      ],
+      "followUpReviewedAt": "2026-10-16",
+      "bookingPolicy": {
+        "mode": "walk_in",
+        "scope": "both_published_branches",
+        "source": "https://arkapizzeria.com/",
+        "notes": "Operator explicitly does not accept reservations; arrival order and waiting list when full. Exact catalogue branch unresolved."
+      }
     },
     {
       "restaurantId": "osm-BDR-bal-k-pisirici",
@@ -747,6 +918,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Balık Pişirici Bodrum restaurant / official / reservations",
           "result": "Generic Balik Pisirici name appears on OSM-derived Neyzen Tevfik street directory. No distinct official business or reservation route identified."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Balik Pisirici Bodrum restoran",
+          "queryIsSummary": true,
+          "result": "Street directories still place generic seafood label on Neyzen Tevfik, with no operator identity or telephone."
         }
       ],
       "limitations": [
@@ -754,7 +932,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Recover unique business identity or source OSM feature; generic seafood category cannot be linked."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-battalbey-cig-kofte",
@@ -801,6 +983,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Battalbey Çig Köfte Bodrum restaurant / official / reservations",
           "result": "Multiple Battalbey branches exist in Bodrum, including Ismet Inonu and Artemis streets. No input address selects a branch. Delivery ordering is not table booking."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Battalbey Bodrum Artemis",
+          "queryIsSummary": true,
+          "result": "Additional map sources place Battalbey on Artemis18C/21 while existing Ismet Inonu branch persists. Food ordering is not table booking."
         }
       ],
       "limitations": [
@@ -808,7 +997,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Resolve branch; require explicit reservation policy before enabling any table route."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-bodrum-belediyesi-carsi-kafe",
@@ -846,7 +1039,8 @@
       "contact": {
         "type": "phone",
         "value": "+905331370417",
-        "bookingExplicit": false
+        "bookingExplicit": false,
+        "source": "https://www.bodrumbelediyeas.com.tr/tesis.php?slug=carsi-cafe"
       },
       "attempts": [
         {
@@ -854,6 +1048,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Bodrum Belediyesi (Carsi Kafe) Bodrum restaurant / official / reservations",
           "result": "Municipal operator confirms Carsi Cafe identity, address and public phone. No statement that this phone accepts table bookings and no reservation system observed."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Carsi Cafe Bodrum Belediyesi rezervasyon",
+          "queryIsSummary": true,
+          "result": "Municipal source rechecked: exact address and telephone but no table-booking offer."
         }
       ],
       "limitations": [
@@ -861,7 +1062,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Published contact alone does not establish reservation acceptance."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-cirali",
@@ -881,6 +1086,11 @@
           "url": "https://business.google.com/v/_/0656941041902172949/8053/_",
           "kind": "secondary",
           "supports": "Business-profile candidate at Ataturk 26."
+        },
+        {
+          "url": "https://wanderlog.com/place/details/3664357/%C3%A7%C4%B1ral%C4%B1-bodrum",
+          "kind": "secondary",
+          "supports": "Closure report conflicts with other directory hours; insufficient for definitive closed status."
         }
       ],
       "checks": {
@@ -903,6 +1113,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Çirali Bodrum restaurant / official / reservations",
           "result": "Google business-hosted page identifies Cirali Bodrum at Ataturk 26. Operator provenance and booking support were not established beyond search result; no integration approved."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Cirali Bodrum restaurant rezervasyon",
+          "queryIsSummary": true,
+          "result": "Verified Google business profile shows Ataturk26/phone05443132028 but Wanderlog reports permanent closure; Yandex retains hours."
         }
       ],
       "limitations": [
@@ -910,7 +1127,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Resolve current operation with operator confirmation; do not infer permanent closure from time-of-day closed label."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-derin-balik",
@@ -957,6 +1178,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Derin Balik Bodrum restaurant / official / reservations",
           "result": "Closure conflict: Restaurant Guru says permanently closed while Tripadvisor shows recent 2026 reviews and claimed listing at Carsi Sok 7/B. No official closure confirmation; neither closed nor bookable is asserted."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Derin Balik Bodrum instagram rezervasyon",
+          "queryIsSummary": true,
+          "result": "Claimed Tripadvisor page remains open with phone and reservation tag, conflicting with earlier closure report; no operator-owned current policy retrieved."
         }
       ],
       "limitations": [
@@ -964,7 +1192,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Resolve closure conflict and confirm restaurant-owned reservation route."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-garden-steak-kebap",
@@ -989,6 +1221,11 @@
           "url": "https://menuburada.com/t-garden-steak-kebap-carsi-mugla/",
           "kind": "secondary",
           "supports": "Ataturk candidate."
+        },
+        {
+          "url": "https://www.tumisyeri.com/t-garden-steak-house-0252-313-46-00",
+          "kind": "secondary",
+          "supports": "Historic Neyzen candidate conflicts with another address/contact."
         }
       ],
       "checks": {
@@ -1011,6 +1248,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Garden Steak & Kebap Bodrum restaurant / official / reservations",
           "result": "Garden Steak and Kebab appears on Neyzen Tevfik while T Garden Steak Kebap appears at Ataturk 28 with a different phone. No official source resolves which is intended."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Garden Steak Bodrum official restaurant",
+          "queryIsSummary": true,
+          "result": "Additional directory associates T Garden with NeyzenTevfik/02523134600 and obsolete tgardenbodrum domain, while Ataturk28 has another phone."
         }
       ],
       "limitations": [
@@ -1018,7 +1262,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Resolve relocation/namesake relationship before selecting one contact."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-gemibas-restaurant",
@@ -1028,7 +1276,7 @@
         "status": "verified",
         "actualCity": "Bodrum",
         "address": "Neyzen Tevfik Cad. No:132, Bodrum Marina",
-        "notes": "Operator site confirms Gemibasi at Bodrum Marina and publishes contact telephone/email. Text extraction of fresh page was empty; no explicit table-booking procedure established."
+        "notes": "Official Gemibasi site is readable on follow-up and corroborates venue address/contact. No explicit table reservation procedure or original booking inventory established."
       },
       "status": "unresolved",
       "provider": null,
@@ -1056,7 +1304,8 @@
       "contact": {
         "type": "phone",
         "value": "+902523161220",
-        "bookingExplicit": false
+        "bookingExplicit": false,
+        "source": "https://www.gemibasi.com/"
       },
       "attempts": [
         {
@@ -1069,6 +1318,13 @@
           "date": "2026-10-15",
           "method": "read_only_http_get",
           "result": "Official homepage HTTP 200; metadata mentions reservations, but no exact booking procedure in static response. No inferred booking route."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Gemibasi rezervasyon resmi",
+          "queryIsSummary": true,
+          "result": "Official current page now yields full address and contact text, but no explicit booking procedure in readable content."
         }
       ],
       "limitations": [
@@ -1076,7 +1332,12 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Confirm whether published phone accepts table bookings or inspect enabled reservation control."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     }
-  ]
+  ],
+  "followUpScope": "Read-only follow-up of every assigned record, including official/provider and catalogue searches. Prior browser observations retain their original date."
 }

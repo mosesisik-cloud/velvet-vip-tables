@@ -47,7 +47,13 @@
       "limitations": [
         "No booking, hold, payment, or message submitted."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Additional current Access listing found, but it is a third-party enquiry channel; no operator-owned reservation policy established.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      }
     },
     {
       "restaurantId": "osm-SBH-la-creperie",
@@ -95,7 +101,13 @@
         "No booking, hold, payment, or message submitted.",
         "Repurposed domain rejected; duplicate-identity relationship requires source OSM identifiers."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Duplicate stable IDs remain unresolved; repurposed casino domain rejected. No operator-owned replacement route established.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      }
     },
     {
       "restaurantId": "osm-SBH-la-guerite",
@@ -143,27 +155,21 @@
         "No booking, hold, payment, or message submitted.",
         "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered."
       ],
-      "registryAddition": {
-        "provider": "SevenRooms",
-        "name": "La Guérite",
-        "city": "Gustavia",
-        "venueId": "lagueritedb",
-        "url": "https://www.sevenrooms.com/reservations/lagueritedb",
-        "source": "https://www.restaurantlaguerite.com/saint-barth-gustavia/",
-        "checkedAt": "2026-10-15",
-        "verification": "official_link_no_current_offers",
-        "integrationMode": "external_link",
-        "venueKey": "www.sevenrooms.com/reservations/lagueritedb",
-        "liveAvailabilitySupported": false,
-        "completionTracking": "unsupported"
-      },
+      "registryAddition": null,
       "availabilityObservation": {
         "checkedAt": "2026-10-15",
         "date": "2026-10-23",
         "guests": 3,
         "result": "closed_on_selected_date",
         "method": "Original standalone search"
-      }
+      },
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Existing official provider destination re-rendered on desktop and mobile; no controls selected. Initial no-click rerun lacked a network write guard, so provider-side effects cannot be certified absent.",
+        "blocker": null
+      },
+      "registryState": "already_integrated_on_main"
     },
     {
       "restaurantId": "osm-SBH-la-petite-plage",
@@ -204,7 +210,7 @@
           "en"
         ],
         "cancellation": null,
-        "cardGuarantee": "Provider says a card imprint is required to confirm. No card entered.",
+        "cardGuarantee": "Original provider states card guarantee required; booking remains a request pending response.",
         "prepayment": null,
         "languageSwitch": "not_tested"
       },
@@ -213,27 +219,22 @@
         "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered.",
         "Provider says requests processed within24–72h; no immediate confirmation inferred. Cancellation/prepayment terms not visible at search stage."
       ],
-      "registryAddition": {
-        "provider": "SevenRooms",
-        "name": "La Petite Plage",
-        "city": "Gustavia",
-        "venueId": "lapetiteplagesaintbarth",
-        "url": "https://www.sevenrooms.com/reservations/lapetiteplagesaintbarth",
-        "source": "https://www.restaurant-lapetiteplage.com/saint-barthelemy",
-        "checkedAt": "2026-10-15",
-        "verification": "official_link_only",
-        "integrationMode": "external_link",
-        "venueKey": "www.sevenrooms.com/reservations/lapetiteplagesaintbarth",
-        "liveAvailabilitySupported": false,
-        "completionTracking": "unsupported"
-      },
+      "registryAddition": null,
       "availabilityObservation": {
         "checkedAt": "2026-10-15",
         "date": "2026-10-15",
         "guests": 2,
         "result": "closed_on_selected_date",
         "method": "Provider default search, desktop/mobile"
-      }
+      },
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Existing official provider destination re-rendered on desktop and mobile; no controls selected. Initial no-click rerun lacked a network write guard, so provider-side effects cannot be certified absent.",
+        "blocker": null
+      },
+      "bookingMode": "request_only",
+      "registryState": "already_integrated_on_main"
     },
     {
       "restaurantId": "osm-SBH-laventura",
@@ -275,7 +276,13 @@
       "limitations": [
         "No booking, hold, payment, or message submitted."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Expanded exact-name search also finds Saint-Nom-la-Breteche, France; this is a different venue and cannot be attached to the St Barth record.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      }
     },
     {
       "restaurantId": "osm-SBH-le-bar-de-l-oubli",
@@ -324,6 +331,12 @@
         "type": "phone",
         "value": "+590590277006",
         "reservationAcceptance": "unknown"
+      },
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Official site re-read: phone explicitly orders food, not table reservations; keep unresolved booking status.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
       }
     },
     {
@@ -376,7 +389,13 @@
       "limitations": [
         "No booking, hold, payment, or message submitted."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Official bazbar.com returned404 again. Historical menu confirms alias but not current booking acceptance.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      }
     },
     {
       "restaurantId": "osm-SBH-le-cafe",
@@ -417,7 +436,7 @@
           "en"
         ],
         "cancellation": null,
-        "cardGuarantee": "Provider says a card imprint is required to confirm. No card entered.",
+        "cardGuarantee": "Original provider states card guarantee required; booking remains a request pending response.",
         "prepayment": null,
         "languageSwitch": "not_tested"
       },
@@ -426,27 +445,22 @@
         "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered.",
         "Provider says requests processed within24–72h; no immediate confirmation inferred. Cancellation/prepayment terms not visible at search stage."
       ],
-      "registryAddition": {
-        "provider": "SevenRooms",
-        "name": "Le Café",
-        "city": "Gustavia",
-        "venueId": "lecafesaintbarth",
-        "url": "https://www.sevenrooms.com/reservations/lecafesaintbarth",
-        "source": "https://www.lecafe.fr/en/saint-barthelemy-restaurant",
-        "checkedAt": "2026-10-15",
-        "verification": "official_link_only",
-        "integrationMode": "external_link",
-        "venueKey": "www.sevenrooms.com/reservations/lecafesaintbarth",
-        "liveAvailabilitySupported": false,
-        "completionTracking": "unsupported"
-      },
+      "registryAddition": null,
       "availabilityObservation": {
         "checkedAt": "2026-10-15",
         "date": "2026-10-15",
         "guests": 2,
         "result": "closed_on_selected_date",
         "method": "Provider default search, desktop/mobile"
-      }
+      },
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Existing official provider destination re-rendered on desktop and mobile; no controls selected. Initial no-click rerun lacked a network write guard, so provider-side effects cannot be certified absent.",
+        "blocker": null
+      },
+      "bookingMode": "request_only",
+      "registryState": "already_integrated_on_main"
     },
     {
       "restaurantId": "osm-SBH-le-petit-deauville",
@@ -493,7 +507,13 @@
       "limitations": [
         "No booking, hold, payment, or message submitted."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Current local restaurant listing describes ice cream and sorbet, not verified reservations; French Montreuil namesake rejected.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      }
     },
     {
       "restaurantId": "osm-SBH-le-repaire",
@@ -547,6 +567,12 @@
         "type": "phone",
         "value": "+590590277248",
         "reservationAcceptance": "published"
+      },
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Access and saint-barths.com show third-party enquiry forms; operator authorization remains unverified. Do not activate as official.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
       }
     },
     {
@@ -594,7 +620,13 @@
       "limitations": [
         "No booking, hold, payment, or message submitted."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Current Eden Rock FAQ re-read: Eden To Go is a takeaway offering; exact stable-ID continuity with Mayas To Go remains unproven.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      }
     },
     {
       "restaurantId": "osm-SBH-megumi-sushi",
@@ -644,6 +676,12 @@
         "type": "phone",
         "value": "+590590291313",
         "reservationAcceptance": "unknown"
+      },
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Official site re-read: dine-in/takeaway buttons lead to meal ordering, not table inventory. Page also contains an unrelated gambling link; no booking route activated.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
       }
     },
     {
@@ -692,7 +730,13 @@
         "No booking, hold, payment, or message submitted.",
         "Pandemic-era wording remains; current hours not verified."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Official contact page still explicitly offers TO GO at Rue du Roi Oscar II; no table-reservation route verified.",
+        "blocker": null
+      }
     },
     {
       "restaurantId": "osm-SBH-nyama",
@@ -739,7 +783,13 @@
       "limitations": [
         "No booking, hold, payment, or message submitted."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "New KeyParadise listing has phone reservation claim and Instagram candidate nyama_sbh; Instagram fetch throttled. No operator source independently accessible, so keep unresolved.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      }
     },
     {
       "restaurantId": "osm-SBH-restaurant-le-creperie",
@@ -787,7 +837,13 @@
         "No booking, hold, payment, or message submitted.",
         "Repurposed domain rejected; duplicate-identity relationship requires source OSM identifiers."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Duplicate ID unresolved; repurposed domain rejected. Removed stale casino website/image from catalogue for this ID only.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      }
     },
     {
       "restaurantId": "osm-SBH-restaurant-victoria",
@@ -834,7 +890,13 @@
       "limitations": [
         "No booking, hold, payment, or message submitted."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Secondary closure evidence retained; no operator-confirmed closure. Do not substitute La Petite Plage or merge IDs.",
+        "blocker": null
+      }
     },
     {
       "restaurantId": "osm-SBH-sella",
@@ -883,20 +945,7 @@
         "Embedding verified on localhost harness only, not production origin. No time selected; no guarantee/checkout steps reached.",
         "Mobile screenshot shows main four time buttons legible; alternate-date rows extend horizontally. Full mobile checkout/accessibility not tested."
       ],
-      "registryAddition": {
-        "provider": "SevenRooms",
-        "name": "Sella",
-        "city": "Public",
-        "venueId": "restaurantsella",
-        "url": "https://www.sevenrooms.com/reservations/restaurantsella",
-        "source": "https://sellasaintbarth.com/fr/",
-        "checkedAt": "2026-10-15",
-        "verification": "official_link_only",
-        "integrationMode": "external_link",
-        "venueKey": "www.sevenrooms.com/reservations/restaurantsella",
-        "liveAvailabilitySupported": false,
-        "completionTracking": "unsupported"
-      },
+      "registryAddition": null,
       "availabilityObservation": {
         "checkedAt": "2026-10-15",
         "date": "2026-10-23",
@@ -909,7 +958,14 @@
           "21:30"
         ],
         "method": "Original standalone and cross-origin iframe on localhost, desktop/mobile; time buttons read only."
-      }
+      },
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Existing official provider destination re-rendered on desktop and mobile; no controls selected. Initial no-click rerun lacked a network write guard, so provider-side effects cannot be certified absent.",
+        "blocker": null
+      },
+      "registryState": "already_integrated_on_main"
     },
     {
       "restaurantId": "osm-SBH-shellona",
@@ -955,7 +1011,13 @@
         "No booking, hold, payment, or message submitted."
       ],
       "registryAddition": null,
-      "retiredBookingUrl": "https://www.sevenrooms.com/reservations/shellonadb"
+      "retiredBookingUrl": "https://www.sevenrooms.com/reservations/shellonadb",
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Operator Barriere page re-read explicitly confirms closure/replacement by Loulou. Marked this catalogue ID permanently_closed using existing UI.",
+        "blocker": null
+      }
     },
     {
       "restaurantId": "osm-SBH-victoire",
@@ -1002,7 +1064,13 @@
       "limitations": [
         "No booking, hold, payment, or message submitted."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Historical Cafe Victoire/map-only evidence still insufficient; no inheritance of Victoria closure or successor booking.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      }
     },
     {
       "restaurantId": "osm-SIN-bones-n-barrels",
@@ -1050,7 +1118,13 @@
         "No booking, hold, payment, or message submitted.",
         "Branch must be resolved before linking any specific provider."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followupCheckedAt": "2026-10-16",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "Official chain pages list several outlets; old source omitted coordinates/OSM IDs. Historical Overpass retrieval failed (429 then500), so no branch inferred.",
+        "blocker": "No sufficiently verified restaurant-specific booking route; see result."
+      }
     }
   ]
 }

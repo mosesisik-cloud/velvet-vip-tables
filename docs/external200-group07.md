@@ -4,7 +4,7 @@ Checked 2026-10-15. Exactly the 20 manifest IDs in group 7; stable IDs preserved
 
 All records received an exact-name/city web search and source review. “Reviewed” means the evidence and uncertainty were assessed, not that all identities or bookability were verified. Repository source has no street address/coordinates for these IDs. Directory and OSM mirrors are discovery evidence only. Missing policies remain null.
 
-Counts: {"reviewed":20,"identityVerified":4,"embeddedOriginalForms":1,"officialExternalLinks":3,"liveAvailability":1,"manualBookingRoutes":1,"walkIn":0,"closed":0,"unresolved":16,"registryAdditions":0}.
+Counts: {"reviewed":20,"identityVerified":4,"embeddedOriginalForms":1,"officialExternalLinks":4,"liveAvailability":1,"manualBookingRoutes":1,"walkIn":0,"closed":0,"unresolved":16,"registryAdditions":0,"verifiedManualContacts":1}.
 
 Registry additions are recorded per restaurant and counted above; Bagatelle uses the existing SevenRooms external-link schema. Official custom/request links are evidence only. No production edits.
 
@@ -42,3 +42,91 @@ JSON count and exact manifest membership checked by generator. This is an eviden
 - TURK Fatih Tutak: desktop — 2 guests / 2026-10-28; offered 18:30,19:00,19:30,20:00,20:30; stopped before selecting time or Continue; mobile — 390x844 resize produced visible client-side application exception; mobile failed.
 
 Where desktop/mobile says not_tested, only source text was inspected. No claim of responsive or end-to-end booking functionality is made.
+
+
+## Follow-up 2026-10-16
+
+All20 IDs reconciled against latest catalog. Browser retest unavailable (IAB unavailable); provider fetch for FishCorner restricted. No new slot selection, Continue, request submission, contact action or CAPTCHA bypass. Earlier UI observations remain dated2026-10-15; Neolokal prior hold-side-effect uncertainty is preserved. No new availability or mobile pass claimed. Bagatelle already present in main, excluded from new additions.
+
+### osm-HKT-u172a3c9fa68f
+
+Exact Thai-name search did not establish a restaurant-owned page; Thai Malai delivery app results are unrelated and rejected. Need operator identity at a street address.
+
+### osm-HKT-u85f393ba80c7
+
+Operator link-in-bio identifies One Chun on Thepkasattri Road. Michelin lists 48/1 and direct contact, while a secondary guide claims walk-in only. Official Instagram fetch failed; need operator reservation policy before classifying phone/walk-in.
+
+### osm-HKT-u88caf8193724
+
+Tourism Authority 2025 guide lists New Break Taek by old bus terminal; new review gives Phang Nga/0951989328. Neither resolves old-terminal versus Chalong branch or conflicting closure claim. Need exact source OSM node or operator page.
+
+### osm-HKT-u9652e72e518c
+
+Thai-name search still yields directory 58 Suthat and Yandex Suthat Soi 1, no operator booking source. Delivery option is not evidence of reservable tables.
+
+### osm-HKT-uf6b9db1d32b4
+
+Official reservation section now exposes name/email/phone/date/party request form, 24h advance notice, same-day telephone and Whats App. Safe external request route; no submit or inventory test.
+
+Explicit booking contact: email reservation.raya@gmail.com ([official source](https://www.rayarestaurant.net/)).
+
+### osm-HKT-xorin
+
+Wongnai merchant-labelled OFFICIAL candidate Xorin Old Town gives 42 Talat Yai and+66873962925, but operator site and conflicting earlier phone remain unresolved. Do not promote merchant-label alone to verified booking.
+
+### osm-HKT-yunnan
+
+Thepkasattri-specific search did not establish operator identity; Patong/Kathu Nanai candidate cannot replace Old Town candidate. Need original coordinates or official address.
+
+### osm-HKT-zero-to-nine
+
+Waze found Zero to Nine 59 Srisena Road/0910418232 and linked Facebook 61557504632782; Facebook fetch throttled. Candidate retained, not verified reservation route.
+
+### curated-IST-mikla
+
+Previous original-form/CAPTCHA evidence preserved. Existing direct custom form remains external only; no new safe time/Continue interaction performed.
+
+### curated-IST-neolokal
+
+Previous request-only Rezervem evidence preserved. Prior time-selection hold side-effects remain unverified; no new interaction attempted.
+
+### curated-IST-turk-fatih-tutak
+
+Previous desktop time results and mobile client exception preserved with their 2026-10-15 observation date. Direct custom provider not an existing adapter; no fresh availability claim.
+
+### osm-IST-akida-pilav
+
+New exact-name search again leads to OSM-derived 18 Sokak/Sumer entries; no operator site or reservation number. Need original node/address, not auto-generated restaurant text.
+
+### osm-IST-basak-borekcisi
+
+Official eatbu page still gives Merv 125/A and lists delivery/takeaway, no table reservation control. Closure conflict with directory not resolved; do not use DISH hosting as proof of a booking adapter.
+
+### osm-IST-bereket-sofras
+
+Sumer candidate also on Migros delivery; operator eatbu candidate remains Kagithane 57/B. Different branches: walk-in statement cannot be transplanted.
+
+### osm-IST-bitas-ev-yemekleri
+
+Current Yemeksepeti merchant page gives Sevket Dag 4 and recent delivery reviews; no table reservation function. Similar Bitas Corba/Sultangazi and Bitas Kavurma/Kadikoy rejected.
+
+### osm-IST-diyarzade-kunefe-katmer-baklava-ve-tatli
+
+Diyarzade candidates conflict:Bilge 13(Gungoren), Menderes 7(OSM), 2 Turna 28 A(Kucukcekmece). QRmenu/food delivery not reservations; linked Instagram fetch failed. Need exact branch.
+
+### osm-IST-durum-durak
+
+Official site explicitly lists Bahcelievler, Beylikduzu, Halkali and QR menu links; no unique branch in latest catalog. QRmenus not booking providers.
+
+### osm-IST-efendim-fas-l-rest
+
+No official rebrand confirmation found for Efendim Fasil to Uras. Old eatbu page alone cannot establish current operation; need operator ownership/address continuity.
+
+### osm-IST-elif-borek-salonu
+
+Further search yields Elif Borek Ve Pide Merv 120 and AI/OSM page only. No operator policy; street-level namesake ambiguity remains.
+
+### osm-IST-emsal-peynircimm
+
+Yandex still categorizes Pelinli 5 candidate as dairy retailer with no phone. Need evidence that catalog entry is a dining restaurant before any booking route.
+

@@ -4,7 +4,7 @@ Checked 2026-10-15. Exactly the 20 manifest IDs in group 8; stable IDs preserved
 
 All records received an exact-name/city web search and source review. “Reviewed” means the evidence and uncertainty were assessed, not that all identities or bookability were verified. Repository source has no street address/coordinates for these IDs. Directory and OSM mirrors are discovery evidence only. Missing policies remain null.
 
-Counts: {"reviewed":20,"identityVerified":1,"embeddedOriginalForms":0,"officialExternalLinks":0,"liveAvailability":0,"manualBookingRoutes":1,"walkIn":0,"closed":0,"unresolved":19,"registryAdditions":0}.
+Counts: {"reviewed":20,"identityVerified":1,"embeddedOriginalForms":0,"officialExternalLinks":0,"liveAvailability":0,"manualBookingRoutes":1,"walkIn":0,"closed":0,"unresolved":19,"registryAdditions":0,"verifiedManualContacts":1}.
 
 Registry additions are recorded per restaurant and counted above; Bagatelle uses the existing SevenRooms external-link schema. Official custom/request links are evidence only. No production edits.
 
@@ -39,3 +39,91 @@ JSON count and exact manifest membership checked by generator. This is an eviden
 
 
 Where desktop/mobile says not_tested, only source text was inspected. No claim of responsive or end-to-end booking functionality is made.
+
+
+## Follow-up 2026-10-16
+
+All20 IDs reconciled against latest catalog. Browser retest unavailable (IAB unavailable); provider fetch for FishCorner restricted. No new slot selection, Continue, request submission, contact action or CAPTCHA bypass. Earlier UI observations remain dated2026-10-15; Neolokal prior hold-side-effect uncertainty is preserved. No new availability or mobile pass claimed. Bagatelle already present in main, excluded from new additions.
+
+### osm-IST-gelik
+
+Official Gelik 1972 site explains 2018 operator split:Atakoy Denizer versus Levent/Acarkent/Firuzkoy/Beylikduzu Duruk. Generic ID cannot select these distinct operators.
+
+### osm-IST-gumus-kanat
+
+Official eatbu text explicitly accepts reservations via 02126444162. Added structured verified phone contact; DISH-hosted brochure is not Dish Cult table inventory.
+
+Explicit booking contact: phone +902126444162 ([official source](https://gumuskanat.eatbu.com/?lang=en)).
+
+### osm-IST-guvenc-konyal
+
+Official Sirkeci eatbu plus Gungoren Gulbayir candidate confirm branch ambiguity; latest catalog has no locator. Need exact branch before booking.
+
+### osm-IST-has-ad-yman
+
+OSM Merv Caddesi mirror contains exact misspellinghasadiyman; no operator identity. Do not normalize to arbitrary Has Adiyaman franchise.
+
+### osm-IST-haznedar-meydan-gece-cigercisi
+
+OSM-derived Gungoren directory supplies Bagcilar Caddesi/02125560037, but expressly secondary sourcing. Need operator confirmation; no call made.
+
+### osm-IST-iskenderun-kral-durum
+
+Instagram-focused exact-name query failed to establish operator; previous Merter/Gungoren address variants unresolved. Need official branch identity.
+
+### osm-IST-izmir-bal-kc-s
+
+Found official Izmir Balik brand in Fethiye/Mugla, explicitly different city and rejected. Istanbul Mimar Sinan candidate still directory only.
+
+### osm-IST-limgarden-kafe-restoran-ev-yemekleri
+
+Directory explicitly discloses OSM provenance and not official business site; Vezir 9/B retained only as candidate despite verified badge. Need operator source.
+
+### osm-IST-mahmud-usta-kebap
+
+Exact name found on Merv Caddesi OSM mirror; AI directory flags 50percent/unverified. Neither establishes current operation or walk-in policy.
+
+### osm-IST-oz-baba-doner
+
+Merv Caddesi OSM candidate differs from Seyitnizam 17 directory candidate. Need branch locator and official contact; no chain/site chosen.
+
+### osm-IST-pasa-doner
+
+Official branch selector re-read; generic Pasa Doner cannot identify branch. Food ordering and menu links not table reservations.
+
+### osm-IST-royal-tavuk
+
+New OSM mirror narrowsroyaltavuk to Merv Caddesi, but no operator address/phone/policy. Need exact venue source; unrelated Royal menus rejected.
+
+### osm-IST-safran-karadeniz
+
+Exact-name official search did not resolve Sumer versus Atasehir candidate; unrelated Safran suppliers rejected. Need restaurant-owned source.
+
+### osm-IST-senkardesler
+
+Merv Caddesi OSM mirror confirms only candidate locality; spelling Senkardesler still no operator reservation channel. Need source node/current operator.
+
+### osm-IST-u7e5b2e46dee5
+
+Exact Russian string is mapped near Radisson Blu Ottomare/Zeytinburnu in OSM mirror. Descriptive label is not venue identity; do not assign hotel restaurant.
+
+### osm-IST-urfa-dergah-kebap
+
+Second directory corroborates Merv 149 B and 02124160063 but no operator-owned booking source; similar Urfa Dergah Sofrasi elsewhere rejected.
+
+### osm-IST-vargeller-kebap
+
+Current Yemeksepeti link remains delivery/group-food-order menu, not table reservation; no operator booking source found.
+
+### osm-MIA-akashi-japanese-restaurant
+
+New Coconut Grove BID report names Varsolby Akashi; government license 3423 Main Hwy differs from old Akashi 3444 Main Hwy and official South Miami 5830 SDixie. Rebrand/branch continuity unproven.
+
+### osm-MIA-el-taquitos
+
+OSM mirror now provides El Taquitos 3414 Main Highway; no operator website or booking policy. Different El Taquito 1388 SW 8th Street rejected.
+
+### osm-MIA-focaccia-bistro
+
+2017review update claims permanent closure; fresh generic hours directory explicitly says hours not venue-confirmed. No official closure announcement: keep unresolved, no live link.
+
