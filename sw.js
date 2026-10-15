@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-160b-live-times";
+const VERSION = "v4-real-162-native-zink";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
