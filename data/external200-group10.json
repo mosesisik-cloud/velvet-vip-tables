@@ -1,0 +1,1056 @@
+{
+  "batch": 10,
+  "checkedAt": "2026-10-15",
+  "records": [
+    {
+      "restaurantId": "osm-SBH-la-cantina",
+      "name": "La Cantina",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Local sources place La Cantina on Rue du Bord de Mer; current restaurant-owned source and table-booking policy not verified.",
+        "candidateCity": "Gustavia",
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://saint-barth.org/directory/restaurants/",
+          "kind": "secondary",
+          "supports": "7 Rue du Bord de Mer; contact listed"
+        },
+        {
+          "url": "https://www.saintbarth-tourisme.com/wp-content/uploads/2023/10/RESTAURANTS-ST-BARTH-2023.pdf",
+          "kind": "official",
+          "supports": "Historical tourism listing only, not current restaurant confirmation."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-SBH-la-creperie",
+      "name": "La Crêperie",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Two manifest IDs may refer to the same La Creperie; no coordinates or street address in source dataset. Do not merge IDs or activate a guessed branch.",
+        "candidateCity": "Gustavia",
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://creperiestbarth.com/",
+          "kind": "rejected",
+          "supports": "Candidate domain now serves German cryptocurrency casino content."
+        },
+        {
+          "url": "https://key-paradise.com/clients/la-creperie/",
+          "kind": "secondary",
+          "supports": "Restaurant listing, phone +590590278407; conflicting Rue de la France / Roi Oscar II address wording."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Repurposed domain rejected; duplicate-identity relationship requires source OSM identifiers."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-SBH-la-guerite",
+      "name": "La Guérite",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "La Pointe Gustavia, 97133 Saint-Barthelemy",
+        "notes": "Restaurant official source identifies exact local venue and SevenRooms route; canonical reservations URL also opened in Chromium."
+      },
+      "status": "official_external_link",
+      "provider": "SevenRooms",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/lagueritedb",
+      "sources": [
+        {
+          "url": "https://www.restaurantlaguerite.com/saint-barth-gustavia/",
+          "kind": "official",
+          "supports": "Venue identity and booking link/widget configuration."
+        },
+        {
+          "url": "https://www.sevenrooms.com/reservations/lagueritedb",
+          "kind": "official",
+          "supports": "Restaurant-specific original SevenRooms search page."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "originalFormLoaded": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "Original standalone form rendered at1365x900",
+        "mobile": "Original standalone form rendered at390x844",
+        "languages": [
+          "fr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered."
+      ],
+      "registryAddition": {
+        "provider": "SevenRooms",
+        "name": "La Guérite",
+        "city": "Gustavia",
+        "venueId": "lagueritedb",
+        "url": "https://www.sevenrooms.com/reservations/lagueritedb",
+        "source": "https://www.restaurantlaguerite.com/saint-barth-gustavia/",
+        "checkedAt": "2026-10-15",
+        "verification": "official_link_no_current_offers",
+        "integrationMode": "external_link",
+        "venueKey": "www.sevenrooms.com/reservations/lagueritedb",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "availabilityObservation": {
+        "checkedAt": "2026-10-15",
+        "date": "2026-10-23",
+        "guests": 3,
+        "result": "closed_on_selected_date",
+        "method": "Original standalone search"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-la-petite-plage",
+      "name": "La Petite Plage",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "Angle des rues du Centenaire et du Bord de Mer, Gustavia, 97133 Saint-Barthelemy",
+        "notes": "Restaurant official source identifies exact local venue and SevenRooms route; canonical reservations URL also opened in Chromium."
+      },
+      "status": "official_external_link",
+      "provider": "SevenRooms",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/lapetiteplagesaintbarth",
+      "sources": [
+        {
+          "url": "https://www.restaurant-lapetiteplage.com/saint-barthelemy",
+          "kind": "official",
+          "supports": "Venue identity and booking link/widget configuration."
+        },
+        {
+          "url": "https://www.sevenrooms.com/reservations/lapetiteplagesaintbarth",
+          "kind": "official",
+          "supports": "Restaurant-specific original SevenRooms search page."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "originalFormLoaded": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "Original standalone form rendered at1365x900",
+        "mobile": "Original standalone form rendered at390x844",
+        "languages": [
+          "fr",
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": "Provider says a card imprint is required to confirm. No card entered.",
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered.",
+        "Provider says requests processed within24–72h; no immediate confirmation inferred. Cancellation/prepayment terms not visible at search stage."
+      ],
+      "registryAddition": {
+        "provider": "SevenRooms",
+        "name": "La Petite Plage",
+        "city": "Gustavia",
+        "venueId": "lapetiteplagesaintbarth",
+        "url": "https://www.sevenrooms.com/reservations/lapetiteplagesaintbarth",
+        "source": "https://www.restaurant-lapetiteplage.com/saint-barthelemy",
+        "checkedAt": "2026-10-15",
+        "verification": "official_link_only",
+        "integrationMode": "external_link",
+        "venueKey": "www.sevenrooms.com/reservations/lapetiteplagesaintbarth",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "availabilityObservation": {
+        "checkedAt": "2026-10-15",
+        "date": "2026-10-15",
+        "guests": 2,
+        "result": "closed_on_selected_date",
+        "method": "Provider default search, desktop/mobile"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-laventura",
+      "name": "Laventura",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact-name and Gustavia searches returned map-directory mentions only; no official restaurant identity or booking provider verified.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.cartogiraffe.com/france/saint-barth%C3%A9lemy/saint-barth%C3%A9lemy/rue%2Bdes%2Bdinzey/",
+          "kind": "secondary",
+          "supports": "Nearby Laventura label only; not proof of an operating restaurant."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-SBH-le-bar-de-l-oubli",
+      "name": "Le Bar de L'Oubli",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "3 Rue de la France, Gustavia, Saint-Barthelemy",
+        "notes": "Official site identifies location and publishes phone; phone enquiry is available but acceptance of table reservations is unverified."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.bardeloubli.com/",
+          "kind": "official",
+          "supports": "Venue, street address, +590590277006; call-to-order wording."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "fr",
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "A published contact number does not establish a verified manual table-booking route."
+      ],
+      "registryAddition": null,
+      "contactRoute": {
+        "type": "phone",
+        "value": "+590590277006",
+        "reservationAcceptance": "unknown"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-le-bete-a-z-ailes",
+      "name": "Le Bête A Z'ailes",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "BAZ Bar alias supported by local listings; official www.bazbar.com returned Wix domain-connection 404. Current operation and booking policy unresolved.",
+        "candidateCity": "Gustavia",
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.bazbar.com/",
+          "kind": "rejected",
+          "supports": "HTTP404 ConnectYourDomain Error, no restaurant content."
+        },
+        {
+          "url": "https://www.access.sb/en/st-barts/bars-clubs/bars-after-work-en/baz-bar/",
+          "kind": "secondary",
+          "supports": "BAZ Bar listing; seasonal wording not current official confirmation."
+        },
+        {
+          "url": "https://www.saintbarth-tourisme.com/wp-content/uploads/2023/10/RESTAURANTS-ST-BARTH-2023.pdf",
+          "kind": "official",
+          "supports": "Historical Bete a Z Ailles / BAZBAR name association only."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-SBH-le-cafe",
+      "name": "Le Café",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "1 rue Jeanne d'Arc, Gustavia, 97133 Saint-Barthelemy",
+        "notes": "Restaurant official source identifies exact local venue and SevenRooms route; canonical reservations URL also opened in Chromium."
+      },
+      "status": "official_external_link",
+      "provider": "SevenRooms",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/lecafesaintbarth",
+      "sources": [
+        {
+          "url": "https://www.lecafe.fr/en/saint-barthelemy-restaurant",
+          "kind": "official",
+          "supports": "Venue identity and booking link/widget configuration."
+        },
+        {
+          "url": "https://www.sevenrooms.com/reservations/lecafesaintbarth",
+          "kind": "official",
+          "supports": "Restaurant-specific original SevenRooms search page."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "originalFormLoaded": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "Original standalone form rendered at1365x900",
+        "mobile": "Original standalone form rendered at390x844",
+        "languages": [
+          "fr",
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": "Provider says a card imprint is required to confirm. No card entered.",
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered.",
+        "Provider says requests processed within24–72h; no immediate confirmation inferred. Cancellation/prepayment terms not visible at search stage."
+      ],
+      "registryAddition": {
+        "provider": "SevenRooms",
+        "name": "Le Café",
+        "city": "Gustavia",
+        "venueId": "lecafesaintbarth",
+        "url": "https://www.sevenrooms.com/reservations/lecafesaintbarth",
+        "source": "https://www.lecafe.fr/en/saint-barthelemy-restaurant",
+        "checkedAt": "2026-10-15",
+        "verification": "official_link_only",
+        "integrationMode": "external_link",
+        "venueKey": "www.sevenrooms.com/reservations/lecafesaintbarth",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "availabilityObservation": {
+        "checkedAt": "2026-10-15",
+        "date": "2026-10-15",
+        "guests": 2,
+        "result": "closed_on_selected_date",
+        "method": "Provider default search, desktop/mobile"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-le-petit-deauville",
+      "name": "Le Petit Deauville",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "St Barth snack/glacier listing found. lepetitdeauville.fr belongs to Montreuil, France and must not be linked to this ID.",
+        "candidateCity": "Gustavia",
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://saint-barth.org/directory/restaurants/",
+          "kind": "secondary",
+          "supports": "19 Rue de la Republique, Gustavia listed."
+        },
+        {
+          "url": "https://www.lepetitdeauville.fr/",
+          "kind": "rejected",
+          "supports": "Different establishment: 1 rue du Progres, 93100 Montreuil."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-SBH-le-repaire",
+      "name": "Le Repaire...",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "Rue de la Republique, Gustavia, 97133 Saint-Barthelemy",
+        "notes": "Government record verifies Le Repaire at Rue de la Republique, Gustavia. KeyParadise lists phone reservations, but operator authorization/current booking acceptance is not independently established."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://key-paradise.com/clients/le-repaire/",
+          "kind": "secondary",
+          "supports": "Restaurant client microsite with reserve-by-phone and address."
+        },
+        {
+          "url": "https://annuaire-entreprises.data.gouv.fr/entreprise/952820389",
+          "kind": "official",
+          "supports": "Government establishment record for LE REPAIRE ST-BARTH at Rue de la Republique."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "fr",
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "A published contact number does not establish a verified manual table-booking route."
+      ],
+      "registryAddition": null,
+      "contactRoute": {
+        "type": "phone",
+        "value": "+590590277248",
+        "reservationAcceptance": "published"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-mayas-to-go",
+      "name": "Mayas to go",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Historical Maya's To Go may now be Eden To Go. Official hotel source verifies new takeaway offering but does not establish continuity of this stable ID. No successor auto-mapping.",
+        "candidateCity": "Saint-Jean",
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.oetkerhotels.com/hotels/eden-rock-st-barths/questions-answers/",
+          "kind": "official",
+          "supports": "Hotel lists Eden To Go takeaway; does not prove old identity."
+        },
+        {
+          "url": "https://www.sbhonline.com/restaurants/",
+          "kind": "secondary",
+          "supports": "Lists Eden To Go as former Mayas To Go."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-SBH-megumi-sushi",
+      "name": "Megumi Sushi",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "27 rue Jeanne d'Arc, La Pointe, Gustavia, Saint-Barthelemy",
+        "notes": "Official restaurant site identifies venue and phone. Zelty links labelled dine-in/takeaway are meal ordering, not a demonstrated table reservation system."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.megumi.fr/",
+          "kind": "official",
+          "supports": "Venue address, phone, ordering links and French/English menus."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "fr",
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Unrelated gambling link also appears on site; no outbound ordering link promoted into booking registry.",
+        "A published contact number does not establish a verified manual table-booking route."
+      ],
+      "registryAddition": null,
+      "contactRoute": {
+        "type": "phone",
+        "value": "+590590291313",
+        "reservationAcceptance": "unknown"
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-natural-delights",
+      "name": "Natural Delights",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "Rue du Roi Oscar II, Gustavia, 97133 Saint-Barthelemy",
+        "notes": "Official site offers takeaway pickup and online product orders. This is not evidence of table booking or a no-reservations policy."
+      },
+      "status": "takeaway",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://naturaldelights-stbarth.fr/contact/",
+          "kind": "official",
+          "supports": "Address and takeaway pickup."
+        },
+        {
+          "url": "https://naturaldelights-stbarth.fr/",
+          "kind": "official",
+          "supports": "Ordering/pickup service."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "fr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Pandemic-era wording remains; current hours not verified."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-SBH-nyama",
+      "name": "Nyama",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Independent local sources consistently identify Nyama at Corossol with phone/email; restaurant-owned source could not be verified. Hold contact activation.",
+        "candidateCity": "Corossol",
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.access.sb/fr/st-barth/restaurants/diner/nyama/",
+          "kind": "secondary",
+          "supports": "Corossol identity and third-party request form; no live slots."
+        },
+        {
+          "url": "https://www.pasha-stbarth.com/blogs/infos/nyama-french-asian-food-new-restaurant-in-st-barth",
+          "kind": "secondary",
+          "supports": "2023 opening report and contacts, not current restaurant source."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-SBH-restaurant-le-creperie",
+      "name": "Restaurant Le Crêperie",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Two manifest IDs may refer to the same La Creperie; no coordinates or street address in source dataset. Do not merge IDs or activate a guessed branch.",
+        "candidateCity": "Gustavia",
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://creperiestbarth.com/",
+          "kind": "rejected",
+          "supports": "Candidate domain now serves German cryptocurrency casino content."
+        },
+        {
+          "url": "https://key-paradise.com/clients/la-creperie/",
+          "kind": "secondary",
+          "supports": "Restaurant listing, phone +590590278407; conflicting Rue de la France / Roi Oscar II address wording."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Repurposed domain rejected; duplicate-identity relationship requires source OSM identifiers."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-SBH-restaurant-victoria",
+      "name": "Restaurant Victoria",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Access explicitly reports permanent closure and replacement by La Petite Plage; another directory still shows old hours. Closure is secondary-reported, not independently operator-confirmed. Do not remap ID.",
+        "candidateCity": "Gustavia",
+        "candidateAddress": null
+      },
+      "status": "closed_reported",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.access.sb/fr/st-barth/restaurants/diner/victoria/",
+          "kind": "secondary",
+          "supports": "Explicit permanent closure report."
+        },
+        {
+          "url": "https://www.saint-barths.com/fr/lieux/restaurants/restaurant-victoria-st-barth",
+          "kind": "secondary",
+          "supports": "Conflicting legacy listing."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-SBH-sella",
+      "name": "Sella",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Public",
+        "address": "Plage de Public, 97133 Saint-Barthelemy",
+        "notes": "Restaurant official source identifies exact local venue and SevenRooms route; canonical reservations URL also opened in Chromium."
+      },
+      "status": "official_external_link",
+      "provider": "SevenRooms",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/restaurantsella",
+      "sources": [
+        {
+          "url": "https://sellasaintbarth.com/fr/",
+          "kind": "official",
+          "supports": "Venue identity and booking link/widget configuration."
+        },
+        {
+          "url": "https://www.sevenrooms.com/reservations/restaurantsella",
+          "kind": "official",
+          "supports": "Restaurant-specific original SevenRooms search page."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "originalFormLoaded": true,
+        "embeddedOriginalForm": true,
+        "liveAvailability": true,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "Original iframe on localhost,1365x900: date changed to23Oct, guests changed to3, Search returned four times.",
+        "mobile": "Original iframe on localhost,390x844 touch emulation: same date/party search returned four times.",
+        "languages": [
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Embedding verified on localhost harness only, not production origin. No time selected; no guarantee/checkout steps reached.",
+        "Mobile screenshot shows main four time buttons legible; alternate-date rows extend horizontally. Full mobile checkout/accessibility not tested."
+      ],
+      "registryAddition": {
+        "provider": "SevenRooms",
+        "name": "Sella",
+        "city": "Public",
+        "venueId": "restaurantsella",
+        "url": "https://www.sevenrooms.com/reservations/restaurantsella",
+        "source": "https://sellasaintbarth.com/fr/",
+        "checkedAt": "2026-10-15",
+        "verification": "official_link_only",
+        "integrationMode": "external_link",
+        "venueKey": "www.sevenrooms.com/reservations/restaurantsella",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "availabilityObservation": {
+        "checkedAt": "2026-10-15",
+        "date": "2026-10-23",
+        "guests": 3,
+        "searchTime": "00:00",
+        "venueLocalTimes": [
+          "19:00",
+          "19:30",
+          "21:00",
+          "21:30"
+        ],
+        "method": "Original standalone and cross-origin iframe on localhost, desktop/mobile; time buttons read only."
+      }
+    },
+    {
+      "restaurantId": "osm-SBH-shellona",
+      "name": "Shellona",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "Shell Beach, Gustavia, 97133 Saint-Barthelemy",
+        "notes": "Hotel operator explicitly states Shellona closed to make way for Loulou. Old site and live search shell are stale; do not map to successor."
+      },
+      "status": "closed",
+      "provider": "SevenRooms",
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.hotelsbarriere.com/collection-fouquet-s/saint-barth/restaurants-et-bars",
+          "kind": "official",
+          "supports": "Explicit Shellona closure and Loulou planned November2026 opening."
+        },
+        {
+          "url": "https://shellona.com/accueil-st-barth/",
+          "kind": "official",
+          "supports": "Legacy venue address and SevenRooms shellonadb link."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "Legacy standalone form rendered1365x900; Oct23/3 guests returned no availability",
+        "mobile": "Legacy standalone form rendered390x844",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted."
+      ],
+      "registryAddition": null,
+      "retiredBookingUrl": "https://www.sevenrooms.com/reservations/shellonadb"
+    },
+    {
+      "restaurantId": "osm-SBH-victoire",
+      "name": "Victoire",
+      "manifestCity": "St. Barts",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Name differs from Victoria. Historical Cafe Victoire and map mentions do not establish current venue. Must not inherit Victoria closure or Petite Plage booking.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://stbarthweekly.com/pdf/Weekly385.pdf",
+          "kind": "secondary",
+          "supports": "Historical Cafe Victoire listing only."
+        },
+        {
+          "url": "https://www.cartogiraffe.com/france/saint-barth%C3%A9lemy/saint-barth%C3%A9lemy/rue%2Bde%2Bla%2Bguadeloupe/",
+          "kind": "secondary",
+          "supports": "Map label Victoire only."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-SIN-bones-n-barrels",
+      "name": "Bones'n Barrels",
+      "manifestCity": "Singapore",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official chain site lists multiple Singapore outlets; dataset has no street/coordinates. Cannot choose Alexandra/Albert Court/Sentosa/Far East/Novena.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.bonesnbarrels.com/index.html",
+          "kind": "official",
+          "supports": "Multiple outlets listed, with inconsistent legacy/current outlet text."
+        },
+        {
+          "url": "https://www.bonesnbarrels.com/contact.html",
+          "kind": "official",
+          "supports": "Alexandra Technopark address and reservation route; not proof this ID refers to it."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "originalFormLoaded": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "not_tested"
+      },
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Branch must be resolved before linking any specific provider."
+      ],
+      "registryAddition": null
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "osm-SBH-bagatelle": {
+    "provider": "SevenRooms",
+    "name": "Bagatelle",
+    "city": "Gustavia",
+    "venueId": "bagatellestbarth",
+    "venueKey": "www.sevenrooms.com/reservations/bagatellestbarth",
+    "url": "https://www.sevenrooms.com/reservations/bagatellestbarth",
+    "source": "https://bagatelle.com/venues/st-barths/booking/",
+    "checkedAt": "2026-10-15",
+    "verification": "official_link_only",
+    "providerTitle": "Bagatelle St. Barth Reservations",
+    "integrationMode": "external_link"
+  }
+}

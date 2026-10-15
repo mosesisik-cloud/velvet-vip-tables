@@ -1,0 +1,37 @@
+{
+  "checkedAt": "2026-10-16",
+  "checks": [
+    {
+      "command": "node scripts/external200-validate.mjs",
+      "result": "passed",
+      "coverage": "Exact manifest membership, ten groups of twenty, truthful claim categories, proposed registry equality, existing resolver and malicious/mismatched destination rejection"
+    },
+    {
+      "command": "node scripts/test-booking-providers.mjs",
+      "result": "passed",
+      "coverage": "Unchanged active registry and provider destination guards"
+    },
+    {
+      "command": "node scripts/test-booking-selection.mjs",
+      "result": "passed",
+      "coverage": "Provider selection validation and immutable destinations"
+    },
+    {
+      "command": "node scripts/test-booking-language.mjs",
+      "result": "passed",
+      "coverage": "Provider locale routing and identity/date preservation"
+    },
+    {
+      "command": "node scripts/test-route-integrity.mjs",
+      "result": "passed",
+      "coverage": "No route issues, external URL problems or merge markers after updating branch to origin/main 3abce96"
+    }
+  ],
+  "notProven": [
+    "End-to-end reservation confirmation",
+    "Production-origin iframe compatibility",
+    "Physical-device/iOS behavior",
+    "Current inventory after observation time",
+    "Absence of hold side-effects for Neolokal request-form time selection"
+  ]
+}

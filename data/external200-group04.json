@@ -1,0 +1,927 @@
+{
+  "batch": 4,
+  "checkedAt": "2026-10-15",
+  "records": [
+    {
+      "restaurantId": "osm-CPT-chippies-prego",
+      "name": "Chippies Prego",
+      "manifestCity": "Cape Town",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Search Chippies Prego Cape Town found Rondebosch at Silwood Centre plus historical Fabrica rebranding and Observatory/Sea Point locations. Generic source ID has no street or coordinates; current branch and booking policy unresolved.",
+        "candidateCity": "Cape Town",
+        "candidateAddress": "Shop 1, Silwood Centre, Campground Road, Rondebosch"
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.eatout.co.za/venue/chippies-prego-rondebosch/",
+          "kind": "secondary",
+          "supports": "Search Chippies Prego Cape Town found Rondebosch at Silwood Centre plus historical Fabrica rebranding and Observatory/Sea Point locations. Generic source ID has no street or coordinates; current branch and booking policy unresolved."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-CPT-food-and-connect",
+      "name": "Food And Connect",
+      "manifestCity": "Cape Town",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official Food & Connect describes multiple UCT outlets; head office is not a restaurant branch. Source record cannot distinguish campus outlet.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://foodandconnect.co.za/main/",
+          "kind": "official",
+          "supports": "Official Food & Connect describes multiple UCT outlets; head office is not a restaurant branch. Source record cannot distinguish campus outlet."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-CPT-furley-s-bar-grill",
+      "name": "Furley's Bar & Grill",
+      "manifestCity": "Cape Town",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Search Furley’s Cape Town / Furleys Newlands found Dean Street listing and historical licence, but no current official venue booking channel. US Mr Furleys result rejected as wrong country.",
+        "candidateCity": "Cape Town",
+        "candidateAddress": "1 Dean Street, Newlands"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://south-africa-streets.openalfa.com/newlands/eating-drinking",
+          "kind": "secondary",
+          "supports": "Search Furley’s Cape Town / Furleys Newlands found Dean Street listing and historical licence, but no current official venue booking channel. US Mr Furleys result rejected as wrong country."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-CPT-gogi-korean",
+      "name": "Gogi Korean",
+      "manifestCity": "Cape Town",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Gogi Korean Newlands search found listing with 1 Dean Street and 082 361 5588, but old COVID in-house dining restriction makes booking policy unreliable. Other-country Gogi sites rejected.",
+        "candidateCity": "Cape Town",
+        "candidateAddress": "1 Dean Street, Newlands"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.dining-out.co.za/md/Gogi-Korean-BBQ/11069",
+          "kind": "secondary",
+          "supports": "Gogi Korean Newlands search found listing with 1 Dean Street and 082 361 5588, but old COVID in-house dining restriction makes booking policy unreliable. Other-country Gogi sites rejected."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-CPT-jean-s-kitchen",
+      "name": "Jean's Kitchen",
+      "manifestCity": "Cape Town",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Cape Town",
+        "address": "Kaplan Centre, UCT Upper Campus, Rondebosch",
+        "notes": "UCT confirms Kaplan Centre cafeteria identity; official booking policy not found. Community directory provides contact but not verified reservation support."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://uct.ac.za/research-innovation-uct-and-un-sdgs/goal-2-zero-hunger/2-3-4",
+          "kind": "official",
+          "supports": "UCT confirms Kaplan Centre cafeteria identity; official booking policy not found. Community directory provides contact but not verified reservation support."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-CPT-kobe-sushi",
+      "name": "Kobe Sushi",
+      "manifestCity": "Cape Town",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Search Kobe Sushi Cape Town found Newlands listing and another SALT Food Market branch. Source lacks coordinates; current branch and reservation policy unresolved.",
+        "candidateCity": "Cape Town",
+        "candidateAddress": "Corner Main Road and Dean Street, Newlands"
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.eatout.co.za/venue/kobe-sushi-bar/",
+          "kind": "secondary",
+          "supports": "Search Kobe Sushi Cape Town found Newlands listing and another SALT Food Market branch. Source lacks coordinates; current branch and reservation policy unresolved."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-CPT-mc-donalds",
+      "name": "Mc Donalds",
+      "manifestCity": "Cape Town",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official locator lists many Cape Town branches including Rondebosch. Source only says Cape Town; no branch can be chosen. Ordering/dine-in listings are not table reservations.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.mcdonalds.co.za/locate",
+          "kind": "official",
+          "supports": "Official locator lists many Cape Town branches including Rondebosch. Source only says Cape Town; no branch can be chosen. Ordering/dine-in listings are not table reservations."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-CPT-nando-s",
+      "name": "Nando's",
+      "manifestCity": "Cape Town",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Search official Cape Town Nandos found Long Street branch, but source supplies no branch/address/coordinates. Do not attach this candidate or food delivery as booking.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://store.nandos.co.za/details/long-street",
+          "kind": "official",
+          "supports": "Search official Cape Town Nandos found Long Street branch, but source supplies no branch/address/coordinates. Do not attach this candidate or food delivery as booking."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-CPT-picnic-cafe-and-deli",
+      "name": "Picnic Cafe and Deli",
+      "manifestCity": "Cape Town",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Cape Town",
+        "address": "Montebello Design Centre, Newlands",
+        "notes": "Official page confirms Montebello venue and invites phone/email enquiries for parties/events: 084 516 0530; picniccafeanddeli@gmail.com. Ordinary table acceptance is not established. Manual-route re-review: official phone/email invitation is specifically for parties, events and functions. Ordinary restaurant-table reservation acceptance is unknown; generic/event contact is not counted as a verified manual table-booking route."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://picniccafe.co.za/",
+          "kind": "official",
+          "supports": "Official page confirms Montebello venue and invites phone/email enquiries for parties/events: 084 516 0530; picniccafeanddeli@gmail.com. Ordinary table acceptance is not established. Manual-route re-review: official phone/email invitation is specifically for parties, events and functions. Ordinary restaurant-table reservation acceptance is unknown; generic/event contact is not counted as a verified manual table-booking route."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent.",
+        "Manual-route re-review: official phone/email invitation is specifically for parties, events and functions. Ordinary restaurant-table reservation acceptance is unknown; generic/event contact is not counted as a verified manual table-booking route."
+      ],
+      "registryAddition": null,
+      "contact": {
+        "phone": "084 516 0530",
+        "email": "picniccafeanddeli@gmail.com",
+        "tableReservationAcceptance": "unknown"
+      }
+    },
+    {
+      "restaurantId": "osm-CPT-thai-ping",
+      "name": "Thai Ping",
+      "manifestCity": "Cape Town",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact Thai Ping Cape Town/Newlands searches located Dean Street map entry only. US Thai Ping unrelated. No official identity/current booking route verified.",
+        "candidateCity": "Cape Town",
+        "candidateAddress": "Dean Street, Newlands"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://south-africa-streets.openalfa.com/newlands/eating-drinking",
+          "kind": "secondary",
+          "supports": "Exact Thai Ping Cape Town/Newlands searches located Dean Street map entry only. US Thai Ping unrelated. No official identity/current booking route verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-CPT-the-trufood-station",
+      "name": "The Trufood Station",
+      "manifestCity": "Cape Town",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact-name search found café kiosk listing at Great Westerford; third-party phone and Instagram candidate do not establish reservation policy.",
+        "candidateCity": "Cape Town",
+        "candidateAddress": "Great Westerford, 240 Main Road, Rondebosch"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.bitcoinfriendlysa.co.za/businesses/the-trufood-station",
+          "kind": "secondary",
+          "supports": "Exact-name search found café kiosk listing at Great Westerford; third-party phone and Instagram candidate do not establish reservation policy."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-DXB-abd-el-wahab-restaurant",
+      "name": "Abd El Wahab Restaurant",
+      "manifestCity": "Dubai",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official landlord confirms Souk Al Bahar venue; Dubai Marina Mall also lists Abdel Wahab. Source ID has no branch anchor; cannot select one.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.emaarmalls.ae/malls-shop-details/souk-al-bahar/abdulwahab-abdulwahab-loungeabdulwahab-abdulwahab-lounge/",
+          "kind": "official",
+          "supports": "Official landlord confirms Souk Al Bahar venue; Dubai Marina Mall also lists Abdel Wahab. Source ID has no branch anchor; cannot select one."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-DXB-acai-co",
+      "name": "Acai & Co.",
+      "manifestCity": "Dubai",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Manifest domain opened but yielded no readable content. Search found Central Park and Dakakeen branches in 2GIS; no branch anchor or booking system verified.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://acaiandco.com/",
+          "kind": "official",
+          "supports": "Manifest domain opened but yielded no readable content. Search found Central Park and Dakakeen branches in 2GIS; no branch anchor or booking system verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-DXB-al-hallab-and-sweets",
+      "name": "Al Hallab and Sweets",
+      "manifestCity": "Dubai",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official website lists Garhoud, Dubai Mall, Mall of Emirates and Bab El Bahr with different phones and booking buttons. Manifest/source have no branch anchor.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://alhallabrestaurant.com/",
+          "kind": "official",
+          "supports": "Official website lists Garhoud, Dubai Mall, Mall of Emirates and Bab El Bahr with different phones and booking buttons. Manifest/source have no branch anchor."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-DXB-asado",
+      "name": "Asado",
+      "manifestCity": "Dubai",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Dubai",
+        "address": "Palace Downtown, Downtown Dubai",
+        "notes": "Official Asado page identifies Palace Downtown and publishes +97144287961. Shared Eat App dining selector omits Asado; generic hidden confirmation example is not a reservation or availability proof. Phone enquiry only. Manual-route re-review: official page publishes a contact phone but no explicit restaurant-specific invitation to reserve by phone. Shared dining selector omits Asado. Table reservation acceptance is unknown."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.addresshotels.com/en/restaurant/palace-downtown/asado/",
+          "kind": "official",
+          "supports": "Official Asado page identifies Palace Downtown and publishes +97144287961. Shared Eat App dining selector omits Asado; generic hidden confirmation example is not a reservation or availability proof. Phone enquiry only. Manual-route re-review: official page publishes a contact phone but no explicit restaurant-specific invitation to reserve by phone. Shared dining selector omits Asado. Table reservation acceptance is unknown."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent.",
+        "Manual-route re-review: official page publishes a contact phone but no explicit restaurant-specific invitation to reserve by phone. Shared dining selector omits Asado. Table reservation acceptance is unknown."
+      ],
+      "registryAddition": null,
+      "contact": {
+        "phone": "+97144287961",
+        "email": null,
+        "tableReservationAcceptance": "unknown"
+      }
+    },
+    {
+      "restaurantId": "osm-DXB-be-super-natural-kitchen",
+      "name": "Be Super Natural Kitchen",
+      "manifestCity": "Dubai",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Brand profile identifies BeStro at Galeries Lafayette Dubai Mall; historical guide also says Be Super Natural Kitchen. No current official reservation route or operating status verified.",
+        "candidateCity": "Dubai",
+        "candidateAddress": "Galeries Lafayette, Dubai Mall"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://ae.linkedin.com/company/be-super-natural",
+          "kind": "official",
+          "supports": "Brand profile identifies BeStro at Galeries Lafayette Dubai Mall; historical guide also says Be Super Natural Kitchen. No current official reservation route or operating status verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-DXB-carluccio-s",
+      "name": "Carluccio's",
+      "manifestCity": "Dubai",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Dubai",
+        "address": "Lower Ground Floor Boardwalk, Dubai Mall, Financial Center Road",
+        "notes": "Manifest branch URL and official Dubai Mall page match provider venue title/address. Official Book Now opens restaurant-specific Eat App original iframe. Browser desktop/mobile tests displayed actual offered times for 2 guests on 2026-10-16. No time selected; Continue untouched."
+      },
+      "status": "official_external_link",
+      "provider": "Eat App",
+      "bookingUrl": "https://eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a",
+      "sources": [
+        {
+          "url": "https://carlucciosme.com/locations/the-dubai-mall/",
+          "kind": "official",
+          "supports": "Manifest branch URL and official page agree: Dubai Mall lower ground floor Boardwalk. Book Now points to same-page JavaScript. Initial direct HTTP fetch 403; ordinary browser investigation recorded separately. Phone +971 4 330 5990."
+        },
+        {
+          "url": "https://eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a",
+          "kind": "official",
+          "supports": "Restaurant-specific provider endpoint observed inside iframe loaded by official Book Now; live browser read-only availability query."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": true,
+        "liveAvailability": true,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "passed_readonly_original_iframe_1365x900",
+        "mobile": "passed_readonly_original_iframe_390x844",
+        "languages": [
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "availabilityObservation": {
+          "recordedAt": "2026-10-15T21:55:30Z",
+          "date": "2026-10-16",
+          "guests": 2,
+          "timezone": "Asia/Dubai",
+          "offeredTimes": [
+            "10:00",
+            "10:30",
+            "11:00",
+            "11:30",
+            "12:00",
+            "12:30",
+            "13:00",
+            "13:30",
+            "14:00",
+            "14:30",
+            "15:00",
+            "15:30",
+            "16:00",
+            "16:30",
+            "17:00",
+            "17:30",
+            "18:00"
+          ],
+          "method": "Official page Book Now; initial date had no times, clicked explicit See availability on Friday 16 Oct; read returned offered times. No slot or Continue clicked.",
+          "testArtifacts": [
+            "work/external200-group04-browser-results.json",
+            "work/external200-group04-desktop.png",
+            "work/external200-group04-mobile.png"
+          ]
+        }
+      },
+      "limitations": [
+        "Availability is point-in-time UI observation, not reservation confirmation or hold.",
+        "No time selected, Continue untouched, no personal data/payment/message submitted.",
+        "English original form observed; no language selector observed.",
+        "Cancellation/card guarantee/prepayment not visible before slot/Continue; remain unknown.",
+        "Original form works on provider official site; Velvet embedding and completion tracking not tested.",
+        "Initial direct HTTP fetch 403; ordinary browser loaded normally without bypass."
+      ],
+      "registryAddition": {
+        "provider": "Eat App",
+        "name": "Carluccio's The Dubai Mall",
+        "city": "Dubai",
+        "venueKey": "eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a",
+        "url": "https://eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a",
+        "source": "https://carlucciosme.com/locations/the-dubai-mall/",
+        "checkedAt": "2026-10-15",
+        "verification": "official_restaurant_link_verified",
+        "providerTitle": "Carluccio's The Dubai Mall",
+        "integrationMode": "external_link",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      }
+    },
+    {
+      "restaurantId": "osm-DXB-karam-beirut",
+      "name": "Karam Beirut",
+      "manifestCity": "Dubai",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Manifest brand website inaccessible through web tool. Search confirms multiple Dubai locations; generic brand ID cannot safely choose Dubai Mall, Mall of Emirates or Festival City.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.karambeirut.ae/",
+          "kind": "official",
+          "supports": "Manifest brand website inaccessible through web tool. Search confirms multiple Dubai locations; generic brand ID cannot safely choose Dubai Mall, Mall of Emirates or Festival City."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-DXB-karma-kafe",
+      "name": "Karma Kafé",
+      "manifestCity": "Dubai",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Dubai",
+        "address": "Level 3, Souk Al Bahar",
+        "notes": "Current venue site and Emaar mall directory agree phone +971 4 570 0493 at Souk Al Bahar; reservation@karma-dubai.com. Legacy official Linktree Eat App link currently says unable to accept bookings. Withhold legacy integration; manual enquiry only. Manual-route re-review: official current site explicitly invites contact for reservations or enquiries immediately above phone/email details. Book CTA also points to WhatsApp. This verifies an offered manual request route, not acceptance of any requested table."
+      },
+      "status": "manual_phone",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://karma-dubai.com/",
+          "kind": "official",
+          "supports": "Current venue site and Emaar mall directory agree phone +971 4 570 0493 at Souk Al Bahar; reservation@karma-dubai.com. Legacy official Linktree Eat App link currently says unable to accept bookings. Withhold legacy integration; manual enquiry only. Manual-route re-review: official current site explicitly invites contact for reservations or enquiries immediately above phone/email details. Book CTA also points to WhatsApp. This verifies an offered manual request route, not acceptance of any requested table."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent.",
+        "Manual-route re-review: official current site explicitly invites contact for reservations or enquiries immediately above phone/email details. Book CTA also points to WhatsApp. This verifies an offered manual request route, not acceptance of any requested table."
+      ],
+      "registryAddition": null,
+      "contact": {
+        "phone": "+971 4 570 0493",
+        "email": "reservation@karma-dubai.com",
+        "tableReservationAcceptance": "manual_request_offered_not_confirmed"
+      }
+    },
+    {
+      "restaurantId": "osm-DXB-margaux",
+      "name": "Margaux",
+      "manifestCity": "Dubai",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Search found current Margaux pastry boutique at Jumeirah Mina Al Salam and historical French Margaux restaurant at Souk Al Bahar. Source cuisine French and generic city insufficient to determine intended venue. Do not replace old restaurant with pastry boutique.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://margauxpastryboutique.com/",
+          "kind": "official",
+          "supports": "Search found current Margaux pastry boutique at Jumeirah Mina Al Salam and historical French Margaux restaurant at Souk Al Bahar. Source cuisine French and generic city insufficient to determine intended venue. Do not replace old restaurant with pastry boutique."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    }
+  ]
+}

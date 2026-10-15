@@ -1,0 +1,344 @@
+{
+  "checkedAt": "2026-10-15",
+  "engine": "Playwright Chromium",
+  "desktop": {
+    "width": 1365,
+    "height": 900
+  },
+  "mobile": {
+    "width": 390,
+    "height": 844,
+    "touchEmulation": true,
+    "physicalDevice": false
+  },
+  "stoppingRule": "Never click a time/Continue/submit that could create guest data, hold, reservation, message or payment. Neolokal request-only selection separately documented in group07.",
+  "observations": [
+    {
+      "restaurantId": "osm-SBH-la-guerite",
+      "checkedAt": "2026-10-15",
+      "url": "https://www.sevenrooms.com/reservations/lagueritedb",
+      "desktop": "Original standalone form rendered at1365x900",
+      "mobile": "Original standalone form rendered at390x844",
+      "embedded": false,
+      "liveAvailability": false,
+      "observation": {
+        "checkedAt": "2026-10-15",
+        "date": "2026-10-23",
+        "guests": 3,
+        "result": "closed_on_selected_date",
+        "method": "Original standalone search"
+      },
+      "limits": [
+        "No booking, hold, payment, or message submitted.",
+        "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered."
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-la-petite-plage",
+      "checkedAt": "2026-10-15",
+      "url": "https://www.sevenrooms.com/reservations/lapetiteplagesaintbarth",
+      "desktop": "Original standalone form rendered at1365x900",
+      "mobile": "Original standalone form rendered at390x844",
+      "embedded": false,
+      "liveAvailability": false,
+      "observation": {
+        "checkedAt": "2026-10-15",
+        "date": "2026-10-15",
+        "guests": 2,
+        "result": "closed_on_selected_date",
+        "method": "Provider default search, desktop/mobile"
+      },
+      "limits": [
+        "No booking, hold, payment, or message submitted.",
+        "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered.",
+        "Provider says requests processed within24–72h; no immediate confirmation inferred. Cancellation/prepayment terms not visible at search stage."
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-le-cafe",
+      "checkedAt": "2026-10-15",
+      "url": "https://www.sevenrooms.com/reservations/lecafesaintbarth",
+      "desktop": "Original standalone form rendered at1365x900",
+      "mobile": "Original standalone form rendered at390x844",
+      "embedded": false,
+      "liveAvailability": false,
+      "observation": {
+        "checkedAt": "2026-10-15",
+        "date": "2026-10-15",
+        "guests": 2,
+        "result": "closed_on_selected_date",
+        "method": "Provider default search, desktop/mobile"
+      },
+      "limits": [
+        "No booking, hold, payment, or message submitted.",
+        "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered.",
+        "Provider says requests processed within24–72h; no immediate confirmation inferred. Cancellation/prepayment terms not visible at search stage."
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-sella",
+      "checkedAt": "2026-10-15",
+      "url": "https://www.sevenrooms.com/reservations/restaurantsella",
+      "desktop": "Original iframe on localhost,1365x900: date changed to23Oct, guests changed to3, Search returned four times.",
+      "mobile": "Original iframe on localhost,390x844 touch emulation: same date/party search returned four times.",
+      "embedded": true,
+      "liveAvailability": true,
+      "observation": {
+        "checkedAt": "2026-10-15",
+        "date": "2026-10-23",
+        "guests": 3,
+        "searchTime": "00:00",
+        "venueLocalTimes": [
+          "19:00",
+          "19:30",
+          "21:00",
+          "21:30"
+        ],
+        "method": "Original standalone and cross-origin iframe on localhost, desktop/mobile; time buttons read only."
+      },
+      "limits": [
+        "No booking, hold, payment, or message submitted.",
+        "Embedding verified on localhost harness only, not production origin. No time selected; no guarantee/checkout steps reached.",
+        "Mobile screenshot shows main four time buttons legible; alternate-date rows extend horizontally. Full mobile checkout/accessibility not tested."
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-shellona",
+      "checkedAt": "2026-10-15",
+      "url": "https://www.sevenrooms.com/reservations/shellonadb",
+      "desktop": "Legacy standalone form rendered1365x900; Oct23/3 guests returned no availability",
+      "mobile": "Legacy standalone form rendered390x844",
+      "embedded": false,
+      "liveAvailability": false,
+      "observation": null,
+      "limits": [
+        "No booking, hold, payment, or message submitted."
+      ]
+    },
+    {
+      "restaurantId": "osm-DXB-carluccio-s",
+      "officialExternalLink": true,
+      "embeddedOriginalForm": true,
+      "liveAvailability": true,
+      "simulatedValidation": false,
+      "confirmedReservation": false,
+      "desktop": "passed_readonly_original_iframe_1365x900",
+      "mobile": "passed_readonly_original_iframe_390x844",
+      "languages": [
+        "en"
+      ],
+      "cancellation": null,
+      "cardGuarantee": null,
+      "prepayment": null,
+      "availabilityObservation": {
+        "recordedAt": "2026-10-15T21:55:30Z",
+        "date": "2026-10-16",
+        "guests": 2,
+        "timezone": "Asia/Dubai",
+        "offeredTimes": [
+          "10:00",
+          "10:30",
+          "11:00",
+          "11:30",
+          "12:00",
+          "12:30",
+          "13:00",
+          "13:30",
+          "14:00",
+          "14:30",
+          "15:00",
+          "15:30",
+          "16:00",
+          "16:30",
+          "17:00",
+          "17:30",
+          "18:00"
+        ],
+        "method": "Official page Book Now; initial date had no times, clicked explicit See availability on Friday 16 Oct; read returned offered times. No slot or Continue clicked.",
+        "testArtifacts": [
+          "work/external200-group04-browser-results.json",
+          "work/external200-group04-desktop.png",
+          "work/external200-group04-mobile.png"
+        ]
+      }
+    },
+    {
+      "restaurantId": "curated-IST-mikla",
+      "checkedAt": "2026-10-15",
+      "url": "https://www.miklarestaurant.com/rezervasyon",
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "original_form_loaded; date control attempted; no availability proven; CAPTCHA not solved",
+        "mobile": "390x844 screenshot inspected; party selector overlaps calendar; no complete-flow claim",
+        "languages": [
+          "tr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": "Card details requested; visible no-show charge EUR 35 per person.",
+        "prepayment": null
+      },
+      "limitations": [
+        "Prepared as evidence only: provider is not admitted by an existing reviewed registry adapter; no allowlist expanded.",
+        "Native restaurant form is not a verified Velvet embed. Default 19:00 is not proof of availability.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ]
+    },
+    {
+      "restaurantId": "curated-IST-neolokal",
+      "checkedAt": "2026-10-15",
+      "url": "https://guest.rezervem.com.tr/Neolokal/?sourceId=webSite&culture=en-US",
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": true,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "official-site iframe interactive through 23 October 2026 / 18:00 / 2 guests; stopped at request form",
+        "mobile": "390x844 screenshot inspected; embedded content renders very small; responsive usability not passed",
+        "languages": [
+          "en",
+          "tr"
+        ],
+        "cancellation": "Reservation cancelled if pre-authorization/prepayment is incomplete 48 hours before; guest cancellation/refund terms not verified.",
+        "cardGuarantee": "Pre-authorization/prepayment must be completed 48 hours before reservation time; amount not shown.",
+        "prepayment": "Pre-authorization/prepayment required 48 hours before; amount not published in inspected form."
+      },
+      "limitations": [
+        "Prepared as evidence only: provider is not admitted by an existing reviewed registry adapter; no allowlist expanded.",
+        "embeddedOriginalForm refers to the official restaurant site, not a Velvet iframe.",
+        "Displayed request times are not confirmed inventory; liveAvailability remains false.",
+        "Initial direct browser attempt timed out; official-site embed succeeded.",
+        "No guest/contact data or request submitted. Network/client behavior was not inspected before selecting 18:00; absence of server-side hold side-effects is unverified. Request-only wording is not evidence that selection cannot hold inventory.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ]
+    },
+    {
+      "restaurantId": "curated-IST-turk-fatih-tutak",
+      "checkedAt": "2026-10-15",
+      "url": "https://rezervasyon.turkft.com/turk-fatih-tutak/reservation",
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": true,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "2 guests / 2026-10-28; offered 18:30,19:00,19:30,20:00,20:30; stopped before selecting time or Continue",
+        "mobile": "390x844 resize produced visible client-side application exception; mobile failed",
+        "languages": [
+          "en",
+          "tr"
+        ],
+        "cancellation": "Policy says no refund for cancellations 72 hours or less before, full refund 72 hours or more; exact 72-hour boundary is ambiguous. Party reduction within 72 hours costs 7,500 TRY per removed guest.",
+        "cardGuarantee": null,
+        "prepayment": "Current rendered policy: 9,900 TRY per guest deposit within 24 hours to confirm; deducted from bill. Cached source had 7,500; current party-reduction clause still says 7,500."
+      },
+      "limitations": [
+        "Prepared as evidence only: provider is not admitted by an existing reviewed registry adapter; no allowlist expanded.",
+        "Underlying vendor not identified; do not invent provider. Availability is point-in-time UI evidence, not live adapter integration.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ]
+    },
+    {
+      "restaurantId": "curated-SBH-bonito-saint-barth",
+      "checkedAt": "2026-10-15",
+      "url": null,
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "official site inspected in browser; reservation contacts visible, no booking widget identified",
+        "mobile": "not_tested",
+        "languages": [
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Likely duplicate venue represented by curated-SBH-bonito-saint-barth and osm-SBH-bonito; IDs preserved, no merge.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-bagatelle",
+      "checkedAt": "2026-10-15",
+      "url": "https://www.sevenrooms.com/reservations/bagatellestbarth",
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": true,
+        "liveAvailability": true,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "official iframe inspected; canonical provider search 2026-10-23 /2 guests offered19:00,19:30; no time selection",
+        "mobile": "390x844 screenshot of same availability results readable; no checkout tested",
+        "languages": [
+          "en"
+        ],
+        "cancellation": "For group deposit bookings, notify at least 12 hours before reservation or deposit is non-refundable.",
+        "cardGuarantee": "For 6+ guests a credit card is required, managed through Stripe with SevenRooms.",
+        "prepayment": "For 15+ guests, fixed menu and 50% deposit upon acceptance."
+      },
+      "limitations": [
+        "Seasonal closed-hours display is not treated as permanent closure.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-black-ginger",
+      "checkedAt": "2026-10-15",
+      "url": "https://blackgingersbh.com/en/reservations/",
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "original Contact Form 7 request form inspected; guest/date/time are free-text fields; explicit staff confirmation required; no submission",
+        "mobile": "390x844 screenshot inspected at request fields and Send Request; readable narrow layout; no submission",
+        "languages": [
+          "en",
+          "fr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Prepared as evidence only: provider is not admitted by an existing reviewed registry adapter; no allowlist expanded.",
+        "Request form was read but not submitted; no table inventory proven.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-bonito",
+      "checkedAt": "2026-10-15",
+      "url": null,
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "official site inspected in browser; reservation contacts visible, no booking widget identified",
+        "mobile": "not_tested",
+        "languages": [
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Likely duplicate venue represented by curated-SBH-bonito-saint-barth and osm-SBH-bonito; IDs preserved, no merge.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ]
+    }
+  ]
+}

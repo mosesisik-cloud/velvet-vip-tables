@@ -1,0 +1,909 @@
+{
+  "batch": 7,
+  "checkedAt": "2026-10-15",
+  "counts": {
+    "reviewed": 20,
+    "identityVerified": 4,
+    "embeddedOriginalForms": 1,
+    "officialExternalLinks": 3,
+    "liveAvailability": 1,
+    "manualBookingRoutes": 1,
+    "walkIn": 0,
+    "closed": 0,
+    "unresolved": 16,
+    "registryAdditions": 0
+  },
+  "records": [
+    {
+      "restaurantId": "osm-HKT-u172a3c9fa68f",
+      "name": "มาลัย อาหารตามสั่ง",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact Thai-name match appears as Genuine Thai Food; restaurant-owned address and booking policy not verified."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://es.restaurantguru.com/Genuine-thai-food-Phuket/menu",
+          "kind": "secondary",
+          "supports": "Exact Thai-name match appears as Genuine Thai Food; restaurant-owned address and booking policy not verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"มาลัย อาหารตามสั่ง\" Phuket restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-HKT-u85f393ba80c7",
+      "name": "วันจันทร์ บ้านอาหารไทย",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Candidate One Chun Facebook profile was discovered via the restaurant name, but current address and reservation instructions were not readable/verified."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.facebook.com/OneChunPhuket",
+          "kind": "official",
+          "supports": "Candidate One Chun Facebook profile was discovered via the restaurant name, but current address and reservation instructions were not readable/verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"วันจันทร์ บ้านอาหารไทย\" Phuket restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-HKT-u88caf8193724",
+      "name": "ก๋วยเตี๋ยวเบรคแตก",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Directory candidate is New Brake Taek by the old bus terminal, Phang Nga Soi 7; it flags possible closure. A Chalong branch also appears in search. No official confirmation of exact branch or closure."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.wongnai.com/restaurants/112006fE-ก๋วยเตี๋ยว-นิวเบรคแตก-บขส-เก่า",
+          "kind": "secondary",
+          "supports": "Directory candidate is New Brake Taek by the old bus terminal, Phang Nga Soi 7; it flags possible closure. A Chalong branch also appears in search. No official confirmation of exact branch or closure."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"ก๋วยเตี๋ยวเบรคแตก\" Phuket restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-HKT-u9652e72e518c",
+      "name": "ครัวพริกแกง@ภูเก็ต",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Directory gives 58 Suthat Road, Talat Yai and 061 953 9166; no restaurant-owned identity or reservation policy verified."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.thaithurkic.com/ครัวพริกแกง-ภูเก็ต-061-953-9166",
+          "kind": "secondary",
+          "supports": "Directory gives 58 Suthat Road, Talat Yai and 061 953 9166; no restaurant-owned identity or reservation policy verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"ครัวพริกแกง@ภูเก็ต\" Phuket restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-HKT-uf6b9db1d32b4",
+      "name": "ร้านอาหาร ระย้า",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Phuket",
+        "address": "48/1 Dibuk Road, Talad-Yai, Muang, Phuket 83000",
+        "notes": "Official Raya/ระย้า site confirms exact name/address and reservation.raya@gmail.com; also publishes 076-218155 / 092-252-4883. No online table inventory found."
+      },
+      "status": "manual_email",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.rayarestaurant.net/",
+          "kind": "official",
+          "supports": "Official Raya/ระย้า site confirms exact name/address and reservation.raya@gmail.com; also publishes 076-218155 / 092-252-4883. No online table inventory found."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "th",
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"ร้านอาหาร ระย้า\" Phuket restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-HKT-xorin",
+      "name": "Xorin",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Xorin Old Town candidate at 42 Talat Yai; directory phone differs from Wongnai and recent press. Official social profile and current booking policy not verified."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.phuket.net/directory/profile/xorin-phuket-old-town/",
+          "kind": "secondary",
+          "supports": "Xorin Old Town candidate at 42 Talat Yai; directory phone differs from Wongnai and recent press. Official social profile and current booking policy not verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Xorin\" Phuket restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-HKT-yunnan",
+      "name": "Yunnan",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Yunnan candidate at 74/23 Nanai Road, Kathu differs from OSM-derived Old Town listing at Thepkasattri Road 6. No exact branch match possible."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.wongnai.com/restaurants/1618258Uk-ร้านอาหารยูนนาน",
+          "kind": "secondary",
+          "supports": "Yunnan candidate at 74/23 Nanai Road, Kathu differs from OSM-derived Old Town listing at Thepkasattri Road 6. No exact branch match possible."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Yunnan\" Phuket restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-HKT-zero-to-nine",
+      "name": "Zero to nine",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact-name search for Zero to nine Phuket did not establish an official restaurant identity or booking route."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "Exact-name web search returned no usable official identity/booking source.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Zero to nine\" Phuket restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "curated-IST-mikla",
+      "name": "Mikla",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Istanbul",
+        "address": "The Marmara Pera, Meşrutiyet Caddesi No:15, 34430 Beyoğlu",
+        "notes": "Official direct reservation page contains party-size, date/time and contact/card fields. Desktop and 390x844 mobile inspected. Date click did not establish changed availability; reCAPTCHA visible. Stopped before any Next, contact or payment step."
+      },
+      "status": "official_external_link",
+      "provider": "Mikla direct form",
+      "bookingUrl": "https://www.miklarestaurant.com/rezervasyon",
+      "sources": [
+        {
+          "url": "https://www.miklarestaurant.com/rezervasyon",
+          "kind": "official",
+          "supports": "Official direct reservation page contains party-size, date/time and contact/card fields. Desktop and 390x844 mobile inspected. Date click did not establish changed availability; reCAPTCHA visible. Stopped before any Next, contact or payment step."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "original_form_loaded; date control attempted; no availability proven; CAPTCHA not solved",
+        "mobile": "390x844 screenshot inspected; party selector overlaps calendar; no complete-flow claim",
+        "languages": [
+          "tr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": "Card details requested; visible no-show charge EUR 35 per person.",
+        "prepayment": null
+      },
+      "limitations": [
+        "Prepared as evidence only: provider is not admitted by an existing reviewed registry adapter; no allowlist expanded.",
+        "Native restaurant form is not a verified Velvet embed. Default 19:00 is not proof of availability.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Mikla\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "curated-IST-neolokal",
+      "name": "Neolokal",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Istanbul",
+        "address": "SALT Galata, Bankalar Avenue, Karaköy 34420",
+        "notes": "Official page embeds restaurant-specific Rezervem. Browser selected 2026-10-23, offered 18:00, 21:30, 22:00, then selected 18:00 and 2 guests. Contact form expressly states request only, subject to staff confirmation. No fields filled or request sent."
+      },
+      "status": "official_external_link",
+      "provider": "Rezervem",
+      "bookingUrl": "https://guest.rezervem.com.tr/Neolokal/?sourceId=webSite&culture=en-US",
+      "sources": [
+        {
+          "url": "https://www.neolokal.com/en/neolokal_en/",
+          "kind": "official",
+          "supports": "Official page embeds restaurant-specific Rezervem. Browser selected 2026-10-23, offered 18:00, 21:30, 22:00, then selected 18:00 and 2 guests. Contact form expressly states request only, subject to staff confirmation. No fields filled or request sent."
+        },
+        {
+          "url": "https://guest.rezervem.com.tr/Neolokal/?sourceId=webSite&culture=en-US",
+          "kind": "official",
+          "supports": "Restaurant-linked provider form; request-only semantics, language selector and guarantee/prepayment condition."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": true,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "official-site iframe interactive through 23 October 2026 / 18:00 / 2 guests; stopped at request form",
+        "mobile": "390x844 screenshot inspected; embedded content renders very small; responsive usability not passed",
+        "languages": [
+          "en",
+          "tr"
+        ],
+        "cancellation": "Reservation cancelled if pre-authorization/prepayment is incomplete 48 hours before; guest cancellation/refund terms not verified.",
+        "cardGuarantee": "Pre-authorization/prepayment must be completed 48 hours before reservation time; amount not shown.",
+        "prepayment": "Pre-authorization/prepayment required 48 hours before; amount not published in inspected form."
+      },
+      "limitations": [
+        "Prepared as evidence only: provider is not admitted by an existing reviewed registry adapter; no allowlist expanded.",
+        "embeddedOriginalForm refers to the official restaurant site, not a Velvet iframe.",
+        "Displayed request times are not confirmed inventory; liveAvailability remains false.",
+        "Initial direct browser attempt timed out; official-site embed succeeded.",
+        "No guest/contact data or request submitted. Network/client behavior was not inspected before selecting 18:00; absence of server-side hold side-effects is unverified. Request-only wording is not evidence that selection cannot hold inventory.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Neolokal\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "curated-IST-turk-fatih-tutak",
+      "name": "TURK Fatih Tutak",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Istanbul",
+        "address": "Cumhuriyet Hacıahmet Silahşör Cad, Yeniyol Sk. No:2, 34440 Şişli",
+        "notes": "Official policy links restaurant-specific original form. Selected 2 guests and 28 October 2026; time list offered 18:30, 19:00, 19:30, 20:00, 20:30. No time selected, Continue or Send as a gift clicked."
+      },
+      "status": "official_external_link",
+      "provider": "TURK direct reservation",
+      "bookingUrl": "https://rezervasyon.turkft.com/turk-fatih-tutak/reservation",
+      "sources": [
+        {
+          "url": "https://turkft.com/reservation",
+          "kind": "official",
+          "supports": "Official policy and Make Reservation link; current rendered prepayment 9,900 TRY/person, cancellation and group conditions inspected."
+        },
+        {
+          "url": "https://turkft.com/",
+          "kind": "official",
+          "supports": "Exact restaurant address in Şişli, Istanbul."
+        },
+        {
+          "url": "https://rezervasyon.turkft.com/turk-fatih-tutak/reservation",
+          "kind": "official",
+          "supports": "Officially linked original form; point-in-time date/party time results, not a confirmed reservation."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": true,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "2 guests / 2026-10-28; offered 18:30,19:00,19:30,20:00,20:30; stopped before selecting time or Continue",
+        "mobile": "390x844 resize produced visible client-side application exception; mobile failed",
+        "languages": [
+          "en",
+          "tr"
+        ],
+        "cancellation": "Policy says no refund for cancellations 72 hours or less before, full refund 72 hours or more; exact 72-hour boundary is ambiguous. Party reduction within 72 hours costs 7,500 TRY per removed guest.",
+        "cardGuarantee": null,
+        "prepayment": "Current rendered policy: 9,900 TRY per guest deposit within 24 hours to confirm; deducted from bill. Cached source had 7,500; current party-reduction clause still says 7,500."
+      },
+      "limitations": [
+        "Prepared as evidence only: provider is not admitted by an existing reviewed registry adapter; no allowlist expanded.",
+        "Underlying vendor not identified; do not invent provider. Availability is point-in-time UI evidence, not live adapter integration.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"TURK Fatih Tutak\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-akida-pilav",
+      "name": "Akida Pilav",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact-name OSM-derived listing places Akida Pilav on 18. Sokak; no official restaurant identity or booking policy found."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://turkiye-sokaklarinda.openalfa.com/istanbul_balabanaga/yeme",
+          "kind": "secondary",
+          "supports": "Exact-name OSM-derived listing places Akida Pilav on 18. Sokak; no official restaurant identity or booking policy found."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Akida Pilav\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-basak-borekcisi",
+      "name": "başak börekcisi",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Restaurant-owned eatbu page identifies Merv Caddesi 125/A, Zeytinburnu. Yandex candidate flags inactive while other directories show operating hours. Exact manifest branch/current operating status cannot be established."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://basakborek.eatbu.com/?lang=en",
+          "kind": "official",
+          "supports": "Restaurant-owned eatbu page identifies Merv Caddesi 125/A, Zeytinburnu. Yandex candidate flags inactive while other directories show operating hours. Exact manifest branch/current operating status cannot be established."
+        },
+        {
+          "url": "https://yandex.com.tr/maps/org/basak_borekcisi/17803038400/",
+          "kind": "secondary",
+          "supports": "Conflicting inactive flag and address; closure not treated as confirmed."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"başak börekcisi\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-bereket-sofras",
+      "name": "Bereket Sofrası",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official candidate at Vatan Caddesi 57/B, Kağıthane says no reservation needed. Other search results show Bereket Sofrası in Sümer/Zeytinburnu. Manifest lacks branch locator, so do not apply the walk-in policy to this ID."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://bereketsofrasi.eatbu.com/?lang=en",
+          "kind": "official",
+          "supports": "Official candidate at Vatan Caddesi 57/B, Kağıthane says no reservation needed. Other search results show Bereket Sofrası in Sümer/Zeytinburnu. Manifest lacks branch locator, so do not apply the walk-in policy to this ID."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Bereket Sofrası\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-bitas-ev-yemekleri",
+      "name": "BiTas Ev Yemekleri",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact-name delivery listing and directory candidate at Şevket Dağ Sokak 4 Bahçelievler. Food delivery is not table booking; official table policy unavailable."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.yemeksepeti.com/restaurant/ysr0/bitas-ev-yemekleri",
+          "kind": "secondary",
+          "supports": "Exact-name delivery listing and directory candidate at Şevket Dağ Sokak 4 Bahçelievler. Food delivery is not table booking; official table policy unavailable."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"BiTas Ev Yemekleri\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-diyarzade-kunefe-katmer-baklava-ve-tatli",
+      "name": "DİYARZADE KÜNEFE, KATMER, BAKLAVA, VE TATLI",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact-name DİYARZADE KÜNEFE/KATMER/BAKLAVA search did not return a usable restaurant-owned identity or reservation source."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "Exact-name web search returned no usable official identity/booking source.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"DİYARZADE KÜNEFE, KATMER, BAKLAVA, VE TATLI\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-durum-durak",
+      "name": "Dürüm Durak",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official brand has Bahçelievler, Beylikdüzü and Halkalı branches. Manifest has no branch address; no branch-specific booking route assigned."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://durumdurak.com/",
+          "kind": "official",
+          "supports": "Official brand has Bahçelievler, Beylikdüzü and Halkalı branches. Manifest has no branch address; no branch-specific booking route assigned."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Dürüm Durak\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-efendim-fas-l-rest",
+      "name": "Efendim Fasıl Rest.",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official-looking eatbu page gives Kennedy Caddesi & Sahil Yolu 63/B-1 Bakırköy. A secondary listing now calls it Uras Balık Meze Meyhane (formerly Efendim Fasıl); current identity unresolved."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://efendimfasil.eatbu.com/?lang=tr",
+          "kind": "official",
+          "supports": "Official-looking eatbu page gives Kennedy Caddesi & Sahil Yolu 63/B-1 Bakırköy. A secondary listing now calls it Uras Balık Meze Meyhane (formerly Efendim Fasıl); current identity unresolved."
+        },
+        {
+          "url": "https://tr.restaurantguru.com/amp/Efendim-Fasil-Istanbul",
+          "kind": "secondary",
+          "supports": "Rebrand claim conflicts with old restaurant-owned page; requires direct official confirmation."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Efendim Fasıl Rest.\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-elif-borek-salonu",
+      "name": "Elif Börek Salonu",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "OSM-derived/AI directory gives Merv Caddesi in Sümer and explicitly marks identity unverified. Its walk-in claim is not adopted."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.restaurantsistanbul.com/istanbul/elif-borek-salonu",
+          "kind": "secondary",
+          "supports": "OSM-derived/AI directory gives Merv Caddesi in Sümer and explicitly marks identity unverified. Its walk-in claim is not adopted."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Elif Börek Salonu\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-emsal-peynircimm",
+      "name": "Emsal Peynircimm",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Candidate at Pelinli Sokak 5 Kartaltepe, Bakırköy is categorized as a dairy shop. No official restaurant or table-booking evidence."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://yandex.com.tr/maps/org/emsal_peynircimm/178531413936/",
+          "kind": "secondary",
+          "supports": "Candidate at Pelinli Sokak 5 Kartaltepe, Bakırköy is categorized as a dairy shop. No official restaurant or table-booking evidence."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Emsal Peynircimm\" Istanbul restaurant official reservation"
+      }
+    }
+  ]
+}

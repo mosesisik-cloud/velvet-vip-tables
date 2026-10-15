@@ -1,0 +1,885 @@
+{
+  "batch": 8,
+  "checkedAt": "2026-10-15",
+  "counts": {
+    "reviewed": 20,
+    "identityVerified": 1,
+    "embeddedOriginalForms": 0,
+    "officialExternalLinks": 0,
+    "liveAvailability": 0,
+    "manualBookingRoutes": 1,
+    "walkIn": 0,
+    "closed": 0,
+    "unresolved": 19,
+    "registryAdditions": 0
+  },
+  "records": [
+    {
+      "restaurantId": "osm-IST-gelik",
+      "name": "Gelik",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official Ataköy page provides telephone reservations and Kennedy Caddesi 20. Gelik is a multi-branch name; manifest does not identify which branch."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.gelik.com.tr/gelikatakoy/",
+          "kind": "official",
+          "supports": "Official Ataköy page provides telephone reservations and Kennedy Caddesi 20. Gelik is a multi-branch name; manifest does not identify which branch."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Gelik\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-gumus-kanat",
+      "name": "Gümüş Kanat",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Istanbul",
+        "address": "Güven Mah Eski Londra Asf Cd 85, 34160 İstanbul",
+        "notes": "Restaurant-owned eatbu site explicitly directs table reservations to +90 212 644 41 62. Site contact/message form is not an availability engine."
+      },
+      "status": "manual_phone",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://gumuskanat.eatbu.com/?lang=en",
+          "kind": "official",
+          "supports": "Restaurant-owned eatbu site explicitly directs table reservations to +90 212 644 41 62. Site contact/message form is not an availability engine."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "en",
+          "tr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Gümüş Kanat\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-guvenc-konyal",
+      "name": "Güvenç Konyalı",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official site identifies Sirkeci at Ankara Cad, Hocapaşa Hamamı Sk.4, Fatih, and discusses other branches. Manifest lacks locator; official contact form is not table booking."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://guvenckonyali.com.tr/",
+          "kind": "official",
+          "supports": "Official site identifies Sirkeci at Ankara Cad, Hocapaşa Hamamı Sk.4, Fatih, and discusses other branches. Manifest lacks locator; official contact form is not table booking."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Güvenç Konyalı\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-has-ad-yman",
+      "name": "has adıyman",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact misspelled name search did not resolve official identity. Nearby directory candidate Has Adıyaman Çiğköftecisi in Sümer is insufficient to map this ID."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://menuburada.com/basak-borekcisi-sumer-istanbul/",
+          "kind": "secondary",
+          "supports": "Exact misspelled name search did not resolve official identity. Nearby directory candidate Has Adıyaman Çiğköftecisi in Sümer is insufficient to map this ID."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"has adıyman\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-haznedar-meydan-gece-cigercisi",
+      "name": "Haznedar Meydan Gece Ciğercisi",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "OSM-derived candidate at Haznedar Meydanı, Güngören; no restaurant-owned source or reservation route."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://travelingturkiye.com/en/places/istanbul-haznedar-meydan-gece-cigercisi",
+          "kind": "secondary",
+          "supports": "OSM-derived candidate at Haznedar Meydanı, Güngören; no restaurant-owned source or reservation route."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Haznedar Meydan Gece Ciğercisi\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-iskenderun-kral-durum",
+      "name": "İskenderun Kral Dürüm",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Directory candidate in Mehmet Nezih Özmen/Güngören; other listings use different Merter street addresses. No official exact branch verification."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://kolaykaydet.com.tr/firma/iskenderun-kral-durum-istanbul-mehmet-nezih-ozmen-mah",
+          "kind": "secondary",
+          "supports": "Directory candidate in Mehmet Nezih Özmen/Güngören; other listings use different Merter street addresses. No official exact branch verification."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"İskenderun Kral Dürüm\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-izmir-bal-kc-s",
+      "name": "İzmir Balıkçısı",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Candidate in Çekmeköy at Mimar Sinan Cd.15/A; generic name and absent manifest locator prevent exact branch identification."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://menuburada.com/izmir-balikcisi-mimar-sinan-istanbul/",
+          "kind": "secondary",
+          "supports": "Candidate in Çekmeköy at Mimar Sinan Cd.15/A; generic name and absent manifest locator prevent exact branch identification."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"İzmir Balıkçısı\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-limgarden-kafe-restoran-ev-yemekleri",
+      "name": "Limgarden Kafe&Restoran&Ev Yemekleri",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "OSM-derived page says Vezir Sokak 9/B, Güngören, telephone 0212 642 41 34; URL says Catalca. No official source to resolve discrepancy."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://isletmeara.com/firma/limgarden-kafe-ve-restoran-ve-ev-yemekleri-catalca",
+          "kind": "secondary",
+          "supports": "OSM-derived page says Vezir Sokak 9/B, Güngören, telephone 0212 642 41 34; URL says Catalca. No official source to resolve discrepancy."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Limgarden Kafe&Restoran&Ev Yemekleri\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-mahmud-usta-kebap",
+      "name": "mahmud usta kebap",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Candidate on Merv Caddesi, Sümer; AI/OSM-derived page explicitly marks data unverified. Reservation and walk-in claims not accepted."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.restaurantsistanbul.com/istanbul/mahmud-usta-kebap",
+          "kind": "secondary",
+          "supports": "Candidate on Merv Caddesi, Sümer; AI/OSM-derived page explicitly marks data unverified. Reservation and walk-in claims not accepted."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"mahmud usta kebap\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-oz-baba-doner",
+      "name": "öz baba döner",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Candidate at Seyitnizam Cd.17 Zeytinburnu; another Öz Baba appears in Küçükçekmece. No manifest locator or official match."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://mekan.com/mekan/oz-baba-doner",
+          "kind": "secondary",
+          "supports": "Candidate at Seyitnizam Cd.17 Zeytinburnu; another Öz Baba appears in Küçükçekmece. No manifest locator or official match."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"öz baba döner\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-pasa-doner",
+      "name": "Paşa Döner",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official branch selector confirms multi-branch chain. Manifest only says Istanbul; no branch-specific table booking assigned."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.pasadoneronline.com/subelerimiz",
+          "kind": "official",
+          "supports": "Official branch selector confirms multi-branch chain. Manifest only says Istanbul; no branch-specific table booking assigned."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Paşa Döner\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-royal-tavuk",
+      "name": "royal tavuk",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact-name royal tavuk Istanbul search did not establish a usable restaurant-owned identity or booking route."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "Exact-name web search returned no usable official identity/booking source.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"royal tavuk\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-safran-karadeniz",
+      "name": "Safran Karadeniz",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Candidate in Sümer/Zeytinburnu; another Safran Karadeniz Pide & Lahmacun exists in Ataşehir. Exact branch and official reservation policy unresolved."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://yandex.com.tr/maps/org/safran_karadeniz_et_lokantasi/1056680911/",
+          "kind": "secondary",
+          "supports": "Candidate in Sümer/Zeytinburnu; another Safran Karadeniz Pide & Lahmacun exists in Ataşehir. Exact branch and official reservation policy unresolved."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Safran Karadeniz\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-senkardesler",
+      "name": "Şenkardeşler",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Candidate on Merv Caddesi Sümer. AI directory says unverified; no restaurant-owned source."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.restaurantsistanbul.com/istanbul/senkardesler",
+          "kind": "secondary",
+          "supports": "Candidate on Merv Caddesi Sümer. AI directory says unverified; no restaurant-owned source."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Şenkardeşler\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-u7e5b2e46dee5",
+      "name": "ресторан рыбны на улице на набережной",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Russian text is a generic description meaning roughly fish restaurant on waterfront, not a verifiable venue name. Exact-string search found no official identity."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "Exact-name web search returned no usable official identity/booking source.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"ресторан рыбны на улице на набережной\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-urfa-dergah-kebap",
+      "name": "Urfa Dergah Kebap",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Directory gives Merv Caddesi 149/B, Sümer and 0212 416 00 63. No restaurant-owned reservation evidence verified."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://menuburada.com/urfa-dergah-kebap-zeytinburnu-istanbul/",
+          "kind": "secondary",
+          "supports": "Directory gives Merv Caddesi 149/B, Sümer and 0212 416 00 63. No restaurant-owned reservation evidence verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Urfa Dergah Kebap\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-IST-vargeller-kebap",
+      "name": "vargeller kebap",
+      "manifestCity": "Istanbul",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Delivery listing gives Şehit Er Yavuz Bahar Sk.12 Sümer; delivery/pickup catalogue is not table reservation. Official dining reservation policy unverified."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.yemeksepeti.com/restaurant/pkp7/vargeller-kebap",
+          "kind": "secondary",
+          "supports": "Delivery listing gives Şehit Er Yavuz Bahar Sk.12 Sümer; delivery/pickup catalogue is not table reservation. Official dining reservation policy unverified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"vargeller kebap\" Istanbul restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-MIA-akashi-japanese-restaurant",
+      "name": "Akashi Japanese Restaurant",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official site currently names South Miami at 5830 S Dixie Hwy. Historical Coconut Grove branch at 3444 Main Hwy also matches the generic manifest name. Do not conflate South Miami with Miami or select branch without locator."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://akashisushi.com/",
+          "kind": "official",
+          "supports": "Official site currently names South Miami at 5830 S Dixie Hwy. Historical Coconut Grove branch at 3444 Main Hwy also matches the generic manifest name. Do not conflate South Miami with Miami or select branch without locator."
+        },
+        {
+          "url": "https://www.yellowpages.com/miami-fl/akashi-restaurant",
+          "kind": "secondary",
+          "supports": "Multiple Akashi locations, including historical Main Highway branch; ambiguity only."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Akashi Japanese Restaurant\" Miami restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-MIA-el-taquitos",
+      "name": "El Taquitos",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact-name search found only El Taquitos as nearby restaurant in an OSM-derived Coconut Grove listing. No official identity, address or reservation page found."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://hashtag.org/local/fl/miami/restaurants/focaccia-bistro-node2475858794",
+          "kind": "secondary",
+          "supports": "Exact-name search found only El Taquitos as nearby restaurant in an OSM-derived Coconut Grove listing. No official identity, address or reservation page found."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"El Taquitos\" Miami restaurant official reservation"
+      }
+    },
+    {
+      "restaurantId": "osm-MIA-focaccia-bistro",
+      "name": "Focaccia Bistro",
+      "manifestCity": "Miami",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Historical Focaccia Bistro at 3111 Grand Avenue. Manifest domain could not be fetched; directory presence does not establish current operation or booking."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.allmenus.com/fl/miami/337927-focaccia-bistro/menu/",
+          "kind": "secondary",
+          "supports": "Historical Focaccia Bistro at 3111 Grand Avenue. Manifest domain could not be fetched; directory presence does not establish current operation or booking."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Repository contains only a destination-level address and no coordinates for this ID.",
+        "Fetch of the candidate website failed; this does not establish closure.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "registryAddition": null,
+      "research": {
+        "checkedAt": "2026-10-15",
+        "query": "\"Focaccia Bistro\" Miami restaurant official reservation"
+      },
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "read_only_http_get",
+          "url": "https://www.focacciabistro.com",
+          "result": "fetch_failed",
+          "closureInferred": false
+        }
+      ]
+    }
+  ]
+}

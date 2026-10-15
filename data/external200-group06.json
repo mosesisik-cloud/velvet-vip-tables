@@ -1,0 +1,854 @@
+{
+  "batch": 6,
+  "checkedAt": "2026-10-15",
+  "records": [
+    {
+      "restaurantId": "osm-HKG-u8d6744e930fe",
+      "name": "利隆火鍋食店",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "利隆火鍋食店 search found Smithfield market directory/maps candidate and phone 2817 3533; no official booking policy.",
+        "candidateCity": "Hong Kong",
+        "candidateAddress": "2/F, Smithfield Municipal Services Building, 12K Smithfield"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://transport.pokeguide.com/en/hong_kong/pois/kennedy-town",
+          "kind": "secondary",
+          "supports": "利隆火鍋食店 search found Smithfield market directory/maps candidate and phone 2817 3533; no official booking policy."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-ub4100aef7fd9",
+      "name": "紅興港式懷舊小食",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact 紅興港式懷舊小食 search returned unrelated snack/recipe results. No reliable venue-specific official source found; no identity inferred from prefix.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-ufc4d4c688c11",
+      "name": "珍品小炒",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact 珍品小炒 search found nearby OSM-derived name at Smithfield Municipal Services Building. Taiwan 珍品小館 results rejected. No official identity/booking route.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://mapcarta.com/W71379535",
+          "kind": "secondary",
+          "supports": "Exact 珍品小炒 search found nearby OSM-derived name at Smithfield Municipal Services Building. Taiwan 珍品小館 results rejected. No official identity/booking route."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-wah-fung",
+      "name": "Wah Fung",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Wah Fung Kennedy Town query found historical roast meat business with Central and Kennedy Town branches; no source address or current official booking route.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.scmp.com/lifestyle/article/1845549/how-three-small-hong-kong-businesses-thrived-after-kids-took-over",
+          "kind": "secondary",
+          "supports": "Wah Fung Kennedy Town query found historical roast meat business with Central and Kennedy Town branches; no source address or current official booking route."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKG-wai-kee-cafe",
+      "name": "維記 Wai Kee Cafe",
+      "manifestCity": "Hong Kong",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact 維記 Forbes query found 36 Forbes Street café candidate in travel guide and OSM-derived map. No current official identity or reservations verified.",
+        "candidateCity": "Hong Kong",
+        "candidateAddress": "Shop A&B, G/F, 36 Forbes Street, Kennedy Town"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://eatoutmap.com/en/hong-kong/kennedy-town/near/kennedy-town",
+          "kind": "secondary",
+          "supports": "Exact 維記 Forbes query found 36 Forbes Street café candidate in travel guide and OSM-derived map. No current official identity or reservations verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-1000009-thai-noodle-restaurant-phuket-9",
+      "name": "1000009 Thai Noodle Restaurant Phuket ล้าน9ก๋วยเตี๋ยว",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact name matches unclaimed listing; no official source or table-booking policy verified.",
+        "candidateCity": "Phuket Town",
+        "candidateAddress": "37/30 Montri Road, Talat Yai"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.tripadvisor.com/Restaurant_Review-g1215781-d26998179-Reviews-1000009_Thai_Noodle_Restaurant_Phuket-Phuket_Town_Phuket.html",
+          "kind": "secondary",
+          "supports": "Exact name matches unclaimed listing; no official source or table-booking policy verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-breakfast-place",
+      "name": "Breakfast place",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact Breakfast place Phuket query returns descriptive breakfast lists, not a uniquely identifiable business. Generic source name and no coordinates prevent reliable mapping.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-come-back",
+      "name": "Come Back",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Come Back Phuket search found Comeback café Montri Road and Come Back Restaurant Wichit. Generic source cannot distinguish these.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.phuket.net/directory/profile/come-back-phuket-cafe/",
+          "kind": "secondary",
+          "supports": "Come Back Phuket search found Comeback café Montri Road and Come Back Restaurant Wichit. Generic source cannot distinguish these."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-five-loaves",
+      "name": "Five Loaves",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Search found Phuket Town 169/1 Phangnga and Kathu 46/367 candidates. Manifest lacks branch anchor. Wongnai official-labelled listing has inconsistent Kathu directions. No safe branch mapping.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.phuket.net/directory/profile/five-loaves-burgers/",
+          "kind": "secondary",
+          "supports": "Search found Phuket Town 169/1 Phangnga and Kathu 46/367 candidates. Manifest lacks branch anchor. Wongnai official-labelled listing has inconsistent Kathu directions. No safe branch mapping."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-khao-tom-thanon-di-buk",
+      "name": "Khao Tom Thanon Di Buk",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact name search identifies relocated porridge shop on Phangnga Road, not Dibuk Road. No owner reservation source verified.",
+        "candidateCity": "Phuket Town",
+        "candidateAddress": "185/11 Phangnga Road, Talat Yai"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.phuket101.net/khaotom-thanon-dibuk-phuket/",
+          "kind": "secondary",
+          "supports": "Exact name search identifies relocated porridge shop on Phangnga Road, not Dibuk Road. No owner reservation source verified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-love2eat",
+      "name": "Love2eat",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact Love2eat Phuket query found directory address/phone 086 954 6665 and social candidate. Los Angeles Luv2Eat rejected. No official booking policy.",
+        "candidateCity": "Phuket Town",
+        "candidateAddress": "187/3 Phang Nga Road"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.thaithurkic.com/love-eat_11x-086-954-6665",
+          "kind": "secondary",
+          "supports": "Exact Love2eat Phuket query found directory address/phone 086 954 6665 and social candidate. Los Angeles Luv2Eat rejected. No official booking policy."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-nigi-express",
+      "name": "Nigi Express",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact name search finds Nigi Express x Hom Hom Ramen at 2/10 Dibuk, phone 0835211142. No official provider or reservation policy confirmed.",
+        "candidateCity": "Phuket Town",
+        "candidateAddress": "2/10 Dibuk Road, Talat Yai"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.wongnai.com/restaurants/1721914Ae-nigi-express-x-%E0%B8%AB%E0%B8%AD%E0%B8%A1%E0%B8%AB%E0%B8%AD%E0%B8%A1-ramen",
+          "kind": "secondary",
+          "supports": "Exact name search finds Nigi Express x Hom Hom Ramen at 2/10 Dibuk, phone 0835211142. No official provider or reservation policy confirmed."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-noy-pochana",
+      "name": "Noy Pochana",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact Noy Pochana search distinguishes Noy from similarly named Yoy Pochana. Article supports Phuket Town candidate only, no official booking system or policy.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.eatingthaifood.com/restaurants/spicy-southern-thai-food-phuket-town/",
+          "kind": "secondary",
+          "supports": "Exact Noy Pochana search distinguishes Noy from similarly named Yoy Pochana. Article supports Phuket Town candidate only, no official booking system or policy."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-pint-factory",
+      "name": "Pint Factory",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official tourism listing gives 96 Suthat Soi 2; older owner-feature article gives Limelight Avenue 2/23 Dibuk. Source has no street anchor. Relocation/branch unresolved; no booking route enabled.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://thailandtourismdirectory.go.th/en/restaurants/90874",
+          "kind": "official",
+          "supports": "Official tourism listing gives 96 Suthat Soi 2; older owner-feature article gives Limelight Avenue 2/23 Dibuk. Source has no street anchor. Relocation/branch unresolved; no booking route enabled."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-reach",
+      "name": "Reach",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Reach Phuket search found unclaimed Reach Vegan Kitchen at Phangnga Road. Generic source name insufficient for official identity or booking policy.",
+        "candidateCity": "Phuket Town",
+        "candidateAddress": "135 Phangnga Road, Talat Yai"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.tripadvisor.com/Restaurant_Review-g1215781-d25197960-Reviews-Reach_Vegan_Kitchen-Phuket_Town_Phuket.html",
+          "kind": "secondary",
+          "supports": "Reach Phuket search found unclaimed Reach Vegan Kitchen at Phangnga Road. Generic source name insufficient for official identity or booking policy."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-sab-nua-restaurant",
+      "name": "Sab Nua Restaurant",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Sab Nua Phuket search found similarly named Sab Nua Krua Sarakham near Choeng Thale property listings but no exact official restaurant identity. No source street/coordinates; do not attach nearby candidate.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-the-barrel-wine-beer-bistro-bar",
+      "name": "The Barrel Wine Beer & Bistro bar",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official chain site lists Phuket Town, Rawai and Cherng Talay branches. Generic source lacks street/coordinates. Wine ordering and LINE contact not live table availability.",
+        "candidateCity": null,
+        "candidateAddress": null
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://thebarrel.asia/contact-us.html",
+          "kind": "official",
+          "supports": "Official chain site lists Phuket Town, Rawai and Cherng Talay branches. Generic source lacks street/coordinates. Wine ordering and LINE contact not live table availability."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-the-tent-phuket",
+      "name": "The Tent Phuket",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact name search found 16 Thepkasattri Road, phone 076217775 and phuketthetent@gmail.com. No official current reservation policy found.",
+        "candidateCity": "Phuket Town",
+        "candidateAddress": "16 Thepkasattri Road, Talat Yai"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.phuket.net/directory/profile/the-tent-phuket/",
+          "kind": "secondary",
+          "supports": "Exact name search found 16 Thepkasattri Road, phone 076217775 and phuketthetent@gmail.com. No official current reservation policy found."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-toy-tor-toe",
+      "name": "Toy-Tor-Toe",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact Romanized name matches ต๋อย ต่อ โต๊ะ noodle venue on Thep Krasattri Road; third-party phone +66898747053 only. Official reservation route unverified.",
+        "candidateCity": "Phuket Town",
+        "candidateAddress": "2/4 Thep Krasattri Road, Talat Yai"
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://au.trip.com/restaurant/thailand/phuket/detail/toy-tor-toe-148195856/",
+          "kind": "secondary",
+          "supports": "Exact Romanized name matches ต๋อย ต่อ โต๊ะ noodle venue on Thep Krasattri Road; third-party phone +66898747053 only. Official reservation route unverified."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-HKT-u0bb8a4bb7e3a",
+      "name": "ไม้หมอน ฟอเรสต์",
+      "manifestCity": "Phuket",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Phuket Town",
+        "address": "9 Soi 3, Phangnga Road, Talat Yai, Mueang Phuket 83000",
+        "notes": "Official Maimorn Forest contact page gives 076-211-208 / 089-619-1845, maimornforest@gmail.com and LINE @maimornforest. Book-table CTA leads to LINE, a manual messaging route; no message sent. Manual-route re-review: official จองโต๊ะ (book table) CTA points to LINE and page identifies @maimornforest. Explicit manual messaging reservation route verified; generic published phone is not independently verified as a telephone booking route."
+      },
+      "status": "manual_message",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.maimornforest.com/contact-us.php",
+          "kind": "official",
+          "supports": "Official Maimorn Forest contact page gives 076-211-208 / 089-619-1845, maimornforest@gmail.com and LINE @maimornforest. Book-table CTA leads to LINE, a manual messaging route; no message sent. Manual-route re-review: official จองโต๊ะ (book table) CTA points to LINE and page identifies @maimornforest. Explicit manual messaging reservation route verified; generic published phone is not independently verified as a telephone booking route."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Official-source search and read-only research performed on 2026-10-15; search absence does not prove no booking service exists.",
+        "Source restaurants.json contains only generic city address and no coordinates. Candidate addresses are not verified unless identity.status is verified.",
+        "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
+        "Cancellation, card guarantee and prepayment not established; null means unknown, not absent.",
+        "Manual-route re-review: official จองโต๊ะ (book table) CTA points to LINE and page identifies @maimornforest. Explicit manual messaging reservation route verified; generic published phone is not independently verified as a telephone booking route."
+      ],
+      "registryAddition": null,
+      "contact": {
+        "phone": "076-211-208 / 089-619-1845",
+        "email": "maimornforest@gmail.com",
+        "tableReservationAcceptance": "manual_request_offered_not_confirmed",
+        "bookingChannel": "LINE",
+        "bookingHandle": "@maimornforest"
+      }
+    }
+  ]
+}

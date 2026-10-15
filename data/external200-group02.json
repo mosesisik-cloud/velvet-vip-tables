@@ -1,0 +1,1105 @@
+{
+  "batch": 2,
+  "checkedAt": "2026-10-15",
+  "scope": "Exactly manifest group; read-only audit, no bookings, holds, payments or messages.",
+  "records": [
+    {
+      "restaurantId": "osm-BDR-hadi-balik",
+      "name": "Hadi Balik",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Official Hadi Balik now promotes Turgutreis bistro; older Carsi listing is reported closed and Aspat branch also appears. Missing input address prevents safe redirect to another branch."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.hadibalik.com/",
+          "kind": "official",
+          "supports": "Current Turgutreis bistro; fish delivery is a separate service."
+        },
+        {
+          "url": "https://www.tripadvisor.com.tr/Restaurant_Review-g298658-d23742045-Reviews-HADI_BALIK_BISTRO_Bodrum-Bodrum_City_Bodrum_District_Mugla_Province_Turkish_Aege.html",
+          "kind": "secondary",
+          "supports": "Carsi Sk 2/13 closure report; branch history."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Hadi Balik Bodrum restaurant / official / reservations",
+          "result": "Official Hadi Balik now promotes Turgutreis bistro; older Carsi listing is reported closed and Aspat branch also appears. Missing input address prevents safe redirect to another branch."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-harem",
+      "name": "Harem",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Harem listed at Neyzen Tevfik 14 by Tripadvisor; third-party reservation intermediary uses its own shared phone, which is not a verified operator booking route. Official operator source not found."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.tripadvisor.co.uk/Restaurant_Review-g298658-d3318156-Reviews-Harem_Restaurant-Bodrum_City_Bodrum_District_Mugla_Province_Turkish_Aegean_Coast.html",
+          "kind": "secondary",
+          "supports": "Venue candidate and contacts."
+        },
+        {
+          "url": "https://www.bodrummeyhaneleri.com/restaurants/harem-restaurant-bodrum/",
+          "kind": "secondary",
+          "supports": "Intermediary route not accepted as official."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Harem Bodrum restaurant / official / reservations",
+          "result": "Harem listed at Neyzen Tevfik 14 by Tripadvisor; third-party reservation intermediary uses its own shared phone, which is not a verified operator booking route. Official operator source not found."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-izmir-kumru",
+      "name": "İzmir Kumru",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Operator Eatbu page gives Neyzen Tevfik 58, but other Izmir Kumru branches exist and Yandex reports this location inactive. Cannot establish input branch/current operation."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://izmirkumru.eatbu.com/?lang=tr",
+          "kind": "official",
+          "supports": "Neyzen Tevfik 58 candidate."
+        },
+        {
+          "url": "https://yandex.com.tr/maps/org/izmir_kumru/1214585791/",
+          "kind": "secondary",
+          "supports": "Inactive-location report."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "İzmir Kumru Bodrum restaurant / official / reservations",
+          "result": "Operator Eatbu page gives Neyzen Tevfik 58, but other Izmir Kumru branches exist and Yandex reports this location inactive. Cannot establish input branch/current operation."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-joy-art-cafe",
+      "name": "Joy art cafe",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Directory matches Joy Art Cafe at Neyzen Tevfik 46A; no operator source or table booking evidence found."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://menuburada.com/joy-art-cafe-bodrum-sahil-mugla/",
+          "kind": "secondary",
+          "supports": "Candidate name/address and phone."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Joy art cafe Bodrum restaurant / official / reservations",
+          "result": "Directory matches Joy Art Cafe at Neyzen Tevfik 46A; no operator source or table booking evidence found."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-kalamare",
+      "name": "Kalamare",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Bodrum",
+        "address": "Çarşı Mah. Sanat Okulu Cad. No:9, Bodrum / Muğla",
+        "notes": "Official Kalamare contact page explicitly labels reservation phone numbers and confirms Sanat Okulu 9. Homepage form is an event enquiry that promises a later reply, not live table inventory."
+      },
+      "status": "manual_phone",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.kalamarebodrum.com/iletisim/",
+          "kind": "official",
+          "supports": "Reservation phones and exact address."
+        },
+        {
+          "url": "https://www.kalamarebodrum.com/",
+          "kind": "official",
+          "supports": "Manual event enquiry form."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": {
+        "type": "phone",
+        "value": "+902523167076",
+        "bookingExplicit": true
+      },
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Kalamare Bodrum restaurant / official / reservations",
+          "result": "Official Kalamare contact page explicitly labels reservation phone numbers and confirms Sanat Okulu 9. Homepage form is an event enquiry that promises a later reply, not live table inventory."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-meat-burger-steak-house",
+      "name": "mEAT Burger & Steak House",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Yandex matches mEAT at Kibris Sehitleri 79/A, but no operator source or table-reservation channel was identified."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://yandex.com.tr/maps/org/meat_burger_steak_house/1256902077/",
+          "kind": "secondary",
+          "supports": "Candidate address and contact."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "mEAT Burger & Steak House Bodrum restaurant / official / reservations",
+          "result": "Yandex matches mEAT at Kibris Sehitleri 79/A, but no operator source or table-reservation channel was identified."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-mezemore",
+      "name": "Mezemore",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Mezemore directory lists Adliye Sk 8. Search also returns Meza Bodrum at nearby 8/B, but no official evidence connects these brands. Directory booking form cannot be treated as operator-authorized."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.bodrummekanrehberi.com/m/restoran/mezemore",
+          "kind": "secondary",
+          "supports": "Mezemore directory and intermediary booking."
+        },
+        {
+          "url": "https://mezabodrum.com/",
+          "kind": "official",
+          "supports": "Different Meza brand; excluded as unproven replacement."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Mezemore Bodrum restaurant / official / reservations",
+          "result": "Mezemore directory lists Adliye Sk 8. Search also returns Meza Bodrum at nearby 8/B, but no official evidence connects these brands. Directory booking form cannot be treated as operator-authorized."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-mosyo",
+      "name": "Mösyö",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Mosyo candidate at Belediye Meydani 6 appears consistently in directories. Candidate official site inaccessible; intermediary form not accepted as official booking."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.bodrummekanrehberi.com/m/restoran/mosyo-bodrum/menu",
+          "kind": "secondary",
+          "supports": "Candidate street address and website."
+        },
+        {
+          "url": "https://www.mosyobodrum.com/",
+          "kind": "official",
+          "supports": "Candidate official domain; inaccessible."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Mösyö Bodrum restaurant / official / reservations",
+          "result": "Mosyo candidate at Belediye Meydani 6 appears consistently in directories. Candidate official site inaccessible; intermediary form not accepted as official booking."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-musto-bistro",
+      "name": "Musto bistro",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Bodrum",
+        "address": "Eskiçeşme Mah. Neyzen Tevfik Cad. No:130, 48400 Bodrum / Muğla",
+        "notes": "Official Musto site confirms Neyzen Tevfik 130. Reservation form explicitly constructs a WhatsApp request to the venue; it does not display current availability or confirm a table."
+      },
+      "status": "manual_whatsapp",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.mustorestaurantbistro.com/",
+          "kind": "official",
+          "supports": "Address, phone and manual WhatsApp reservation form."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "read_only_render_1365x900_request_form_content_in_dom",
+        "mobile": "read_only_render_390x844_request_form_content_in_dom",
+        "languages": [
+          "tr",
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "labels_observed_not_switched",
+        "originalRequestFormObserved": true
+      },
+      "contact": {
+        "type": "whatsapp",
+        "value": "+905332027575",
+        "bookingExplicit": true
+      },
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Musto bistro Bodrum restaurant / official / reservations",
+          "result": "Official Musto site confirms Neyzen Tevfik 130. Reservation form explicitly constructs a WhatsApp request to the venue; it does not display current availability or confirm a table."
+        },
+        {
+          "date": "2026-10-15",
+          "method": "coordinator_chromium_read_only_render",
+          "evidenceFiles": [
+            "work/external200-musto-desktop.txt",
+            "work/external200-musto-mobile.txt"
+          ],
+          "result": "Desktop and mobile DOM contain name, date, time (latest 22:30), party 2 to 7+, optional phone/note and WhatsApp-send content. TR/EN labels observed on desktop. Modal visibility/functionality and submission not tested."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile read-only rendering inspected; no form filling, submission, live inventory or embedding test. DOM form content alone does not establish visibility or functionality.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-nazikana",
+      "name": "nazikANA",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Nazik Ana official candidate domain has historical indexed content and reservation label, but current fetch failed. Directories list central Eski Hukumet 5 and an Islamhaneleri namesake. Input does not resolve location."
+      },
+      "status": "unresolved_branch",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.nazikanarestaurant.com/",
+          "kind": "official",
+          "supports": "Historical operator content; current fetch failed."
+        },
+        {
+          "url": "https://www.tripadvisor.co.uk/Restaurant_Review-g298658-d2523308-Reviews-Nazik_Ana-Bodrum_City_Bodrum_District_Mugla_Province_Turkish_Aegean_Coast.html",
+          "kind": "secondary",
+          "supports": "Central candidate."
+        },
+        {
+          "url": "https://yandex.com.tr/maps/org/nazikana_restaurant/100350447344/",
+          "kind": "secondary",
+          "supports": "Islamhaneleri namesake."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "nazikANA Bodrum restaurant / official / reservations",
+          "result": "Nazik Ana official candidate domain has historical indexed content and reservation label, but current fetch failed. Directories list central Eski Hukumet 5 and an Islamhaneleri namesake. Input does not resolve location."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-nokta-sebzeli-bodrum-doneri",
+      "name": "nokta sebzeli bodrum döneri",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Directories identify Nokta at Dr Alimbey 31 (one says Ataturk 31). No official reservation route found. Takeout/doner service does not prove walk-in-only."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://enyakinnerde.com/multinet/detay/nokta-sebzeli-bodrum-doneri",
+          "kind": "secondary",
+          "supports": "Candidate street address."
+        },
+        {
+          "url": "https://menuburada.com/amp-restoran-nokta-sebzeli-bodrum-doneri-carsi-mugla/",
+          "kind": "secondary",
+          "supports": "Different street label; no verified table booking."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "nokta sebzeli bodrum döneri Bodrum restaurant / official / reservations",
+          "result": "Directories identify Nokta at Dr Alimbey 31 (one says Ataturk 31). No official reservation route found. Takeout/doner service does not prove walk-in-only."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-otantik-ocakasi",
+      "name": "Otantik Ocakasi",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Likely misspelling of Otantik Ocakbasi. Michelin gives Ataturk 46 and direct-contact booking, but no operator source inspected confirms input identity. No registry addition."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://guide.michelin.com/gb/en/mugla/bodrum_2806351/restaurant/otantik-ocakbas%C4%B1",
+          "kind": "secondary",
+          "supports": "Candidate spelling, address and phone-booking indication."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Otantik Ocakasi Bodrum restaurant / official / reservations",
+          "result": "Likely misspelling of Otantik Ocakbasi. Michelin gives Ataturk 46 and direct-contact booking, but no operator source inspected confirms input identity. No registry addition."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-rasit-in-yeri",
+      "name": "Raşit'in Yeri",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Rasit in Yeri appears on OSM-derived map near harbour master and in historical municipal material as Yali Kahvesi. Current official operating identity and booking channel remain unknown."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://mapcarta.com/N3034104034",
+          "kind": "secondary",
+          "supports": "Nearby OSM-derived Rasit in Yeri name."
+        },
+        {
+          "url": "https://www.bodrum.bel.tr/upload/basili_kaynaklar/Mazimdeki_Bodrum_ve_Bodrumlular.pdf",
+          "kind": "official",
+          "supports": "Historical Yali Kahvesi / Rasit in Yeri, not current operation proof."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Raşit'in Yeri Bodrum restaurant / official / reservations",
+          "result": "Rasit in Yeri appears on OSM-derived map near harbour master and in historical municipal material as Yali Kahvesi. Current official operating identity and booking channel remain unknown."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-red-dragon",
+      "name": "Red Dragon",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Bodrum",
+        "address": "Neyzen Tevfik Cad. No:150 (Marina Yanı), Bodrum",
+        "notes": "Official chain website lists a single Bodrum branch at Neyzen Tevfik 150 and phone. Reservation page has name, phone, datetime and party-size inputs; no branch-specific inventory or confirmation semantics verified. Use published Bodrum telephone for manual booking."
+      },
+      "status": "manual_phone",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.reddragon.com.tr/",
+          "kind": "official",
+          "supports": "Bodrum branch address and telephone; separates delivery ordering."
+        },
+        {
+          "url": "https://www.reddragon.com.tr/rezervasyon",
+          "kind": "official",
+          "supports": "Original chain reservation request form only; no submission made."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "read_only_render_1365x900_request_form_content_in_dom",
+        "mobile": "read_only_render_390x844_request_form_content_in_dom",
+        "languages": [
+          "tr",
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "languageSwitch": "labels_observed_not_switched",
+        "originalRequestFormObserved": true
+      },
+      "contact": {
+        "type": "phone",
+        "value": "+902523168537",
+        "bookingExplicit": true
+      },
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Red Dragon Bodrum restaurant / official / reservations",
+          "result": "Official chain website lists a single Bodrum branch at Neyzen Tevfik 150 and phone. Reservation page has name, phone, datetime and party-size inputs; no branch-specific inventory or confirmation semantics verified. Use published Bodrum telephone for manual booking."
+        },
+        {
+          "date": "2026-10-15",
+          "method": "coordinator_chromium_read_only_render",
+          "evidenceFiles": [
+            "work/external200-reddragon-desktop.txt",
+            "work/external200-reddragon-mobile.txt"
+          ],
+          "result": "Desktop and mobile DOM contain reservation page person/phone/calendar/party icons and Turkish/English labels. No form fill, submission or branch-specific inventory tested."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile read-only rendering inspected; no form filling, submission, live inventory or embedding test. DOM form content alone does not establish visibility or functionality.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-sahil-koftecisi",
+      "name": "Sahil Köftecisi",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Sahil Koftecisi candidate at Neyzen Tevfik 64/A has a Yandex inactive report and other directories retaining operation/contact details. Official current status not found; closure not asserted."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://yandex.com.tr/maps/org/sahil_koftecisi/1199497965/",
+          "kind": "secondary",
+          "supports": "Inactive report."
+        },
+        {
+          "url": "https://www.tripadvisor.com.tr/Restaurant_Review-g298658-d14053363-Reviews-Sahil_Koftecisi-Bodrum_City_Bodrum_District_Mugla_Province_Turkish_Aegean_Coast.html",
+          "kind": "secondary",
+          "supports": "Candidate address and conflicting listing."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Sahil Köftecisi Bodrum restaurant / official / reservations",
+          "result": "Sahil Koftecisi candidate at Neyzen Tevfik 64/A has a Yandex inactive report and other directories retaining operation/contact details. Official current status not found; closure not asserted."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-the-place",
+      "name": "The place",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Directory points to The Place operator Eatbu site; fetched page had no readable content. Generic name and missing input address prevent confident identity or booking identification."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.tumisyeri.com/the-place-restaurant-cafe-bar-0543-370-83-84",
+          "kind": "secondary",
+          "supports": "Candidate operator site."
+        },
+        {
+          "url": "https://theplacerestaurant.eatbu.com/",
+          "kind": "official",
+          "supports": "Candidate operator site; zero extracted text."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "The place Bodrum restaurant / official / reservations",
+          "result": "Directory points to The Place operator Eatbu site; fetched page had no readable content. Generic name and missing input address prevent confident identity or booking identification."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-trafo",
+      "name": "Trafo",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Bodrum",
+        "address": "Çarşı Mah. Dr. Alim Bey Cad. No:4 Bodrum",
+        "notes": "Municipal operator confirms Trafo Cafe & Restaurant at Dr Alim Bey 4 and phone. No explicit table reservation route found, so contact alone is not counted as manual booking."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.bodrumbelediyeas.com.tr/tesis.php?slug=trafo-bodrum-cafe-restaurant",
+          "kind": "official",
+          "supports": "Exact venue address and telephone."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": {
+        "type": "phone",
+        "value": "+905331688986",
+        "bookingExplicit": false
+      },
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Trafo Bodrum restaurant / official / reservations",
+          "result": "Municipal operator confirms Trafo Cafe & Restaurant at Dr Alim Bey 4 and phone. No explicit table reservation route found, so contact alone is not counted as manual booking."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-yelken-bal-k",
+      "name": "Yelken Balık",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Bodrum",
+        "address": "Eskiçeşme, Neyzen Tevfik Cd. No:134, Bodrum, Muğla",
+        "notes": "Official reservation/contact page identifies Bodrum branch at Neyzen Tevfik 134 with a branch-specific reservation contact. Ankara branches must not be substituted. Third-party development booking URL excluded."
+      },
+      "status": "manual_phone",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.yelkenbalik.com.tr/iletisim",
+          "kind": "official",
+          "supports": "Bodrum branch reservation phone and address."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": {
+        "type": "phone",
+        "value": "+905322578252",
+        "bookingExplicit": true
+      },
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Yelken Balık Bodrum restaurant / official / reservations",
+          "result": "Official reservation/contact page identifies Bodrum branch at Neyzen Tevfik 134 with a branch-specific reservation contact. Ankara branches must not be substituted. Third-party development booking URL excluded."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BDR-zoe-restaurant-cocktail-bar",
+      "name": "ZOE Restaurant & Cocktail Bar",
+      "manifestCity": "Bodrum",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "ZOE appears in directories at Sanat Okulu 14; no operator source or officially delegated reservation system established."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://isletmeara.com/firma/zoe-restaurant-ve-cocktail-bar-bodrum",
+          "kind": "secondary",
+          "supports": "Candidate address and phone."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "ZOE Restaurant & Cocktail Bar Bodrum restaurant / official / reservations",
+          "result": "ZOE appears in directories at Sanat Okulu 14; no operator source or officially delegated reservation system established."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    },
+    {
+      "restaurantId": "osm-BKK-duklong",
+      "name": "Duklong",
+      "manifestCity": "Bangkok",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Duklong Cafe and Eat candidate at 71/4-5 Ban Phan Thom found; linked Facebook read throttled. Different Duklong cafe exists in Nakhon Nayok. No verified operator booking route."
+      },
+      "status": "unresolved",
+      "provider": null,
+      "bookingUrl": null,
+      "sources": [
+        {
+          "url": "https://www.openrice.com/zh/bangkok/r-duklong-cafe-%E0%B8%94%E0%B8%B9%E0%B8%84%E0%B8%A5%E0%B8%AD%E0%B8%87-%E0%B8%84%E0%B8%B2%E0%B9%80%E0%B8%9F%E0%B9%88-ban-phan-thom-r1557273",
+          "kind": "secondary",
+          "supports": "Bangkok candidate and operator Facebook link."
+        },
+        {
+          "url": "https://www.facebook.com/duklongcafe/",
+          "kind": "official",
+          "supports": "Candidate operator page; throttled."
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "contact": null,
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Duklong Bangkok restaurant / official / reservations",
+          "result": "Duklong Cafe and Eat candidate at 71/4-5 Ban Phan Thom found; linked Facebook read throttled. Different Duklong cafe exists in Nakhon Nayok. No verified operator booking route."
+        }
+      ],
+      "limitations": [
+        "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
+        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
+      ],
+      "registryAddition": null
+    }
+  ]
+}
