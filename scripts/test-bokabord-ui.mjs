@@ -21,7 +21,7 @@ try {
        window.calls.push(action);
        await new Promise(resolve=>{window.release=resolve;});
        if(window.failNext){window.failNext=false;return {error:'connection'};}
-       fields.find(f=>f.name===action.field).value=action.value;
+       for(const [name,value] of Object.entries(action.fields)) fields.find(f=>f.name===name).value=value;
      }
      return {id:'test',restaurantId:'curated-STO-zink-italian-cuisine',revision:++revision,image:'data:image/png;base64,'+image,imageHash,fields:structuredClone(fields),width:1280,height:720,text:'Contact',contact:true,canSubmit:true,mode:'prepare'};
    });
@@ -34,10 +34,10 @@ try {
  assert.equal(await page.locator('[data-submit]').isDisabled(),true);
  await page.evaluate(()=>window.release());await page.waitForFunction(()=>window.calls.length===2);
  assert.equal(await last.inputValue(),'Test');assert.equal(await last.evaluate(e=>e===document.activeElement),true);
- await page.evaluate(()=>window.release());await page.waitForFunction(()=>window.calls.length===3);
+ assert.deepEqual(await page.evaluate(()=>window.calls[1].fields),{firstname:'Gabriel',lastname:'Test'});
  await page.evaluate(()=>window.release());await page.waitForFunction(()=>!document.querySelector('[data-submit]').disabled);
  assert.equal(await first.getAttribute('data-verified-value'),'Gabriel');assert.equal(await last.getAttribute('data-verified-value'),'Test');
- await first.fill('Retry');await page.waitForFunction(()=>window.calls.length===4);
+ await first.fill('Retry');await page.waitForFunction(()=>window.calls.length===3);
  await page.evaluate(()=>{window.failNext=true;window.release();});
  await page.waitForFunction(()=>document.querySelector('[data-status]').textContent.includes('kunde inte'));
  assert.equal(await page.locator('[data-submit]').isDisabled(),true);

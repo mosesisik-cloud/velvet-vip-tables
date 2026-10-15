@@ -60,3 +60,6 @@ Driftbilden byggs med `deploy/Dockerfile.bokabord` från projektets låsta Playw
 Servern återanvänder publikt cachebara JavaScript-, CSS- och typsnittsfiler i minnet, högst 10 MiB och 15 minuter (aldrig längre än leverantörens max-age). HTML, API-svar, tillgänglighet, kontaktuppgifter och bokningar cachas inte. Privata svar och svar med Set-Cookie undantas. Sessionsbilder skapas fortfarande från den aktuella leverantörsvyn och verifieras med SHA-256.
 
 Väntan mellan steg följer Angulars pågående anrop och webbläsarens rendering. Kontaktfälten behåller fokus och kan redigeras under synkning; senaste ändringen köas. Inlämning spärras tills alla ändringar är synkade, även vid nätverksfel. Kör `node scripts/test-bokabord-ui.mjs` med installerad Playwright Chromium för att kontrollera långsamma svar, fokus, senaste inmatning och felhantering utan provideranrop.
+
+
+Version 167 öppnar eller återupptar gästens session med ett anrop. Kontaktändringar samlas i ett validerat fältpaket; hela paketet valideras före inmatning. Fältgeometri läses tillsammans från leverantörens DOM. Klick återkopplas omedelbart med en diskret markör, utan att förutsäga tider eller visa en påhittad bekräftelse. Restaurangsidan har en lugnare layout och ett tydligt Bokabord-märkt formulär. Bokningsstatus och samtycke fungerar som tidigare.

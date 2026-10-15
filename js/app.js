@@ -2491,7 +2491,7 @@ async function renderRestaurantDetail(placeId) {
         <div class="detail-panel restaurant-menu-panel"><span class="eyebrow">Mat & dryck</span><h2>Meny</h2><p>${esc(menuNote)}</p>${menuHref ? `<a class="btn btn-gold" href="${esc(menuViewHref)}" data-nav>${esc(menuLabel)} i VELVET →</a>` : ""}</div>
         <div class="detail-panel"><h2>Sociala medier & recensioner</h2><div class="restaurant-socials">${socials.length ? socials.map(([name, url]) => `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)} ↗</a>`).join("") : `<span class="events-meta">Inga verifierade sociala länkar ännu.</span>`}</div>${restaurant.reviewUrl ? `<p class="restaurant-review-link"><a class="link-gold" href="${esc(restaurant.reviewUrl)}" target="_blank" rel="noopener">Läs verifierade recensioner på ${esc(restaurant.reviewSource || "Google")} ↗</a></p>` : ""}</div>
       </div>
-      <aside class="detail-panel restaurant-book-panel"><span class="eyebrow">Vanlig restaurangbokning</span><h2>Boka bord</h2><p>Välj datum, tid och sällskap. Ingen promoter och ingen gruppmatchning.</p>
+      <aside class="detail-panel restaurant-book-panel"><span class="eyebrow">${esc(restaurant.name)}</span><h2>Boka bord</h2>
         ${bookingPanel}
       </aside>
     </div>

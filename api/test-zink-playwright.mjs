@@ -122,3 +122,13 @@ test('asset cache reuses public files but never bookings or private responses, e
   cache.put('b',headers,Buffer.from('12345'),200);assert.equal(cache.get('a'),null);assert.equal(cache.bytes,5);
   now=60001;assert.equal(cache.get('b'),null);assert.equal(cache.bytes,0);
 });
+
+test('batch contact changes validate every field before touching the provider', async () => {
+ const mirror=new BokabordMirror({prepare:true});const edits=[];
+ const s={id:'batch',owner:'guest',revision:1,touched:Date.now(),context:{close:async()=>{}},page:{getByRole:()=>({isVisible:async()=>true}),locator:selector=>({fill:async value=>edits.push([selector,value]),blur:async()=>{}})}};
+ mirror.sessions.set(s.id,s);mirror.settle=async()=>{};mirror.snapshot=async()=>({ok:true});
+ try {
+  await assert.rejects(mirror.action('batch','guest',{type:'fill',revision:1,fields:{firstname:'Test',unknown:'bad'}}),/field/);assert.equal(edits.length,0);
+  await mirror.action('batch','guest',{type:'fill',revision:1,fields:{firstname:'Test',lastname:'Guest'}});assert.equal(edits.length,2);
+ }finally{await mirror.close();}
+});
