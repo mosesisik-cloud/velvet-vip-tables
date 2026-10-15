@@ -1571,7 +1571,7 @@
     "checkedAt": "2026-10-15",
     "verification": "official_link_only",
     "integrationMode": "external_link",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
     "notes": "Exact official identity in Nice, catalog Monaco grouping needs location review. Initial form only; no slots selected. Conservative external mode for new provider pending full journey audit."
   },
