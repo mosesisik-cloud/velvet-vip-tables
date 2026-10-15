@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-188-request-window";
+const VERSION = "v4-real-189-cura-arpege";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
