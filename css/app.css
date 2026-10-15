@@ -3135,3 +3135,7 @@ body.light-shell .dest-card::after {
  .restaurant-detail .restaurant-gallery figure { height: 250px; }
  .restaurant-detail .restaurant-book-panel { padding: 18px; }
 }
+
+/* Keep the original provider UI at its native viewport size. */
+.booking-provider-stage { width:100%; min-width:0; }
+.booking-provider-frame { display:block; width:100%; height:min(900px, 85dvh); min-height:540px; border:0; background:#fff; color-scheme:light; }

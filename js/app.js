@@ -1,3 +1,4 @@
+import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
 import { mountBokabordMirror } from "./bokabord-mirror.js";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
 import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=159b";
@@ -2338,7 +2339,7 @@ function restaurantCardHTML(r) {
 }
 
 function restaurantMediaHTML(r) {
-  const images = Array.isArray(r.images) ? r.images.filter((url) => /^https?:\/\//i.test(url)) : [];
+  const images = hasVerifiedRestaurantImages(r) ? r.images.filter((url) => /^https?:\/\//i.test(url)) : [];
   const image = images[0] || "";
   if (image) {
     const fallbacks = esc(encodeURIComponent(JSON.stringify(images.slice(1))));
@@ -2354,9 +2355,10 @@ const hasVerifiedRestaurantImages = (restaurant) =>
   && restaurant.images.some((url) => /^https?:\/\//i.test(url) && !/unsplash|pexels|pixabay/i.test(url))
   && /^https?:\/\//i.test(restaurant?.imageSource || "");
 const publishableRestaurants = (rows) => sortRestaurants((rows || []).filter((restaurant) =>
-  (restaurant.curated === true || Number(restaurant.rating) >= 3.8) && hasVerifiedRestaurantImages(restaurant)
+  (restaurant.curated === true || Number(restaurant.rating) >= 3.8) && (hasVerifiedRestaurantImages(restaurant) || hasEmbeddedBooking(restaurant.placeId))
 ));
 async function mountHomeRestaurants() {
+  await getEmbeddedBooking(null);
   const root = document.getElementById("home-restaurants");
   if (!root) return;
   let data = null;
@@ -2374,6 +2376,7 @@ async function mountHomeRestaurants() {
 }
 
 async function renderRestaurants() {
+  await getEmbeddedBooking(null);
   setTitle(t("navRestaurants"));
   view().innerHTML = `<section class="section"><div class="section-head"><div><h1>${esc(t("navRestaurants"))}</h1><div class="sub">${esc(t("restaurantsSub"))}</div></div></div><p class="events-meta restaurant-loading"><span class="spinner spinner-sm"></span> ${esc(t("restaurantsLoading"))}</p></section>`;
   let data = null;
@@ -2398,6 +2401,7 @@ async function renderRestaurants() {
 }
 
 async function mountDestinationRestaurants(d) {
+  await getEmbeddedBooking(null);
   const root = document.getElementById("destination-restaurants");
   if (!root) return;
   let row = null;
@@ -2422,6 +2426,7 @@ async function mountDestinationRestaurants(d) {
 }
 
 async function renderRestaurantDetail(placeId) {
+  const restaurantRoute = location.hash;
   setTitle("Restaurang");
   view().innerHTML = `<section class="section"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm"></span> Laddar restaurang…</p></section>`;
   let data = null;
@@ -2432,13 +2437,15 @@ async function renderRestaurantDetail(placeId) {
     const match = (row.restaurants || []).find((item) => item.placeId === placeId);
     if (match) { restaurant = match; destination = { code, ...row }; break; }
   }
-  if (!restaurant || !hasVerifiedRestaurantImages(restaurant)) {
+  const embeddedBooking = restaurant ? await getEmbeddedBooking(restaurant.placeId) : null;
+  if (location.hash !== restaurantRoute) return;
+  if (!restaurant || (!hasVerifiedRestaurantImages(restaurant) && !embeddedBooking)) {
     view().innerHTML = `<section class="section"><div class="empty-state"><h1>Restaurangen hittades inte</h1><p><a class="btn btn-gold" href="#/restaurants" data-nav>Till restauranger</a></p></div></section>`;
     return;
   }
   setTitle(restaurant.name);
   const rating = Number(restaurant.rating);
-  const images = Array.isArray(restaurant.images) ? restaurant.images : [];
+  const images = hasVerifiedRestaurantImages(restaurant) ? restaurant.images : [];
   const socials = [["Instagram", restaurant.instagram], ["Facebook", restaurant.facebook], ["TikTok", restaurant.tiktok]].filter(([, url]) => /^https:\/\//i.test(url || ""));
   const directMenu = /^https:\/\//i.test(restaurant.menuUrl || "");
   const menuHref = directMenu ? restaurant.menuUrl : (/^https:\/\//i.test(restaurant.website || "") ? restaurant.website : restaurant.mapsUrl);
@@ -2454,7 +2461,10 @@ async function renderRestaurantDetail(placeId) {
   const zinkPilot = restaurant.placeId === "curated-STO-zink-italian-cuisine" && restaurant.bookingProvider === "BokaBord" && restaurant.bookingUrl;
   const pendingRestaurantBooking = loadPendingRestaurantBooking(restaurant.placeId);
   const mirrorConfig = destination.code === 'STO' ? await apiJSON("/restaurant-bookings/mirror/config") : null;
-  const bookingPanel = mirrorConfig?.enabled && mirrorConfig.restaurantIds?.includes(restaurant.placeId)
+  if (location.hash !== restaurantRoute) return;
+  const bookingPanel = embeddedBooking
+    ? `<div id="restaurant-provider-booking"></div>`
+    : mirrorConfig?.enabled && mirrorConfig.restaurantIds?.includes(restaurant.placeId)
     ? `<div id="bokabord-mirror"></div>`
     : zinkPilot
     ? `<div class="restaurant-provider-intro"><span>01 · DATUM</span><i></i><span>02 · TID</span><i></i><span>03 · BEKRÄFTA</span></div>
@@ -2496,6 +2506,8 @@ async function renderRestaurantDetail(placeId) {
       </aside>
     </div>
   </section>`;
+  const providerContainer = document.getElementById("restaurant-provider-booking");
+  if (providerContainer && embeddedBooking) mountEmbeddedBooking(providerContainer, embeddedBooking);
   const mirrorContainer = document.getElementById("bokabord-mirror");
   if (mirrorContainer) mountBokabordMirror(mirrorContainer, apiJSON, { restaurantId: restaurant.placeId, restaurantName: restaurant.name });
   const webbridgeForm = document.getElementById("restaurant-webbridge-search");
