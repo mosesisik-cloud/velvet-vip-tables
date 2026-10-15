@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "records": [
+    {
+      "issue": 69,
+      "claim": "velvet-root-le1947-20261016",
+      "restaurantId": "curated-CRV-le-1947-a-cheval-blanc",
+      "checkedAt": "2026-10-16",
+      "identity": {
+        "status": "verified",
+        "name": "Le 1947 a Cheval Blanc",
+        "city": "Courchevel",
+        "country": "France",
+        "address": "Rue du Jardin Alpin, 73120 Courchevel, France",
+        "source": "https://www.yannick-alleno.com/les-etablissements-du-groupe/cheval-blanc-1947",
+        "corroboration": "https://courchevel.com/fr/a/le-1947-a-cheval-blanc-185096/",
+        "match": "Exact curated restaurant name and city; operator dedicated page and local tourism listing agree on address/email/telephone."
+      },
+      "bookingRoute": {
+        "status": "manual_email",
+        "provider": null,
+        "url": "mailto:le1947.courchevel@chevalblanc.com?subject=Votre%20r%C3%A9servation",
+        "email": "le1947.courchevel@chevalblanc.com",
+        "source": "https://www.yannick-alleno.com/les-etablissements-du-groupe/cheval-blanc-1947",
+        "evidence": "Two local Reserver links are mailto to exact restaurant address; Nos horaires explicitly Reservations par email. Official tourism Reserver section also gives same email.",
+        "mode": "request_only",
+        "responseTimeHours": null,
+        "instantConfirmation": false,
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "contact": {
+        "phone": "+33 4 79 00 50 50",
+        "phoneRole": "general official contact, not separately proven phone-booking route",
+        "officialWebsite": "https://www.chevalblanc.com/fr/maison/courchevel/restaurants-et-bars/le-1947-cheval-blanc-courchevel/"
+      },
+      "policy": {
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null,
+        "dressCode": "Tenue correcte exigee",
+        "hoursObserved": "Wednesday-Sunday,19:30-21:00",
+        "hoursSource": "https://www.yannick-alleno.com/les-etablissements-du-groupe/cheval-blanc-1947",
+        "season": null,
+        "seasonLimitations": "ChevalBlanc indexed official content says opening December5,2025, stale for2026. Courchevel tourism header Dec4,2026-Apr18,2027 is resort-wide, NOT verified restaurant opening season. Do not apply it to Le1947."
+      },
+      "rejectedDestinations": [
+        {
+          "kind": "sibling_navigation",
+          "reason": "Alleno global nav contains Zenchef/SevenRooms/TableCheck for other venues; none is Le1947. LaTerrasse and LeGrillAlpin are different venues."
+        },
+        {
+          "kind": "tourism_generic_booking",
+          "url": "https://reservation.courchevel.com/",
+          "reason": "Generic resort reservation navigation, not Le1947 restaurant engine."
+        }
+      ],
+      "tests": {
+        "identityPageRendered": true,
+        "officialBookingLinkObserved": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedCheckout": false,
+        "confirmedReservation": false,
+        "networkGuard": "ServiceWorkers blocked; GET/HEAD only; all other requests aborted; no form controls clicked",
+        "browserEvidence": "work/issue69-le1947-browser.json",
+        "limitations": [
+          "Direct ChevalBlanc browser page returned access denied; no bypass. OperatorAlleno and officialTourism rendered normally.",
+          "No email or phone initiated, no reservation/hold/payment.",
+          "Read-only research does not prove restaurant response or current inventory."
+        ]
+      },
+      "decision": "accept_manual_email_route_no_provider_registry_addition",
+      "proposedCatalogUpdate": {
+        "keepRestaurantId": true,
+        "address": "Rue du Jardin Alpin, 73120 Courchevel, France",
+        "website": "https://www.yannick-alleno.com/les-etablissements-du-groupe/cheval-blanc-1947",
+        "locationSource": "https://www.yannick-alleno.com/les-etablissements-du-groupe/cheval-blanc-1947",
+        "locationVerifiedAt": "2026-10-16"
+      },
+      "next": "Integrator may expose clearly labelled email reservation request/contact with unknown terms, never instant booking or provider iframe. No provider registry fragment warranted.",
+      "publication": "not_changed"
+    }
+  ]
+}
