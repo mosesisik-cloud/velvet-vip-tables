@@ -1,0 +1,49 @@
+{
+  "restaurantId": "curated-CRV-bagatelle-courchevel",
+  "issue": 67,
+  "agent": "kimi-01",
+  "checkedAt": "2026-10-16",
+  "status": "ready_for_review",
+  "identity": {
+    "name": "Bagatelle Courchevel",
+    "address": "Courchevel 1850 slopes area (access via Chenus lift per official page), 73120 Courchevel, France",
+    "city": "Courchevel",
+    "officialWebsite": "https://bagatelle.com/venues/courchevel/",
+    "operatingStatus": "operating (ski-season mountain restaurant; open daily 11:00-16:00 per official booking page)",
+    "sources": [
+      "https://bagatelle.com/venues/courchevel/booking (official booking page, fetched 2026-10-16)"
+    ],
+    "duplicates": "CONFIRMED DUPLICATE: catalog holds both curated-CRV-bagatelle-courchevel and osm-CRV-bagatelle, both 'Bagatelle', Courchevel, both not_integrated. Per coordinator instruction IDs are preserved; this evidence covers the single physical restaurant and applies to both records. Coordinator decides dedup."
+  },
+  "bookingRoute": {
+    "category": "D - booking request requiring restaurant response (email-only)",
+    "provider": null,
+    "observed": "Official booking page states verbatim: 'Reservation requests are handled exclusively by email at courchevel@bagatelle.com'. No booking widget, iframe or provider link on the page. Terms stated: reservations held up to 10 minutes, incomplete parties not seated, Chenus lift takes at least 10 minutes excluding waiting.",
+    "officialUrl": "https://bagatelle.com/venues/courchevel/booking",
+    "manualRoutes": {
+      "email": "courchevel@bagatelle.com (official booking page, exclusive channel)"
+    },
+    "availability": "unknown"
+  },
+  "proposedRegistryRecord": null,
+  "proposedWorklistNote": "bookingRoute: verified_request_route (email-only); email courchevel@bagatelle.com; official booking page https://bagatelle.com/venues/courchevel/booking; open daily 11:00-16:00; no online provider (checked 2026-10-16). Duplicate note: osm-CRV-bagatelle is the same physical restaurant.",
+  "tests": {
+    "performed": [
+      "Official booking page fetched and full text extracted - email-only policy verbatim - pass",
+      "Link/form/iframe inventory of booking page - no provider engine - pass",
+      "Duplicate search in worklist - duplicate confirmed and documented (IDs preserved)",
+      "Local JSON validation - pass"
+    ],
+    "notPerformed": [
+      "No email sent to the restaurant (no messages allowed)",
+      "No app runtime test (scoped evidence fragment only)"
+    ],
+    "basis": "remote_official_sources_and_readonly_gets"
+  },
+  "limitations": [
+    "Exact street address not stated on official booking page (mountain restaurant on slopes; Chenus lift referenced)",
+    "Season opening dates 2026/2027 not verified"
+  ],
+  "nextStep": "Integrator consolidates email-request status into the canonical worklist and flags the curated/osm duplicate pair to the coordinator for dedup decision.",
+  "publication": "not_published"
+}
