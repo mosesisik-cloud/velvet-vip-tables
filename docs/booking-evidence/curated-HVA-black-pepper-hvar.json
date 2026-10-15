@@ -1,0 +1,121 @@
+{
+  "restaurantId": "curated-HVA-black-pepper-hvar",
+  "issue": 92,
+  "agent": "codex-659a9610-6318-4fe4-a087-a0e071ca94da",
+  "checkedAt": "2026-10-16",
+  "branch": "booking/92-black-pepper-659a9610",
+  "claimConfirmation": "https://github.com/mosesisik-cloud/velvet-vip-tables/issues/92#issuecomment-6204272213",
+  "scope": "Per-restaurant evidence for coordinator review; not a runtime registry entry.",
+  "identity": {
+    "status": "verified_official_source",
+    "name": "Black Pepper",
+    "catalogName": "Black Pepper Hvar",
+    "city": "Hvar",
+    "country": "Croatia",
+    "address": "Skaline od gojave 11, Hvar 21450",
+    "website": "https://blackpepperhvar.com/",
+    "phone": "+385 95 7509 790",
+    "email": "blackpepperhvar@gmail.com",
+    "basis": "Official restaurant homepage identifies Hvar, publishes the street address and contact details, and directly links its reservation destination. Provider page visually displays the BLACK PEPPER logo."
+  },
+  "bookingRoute": {
+    "status": "official_link_verified_standalone_form_loaded",
+    "provider": "i-host",
+    "venueId": "1767",
+    "url": "https://www.i-host.gr/Reservations/New?restaurant=1767&channel=website&lang=eng",
+    "source": "https://blackpepperhvar.com/",
+    "linkLabels": [
+      "Book now",
+      "Reservations"
+    ],
+    "observedProviderUrl": "https://www.i-host.gr/Reservations/New?channel=website&lang=eng&restaurant=1767",
+    "queryOrderNote": "The web text reader reordered query parameters; browser inspection of the official Book now anchor confirmed the exact url above.",
+    "recommendedMode": "external_link",
+    "embeddedFormVerified": false,
+    "liveAvailabilityVerified": false,
+    "liveAvailabilitySupportedInVelvet": false,
+    "completionTracking": "unsupported",
+    "requestOnlyStatus": "not_established",
+    "confirmedReservation": false,
+    "observation": "Standalone browser page rendered in English with people, date and time controls and a disabled Reserve button while people/time remained unselected. Screenshot displayed BLACK PEPPER branding. Time options are input choices, not proof of availability. No selections, customer details, submission, hold, payment or restaurant message were made.",
+    "limitations": [
+      "No availability search or reservation was performed.",
+      "Embedding was not tested; standalone form loading does not establish native_embed support.",
+      "Cancellation, deposits, payment requirements and final request-versus-confirmation semantics were not verified.",
+      "Official contact details are a manual fallback, not an automated booking connection."
+    ]
+  },
+  "sources": [
+    {
+      "url": "https://blackpepperhvar.com/",
+      "type": "restaurant_official",
+      "checkedAt": "2026-10-16",
+      "method": "Web text reader and live browser accessibility tree; Book now href inspected.",
+      "supports": [
+        "Restaurant identity, Hvar street address and contact details",
+        "Direct i-host destination with restaurant=1767"
+      ]
+    },
+    {
+      "url": "https://www.i-host.gr/Reservations/New?channel=website&lang=eng&restaurant=1767",
+      "type": "officially_linked_provider",
+      "checkedAt": "2026-10-16",
+      "method": "Read-only live browser accessibility tree and screenshot.",
+      "supports": [
+        "Standalone initial form loaded",
+        "BLACK PEPPER visual branding"
+      ],
+      "limitation": "Text-only reader exposed unresolved templates; no template success text was treated as an actual reservation."
+    }
+  ],
+  "excludedDiscoveryLeads": [
+    {
+      "url": "https://www.smokvina.hr/bookyour/r/blackpepper",
+      "reason": "Search-discovered listing was not the official website's reservation destination; not selected."
+    },
+    {
+      "url": "https://reserve.hr/listing/black-pepper-restaurant-hvar-croatia/",
+      "reason": "Search-discovered listing was not the official website's reservation destination; not selected."
+    }
+  ],
+  "integration": {
+    "status": "not_integrated",
+    "publication": "not_published",
+    "changedFiles": [
+      "docs/booking-evidence/curated-HVA-black-pepper-hvar.json"
+    ],
+    "reviewedFiles": [
+      "js/restaurant-booking-providers.js",
+      "js/booking-language.js",
+      "data/booking-providers.json",
+      "data/restaurants.json"
+    ],
+    "resolverBlob": "237a751f8bc1c3f95877aa0c2bbc8b36ef5bdb76",
+    "registryBlob": "11e165a7ed1a7badd9e5bb0fe870400a4bd421ef",
+    "blocker": "i-host is absent from PROVIDER_HOSTS and EXACT_EXTERNAL_LINKS; the current resolver rejects an i-host candidate. IDENTITY_PARAMS also omits restaurant, so a general host-only addition would not protect this venue identity.",
+    "nextStep": "Coordinator should assign one shared-file integrator. Reuse resolveEmbeddedBooking and mountEmbeddedBooking's existing external_link path; an exact per-restaurant URL/source rule is the narrowest route. Preserve restaurant=1767, channel=website and lang=eng. Add rejection coverage for different restaurant IDs/hosts and missing or altered identity parameters before enabling. Consolidate canonical evidence, review and test; release owner alone deploys.",
+    "sharedFilesChanged": false
+  },
+  "verification": {
+    "regression": {
+      "command": "node scripts/test-booking-providers.mjs",
+      "result": "passed",
+      "details": "130 existing restaurant mappings and destination guards passed; provider navigation/private booking state cache safeguards passed.",
+      "environment": "Node.js v24.19.0; unmodified test and dependencies fetched from the working branch through GitHub connector. Initial partial-file run lacked sw.js; rerun passed after fetching that branch file."
+    },
+    "focused": {
+      "result": "passed",
+      "checks": [
+        "Current registry has no row for this restaurant.",
+        "Current resolver rejects an i-host external-link candidate.",
+        "Existing bookingLanguage preserves this exact official URL.",
+        "Evidence JSON parses and retains explicit no-availability/no-confirmation flags."
+      ],
+      "reproduction": "Import resolveEmbeddedBooking and bookingLanguage; assert registry lacks restaurantId, resolver returns null for {provider:'i-host',url:bookingRoute.url,source:bookingRoute.source,venueId:'1767',venueKey:'www.i-host.gr/Reservations/New?restaurant=1767',integrationMode:'external_link',verification:'official_link_only',liveAvailabilitySupported:false,completionTracking:'unsupported'}; assert bookingLanguage(candidate,'sv').url equals bookingRoute.url. Parse evidence and assert liveAvailabilityVerified and confirmedReservation are false."
+    },
+    "browser": {
+      "result": "passed_initial_form_only",
+      "scope": "Read-only official-source and initial standalone provider inspection; no end-to-end booking test."
+    }
+  }
+}
