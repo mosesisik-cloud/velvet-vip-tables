@@ -1,3 +1,4 @@
+import { restaurantContactPanel } from './restaurant-contact.js';
 import { MEMBER_ACCOUNTS_ENABLED } from "./release-features.js";
 import { external200BookingPanel } from './external200-booking.js?v=184';
 import { loadPlaceBrands, placeBrandHTML } from './place-brand.js?v=178';
@@ -2515,6 +2516,7 @@ async function renderRestaurantDetail(placeId) {
   if (location.hash !== restaurantRoute) return;
   const bookingCopy = getBookingCopy(currentLang());
   const scopedBookingPanel = external200BookingPanel(restaurant.placeId, embeddedBooking, currentLang());
+  const contactBookingPanel = !embeddedBooking && !(mirrorConfig?.enabled && mirrorConfig.restaurantIds?.includes(restaurant.placeId)) ? restaurantContactPanel(restaurant.placeId, currentLang()) : null;
   const permanentlyClosed = restaurant.operatingStatus === 'permanently_closed';
   let closureSource = '';
   try {
@@ -2529,6 +2531,8 @@ async function renderRestaurantDetail(placeId) {
     ? scopedBookingPanel
     : mirrorConfig?.enabled && mirrorConfig.restaurantIds?.includes(restaurant.placeId)
     ? `<div id="bokabord-mirror"></div>`
+    : contactBookingPanel
+    ? contactBookingPanel
     : zinkPilot
     ? `<div class="restaurant-provider-intro"><span>01 · ${esc(rt("date"))}</span><i></i><span>02 · ${esc(rt("time"))}</span><i></i><span>03 · ${esc(rt("confirm"))}</span></div>
        <div class="webbridge-badge"><span aria-hidden="true">↔</span><div><strong>VELVET WebBridge</strong><small>${esc(rt("providerConnection"))}</small></div><b>PILOT</b></div>
@@ -2555,9 +2559,9 @@ async function renderRestaurantDetail(placeId) {
     </div>
     ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} ${esc(rt("photos"))} · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">${esc(rt("source"))} ↗</a></div></div>` : `<div class="restaurant-detail-placeholder"><b aria-hidden="true">${esc(String(restaurant.name || "R").slice(0, 1).toUpperCase())}</b><span>${esc(restaurant.name)}</span><small>${esc(uxT("noRestaurantPhoto"))}</small></div>`}
     <div class="restaurant-detail-grid">
-      <aside class="detail-panel restaurant-book-panel" id="restaurant-booking-panel" data-restaurant-id="${esc(restaurant.placeId)}" aria-labelledby="restaurant-booking-heading"><span class="eyebrow">${esc(restaurant.name)}</span><h2 id="restaurant-booking-heading" tabindex="-1">${permanentlyClosed ? esc(bookingCopy.closedHeading) : esc(uxT("jumpBooking"))}</h2>
-        ${bookingSelection && !permanentlyClosed && !scopedBookingPanel ? `<p class="booking-selection-summary">${esc(uxT('bookingChoice').replace('{date}',bookingSelection.date).replace('{time}',bookingSelection.time).replace('{party}',bookingSelection.party))}</p>` : ''}
-        <section ${permanentlyClosed || scopedBookingPanel ? "hidden" : ""} class="booking-cancellation-notice" aria-label="${esc(bookingCopy.policyHeading)}">
+      <aside class="detail-panel restaurant-book-panel" id="restaurant-booking-panel" data-restaurant-id="${esc(restaurant.placeId)}" aria-labelledby="restaurant-booking-heading"><span class="eyebrow">${esc(restaurant.name)}</span><h2 id="restaurant-booking-heading" tabindex="-1">${permanentlyClosed ? esc(bookingCopy.closedHeading) : contactBookingPanel ? esc(bookingCopy.requestHeading) : esc(uxT("jumpBooking"))}</h2>
+        ${bookingSelection && !permanentlyClosed && !scopedBookingPanel && !contactBookingPanel ? `<p class="booking-selection-summary">${esc(uxT('bookingChoice').replace('{date}',bookingSelection.date).replace('{time}',bookingSelection.time).replace('{party}',bookingSelection.party))}</p>` : ''}
+        <section ${permanentlyClosed || scopedBookingPanel || contactBookingPanel ? "hidden" : ""} class="booking-cancellation-notice" aria-label="${esc(bookingCopy.policyHeading)}">
           <strong>${esc(bookingCopy.policyHeading)}</strong>
           <p>${esc(bookingCopy.policyCheck)}</p>
           ${embeddedBooking?.cancellationPolicy ? `<p lang="sv">${esc(embeddedBooking.cancellationPolicy.summary)}</p><p><a href="${esc(embeddedBooking.cancellationPolicy.source)}" target="_blank" rel="noopener noreferrer">${esc(bookingCopy.policySource)}</a> · ${esc(formatBookingCopy(bookingCopy.policyChecked,{date:embeddedBooking.cancellationPolicy.checkedAt}))} ${esc(bookingCopy.comparePolicy)}${currentLang() !== 'sv' ? ' (Svenska)' : ''}</p>` : `<p>${esc(bookingCopy.unknownPolicy)}</p>`}
