@@ -1465,22 +1465,10 @@
           "reviewCount": 0,
           "address": "Saint-Tropez, France",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Verde%20Beach%2C%20Saint-Tropez",
-          "website": "https://verde-beach.com/",
+          "website": "",
           "primaryType": "restaurant",
           "source": "VELVET curated",
-          "curated": true,
-          "images": [
-            "https://verde-beach.com/wp-content/uploads/2026/06/beach-event-3.jpg",
-            "https://verde-beach.com/wp-content/uploads/2026/05/IMG_7557-Edit-Edit.jpg",
-            "https://verde-beach.com/wp-content/uploads/2026/06/beach-event-3-796x1024.jpg",
-            "https://verde-beach.com/wp-content/uploads/2026/06/beach-event-3-768x988.jpg",
-            "https://verde-beach.com/wp-content/uploads/2026/06/beach-event-3-1195x1536.jpg"
-          ],
-          "imageSource": "https://verde-beach.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
-          "menuUrl": "https://verde-beach.com/wp-content/uploads/2026/06/2026-VerdeBeach-Menu.pdf",
-          "menuSource": "https://verde-beach.com/",
-          "menuVerifiedAt": "2026-09-18T13:20:19.393Z"
+          "curated": true
         },
         {
           "placeId": "osm-STT-le-sporting",
@@ -1810,20 +1798,11 @@
           "reviewCount": 0,
           "address": "Saint-Tropez, France",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=La%20Petite%20Plage%2C%20Saint-Tropez",
-          "website": "https://www.lapetiteplage-saint-tropez.com/",
+          "website": "https://www.restaurant-lapetiteplage.com/saint-tropez",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
           "curated": true,
-          "cuisine": "fine_dining;mediterranean",
-          "images": [
-            "https://www.lapetiteplage-saint-tropez.com/asset/img/banner.jpg",
-            "https://www.lapetiteplage-saint-tropez.com/asset/img/fwsup.jpg",
-            "https://www.lapetiteplage-saint-tropez.com/asset/img/bxwgk.jpg",
-            "https://www.lapetiteplage-saint-tropez.com/asset/img/asbnn.jpg",
-            "https://www.lapetiteplage-saint-tropez.com/asset/img/grtsea.jpg"
-          ],
-          "imageSource": "https://www.lapetiteplage-saint-tropez.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "cuisine": "fine_dining;mediterranean"
         },
         {
           "placeId": "osm-STT-le-pationata",

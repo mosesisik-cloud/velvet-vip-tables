@@ -12,19 +12,27 @@ const server=createServer(async(req,res)=>{try {
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
 const browser=await chromium.launch();
 try{
- const page=await browser.newPage({viewport:{width:390,height:844}});let calls=[];let mode='mixed';
+ const page=await browser.newPage({viewport:{width:390,height:844}});let calls=[];let mode='mixed';let polls=0;
  await page.route('**/availability?**',async route=>{
   calls.push(new URL(route.request().url()));
+  if(mode.startsWith('progressive')) return route.fulfill({json:{searchId:'test-job',complete:false,checkedAt:null,results:[{restaurantId:'good',restaurant:'First restaurant',provider:'SevenRooms',status:'pending',slots:[]},{restaurantId:'second',restaurant:'Second restaurant',status:'pending',slots:[]}]}});
   if(mode==='slow'){await new Promise(resolve=>setTimeout(resolve,600));}
   if(mode==='error')return route.fulfill({status:503,body:'Unavailable'});
   await route.fulfill({json:{checkedAt:new Date().toISOString(),results:[{restaurantId:'good',restaurant:'Test <script>bad()</script>',city:'Stockholm',provider:'SevenRooms',status:'available',slots:[{time:'19:00',bookingUrl:'https://www.sevenrooms.com/reservations/example'},{time:'19:30',bookingUrl:'javascript:alert(1)'}]},{restaurantId:'closed',restaurant:'No tables',status:'unavailable',slots:[{time:'20:00'}]},{restaurantId:'unknown',restaurant:'Unsupported restaurant',status:'unsupported',slots:[]},{restaurantId:'error',restaurant:'Error restaurant',status:'error',slots:[]}]}});
+ });
+ await page.route('**/availability/jobs/test-job', async route => {
+  polls++;
+  if(mode==='progressive-slow') await new Promise(resolve=>setTimeout(resolve,700));
+  if(mode==='progressive-error') return route.fulfill({status:503,body:'unavailable'});
+  const complete=polls>=2;
+  await route.fulfill({json:{searchId:'test-job',complete,checkedAt:new Date().toISOString(),results:[{restaurantId:'good',restaurant:'First restaurant',provider:'SevenRooms',status:'available',slots:[{time:'19:00',bookingUrl:'https://www.sevenrooms.com/reservations/example'}]},{restaurantId:'second',restaurant:'Second restaurant',provider:'SevenRooms',status:complete?'available':'pending',slots:complete?[{time:'19:30',bookingUrl:'https://www.sevenrooms.com/reservations/second'}]:[]}]}});
  });
  await page.goto(`http://127.0.0.1:${server.address().port}`);
  assert.equal(calls.length,0);
  await page.getByLabel('Destination',{exact:true}).selectOption('Stockholm');
  await page.getByRole('button',{name:'Sök lediga bord'}).click();
  await page.getByText('1 restaurang har lediga tider',{exact:false}).waitFor();
- assert.equal(calls[0].searchParams.get('city'),'Stockholm');assert.equal(calls[0].searchParams.get('party'),'2');
+ assert.equal(calls[0].searchParams.get('city'),'Stockholm');assert.equal(calls[0].searchParams.get('party'),'2');assert.equal(calls[0].searchParams.get('progressive'),'1');
  assert.equal(await page.locator('.availability-slot').count(),2);
  assert.equal(await page.locator('.availability-slot').nth(1).getAttribute('href'),'#/restaurant/good');
  assert.equal(await page.locator('.availability-results script').count(),0);
@@ -37,6 +45,47 @@ try{
  await page.waitForTimeout(750);assert.equal(await page.locator('.availability-slot').count(),0);
  await page.getByText('Sök för att visa tider för ditt nya val.').waitFor();
  mode='error';await page.getByRole('button',{name:'Sök lediga bord'}).click();await page.getByText('Det gick inte att hämta lediga tider just nu. Försök igen.').waitFor();
+ mode='progressive';polls=0;
+ await page.getByRole('button',{name:'Sök lediga bord'}).click();
+ await page.getByText('2 restauranger återstår',{exact:false}).waitFor();
+ assert.equal(await page.locator('.availability-results').getAttribute('aria-busy'),'true');
+ assert.doesNotMatch(await page.locator('.availability-status').textContent(),/Inga lediga|kunde inte/);
+ await page.locator('.availability-slot').first().waitFor();
+ await page.locator('.availability-slot').first().focus();
+ await page.evaluate(()=>window.retainedSlot=document.activeElement);
+ const selectedHref=await page.locator('.availability-slot').first().getAttribute('href');
+ assert.match(selectedHref,/^#\/restaurant\/good\?date=.*&time=19%3A00&party=2$/);
+ await page.getByText('2 restauranger har lediga tider',{exact:false}).waitFor();
+ assert.equal(await page.locator('.availability-slot').count(),2);
+ assert.ok(await page.evaluate(()=>window.retainedSlot===document.activeElement && window.retainedSlot.isConnected),'Unchanged slot retains focus and DOM node after poll');
+ assert.equal(await page.locator('.availability-results').getAttribute('aria-busy'),'false');
+ const finishedPolls=polls;await page.waitForTimeout(1700);assert.equal(polls,finishedPolls,'Completed search stops polling');
+ mode='progressive-slow';polls=0;
+ await page.getByRole('button',{name:'Sök lediga bord'}).click();
+ await page.waitForFunction(()=>document.querySelector('.availability-status').textContent.includes('återstår'));
+ await page.waitForTimeout(1600);
+ await page.getByLabel('Destination',{exact:true}).selectOption('Stockholm');
+ await page.waitForTimeout(850);
+ assert.equal(await page.locator('.availability-slot').count(),0,'Old job response cannot restore changed filters');
+ const stoppedPolls=polls;await page.waitForTimeout(1700);assert.equal(polls,stoppedPolls,'Changed filters stop polling');
+ mode='progressive-error';polls=0;
+ await page.getByRole('button',{name:'Sök lediga bord'}).click();
+ await page.getByText('Sökningen avbröts.',{exact:false}).waitFor();
+ assert.doesNotMatch(await page.locator('.availability-status').textContent(),/Inga lediga/);
+ mode='progressive';polls=0;
+ await page.evaluate(()=>{window.realSetTimeout=window.setTimeout;window.setTimeout=(fn,ms,...args)=>window.realSetTimeout(fn,ms===180000?2000:ms,...args);});
+ await page.getByRole('button',{name:'Sök lediga bord'}).click();
+ await page.getByText('Sökningen tog för lång tid.',{exact:false}).waitFor();
+ assert.equal(await page.locator('.availability-slot').count(),1,'Timeout preserves partial available results');
+ assert.equal(await page.locator('.availability-results').getAttribute('aria-busy'),'false');
+ const timedOutPolls=polls;await page.waitForTimeout(1700);assert.equal(polls,timedOutPolls,'Deadline stops polling');
+ await page.evaluate(()=>window.setTimeout=window.realSetTimeout);
+ mode='progressive';polls=0;
+ await page.getByRole('button',{name:'Sök lediga bord'}).click();
+ await page.getByText('2 restauranger återstår',{exact:false}).waitFor();
+ await page.evaluate(()=>window.ui.destroy());await page.waitForTimeout(1700);assert.equal(polls,0,'Unmount cancels scheduled job poll');
+ assert.equal(await page.locator('.availability-slot').count(),0);
+ await page.reload();await page.getByLabel('Destination',{exact:true}).selectOption('Stockholm');
  mode='slow';await page.getByRole('button',{name:'Sök lediga bord'}).click();await page.evaluate(()=>window.ui.destroy());await page.waitForTimeout(750);assert.equal(await page.locator('.availability-slot').count(),0);
- console.log('PASS availability UI: guest search, truthful mixed statuses, safe links/text, mobile width, stale abort, errors, unmount');
+ console.log('PASS availability UI: guest search, truthful mixed statuses, safe links/text, mobile width, progressive results/focus/stop, stale abort, errors, unmount');
 }finally{await browser.close();await new Promise(resolve=>server.close(resolve));}

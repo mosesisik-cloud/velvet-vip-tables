@@ -1,3 +1,4 @@
+import { parseBookingSelection, withBookingSelection } from './booking-selection.js';
 import { mountBookingReport } from './booking-report.js';
 import { mountAvailabilitySearch } from './availability-search.js';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
@@ -2439,7 +2440,8 @@ async function renderRestaurantDetail(placeId) {
     const match = (row.restaurants || []).find((item) => item.placeId === placeId);
     if (match) { restaurant = match; destination = { code, ...row }; break; }
   }
-  const embeddedBooking = restaurant ? await getEmbeddedBooking(restaurant.placeId) : null;
+  const bookingSelection = parseBookingSelection(new URLSearchParams(restaurantRoute.split('?')[1] || ''));
+  const embeddedBooking = restaurant ? withBookingSelection(await getEmbeddedBooking(restaurant.placeId), bookingSelection) : null;
   if (location.hash !== restaurantRoute) return;
   if (!restaurant || (!hasVerifiedRestaurantImages(restaurant) && !embeddedBooking)) {
     view().innerHTML = `<section class="section"><div class="empty-state"><h1>Restaurangen hittades inte</h1><p><a class="btn btn-gold" href="#/restaurants" data-nav>Till restauranger</a></p></div></section>`;
@@ -2511,6 +2513,12 @@ async function renderRestaurantDetail(placeId) {
   const providerContainer = document.getElementById("restaurant-provider-booking");
   if (providerContainer && embeddedBooking) {
     mountEmbeddedBooking(providerContainer, embeddedBooking);
+    if (bookingSelection) {
+      const selected = document.createElement('p'); selected.className = 'booking-selection-summary';
+      selected.textContent = `Ditt sökval: ${bookingSelection.date} kl. ${bookingSelection.time} · ${bookingSelection.party} gäster. Kontrollera att samma val visas i restaurangens formulär.`;
+      providerContainer.prepend(selected);
+      if (embeddedBooking.provider === 'SevenRooms') providerContainer.querySelector('button')?.click();
+    }
     const reportContainer = document.createElement('div');
     providerContainer.after(reportContainer);
     mountBookingReport(reportContainer, {restaurantId:restaurant.placeId,apiBase:apiBase()});
