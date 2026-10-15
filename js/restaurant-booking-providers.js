@@ -25,6 +25,12 @@ const PROVIDER_HOSTS = Object.freeze({
 });
 const EMBED_PROVIDERS = new Set(['TABLFY', 'Meitre', 'Elyra', 'Guestplan', 'TableCheck', 'Zenchef', 'ResDiary / Dish Cult', 'Tableo', 'Restoo', 'Eat App']);
 const IDENTITY_PARAMS = new Set(['rid', 'restref', 'restaurantid', 'restaurant_id', 'venue', 'venue_id', 'id', 'restaurant_uid', 'reservation']);
+// Evidence is specific to these complete official links, including query order
+// and values. Do not generalize this into provider-wide query acceptance.
+const EXACT_EXTERNAL_LINKS = Object.freeze({
+  'osm-PAR-bigbang': {provider:'JoinOko',url:'https://reservation.joinoko.com/784893b8aceb4e017dddef37?lang=fr',source:'https://sevres.bigbang-restaurant.fr/fr/',venueKey:'reservation.joinoko.com/784893b8aceb4e017dddef37'},
+  'curated-MCO-pavyllon-monte-carlo': {provider:'SevenRooms',venueId:'pavyllonyannickalleno',url:'https://eu.sevenrooms.com/reservations/pavyllonyannickalleno?venues=pavyllonyannickalleno,legrill,bluebay,lelouisxvalainducasse',source:'https://www.yannick-alleno.com/contact',venueKey:'eu.sevenrooms.com/reservations/pavyllonyannickalleno'},
+});
 function venueKey(url) {
   const identity = [...url.searchParams].filter(([key]) => IDENTITY_PARAMS.has(key.toLowerCase()))
     .map(([key, value]) => [key.toLowerCase(), value]).sort(([a, av], [b, bv]) => a.localeCompare(b) || av.localeCompare(bv));
@@ -42,6 +48,13 @@ export function resolveEmbeddedBooking(registry, restaurantId) {
     const source = new URL(row.source);
     if (url.protocol !== 'https:' || url.username || url.password || url.port || url.hash
       || source.protocol !== 'https:' || source.username || source.password) return null;
+    if (Object.hasOwn(EXACT_EXTERNAL_LINKS,restaurantId) || row.provider === 'JoinOko' || row.venueId === 'pavyllonyannickalleno') {
+      const exact=Object.hasOwn(EXACT_EXTERNAL_LINKS,restaurantId) ? EXACT_EXTERNAL_LINKS[restaurantId] : null;
+      if (!exact || Object.entries(exact).some(([key,value])=>row[key]!==value)
+        || row.integrationMode!=='external_link' || row.verification!=='official_link_only'
+        || row.liveAvailabilitySupported!==false || row.completionTracking!=='unsupported') return null;
+      return {...row,restaurantId,url:row.url,integrationMode:'external_link'};
+    }
     if (row.provider === 'SevenRooms') {
       if (row.integrationMode === 'external_link') {
         if (!['official_link_only','official_link_no_current_offers'].includes(row.verification)
