@@ -1,3 +1,4 @@
+import { availabilityCopy } from './availability-copy.js';
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const localDate = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 export function availabilityCities(restaurants) {
@@ -5,37 +6,68 @@ export function availabilityCities(restaurants) {
   return [...new Set(rows.filter(value => typeof value === 'string' && value.trim()))].sort((a,b) => a.localeCompare(b,'sv'));
 }
 function bookingLink(row, slot, query) {
+  const selection = new URLSearchParams({date:query.get('date') || '',time:slot.time || '',party:query.get('party') || ''});
   try { const u = new URL(slot.bookingUrl); if (u.protocol === 'https:' && !u.username && !u.password) {
     if (row.provider === 'SevenRooms' && ['www.sevenrooms.com','sevenrooms.com','eu.sevenrooms.com'].includes(u.hostname)) {
-      const selection=new URLSearchParams({date:query.get('date'),time:slot.time,party:query.get('party')});
       return `#/restaurant/${encodeURIComponent(row.restaurantId)}?${selection}`;
     }
     return u.href;
   } } catch {}
-  return `#/restaurant/${encodeURIComponent(row.restaurantId || '')}`;
+  return `#/restaurant/${encodeURIComponent(row.restaurantId || '')}?${selection}`;
+}
+const SEARCH_CACHE_KEY = 'velvet_availability_v1';
+const SEARCH_MAX_AGE = 5 * 60 * 1000;
+export function availabilityState(restaurants, params = new URLSearchParams(), initialCity = '', today = localDate()) {
+  const cities = availabilityCities(restaurants);
+  const requested = params.get('city') ?? initialCity;
+  const codeCity = restaurants?.destinations?.[requested]?.destination;
+  const city = cities.find(city => city.toLocaleLowerCase() === String(codeCity || requested).toLocaleLowerCase()) || '';
+  const requestedDate = params.get('date') || today;
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(requestedDate) && requestedDate >= today && !Number.isNaN(Date.parse(requestedDate)) && new Date(requestedDate).toISOString().slice(0, 10) === requestedDate ? requestedDate : today;
+  const requestedTime = params.get('time') || '19:00';
+  const time = /^([01]\d|2[0-3]):[0-5]\d$/.test(requestedTime) ? requestedTime : '19:00';
+  const party = /^[1-9]$|^1[0-2]$/.test(params.get('party') || '') ? params.get('party') : '2';
+  return { city, date, time, party };
+}
+export function availabilityCacheMatches(saved, query, now = Date.now()) {
+  return !!saved && saved.query === query && Number.isFinite(saved.savedAt) && now >= saved.savedAt && now - saved.savedAt < SEARCH_MAX_AGE && Array.isArray(saved.data?.results);
 }
 /** Mounts guest search. Call destroy before replacing its route to cancel requests. */
-export function mountAvailabilitySearch(container, { restaurants, apiBase = '', initialCity = '' } = {}) {
+export function mountAvailabilitySearch(container, { restaurants, apiBase = '', initialCity = '', lang } = {}) {
+  const { language, locale, text: tr } = availabilityCopy(lang);
   const cities = availabilityCities(restaurants);
+  cities.sort((a, b) => a.localeCompare(b, language));
+  const routeParams = new URLSearchParams(location.hash.split('?')[1] || '');
+  const initial = availabilityState(restaurants, routeParams, initialCity);
   let controller, revision = 0, destroyed = false;
   container.innerHTML = `<section class="availability-search" aria-labelledby="availability-heading">
-    <header class="availability-intro"><span class="availability-eyebrow">ETT BORD ATT LÄNGTA TILL</span><h1 id="availability-heading">Var vill du äta?</h1><p>Hitta lediga bord för din kväll. Välj destination, dag och sällskap.</p></header>
+    <header class="availability-intro"><span class="availability-eyebrow">${escapeHTML(tr('eyebrow'))}</span><h1 id="availability-heading">${escapeHTML(tr('title'))}</h1><p>${escapeHTML(tr('intro'))}</p></header>
     <form class="availability-form">
-      <label>Destination<select name="city" required aria-label="Destination"><option value="">Välj destination</option>${cities.map(city=>`<option value="${escapeHTML(city)}" ${city===initialCity?'selected':''}>${escapeHTML(city)}</option>`).join('')}</select></label>
-      <label>Datum<input type="date" name="date" aria-label="Datum" required min="${localDate()}" value="${localDate()}"></label>
-      <label>Tid<input type="time" name="time" aria-label="Tid" required value="19:00" step="900"></label>
-      <label>Gäster<select name="party" aria-label="Gäster">${Array.from({length:12},(_,i)=>`<option value="${i+1}" ${i===1?'selected':''}>${i+1} ${i===0?'gäst':'gäster'}</option>`).join('')}</select></label>
-      <button type="submit" class="availability-submit">Sök lediga bord <span aria-hidden="true">→</span></button>
+      <label>${escapeHTML(tr('city'))}<select name="city" required aria-label="${escapeHTML(tr('city'))}"><option value="">${escapeHTML(tr('chooseCity'))}</option>${cities.map(city=>`<option value="${escapeHTML(city)}" ${city===initial.city?'selected':''}>${escapeHTML(city)}</option>`).join('')}</select></label>
+      <label>${escapeHTML(tr('date'))}<input type="date" name="date" aria-label="${escapeHTML(tr('date'))}" required min="${localDate()}" value="${initial.date}"></label>
+      <label>${escapeHTML(tr('time'))}<input type="time" name="time" aria-label="${escapeHTML(tr('time'))}" required value="${initial.time}" step="900"></label>
+      <label>${escapeHTML(tr('guests'))}<select name="party" aria-label="${escapeHTML(tr('guests'))}">${Array.from({length:12},(_,i)=>`<option value="${i+1}" ${String(i+1)===initial.party?'selected':''}>${i+1} ${escapeHTML(tr(i===0?'guest':'guestPlural'))}</option>`).join('')}</select></label>
+      <button type="submit" class="availability-submit" aria-label="${escapeHTML(tr('search'))}">${escapeHTML(tr('search'))} <span aria-hidden="true">→</span></button>
     </form>
-    <p class="availability-note">Visar tider inom 90 minuter från ditt val, i restaurangens lokala tid. Du behöver inget Velvet-konto.</p>
-    <div class="availability-status" role="status" aria-live="polite">Välj en destination för att hitta lediga bord.</div>
+    <p class="availability-note">${escapeHTML(tr('note'))}</p>
+    <div class="availability-status" role="status" aria-live="polite">${escapeHTML(tr(initial.city ? 'selectedInitial' : 'initial', {city:initial.city}))}</div>
     <div class="availability-results" aria-busy="false"></div>
-    <p class="availability-disclaimer">Tillgängligheten kan ändras. Bordet är bokat först när restaurangens bokningssystem bekräftar din reservation.</p>
+    <p class="availability-disclaimer">${escapeHTML(tr('disclaimer'))}</p>
   </section>`;
   const form = container.querySelector('form');
   const status = container.querySelector('.availability-status');
   const results = container.querySelector('.availability-results');
   const button = container.querySelector('[type=submit]');
+  const setButtonBusy = busy => {
+    button.setAttribute('aria-label', tr('search'));
+    button.setAttribute('aria-busy', String(busy));
+    button.innerHTML = `${escapeHTML(tr(busy ? 'searching' : 'search'))} <span aria-hidden="true">→</span>`;
+  };
+  const readQuery = () => new URLSearchParams(new FormData(form));
+  const syncQuery = query => history.replaceState(history.state, '', '#/availability?' + query.toString());
+  const cache = (query, data) => {
+    try { sessionStorage.setItem(SEARCH_CACHE_KEY, JSON.stringify({query: query.toString(), data, savedAt: Date.now()})); } catch {}
+  };
   function reconcile(markup) {
     const template = document.createElement('template'); template.innerHTML = markup;
     const existing = new Map([...results.children].map(node => [node.dataset.resultKey || node.className, node]));
@@ -60,27 +92,57 @@ export function mountAvailabilitySearch(container, { restaurants, apiBase = '', 
     });
   }
   function invalidate() {
+    syncQuery(readQuery());
     revision++; controller?.abort(); controller = null;
     results.replaceChildren(); results.setAttribute('aria-busy','false');
-    button.textContent = 'Sök lediga bord →';
-    status.textContent = 'Sök för att visa tider för ditt nya val.';
+    setButtonBusy(false);
+    status.textContent = tr('edited');
   }
+  form.addEventListener('input', invalidate);
   form.addEventListener('change', invalidate);
+  function renderResults(data, query) {
+    const complete = data.complete !== false;
+    const rows = data.results.filter(row => row && typeof row.restaurantId === 'string');
+    const validSlot = slot => slot && /^([01]\d|2[0-3]):[0-5]\d$/.test(slot.time);
+    const available = rows.filter(row => row.status === 'available' && Array.isArray(row.slots) && row.slots.some(validSlot));
+    const rest = rows.filter(row => !available.includes(row));
+    const pending = rows.filter(row => row.status === 'pending').length;
+    const checked = new Date(data.checkedAt || NaN);
+    const updated = Number.isNaN(checked.getTime()) ? '' : ' · ' + tr('checked', {time:checked.toLocaleTimeString(locale, {hour:'2-digit',minute:'2-digit'})});
+    const availableText = tr(available.length === 1 ? 'availableOne' : 'availableMany', {count:available.length});
+    status.textContent = !complete
+      ? (available.length ? availableText + ' · ' : '') + tr('searchingMore') + (pending ? ' · ' + tr('remaining', {count:pending}) : '…')
+      : !rows.some(row => ['available','unavailable'].includes(row.status)) ? tr('noCheck')
+      : available.length ? availableText + updated : tr('none', {updated});
+    const cards = available.map(row => {
+      const name = row.restaurant || row.name || tr('restaurant');
+      const slots = row.slots.filter(validSlot).map(slot => `<a href="${escapeHTML(bookingLink(row,slot,query))}" class="availability-slot" aria-label="${escapeHTML(tr('bookAt', {name,time:slot.time}))}">${escapeHTML(slot.time)}<span aria-hidden="true"> ↗</span></a>`).join('');
+      return `<article class="availability-card" data-result-key="${escapeHTML(row.restaurantId)}"><div class="availability-card-head"><div><p class="availability-city">${escapeHTML(row.city || query.get('city'))}</p><h2><a href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${escapeHTML(name)}</a></h2><p class="availability-provider">${escapeHTML(tr('via', {provider:row.provider || tr('bookingSystem')}))}</p></div><span class="availability-badge">${escapeHTML(tr('available'))}</span></div><div class="availability-slots" aria-label="${escapeHTML(tr('slotsFor', {name}))}">${slots}</div><p class="availability-card-note">${row.partial ? escapeHTML(tr('partialNote')) + ' ' : ''}${row.slots.some(slot => slot.requiresPrepayment) ? escapeHTML(tr('prepaymentNote')) + ' ' : row.slots.some(slot => slot.requiresCard) ? escapeHTML(tr('cardNote')) + ' ' : ''}${row.slots.some(slot => slot.paymentRequirement === 'mixed') ? escapeHTML(tr('mixedNote')) + ' ' : ''}${escapeHTML(tr('continueNote'))}</p></article>`;
+    }).join('');
+    const labels = {pending:tr('pending'),unsupported:tr('unsupported'),error:tr('error'),unavailable:tr('unavailable')};
+    const markup = cards + (rest.length ? `<details class="availability-other" ${available.length ? '' : 'open'}><summary>${escapeHTML(tr('other', {count:rest.length}))}</summary><ul>${rest.map(row => `<li><div><a href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${escapeHTML(row.restaurant || row.name || tr('restaurant'))}</a><p>${escapeHTML(labels[row.status] || tr('unconfirmed'))}</p></div><a class="availability-detail" href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${escapeHTML(tr('show'))} <span aria-hidden="true">→</span></a></li>`).join('')}</ul></details>` : '');
+    reconcile(rows.length ? markup : complete ? `<p class="availability-empty">${escapeHTML(tr('empty'))}</p>` : '');
+  }
   async function submit(event) {
     event.preventDefault();
     if (!form.reportValidity()) return;
+    const query = readQuery();
+    syncQuery(query);
+    return runSearch(query);
+  }
+  async function runSearch(query, resumeId = "") {
     controller?.abort(); controller = new AbortController();
     const current = ++revision;
     const requestController = controller;
-    let timedOut = false, receivedPartial = false;
+    let timedOut = false, receivedPartial = Boolean(resumeId);
     const deadline = setTimeout(() => { timedOut = true; requestController.abort(); },180000);
-    const query = new URLSearchParams(new FormData(form));
-    results.replaceChildren(); results.setAttribute('aria-busy','true');
-    status.textContent = `Söker lediga bord i ${query.get('city')}…`;
-    button.textContent = 'Söker…';
+    if (!resumeId) results.replaceChildren();
+    results.setAttribute('aria-busy','true');
+    status.textContent = tr('searchingCity', {city:query.get('city')});
+    setButtonBusy(true);
     try {
       const initialQuery = new URLSearchParams(query); initialQuery.set('progressive','1');
-      let endpoint = `${apiBase.replace(/\/$/,'')}/availability?${initialQuery}`;
+      let endpoint = resumeId ? (apiBase.endsWith("/") ? apiBase.slice(0,-1) : apiBase) + "/availability/jobs/" + encodeURIComponent(resumeId) : `${apiBase.replace(/\/$/,'')}/availability?${initialQuery}`;
       while (true) {
       const response = await fetch(endpoint, {signal:requestController.signal,cache:'no-store',credentials:'same-origin'});
       if (!response.ok) throw new Error('search_failed');
@@ -89,17 +151,8 @@ export function mountAvailabilitySearch(container, { restaurants, apiBase = '', 
       if (!Array.isArray(data.results)) throw new Error('invalid_response');
       const complete = data.complete !== false;
       receivedPartial = true;
-      const rows = data.results.filter(row=>row && typeof row.restaurantId==='string');
-      const available = rows.filter(row=>row.status==='available' && Array.isArray(row.slots) && row.slots.some(slot=>/^\d{2}:\d{2}$/.test(slot.time)));
-      const rest = rows.filter(row=>!available.includes(row));
-      const pending = rows.filter(row => row.status === 'pending').length;
-      const checked = new Date(data.checkedAt || NaN);
-      const updated = Number.isNaN(checked.getTime()) ? '' : ` · Kontrollerat ${checked.toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'})}`;
-      status.textContent = !complete ? `${available.length ? available.length + ' restauranger har lediga tider · ' : ''}Söker vidare${pending ? ' · ' + pending + ' restauranger återstår' : '…'}` : !rows.some(row=>['available','unavailable'].includes(row.status)) ? 'Vi kunde inte kontrollera lediga tider här ännu. Öppna restaurangens bokning nedan.' : available.length ? `${available.length} ${available.length===1?'restaurang har':'restauranger har'} lediga tider${updated}` : `Inga lediga tider hittades i de system vi kunde kontrollera${updated}. Prova en annan tid eller dag.`;
-      const cards = available.map(row=>`<article class="availability-card" data-result-key="${escapeHTML(row.restaurantId)}"><div class="availability-card-head"><div><p class="availability-city">${escapeHTML(row.city || query.get('city'))}</p><h2><a href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${escapeHTML(row.restaurant || row.name || 'Restaurang')}</a></h2><p class="availability-provider">Via ${escapeHTML(row.provider || 'restaurangens bokningssystem')}</p></div><span class="availability-badge">Lediga tider</span></div><div class="availability-slots" aria-label="Lediga tider för ${escapeHTML(row.restaurant || row.name)}">${row.slots.filter(slot=>/^\d{2}:\d{2}$/.test(slot.time)).map(slot=>`<a href="${escapeHTML(bookingLink(row,slot,query))}" class="availability-slot" aria-label="Fortsätt boka ${escapeHTML(row.restaurant || row.name)} klockan ${escapeHTML(slot.time)}">${escapeHTML(slot.time)}<span aria-hidden="true"> ↗</span></a>`).join('')}</div><p class="availability-card-note">${row.partial ? 'Visar hittade tider från en del av restaurangens alternativ. ' : ''}${row.slots.some(slot => slot.requiresPrepayment) ? 'Förskottsbetalning kan krävas för vissa alternativ. ' : row.slots.some(slot => slot.requiresCard) ? 'Kortgaranti kan krävas för vissa alternativ. ' : ''}${row.slots.some(slot => slot.paymentRequirement === 'mixed') ? 'Villkoren varierar mellan alternativen vid samma tid. ' : ''}Fortsätt till bokningen för att välja bord och se villkor.</p></article>`).join('');
-      const labels = {pending:'Kontrollerar lediga tider…',unsupported:'Kan inte kontrolleras här ännu',error:'Kunde inte hämta tider',unavailable:'Inga lediga tider i sökningen'};
-      const markup = cards + (rest.length ? `<details class="availability-other" ${available.length?'':'open'}><summary>Övriga restauranger (${rest.length})</summary><ul>${rest.map(row=>`<li><div><a href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${escapeHTML(row.restaurant || row.name || 'Restaurang')}</a><p>${labels[row.status] || 'Tillgänglighet kunde inte bekräftas'}</p></div><a class="availability-detail" href="#/restaurant/${encodeURIComponent(row.restaurantId)}">Visa restaurang <span aria-hidden="true">→</span></a></li>`).join('')}</ul></details>` : '');
-      reconcile(rows.length ? markup : complete ? '<p class="availability-empty">Vi har ännu inga sökbara restauranger här. Du kan fortfarande utforska destinationens restauranger i Velvet.</p>' : '');
+      renderResults(data, query);
+      cache(query, data);
       if (complete) break;
       if (typeof data.searchId !== 'string' || !/^[a-zA-Z0-9_-]{1,100}$/.test(data.searchId)) throw new Error('invalid_search_id');
       endpoint = `${apiBase.replace(/\/$/,'')}/availability/jobs/${encodeURIComponent(data.searchId)}`;
@@ -108,12 +161,23 @@ export function mountAvailabilitySearch(container, { restaurants, apiBase = '', 
       }
     } catch(error) {
       if (destroyed || current!==revision || (error.name==='AbortError' && !timedOut)) return;
-      status.textContent = timedOut ? 'Sökningen tog för lång tid. Resultaten som redan hittats visas här; återstående restauranger är inte kontrollerade. Sök igen för nya uppgifter.' : receivedPartial ? 'Sökningen avbröts. Resultaten som redan hittats visas här; återstående restauranger kunde inte kontrolleras. Försök igen.' : 'Det gick inte att hämta lediga tider just nu. Försök igen.';
+      status.textContent = tr(timedOut ? 'timeout' : receivedPartial ? 'interrupted' : 'failure');
     } finally {
       clearTimeout(deadline);
-      if (!destroyed && current===revision) { results.setAttribute('aria-busy','false'); button.textContent='Sök lediga bord →'; }
+      if (!destroyed && current===revision) { results.setAttribute('aria-busy','false'); setButtonBusy(false); }
     }
   }
   form.addEventListener('submit', submit);
-  return { destroy() { destroyed=true; revision++; controller?.abort(); form.removeEventListener('submit',submit); form.removeEventListener('change',invalidate); } };
+  try {
+    const query = readQuery();
+    const saved = JSON.parse(sessionStorage.getItem(SEARCH_CACHE_KEY));
+    if (availabilityCacheMatches(saved, query.toString())) {
+      renderResults(saved.data, query);
+      if (saved.data.complete === false && typeof saved.data.searchId === 'string' && /^[a-zA-Z0-9_-]{1,100}$/.test(saved.data.searchId)) {
+        runSearch(query, saved.data.searchId);
+      }
+    }
+  } catch {}
+
+  return { destroy() { destroyed=true; revision++; controller?.abort(); form.removeEventListener('submit',submit); form.removeEventListener('change',invalidate); form.removeEventListener('input',invalidate); } };
 }

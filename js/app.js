@@ -1,7 +1,12 @@
 import {getBookingCopy, formatBookingCopy} from './booking-copy.js';
+import { restaurantCopy } from './restaurant-copy.js?v=175';
+import { primarySection, isDiscoveryList, safeDiscoveryReturn } from './navigation-state.js';
+import { authOptions, authCopy } from './auth-options.js';
 import { parseBookingSelection, withBookingSelection } from './booking-selection.js';
 import { mountBookingReport } from './booking-report.js';
-import { mountAvailabilitySearch } from './availability-search.js';
+import { uxT } from './ux-copy.js?v=175';
+import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo, resolveAuthReturn, joinResponse } from './ux-booking.js?v=175';
+import { mountAvailabilitySearch } from './availability-search.js?v=174';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
 import { mountBokabordMirror } from "./bokabord-mirror.js";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
@@ -13,6 +18,28 @@ import { loadFaceApi, detectPassportFace, watchBlink, stopLiveness, requestLiven
 // ---------- Data ----------
 let DESTINATIONS = [];
 let VENUES = [];
+// Shared discovery index; fetch once per page, retry after a failed request.
+let RESTAURANT_INDEX = [];
+let restaurantIndexPromise = null;
+async function ensureRestaurantIndex() {
+  if (!restaurantIndexPromise) restaurantIndexPromise = (async () => {
+    await getEmbeddedBooking(null);
+    const response = await fetch("data/restaurants.json", { cache: "no-cache" });
+    if (!response.ok) throw new Error("restaurant_index_failed");
+    const data = await response.json();
+    RESTAURANT_INDEX = Object.entries(data.destinations || {}).flatMap(([code, row]) =>
+      publishableRestaurants(row.restaurants || []).map(restaurant => ({ ...restaurant, destinationCode: code, destinationName: row.destination || code }))
+    );
+    return RESTAURANT_INDEX;
+  })().catch(() => { restaurantIndexPromise = null; return RESTAURANT_INDEX; });
+  return restaurantIndexPromise;
+}
+const restaurantFavId = id => "restaurant:" + id;
+const favoriteEntry = id => id.startsWith("restaurant:")
+  ? RESTAURANT_INDEX.find(r => restaurantFavId(r.placeId) === id)
+  : VENUES.find(v => v.venue_id === id);
+const favoriteCard = item => item.placeId ? restaurantCardHTML(item) : venueCard(item);
+const favoriteId = item => item.placeId ? restaurantFavId(item.placeId) : item.venue_id;
 let VENUE_IMAGES = {}; // venue_id -> bild från ställets egen hemsida (data/venue-images.json)
 let VENUE_IMAGE_SOURCES = {}; // venue_id -> verifierad officiell källa
 let VENUE_YOUTUBE = {}; // venue_id -> mest visade officiella klipp (data/venue-youtube.json)
@@ -794,7 +821,66 @@ const SOCIALS = [
   { id: "snapchat", label: "Snapchat", icon: "https://cdn.simpleicons.org/snapchat/111111" },
 ];
 function socialCompactButton(s, attr) {
-  return `<button type="button" class="social-btn social-btn-compact" ${attr}="${s.id}" aria-label="Fortsätt med ${esc(s.label)}" title="${esc(s.label)}"><span class="social-logo-tile social-logo-${esc(s.id)}"><img src="${esc(s.icon)}" alt="" aria-hidden="true"></span><span>${esc(s.label)}</span></button>`;
+  return `<button type="button" class="social-btn social-btn-compact" ${attr}="${s.id}" aria-label="${esc(authCopy('continueWith', currentLang()).replace('{provider}', s.label))}" title="${esc(s.label)}"><span class="social-logo-tile social-logo-${esc(s.id)}"><img src="${esc(s.icon)}" alt="" aria-hidden="true"></span><span>${esc(s.label)}</span></button>`;
+}
+function mountAuthChoices(root, { onPasskey = () => {} } = {}) {
+  if (!root) return;
+  const environment = { hostname: location.hostname, secureContext: window.isSecureContext === true,
+    publicKeyCredential: !!window.PublicKeyCredential, credentials: !!navigator.credentials };
+  const text = key => authCopy(key, currentLang());
+  const capability = authOptions(null, environment);
+  root.innerHTML = `<p>${esc(text('intro'))}</p>
+    ${capability.passkey ? `<button type="button" class="btn btn-gold phone-login" data-auth-passkey>${esc(text('passkey'))}</button><p class="stepper-hint">${esc(text('passkeyHint'))}</p>` : `<p class="stepper-hint">${esc(text(capability.passkeyReason))}</p>`}
+    <div data-auth-providers></div><p data-auth-error role="alert"></p>`;
+  const providers = root.querySelector('[data-auth-providers]');
+  const error = root.querySelector('[data-auth-error]');
+  let revision = 0;
+  let busy = false;
+  const refresh = async () => {
+    const request = ++revision;
+    const restore = providers.contains(document.activeElement);
+    providers.innerHTML = `<p role="status">${esc(text('loading'))}</p>`;
+    error.textContent = '';
+    let timer;
+    const config = await Promise.race([
+      apiJSON('/pay/config').catch(() => null),
+      new Promise(resolve => { timer = setTimeout(() => resolve(null), 5000); }),
+    ]);
+    clearTimeout(timer);
+    if (!root.isConnected || request !== revision) return;
+    const options = authOptions(config, environment);
+    providers.innerHTML = options.providerState === 'error'
+      ? `<p role="status">${esc(text('error'))}</p><button type="button" class="btn btn-ghost" data-auth-retry>${esc(text('retry'))}</button>`
+      : options.providers.length
+        ? `<div class="social-grid social-grid-onetap">${SOCIALS.filter(s => options.providers.includes(s.id)).map(s => socialCompactButton(s, 'data-auth-provider')).join('')}</div>`
+        : `<p role="status">${esc(text('empty'))}</p><button type="button" class="btn btn-ghost" data-auth-retry>${esc(text('retry'))}</button>`;
+    if (busy) providers.querySelectorAll('button').forEach(button => { button.disabled = true; });
+    if (restore) providers.querySelector('button')?.focus();
+  };
+  root.addEventListener('click', async event => {
+    const button = event.target.closest('button');
+    if (!button || !root.contains(button) || busy) return;
+    if (button.hasAttribute('data-auth-retry')) { refresh(); return; }
+    if (!button.hasAttribute('data-auth-provider') && !button.hasAttribute('data-auth-passkey')) return;
+    busy = true;
+    error.textContent = '';
+    root.querySelectorAll('button').forEach(el => { el.disabled = true; });
+    try {
+      if (button.hasAttribute('data-auth-passkey')) {
+        if (await loginWithPasskey()) { onPasskey(); return; }
+      } else {
+        const result = await loginWithSocial(button.dataset.authProvider);
+        if (result?.oauth) return;
+      }
+      if (root.isConnected) error.textContent = text('failed');
+    } catch {
+      if (root.isConnected) error.textContent = text('failed');
+    } finally {
+      busy = false;
+      root.querySelectorAll('button').forEach(el => { el.disabled = false; });
+    }
+  });
+  refresh();
 }
 let userMem = null;
 function loadUser() {
@@ -960,8 +1046,9 @@ async function loginWithPasskey() {
   saveUser(user);
   let returnTo = "";
   try {
-    returnTo = sessionStorage.getItem("velvet_after_login") || "";
+    returnTo = resolveAuthReturn({explicit:sessionStorage.getItem("velvet_after_login"), fallback:user.idvStatus === "verified" ? "#/" : "#/verify"});
     sessionStorage.removeItem("velvet_after_login");
+    sessionStorage.removeItem("velvet_oauth_from");
   } catch {}
   location.hash = returnTo || (user.idvStatus === "verified" ? "#/" : "#/verify");
   return user;
@@ -1165,8 +1252,7 @@ async function publishTable(table) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(table),
   });
-  if (remote?.error) return remote;
-  return remote?.table || table;
+  return remote || { error: 'unavailable' };
 }
 async function listOpenTables() {
   const remote = await apiJSON("/tables");
@@ -1191,10 +1277,8 @@ async function joinOpenTable(id, hint) {
         body: JSON.stringify({ user: u }),
       });
       const data = await r.json().catch(() => ({}));
-      if (r.status === 403) return { error: data.error || "idv_required", openFor: data.openFor, minAge: data.minAge, ageYears: data.ageYears };
-      if (r.status === 409) return { error: "full" };
-      if (data.table) return { table: data.table, already: data.already };
-    } catch {}
+      return joinResponse(r.status, data, id);
+    } catch { return {error:'unavailable'}; }
   }
   const list = loadLocalTables();
   const tb = list.find((x) => x.id === id);
@@ -1214,6 +1298,19 @@ async function joinOpenTable(id, hint) {
   if (tb.openLeft === 0) tb.status = "full";
   saveLocalTables(list);
   return { table: decorateLocalTable(tb) };
+}
+
+function handleJoinFailure(result, returnTo, venue, button) {
+  if (result?.table) return false;
+  if (button) button.disabled = false;
+  const error = result?.error;
+  if (error === 'auth') openOnboarding({dismissable:true,phase:'auth',returnTo});
+  else if (error === 'idv_required' || error === 'card_required') {
+    rememberAfterIdv(returnTo); location.hash = error === 'card_required' ? '#/card' : '#/verify';
+  } else if (error === 'too_young') showToast(tooYoungText(result,venue));
+  else if (error === 'seat_pref') showToast(t('seatPref').replace('{who}',openForLabel(result.openFor).toLowerCase()));
+  else showToast(uxT(error === 'full' ? 'joinFull' : error === 'missing' ? 'joinMissing' : 'joinUnavailable'));
+  return true;
 }
 
 function decorateLocalTable(tb) {
@@ -1530,13 +1627,13 @@ function promoterCardHTML(p, opts = {}) {
   <div class="person-row">
     ${avatar}
     <div class="person-info">
-      <div class="person-name">${esc(name)} <span class="chip-mini">${esc(t("promoterVerified"))}</span></div>
+      <div class="person-name">${esc(name)} <span class="chip-mini">${esc(t("promoter"))}</span></div>
       <div class="person-meta">
         ${p.provider ? `<span class="soc-pill">${esc(p.provider)}</span>` : ""}
         ${handle ? (p.socialUrl
           ? `<a class="person-handle" href="${esc(p.socialUrl)}" target="_blank" rel="noopener">${esc(handle)}</a>`
           : `<span class="person-handle">${esc(handle)}</span>`) : ""}
-        <span class="idv-badge ok">✓ ${esc(badge)}</span>
+        <span class="idv-badge${p.idv === "verified" ? " ok" : ""}">${p.idv === "verified" ? "✓ " : ""}${esc(badge)}</span>
         ${where ? `<span>${esc(where)}</span>` : ""}
       </div>
     </div>
@@ -1639,7 +1736,7 @@ function promoterLockHTML(kind) {
   if (kind === "card") {
     return `
     <div class="promo-lock">
-      <p class="idv-badge ok">${esc(t("payingCustomer"))}</p>
+      <p class="idv-badge">${esc(uxT("cardRequired"))}</p>
       <h2>${esc(t("cardTitle"))}</h2>
       <p>${esc(t("cardLockedBody"))}</p>
       <a class="btn btn-gold" href="#/card" data-nav id="ch-card">${esc(t("cardCta"))}</a>
@@ -1647,7 +1744,7 @@ function promoterLockHTML(kind) {
   }
   return `
     <div class="promo-lock">
-      <p class="idv-badge ok">${esc(t("verifiedMember"))}</p>
+      <p class="idv-badge">${esc(uxT("verificationRequired"))}</p>
       <h2>${esc(t("verifiedPerkPromoter"))}</h2>
       <p>${esc(t("promoterLockedBody"))}</p>
       <a class="btn btn-gold" href="#/verify" data-nav id="ch-verify">${esc(t("verifyCta"))}</a>
@@ -2015,7 +2112,7 @@ function renderHome() {
   let knownGeo = loadGeo();
   if (!knownGeo && (isPreviewHost() || /^(?:localhost|127\.0\.0\.1)$/i.test(location.hostname))) {
     knownGeo = locateByTimezone();
-    if (knownGeo) saveGeo(knownGeo.lat, knownGeo.lng);
+    // A timezone suggestion is not a measured position; do not persist it as GPS.
   }
   const geoNearest = knownGeo ? nearestDestination(knownGeo.lat, knownGeo.lng) : null;
   const localDest = homeDestination() || geoNearest?.d || null;
@@ -2024,73 +2121,43 @@ function renderHome() {
     : [];
   if (localDest && !loadNight().dest) saveNight({ dest: localDest.code, date: loadNight().date });
   view().innerHTML = `
-  <section class="hero">
+  <section class="hero home-clean">
     <div class="hero-media" id="hero-media" aria-hidden="true"></div>
     <div class="hero-kicker">${esc(t("heroKicker"))}</div>
     <h1>${esc(t("heroTitle1"))}<br><em>${esc(t("heroTitle2"))}</em></h1>
     <p>${esc(t("heroP"))}</p>
     <form class="home-discovery" id="home-discovery-form" role="search">
       <span class="home-discovery-pin" aria-hidden="true">⌖</span>
-      <label class="sr-only" for="home-discovery-input">Sök destination eller ställe</label>
-      <input id="home-discovery-input" list="home-destination-list" placeholder="Vart vill du gå?" autocomplete="off">
+      <label class="sr-only" for="home-discovery-input">${esc(t("heroSearchLabel"))}</label>
+      <input id="home-discovery-input" list="home-destination-list" placeholder="${esc(t("heroSearchPlaceholder"))}" autocomplete="off">
       <datalist id="home-destination-list">${pubD.map((d) => `<option value="${esc(d.name)}">${esc(d.country)}</option>`).join("")}</datalist>
-      <button type="submit">Utforska</button>
+      <button type="submit">${esc(t("navSearch"))}</button>
     </form>
-    <div class="home-category-links" aria-label="Populära kategorier">
-      <a href="#/restaurants" data-nav>Restauranger</a><a href="#/venues?cat=nightclub" data-nav>Nattklubbar</a><a href="#/venues?cat=beach" data-nav>Beach clubs</a><a href="#/map" data-nav>Karta</a>
+    <div class="home-category-links" aria-label="${esc(t("popularCategories"))}">
+      <a href="#/restaurants" data-nav>${esc(t("navRestaurants"))}</a><a href="#/venues?cat=nightclub" data-nav>${esc(t("navNightclubs"))}</a><a href="#/venues?cat=beach" data-nav>${esc(t("navBeachClubs"))}</a>
     </div>
-    <div class="hero-cta">
-      <button type="button" class="btn btn-gold" id="walk-start">${esc(t("walkCta"))}</button>
+    <div class="hero-cta home-intent">
+      <a class="btn btn-gold" href="#/availability${localDest ? `?city=${encodeURIComponent(localDest.name)}` : ""}" data-nav>${esc(t("navFindTable"))}</a>
       <a class="btn btn-ghost" href="#/destinations" data-nav>${esc(t("seeDest"))}</a>
+      <a class="btn btn-ghost" href="#/open" data-nav>${esc(t("navSocial"))}</a>
     </div>
     <p class="hero-credit"><a href="${esc(HERO_VIDEO.credit)}" target="_blank" rel="noopener">${esc(t("videoPexels"))}</a></p>
   </section>
 
   <section class="section home-nearby" id="home-nearby">
     <div class="home-location-bar">
-      <div><span class="home-location-pin" aria-hidden="true">⌖</span><strong>${esc(localDest ? `${t("geoNearest")} ${localDest.name}` : t("nearMe"))}</strong><small>${esc(localDest ? `${localVenues.length} ställen visas först` : t("geoHint"))}</small></div>
-      <button type="button" class="btn btn-gold btn-sm" id="home-locate">${esc(localDest ? t("geoRetry") : t("geoUse"))}</button>
+      <div><span class="home-location-pin" aria-hidden="true">⌖</span><strong>${esc(localDest ? t("localPlaces").replace("{name}", localDest.name) : t("nearMe"))}</strong><small>${esc(localDest ? t("explorePlacesHint") : t("geoHint"))}</small></div>
+      <button type="button" class="btn btn-gold btn-sm" id="home-locate">${esc(t("geoUse"))}</button>
     </div>
-    ${localDest ? `<div class="section-head"><div><h2>${esc(localDest.name)} först</h2><div class="sub">Restauranger och klubbar närmast din valda plats</div></div><a class="link-gold" href="#/destination/${encodeURIComponent(localDest.code)}" data-nav>${esc(t("explore"))} →</a></div>
+    ${localDest ? `<div class="section-head"><div><h2>${esc(t("localPlaces").replace("{name}", localDest.name))}</h2><div class="sub">${esc(t("explorePlacesHint"))}</div></div><a class="link-gold" href="#/destination/${encodeURIComponent(localDest.code)}" data-nav>${esc(t("explore"))} →</a></div>
       <div class="vibe-rail home-local-rail">${localVenues.length ? localVenues.map((v, i) => venueCard(v, { vibe: true, eager: i < 3 })).join("") : `<p class="events-meta">${esc(t("noHits"))}</p>`}</div>` : ""}
   </section>
-  <section class="section home-verify" id="home-verify">
-    <div class="section-head"><div><h2>Verifiera dig</h2><div class="sub">Ett tryck för att börja · pass och selfie görs bara första gången</div></div></div>
-    ${loadUser() ? `
-      <p class="stepper-hint">${idvStatus() === "verified" ? "✓ Verifieringen är klar på den här enheten" : "Kontot är anslutet · slutför pass och selfie"}</p>
-      <a class="btn btn-gold" href="${idvStatus() === "verified" ? "#/account" : "#/verify"}" data-nav>${idvStatus() === "verified" ? "Öppna konto" : "Fortsätt verifieringen"}</a>
-    ` : `
-      <p class="stepper-hint social-honesty auth-real-note">🔒 Riktig säker inloggning · VELVET sparar aldrig ditt lösenord</p>
-      <button type="button" class="btn btn-gold phone-login" id="home-passkey">Face ID / Touch ID / skärmlås</button>
-      <div class="social-grid social-grid-onetap">
-        ${SOCIALS.map((s) => socialCompactButton(s, "data-home-soc")).join("")}
-      </div>
-    `}
-  </section>
-
   <section class="section home-restaurants" id="home-restaurants-section">
     <div class="section-head">
-      <div><h2>${esc(t("navRestaurants"))}</h2><div class="sub" id="home-restaurants-count">Restauranger i 39 destinationer</div></div>
+      <div><h2>${esc(t("navRestaurants"))}</h2><div class="sub" id="home-restaurants-count">${esc(t("restaurantsSub"))}</div></div>
       <a class="link-gold" href="#/restaurants" data-nav>${esc(t("navRestaurants"))} →</a>
     </div>
     <div id="home-restaurants"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("restaurantsLoading"))}</p></div>
-  </section>
-
-  <section class="section night-section" id="night-home">
-    <div class="section-head">
-      <div><h2>${esc(t("tablesTitle"))}</h2><div class="sub">${esc(t("tablesSub"))}</div></div>
-      <a class="link-gold" href="${openNightHref(loadNight().dest, loadNight().date)}" data-nav>${esc(t("navOpen"))} →</a>
-    </div>
-    <div class="night-pick">
-      <label class="night-dest-label">${esc(t("tablesCity"))}
-        <select id="home-night-dest" aria-label="${esc(t("tablesCity"))}">
-          <option value="">${esc(t("allDest"))}</option>
-          ${orderedPublicDestinations().map((x) => `<option value="${esc(x.code)}" ${loadNight().dest === x.code ? "selected" : ""}>${esc(x.name)}</option>`).join("")}
-        </select>
-      </label>
-    </div>
-    <div class="avail-chips" id="home-night-chips" role="list">${dateChipsHTML(loadNight().date, destByCodeOrName(loadNight().dest))}</div>
-    <div class="night-board" id="home-night-list"></div>
   </section>
 
   <section class="section vibe-section" id="vibe-walk">
@@ -2110,12 +2177,7 @@ function renderHome() {
     <div class="dest-grid dest-grid-walk">${tier1.slice(0, 8).map(destCard).join("")}</div>
   </section>
 
-  <div class="stats">
-    <div class="stat"><div class="stat-num">${pubD.length}</div><div class="stat-label">${esc(t("statDests"))}</div></div>
-    <div class="stat"><div class="stat-num">${pubV.length}</div><div class="stat-label">${esc(t("statVenues"))}</div></div>
-    <div class="stat"><div class="stat-num">${pubV.filter((v) => v.priority_score >= 90).length}</div><div class="stat-label">${esc(t("statPrio"))}</div></div>
-    <div class="stat"><div class="stat-num">${pubV.filter((v) => statusInfo(v.research_status).cls === "tag-verified").length}</div><div class="stat-label">${esc(t("verified"))}</div></div>
-  </div>`;
+`;
   bindDestCards();
   bindVenueCards();
   mountHomeRestaurants();
@@ -2133,46 +2195,15 @@ function renderHome() {
       renderHome();
     }, () => { showToast(t("geoError")); btn.disabled = false; btn.textContent = t("geoUse"); });
   });
-  $("#home-passkey")?.addEventListener("click", () => loginWithPasskey());
-  document.querySelectorAll("[data-home-soc]").forEach((el) => el.addEventListener("click", async () => {
-    el.disabled = true;
-    const r = await loginWithSocial(el.dataset.homeSoc).catch(() => null);
-    if (!r?.oauth) { showToast(socialTrustCopy().unavailable); el.disabled = false; }
-  }));
   paintVibeRail();
-  const paintHomeNight = async () => {
-    const n = loadNight();
-    const dd = destByCodeOrName(n.dest);
-    const chips = $("#home-night-chips");
-    if (chips) chips.innerHTML = dateChipsHTML(n.date, dd);
-    chips?.querySelectorAll("[data-avail-date]").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        saveNight({ dest: n.dest, date: btn.dataset.availDate });
-        paintHomeNight();
-      });
-    });
-    const more = document.querySelector(".night-section .link-gold");
-    if (more) more.setAttribute("href", openNightHref(n.dest, n.date));
-    if (dd) await hydrateNight(dd, n.date);
-    const tables = (await listOpenTables()).map((tb) => tb.members ? tb : decorateLocalTable(tb));
-    paintNightList($("#home-night-list"), dd, n.date, { limit: 6, openTables: tables });
-  };
-  $("#home-night-dest")?.addEventListener("change", (e) => {
-    saveNight({ dest: e.target.value, date: loadNight().date });
-    paintHomeNight();
-  });
-  paintHomeNight();
   $("#walk-start")?.addEventListener("click", () => {
     document.getElementById("vibe-walk")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
   $("#home-discovery-form")?.addEventListener("submit", (event) => {
     event.preventDefault();
-    const query = fold($("#home-discovery-input")?.value || "").trim();
+    const query = ($("#home-discovery-input")?.value || "").trim();
     if (!query) { $("#home-discovery-input")?.focus(); return; }
-    const destination = DESTINATIONS.find((d) => fold(d.name) === query) || DESTINATIONS.find((d) => fold(`${d.name} ${d.country}`).includes(query));
-    if (destination) { location.hash = `#/destination/${encodeURIComponent(destination.code)}`; return; }
-    const venue = VENUES.find((v) => fold(`${v.name} ${v.destination} ${v.category}`).includes(query));
-    location.hash = venue ? `#/venue/${encodeURIComponent(venue.venue_id)}` : `#/venues?q=${encodeURIComponent($("#home-discovery-input")?.value || "")}`;
+    openSearch(query);
   });
   document.querySelectorAll("[data-vibe]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -2282,7 +2313,6 @@ function destCard(d) {
   const cover = coverVenueForDest(d);
   return `
   <div class="dest-card" data-code="${esc(d.code)}" role="link" tabindex="0" aria-label="${esc(t("destCardAria").replace("{name}", d.name))}">
-    <span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span>
     <div class="dest-cover${cover ? "" : " img-fail"}">
       ${coverImgHTML(cover && cover.url)}
       <div class="dest-emblem" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
@@ -2291,7 +2321,6 @@ function destCard(d) {
     <h3>${esc(d.name)}</h3>
     <div class="dest-country">${esc(d.country)} · ${esc(d.region)}</div>
     <div class="dest-meta"><span>${esc(t("seasonShort"))} <b>${esc(d.peak_season)}</b></span>${(() => { const km = distanceToDest(d); return km != null ? `<span class="dest-km">~${fmtKm(km)} km</span>` : ""; })()}</div>
-    ${pips(d.luxury)}
   </div>`;
 }
 
@@ -2338,7 +2367,7 @@ function restaurantCardHTML(r) {
       ${stars}
     </div>
     ${reviews > 0 ? `<p class="restaurant-review-count">${esc(reviews.toLocaleString(currentLang()))} ${esc(t("restaurantReviews"))}</p>` : ""}
-    <div class="restaurant-actions">${detail}${site}${maps}</div>
+    <div class="restaurant-actions">${detail}${r.placeId ? favBtnHTML(restaurantFavId(r.placeId), r.name) : ""}${site}${maps}</div>
   </article>`;
 }
 
@@ -2347,7 +2376,7 @@ function restaurantMediaHTML(r) {
   const image = images[0] || "";
   if (image) {
     const fallbacks = esc(encodeURIComponent(JSON.stringify(images.slice(1))));
-    return `<a class="restaurant-media" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav><img src="${esc(image)}" data-fallbacks="${fallbacks}" data-fallback-index="0" alt="${esc(r.name)}" loading="lazy" onerror="const xs=JSON.parse(decodeURIComponent(this.dataset.fallbacks||'%5B%5D'));const i=Number(this.dataset.fallbackIndex||0);if(xs[i]){this.dataset.fallbackIndex=String(i+1);this.src=xs[i]}else{this.closest('.restaurant-card')?.remove()}"><span>Visa restaurang</span></a>`;
+    return `<a class="restaurant-media" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav><img src="${esc(image)}" data-fallbacks="${fallbacks}" data-fallback-index="0" alt="${esc(r.name)}" loading="lazy" onerror="const xs=JSON.parse(decodeURIComponent(this.dataset.fallbacks||'%5B%5D'));const i=Number(this.dataset.fallbackIndex||0);if(xs[i]){this.dataset.fallbackIndex=String(i+1);this.src=xs[i]}else{this.hidden=true;this.closest('.restaurant-media')?.classList.add('restaurant-media-placeholder')}"><span>Visa restaurang</span></a>`;
   }
   const initial = String(r.name || "R").trim().slice(0, 1).toUpperCase();
   return `<a class="restaurant-media restaurant-media-placeholder" href="#/restaurant/${encodeURIComponent(r.placeId)}" data-nav aria-label="Visa ${esc(r.name)}"><b aria-hidden="true">${esc(initial)}</b><span>${esc(r.name)}</span><small>Officiell originalbild verifieras</small></a>`;
@@ -2368,23 +2397,28 @@ async function mountHomeRestaurants() {
   let data = null;
   try { const res = await fetch("data/restaurants.json", { cache: "no-store" }); if (res.ok) data = await res.json(); } catch {}
   const rows = data?.destinations || {};
-  const total = Object.values(rows).reduce((sum, destination) => sum + (destination.restaurants || []).length, 0);
+  const total = Object.values(rows).reduce((sum, destination) => sum + publishableRestaurants(destination.restaurants || []).length, 0);
   const counter = document.getElementById("home-restaurants-count");
-  if (counter && total) counter.textContent = `${total.toLocaleString(currentLang())} restauranger i ${Object.keys(rows).length} destinationer`;
+  if (counter && total) counter.textContent = `${total.toLocaleString(currentLang())} restauranger i ${Object.values(rows).filter(d => publishableRestaurants(d.restaurants || []).length).length} destinationer`;
   const localCode = homeDestination()?.code || (() => { const g = loadGeo(); return g ? nearestDestination(g.lat, g.lng)?.d?.code : ""; })();
   const featuredCodes = [localCode, "TYO", "HKG", "SYD", "CPT", "RIO", "CDM", "LIS", "AMS"].filter((code, i, all) => code && all.indexOf(code) === i);
-  const featured = featuredCodes.flatMap((code) => publishableRestaurants(rows[code]?.restaurants || []).slice(0, 1));
+  const localRestaurants = publishableRestaurants(rows[localCode]?.restaurants || []);
+  const featured = localRestaurants.length ? localRestaurants.slice(0, 6) : featuredCodes.flatMap((code) => publishableRestaurants(rows[code]?.restaurants || []).slice(0, 1)).slice(0, 6);
   root.innerHTML = featured.length
     ? `<div class="restaurant-grid">${featured.map(restaurantCardHTML).join("")}</div>`
     : `<div class="empty-state"><p>${esc(t("restaurantsEmpty"))}</p></div>`;
+  bindFavButtons(root);
 }
 
 async function renderRestaurants() {
+  const catalogRoute = location.hash;
   await getEmbeddedBooking(null);
+  if (location.hash !== catalogRoute) return;
   setTitle(t("navRestaurants"));
   view().innerHTML = `<section class="section"><div class="section-head"><div><h1>${esc(t("navRestaurants"))}</h1><div class="sub">${esc(t("restaurantsSub"))}</div></div></div><p class="events-meta restaurant-loading"><span class="spinner spinner-sm"></span> ${esc(t("restaurantsLoading"))}</p></section>`;
   let data = null;
   try { const r = await fetch("data/restaurants.json", { cache: "no-store" }); if (r.ok) data = await r.json(); } catch {}
+  if (location.hash !== catalogRoute) return;
   const rows = data?.destinations || {};
   const uniqueDestinations = DESTINATIONS.filter((d, index, all) => all.findIndex((candidate) => candidate.code === d.code) === index);
   const queryIndex = location.hash.indexOf("?");
@@ -2393,14 +2427,21 @@ async function renderRestaurants() {
   const selectedDestination = uniqueDestinations.find((d) => d.code === requestedDestination || d.name.toLowerCase() === requestedDestination.toLowerCase()) || null;
   const groups = uniqueDestinations.filter((d) => !selectedDestination || d.code === selectedDestination.code).map((d) => ({ d, restaurants: publishableRestaurants(rows[d.code]?.restaurants || []) })).filter((x) => x.restaurants.length);
   view().innerHTML = `<section class="section restaurant-directory"><div class="section-head"><div><h1>${esc(t("navRestaurants"))}${selectedDestination ? ` i ${esc(selectedDestination.name)}` : ""}</h1><div class="sub">${esc(t("restaurantsSub"))}</div></div><span class="count">${groups.reduce((n, x) => n + x.restaurants.length, 0)}</span></div>
-    <p><a class="btn btn-gold" href="#/availability" data-nav>Sök lediga bord</a></p><div class="filters restaurant-filters"><select id="restaurant-dest-filter" aria-label="${esc(t("filterDest"))}"><option value="">${esc(t("allDest"))}</option>${uniqueDestinations.filter((d) => publishableRestaurants(rows[d.code]?.restaurants || []).length).map((d) => `<option value="${esc(d.code)}" ${selectedDestination?.code === d.code ? "selected" : ""}>${esc(d.name)}</option>`).join("")}</select></div>
-    <div class="restaurant-jump">${groups.map(({ d }) => `<a href="#restaurant-${esc(d.code)}">${esc(d.name)}</a>`).join("")}</div>
+    <p><a class="btn btn-gold" href="#/availability${selectedDestination ? `?city=${encodeURIComponent(rows[selectedDestination.code]?.destination || selectedDestination.name)}` : ""}" data-nav>Sök lediga bord</a></p><div class="filters restaurant-filters"><select id="restaurant-dest-filter" aria-label="${esc(t("filterDest"))}"><option value="">${esc(t("allDest"))}</option>${uniqueDestinations.filter((d) => publishableRestaurants(rows[d.code]?.restaurants || []).length).map((d) => `<option value="${esc(d.code)}" ${selectedDestination?.code === d.code ? "selected" : ""}>${esc(d.name)}</option>`).join("")}</select></div>
+    <div class="restaurant-jump">${groups.map(({ d }) => `<button type="button" class="btn btn-ghost btn-sm" data-restaurant-jump="${esc(d.code)}">${esc(d.name)}</button>`).join("")}</div>
     ${groups.map(({ d, restaurants }) => `<section class="restaurant-city" id="restaurant-${esc(d.code)}"><div class="section-head"><div><h2>${esc(d.name)}</h2><div class="sub">${esc(d.country)}</div></div><a href="#/destination/${encodeURIComponent(d.code)}" data-nav>${esc(t("explore"))} →</a></div><div class="restaurant-grid">${restaurants.map(restaurantCardHTML).join("")}</div></section>`).join("")}
     <p class="restaurant-source">VELVET curated · ${esc(t("restaurantsSub"))}</p></section>`;
+  bindFavButtons(view());
+  view().querySelectorAll("[data-restaurant-jump]").forEach(button => button.addEventListener("click", () => {
+    const heading = document.getElementById("restaurant-" + button.dataset.restaurantJump)?.querySelector("h2");
+    if (!heading) return;
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+    heading.scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+  }));
   document.getElementById("restaurant-dest-filter")?.addEventListener("change", (event) => {
     const code = event.target.value;
     location.hash = code ? `#/restaurants?dest=${encodeURIComponent(code)}` : "#/restaurants";
-    renderRestaurants();
   });
 }
 
@@ -2427,12 +2468,14 @@ async function mountDestinationRestaurants(d) {
     ? `<div class="restaurant-grid">${restaurants.map(restaurantCardHTML).join("")}</div>
        <p class="restaurant-source">${esc(row.source || "Google Places")} · ${esc(t("restaurantsSub"))}${row.fetchedAt ? ` · ${esc(new Date(row.fetchedAt).toLocaleDateString(currentLang()))}` : ""}</p>`
     : `<div class="empty-state restaurant-empty"><p>${esc(t("restaurantsEmpty"))}</p></div>`;
+  bindFavButtons(root);
 }
 
 async function renderRestaurantDetail(placeId) {
+  const rt = restaurantCopy(currentLang());
   const restaurantRoute = location.hash;
-  setTitle("Restaurang");
-  view().innerHTML = `<section class="section"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm"></span> Laddar restaurang…</p></section>`;
+  setTitle(rt("restaurant"));
+  view().innerHTML = `<section class="section"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm"></span> ${esc(rt("loading"))}</p></section>`;
   let data = null;
   try { const response = await fetch("data/restaurants.json", { cache: "no-store" }); if (response.ok) data = await response.json(); } catch {}
   let restaurant = null;
@@ -2445,7 +2488,7 @@ async function renderRestaurantDetail(placeId) {
   const embeddedBooking = restaurant ? withBookingSelection(await getEmbeddedBooking(restaurant.placeId), bookingSelection) : null;
   if (location.hash !== restaurantRoute) return;
   if (!restaurant) {
-    view().innerHTML = `<section class="section"><div class="empty-state"><h1>Restaurangen hittades inte</h1><p><a class="btn btn-gold" href="#/restaurants" data-nav>Till restauranger</a></p></div></section>`;
+    view().innerHTML = `<section class="section"><div class="empty-state"><h1>${esc(rt("notFound"))}</h1><p><a class="btn btn-gold" href="#/restaurants" data-nav>${esc(rt("backRestaurants"))}</a></p></div></section>`;
     return;
   }
   setTitle(restaurant.name);
@@ -2454,13 +2497,9 @@ async function renderRestaurantDetail(placeId) {
   const socials = [["Instagram", restaurant.instagram], ["Facebook", restaurant.facebook], ["TikTok", restaurant.tiktok]].filter(([, url]) => /^https:\/\//i.test(url || ""));
   const directMenu = /^https:\/\//i.test(restaurant.menuUrl || "");
   const menuHref = directMenu ? restaurant.menuUrl : (/^https:\/\//i.test(restaurant.website || "") ? restaurant.website : restaurant.mapsUrl);
-  const menuViewHref = `#/menu/restaurant/${encodeURIComponent(restaurant.placeId)}`;
-  const menuLabel = directMenu ? "Öppna officiell meny" : (restaurant.website ? "Hitta menyn på officiella sidan" : "Meny och information på Google");
-  const menuNote = directMenu
-    ? "Verifierad länk till restaurangens egen meny. Rätter och priser kan ändras."
-    : restaurant.website
-      ? "Restaurangen har ännu ingen separat verifierad menylänk. Öppna deras egen sida för aktuell meny."
-      : "Ingen officiell webbmeny är verifierad ännu. VELVET hittar aldrig på rätter eller priser.";
+  const menuViewHref = `#/menu/restaurant/${encodeURIComponent(restaurant.placeId)}${bookingSelection ? '?' + new URLSearchParams(bookingSelection).toString() : ''}`;
+  const menuLabel = directMenu ? rt("menuOfficial") : (restaurant.website ? rt("menuWebsite") : rt("menuGoogle"));
+  const menuNote = directMenu ? rt("menuNoteOfficial") : restaurant.website ? rt("menuNoteWebsite") : rt("menuNoteMissing");
   const today = new Date().toISOString().slice(0, 10);
   const nextBookableDay = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
   const zinkPilot = restaurant.placeId === "curated-STO-zink-italian-cuisine" && restaurant.bookingProvider === "BokaBord" && restaurant.bookingUrl;
@@ -2481,57 +2520,63 @@ async function renderRestaurantDetail(placeId) {
     : mirrorConfig?.enabled && mirrorConfig.restaurantIds?.includes(restaurant.placeId)
     ? `<div id="bokabord-mirror"></div>`
     : zinkPilot
-    ? `<div class="restaurant-provider-intro"><span>01 · DATUM</span><i></i><span>02 · TID</span><i></i><span>03 · BEKRÄFTA</span></div>
-       <div class="webbridge-badge"><span aria-hidden="true">↔</span><div><strong>VELVET WebBridge</strong><small>Säker koppling till Zinks bokningssystem</small></div><b>PILOT</b></div>
+    ? `<div class="restaurant-provider-intro"><span>01 · ${esc(rt("date"))}</span><i></i><span>02 · ${esc(rt("time"))}</span><i></i><span>03 · ${esc(rt("confirm"))}</span></div>
+       <div class="webbridge-badge"><span aria-hidden="true">↔</span><div><strong>VELVET WebBridge</strong><small>${esc(rt("providerConnection"))}</small></div><b>PILOT</b></div>
        <form id="restaurant-webbridge-search" class="restaurant-book-form restaurant-provider-start">
-         <label>Datum<input name="date" type="date" min="${today}" value="${nextBookableDay}" required></label>
-         <label>Antal gäster<select name="party" required>${Array.from({length: 8}, (_, i) => `<option value="${i + 1}" ${i === 1 ? "selected" : ""}>${i + 1} ${i ? "gäster" : "gäst"}</option>`).join("")}</select></label>
-         <button class="btn btn-gold btn-block restaurant-live-book" type="submit">Visa riktiga lediga tider</button>
+         <label>${esc(rt("date"))}<input name="date" type="date" min="${today}" value="${bookingSelection?.date >= today ? bookingSelection.date : nextBookableDay}" required></label>
+         <label>${esc(rt("guests"))}<select name="party" required>${Array.from({length: 8}, (_, i) => `<option value="${i + 1}" ${i + 1 === (bookingSelection?.party <= 8 ? bookingSelection.party : 2) ? "selected" : ""}>${i + 1} ${esc(rt(i ? "guestPlural" : "guest"))}</option>`).join("")}</select></label>
+         <button class="btn btn-gold btn-block restaurant-live-book" type="submit">${esc(rt("showTimes"))}</button>
        </form>
-       <p class="stepper-hint restaurant-live-note">Tider, gästuppgifter och bekräftelse visas direkt här. Ingen extern sida öppnas.</p>
+       <p class="stepper-hint restaurant-live-note">${esc(rt("inlineBooking"))}</p>
        <div id="restaurant-webbridge-result" aria-live="polite"></div>
-       ${restaurant.phone ? `<a class="restaurant-official-book" href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">Ring restaurangen: ${esc(restaurant.phone)}</a>` : ""}`
+       ${restaurant.phone ? `<a class="restaurant-official-book" href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">${esc(rt("callRestaurant", {phone: restaurant.phone}))}</a>` : ""}`
     : restaurant.bookingDirect && restaurant.bookingUrl
-    ? `<a class="btn btn-gold btn-block restaurant-live-book" href="${esc(restaurant.bookingUrl)}" target="_blank" rel="noopener">Boka hos ${esc(restaurant.name)} nu ↗</a>
-       <p class="stepper-hint restaurant-live-note">Du skickas till ${esc(restaurant.bookingProvider || "restaurangens bokningssystem")} där du ser lediga tider och får en riktig bokningsbekräftelse.</p>
-       ${restaurant.phone ? `<a class="restaurant-official-book" href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">Ring restaurangen: ${esc(restaurant.phone)}</a>` : ""}`
-    : `<form id="restaurant-book-form" class="restaurant-book-form"><label>Datum<input name="date" type="date" min="${today}" required></label><label>Tid<select name="time" required><option value="">Välj tid</option>${["17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00"].map((time) => `<option>${time}</option>`).join("")}</select></label><label>Antal gäster<select name="party" required>${Array.from({length: 12}, (_, i) => `<option value="${i + 1}">${i + 1} ${i ? "gäster" : "gäst"}</option>`).join("")}</select></label><label>Namn<input name="name" autocomplete="name" required></label><label>E-post<input name="email" type="email" autocomplete="email" required></label><label>Önskemål<textarea name="note" rows="3" placeholder="Allergier, barnstol eller annat"></textarea></label><button class="btn btn-gold btn-block" type="submit">Skicka bokningsförfrågan via VELVET</button>${restaurant.bookingUrl ? `<a class="restaurant-official-book" href="${esc(restaurant.bookingUrl)}" target="_blank" rel="noopener">Eller boka direkt hos restaurangen ↗</a>` : ""}</form><div id="restaurant-book-result" aria-live="polite"></div>`;
+    ? `<a class="btn btn-gold btn-block restaurant-live-book" href="${esc(restaurant.bookingUrl)}" target="_blank" rel="noopener">${esc(rt("bookAt", {name: restaurant.name}))} ↗</a>
+       <p class="stepper-hint restaurant-live-note">${esc(rt("externalBooking", {provider: restaurant.bookingProvider || rt("bookingSystem")}))}</p>
+       ${restaurant.phone ? `<a class="restaurant-official-book" href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">${esc(rt("callRestaurant", {phone: restaurant.phone}))}</a>` : ""}`
+    : `<form id="restaurant-book-form" class="restaurant-book-form"><label>${esc(rt("date"))}<input name="date" type="date" min="${today}" required></label><label>${esc(rt("time"))}<select name="time" required><option value="">${esc(rt("chooseTime"))}</option>${["17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00"].map((time) => `<option>${time}</option>`).join("")}</select></label><label>${esc(rt("guests"))}<select name="party" required>${Array.from({length: 12}, (_, i) => `<option value="${i + 1}">${i + 1} ${esc(rt(i ? "guestPlural" : "guest"))}</option>`).join("")}</select></label><label>${esc(rt("name"))}<input name="name" autocomplete="name" required></label><label>${esc(rt("email"))}<input name="email" type="email" autocomplete="email" required></label><label>${esc(rt("requests"))}<textarea name="note" rows="3" placeholder="${esc(rt("requestsPlaceholder"))}"></textarea></label><button class="btn btn-gold btn-block" type="submit">${esc(rt("sendRequest"))}</button>${restaurant.bookingUrl ? `<a class="restaurant-official-book" href="${esc(restaurant.bookingUrl)}" target="_blank" rel="noopener">${esc(rt("bookDirect"))} ↗</a>` : ""}</form><div id="restaurant-book-result" aria-live="polite"></div>`;
   view().innerHTML = `<section class="section restaurant-detail">
-    <a class="back-link" href="#/destination/${encodeURIComponent(destination.code)}" data-nav>← Restauranger i ${esc(destination.destination)}</a>
-    ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} officiella bilder · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">källa ↗</a></div></div>` : `<div class="restaurant-detail-placeholder"><b aria-hidden="true">${esc(String(restaurant.name || "R").slice(0, 1).toUpperCase())}</b><span>${esc(restaurant.name)}</span><small>Ingen generisk bild visas · officiell originalbild verifieras</small></div>`}
+    <a class="back-link" href="#/restaurants?dest=${encodeURIComponent(destination.code)}" data-nav>← ${esc(rt("restaurantsIn", {name: destination.destination}))}</a>
     <div class="restaurant-detail-hero">
-      <div><div class="eyebrow">${esc(restaurant.cuisine || "Restaurang")}</div><h1>${esc(restaurant.name)}</h1><p class="restaurant-lead">${esc(restaurant.description || `Restaurang i ${destination.destination}.`)}</p>
-        <div class="restaurant-detail-actions">${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuViewHref)}" data-nav>Meny</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">Karta ↗</a>` : ""}</div>
+      <div><div class="eyebrow">${esc(restaurant.cuisine || rt("restaurant"))}</div><h1>${esc(restaurant.name)}</h1><p class="restaurant-lead">${esc(restaurant.description || rt("restaurantIn", {name: destination.destination}))}</p>
+        <div class="restaurant-detail-actions">${permanentlyClosed ? "" : `<button type="button" class="btn btn-gold" id="restaurant-book-jump" aria-controls="restaurant-booking-panel">${esc(uxT("jumpBooking"))}</button>`}${favBtnHTML(restaurantFavId(restaurant.placeId), restaurant.name)}${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">${esc(rt("website"))} ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuViewHref)}" data-nav>${esc(rt("menu"))}</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">${esc(rt("map"))} ↗</a>` : ""}</div>
       </div>
-      <div class="restaurant-detail-rating">${Number.isFinite(rating) && rating > 0 ? `<strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span><small>${esc(String(restaurant.reviewCount || 0))} recensioner · ${esc(restaurant.reviewSource || "Google")}</small>` : `<small>Inget verifierat betyg publicerat ännu</small>`}</div>
+      <div class="restaurant-detail-rating">${Number.isFinite(rating) && rating > 0 ? `<strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span><small>${esc(String(restaurant.reviewCount || 0))} ${esc(rt("reviews"))} · ${esc(restaurant.reviewSource || "Google")}</small>` : `<small>${esc(rt("noRating"))}</small>`}</div>
     </div>
+    ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} ${esc(rt("photos"))} · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">${esc(rt("source"))} ↗</a></div></div>` : `<div class="restaurant-detail-placeholder"><b aria-hidden="true">${esc(String(restaurant.name || "R").slice(0, 1).toUpperCase())}</b><span>${esc(restaurant.name)}</span><small>${esc(uxT("noRestaurantPhoto"))}</small></div>`}
     <div class="restaurant-detail-grid">
-      <div class="restaurant-detail-main">
-        <div class="detail-panel"><h2>Om restaurangen</h2><dl class="restaurant-facts">
-          <div><dt>Plats</dt><dd>${esc(restaurant.address || destination.destination)}</dd></div>
-          ${restaurant.cuisine ? `<div><dt>Kök</dt><dd>${esc(restaurant.cuisine)}</dd></div>` : ""}${restaurant.priceClass ? `<div><dt>Prisklass</dt><dd>${esc(restaurant.priceClass)}</dd></div>` : ""}${restaurant.openingHours ? `<div><dt>Öppettider</dt><dd>${esc(restaurant.openingHours)}</dd></div>` : ""}
-          ${restaurant.phone ? `<div><dt>Telefon</dt><dd><a href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">${esc(restaurant.phone)}</a></dd></div>` : ""}${restaurant.email ? `<div><dt>E-post</dt><dd><a href="mailto:${esc(restaurant.email)}">${esc(restaurant.email)}</a></dd></div>` : ""}
-        </dl></div>
-        <div class="detail-panel restaurant-menu-panel"><span class="eyebrow">Mat & dryck</span><h2>Meny</h2><p>${esc(menuNote)}</p>${menuHref ? `<a class="btn btn-gold" href="${esc(menuViewHref)}" data-nav>${esc(menuLabel)} i VELVET →</a>` : ""}</div>
-        <div class="detail-panel"><h2>Sociala medier & recensioner</h2><div class="restaurant-socials">${socials.length ? socials.map(([name, url]) => `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)} ↗</a>`).join("") : `<span class="events-meta">Inga verifierade sociala länkar ännu.</span>`}</div>${restaurant.reviewUrl ? `<p class="restaurant-review-link"><a class="link-gold" href="${esc(restaurant.reviewUrl)}" target="_blank" rel="noopener">Läs verifierade recensioner på ${esc(restaurant.reviewSource || "Google")} ↗</a></p>` : ""}</div>
-      </div>
-      <aside class="detail-panel restaurant-book-panel"><span class="eyebrow">${esc(restaurant.name)}</span><h2>${permanentlyClosed ? esc(bookingCopy.closedHeading) : "Boka bord"}</h2>
+      <aside class="detail-panel restaurant-book-panel" id="restaurant-booking-panel" aria-labelledby="restaurant-booking-heading"><span class="eyebrow">${esc(restaurant.name)}</span><h2 id="restaurant-booking-heading" tabindex="-1">${permanentlyClosed ? esc(bookingCopy.closedHeading) : esc(uxT("jumpBooking"))}</h2>
+        ${bookingSelection && !permanentlyClosed ? `<p class="booking-selection-summary">${esc(uxT('bookingChoice').replace('{date}',bookingSelection.date).replace('{time}',bookingSelection.time).replace('{party}',bookingSelection.party))}</p>` : ''}
         <section ${permanentlyClosed ? "hidden" : ""} class="booking-cancellation-notice" aria-label="${esc(bookingCopy.policyHeading)}">
           <strong>${esc(bookingCopy.policyHeading)}</strong>
           <p>${esc(bookingCopy.policyCheck)}</p>
           ${embeddedBooking?.cancellationPolicy ? `<p lang="sv">${esc(embeddedBooking.cancellationPolicy.summary)}</p><p><a href="${esc(embeddedBooking.cancellationPolicy.source)}" target="_blank" rel="noopener noreferrer">${esc(bookingCopy.policySource)}</a> · ${esc(formatBookingCopy(bookingCopy.policyChecked,{date:embeddedBooking.cancellationPolicy.checkedAt}))} ${esc(bookingCopy.comparePolicy)}${currentLang() !== 'sv' ? ' (Svenska)' : ''}</p>` : `<p>${esc(bookingCopy.unknownPolicy)}</p>`}
         </section>
+
         ${bookingPanel}
       </aside>
+      <div class="restaurant-detail-main">
+        <div class="detail-panel"><h2>${esc(rt("about"))}</h2><dl class="restaurant-facts">
+          <div><dt>${esc(rt("location"))}</dt><dd>${esc(restaurant.address || destination.destination)}</dd></div>
+          ${restaurant.cuisine ? `<div><dt>${esc(rt("cuisine"))}</dt><dd>${esc(restaurant.cuisine)}</dd></div>` : ""}${restaurant.priceClass ? `<div><dt>${esc(rt("price"))}</dt><dd>${esc(restaurant.priceClass)}</dd></div>` : ""}${restaurant.openingHours ? `<div><dt>${esc(rt("hours"))}</dt><dd>${esc(restaurant.openingHours)}</dd></div>` : ""}
+          ${restaurant.phone ? `<div><dt>${esc(rt("phone"))}</dt><dd><a href="tel:${esc(restaurant.phone.replace(/\s/g, ""))}">${esc(restaurant.phone)}</a></dd></div>` : ""}${restaurant.email ? `<div><dt>${esc(rt("email"))}</dt><dd><a href="mailto:${esc(restaurant.email)}">${esc(restaurant.email)}</a></dd></div>` : ""}
+        </dl></div>
+        <div class="detail-panel restaurant-menu-panel"><span class="eyebrow">${esc(rt("food"))}</span><h2>${esc(rt("menu"))}</h2><p>${esc(menuNote)}</p>${menuHref ? `<a class="btn btn-gold" href="${esc(menuViewHref)}" data-nav>${esc(menuLabel)} →</a>` : ""}</div>
+        <div class="detail-panel"><h2>${esc(rt("socialReviews"))}</h2><div class="restaurant-socials">${socials.length ? socials.map(([name, url]) => `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)} ↗</a>`).join("") : `<span class="events-meta">${esc(rt("noSocial"))}</span>`}</div>${restaurant.reviewUrl ? `<p class="restaurant-review-link"><a class="link-gold" href="${esc(restaurant.reviewUrl)}" target="_blank" rel="noopener">${esc(rt("readReviews", {source: restaurant.reviewSource || "Google"}))} ↗</a></p>` : ""}</div>
+      </div>
+
     </div>
   </section>`;
+  bindFavButtons(view());
+  document.getElementById('restaurant-book-jump')?.addEventListener('click', () => {
+    const heading = document.getElementById('restaurant-booking-heading');
+    heading?.focus({preventScroll:true});
+    heading?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  });
   const providerContainer = document.getElementById("restaurant-provider-booking");
   if (providerContainer && embeddedBooking) {
     mountEmbeddedBooking(providerContainer, embeddedBooking, currentLang());
     if (bookingSelection) {
-      const selected = document.createElement('p'); selected.className = 'booking-selection-summary';
-      selected.textContent = `Ditt sökval: ${bookingSelection.date} kl. ${bookingSelection.time} · ${bookingSelection.party} gäster. Kontrollera att samma val visas i restaurangens formulär.`;
-      providerContainer.prepend(selected);
       if (embeddedBooking.provider === 'SevenRooms') providerContainer.querySelector('button')?.click();
     }
     const reportContainer = document.createElement('div');
@@ -2781,6 +2826,8 @@ function menuItemsHTML(items) {
 }
 
 async function renderMenuReader(kind, id) {
+  const menuRoute = location.hash;
+  const menuSelection = kind === "restaurant" ? parseBookingSelection(new URLSearchParams(menuRoute.split('?')[1] || '')) : null;
   setTitle("Meny");
   view().innerHTML = `<section class="section"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm"></span> Laddar officiell meny…</p></section>`;
   let name = "Stället";
@@ -2794,6 +2841,7 @@ async function renderMenuReader(kind, id) {
   if (kind === "restaurant") {
     let data = null;
     try { const response = await fetch("data/restaurants.json", { cache: "no-store" }); if (response.ok) data = await response.json(); } catch {}
+    if (location.hash !== menuRoute) return;
     let restaurant = null;
     for (const row of Object.values(data?.destinations || {})) {
       restaurant = (row.restaurants || []).find((item) => item.placeId === id);
@@ -2801,7 +2849,7 @@ async function renderMenuReader(kind, id) {
     }
     if (restaurant) {
       name = restaurant.name;
-      backHref = `#/restaurant/${encodeURIComponent(restaurant.placeId)}`;
+      backHref = `#/restaurant/${encodeURIComponent(restaurant.placeId)}${menuSelection ? '?' + new URLSearchParams(menuSelection).toString() : ''}`;
       const direct = RESTAURANT_MENUS[restaurant.placeId];
       if (direct && Array.isArray(direct.items) && direct.items.length) {
         items = direct.items.filter((item) => item && item.name);
@@ -2880,16 +2928,9 @@ function renderDestinationDetail(code) {
       <div class="detail-hero-main">
         <div class="detail-kicker">${esc(d.country)} · ${esc(d.region)} · ${esc(t("seasonShort"))} ${esc(d.peak_season)}</div>
         <h1 class="detail-name">${esc(d.name)}</h1>
-        <div class="venue-tags detail-tags">
-          <span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span>
-          ${useCases.map((u) => `<span class="tag">${esc(u)}</span>`).join("")}
-          ${(() => {
-            const c = (CLUB_RANKINGS.cities || []).find((x) => x.destination_code === d.code);
-            return c ? `<span class="tag src-rank">${esc(t("srcTimeout").replace("{n}", String(c.rank)))}</span>` : "";
-          })()}
-        </div>
-        ${d.note ? `<p class="detail-notes"><span class="dest-note-label">${esc(t("strategicNote"))}</span> ${esc(d.note)}</p>` : ""}
         <div class="detail-links">
+          <a class="btn btn-gold" href="#/availability?city=${encodeURIComponent(d.name)}" data-nav>${esc(t("navFindTable"))}</a>
+          <a class="icon-link" href="#/restaurants?dest=${encodeURIComponent(d.code)}" data-nav>${esc(t("navRestaurants"))}</a>
           <a class="icon-link" href="#/open?dest=${encodeURIComponent(d.code)}" data-nav>${esc(t("navOpen"))}</a>
           <a class="icon-link" href="#/venues" id="dd-list">${esc(t("seeInList"))}</a>
           <a class="icon-link" href="${esc(mapsGoogleQuery(destQuery(d)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
@@ -2899,29 +2940,12 @@ function renderDestinationDetail(code) {
       <div class="dest-emblem dest-emblem-lg" style="--h:${destHue(d.code)}" aria-hidden="true">${esc(d.code)}</div>
     </div>
 
-    ${cityAvailHTML(d, (location.hash.split("?")[1] ? new URLSearchParams(location.hash.split("?")[1]).get("date") : "") || loadNight().date)}
-
-    <div class="detail-grid dest-detail-grid">
-      <div class="detail-panel">
-        <h2 class="detail-panel-title">${esc(t("ratings"))}</h2>
-        <div class="meters">
-          ${scoreMeter(t("scoreLuxury"), d.luxury)}
-          ${scoreMeter(t("scoreParty"), d.party)}
-          ${scoreMeter(t("scoreShare"), d.shareability)}
-        </div>
-      </div>
-      <div class="detail-panel">
-        <h2 class="detail-panel-title">${esc(t("destFacts"))}</h2>
-        <div class="detail-facts" style="margin-top:0; border-top:none; padding-top:0">
-          <div class="fact"><span class="fact-label">${esc(t("countryLabel"))}</span><span class="fact-val">${esc(d.country)}</span></div>
-          <div class="fact"><span class="fact-label">${esc(t("regionLabel"))}</span><span class="fact-val">${esc(d.region)}</span></div>
-          <div class="fact"><span class="fact-label">Tier</span><span class="fact-val"><span class="tier ${d.tier === "Tier 1" ? "tier-1" : "tier-2"}">${esc(d.tier)}</span></span></div>
-          <div class="fact"><span class="fact-label">${esc(t("peakSeason"))}</span><span class="fact-val">${esc(d.peak_season)}</span></div>
-          <div class="fact"><span class="fact-label">${esc(t("verified"))}</span><span class="fact-val">${verified.length}</span></div>
-          ${(() => { const km = distanceToDest(d); return km != null ? `<div class="fact"><span class="fact-label">${esc(t("distanceFromYou"))}</span><span class="fact-val">~${fmtKm(km)} km</span></div>` : ""; })()}
-        </div>
-      </div>
+    <div class="section-head restaurant-section-head">
+      <div><h2>${esc(t("restaurantsTitle").replace("{name}", d.name))}</h2><div class="sub">${esc(t("restaurantsSub"))}</div></div>
     </div>
+    <div id="destination-restaurants" aria-live="polite"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("restaurantsLoading"))}</p></div>
+
+    <details class="detail-disclosure"><summary>${esc(t("navOpen"))}</summary>${cityAvailHTML(d, (location.hash.split("?")[1] ? new URLSearchParams(location.hash.split("?")[1]).get("date") : "") || loadNight().date)}</details>
 
     ${Number.isFinite(d.lat) && Number.isFinite(d.lng) ? `
     <div class="detail-panel dest-map-panel">
@@ -2930,13 +2954,8 @@ function renderDestinationDetail(code) {
         <div id="map-dest" class="map-canvas map-canvas-mini" role="application" aria-label="${esc(t("mapOf").replace("{name}", d.name))}"></div>
         <div class="map-loading" id="dest-map-status" role="status"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("loadingMap"))}</div>
       </div>
-      <p class="map-note">${esc(t("mapNoteApprox").replace("{name}", d.name))} <a class="link-gold" href="#/map" data-nav>${esc(t("wholeMap"))}</a></p>
+      <p class="map-note">${esc(t("cityMapNote"))} <a class="link-gold" href="#/map" data-nav>${esc(t("wholeMap"))}</a></p>
     </div>` : ""}
-
-    <div class="section-head restaurant-section-head">
-      <div><h2>${esc(t("restaurantsTitle").replace("{name}", d.name))}</h2><div class="sub">${esc(t("restaurantsSub"))}</div></div>
-    </div>
-    <div id="destination-restaurants" aria-live="polite"><p class="events-meta restaurant-loading"><span class="spinner spinner-sm" aria-hidden="true"></span> ${esc(t("restaurantsLoading"))}</p></div>
 
     ${inCity.length ? `
     <div class="section-head" style="margin-top:44px">
@@ -3047,7 +3066,7 @@ function venueCard(v, { eager = false, rank = 0, vibe = false } = {}) {
           <div class="venue-name">${esc(v.name)}</div>
           <div class="venue-loc">${esc(v.destination)}</div>
         </div>
-        ${vibe ? "" : `<div class="prio">${googleRatingHTML(v, { compact: true }) || `<span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">Prio</span>`}</div>`}
+        ${vibe ? "" : `<div class="prio">${googleRatingHTML(v, { compact: true })}</div>`}
       </div>
       <div class="venue-tags">
         <span class="tag">${esc(v.category)}</span>
@@ -3056,13 +3075,9 @@ function venueCard(v, { eager = false, rank = 0, vibe = false } = {}) {
         ${v.shareable_format ? `<span class="tag tag-verified">${esc(t("shareableCost"))}</span>` : ""}
         ${eventsFor(v).length ? `<span class="tag tag-events">🎟 ${esc(t("comingN").replace("{n}", String(eventsFor(v).length)))}</span>` : ""}`}
       </div>
-      ${!vibe && publicNote(v) ? `<div class="venue-note">${esc(publicNote(v))}</div>` : ""}
       ${vibe ? `<div class="vibe-open">${esc(t("openRoom").replace("{name}", v.name))}</div>` : `
       <div class="venue-actions">
-        <button class="btn btn-gold btn-sm" data-book="${esc(v.venue_id)}">${esc(t("sendRequest"))}</button>
-        ${bookingLinkHTML(v)}
-        <a class="icon-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("openMaps"))} ↗</a>
-        ${igLinkHTML(v)}
+        <a class="btn btn-ghost btn-sm" href="#/venue/${encodeURIComponent(v.venue_id)}" data-nav>${esc(t("seeVenue"))}</a>
       </div>`}
     </div>
     ${photoAttrHTML(v)}
@@ -3592,7 +3607,6 @@ function renderVenueDetail(id) {
   <section class="section detail">
     <a class="detail-back" href="#/venues" data-nav>← ${esc(t("allVenues"))}</a>
 
-    ${venueIntroHTML(v)}
     ${venueGalleryHTML(v)}
     ${photoAttrHTML(v, { official: true })}
 
@@ -3607,48 +3621,26 @@ function renderVenueDetail(id) {
           ${rankingTagHTML(v)}
           ${dest ? `<span class="tag">${esc(t("seasonShort"))} ${esc(dest.peak_season)}</span>` : ""}
         </div>
-        ${publicNote(v) ? `<p class="detail-notes">${esc(publicNote(v))}</p>` : ""}
         <div class="detail-links">
-          ${bookingLinkHTML(v)}
+          ${bookingLinkHTML(v, { gold: true })}
           ${(venueMenu(v)?.source || v.website_url || v.source_url) ? `<a class="icon-link" href="#/menu/venue/${encodeURIComponent(v.venue_id)}" data-nav>Meny</a>` : ""}
           <a class="icon-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
-          ${v.website_url ? `<a class="icon-link" href="${esc(v.website_url)}" target="_blank" rel="noopener">${esc(t("website"))} ↗</a>` : ""}
         </div>
-      </div>
-      <div class="prio prio-lg">
-        ${googlePlace(v)?.matched
-          ? `<span class="prio-num">${esc(String(googlePlace(v).rating))}</span><span class="prio-label">Google</span>`
-          : `<span class="prio-num">${num(v.priority_score)}</span><span class="prio-label">VELVET-prio</span>`}
       </div>
     </div>
 
-    ${followSectionHTML(v)}
-
     <div class="detail-grid">
-      ${contactPanelHTML(v)}
-      ${rankingPanelHTML(v)}
       ${factsPanelHTML(v)}
-      ${googleReviewsPanelHTML(v)}
       ${menuPanelHTML(v)}
-      ${eventsSectionHTML(v)}
+      ${googleReviewsPanelHTML(v)}
+      <details class="detail-disclosure"><summary>${esc(t("moreDetails"))}</summary>
+        ${eventsSectionHTML(v)}
+        ${rankingPanelHTML(v)}
+        ${contactPanelHTML(v)}
+        ${followSectionHTML(v)}
+      </details>
+      <details class="detail-disclosure"><summary>${esc(t("otherBookingOptions"))}</summary>
       ${venuePackagesPanelHTML(v)}
-      <div class="detail-panel">
-        <h2 class="detail-panel-title">${esc(t("velvetScore"))}</h2>
-        <p class="events-meta">${esc(t("velvetScoreHint"))}</p>
-        <div class="meters">
-          ${scoreMeter(t("scoreLuxury"), v.luxury_score)}
-          ${scoreMeter(t("scoreParty"), v.party_score)}
-          ${scoreMeter(t("scoreShare"), v.shareability_score)}
-          ${scoreMeter(t("scoreBook"), v.booking_potential)}
-        </div>
-        <div class="detail-facts">
-          <div class="fact"><span class="fact-label">${esc(t("verification"))}</span><span class="fact-val"><span class="tag ${st.cls}">${st.label}</span></span></div>
-          <div class="fact"><span class="fact-label">${esc(t("categoryLabel"))}</span><span class="fact-val">${esc(v.category)}</span></div>
-          <div class="fact"><span class="fact-label">${esc(t("venueIdLabel"))}</span><span class="fact-val">${esc(v.venue_id)}</span></div>
-          ${dest ? `<div class="fact"><span class="fact-label">${esc(t("regionLabel"))}</span><span class="fact-val">${esc(dest.region)}</span></div>` : ""}
-        </div>
-      </div>
-
       <div class="detail-panel detail-cta">
         <h2 class="detail-panel-title">${esc(t("requestShareTitle"))}</h2>
         ${fromCalcHTML(v)}
@@ -3670,13 +3662,14 @@ function renderVenueDetail(id) {
         <h2 class="detail-panel-title">${esc(t("availTitle"))}</h2>
         <p class="events-meta">${esc(t("availHint"))}</p>
         <div class="avail-controls" style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0">
-          <input type="date" id="avail-date" min="${todayISO()}" style="flex:1;min-width:150px">
-          <select id="avail-party">${[2, 4, 6, 8, 10, 12].map((n) => `<option value="${n}"${n === 6 ? " selected" : ""}>${esc(t("availParty").replace("{n}", String(n)))}</option>`).join("")}</select>
+          <input type="date" aria-label="${esc(t("dateLabel"))}" id="avail-date" min="${todayISO()}" style="flex:1;min-width:150px">
+          <select aria-label="${esc(t("partyTitle"))}" id="avail-party">${[2, 4, 6, 8, 10, 12].map((n) => `<option value="${n}"${n === 6 ? " selected" : ""}>${esc(t("availParty").replace("{n}", String(n)))}</option>`).join("")}</select>
           <button class="btn btn-gold btn-sm" id="avail-load">${esc(t("availLoad"))}</button>
         </div>
         <div id="avail-result"></div>
       </div>
       ${venuePromotersPanelHTML()}
+      </details>
     </div>
     ${venueDockHTML(v)}
   </section>`;
@@ -3966,17 +3959,17 @@ async function openBookingModal(v, preselectedPackageId = "") {
         </div>
 
         <div class="form-group">
-          <label class="chk-row"><input type="checkbox" id="m-open" checked> ${t("openSeats")}</label>
+          <label class="chk-row"><input type="checkbox" id="m-open"> ${t("openSeats")}</label>
           <p class="stepper-hint">${t("openSeatsHint")}</p>
           <div class="stepper" id="m-open-row" role="group" aria-label="${t("openSeatsCount")}">
             <button type="button" id="m-open-minus" aria-label="−">−</button>
             <span class="stepper-val" id="m-open-val">2</span>
             <button type="button" id="m-open-plus" aria-label="+">+</button>
           </div>
-          <label class="stepper-hint" style="display:block;margin-top:10px">${esc(t("openForLabel"))}
-            ${openForSelectHTML("m-open-for", "women")}
+          <div id="m-sharing-options" class="hidden"><label class="stepper-hint" style="display:block;margin-top:10px">${esc(t("openForLabel"))}
+            ${openForSelectHTML("m-open-for", "anyone")}
           </label>
-          <p class="stepper-hint">${esc(t("openForHint"))}</p>
+          <p class="stepper-hint">${esc(t("openForHint"))}</p></div>
         </div>
 
         <div class="form-group">
@@ -4153,17 +4146,18 @@ async function openBookingModal(v, preselectedPackageId = "") {
 
   const pkgEls = [...root.querySelectorAll("[data-pkg]")];
   pkgEls.forEach((el, idx) => {
+    el.tabIndex = el.getAttribute("aria-checked") === "true" ? 0 : -1;
     const pick = () => {
-      pkgEls.forEach((x) => { x.classList.remove("selected"); x.setAttribute("aria-checked", "false"); });
-      el.classList.add("selected"); el.setAttribute("aria-checked", "true");
+      pkgEls.forEach((x) => { x.classList.remove("selected"); x.setAttribute("aria-checked", "false"); x.tabIndex = -1; });
+      el.classList.add("selected"); el.setAttribute("aria-checked", "true"); el.tabIndex = 0;
       sel = pkgs.find((p) => p.id === el.dataset.pkg);
       update();
     };
     el.addEventListener("click", pick);
     el.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); }
-      else if (e.key === "ArrowDown" || e.key === "ArrowRight") { e.preventDefault(); pkgEls[(idx + 1) % pkgEls.length].focus(); }
-      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") { e.preventDefault(); pkgEls[(idx - 1 + pkgEls.length) % pkgEls.length].focus(); }
+      else if (e.key === "ArrowDown" || e.key === "ArrowRight") { e.preventDefault(); const next = pkgEls[(idx + 1) % pkgEls.length]; next.click(); next.focus(); }
+      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") { e.preventDefault(); const previous = pkgEls[(idx - 1 + pkgEls.length) % pkgEls.length]; previous.click(); previous.focus(); }
     });
   });
   $("#m-minus").addEventListener("click", () => { party = Math.max(minParty(), party - 1); openSeats = Math.min(openSeats, Math.max(0, party - minParty())); update(); });
@@ -4174,6 +4168,7 @@ async function openBookingModal(v, preselectedPackageId = "") {
   const syncOpen = () => {
     const on = $("#m-open")?.checked;
     openRow?.classList.toggle("hidden", !on);
+    $("#m-sharing-options")?.classList.toggle("hidden", !on);
     if ($("#m-open-val")) $("#m-open-val").textContent = openSeats;
   };
   $("#m-open")?.addEventListener("change", syncOpen);
@@ -4274,6 +4269,11 @@ async function openBookingModal(v, preselectedPackageId = "") {
     booking.delivery = sent;
     saveBookings([...loadBookings(), booking]);
     const remote = await publishTable(booking);
+    booking.published = publicationConfirmed(remote, booking.id);
+    // Keep local records honest even when the public table API is unavailable.
+    if (openOn && !booking.published) booking.status = "local-pending";
+    saveBookings(loadBookings().map((item) => item.id === booking.id ? booking : item));
+    saveLocalTables(loadLocalTables().map((item) => item.id === booking.id ? booking : item));
     if (remote?.error === "idv_required" || remote?.error === "card_required") {
       btn.disabled = false;
       btn.textContent = t("sendRequest");
@@ -4319,7 +4319,7 @@ function showConfirmation(b, opener) {
         <div class="split-total">${esc(moneyOrClub(b.total))}</div>
       </div>
       <p class="price-disclaimer">${esc(sent ? t("confirmSentHint") : t("confirmSavedHint"))}</p>
-      ${b.openSeats ? `<p class="invite-joined" role="status">${esc(t("openPublished"))}</p>` : ""}
+      ${b.openSeats ? `<p class="invite-joined" role="status">${esc(b.published ? t("openPublished") : uxT("notPublished"))}</p>` : ""}
       <div class="confirm-actions">
         ${b.openSeats ? `<a class="btn btn-gold" href="#/table/${encodeURIComponent(b.id)}" data-nav id="c-go">${esc(t("viewParty"))}</a>` : `<a class="btn btn-gold" href="#/bookings" data-nav id="c-go">${esc(t("navBookings"))}</a>`}
         <button class="btn btn-ghost" id="c-copy">${esc(t("copyInvite"))}</button>
@@ -4413,24 +4413,19 @@ async function renderBookings() {
           <a class="btn btn-gold btn-sm" href="#/table/${encodeURIComponent(b.id)}" data-nav>${esc(t("viewParty"))}</a>
           ${b.delivery !== "sent" ? `<a class="btn btn-ghost btn-sm" href="${mailtoFor(b)}">${esc(t("openMail"))}</a>` : ""}
           <button class="btn btn-ghost btn-sm btn-share" data-share="${esc(b.id)}">${esc(t("sharePlace"))}</button>
-          <button class="btn btn-ghost btn-sm btn-danger" data-cancel="${esc(b.id)}">${esc(t("remove"))}</button>
+          <div><button class="btn btn-ghost btn-sm btn-danger" data-cancel="${esc(b.id)}">${esc(uxT("removeLocal"))}</button><p class="stepper-hint">${esc(uxT("removeHint"))}</p></div>
         </div>
       </div>`).join("")}
     ${restaurantBookings.length ? `<div class="restaurant-booking-history"><span class="eyebrow">RESTAURANGBOKNINGAR</span><h2>Dina restaurangbokningar</h2>${restaurantBookings.map((booking) => {
       const confirmed = booking.status === "confirmed" || booking.status === "provider_confirmed";
       const declined = booking.status === "declined" || booking.status === "provider_error" || booking.status === "provider_rejected";
-      const received = booking.status === "received";
-      const requested = booking.status === "request" || booking.status === "local-pending";
-      const status = booking.status === "guest_reported" ? "Bekräftelse uppgiven av gästen" : confirmed ? "Bekräftad av restaurangen" : declined ? "Inte bekräftad" : received ? "Mottagen av restaurangen" : requested ? "Väntar på Velvet Concierge" : booking.status === "unknown" ? "Resultatet behöver kontrolleras" : "Behandlas";
-      const delivery = booking.status === "guest_reported" ? "Sparad från gästens uppgifter. Velvet har ännu inte verifierat bekräftelsen hos bokningssystemet." : confirmed
-        ? "Restaurangen har bekräftat bokningen."
-        : declined ? "Restaurangen kunde inte bekräfta den önskade tiden."
-          : received ? "Velvet har lämnat förfrågan till restaurangen och väntar på svar."
-            : "Detta är en riktig förfrågan, men ännu ingen bekräftad reservation.";
-      const operatorControls = restaurantOperator && booking.status !== 'guest_reported' && !confirmed && !declined && booking.status !== 'unknown' && booking.status !== 'payment_required'
+      const statusKey = restaurantStatusKey(booking.status);
+      const status = uxT(statusKey);
+      const delivery = uxT(statusKey + "Hint");
+      const operatorControls = restaurantOperator && booking.status !== 'local-pending' && booking.status !== 'guest_reported' && !confirmed && !declined && booking.status !== 'unknown' && booking.status !== 'payment_required'
         ? `<div class="restaurant-operator-status"><select data-restaurant-status="${esc(booking.id)}"><option value="received">Mottagen av Zink</option><option value="confirmed">Bekräftad av Zink</option><option value="declined">Avböjd</option></select><input data-restaurant-reference="${esc(booking.id)}" placeholder="Zinks bokningsreferens"><button class="btn btn-gold btn-sm" type="button" data-restaurant-status-submit="${esc(booking.id)}">Uppdatera status</button></div>`
         : "";
-      return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${esc(delivery)}</div>${restaurantOperator && booking.name ? `<div class="booking-delivery">${esc(booking.name)} · ${esc(booking.email || "")} · ${esc(booking.phone || "")}</div>` : ""}${operatorControls}</div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${confirmed ? "Visa restaurangen" : "Till bokningen"}</a></div>`;
+      return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${esc(delivery)}</div>${restaurantOperator && booking.name ? `<div class="booking-delivery">${esc(booking.name)} · ${esc(booking.email || "")} · ${esc(booking.phone || "")}</div>` : ""}${operatorControls}</div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${esc(uxT("viewRestaurant"))}</a></div>`;
     }).join("")}</div>` : ""}
   </section>`;
 
@@ -4546,9 +4541,7 @@ function renderJoin(raw) {
       if (!loadUser()) { openOnboarding({ dismissable: false, phase: "auth" }); return; }
       joinBtn.disabled = true;
       const r = await joinOpenTable(inv.id, inv);
-      if (r.error === "auth") { openOnboarding({ dismissable: false, phase: "auth" }); return; }
-      if (r.error === "idv_required") { location.hash = "#/verify"; return; }
-      if (r.error === "too_young") { showToast(tooYoungText(r, v)); joinBtn.disabled = false; return; }
+      if (handleJoinFailure(r, location.hash, v, joinBtn)) return;
       if (!loadBookings().some((b) => b.id === inv.id)) {
         saveBookings([...loadBookings(), { ...inv, guests: [], joined: true, created: new Date().toISOString() }]);
       }
@@ -4986,30 +4979,7 @@ function mountDestMap(d, venues) {
       .addTo(map)
       .bindPopup(`<div class="map-pop"><div class="map-pop-name">${esc(d.name)}</div><div class="map-pop-meta">${esc(d.country)} · ${esc(d.region)}</div></div>`);
 
-    // Venues i en deterministisk ring runt centrum (~2 km) — stabil mellan renderingar
     const pts = [[d.lat, d.lng]];
-    const n = venues.length;
-    const latRad = d.lat * Math.PI / 180;
-    venues.forEach((v, i) => {
-      const ang = (2 * Math.PI * i) / Math.max(n, 1) + destHue(v.venue_id) / 360;
-      const r = n > 1 ? 0.02 : 0.012;
-      const lat = d.lat + Math.sin(ang) * r * 0.75;
-      const lng = d.lng + (Math.cos(ang) * r) / Math.max(Math.cos(latRad), 0.2);
-      pts.push([lat, lng]);
-      L.circleMarker([lat, lng], {
-        radius: 7, color: "#d4af5f", weight: 1.5,
-        fillColor: "#e8c87e", fillOpacity: 0.55,
-      }).addTo(map).bindPopup(`
-        <div class="map-pop">
-          <div class="map-pop-kicker">${esc(v.category)}</div>
-          <div class="map-pop-name">${esc(v.name)}</div>
-          <div class="map-pop-meta">${esc(t("clubSetsPrice"))}</div>
-          <a class="map-pop-link" href="#/venue/${encodeURIComponent(v.venue_id)}">${esc(t("seeVenue"))}</a>
-          ${bookingUrlFor(v) ? `<br><a class="map-pop-link" href="#/book-site/${encodeURIComponent(v.venue_id)}">${esc(t("bookOnSiteShort"))} ↗</a>` : ""}
-          <br><a class="map-pop-link" href="${esc(mapsGoogleQuery(placeQuery(v)))}" target="_blank" rel="noopener">${esc(t("directions"))} ↗</a>
-          ${v.instagram_url ? `<br><a class="map-pop-link" href="${esc(v.instagram_url)}" target="_blank" rel="noopener">${esc(igHandle(v.instagram_url) || "Instagram")} ↗</a>` : ""}
-        </div>`);
-    });
     fitWhenSized(map, () => map.fitBounds(pts, { padding: [30, 30], maxZoom: 13 }));
   }).catch(() => {
     const shell = host && host.closest(".map-shell");
@@ -5081,7 +5051,13 @@ function countryList() {
 function openOnboarding(opts = {}) {
   const root = document.getElementById("onboarding-root");
   if (!root || root.innerHTML) return; // redan öppen
-  const dismissable = !!opts.dismissable;
+  if (opts.phase === "auth") {
+    try {
+      const returnTo = loginReturnTo(opts.returnTo || location.hash);
+      if (returnTo && (opts.returnTo || !sessionStorage.getItem("velvet_after_login"))) sessionStorage.setItem("velvet_after_login", returnTo);
+    } catch { /* Storage is optional; authentication remains available. */ }
+  }
+  const dismissable = opts.phase === "auth" || !!opts.dismissable;
   const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   const langPicked = () => { try { return !!localStorage.getItem("velvet_lang_picked"); } catch { return false; } };
   let phase = opts.phase
@@ -5128,6 +5104,9 @@ function openOnboarding(opts = {}) {
   };
   const close = (refocus = true) => {
     closed = true;
+    if (refocus && opts.phase === "auth") {
+      try { sessionStorage.removeItem("velvet_after_login"); } catch { /* optional */ }
+    }
     cleanup();
     root.innerHTML = "";
     if (refocus) restoreFocus(opener);
@@ -5252,13 +5231,7 @@ function openOnboarding(opts = {}) {
           </div>` : `
           <h1 class="ob-title">${esc(t("loginTitle"))}</h1>
           <p class="ob-sub">${esc(t("loginSub"))}</p>
-          <p class="one-tap-copy">${esc(socialTrustCopy().oneTapSub)}</p>
-          <p class="stepper-hint social-honesty auth-real-note">🔒 Riktig säker inloggning · VELVET sparar aldrig ditt lösenord</p>
-          <button type="button" class="btn btn-gold phone-login" id="ob-phone-login">Face ID / Touch ID / skärmlås</button>
-          <div class="social-grid social-grid-onetap">
-            ${SOCIALS.map((s) => socialCompactButton(s, "data-soc")).join("")}
-          </div>
-          <p class="stepper-hint social-honesty">🔒 ${esc(socialTrustCopy().explain)}</p>
+          <div id="ob-auth-choices"></div>
           <div class="ob-actions"><button class="btn btn-ghost" id="ob-skip-auth">${esc(dismissable && opts.returnTo ? "Avbryt – stanna på bokningen" : t("skipLogin"))}</button></div>
           `}
         </div>
@@ -5275,17 +5248,7 @@ function openOnboarding(opts = {}) {
           render();
         });
       });
-      root.querySelectorAll("[data-soc]").forEach((el) => {
-        el.addEventListener("click", async () => {
-          el.disabled = true;
-          let r = null;
-          try { r = await loginWithSocial(el.dataset.soc); }
-          catch (err) { console.warn("VELVET login", err); }
-          if (r?.oauth) return;
-          if (r?.unavailable) { showToast(socialTrustCopy().unavailable); el.disabled = false; return; }
-          el.disabled = false;
-        });
-      });
+      mountAuthChoices(root.querySelector('#ob-auth-choices'), { onPasskey: () => close(false) });
       const closeLang = $("#ob-close");
       if (closeLang) closeLang.addEventListener("click", () => { if (dismissable) close(); else skip(); });
       const skipA = $("#ob-skip-auth");
@@ -5299,7 +5262,6 @@ function openOnboarding(opts = {}) {
         phase = "country";
         render();
       });
-      $("#ob-phone-login")?.addEventListener("click", async () => { if (await loginWithPasskey()) close(false); });
       return;
     }
     const countries = countryList();
@@ -5405,9 +5367,12 @@ function openOnboarding(opts = {}) {
 }
 
 // ---------- Favoriter & delbar lista ----------
-function renderFavorites() {
+async function renderFavorites() {
+  const favoritesRoute = location.hash;
+  if (loadFavs().some(id => id.startsWith("restaurant:"))) await ensureRestaurantIndex();
+  if (location.hash !== favoritesRoute) return;
   const ids = loadFavs();
-  const list = ids.map((id) => VENUES.find((v) => v.venue_id === id)).filter(Boolean);
+  const list = ids.map(favoriteEntry).filter(Boolean);
   view().innerHTML = `
   <section class="section">
     <div class="section-head">
@@ -5420,7 +5385,7 @@ function renderFavorites() {
         <h3>${esc(t("noFav"))}</h3>
         <p>${esc(t("noFavHint"))}</p>
         <p style="margin-top:20px"><a class="btn btn-gold" href="#/venues" data-nav>${esc(t("explore"))}</a></p>
-      </div>` : `<div class="venue-grid">${list.map(venueCard).join("")}</div>`}
+      </div>` : `<div class="venue-grid">${list.map(favoriteCard).join("")}</div>`}
   </section>`;
   bindVenueCards();
   const share = $("#fav-share");
@@ -5435,7 +5400,8 @@ function renderFavorites() {
   }
 }
 
-function renderSharedList(raw) {
+async function renderSharedList(raw) {
+  const sharedRoute = location.hash;
   let p;
   try { p = b64urlDecode(raw); } catch { p = null; }
   const valid = p && typeof p === "object" && !Array.isArray(p) && Array.isArray(p.ids);
@@ -5444,7 +5410,9 @@ function renderSharedList(raw) {
     return;
   }
   const ids = p.ids.filter((id) => typeof id === "string");
-  const list = ids.map((id) => VENUES.find((v) => v.venue_id === id)).filter(Boolean);
+  if (ids.some(id => id.startsWith("restaurant:"))) await ensureRestaurantIndex();
+  if (location.hash !== sharedRoute) return;
+  const list = ids.map(favoriteEntry).filter(Boolean);
   const title = (typeof p.name === "string" && p.name) ? p.name : t("sharedListName");
   view().innerHTML = `
   <section class="section">
@@ -5457,13 +5425,13 @@ function renderSharedList(raw) {
         <div class="big">🔗</div>
         <h3>${esc(t("listEmpty"))}</h3>
         <p>${esc(t("listEmptyHint"))}</p>
-      </div>` : `<div class="venue-grid">${list.map(venueCard).join("")}</div>`}
+      </div>` : `<div class="venue-grid">${list.map(favoriteCard).join("")}</div>`}
   </section>`;
   bindVenueCards();
   const save = $("#list-save");
   if (save) {
     save.addEventListener("click", () => {
-      saveFavs([...loadFavs(), ...list.map((v) => v.venue_id)]);
+      saveFavs([...loadFavs(), ...list.map(favoriteId)]);
       save.textContent = t("savedCheck");
       syncFavButtons();
     });
@@ -5613,11 +5581,7 @@ async function renderTable(id) {
     const btn = $("#party-join");
     if (btn) btn.disabled = true;
     const r = await joinOpenTable(tb.id, tb);
-    if (r.error === "auth") openOnboarding({ dismissable: false, phase: "auth" });
-    else if (r.error === "idv_required") location.hash = "#/verify";
-    else if (r.error === "too_young") { showToast(tooYoungText(r, VENUES.find((x) => x.venue_id === tb.venue_id))); if (btn) btn.disabled = false; }
-    else if (r.error === "seat_pref") { showToast(t("seatPref").replace("{who}", openForLabel(r.openFor || tb.openFor).toLowerCase())); if (btn) btn.disabled = false; }
-    else renderTable(id);
+    if (!handleJoinFailure(r, `#/table/${encodeURIComponent(tb.id)}`, VENUES.find(x=>x.venue_id===tb.venue_id), btn)) renderTable(id);
   });
   document.querySelectorAll("[data-pay], [data-pay-name]").forEach((btn) => {
     btn.addEventListener("click", async () => {
@@ -5671,7 +5635,7 @@ async function renderPay(tableId) {
     return;
   }
   const mine = (tb.members || []).find((m) => m.id === me.id);
-  const canPay = !!(mine && !mine.paid);
+  const canPay = canStartPayment(mine);
   const startAmt = Number(mine?.paidAmount) || 0;
   setTitle(`${t("payShare")} · ${tb.venue}`);
   view().innerHTML = `
@@ -5690,11 +5654,11 @@ async function renderPay(tableId) {
       ${Number(tb.per_person) > 0 ? `<p class="price-disclaimer">${esc(t("guestBudget").replace("{amount}", fmtEUR(tb.per_person)))}</p>` : `<p class="price-disclaimer">${esc(t("clubSetsPrice"))}</p>`}
     </div>
     ${mine?.paid ? `<p class="invite-joined">✓ ${esc(t("paid"))}${mine.paidVia ? ` · ${esc(mine.paidVia)}` : ""}</p>` : ""}
-    ${mine?.paidPending ? `<p class="invite-joined">${esc(t("payWait"))}</p>` : ""}
+    ${mine?.paidPending ? `<p class="invite-joined" role="status">${esc(uxT("pendingPayment"))}</p>` : ""}
     ${!mine ? `<p class="price-disclaimer">${esc(t("payNeedJoin"))}</p>` : ""}
     ${!cfg.ready && isOperatorUser(me) ? `<p style="margin:0 0 14px"><a class="btn btn-gold" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
     <div class="pay-grid" id="pay-grid">
-      ${PAY_METHODS.map((m) => {
+      ${PAY_METHODS.filter((m) => (cfg.methods || []).some((spec) => spec.id === m.id && spec.enabled)).map((m) => {
         const spec = (cfg.methods || []).find((x) => x.id === m.id);
         const on = !!(spec && spec.enabled);
         return `<button type="button" class="pay-method${on ? "" : " off"}" data-method="${m.id}" ${on && canPay ? "" : "disabled"}>
@@ -5705,6 +5669,7 @@ async function renderPay(tableId) {
       }).join("")}
     </div>
     <div id="pay-bank" class="pay-bank hidden"></div>
+    ${!(cfg.methods || []).some((spec) => spec.enabled && PAY_METHODS.some((m) => m.id === spec.id)) ? `<p role="status">${esc(uxT("noMethods"))}</p>` : ""}
     <div class="field-error hidden" id="pay-err" role="alert"></div>
     <p class="price-disclaimer">${esc(t("payHonest"))}</p>
   </section>`;
@@ -5723,6 +5688,7 @@ async function renderPay(tableId) {
       });
       btn.disabled = false;
       if (r?.mode === "redirect" && r.url) {
+        try { sessionStorage.setItem("velvet_payment_return", `#/table/${encodeURIComponent(tb.id)}`); } catch {}
         location.href = r.url;
         return;
       }
@@ -5745,16 +5711,21 @@ async function renderPay(tableId) {
             <button type="button" class="btn btn-ghost btn-sm" id="copy-ref">${esc(t("copyRef"))}</button>
           </p>
           <p style="margin-top:12px"><button type="button" class="btn btn-gold" id="pay-sent">${esc(t("payISent"))}</button></p>
-          <p class="stepper-hint">${esc(t("payAfterBank"))}</p>`;
+          <p class="stepper-hint">${esc(t("payAfterBank"))}</p><p id="bank-status" role="status" aria-live="polite"></p>`;
         $("#copy-iban")?.addEventListener("click", () => copyText(r.bank.iban));
         $("#copy-ref")?.addEventListener("click", () => copyText(r.bank.reference));
         $("#pay-sent")?.addEventListener("click", async () => {
+          const sentButton = document.getElementById('pay-sent');
+          const bankStatus = document.getElementById('bank-status');
+          if (sentButton) sentButton.disabled = true;
+          if (bankStatus) bankStatus.textContent = t('payChecking');
           const s = await apiJSON("/pay/sent", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ tableId: tb.id, user: me, amount, method: btn.dataset.method, reference: r.bank.reference }),
           });
           if (s?.ok) { showToast(t("payWait")); location.hash = `#/table/${encodeURIComponent(tb.id)}`; }
+          else { if (bankStatus) bankStatus.textContent = uxT('paymentCheckFailed'); if (sentButton) sentButton.disabled = false; }
         });
         return;
       }
@@ -5765,6 +5736,7 @@ async function renderPay(tableId) {
 }
 
 async function renderPayReturn() {
+  const returnRoute = location.hash;
   const me = loadUser();
   const sid = new URLSearchParams(location.search).get("session_id") || "";
   view().innerHTML = `
@@ -5779,10 +5751,11 @@ async function renderPayReturn() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ user: me, sessionId: sid }),
   }) : null;
+  if (location.hash !== returnRoute) return;
   if (r?.ok && r.card) {
     saveUser({ ...loadUser(), cardLast4: r.card.last4, cardBrand: r.card.brand });
-    showToast(t("payingCustomer"));
-    location.hash = "#/account";
+    showToast(uxT('cardConnected'));
+    location.hash = loginReturnTo(consumeAfterIdv()) || "#/account";
     return;
   }
   if (r?.ok && r.bridge) {
@@ -5795,14 +5768,16 @@ async function renderPayReturn() {
     location.hash = `#/table/${encodeURIComponent(r.table.id)}`;
     return;
   }
+  let back = '#/bookings';
+  try { back = loginReturnTo(sessionStorage.getItem('velvet_payment_return')) || back; } catch {}
   view().innerHTML = `
-  <section class="section">
-    <div class="empty-state">
-      <h3>${esc(t("payPending"))}</h3>
-      <p>${esc(t("payPendingHint"))}</p>
-      <p style="margin-top:20px"><a class="btn btn-gold" href="#/open" data-nav>${esc(t("navOpen"))}</a></p>
-    </div>
-  </section>`;
+  <section class="section"><div class="empty-state">
+    <h1>${esc(r?.error === 'not_paid' ? t('payPending') : uxT('paymentUnknown'))}</h1>
+    <p role="status">${esc(r?.error === 'not_paid' ? t('payPendingHint') : uxT('paymentCheckFailed'))}</p>
+    ${sid ? `<p><button type="button" class="btn btn-gold" id="payment-check-again">${esc(uxT('checkAgain'))}</button></p>` : ''}
+    <p><a class="btn btn-ghost" href="${esc(back)}" data-nav>${esc(t('navBookings'))}</a></p>
+  </div></section>`;
+  document.getElementById('payment-check-again')?.addEventListener('click', () => renderPayReturn());
 }
 
 async function renderPayout() {
@@ -6477,142 +6452,76 @@ async function renderUserProfile(id) {
 }
 
 async function renderCard() {
+  const requestedHash = location.hash;
   const u = loadUser();
   if (!u) {
-    view().innerHTML = `<section class="section"><div class="empty-state"><h3>${esc(t("loginTitle"))}</h3><p><button class="btn btn-gold" id="c-login">${esc(t("loginCta"))}</button></p></div></section>`;
-    $("#c-login")?.addEventListener("click", () => openOnboarding({ dismissable: false, phase: "auth" }));
+    view().innerHTML = `<section class="section"><div class="empty-state"><h1>${esc(t("loginTitle"))}</h1><p><button class="btn btn-gold" id="c-login">${esc(t("loginCta"))}</button></p><p><a href="#/account" data-nav>${esc(t("account"))}</a></p></div></section>`;
+    $("#c-login")?.addEventListener("click", () => openOnboarding({ dismissable: true, phase: "auth" }));
     return;
+  }
+  setTitle(uxT('cardSetupTitle'));
+  view().innerHTML = `<section class="section"><p role="status">${esc(uxT('cardSetupLoading'))}</p></section>`;
+  let savedReturn = '';
+  try { savedReturn = loginReturnTo(sessionStorage.getItem('velvet_after_idv')); } catch {}
+  let returnTo = savedReturn && !/^#\/(card|verify)(?:\?|$)/.test(savedReturn) ? savedReturn : '#/account';
+  // Back means viewing the request, not replaying its membership gate.
+  if (returnTo.startsWith('#/book-site/')) {
+    const [path, query = ''] = returnTo.split('?');
+    const params = new URLSearchParams(query);
+    params.delete('go');
+    returnTo = path + (params.toString() ? '?' + params.toString() : '');
   }
   await refreshIdv();
+  if (location.hash !== requestedHash) return;
   if (!isIdvOk()) {
-    rememberAfterIdv("#/card");
-    location.hash = "#/verify";
+    if (!savedReturn) rememberAfterIdv('#/card');
+    location.hash = '#/verify';
     return;
   }
-  const payCfg = await apiJSON("/pay/config");
-  setTitle(t("cardTitle"));
+  const payCfg = await apiJSON('/pay/config');
+  if (location.hash !== requestedHash) return;
+  const setupAvailable = payCfg?.stripe === true;
+  const configKnown = typeof payCfg?.stripe === 'boolean';
   view().innerHTML = `
   <section class="section card-page">
-    <a class="detail-back" href="#/account" data-nav>← ${esc(t("account"))}</a>
-    <h1>${esc(t("cardTitle"))}</h1>
-    <p class="ob-sub" style="margin:0 0 16px;text-align:left">${esc(t("cardSub"))}</p>
-    ${isCardOk() ? `<p class="idv-badge ok">💳 ${esc(cardLabel())} · ${esc(t("payingCustomer"))}</p>` : `<p class="idv-badge no">${esc(t("cardNeed"))}</p>`}
-    <div class="card-face" aria-hidden="true">
-      <span class="card-face-brand" id="card-brand-lab">VELVET</span>
-      <div class="card-face-num" id="card-face-num">•••• •••• •••• ••••</div>
-      <div class="card-face-row">
-        <span id="card-face-name">${esc(displayName(u) || "—")}</span>
-        <span id="card-face-exp">${esc(t("cardExpPh"))}</span>
-      </div>
-    </div>
-    <form class="pay-form" id="card-form">
-      <label>${esc(t("cardName"))}
-        <input type="text" id="card-name" autocomplete="cc-name" maxlength="48" value="${esc(displayName(u))}">
-      </label>
-      <label>${esc(t("cardNumber"))}
-        <input type="text" id="card-num" inputmode="numeric" autocomplete="cc-number" maxlength="23" placeholder="•••• •••• •••• ••••">
-      </label>
-      <div class="card-row">
-        <label>${esc(t("cardExp"))}
-          <input type="text" id="card-exp" inputmode="numeric" autocomplete="cc-exp" maxlength="5" placeholder="${esc(t("cardExpPh"))}">
-        </label>
-        <label>${esc(t("cardCvc"))}
-          <input type="text" id="card-cvc" inputmode="numeric" autocomplete="cc-csc" maxlength="4" placeholder="•••">
-        </label>
-      </div>
-      <div class="field-error hidden" id="card-err" role="alert"></div>
-      ${payCfg?.stripe ? `<p class="events-meta">${esc(t("cardStripeHint"))}</p>
-      <p><button type="button" class="btn btn-gold" id="card-stripe" style="width:100%">${esc(t("cardStripe"))}</button></p>` : ""}
-      <button class="btn btn-gold" type="submit" style="width:100%">${esc(t("cardCta"))}</button>
-    </form>
+    <a class="detail-back" href="${esc(returnTo)}" data-nav>← ${esc(uxT('cardReturn'))}</a>
+    <h1>${esc(uxT('cardSetupTitle'))}</h1>
+    <p class="ob-sub" style="margin:0 0 16px;text-align:left">${esc(uxT('cardSetupIntro'))}</p>
+    ${cardLabel() ? `<p>${esc(uxT('cardStoredDetails'))}: ${esc(cardLabel())}</p><p class="stepper-hint">${esc(uxT('cardStoredHint'))}</p>` : ''}
+    ${setupAvailable
+      ? `<p><button type="button" class="btn btn-gold" id="card-stripe">${esc(uxT('cardSetupAction'))}</button></p>`
+      : `<p role="status">${esc(uxT(configKnown ? 'cardSetupUnavailable' : 'cardSetupReadFailed'))}</p><p><button type="button" class="btn btn-ghost" id="card-retry">${esc(uxT('checkAgain'))}</button></p>`}
+    <div class="field-error hidden" id="card-err" role="alert"></div>
+    <p><a class="btn btn-ghost" href="${esc(returnTo)}" data-nav>${esc(uxT('cardReturn'))}</a> <a href="#/account" data-nav>${esc(t('account'))}</a></p>
   </section>`;
-  const setErr = (msg) => {
-    const err = $("#card-err");
-    if (!err) return;
-    if (!msg) { err.classList.add("hidden"); err.textContent = ""; return; }
-    err.textContent = msg;
-    err.classList.remove("hidden");
-  };
-  const digits = (el) => String(el?.value || "").replace(/\D/g, "");
-  const paintFace = () => {
-    const n = digits($("#card-num"));
-    const brand = cardBrandOf(n);
-    const pretty = n.replace(/(\d{4})(?=\d)/g, "$1 ").trim() || "•••• •••• •••• ••••";
-    const lab = $("#card-brand-lab");
-    const num = $("#card-face-num");
-    const exp = $("#card-face-exp");
-    const nm = $("#card-face-name");
-    if (lab) lab.textContent = brand === "card" ? "VELVET" : brand.toUpperCase();
-    if (num) num.textContent = pretty;
-    if (exp) exp.textContent = ($("#card-exp")?.value || t("cardExpPh"));
-    if (nm) nm.textContent = ($("#card-name")?.value || displayName(u) || "—").slice(0, 28);
-  };
-  $("#card-num")?.addEventListener("input", (e) => {
-    const d = digits(e.target).slice(0, 19);
-    e.target.value = d.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
-    paintFace();
-  });
-  $("#card-exp")?.addEventListener("input", (e) => {
-    let d = digits(e.target).slice(0, 4);
-    if (d.length >= 3) d = d.slice(0, 2) + "/" + d.slice(2);
-    e.target.value = d;
-    paintFace();
-  });
-  $("#card-cvc")?.addEventListener("input", (e) => { e.target.value = digits(e.target).slice(0, 4); });
-  $("#card-name")?.addEventListener("input", paintFace);
-  $("#card-num")?.focus();
-  $("#card-stripe")?.addEventListener("click", async () => {
-    setErr("");
-    const r = await apiJSON("/card/setup", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user: u }),
+  $('#card-retry')?.addEventListener('click', renderCard);
+  $('#card-stripe')?.addEventListener('click', async () => {
+    const button = $('#card-stripe');
+    const error = $('#card-err');
+    if (!button || button.disabled) return;
+    button.disabled = true;
+    error.classList.add('hidden');
+    const result = await apiJSON('/card/setup', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ user: u }),
     });
-    if (r?.url) { location.href = r.url; return; }
-    setErr(r?.error === "no_processor" ? t("payNoProcessor") : t("cardBad"));
-  });
-  $("#card-form")?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    setErr("");
-    const num = digits($("#card-num"));
-    const exp = digits($("#card-exp"));
-    const cvc = digits($("#card-cvc"));
-    if (!luhnOk(num)) { setErr(t("cardBad")); return; }
-    if (exp.length !== 4) { setErr(t("cardExpired")); return; }
-    const expMonth = Number(exp.slice(0, 2));
-    const expYear = 2000 + Number(exp.slice(2));
-    const now = new Date();
-    if (expMonth < 1 || expMonth > 12 || expYear < now.getFullYear() || (expYear === now.getFullYear() && expMonth < now.getMonth() + 1)) {
-      setErr(t("cardExpired"));
+    if (location.hash !== requestedHash) return;
+    if (typeof result?.url === 'string' && /^https:\/\//i.test(result.url)) {
+      location.href = result.url;
       return;
     }
-    if (cvc.length < 3) { setErr(t("cardBad")); return; }
-    const btn = $("#card-form button[type=submit]");
-    if (btn) { btn.disabled = true; btn.textContent = "…"; }
-    const r = await apiJSON("/card", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user: u,
-        last4: num.slice(-4),
-        brand: cardBrandOf(num),
-        expMonth,
-        expYear,
-      }),
-    });
-    $("#card-num").value = "";
-    $("#card-cvc").value = "";
-    if (r?.error === "idv_required") { location.hash = "#/verify"; return; }
-    if (r?.error === "no_pan") { setErr(t("cardSub")); if (btn) { btn.disabled = false; btn.textContent = t("cardCta"); } return; }
-    if (r?.error || !r?.card) {
-      setErr(r?.error === "expired" ? t("cardExpired") : t("cardBad"));
-      if (btn) { btn.disabled = false; btn.textContent = t("cardCta"); }
+    if (result?.error === 'idv_required') {
+      if (!savedReturn) rememberAfterIdv('#/card');
+      location.hash = '#/verify';
       return;
     }
-    saveUser({ ...loadUser(), cardLast4: r.card.last4, cardBrand: r.card.brand });
-    showToast(t("payingCustomer"));
-    const next = consumeAfterIdv();
-    location.hash = next || "#/account";
+    if (result?.error === 'auth') {
+      button.disabled = false;
+      openOnboarding({ dismissable: true, phase: 'auth', returnTo: requestedHash });
+      return;
+    }
+    error.textContent = uxT(result?.error === 'no_processor' ? 'cardSetupUnavailable' : 'cardSetupFailed');
+    error.classList.remove('hidden');
+    button.disabled = false;
   });
 }
 
@@ -6660,24 +6569,16 @@ async function renderAccount() {
           </div>`).join("")}` : ""}
       ${isOperatorUser(u) ? `<p style="margin-top:16px"><a class="btn btn-gold btn-sm" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
       <p style="margin-top:16px"><button class="btn btn-ghost" id="acc-out">${esc(t("logout"))}</button></p>` : `
-      <p>${esc(socialTrustCopy().oneTapSub)}</p>
-      <p class="stepper-hint social-honesty auth-real-note">🔒 Riktig säker inloggning · VELVET sparar aldrig ditt lösenord</p>
-      <button type="button" class="btn btn-gold phone-login" id="acc-phone-login" style="margin-top:16px">Face ID / Touch ID / skärmlås</button>
-      <div class="social-grid social-grid-onetap" style="margin-top:16px">
-        ${SOCIALS.map((s) => socialCompactButton(s, "data-account-soc")).join("")}
-      </div>`}
+      <div id="account-auth-choices"></div>`}
     <h3 style="margin:28px 0 12px">${esc(t("chooseLang"))}</h3>
     <div class="lang-grid">
       ${LANGS.map((l) => `<button type="button" class="lang-card${currentLang() === l.id ? " on" : ""}" data-lang="${l.id}"><span class="lang-flag">${l.flag}</span><span>${esc(l.label)}</span></button>`).join("")}
     </div>
   </section>`;
   $("#acc-out")?.addEventListener("click", async () => { await logoutUser(); renderAccount(); });
-  $("#acc-phone-login")?.addEventListener("click", () => loginWithPasskey());
-  document.querySelectorAll("[data-account-soc]").forEach((el) => el.addEventListener("click", async () => {
-    el.disabled = true;
-    const r = await loginWithSocial(el.dataset.accountSoc).catch(() => null);
-    if (!r?.oauth) { showToast(socialTrustCopy().unavailable); el.disabled = false; }
-  }));
+  mountAuthChoices(document.getElementById('account-auth-choices'), {
+    onPasskey: () => { if ((location.hash || '').split('?')[0] === '#/account') renderAccount(); },
+  });
   document.querySelectorAll("[data-lang]").forEach((el) => {
     el.addEventListener("click", () => {
       applyLang(el.dataset.lang);
@@ -6768,11 +6669,16 @@ function searchHits(q) {
       });
     }
   }
-  return out.slice(0, 12);
+  for (const restaurant of RESTAURANT_INDEX) {
+    if (!fold(restaurant.name + " " + restaurant.destinationName + " " + (restaurant.cuisine || "")).includes(s)) continue;
+    out.push({ kind: t("navRestaurants"), title: restaurant.name, meta: restaurant.destinationName, href: "#/restaurant/" + encodeURIComponent(restaurant.placeId) });
+  }
+  // Exact restaurant/venue names must not be displaced by broad city matches.
+  return out.sort((a, b) => Number(fold(b.title) === s) - Number(fold(a.title) === s)).slice(0, 12);
 }
 
 let searchCloser = null;
-function openSearch() {
+function openSearch(initialQuery = "") {
   if (searchCloser) return;
   if (document.body.classList.contains("modal-lock") || document.body.classList.contains("ob-lock")) return;
   const root = document.getElementById("search-root");
@@ -6850,6 +6756,8 @@ function openSearch() {
   };
   const paint = () => {
     hits = searchHits(input.value);
+    const kinds = [...new Set(hits.map(hit => hit.kind))];
+    hits = kinds.flatMap(kind => hits.filter(hit => hit.kind === kind));
     active = 0;
     const q = input.value.trim();
     if (!hits.length) {
@@ -6861,6 +6769,7 @@ function openSearch() {
       emptyEl.hidden = true;
       statusEl.textContent = t("searchHitsN").replace("{n}", String(hits.length));
       hitsEl.innerHTML = hits.map((h, i) => `
+        ${i === 0 || hits[i - 1].kind !== h.kind ? `<div class="search-group-label" role="presentation">${esc(h.kind)}</div>` : ""}
         <div class="search-hit${i === 0 ? " active" : ""}" id="search-opt-${i}" data-i="${i}" role="option" aria-selected="${i === 0}">
           <div><div>${esc(h.title)}</div><div class="search-hit-k">${esc(h.kind)}</div></div>
           <div class="search-hit-k">${esc(h.meta)}</div>
@@ -6891,7 +6800,9 @@ function openSearch() {
     overlay.style.top = "";
     panel.style.height = "";
   });
+  input.value = typeof initialQuery === "string" ? initialQuery : "";
   paint();
+  ensureRestaurantIndex().then(() => { if (searchCloser === close) paint(); });
   input.focus();
   fitViewport();
 }
@@ -7398,7 +7309,6 @@ async function renderBookSite(id) {
   };
   const kindLabel = t("bridgeTitle");
   const engineName = adapter.engineLabel || "";
-  const enginePhrase = engineName || t("bridgeAnySystem");
   const openHref = adapter.widgetUrl || adapter.officialUrl || b.url;
   const openLabel = engineName ? t("bookOnSiteOpenEngine").replace("{engine}", engineName) : t("bookOnSiteOpen");
   const young = venueTooYoung(v);
@@ -7438,7 +7348,7 @@ async function renderBookSite(id) {
       <div class="book-site-copy">
         <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)}${engineName ? ` · ${esc(engineName)}` : ""}${host ? ` · ${esc(host)}` : ""}</p>
         <h1>${esc(v.name)}</h1>
-        <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(t("bridgeSub").replace("{name}", v.name).replace("{engine}", enginePhrase))}</p>
+        <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(uxT("bridgeIntro").replace("{name}", v.name))}</p>
         ${adapter.vipHow ? `<p class="events-meta">${esc(t("bridgeReadLive"))}: ${esc(adapter.vipHow)}</p>` : `<p class="events-meta">${esc(t("bridgeReadLive"))}</p>`}
         <div class="book-desk-card">
         ${tooYoung ? `
@@ -7466,7 +7376,7 @@ async function renderBookSite(id) {
             <input type="number" id="br-amount" min="0" step="1" inputmode="decimal" placeholder="EUR" value="${pending?.amount ? esc(String(pending.amount)) : ""}">
           </label>
           <p class="events-meta">${esc(isPayingMember() ? t("guestVerified") : t("bridgeNeed"))}${adapter.clubPay ? ` · ${esc(t("clubHasPay"))}` : ""}</p>
-          <button type="button" class="btn btn-gold" id="br-make" style="width:100%">${esc(t("bridgeCta").replace("{name}", v.name))}</button>
+          <button type="button" class="btn btn-gold" id="br-make" style="width:100%">${esc(uxT("prepareRequest"))}</button>
         </div>
         <div class="bridge-packet hidden" id="bridge-out"></div>`}
         </div>
@@ -7507,7 +7417,7 @@ async function renderBookSite(id) {
       : "";
     el.innerHTML = `
       <h2 class="detail-panel-title">${esc(t("bridgePacket"))} · ${esc(bridge.id)}</h2>
-      <p class="idv-badge ok">${esc(t("bridgeStatus"))}</p>
+      <p class="events-meta" role="status">${esc(uxT("preparedHint"))}</p>
       <pre class="bridge-pre">${esc(bridge.packet || "")}</pre>
       <div class="book-site-actions" style="margin-top:12px">
         ${(bridge.handoffUrl || adapter.widgetUrl || adapter.officialUrl || b.url) ? `<a class="btn btn-gold" id="br-open" href="${esc(bridge.handoffUrl || adapter.widgetUrl || adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bridgeOpen"))} ↗</a>` : ""}
@@ -7585,7 +7495,7 @@ async function renderBookSite(id) {
     stashPending();
     rememberAfterIdv(returnHash());
     if (!loadUser()) {
-      openOnboarding({ dismissable: true, phase: "auth" });
+      openOnboarding({ dismissable: true, phase: "auth", returnTo: returnHash() });
       return true;
     }
     if (!isIdvOk()) { location.hash = "#/verify"; return true; }
@@ -7621,21 +7531,10 @@ async function renderBookSite(id) {
     if (r?.bridge) {
       clearPendingBridge();
       paintPacket(r.bridge);
-      const amt = Number($("#br-amount")?.value || r.bridge.payment?.amount || 0);
-      if (r.payReady && amt > 0) {
-        const pay = await apiJSON("/pay/intent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user: loadUser(),
-            venueId: v.venue_id,
-            bridgeId: r.bridge.id,
-            amount: amt,
-            method: "card",
-          }),
-        });
-        if (pay?.url) location.href = pay.url;
-      }
+      // Payment is a separate explicit action in the prepared summary.
+    } else {
+      stashPending();
+      showToast(uxT("requestFailed"));
     }
   });
   if (pending && isPayingMember() && !tooYoung && q.get("go") === "1") {
@@ -7671,13 +7570,13 @@ const routes = {
   "#/availability": renderAvailabilitySearch,
   "#/map": renderMapView,
   "#/bookings": renderBookings,
-  "#/open": () => { renderOpenTables(); },
-  "#/verify": () => { renderVerify(); },
-  "#/card": () => { renderCard(); },
+  "#/open": () => renderOpenTables(),
+  "#/verify": () => renderVerify(),
+  "#/card": () => renderCard(),
   "#/account": renderAccount,
-  "#/promoters": () => { renderPromoters(); },
-  "#/payout": () => { renderPayout(); },
-  "#/pay-return": () => { renderPayReturn(); },
+  "#/promoters": () => renderPromoters(),
+  "#/payout": () => renderPayout(),
+  "#/pay-return": () => renderPayReturn(),
   "#/favorites": renderFavorites,
   "#/villkor": () => renderLegal("villkor"),
   "#/integritet": () => renderLegal("integritet"),
@@ -7702,7 +7601,51 @@ const paramRoutes = [
 // Trasiga %-sekvenser i hashen får inte krascha routern
 const safeDecode = (s) => { try { return decodeURIComponent(s); } catch { return s; } };
 
-function route() {
+let routeRevision = 0;
+let renderedRoute = '';
+const routeScroll = new Map();
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+
+function paintExploreNav(hash) {
+  const nav = document.getElementById('explore-nav');
+  if (!nav) return;
+  nav.hidden = primarySection(hash) !== '#/';
+  nav.setAttribute('aria-label', t('navExplore'));
+  const params = new URLSearchParams(hash.split('?')[1] || '');
+  const cityRoute = hash.match(/^#\/destination\/([^?]+)/);
+  const venueRoute = hash.match(/^#\/venue\/([^?]+)/);
+  const venue = venueRoute && VENUES.find(v => v.venue_id === safeDecode(venueRoute[1]));
+  const selected = destByCodeOrName(cityRoute ? safeDecode(cityRoute[1]) : params.get('dest') || params.get('city') || venue?.destination_code) || homeDestination();
+  const links = [
+    ['#/restaurants' + (selected ? '?dest=' + encodeURIComponent(selected.code) : ''), 'navRestaurants'],
+    ['#/venues', 'navVenues'],
+    ['#/availability' + (selected ? '?city=' + encodeURIComponent(selected.name) : ''), 'navFindTable'],
+    ['#/destinations', 'navDestinations'],
+    ['#/map', 'navMap'],
+    ['#/open', 'navOpen'],
+  ];
+  nav.innerHTML = links.map(([href, key]) => `<a href="${esc(href)}" data-nav${hash.split('?')[0] === href.split('?')[0] ? ' aria-current="page"' : ''}>${esc(t(key))}</a>`).join('');
+}
+
+async function route() {
+  const revision = ++routeRevision;
+  const incoming = location.hash || '#/';
+  if (renderedRoute && renderedRoute !== incoming) {
+    routeScroll.set(renderedRoute, window.scrollY);
+    if (isDiscoveryList(renderedRoute)) {
+      try { sessionStorage.setItem('velvet_discovery_return', renderedRoute); } catch {}
+    } else if (/^#\/(venue|restaurant)\//.test(incoming) && !/^#\/(venue|restaurant|book-site|menu)\//.test(renderedRoute)) {
+      try { sessionStorage.removeItem('velvet_discovery_return'); } catch {}
+    }
+  }
+  if (/^#\/(venue|restaurant)\//.test(incoming)) {
+    try {
+      const target = incoming.split('?')[0];
+      if (!isDiscoveryList(renderedRoute) && sessionStorage.getItem('velvet_discovery_target') !== target) sessionStorage.removeItem('velvet_discovery_return');
+      sessionStorage.setItem('velvet_discovery_target', target);
+    } catch {}
+  }
+  renderedRoute = incoming;
   activeAvailabilitySearch?.destroy(); activeAvailabilitySearch = null;
   document.body.classList.remove("has-dock");
   // Stäng ev. öppen modal vid ruttbyte (t.ex. bakåtknapp med öppen modal)
@@ -7729,7 +7672,9 @@ function route() {
   }
   // Okänd rutt → 404-vy (ingen nav-länk markeras som aktiv)
   if (!fn) { fn = () => render404(h); active = null; }
-  fn();
+  paintExploreNav(raw);
+  await fn();
+  if (revision !== routeRevision || (location.hash || "#/") !== raw) return;
   const titles = {
     "#/": null,
     "": null,
@@ -7743,21 +7688,45 @@ function route() {
     "#/integritet": t("legalPrivacy"),
   };
   if (Object.prototype.hasOwnProperty.call(titles, h)) setTitle(titles[h]);
-  window.scrollTo(0, 0);
-  document.querySelectorAll(".nav-links a").forEach((a) => {
-    a.classList.toggle("active", a.getAttribute("href") === active);
+  const main = view();
+  // Every route has one orientation heading, including legacy H2-only screens.
+  if (!main.querySelector('h1')) {
+    const heading = main.querySelector('h2, h3');
+    if (heading) {
+      const h1 = document.createElement('h1');
+      for (const attribute of heading.attributes) h1.setAttribute(attribute.name, attribute.value);
+      h1.replaceChildren(...heading.childNodes);
+      heading.replaceWith(h1);
+    }
+  }
+  document.querySelectorAll('.nav-links a').forEach((a) => {
+    const isActive = active !== null && a.getAttribute('href') === primarySection(raw);
+    a.classList.toggle('active', isActive);
+    if (isActive) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+  });
+  if (/^#\/(venue|restaurant)\//.test(raw)) {
+    let returnTo;
+    try { returnTo = safeDiscoveryReturn(sessionStorage.getItem('velvet_discovery_return')); } catch {}
+    const back = main.querySelector('.detail-back, .back-link');
+    if (returnTo && back) { back.href = returnTo; back.textContent = '← ' + t(returnTo.startsWith('#/destination/') ? 'navDestinations' : returnTo.startsWith('#/favorites') ? 'navFav' : 'searchResultsBack'); }
+  }
+  main.focus({ preventScroll: true });
+  requestAnimationFrame(() => {
+    if (revision === routeRevision) window.scrollTo(0, routeScroll.get(raw) || 0);
   });
 }
 
 // Mjuk crossfade mellan vyer vid ruttbyte (View Transitions API, progressive
 // enhancement). Vid reduced-motion eller saknat stöd → omedelbart byte som förr.
 // Endast hashchange går via denna; programmatiska route()-anrop förblir direkta.
-function routeWithTransition() {
+function routeWithTransition(event) {
+  // replaceState updates search filters without rendering; retain that exact URL on departure.
+  if (event?.oldURL) renderedRoute = new URL(event.oldURL).hash || "#/";
   const reduce = typeof matchMedia === "function" && matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if (typeof document.startViewTransition !== "function" || reduce || document.visibilityState === "hidden") { route(); return; }
+  if (typeof document.startViewTransition !== "function" || reduce || document.visibilityState === "hidden") { route().catch(() => {}); return; }
   let vt;
   try { vt = document.startViewTransition(() => route()); }
-  catch { route(); return; }
+  catch { route().catch(() => {}); return; }
   // Snabba ruttbyten/dold flik avbryter pågående övergång → svälj de förväntade rejections
   vt.updateCallbackDone?.catch(() => {});
   vt.ready?.catch(() => {});
@@ -7800,14 +7769,18 @@ function initMobileNav() {
     toggle.setAttribute("aria-expanded", String(open));
     toggle.setAttribute("aria-label", t(open ? "navMenuClose" : "navMenuOpen"));
   };
-  toggle.addEventListener("click", () => setOpen(!links.classList.contains("open")));
+  toggle.addEventListener("click", () => {
+    const opening = !links.classList.contains("open");
+    setOpen(opening);
+    if (opening) links.querySelector('a')?.focus();
+  });
   // Stäng vid länkklick (även samma route, då hashchange inte triggas)
   links.addEventListener("click", (e) => {
     if (e.target.closest("a") || e.target.closest("[data-nav-lang]")) setOpen(false);
   });
   window.addEventListener("hashchange", () => setOpen(false));
   document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && links.classList.contains("open")) setOpen(false);
+    if (e.key === "Escape" && links.classList.contains("open")) { setOpen(false); toggle.focus(); }
   });
 }
 
@@ -7945,7 +7918,8 @@ async function init() {
       if (Array.isArray(extraV)) v = v.concat(extraV);
     }
   } catch { /* optional */ }
-  DESTINATIONS = d;
+  const seenDestinationCodes = new Set();
+  DESTINATIONS = d.filter(item => item.code && !seenDestinationCodes.has(item.code) && seenDestinationCodes.add(item.code));
   // Samma enhet förekom tidigare både i huvudkatalogen och den sökbara
   // extralistan. Dubbla poster gav dubbla kort och samma foto två gånger.
   const seenVenueSites = new Set();
@@ -7988,8 +7962,10 @@ async function init() {
   const authError = bootParams.get("auth_error") || "";
   const authProvider = bootParams.get("provider") || "";
   const passkeyRequested = bootParams.get("passkey") === "1";
+  let authenticatedOnBoot = false;
   const serverSession = await apiJSON("/auth/session");
   if (serverSession?.user) {
+    authenticatedOnBoot = true;
     saveUser({ ...serverSession.user, created: serverSession.user.created || new Date().toISOString() });
   } else if (location.hostname === "b2b.bakemyday.se") {
     // På den riktiga domänen är en HttpOnly-session sanningen. En gammal
@@ -7998,8 +7974,9 @@ async function init() {
     try { localStorage.removeItem(USER_KEY); } catch {}
   }
   if (authTok) {
+    authenticatedOnBoot = false;
     const sess = await apiJSON("/auth/session?token=" + encodeURIComponent(authTok));
-    if (sess?.user) saveUser({ ...sess.user, created: sess.user.created || new Date().toISOString() });
+    if (sess?.user) { authenticatedOnBoot = true; saveUser({ ...sess.user, created: sess.user.created || new Date().toISOString() }); }
   }
   const existing = loadUser();
   if (existing) registerUser(existing);
@@ -8008,11 +7985,12 @@ async function init() {
     const rest = bootParams.toString();
     history.replaceState(null, "", location.pathname + (rest ? `?${rest}` : "") + (location.hash || "#/"));
   }
-  if (loadUser() && (authTok || authProvider)) {
+  if (authenticatedOnBoot && !authError && (authTok || authProvider)) {
     try {
-      const oauthFrom = sessionStorage.getItem("velvet_oauth_from") || "";
+      const returnTo = resolveAuthReturn({explicit:sessionStorage.getItem("velvet_after_login"), oauthFrom:sessionStorage.getItem("velvet_oauth_from"), fallback:location.hash || "#/account"});
+      sessionStorage.removeItem("velvet_after_login");
       sessionStorage.removeItem("velvet_oauth_from");
-      if (/^#\/restaurant\//.test(oauthFrom)) location.hash = oauthFrom;
+      location.hash = returnTo;
     } catch {}
   }
   const sid = bootParams.get("session_id");
@@ -8046,11 +8024,6 @@ async function init() {
   route();
   updateBookingBadge();
   updateFavBadge();
-  // Första besöket (inget val sparat) och ingen direktlänk → visa onboardingen.
-  // Direktlänkar (#/venue/…, #/join/…, …) får aldrig blockeras.
-  if (!passkeyRequested && !homeChoice && (!location.hash || location.hash === "#/")) {
-    openOnboarding({ dismissable: true });
-  }
   if (authError) {
     const provider = SOCIALS.find((s) => s.id === authProvider)?.label || authProvider || "Anslutningen";
     const msg = authError === "not_configured"

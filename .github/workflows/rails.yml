@@ -15,3 +15,13 @@ jobs:
       - run: npm run test:auth
       - run: npm test
       - run: node api/test-rails.mjs
+      - run: node scripts/test-ux-navigation.mjs
+      - run: node scripts/test-ux-booking.mjs
+      - run: node scripts/test-discovery.mjs
+      - run: node scripts/test-booking-selection.mjs
+      - run: node scripts/test-booking-providers.mjs
+      - run: node scripts/test-auth-options.mjs
+      - run: node scripts/test-route-integrity.mjs
+      - run: node scripts/test-restaurant-ids.mjs
+      - run: node scripts/test-card-setup.mjs
+      - run: node scripts/test-external-destinations.mjs
