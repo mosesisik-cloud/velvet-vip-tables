@@ -5,6 +5,14 @@
   "agent": "gabbe-wave17-01a02152",
   "worker": "wave17_gaggan",
   "checkedAt": "2026-10-16",
+  "inspectionSafety": {
+    "backgroundSideEffects": "unknown",
+    "serviceWorkerBlocking": "not_recorded",
+    "requestWriteInterception": "not_recorded",
+    "networkAudit": "not_recorded",
+    "writeFreeEndToEndCertified": false,
+    "basis": "Historical browser/tool observations record public page navigation and no deliberate booking-form submission or guest-data entry by the operator. Service-worker blocking, write-request interception and network audit were not recorded. No network-level safeguard or absence of automatic/background side effects is certified. This provenance correction adds no new live inspection or fabricated logs."
+  },
   "identity": {
     "status": "verified",
     "name": "Gaggan at Louis Vuitton",
@@ -109,8 +117,8 @@
     },
     {
       "name": "no_side_effects",
-      "result": "passed",
-      "detail": "Only public page reads/navigation performed. No booking, hold, guest entry, payment, message, login or access-control bypass."
+      "result": "unknown",
+      "detail": "Historical operator-action record shows page navigation, with no deliberate reservation/hold/payment/message submission, guest-data entry, login or access-control bypass. That action record is not network evidence: background effects are unknown, and service-worker blocking, request-write interception and network audit were not recorded."
     },
     {
       "name": "json_parse",

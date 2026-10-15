@@ -2,6 +2,8 @@
 
 Read-only source inspection at main `b0a3b6d` on 2026-10-16. Shared runtime files and registries were not edited by this reviewer. These recommendations do not establish publication or a completed reservation.
 
+Historical browser checks describe reported navigation and operator actions only. Original network-audit, request-write blocking and service-worker-blocking provenance was not recorded; background side effects are unknown. Do not treat these fragments or their offline assertions as write-free browser certification. The PR #109 follow-up corrects those fields without new provider visits.
+
 ## Existing manual-contact path
 
 `js/restaurant-contact.js` already has an independent frozen map keyed by stable restaurant ID. Its binding schema is exactly `{type, value, source}`. `resolveReviewedRestaurantContact` rejects unknown IDs, changed fields and extra fields. It delegates safe href construction to `external200ContactHref` in `js/external200-booking.js`.
@@ -54,4 +56,4 @@ Keep `lang=en` as linked by the official source; no provider locale rewrite is v
 - Retain provider/mirror precedence and permanent-closure behavior in the real app route.
 - For i-host, reject copied stable IDs, changed restaurant number, host, path, source, duplicate/missing/extra query parameters, fragment, credentials and protocol; reject attempts to mark the row embedded or live-ready.
 - Keep response windows and cancellation/payment terms unknown. Do not infer policies from hidden or unresolved provider templates. Availability flags and manual-route presence are not confirmation.
-- The broad request-only service test currently assumes every registry request-only row has a 24–72-hour response and card guarantee. Manual contacts should not be inserted into that registry merely to satisfy it.
+- At the reviewed base, a broad request-only test assumed 24–72-hour replies and card guarantees. Later main188 added unknown/max-only response handling; the historical warning is not a claim of a present main188 defect. Manual contacts still must not be inserted into a provider registry merely to satisfy a test.

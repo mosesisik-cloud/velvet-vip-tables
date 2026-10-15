@@ -4,6 +4,14 @@
   "claimAgent": "gabbe-wave17-01a02152",
   "evidenceAgent": "wave17_lucca",
   "checkedAt": "2026-10-16",
+  "inspectionSafety": {
+    "backgroundSideEffects": "unknown",
+    "serviceWorkerBlocking": "not_recorded",
+    "requestWriteInterception": "not_recorded",
+    "networkAudit": "not_recorded",
+    "writeFreeEndToEndCertified": false,
+    "basis": "The reviewer reported official-page navigation and read-only link inspection without opening the WhatsApp contact, entering guest details or submitting a reservation, payment or message. These are reported operator actions only; no logged request interception, service-worker blocking or network audit establishes that background side effects did not occur."
+  },
   "identity": {
     "status": "official_branch_verified",
     "name": "Lucca by the Sea",
@@ -76,8 +84,8 @@
     ]
   },
   "limitations": [
-    "No WhatsApp contact was opened or message sent; only the official CTA destination was read.",
-    "No booking, hold, payment, personal-data entry, reservation confirmation or inventory test occurred.",
+    "The reviewer reported no WhatsApp-contact activation or message submission; only the official CTA destination was read. Background messaging or other service effects were not audited.",
+    "No booking, hold-creating action, payment submission, personal-data entry, reservation confirmation or inventory-test action was observed or reported. Without recorded network/write safeguards, this is not certification that no background booking, hold or other effect occurred.",
     "No current seasonal operating dates were verified. Do not infer permanent closure from removal of the hotel's old page.",
     "Manual-contact evidence is not an in-app booking integration. Public website, registry, catalogue and canonical worklist remain unchanged by this evidence task."
   ],
@@ -91,7 +99,8 @@
     "jsonParse": "passed",
     "nativeEmbed": "not_tested",
     "availability": "not_tested",
-    "reservationSubmission": "not_performed"
+    "reservationSubmission": "not_performed",
+    "operatorActionBasis": "Reservation submission was not reported as an operator action. Form/iframe counts are rendered-document observations, not network or service-worker safety checks. Background side effects remain unknown."
   },
   "publication": {
     "status": "not_published",

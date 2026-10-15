@@ -5,6 +5,14 @@
   "agent": "gabbe-wave17-01a02152",
   "worker": "wave17_gaggan",
   "checkedAt": "2026-10-16",
+  "inspectionSafety": {
+    "backgroundSideEffects": "unknown",
+    "serviceWorkerBlocking": "not_recorded",
+    "requestWriteInterception": "not_recorded",
+    "networkAudit": "not_recorded",
+    "writeFreeEndToEndCertified": false,
+    "basis": "Historical parent browser observations record the initial provider page and no deliberate field change, search, slot selection or submission by the operator. Service-worker blocking, write-request interception and network audit were not recorded. Initial-page observation and no deliberate submission do not certify absence of automatic/background side effects. This provenance correction adds no new live inspection or fabricated logs."
+  },
   "identity": {
     "status": "verified",
     "name": "Ossiano",
@@ -28,7 +36,7 @@
     "observedMode": "official_external_link_unresolved_operating_status",
     "sourceRelationship": "Operator restaurant page links this exact restaurant-specific SevenRooms route.",
     "webResult": "The official link redirected to the matching venue search URL. Web extraction produced no readable provider body; a separate fetch returned an internal error. These results are inconclusive about form rendering or service availability.",
-    "browserResult": "Parent coordinator observed the linked original SevenRooms top-level page: matching Ossiano name and Atlantis The Palm, Dubai address; guest/date/time controls; displayed date 15 October and a closure notice for that date. Other-dates heading rendered without any listed dates or slots. No fields, searches or slots were selected.",
+    "browserResult": "Parent coordinator observed the linked original SevenRooms top-level page: matching Ossiano name and Atlantis The Palm, Dubai address; guest/date/time controls; displayed date 15 October and a closure notice for that date. Other-dates heading rendered without any listed dates or slots. The historical operator-action record shows no deliberate field changes, searches or slot selections; it is not a network audit or proof of no background effects.",
     "initialStandaloneFormObserved": true,
     "nativeEmbeddingObserved": false,
     "availabilityObserved": false,
@@ -69,7 +77,7 @@
       "url": "https://www.sevenrooms.com/explore/ossianodubai/reservations/create/search?tracking=AD-website",
       "type": "provider_browser_observation_by_parent",
       "observedBy": "/root",
-      "observation": "Parent fresh accessibility snapshot showed Ossiano - Reservations, Atlantis The Palm in Dubai, two guests, displayed 15 October, all times, and a notice that the restaurant was closed on that displayed date. Other-dates heading had no dates or slots listed. About copy referred to a newly reimagined setting. Parent did not interact with fields, search or select a slot.",
+      "observation": "Parent accessibility snapshot from the historical inspection showed Ossiano - Reservations, Atlantis The Palm in Dubai, two guests, displayed 15 October, all times, and a notice that the restaurant was closed on that displayed date. Other-dates heading had no dates or slots listed. About copy referred to a newly reimagined setting. Recorded parent actions did not change fields, search or select a slot; automatic/background requests were not audited.",
       "checkedAt": "2026-10-16",
       "scope": "Standalone original provider page, not an iframe and not a completed reservation."
     },
@@ -122,12 +130,12 @@
     {
       "name": "provider_browser_rendering",
       "result": "passed_standalone_initial_form_only",
-      "detail": "Local worker browser surface was unavailable, but parent supplied fresh CUA accessibility evidence of exact provider page and matching restaurant controls. Closure on displayed 15 October; no alternative dates/slots. No iframe test, fields changed, search or slot selection."
+      "detail": "Local worker browser surface was unavailable, but parent supplied CUA accessibility evidence from the historical inspection of the exact provider page and matching restaurant controls. Closure on displayed 15 October; no alternative dates/slots. No iframe test was recorded. No deliberate field change, search or slot selection was recorded; this is operator-action evidence, not network-level side-effect verification."
     },
     {
       "name": "no_side_effects",
-      "result": "passed",
-      "detail": "Public read-only pages and local evidence inspected. No reservation, hold, slot selection, personal-data submission, payment, restaurant message or access-control bypass."
+      "result": "unknown",
+      "detail": "Historical operator actions were limited to public-page navigation and local evidence inspection, with no deliberate reservation/hold/payment/message submission, slot selection, personal-data entry or access-control bypass. Background effects remain unknown because service-worker blocking, request-write interception and network audit were not recorded. No write-free end-to-end certification is made."
     },
     {
       "name": "json_parse",

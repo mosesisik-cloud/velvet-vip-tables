@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 
 // Evidence-fragment checks only. This does not prove provider availability,
 // embedding, restaurant acceptance, a successful booking or publication.
+// Historical user-action observations are not a background network audit.
 const expectedIssues = new Map([
   ['curated-ATH-island-athens-riviera', 55],
   ['curated-ATH-varoulko-seaside', 56],
@@ -22,6 +23,7 @@ for (const record of records) {
   assert.ok(expectedIssues.has(record.restaurantId), `Unclaimed restaurant: ${record.restaurantId}`);
   assert.ok(!byId.has(record.restaurantId), `Duplicate claim: ${record.restaurantId}`);
   assert.equal(record.issue, expectedIssues.get(record.restaurantId), `Wrong issue for ${record.restaurantId}`);
+  checkInspectionSafety(record.inspectionSafety);
   byId.set(record.restaurantId, record);
   const sources = record.sources || record.evidence;
   assert.ok(Array.isArray(sources) && sources.length > 0, `${record.restaurantId}: missing source evidence`);
@@ -33,6 +35,15 @@ function assertHttps(value, context) {
   const url = new URL(value);
   assert.equal(url.protocol, 'https:', `${context}: non-HTTPS source`);
   assert.equal(url.username + url.password + url.port, '', `${context}: credentialed or nonstandard source`);
+}
+function checkInspectionSafety(safety) {
+  assert.ok(safety && typeof safety === 'object', 'Missing inspection safeguard provenance');
+  assert.equal(safety.backgroundSideEffects, 'unknown');
+  for (const key of ['serviceWorkerBlocking', 'requestWriteInterception', 'networkAudit']) {
+    assert.equal(safety[key], 'not_recorded', `No original safeguard/audit log recorded for ${key}`);
+  }
+  assert.equal(safety.writeFreeEndToEndCertified, false);
+  assert.ok(typeof safety.basis === 'string' && safety.basis.trim(), 'Missing provenance limitation');
 }
 const urlKeys = new Set([
   'url', 'source', 'sourceUrl', 'website', 'finalUrl', 'exactOfficialBookingUrl',
@@ -47,11 +58,14 @@ const unsupportedClaims = new Set([
 const sideEffectCounts = new Set(['reservationsCreated', 'holdsCreated', 'messagesSent']);
 function checkEvidence(value, path) {
   if (!value || typeof value !== 'object') return;
+  if (value.name === 'no_side_effects') {
+    assert.equal(value.result ?? value.status, 'unknown', `${path}: no write-free certification without safeguard provenance`);
+  }
   for (const [key, item] of Object.entries(value)) {
     const context = `${path}.${key}`;
     if (urlKeys.has(key) && typeof item === 'string') assertHttps(item, context);
     if (unsupportedClaims.has(key)) assert.equal(item, false, `${context}: this batch did not verify this capability`);
-    if (sideEffectCounts.has(key)) assert.equal(item, 0, `${context}: read-only evidence must not create side effects`);
+    if (sideEffectCounts.has(key)) assert.equal(item, null, `${context}: unmeasured background outcomes must stay unknown`);
     if (key === 'integrationMode') assert.notEqual(item, 'native_embed', `${context}: no native embedding verified`);
     if (key === 'verification') assert.notEqual(item, 'embedded_form_loaded', `${context}: no embedded-form test recorded`);
     if (key === 'completionTracking') assert.equal(item, 'unsupported', `${context}: no completion integration verified`);
@@ -59,6 +73,19 @@ function checkEvidence(value, path) {
   }
 }
 for (const {name, data} of documents) checkEvidence(data, name);
+
+// Mutation checks protect against restoring a false certification. These are
+// offline fixture changes only; no evidence file or provider is modified.
+const safetyFixture = records[0].inspectionSafety;
+for (const key of ['backgroundSideEffects', 'serviceWorkerBlocking', 'requestWriteInterception', 'networkAudit', 'writeFreeEndToEndCertified']) {
+  const changed = {...safetyFixture, [key]: key === 'writeFreeEndToEndCertified' ? true : 'verified'};
+  assert.throws(() => checkInspectionSafety(changed), assert.AssertionError);
+}
+assert.throws(() => checkInspectionSafety(undefined), assert.AssertionError);
+for (const key of sideEffectCounts) {
+  assert.throws(() => checkEvidence({[key]: 0}, 'mutated'), assert.AssertionError);
+}
+assert.throws(() => checkEvidence({name:'no_side_effects', result:'passed'}, 'mutated'), assert.AssertionError);
 
 const island = byId.get('curated-ATH-island-athens-riviera');
 assert.equal(island.classification, 'official_manual_reservation_route');
@@ -117,4 +144,4 @@ assert.equal(ossiano.proposedRecord.implementationStatus, 'blocked');
 assert.ok(ossiano.evidence.some(source => source.url === 'https://guide.michelin.com/ae-du/en/dubai-emirate/dubai/restaurant/ossiano'),
   'Retain the conflicting status evidence alongside the operator source');
 
-console.log('PASS: five Wave 17 claims, HTTPS evidence, exact destination identity and conservative booking claims');
+console.log('PASS: five Wave 17 claims, exact identity, conservative booking claims and safeguard-provenance mutation guards; no live calls');

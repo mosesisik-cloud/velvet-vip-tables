@@ -5,12 +5,13 @@
   "claimOwner": "gabbe-wave17-01a02152",
   "scope": "Read-only evidence for two confirmed parent-owned issues. Proposed mappings only; no registry, catalogue, canonical worklist, UI or remote issue edited.",
   "safety": {
-    "reservationsCreated": 0,
-    "holdsCreated": 0,
-    "messagesSent": 0,
+    "reservationsCreated": null,
+    "holdsCreated": null,
+    "messagesSent": null,
     "personalDataSubmitted": false,
     "paymentSubmitted": false,
-    "accessControlsBypassed": false
+    "accessControlsBypassed": false,
+    "basis": "Submission and bypass booleans describe reported operator actions only. No personal-data entry, payment submission or access-control bypass was reported. No logged request interception, service-worker blocking or network audit establishes background effects, so created-reservation, hold and sent-message counts are unknown."
   },
   "browserLimitations": [
     "CUA inventory returned no available browsers; createBrowserTab('iab') returned Browser is not available. Native embedded-form rendering was not tested.",
@@ -23,6 +24,14 @@
       "name": "Island Athens Riviera",
       "city": "Athens Riviera",
       "country": "Greece",
+      "inspectionSafety": {
+        "backgroundSideEffects": "unknown",
+        "serviceWorkerBlocking": "not_recorded",
+        "requestWriteInterception": "not_recorded",
+        "networkAudit": "not_recorded",
+        "writeFreeEndToEndCertified": false,
+        "basis": "The reviewer reported reading official pages and contact destinations without activating a contact link or submitting guest data. These are operator-action observations, not background write certification; no logged request interception, service-worker blocking or network audit was recorded."
+      },
       "identity": {
         "status": "official_identity_verified",
         "officialName": "Island Club Restaurant",
@@ -41,7 +50,7 @@
         },
         {
           "url": "https://www.islandresortathensriviera.com/clubrestaurant/contact",
-          "observation": "Dedicated Club Restaurant Reservations page offers phone +30 210 9653 563-564, WhatsApp +30 698 181 7000 and reservations@islandclubrestaurant.gr. No date/party/time inventory widget observed in retrieved page. No contact link activated."
+          "observation": "Dedicated Club Restaurant Reservations page offers phone +30 210 9653 563-564, WhatsApp +30 698 181 7000 and reservations@islandclubrestaurant.gr. No date/party/time inventory widget observed in retrieved page. The reviewer reported no contact-link activation; background effects were not audited."
         }
       ],
       "classification": "official_manual_reservation_route",
@@ -75,7 +84,8 @@
       "limitations": [
         "The non-www catalogue domain was inaccessible in the web tool; the www domain did resolve to the current official page.",
         "No automated inventory connection found from the reviewed official pages. This mapping is an honest manual route, not an in-Velvet completed-booking integration.",
-        "Seasonal opening, live availability, cancellation terms, embedded-form support and booking completion were not established."
+        "Seasonal opening, live availability, cancellation terms, embedded-form support and booking completion were not established.",
+        "No reservation, hold, message or payment submission was reported as an operator action. Background side effects remain unknown because network/write-interception and service-worker safeguards were not recorded."
       ]
     },
     {
@@ -84,6 +94,14 @@
       "name": "Varoulko Seaside",
       "city": "Athens Riviera",
       "country": "Greece",
+      "inspectionSafety": {
+        "backgroundSideEffects": "unknown",
+        "serviceWorkerBlocking": "not_recorded",
+        "requestWriteInterception": "not_recorded",
+        "networkAudit": "not_recorded",
+        "writeFreeEndToEndCertified": false,
+        "basis": "The reviewer and parent reported navigation and initial-form observation without field changes, search submission or slot selection. Those reports establish operator actions only. No logged request interception, service-worker blocking or network audit was recorded, so provider background writes or holds cannot be ruled out."
+      },
       "identity": {
         "status": "official_identity_verified",
         "officialName": "Varoulko Seaside",
@@ -103,7 +121,7 @@
         },
         {
           "url": "https://www.i-host.gr/reservations/new?channel=website&lang=en&restaurant=232",
-          "observation": "The exact official destination was retrievable and identifies i-host as its platform, but text extraction shows unresolved restaurantDetails/title and reservation templates. Initial browser form, provider identity display, inventory and embedded compatibility remain unverified. No form field or next step was used."
+          "observation": "The exact official destination was retrievable and identifies i-host as its platform, but text extraction shows unresolved restaurantDetails/title and reservation templates. Initial browser form, provider identity display, inventory and embedded compatibility remain unverified by this retrieval. The reviewer reported no form-field or next-step interaction; background effects were not audited."
         }
       ],
       "classification": "official_external_provider_link_verified",
@@ -121,7 +139,8 @@
         "nativeEmbeddingObserved": false,
         "liveAvailabilityObserved": false,
         "confirmedReservation": false,
-        "limitation": "Initial time-selector options are not an availability response or bookable inventory. A standalone form is not proof of embedding support."
+        "operatorActionBasis": "FieldsChanged, searchSubmitted and slotSelected describe the parent's reported operator actions, not a network audit or certification that no background write or hold occurred. ConfirmedReservation means no confirmation was observed.",
+        "limitation": "Initial time-selector options are not an availability response or bookable inventory. A standalone form is not proof of embedding support. Background side effects remain unverified."
       },
       "proposedMapping": {
         "name": "Varoulko Seaside",
@@ -142,7 +161,7 @@
         "Keep the official lang=en query unchanged unless provider language support is independently verified. Do not infer Swedish support from the Velvet locale."
       ],
       "limitations": [
-        "Official source-to-provider relationship verified and root observed the original standalone initial form. No native embedding, live availability, hold, payment, final guest journey or completed reservation observed.",
+        "Official source-to-provider relationship verified and root observed the original standalone initial form. No native embedding, live availability, payment submission, final guest journey or completed-reservation confirmation was observed. No hold-creating action was reported, but background holds and other effects remain unverified.",
         "Provider source contains generic reservation terms but no reviewed restaurant-specific cancellation summary was established. Do not populate cancellation terms from hidden or unresolved templates."
       ]
     }
