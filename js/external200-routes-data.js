@@ -13,7 +13,7 @@ export const external200Routes = {
   "osm-BAL-la-rosa": {
     "status": "unresolved",
     "checkedAt": "2026-10-16",
-    "source": "https://linktr.ee/larosa_canggu"
+    "source": null
   },
   "osm-BAL-mexican-grilled-sancwich": {
     "status": "unresolved",
@@ -83,7 +83,7 @@ export const external200Routes = {
   "osm-BDR-bodrum-belediyesi-carsi-kafe": {
     "status": "unresolved",
     "checkedAt": "2026-10-16",
-    "source": "https://www.bodrumbelediyeas.com.tr/tesis.php?slug=carsi-cafe"
+    "source": null
   },
   "osm-BDR-cirali": {
     "status": "unresolved",
@@ -103,7 +103,7 @@ export const external200Routes = {
   "osm-BDR-gemibas-restaurant": {
     "status": "unresolved",
     "checkedAt": "2026-10-16",
-    "source": "https://www.gemibasi.com/"
+    "source": null
   },
   "osm-BDR-hadi-balik": {
     "status": "unresolved_branch",
@@ -200,7 +200,7 @@ export const external200Routes = {
   "osm-BDR-the-place": {
     "status": "manual_phone",
     "checkedAt": "2026-10-16",
-    "source": "https://theplacerestaurant.eatbu.com/",
+    "source": "https://theplacerestaurant.eatbu.com/?lang=en",
     "contact": {
       "type": "phone",
       "value": "+905433708384",
@@ -210,7 +210,7 @@ export const external200Routes = {
   "osm-BDR-trafo": {
     "status": "unresolved",
     "checkedAt": "2026-10-16",
-    "source": "https://www.bodrumbelediyeas.com.tr/tesis.php?slug=trafo-bodrum-cafe-restaurant"
+    "source": null
   },
   "osm-BDR-yelken-bal-k": {
     "status": "official_external_link",
@@ -357,7 +357,7 @@ export const external200Routes = {
   "osm-CPT-jean-s-kitchen": {
     "status": "unresolved",
     "checkedAt": "2026-10-16",
-    "source": "https://uct.ac.za/research-innovation-uct-and-un-sdgs/goal-2-zero-hunger/2-3-4"
+    "source": null
   },
   "osm-CPT-kobe-sushi": {
     "status": "unresolved_branch",
@@ -377,7 +377,7 @@ export const external200Routes = {
   "osm-CPT-picnic-cafe-and-deli": {
     "status": "unresolved",
     "checkedAt": "2026-10-16",
-    "source": "https://picniccafe.co.za/"
+    "source": null
   },
   "osm-CPT-thai-ping": {
     "status": "unresolved",
@@ -407,7 +407,7 @@ export const external200Routes = {
   "osm-DXB-asado": {
     "status": "unresolved",
     "checkedAt": "2026-10-16",
-    "source": "https://www.addresshotels.com/en/restaurant/palace-downtown/asado/"
+    "source": null
   },
   "osm-DXB-be-super-natural-kitchen": {
     "status": "unresolved",
@@ -449,7 +449,7 @@ export const external200Routes = {
   "osm-DXB-shang-palace": {
     "status": "official_external_link",
     "checkedAt": "2026-10-16",
-    "source": "https://www.shangri-la.com/dubai/shangrila/dining/restaurants/shang-palace/",
+    "source": "https://www.shangri-la.com/ru/dubai/shangrila/offer-detail/dining/experience-shang-palace/",
     "externalUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai",
     "bookingMode": "unknown",
     "contact": {
@@ -526,7 +526,7 @@ export const external200Routes = {
   "osm-HKG-u19c6d6df7171": {
     "status": "unresolved",
     "checkedAt": "2026-10-16",
-    "source": "https://www.wastereduction.gov.hk/sites/default/files/food_wise/signees/Food_Wise_Eateries_Scheme-ListofParticipatingEateries_EN.pdf"
+    "source": null
   },
   "osm-HKG-u1b0ea4f52786": {
     "status": "unresolved_branch",
@@ -914,7 +914,7 @@ export const external200Routes = {
   "osm-MIA-pummarola-coral-gable": {
     "status": "unresolved",
     "checkedAt": "2026-10-16",
-    "source": "https://www.pummarola.us/"
+    "source": null
   },
   "osm-MIA-the-cheesecake-factory": {
     "status": "unresolved_branch",
@@ -1044,7 +1044,7 @@ export const external200Routes = {
   "osm-SBH-le-bar-de-l-oubli": {
     "status": "unresolved",
     "checkedAt": "2026-10-16",
-    "source": "https://www.bardeloubli.com/"
+    "source": null
   },
   "osm-SBH-le-bete-a-z-ailes": {
     "status": "unresolved",
@@ -1066,7 +1066,7 @@ export const external200Routes = {
   "osm-SBH-le-repaire": {
     "status": "unresolved",
     "checkedAt": "2026-10-16",
-    "source": "https://annuaire-entreprises.data.gouv.fr/entreprise/952820389"
+    "source": null
   },
   "osm-SBH-mayas-to-go": {
     "status": "unresolved",
@@ -1076,7 +1076,7 @@ export const external200Routes = {
   "osm-SBH-megumi-sushi": {
     "status": "unresolved",
     "checkedAt": "2026-10-16",
-    "source": "https://www.megumi.fr/"
+    "source": null
   },
   "osm-SBH-natural-delights": {
     "status": "takeaway",

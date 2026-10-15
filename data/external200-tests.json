@@ -29,7 +29,7 @@
     {
       "command": "node scripts/external200-test-routes.mjs",
       "result": "passed",
-      "coverage": "Exact scope, four languages, generated-data freshness, provider precedence, safe contacts, no synthetic forms"
+      "coverage": "Exact scope, four languages, generated-data freshness, provider precedence, safe contacts, no synthetic forms; independent exact per-ID source/destination bindings reject altered URL, source, ID, query, host and protocol in compiler and runtime for all15 links; independently pinned18 manual contacts and combined URL/source/LINE tampering across200 IDs"
     },
     {
       "command": "node scripts/external200-test-browser.mjs",

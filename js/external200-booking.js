@@ -1,4 +1,5 @@
 import { external200Routes } from './external200-routes-data.js';
+import { resolveExternal200ReviewedLink, resolveExternal200ReviewedContact, resolveExternal200ReviewedSource } from './external200-reviewed-links.js';
 import { getBookingCopy } from './booking-copy.js?v=180';
 
 const copy = {
@@ -64,13 +65,13 @@ export function external200BookingPanel(restaurantId, provider, language = 'en')
   if (provider || !Object.hasOwn(external200Routes, restaurantId)) return null;
   const row = external200Routes[restaurantId];
   const c = copy[language] || copy.en;
-  const external = https(row.externalUrl);
-  const contact = external200ContactHref(row.contact);
+  const external = resolveExternal200ReviewedLink(restaurantId, row.source, row.externalUrl)?.url || null;
+  const contact = external200ContactHref(resolveExternal200ReviewedContact(restaurantId, row.contact));
   const inactive = ['closed','closed_reported','walk_in','takeaway','unresolved_branch'].includes(row.status);
   const kind = inactive ? row.status : external ? 'external' : contact ? 'manual' : 'unresolved';
   const href = !inactive ? external || contact : null;
   const label = external ? c.open : row.contact?.type === 'line' ? c.source + ' · LINE ' + row.contact.value : c[row.contact?.type];
-  const source = https(row.source);
+  const source = resolveExternal200ReviewedSource(restaurantId, row.source);
   const request = kind === 'external' && row.bookingMode === 'request_only' ? `<p>${esc(getBookingCopy(language).requestNotice)}</p>` : '';
   const policy = href ? `<p>${esc(getBookingCopy(language).policyCheck)}</p>` : '';
   const alternative = !inactive && external && contact ? `<p><a class="restaurant-official-book" href="${esc(contact)}"${contact.startsWith('https:') ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(c[row.contact.type] || c.source)}</a></p>` : '';
