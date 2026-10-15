@@ -81,9 +81,17 @@
         "personalDataSubmitted": false,
         "messageSent": false,
         "paymentSubmitted": false,
-        "holdsCreated": 0,
-        "reservationsCreated": 0,
+        "holdsCreated": null,
+        "reservationsCreated": null,
         "accessControlsBypassed": false
+      },
+      "inspectionSafety": {
+        "backgroundSideEffects": "unknown",
+        "serviceWorkerBlocking": "not_recorded",
+        "requestWriteInterception": "not_recorded",
+        "networkAudit": "not_recorded",
+        "writeFreeEndToEndCertified": false,
+        "basis": "Evidence records visible initial request-form state and deliberate agent actions only. The false submission/message flags describe unperformed agent actions, not certified system outcomes. No agent field changes or form submission were observed. Contemporaneous network auditing, service-worker blocking and write-request interception provenance were not recorded; background requests and side effects remain unknown."
       },
       "integrationRequirements": [
         "Proposed external route is the restaurant's own request form, not a live-inventory provider. Pin exact restaurantId, HTTPS homepage, venueKey and source rather than broadly trusting Restaurant website hosts.",
@@ -92,9 +100,10 @@
         "No third-party provider URL was observed. Do not reuse Acqua Bangkok's booking route or the inaccessible legacy contact page."
       ],
       "limitations": [
+        "No network audit or safeguard provenance for service-worker blocking and write-request interception was recorded. Absence of deliberate form submission does not certify zero background side effects or a write-free end-to-end inspection.",
         "Worker CUA was unavailable. Parent subsequently verified the original standalone form in CUA, as attributed above; neither worker nor parent tested an iframe or submitted the form.",
         "Rendered phone text and tel destination disagree. Only the consistent published email is proposed as a manual contact.",
-        "No values entered, availability search performed, request submitted, booking/hold created, message sent or payment made.",
+        "No deliberate agent value entry, availability search, request submission, message-sending action or payment action was observed. Booking, hold and message outcomes in automatic background traffic were not audited.",
         "Submission delivery, restaurant reply, cancellation policy and current bookable inventory remain untested. Published opening hours are not an availability response.",
         "Evidence-only proposal; no shared registry, catalogue, manual-contact binding, UI or canonical worklist changed."
       ],

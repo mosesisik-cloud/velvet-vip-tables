@@ -74,12 +74,21 @@
         "availabilityObserved": false,
         "confirmedReservation": false,
         "availabilitySearchSubmitted": false,
-        "holdCreated": false,
+        "holdCreated": null,
         "guestInformationSubmitted": false,
         "contactSent": false,
         "paymentSubmitted": false
       },
+      "inspectionSafety": {
+        "backgroundSideEffects": "unknown",
+        "serviceWorkerBlocking": "not_recorded",
+        "requestWriteInterception": "not_recorded",
+        "networkAudit": "not_recorded",
+        "writeFreeEndToEndCertified": false,
+        "basis": "Evidence records visible initial provider state, its automatic initial response and deliberate agent actions only. The false submission/contact flags describe unperformed agent actions, not certified system outcomes. No agent field changes or search submission were observed. Contemporaneous network auditing, service-worker blocking and write-request interception provenance were not recorded; background requests and side effects remain unknown. Existing alias evidence is historical and is not recertified by this inspection."
+      },
       "limitations": [
+        "No network audit or safeguard provenance for service-worker blocking and write-request interception was recorded. Absence of deliberate form submission does not certify zero background side effects or a write-free end-to-end inspection.",
         "Exact official-link provenance and redirect were established by this reviewer; parent separately observed the original standalone initial form and a single-date closed status. Neither proves native readiness or available inventory.",
         "An existing OSM catalogue ID already has the same exact provider integration. Resolve the duplicate/alias with the coordinator before applying this proposal or counting it as a new restaurant.",
         "Keep liveAvailabilitySupported explicitly false so legacy SevenRooms defaults do not initiate inventory requests for this newly reviewed link.",
@@ -154,12 +163,21 @@
         "availabilityObserved": false,
         "confirmedReservation": false,
         "availabilitySearchSubmitted": false,
-        "holdCreated": false,
+        "holdCreated": null,
         "guestInformationSubmitted": false,
         "contactSent": false,
         "paymentSubmitted": false
       },
+      "inspectionSafety": {
+        "backgroundSideEffects": "unknown",
+        "serviceWorkerBlocking": "not_recorded",
+        "requestWriteInterception": "not_recorded",
+        "networkAudit": "not_recorded",
+        "writeFreeEndToEndCertified": false,
+        "basis": "Evidence records visible initial provider state and deliberate agent actions only. The false submission/contact flags describe unperformed agent actions, not certified system outcomes. No agent field changes or reservation submission were observed. Contemporaneous network auditing, service-worker blocking and write-request interception provenance were not recorded; background requests and side effects remain unknown."
+      },
       "limitations": [
+        "No network audit or safeguard provenance for service-worker blocking and write-request interception was recorded. Absence of deliberate form submission does not certify zero background side effects or a write-free end-to-end inspection.",
         "Two different provider links remain on the official site. The primary i-host route is repeatedly linked, but the site does not establish whether the secondary BookMeATable route is current or retired. Do not claim either supplies live inventory from page retrieval alone.",
         "Use an exact restaurantId/source/full-URL binding. Current generic identity-parameter extraction omits restaurant, so simply allowlisting i-host would not pin restaurant=1779. Preserve the officially linked lang=eng value without inferred locale rewrites.",
         "Root observed only the original standalone initial form. No original embedded form, inventory response, guest journey, hold, payment or reservation confirmation was observed.",

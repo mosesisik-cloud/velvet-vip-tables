@@ -6,8 +6,9 @@ Refs #89, #91, #93, #94, #102. Continues Wave 17 PR #109.
 
 This is evidence for the existing booking coordinator, not a second canonical
 registry. No runtime, provider registry, canonical worklist or release file changes.
-All claims remain owned until coordinator review. No real bookings, holds,
-messages, guest details, payments, CAPTCHA or access-control bypasses.
+All claims remain owned until coordinator review. No booking, hold, contact,
+guest-data, payment, CAPTCHA or access-bypass action was deliberately performed.
+This describes reported operator actions, not a network audit of background effects.
 
 ## Outcomes
 
@@ -46,8 +47,9 @@ Five reviewed tasks do not mean five newly activated booking integrations.
    contact fallback. Acqua's visible phone numbers conflict with its tel href, so
    only the matching reservation email is proposed.
 7. Acqua's request-only semantics must also be pinned to its exact mapping.
-   Existing generic request tests may assume 24–72-hour replies and card
-   guarantees; do not copy those defaults to Acqua. Its payment/cancellation
+   Do not copy another venue's 24–72-hour reply or card-guarantee defaults to Acqua.
+   Later main188 already added unknown/max-only response handling; the historical
+   base186 warning is not a present main188 defect. Acqua's payment/cancellation
    conditions are unknown. Runtime sanitization may omit `paymentRequirement:
    "unknown"`; omission must stay unknown rather than inventing a guarantee.
 
@@ -56,6 +58,20 @@ Acqua's blank request fields, Dalmatino's initial date response, Gariful's disab
 Reserve form and Burnt Ends' operator-embedded seating/calendar form. Dalmatino's
 default date said closed on October 15; this is not evidence of permanent closure.
 No availability search or onward booking/Continue/Submit action was performed.
+
+## Browser safeguard provenance
+
+The PR #109 review's safety-provenance finding also applies to this historical
+batch. All five records now explicitly mark background side effects as unknown.
+Original service-worker blocking, request-write interception and network-audit
+provenance were not recorded. Initial-page observations and absent operator
+submissions do not certify write-free end-to-end behavior. Unmeasured system
+effect counts/flags are null; source identity and capability limits are preserved.
+
+No provider was revisited for this correction. Offline contract and mutation
+tests reject missing provenance, invented safety verification and unsupported
+zero/false system outcomes. Future write-free browser testing requires actual
+recorded safeguards and audit evidence; these JSON tests are not a substitute.
 
 ## Verification and publication
 

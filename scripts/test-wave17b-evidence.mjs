@@ -3,6 +3,7 @@ import fs from 'node:fs/promises';
 
 // Contract checks on review evidence, not proof of bookable inventory,
 // successful reservations, delivery of a request, native embedding or release.
+// Absence of operator clicks is not a background network audit.
 const claims = new Map([
   ['curated-HKG-caprice', 89],
   ['curated-HKT-acqua-restaurant-phuket', 91],
@@ -29,6 +30,7 @@ for (const record of records) {
   assert.ok(record.sources.length > 0);
   assert.ok(record.limitations.length > 0);
   assert.equal(record.publication, 'not_published');
+  checkInspectionSafety(record.inspectionSafety);
   assert.equal(record.checks.nativeEmbeddingObserved, false);
   assert.equal(record.checks.availabilityObserved, false);
   assert.equal(record.checks.confirmedReservation, false);
@@ -52,24 +54,45 @@ function assertHttps(value) {
   assert.equal(url.protocol, 'https:');
   assert.equal(url.username + url.password + url.port, '');
 }
+function checkInspectionSafety(safety) {
+  assert.ok(safety && typeof safety === 'object', 'Missing inspection safeguard provenance');
+  assert.equal(safety.backgroundSideEffects, 'unknown');
+  for (const key of ['serviceWorkerBlocking', 'requestWriteInterception', 'networkAudit']) {
+    assert.equal(safety[key], 'not_recorded', `No original safeguard/audit log recorded for ${key}`);
+  }
+  assert.equal(safety.writeFreeEndToEndCertified, false);
+  assert.ok(typeof safety.basis === 'string' && safety.basis.trim(), 'Missing provenance limitation');
+}
 const urlFields = new Set(['url', 'source', 'addressSource', 'officialReservationPage']);
 const falseFlags = new Set([
   'nativeEmbeddingObserved', 'availabilityObserved', 'confirmedReservation',
-  'liveAvailabilitySupported', 'bookingOrHoldCreated', 'personalDataSubmitted',
+  'liveAvailabilitySupported', 'personalDataSubmitted',
   'fieldsChanged', 'searchSubmitted', 'slotSelected', 'messageSent',
   'paymentSubmitted', 'accessControlsBypassed', 'availabilitySearchSubmitted',
-  'holdCreated', 'guestInformationSubmitted', 'contactSent',
+  'guestInformationSubmitted', 'contactSent',
 ]);
+const unknownEffects = new Set(['holdsCreated', 'reservationsCreated', 'messagesSent', 'holdCreated', 'bookingOrHoldCreated']);
 function review(value) {
   if (!value || typeof value !== 'object') return;
   for (const [key, item] of Object.entries(value)) {
     if (urlFields.has(key) && typeof item === 'string') assertHttps(item);
     if (falseFlags.has(key)) assert.equal(item, false, `Unverified or side-effect flag: ${key}`);
-    if (['holdsCreated', 'reservationsCreated', 'messagesSent'].includes(key)) assert.equal(item, 0);
+    if (unknownEffects.has(key)) assert.equal(item, null, `Unmeasured background outcome: ${key}`);
     review(item);
   }
 }
 documents.forEach(review);
+// Offline mutation checks: reject false certification and unmeasured zero/false
+// outcomes without contacting or modifying any provider.
+const safetyFixture = records[0].inspectionSafety;
+for (const key of ['backgroundSideEffects', 'serviceWorkerBlocking', 'requestWriteInterception', 'networkAudit', 'writeFreeEndToEndCertified']) {
+  const changed = {...safetyFixture, [key]: key === 'writeFreeEndToEndCertified' ? true : 'verified'};
+  assert.throws(() => checkInspectionSafety(changed), assert.AssertionError);
+}
+assert.throws(() => checkInspectionSafety(undefined), assert.AssertionError);
+for (const key of unknownEffects) {
+  for (const item of [0, false]) assert.throws(() => review({[key]:item}), assert.AssertionError);
+}
 
 const caprice = byId.get('curated-HKG-caprice');
 assert.equal(caprice.proposedMapping.provider, 'Restaurant website');
@@ -124,4 +147,4 @@ assert.equal(burnt.checks.embeddedOnOperatorObserved, true);
 assert.equal(burnt.checks.nativeEmbeddingObserved, false, 'Operator iframe is not a Velvet embedding test');
 assert.equal(burnt.manualContactCandidate, null, 'General enquiries are not a confirmed reservation channel');
 
-console.log('PASS: five Wave 17B claims, exact routes, duplicate-ID guard and conservative booking evidence');
+console.log('PASS: five Wave 17B claims, exact routes, duplicate-ID guard and safeguard-provenance mutation guards; no live calls');

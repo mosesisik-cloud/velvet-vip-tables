@@ -59,10 +59,19 @@
         "nativeEmbeddingObserved": false,
         "availabilityObserved": false,
         "confirmedReservation": false,
-        "bookingOrHoldCreated": false,
+        "bookingOrHoldCreated": null,
         "personalDataSubmitted": false
       },
+      "inspectionSafety": {
+        "backgroundSideEffects": "unknown",
+        "serviceWorkerBlocking": "not_recorded",
+        "requestWriteInterception": "not_recorded",
+        "networkAudit": "not_recorded",
+        "writeFreeEndToEndCertified": false,
+        "basis": "Evidence records visible initial form state and deliberate agent actions only. No agent field changes or search submission were observed. Contemporaneous network auditing, service-worker blocking and write-request interception provenance were not recorded; background requests and side effects remain unknown."
+      },
       "limitations": [
+        "No network audit or safeguard provenance for service-worker blocking and write-request interception was recorded. Absence of deliberate form submission does not certify zero background side effects or a write-free end-to-end inspection.",
         "Proposed record is the official restaurant page, not an OpenTable mapping. Exact backend provider destination/ID was not verified because Find A Table was not submitted.",
         "The current resolver does not allow this Restaurant website host/path. Integrator must add an exact reviewed restaurant-ID/host/path rule and tests before activation; do not broadly allow arbitrary Four Seasons pages.",
         "Worker browser/network surfaces were unavailable; initial form evidence is attributed to parent CUA. No Velvet iframe rendering tested.",
@@ -129,16 +138,25 @@
         "nativeEmbeddingObserved": false,
         "availabilityObserved": false,
         "confirmedReservation": false,
-        "bookingOrHoldCreated": false,
+        "bookingOrHoldCreated": null,
         "personalDataSubmitted": false
       },
+      "inspectionSafety": {
+        "backgroundSideEffects": "unknown",
+        "serviceWorkerBlocking": "not_recorded",
+        "requestWriteInterception": "not_recorded",
+        "networkAudit": "not_recorded",
+        "writeFreeEndToEndCertified": false,
+        "basis": "Evidence records the visible initial operator iframe and deliberate agent actions only. No agent date selection or Continue submission was observed. Contemporaneous network auditing, service-worker blocking and write-request interception provenance were not recorded; background requests and side effects remain unknown."
+      },
       "limitations": [
+        "No network audit or safeguard provenance for service-worker blocking and write-request interception was recorded. Absence of deliberate form submission does not certify zero background side effects or a write-free end-to-end inspection.",
         "Current resolver does not support Weeloy/restaurants.sg. Integrator must add exact restaurant-ID, HTTPS host/path and full-query checks before activation, preserving bkrestaurant=SG_SG_R_BurntEnds. No provider-wide wildcard allowlist.",
         "Original provider form was observed embedded on the operator site only, not Velvet and not independently tested as a standalone page. External-only proposed mapping does not certify in-app embedding.",
         "Provider form includes separate cocktail-bar options alongside restaurant areas. Do not silently choose the cocktail bar or confuse #01-04 with the restaurant at #01-02.",
         "Worker CUA/network unavailable; form evidence is attributed to parent CUA. No inventory inferred from calendar or seating-gallery preview.",
         "General enquiry email eat@burntends.com.sg is not asserted to be a reservation-only route.",
-        "No availability search, slot selection, contact details, card data, hold, payment or reservation submitted."
+        "No deliberate agent availability search, slot selection, contact-detail or card-data entry, payment action or reservation submission was observed. This action record is not an audit of automatic provider traffic."
       ],
       "publication": "not_published"
     }
