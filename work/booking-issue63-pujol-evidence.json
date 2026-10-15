@@ -1,0 +1,79 @@
+{
+  "restaurantId": "curated-CDM-pujol",
+  "issue": 63,
+  "agent": "kimi-01",
+  "checkedAt": "2026-10-16",
+  "status": "ready_for_review",
+  "identity": {
+    "name": "Pujol",
+    "address": "Tennyson 133, Polanco IV Sección, CP 11550, Ciudad de México, Mexico",
+    "city": "Mexico City",
+    "officialWebsite": "https://www.pujol.com.mx/",
+    "operatingStatus": "operating",
+    "hours": "Official site footer: Mon-Fri 13:30-21:30, Sunday closed (checked 2026-10-16). Legacy OpenTable listings state Mon-Sat; treat exact Saturday service as unverified.",
+    "sources": [
+      "https://www.pujol.com.mx/ (footer: TENNYSON 133, POLANCO IV SECTION, CP 11550 MEXICO CITY)",
+      "https://www.pujol.com.mx/en (rendered in browser 2026-10-16, footer and contact page confirm identity)",
+      "https://www.pujol.com.mx/en/contacto (reservations contact: reservaciones@pujol.com.mx)"
+    ],
+    "duplicates": "No other catalog ID for this physical restaurant found in data/restaurant-worklist.json (searched name 'pujol' and city 'Mexico City'). Pujol.itto (Calle Tokio 110, Col. Juárez) is a separate sibling restaurant with its own site (pujolitto.com), not in the catalog; it must not be merged with this record."
+  },
+  "proposedRegistryRecord": {
+    "targetFile": "api/providers/opentable-restaurants.json",
+    "key": "curated-CDM-pujol",
+    "record": {
+      "provider": "OpenTable",
+      "name": "Pujol",
+      "city": "Mexico City",
+      "url": "https://www.opentable.com.mx/r/pujol-reservations-ciudad-de-mexico?restref=1545187&lang=es-MX&ot_source=Restaurant%20website",
+      "source": "https://www.pujol.com.mx/en",
+      "checkedAt": "2026-10-16",
+      "verification": "official_restaurant_link_verified",
+      "mode": "external",
+      "availability": "unknown",
+      "completionTracking": false
+    },
+    "note": "Proposed for the integrator. Shared registry file NOT modified by this PR. URL is the exact href of the global RESERVE navigation link on the official site, captured in a rendered browser session 2026-10-16."
+  },
+  "bookingRoute": {
+    "category": "A - official external booking link",
+    "provider": "OpenTable",
+    "officialUrl": "https://www.opentable.com.mx/r/pujol-reservations-ciudad-de-mexico?restref=1545187&lang=es-MX&ot_source=Restaurant%20website",
+    "observed": "Official site global navigation RESERVE points to this exact OpenTable URL (restref=1545187). Link href captured from rendered DOM; not clicked.",
+    "availability": "unknown",
+    "providerPageCheck": "OpenTable restaurant page and read-only GET availability endpoint both returned HTTP 403 (Akamai access control) from the test environment on 2026-10-16. Access control was not bypassed. This is an environment/anti-bot limitation, not evidence about the restaurant.",
+    "secondaryUnverified": {
+      "sevenrooms": "https://www.sevenrooms.com/explore/pujol/reservations/create/search/ renders an initial party/date/time search form naming Pujol at 133 Tennyson with phone +52 55 5545 4111 (fetched 2026-10-16). It is NOT referenced by the official site, so it is recorded as an unverified secondary surface, not the mapped route.",
+      "legacyOpenTable": "Older OpenTable listings 'menu-degustacion-pujol-mexico-city' and 'menu-barra-de-tacos-pujol-ciudad-de-mexico' (both Tennyson 133) currently state the restaurant is not on the OpenTable booking network. These legacy IDs must not be used; use restref=1545187 only."
+    },
+    "manualRoutes": {
+      "email": "reservaciones@pujol.com.mx (official contact page, named reservations contact)",
+      "whatsapp": "+52 55 3212 6206 (wa.me link 'Hola Pujol' on official homepage)"
+    }
+  },
+  "excluded": {
+    "pujolItto": "The official homepage also embeds an OpenTable availability link with restRef=1508170 in a section showing Calle Tokio 110 Local 1, Col. Juárez, CP 06600. That address belongs to the separate sibling restaurant Pujol.itto (pujolitto.com, opened 2026-05). Not mapped to curated-CDM-pujol. If Pujol.itto enters the catalog it needs its own ID and task."
+  },
+  "tests": {
+    "performed": [
+      "Identity verified against official site (footer address, contact page) - pass",
+      "Official RESERVE link target captured from rendered DOM - pass",
+      "Catalog duplicate search in data/restaurant-worklist.json (770 records) - no duplicate for this physical restaurant",
+      "Provider page load attempt (read-only GET) - blocked by HTTP 403 access control; not bypassed",
+      "SevenRooms secondary surface initial form render check (GET only) - renders, recorded as unverified"
+    ],
+    "notPerformed": [
+      "No availability observed for any date or party size",
+      "No click past initial pages, no date/time selection, no holds, no bookings, no messages",
+      "JSON schema validated locally; no app-level runtime test (scoped evidence fragment only)"
+    ],
+    "basis": "remote_official_sources_and_readonly_gets"
+  },
+  "limitations": [
+    "OpenTable pages unreachable from test environment (Akamai 403); availability remains unknown",
+    "Official site hours (Mon-Fri) conflict with legacy OpenTable hours (Mon-Sat); exact service days unverified",
+    "SevenRooms surface not confirmed as official; not mapped"
+  ],
+  "nextStep": "Integrator reviews and, if accepted, adds proposedRegistryRecord to api/providers/opentable-restaurants.json, then consolidates evidence into data/restaurant-worklist.json. A reviewer with unconstrained network access may optionally load the OpenTable page to confirm the listing title matches Pujol, Tennyson 133.",
+  "publication": "not_published"
+}
