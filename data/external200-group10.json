@@ -27,6 +27,11 @@
           "url": "https://www.saintbarth-tourisme.com/wp-content/uploads/2023/10/RESTAURANTS-ST-BARTH-2023.pdf",
           "kind": "official",
           "supports": "Historical tourism listing only, not current restaurant confirmation."
+        },
+        {
+          "url": "https://www.access.sb/fr/st-barth/bars-clubs/bars-festifs/la-cantina-bar/",
+          "kind": "secondary",
+          "supports": "Third-party enquiry form; operator authorization not established."
         }
       ],
       "checks": {
@@ -487,6 +492,11 @@
           "url": "https://www.lepetitdeauville.fr/",
           "kind": "rejected",
           "supports": "Different establishment: 1 rue du Progres, 93100 Montreuil."
+        },
+        {
+          "url": "https://www.sbhonline.com/restaurants/",
+          "kind": "secondary",
+          "supports": "Lists ice-cream/sorbet; no verified restaurant-owned booking route."
         }
       ],
       "checks": {
@@ -538,6 +548,11 @@
           "url": "https://annuaire-entreprises.data.gouv.fr/entreprise/952820389",
           "kind": "official",
           "supports": "Government establishment record for LE REPAIRE ST-BARTH at Rue de la Republique."
+        },
+        {
+          "url": "https://www.saint-barths.com/en/places/restaurants/restaurant-le-repaire",
+          "kind": "secondary",
+          "supports": "Third-party contact/request form; not independently operator-authorized."
         }
       ],
       "checks": {
@@ -763,6 +778,11 @@
           "url": "https://www.pasha-stbarth.com/blogs/infos/nyama-french-asian-food-new-restaurant-in-st-barth",
           "kind": "secondary",
           "supports": "2023 opening report and contacts, not current restaurant source."
+        },
+        {
+          "url": "https://key-paradise.com/en/clients/nyama-st-barth/",
+          "kind": "secondary",
+          "supports": "Corossol venue and telephone booking claim; Instagram operator source could not be fetched."
         }
       ],
       "checks": {

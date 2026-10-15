@@ -73,5 +73,6 @@ export function external200BookingPanel(restaurantId, provider, language = 'en')
   const source = https(row.source);
   const request = kind === 'external' && row.bookingMode === 'request_only' ? `<p>${esc(getBookingCopy(language).requestNotice)}</p>` : '';
   const policy = href ? `<p>${esc(getBookingCopy(language).policyCheck)}</p>` : '';
-  return `<div class="external200-booking-status" data-booking-status="${esc(kind)}" role="status"><p>${esc(c[kind])}</p>${request}${href ? `<a class="btn btn-gold btn-block" href="${esc(href)}"${href.startsWith('https:') ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(label)}</a>` : ''}${policy}${source ? `<p><a href="${esc(source)}" target="_blank" rel="noopener noreferrer">${esc(c.source)} ↗</a></p>` : ''}</div>`;
+  const alternative = !inactive && external && contact ? `<p><a class="restaurant-official-book" href="${esc(contact)}"${contact.startsWith('https:') ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(c[row.contact.type] || c.source)}</a></p>` : '';
+  return `<div class="external200-booking-status" data-booking-status="${esc(kind)}" role="status"><p>${esc(c[kind])}</p>${request}${href ? `<a class="btn btn-gold btn-block" href="${esc(href)}"${href.startsWith('https:') ? ' target="_blank" rel="noopener noreferrer"' : ''}>${esc(label)}</a>` : ''}${alternative}${policy}${source ? `<p><a href="${esc(source)}" target="_blank" rel="noopener noreferrer">${esc(c.source)} ↗</a></p>` : ''}</div>`;
 }

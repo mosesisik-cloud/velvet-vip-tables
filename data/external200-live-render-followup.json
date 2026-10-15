@@ -1,0 +1,946 @@
+{
+  "checkedAt": "2026-10-15T22:37:21.609Z",
+  "guard": {
+    "allowedMethods": [
+      "GET",
+      "HEAD"
+    ],
+    "scope": "browser_context_including_popups",
+    "serviceWorkers": "blocked",
+    "controlsSelected": false
+  },
+  "interpretation": "Read-only rendering observations only. Blocked POSTs may affect functionality; neither empty state nor HTTP200 proves inventory or a completed booking.",
+  "earlierProbeLimitation": "Earlier no-click runs and Shang Palace search lacked a network guard. No guest details or slot selection were submitted in this follow-up, but provider-JavaScript side effects cannot be certified absent. Historical Neolokal limitation remains.",
+  "results": [
+    {
+      "restaurantId": "osm-BDR-musto-bistro",
+      "mode": "desktop",
+      "url": "https://www.mustorestaurantbistro.com/",
+      "httpStatus": 200,
+      "title": "Musto Restaurant Bodrum | Deniz Ürünleri, Kahvaltı & Izgara",
+      "error": null,
+      "blockedWrites": [],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-BDR-musto-bistro",
+      "mode": "mobile",
+      "url": "https://www.mustorestaurantbistro.com/",
+      "httpStatus": 200,
+      "title": "Musto Restaurant Bodrum | Deniz Ürünleri, Kahvaltı & Izgara",
+      "error": null,
+      "blockedWrites": [],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-BDR-yelken-bal-k",
+      "mode": "desktop",
+      "url": "https://www.yerimhazir.com/isletme/yelken-balik-bodrum/373",
+      "httpStatus": 200,
+      "title": "Yelken Balık Bodrum — Rezervasyon ve menü | Yerim Hazır",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-BDR-yelken-bal-k",
+      "mode": "mobile",
+      "url": "https://www.yerimhazir.com/isletme/yelken-balik-bodrum/373",
+      "httpStatus": 200,
+      "title": "Yelken Balık Bodrum — Rezervasyon ve menü | Yerim Hazır",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-DXB-carluccio-s",
+      "mode": "desktop",
+      "url": "https://eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a",
+      "httpStatus": 200,
+      "title": "Book a table at Carluccio's The Dubai Mall with Eat App • Eat App",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://eatapp.co/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d2d3316b729e/0.2858370851671155:1792101632:NakbgRBdiCD8fXSoZdikbPC88NFvxEp7hPDPmZMvCgw/a4b24a88cc55a2cc"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google-analytics.com/j/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://stats.g.doubleclick.net/j/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://alb.reddit.com/rp"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-DXB-carluccio-s",
+      "mode": "mobile",
+      "url": "https://eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a",
+      "httpStatus": 200,
+      "title": "Book a table at Carluccio's The Dubai Mall with Eat App • Eat App",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://eatapp.co/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d2d3316b729e/0.2858370851671155:1792101632:NakbgRBdiCD8fXSoZdikbPC88NFvxEp7hPDPmZMvCgw/a4b24aa8fc1ba68a"
+        },
+        {
+          "method": "POST",
+          "destination": "https://alb.reddit.com/rp"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google-analytics.com/j/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://stats.g.doubleclick.net/j/collect"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-DXB-shang-palace",
+      "mode": "desktop",
+      "url": "https://www.sevenrooms.com/reservations/shangpalacedubai",
+      "httpStatus": 200,
+      "title": "Shang Palace Dubai Reservations",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://o17585.ingest.us.sentry.io/api/6350689/envelope/"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google-analytics.com/j/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://ad.doubleclick.net/ccm/s/collect"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-DXB-shang-palace",
+      "mode": "mobile",
+      "url": "https://www.sevenrooms.com/reservations/shangpalacedubai",
+      "httpStatus": 200,
+      "title": "Shang Palace Dubai Reservations",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://o17585.ingest.us.sentry.io/api/6350689/envelope/"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google-analytics.com/j/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-HKT-uf6b9db1d32b4",
+      "mode": "desktop",
+      "url": "https://www.rayarestaurant.net/",
+      "httpStatus": 200,
+      "title": "ต้นตำรับอาหารภูเก็ต | ระย้า Raya Restaurant | Thailand",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/site-members"
+        },
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-HKT-uf6b9db1d32b4",
+      "mode": "mobile",
+      "url": "https://www.rayarestaurant.net/",
+      "httpStatus": 200,
+      "title": "ต้นตำรับอาหารภูเก็ต | ระย้า Raya Restaurant | Thailand",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/site-members"
+        },
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "destination": "https://panorama.wixapps.net/api/v1/bulklog"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "curated-IST-mikla",
+      "mode": "desktop",
+      "url": "https://www.miklarestaurant.com/rezervasyon",
+      "httpStatus": 200,
+      "title": "Rezervasyon | Mikla Restaurant",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "curated-IST-mikla",
+      "mode": "mobile",
+      "url": "https://www.miklarestaurant.com/rezervasyon",
+      "httpStatus": 200,
+      "title": "Rezervasyon | Mikla Restaurant",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "curated-IST-neolokal",
+      "mode": "desktop",
+      "url": "https://guest.rezervem.com.tr/Neolokal/?sourceId=webSite&culture=en-US",
+      "httpStatus": 200,
+      "title": "Neolokal – A Modern Journey Through Michelin-Starred Anatolian Cuisine | Rezervem",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://guest.rezervem.com.tr/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d2d3316b729e/0.2858370851671155:1792101632:NakbgRBdiCD8fXSoZdikbPC88NFvxEp7hPDPmZMvCgw/a4b24be9adf09903"
+        },
+        {
+          "method": "POST",
+          "destination": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/3404904876:1792101627:ZBlA0sZS9mNbzq6E1TUSeRgRcvsaRySsv6rNG6iNAXE/a4b24c24fd172d80/L_bv0qSUiTPn9z0ezFgTs0iGlYzWrhsLz9vZlo90ND0-1792103731-1.2.1.1-wY0wkXBloUglfTnC6zxiMC89ExkSnRRR0j9srzCC2IxVYKMT9F73SZ3uE0L_CDnX"
+        },
+        {
+          "method": "POST",
+          "destination": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/3404904876:1792101627:ZBlA0sZS9mNbzq6E1TUSeRgRcvsaRySsv6rNG6iNAXE/a4b24c24fd182d80/GewK2.ribvTKFQamNhAjvkNnbxio7So0nDbjimae_jM-1792103732-1.2.1.1-r.PVGTN1d9NpnIPxrC7GkOmzWJkdY2LS_EUEYSlPyCvOY0iRYG.ooksWA..tLqJW"
+        },
+        {
+          "method": "POST",
+          "destination": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/3404904876:1792101627:ZBlA0sZS9mNbzq6E1TUSeRgRcvsaRySsv6rNG6iNAXE/a4b24c24fd172d80/L_bv0qSUiTPn9z0ezFgTs0iGlYzWrhsLz9vZlo90ND0-1792103731-1.2.1.1-wY0wkXBloUglfTnC6zxiMC89ExkSnRRR0j9srzCC2IxVYKMT9F73SZ3uE0L_CDnX"
+        },
+        {
+          "method": "POST",
+          "destination": "https://bam.eu01.nr-data.net/browser/connect/2/NRJS-0ef2c4cc9a5d0ac9397"
+        },
+        {
+          "method": "POST",
+          "destination": "https://bam.eu01.nr-data.net/jserrors/1/NRJS-0ef2c4cc9a5d0ac9397"
+        },
+        {
+          "method": "POST",
+          "destination": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/3404904876:1792101627:ZBlA0sZS9mNbzq6E1TUSeRgRcvsaRySsv6rNG6iNAXE/a4b24c24fd182d80/GewK2.ribvTKFQamNhAjvkNnbxio7So0nDbjimae_jM-1792103732-1.2.1.1-r.PVGTN1d9NpnIPxrC7GkOmzWJkdY2LS_EUEYSlPyCvOY0iRYG.ooksWA..tLqJW"
+        },
+        {
+          "method": "POST",
+          "destination": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/3404904876:1792101627:ZBlA0sZS9mNbzq6E1TUSeRgRcvsaRySsv6rNG6iNAXE/a4b24c24fd172d80/L_bv0qSUiTPn9z0ezFgTs0iGlYzWrhsLz9vZlo90ND0-1792103731-1.2.1.1-wY0wkXBloUglfTnC6zxiMC89ExkSnRRR0j9srzCC2IxVYKMT9F73SZ3uE0L_CDnX"
+        },
+        {
+          "method": "POST",
+          "destination": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/3404904876:1792101627:ZBlA0sZS9mNbzq6E1TUSeRgRcvsaRySsv6rNG6iNAXE/a4b24c24fd182d80/GewK2.ribvTKFQamNhAjvkNnbxio7So0nDbjimae_jM-1792103732-1.2.1.1-r.PVGTN1d9NpnIPxrC7GkOmzWJkdY2LS_EUEYSlPyCvOY0iRYG.ooksWA..tLqJW"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "curated-IST-neolokal",
+      "mode": "mobile",
+      "url": "https://guest.rezervem.com.tr/Neolokal/?sourceId=webSite&culture=en-US",
+      "httpStatus": 200,
+      "title": "Neolokal – A Modern Journey Through Michelin-Starred Anatolian Cuisine | Rezervem",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://guest.rezervem.com.tr/cdn-cgi/challenge-platform/h/b/jsd/oneshot/d2d3316b729e/0.2858370851671155:1792101632:NakbgRBdiCD8fXSoZdikbPC88NFvxEp7hPDPmZMvCgw/a4b24c3a1ea66440"
+        },
+        {
+          "method": "POST",
+          "destination": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/3404904876:1792101627:ZBlA0sZS9mNbzq6E1TUSeRgRcvsaRySsv6rNG6iNAXE/a4b24c50ec4b70d2/s2fUt6A6SRAOxkLpW0bu9VqqKAj0JCik6ycgx.0qv00-1792103739-1.2.1.1-dOsMYyDywwJMiiERg86WB96JRNU1UZE5yIBcMDBBB.KDFjnO7N_Y1OyCnIaI6ooR"
+        },
+        {
+          "method": "POST",
+          "destination": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/3404904876:1792101627:ZBlA0sZS9mNbzq6E1TUSeRgRcvsaRySsv6rNG6iNAXE/a4b24c50ec4d70d2/u_vnGyqwB0cHA_n_h_i.5eNS4cIblTD5tKW1jl8FDxg-1792103739-1.2.1.1-pHlZ.KpvRSFQlgCyr9H6PIgT5QXZZ9U.0iUh9fSEzkvkADqHy7I9V6QfZDcsQEtb"
+        },
+        {
+          "method": "POST",
+          "destination": "https://bam.eu01.nr-data.net/browser/connect/2/NRJS-0ef2c4cc9a5d0ac9397"
+        },
+        {
+          "method": "POST",
+          "destination": "https://bam.eu01.nr-data.net/jserrors/1/NRJS-0ef2c4cc9a5d0ac9397"
+        },
+        {
+          "method": "POST",
+          "destination": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/3404904876:1792101627:ZBlA0sZS9mNbzq6E1TUSeRgRcvsaRySsv6rNG6iNAXE/a4b24c50ec4b70d2/s2fUt6A6SRAOxkLpW0bu9VqqKAj0JCik6ycgx.0qv00-1792103739-1.2.1.1-dOsMYyDywwJMiiERg86WB96JRNU1UZE5yIBcMDBBB.KDFjnO7N_Y1OyCnIaI6ooR"
+        },
+        {
+          "method": "POST",
+          "destination": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/3404904876:1792101627:ZBlA0sZS9mNbzq6E1TUSeRgRcvsaRySsv6rNG6iNAXE/a4b24c50ec4d70d2/u_vnGyqwB0cHA_n_h_i.5eNS4cIblTD5tKW1jl8FDxg-1792103739-1.2.1.1-pHlZ.KpvRSFQlgCyr9H6PIgT5QXZZ9U.0iUh9fSEzkvkADqHy7I9V6QfZDcsQEtb"
+        },
+        {
+          "method": "POST",
+          "destination": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/3404904876:1792101627:ZBlA0sZS9mNbzq6E1TUSeRgRcvsaRySsv6rNG6iNAXE/a4b24c50ec4b70d2/s2fUt6A6SRAOxkLpW0bu9VqqKAj0JCik6ycgx.0qv00-1792103739-1.2.1.1-dOsMYyDywwJMiiERg86WB96JRNU1UZE5yIBcMDBBB.KDFjnO7N_Y1OyCnIaI6ooR"
+        },
+        {
+          "method": "POST",
+          "destination": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/3404904876:1792101627:ZBlA0sZS9mNbzq6E1TUSeRgRcvsaRySsv6rNG6iNAXE/a4b24c50ec4d70d2/u_vnGyqwB0cHA_n_h_i.5eNS4cIblTD5tKW1jl8FDxg-1792103739-1.2.1.1-pHlZ.KpvRSFQlgCyr9H6PIgT5QXZZ9U.0iUh9fSEzkvkADqHy7I9V6QfZDcsQEtb"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "curated-IST-turk-fatih-tutak",
+      "mode": "desktop",
+      "url": "https://rezervasyon.turkft.com/turk-fatih-tutak/reservation",
+      "httpStatus": 200,
+      "title": "Reservation",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://api.kiprotect.com/v1/privacy-managers/22084777963207a4e74b08885a3af5de/submit"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "curated-IST-turk-fatih-tutak",
+      "mode": "mobile",
+      "url": "https://rezervasyon.turkft.com/turk-fatih-tutak/reservation",
+      "httpStatus": 200,
+      "title": "Reservation",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://api.kiprotect.com/v1/privacy-managers/22084777963207a4e74b08885a3af5de/submit"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-bagatelle",
+      "mode": "desktop",
+      "url": "https://www.sevenrooms.com/reservations/bagatellestbarth",
+      "httpStatus": 200,
+      "title": "Bagatelle St. Barth Reservations",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://www.google-analytics.com/j/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://o17585.ingest.us.sentry.io/api/6350689/envelope/"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://m.stripe.com/6"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-bagatelle",
+      "mode": "mobile",
+      "url": "https://www.sevenrooms.com/reservations/bagatellestbarth",
+      "httpStatus": 200,
+      "title": "Bagatelle St. Barth Reservations",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google-analytics.com/j/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://o17585.ingest.us.sentry.io/api/6350689/envelope/"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://m.stripe.com/6"
+        },
+        {
+          "method": "POST",
+          "destination": "https://o17585.ingest.us.sentry.io/api/6350689/envelope/"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-black-ginger",
+      "mode": "desktop",
+      "url": "https://blackgingersbh.com/en/reservations/",
+      "httpStatus": 200,
+      "title": "Reservations – Black Ginger – Thaï restaurant – St Barth",
+      "error": null,
+      "blockedWrites": [],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-black-ginger",
+      "mode": "mobile",
+      "url": "https://blackgingersbh.com/en/reservations/",
+      "httpStatus": 200,
+      "title": "Reservations – Black Ginger – Thaï restaurant – St Barth",
+      "error": null,
+      "blockedWrites": [],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-fishcorner",
+      "mode": "desktop",
+      "url": "https://bookings.zenchef.com/results?pid=1001&rid=388090",
+      "httpStatus": 200,
+      "title": "Fish Corner - Réservation en ligne",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://d3f8478c3e24.edge.sdk.awswaf.com/d3f8478c3e24/mp_verify"
+        },
+        {
+          "method": "POST",
+          "destination": "https://d3f8478c3e24.edge.sdk.awswaf.com/d3f8478c3e24/mp_verify"
+        },
+        {
+          "method": "POST",
+          "destination": "https://d3f8478c3e24.edge.sdk.awswaf.com/d3f8478c3e24/report"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-fishcorner",
+      "mode": "mobile",
+      "url": "https://bookings.zenchef.com/results?pid=1001&rid=388090",
+      "httpStatus": 200,
+      "title": "Fish Corner - Réservation en ligne",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://d3f8478c3e24.edge.sdk.awswaf.com/d3f8478c3e24/mp_verify"
+        },
+        {
+          "method": "POST",
+          "destination": "https://d3f8478c3e24.edge.sdk.awswaf.com/d3f8478c3e24/mp_verify"
+        },
+        {
+          "method": "POST",
+          "destination": "https://d3f8478c3e24.edge.sdk.awswaf.com/d3f8478c3e24/report"
+        },
+        {
+          "method": "POST",
+          "destination": "https://bookings.zenchef.com/unleash/api/frontend/client/metrics"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-la-guerite",
+      "mode": "desktop",
+      "url": "https://www.sevenrooms.com/reservations/lagueritedb",
+      "httpStatus": 200,
+      "title": "La Guerite SBH Reservations",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://www.google-analytics.com/j/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://o17585.ingest.us.sentry.io/api/6350689/envelope/"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://m.stripe.com/6"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-la-guerite",
+      "mode": "mobile",
+      "url": "https://www.sevenrooms.com/reservations/lagueritedb",
+      "httpStatus": 200,
+      "title": "La Guerite SBH Reservations",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://www.google-analytics.com/j/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://o17585.ingest.us.sentry.io/api/6350689/envelope/"
+        },
+        {
+          "method": "POST",
+          "destination": "https://m.stripe.com/6"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-la-petite-plage",
+      "mode": "desktop",
+      "url": "https://www.sevenrooms.com/explore/lapetiteplagesaintbarth/reservations/create/search",
+      "httpStatus": 200,
+      "title": "Reservation at LA PETITE PLAGE Saint-Barth",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://rs.fullstory.com/rec/page"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.sevenrooms.com/svc/global-client-hub-backend/auth/token-refresh"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-la-petite-plage",
+      "mode": "mobile",
+      "url": "https://www.sevenrooms.com/explore/lapetiteplagesaintbarth/reservations/create/search",
+      "httpStatus": 200,
+      "title": "Reservation at LA PETITE PLAGE Saint-Barth",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://rs.fullstory.com/rec/page"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.sevenrooms.com/svc/global-client-hub-backend/auth/token-refresh"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-le-cafe",
+      "mode": "desktop",
+      "url": "https://www.sevenrooms.com/explore/lecafesaintbarth/reservations/create/search",
+      "httpStatus": 200,
+      "title": "Reservation at LE CAFÉ Saint-Barth",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://www.sevenrooms.com/svc/global-client-hub-backend/auth/token-refresh"
+        },
+        {
+          "method": "POST",
+          "destination": "https://rs.fullstory.com/rec/page"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-le-cafe",
+      "mode": "mobile",
+      "url": "https://www.sevenrooms.com/explore/lecafesaintbarth/reservations/create/search",
+      "httpStatus": 200,
+      "title": "Reservation at LE CAFÉ Saint-Barth",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://rs.fullstory.com/rec/page"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.sevenrooms.com/svc/global-client-hub-backend/auth/token-refresh"
+        },
+        {
+          "method": "POST",
+          "destination": "https://pagead2.googlesyndication.com/ccm/collect"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-sella",
+      "mode": "desktop",
+      "url": "https://www.sevenrooms.com/reservations/restaurantsella",
+      "httpStatus": 200,
+      "title": "Restaurant Sella Reservations",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://www.google-analytics.com/j/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://o17585.ingest.us.sentry.io/api/6350689/envelope/"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://ad.doubleclick.net/ccm/s/collect"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    },
+    {
+      "restaurantId": "osm-SBH-sella",
+      "mode": "mobile",
+      "url": "https://www.sevenrooms.com/reservations/restaurantsella",
+      "httpStatus": 200,
+      "title": "Restaurant Sella Reservations",
+      "error": null,
+      "blockedWrites": [
+        {
+          "method": "POST",
+          "destination": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://www.google-analytics.com/j/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "destination": "https://o17585.ingest.us.sentry.io/api/6350689/envelope/"
+        },
+        {
+          "method": "POST",
+          "destination": "https://m.stripe.com/6"
+        }
+      ],
+      "bodyRendered": true,
+      "availabilityVerified": false,
+      "confirmationVerified": false
+    }
+  ]
+}
