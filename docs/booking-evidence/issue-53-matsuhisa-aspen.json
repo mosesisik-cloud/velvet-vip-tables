@@ -1,0 +1,155 @@
+{
+  "restaurantId": "curated-ASP-matsuhisa-aspen",
+  "issue": 53,
+  "agent": "codex-worker-2-5351",
+  "checkedAt": "2026-10-15T23:05:52.539Z",
+  "checkedDateStockholm": "2026-10-16",
+  "identity": {
+    "name": "Matsuhisa Aspen",
+    "address": "303 E. Main Street, Aspen, CO 81611, USA",
+    "source": "https://www.matsuhisarestaurants.com/contact/",
+    "duplicateCheck": "Catalog name/address search found only this Aspen ID; Cala di Volpe is a different branch. Not an exhaustive fuzzy duplicate audit."
+  },
+  "bookingRoute": {
+    "category": "E",
+    "status": "verified_manual_phone",
+    "provider": null,
+    "source": "https://www.matsuhisarestaurants.com/reservation-2/",
+    "phone": "+19705446628",
+    "proposedHref": "tel:+19705446628",
+    "observedHref": "tel:19705446628",
+    "advanceWindow": "Downstairs: official reservation page says 30 days; no inventory observed.",
+    "groupInquiry": {
+      "category": "D",
+      "minimumGuests": 15,
+      "url": "https://matsuhisa.tripleseat.com/party_request/20050",
+      "provider": "Tripleseat",
+      "verification": "Official outbound link only; destination not loaded or submitted."
+    },
+    "availability": "unknown",
+    "cancellation": "unknown",
+    "cardGuarantee": "unknown",
+    "prepayment": "unknown",
+    "languages": "English observed; no alternate booking language verified",
+    "unverifiedOnlineCandidate": {
+      "provider": "OpenTable",
+      "observedLoaderRestaurantId": "6946",
+      "status": "loader blocked; branch binding and online functionality not verified"
+    }
+  },
+  "implementation": {
+    "status": "evidence_only_awaiting_integrator",
+    "suggestion": "Use existing reviewed manual-contact architecture, adding phone-specific copy/status and guards through its owner. Do not use current email-only panel unchanged."
+  },
+  "browserChecks": [
+    {
+      "viewport": {
+        "width": 390,
+        "height": 900
+      },
+      "url": "https://www.matsuhisarestaurants.com/reservation-2/",
+      "httpStatus": 200,
+      "identityPresent": true,
+      "phonePresent": true,
+      "explicitReservationPhone": true,
+      "blockedRequests": [
+        {
+          "method": "GET",
+          "host": "www.opentable.com",
+          "path": "/widget/reservation/loader"
+        },
+        {
+          "method": "GET",
+          "host": "acsbap.com",
+          "path": "/api/app/assets/js/acsb.js"
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 900
+      },
+      "url": "https://www.matsuhisarestaurants.com/contact/",
+      "httpStatus": 200,
+      "identityPresent": true,
+      "phonePresent": true,
+      "explicitReservationPhone": null,
+      "blockedRequests": [
+        {
+          "method": "GET",
+          "host": "www.opentable.com",
+          "path": "/widget/reservation/loader"
+        },
+        {
+          "method": "GET",
+          "host": "acsbap.com",
+          "path": "/api/app/assets/js/acsb.js"
+        },
+        {
+          "method": "GET",
+          "host": "acsbap.com",
+          "path": "/api/app/assets/js/acsb.js"
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "url": "https://www.matsuhisarestaurants.com/reservation-2/",
+      "httpStatus": 200,
+      "identityPresent": true,
+      "phonePresent": true,
+      "explicitReservationPhone": true,
+      "blockedRequests": [
+        {
+          "method": "GET",
+          "host": "www.opentable.com",
+          "path": "/widget/reservation/loader"
+        },
+        {
+          "method": "GET",
+          "host": "acsbap.com",
+          "path": "/api/app/assets/js/acsb.js"
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 1365,
+        "height": 900
+      },
+      "url": "https://www.matsuhisarestaurants.com/contact/",
+      "httpStatus": 200,
+      "identityPresent": true,
+      "phonePresent": true,
+      "explicitReservationPhone": null,
+      "blockedRequests": [
+        {
+          "method": "GET",
+          "host": "www.opentable.com",
+          "path": "/widget/reservation/loader"
+        },
+        {
+          "method": "GET",
+          "host": "acsbap.com",
+          "path": "/api/app/assets/js/acsb.js"
+        },
+        {
+          "method": "GET",
+          "host": "acsbap.com",
+          "path": "/api/app/assets/js/acsb.js"
+        }
+      ]
+    }
+  ],
+  "safety": "Only GET/HEAD to www.matsuhisarestaurants.com allowed; all other hosts/methods blocked, service workers blocked, no controls clicked, no forms filled. Blocked third-party resources can affect layout.",
+  "limitations": [
+    "Rendered body text and links checked at mobile and desktop widths; no screenshot-based visual QA.",
+    "No telephone call, event submission, live availability, embed, checkout or confirmation tested.",
+    "Reservation page and contact page have conflicting hours and upstairs season wording; do not publish a single synthesized schedule or classify entire restaurant as closed."
+  ],
+  "publication": "not_published"
+}
