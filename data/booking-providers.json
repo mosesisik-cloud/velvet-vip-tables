@@ -1129,5 +1129,70 @@
       "error": "No loaded provider frame",
       "inputs": null
     }
+  },
+  "curated-TYO-florilege": {
+    "name": "Florilège",
+    "city": "Tokyo",
+    "provider": "TableCheck",
+    "url": "https://www.tablecheck.com/shops/florilege/reserve",
+    "source": "https://www.aoyama-florilege.jp/reservations.html",
+    "venueKey": "www.tablecheck.com/shops/florilege/reserve",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-15",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
+  },
+  "curated-CPT-fyn": {
+    "name": "FYN",
+    "city": "Cape Town",
+    "provider": "Dineplan",
+    "url": "https://account.dineplan.com/widget/v3/DjfvyT1k?source=direct",
+    "source": "https://www.fynrestaurant.com/make-a-booking",
+    "venueKey": "account.dineplan.com/widget/v3/DjfvyT1k",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-15",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
+  },
+  "curated-CPT-salsify-at-the-roundhouse": {
+    "name": "Salsify at the Roundhouse",
+    "city": "Cape Town",
+    "provider": "Dineplan",
+    "url": "https://calendar.dineplan.com/m0w4SxVp?type=inline",
+    "source": "https://salsify.co.za/reservations/",
+    "venueKey": "calendar.dineplan.com/m0w4SxVp",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "checkedAt": "2026-10-15",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
+  },
+  "curated-CPT-la-colombe": {
+    "name": "La Colombe",
+    "city": "Cape Town",
+    "provider": "Dineplan",
+    "url": "https://www.dineplan.com/widgetframe/GCPvsZBn",
+    "source": "https://www.lacolombe.restaurant/la-colombe",
+    "venueKey": "www.dineplan.com/widgetframe/GCPvsZBn",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-15",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
+  },
+  "curated-AMS-de-kas": {
+    "name": "De Kas",
+    "city": "Amsterdam",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=386643&lang=en&showCollapsed=1",
+    "source": "https://restaurantdekas.com/eng/garden",
+    "venueKey": "bookings.zenchef.com/results?rid=386643",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-15",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
