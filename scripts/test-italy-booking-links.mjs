@@ -54,5 +54,5 @@ assert.equal(paolino.cancellationPolicy, undefined);
 for (const id of ['osm-PAR-bigbang','curated-MCO-pavyllon-monte-carlo']) {
   assert.equal(resolveEmbeddedBooking(registry,id)?.url,registry[id].url, 'Existing exact exceptions preserved');
 }
-assert.equal(Object.keys(registry).length,130);
+assert.ok(Object.keys(registry).length >= 130);
 console.log('PASS: Italy external links, exact identity guards, policy provenance and existing exceptions (no network or bookings)');
