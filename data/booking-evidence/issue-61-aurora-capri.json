@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "issue": 61,
+  "agent": "codex-worker-4-fab7",
+  "chatId": "01a141cb-fab7-7812-a771-1f559b7dbeb9",
+  "originalClaimCommentId": 6204085410,
+  "claimCommit": "9534a1b7f857751ead774f2d8f1fc2675e9a8f5e",
+  "restaurantId": "curated-CAP-aurora-capri",
+  "checkedAt": "2026-10-16",
+  "timezone": "Europe/Stockholm",
+  "status": "ready_for_review",
+  "identity": {
+    "status": "verified",
+    "name": "Ristorante Aurora Capri",
+    "address": "Via Fuorlovado, 18, 80073 Capri (NA), Italy",
+    "source": "https://www.auroracapri.com/",
+    "evidence": "The official site's rendered contact section labels Aurora separately from Mia Capri enoteca at Longano, 10. Use Aurora's address and contacts."
+  },
+  "contact": {
+    "status": "official_contact_verified",
+    "website": "https://www.auroracapri.com/",
+    "email": "aurora@capri.it",
+    "phones": ["+390818370181", "+390818376533"],
+    "navigation": "Open the homepage and select CONTATTI. Direct navigation to /contatti returns HTTP 404, while in-app navigation renders the contact page.",
+    "excludedContacts": {
+      "email": "mia@capri.it",
+      "phone": "+390818374458",
+      "reason": "Separately labelled Mia Capri enoteca, not the restaurant contact block."
+    }
+  },
+  "bookingRoute": {
+    "status": "unknown",
+    "provider": null,
+    "evidence": "No booking form or booking-labelled link observed on the inspected home/contact views. Official phone and email are general contacts, not proof of reservation acceptance.",
+    "liveAvailability": "not_observed",
+    "confirmedReservation": "not_tested",
+    "openingStatus": "unknown",
+    "limitation": "Inspection does not prove absence of other booking channels or current seasonal opening."
+  },
+  "tests": {
+    "method": "Headless Chromium via Playwright; service workers blocked; all non-GET and unreviewed XHR/fetch requests blocked; no contact links activated or forms submitted.",
+    "homepageHttpStatus": 200,
+    "spaContactTitle": "Contatti",
+    "spaContactForms": 0,
+    "directContactHttpStatus": 404,
+    "translation": "Initial conservative pass blocked static assets/i18n/it.json. Reviewed that JSON and allowed only its exact GET URL before repeating the contact inspection.",
+    "reproduce": "node scripts/inspect-aurora-capri.cjs",
+    "limitations": ["No messages, calls, reservations, holds or payments.", "No Velvet integration or production test; this is a per-restaurant evidence fragment."]
+  },
+  "implementation": "evidence_only_pending_integrator",
+  "publication": "not_published",
+  "next": "Booking coordinator should consolidate verified identity and general contact route. Prefer homepage for external navigation; do not expose /contatti as a direct link or present these contacts as a verified booking channel. Obtain explicit official booking evidence before changing bookingRoute from unknown.",
+  "sources": [
+    { "url": "https://www.auroracapri.com/", "role": "Live homepage and client-side CONTATTI navigation" },
+    { "url": "https://www.auroracapri.com/main.js", "role": "Official client application contact markup and route definitions" },
+    { "url": "https://www.auroracapri.com/assets/i18n/it.json", "role": "Official static labels; reviewed before allowing browser GET" },
+    { "url": "https://www.auroracapri.com/contatti", "role": "Direct-request 404 regression observation, not recommended destination" }
+  ]
+}
