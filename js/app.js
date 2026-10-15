@@ -2497,7 +2497,7 @@ async function renderRestaurantDetail(placeId) {
     </div>
   </section>`;
   const mirrorContainer = document.getElementById("bokabord-mirror");
-  if (mirrorContainer) mountBokabordMirror(mirrorContainer, apiJSON, { restaurantId: restaurant.placeId, restaurantName: restaurant.name, onLogin: () => { const returnTo = `#/restaurant/${restaurant.placeId}`; try { sessionStorage.setItem('velvet_after_login', returnTo); } catch {} openOnboarding({ dismissable: true, phase: 'auth', returnTo }); } });
+  if (mirrorContainer) mountBokabordMirror(mirrorContainer, apiJSON, { restaurantId: restaurant.placeId, restaurantName: restaurant.name });
   const webbridgeForm = document.getElementById("restaurant-webbridge-search");
   const webbridgeResult = document.getElementById("restaurant-webbridge-result");
   if (webbridgeForm && webbridgeResult) {
@@ -4331,7 +4331,7 @@ function showConfirmation(b, opener) {
 
 async function renderBookings() {
   const bookings = loadBookings();
-  const restaurantRemote = loadUser() ? await apiJSON("/restaurant-bookings") : null;
+  const restaurantRemote = await apiJSON("/restaurant-bookings");
   const remoteRestaurantBookings = Array.isArray(restaurantRemote?.bookings) ? restaurantRemote.bookings : [];
   const restaurantOperator = restaurantRemote?.operator === true;
   const remoteRestaurantIds = new Set(remoteRestaurantBookings.map((booking) => booking.id));

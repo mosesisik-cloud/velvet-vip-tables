@@ -4,7 +4,7 @@ Velvet visar originalformuläret från en isolerad Chromium-session. Klick, scro
 
 ## Körlägen
 
-API-serverns `VELVET_BOKABORD_MIRROR=inspect` är fortfarande en inspektionspilot för inloggade operatörer. Den stoppar vid kontaktuppgifter. Utan flaggan används tidigare bokningsflöde. Ingen produktion har driftsatts med dessa ändringar.
+API-serverns `VELVET_BOKABORD_MIRROR=inspect` är fortfarande en inspektionspilot för inloggade operatörer. Den stoppar vid kontaktuppgifter. Utan flaggan används tidigare bokningsflöde. Live-läget beskrivs nedan.
 
 Den lokala förhandsvisningen stöder `MIRROR_MODE=prepare`: kontaktfält placeras över originalbilden och synkas till leverantörens formulär. Båda marknadsföringsvalen avmarkeras. `/current` återupptar en befintlig session.
 
@@ -46,9 +46,9 @@ Ett godkänt skarpt test genomfördes via Velvet: Middag → 1 gäst → datum/t
 
 ## Produktionsläge för Stockholm
 
-`VELVET_BOKABORD_MIRROR=live` aktiverar kontaktinmatning och skarp inlämning för inloggade Velvet-användare. Restaurangerna kommer från `api/bokabord-restaurants.json`, med bokningshash och officiell källa. Klienten visar originalbilden och kräver ett nytt villkorsgodkännande innan varje inlämningssteg. Det som godkänns binds till aktuell bildrevision och leverantörens formulärmodell. Ingen generell godkännandefil används i produktion.
+`VELVET_BOKABORD_MIRROR=live` aktiverar kontaktinmatning och skarp inlämning utan krav på Velvet-konto. Restaurangerna kommer från `api/bokabord-restaurants.json`, med bokningshash och officiell källa. Klienten visar originalbilden och kräver ett nytt villkorsgodkännande innan varje inlämningssteg. Det som godkänns binds till aktuell bildrevision och leverantörens formulärmodell. Ingen generell godkännandefil används i produktion.
 
-`api/mirror-attempts/` är en privat, beständig volym: varje bokningsförsök reserveras atomiskt före sändning, inklusive efter omstart. Bokningshistoriken läser dessa poster. Inget okänt försök skickas automatiskt igen. Produktionsläget använder samma inloggning som övriga Velvet och kontrollerar sessionsägare vid varje åtgärd.
+`api/mirror-attempts/` är en privat, beständig volym: varje bokningsförsök reserveras atomiskt före sändning, inklusive efter omstart. Bokningshistoriken läser dessa poster. Inget okänt försök skickas automatiskt igen. Gäster får en slumpmässig HttpOnly/Secure/SameSite-cookie. Servern kontrollerar sessionsägaren vid varje åtgärd och visar endast gästens egen historik i samma webbläsare. Inloggade användare behåller kontobunden historik.
 
 22 Stockholmrestauranger har verifierade Bokabord-widgetar. Frantzén visade enbart väntelista på det kontrollerade datumet. Kortgaranti, obligatoriska tillval och väntelista behöver slutföras i leverantörens säkra formulär; Velvet visar en tydlig länk och skickar ingen reservation för dessa val. Vanliga bokningar utan dessa krav genomförs i Velvet. Övriga bokningsleverantörer omfattas inte av adaptern.
 

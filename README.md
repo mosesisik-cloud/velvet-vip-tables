@@ -12,7 +12,7 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 
 ## Bokabord i Stockholm
 
-22 verifierade Bokabord-restauranger stöds av bildspeglingen. `VELVET_BOKABORD_MIRROR=live` låter inloggade gäster fylla i originalformuläret och godkänna bokningen i Velvet. Kortgaranti, tillval och väntelista slutförs hos leverantören. `inspect` stoppar vid kontaktuppgifter. Se [körinstruktioner och verifiering](docs/bokabord-playwright-pilot.md).
+22 verifierade Bokabord-restauranger stöds av bildspeglingen. `VELVET_BOKABORD_MIRROR=live` låter gäster utan inloggning fylla i originalformuläret och godkänna bokningen i Velvet. Kortgaranti, tillval och väntelista slutförs hos leverantören. `inspect` stoppar vid kontaktuppgifter. Se [körinstruktioner och verifiering](docs/bokabord-playwright-pilot.md).
 
 ## Vad som är på riktigt i V4
 
@@ -81,7 +81,7 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 - Datum, tider, kontaktuppgifter och slutlig bekräftelse visas i VELVETs eget gränssnitt. Ingen leverantörssida eller iframe öppnas.
 - En bokning markeras aldrig som bekräftad förrän BokaBord har svarat med `success: true`.
 - Zinks verifierade 2026-meny finns direkt i VELVET från `data/restaurant-menus.json`.
-- Testerna validerar flödet men skapar aldrig en reservation. En skarp bokning kräver att en inloggad gäst själv trycker **Bekräfta riktig bokning**.
+- Testerna validerar flödet men skapar aldrig en reservation. En skarp bokning kräver att gästen själv trycker **Bekräfta riktig bokning**.
 
 ### Produktionskrav för V157–V159-piloten
 

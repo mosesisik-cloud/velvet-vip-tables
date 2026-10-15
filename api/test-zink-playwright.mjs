@@ -4,6 +4,20 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { BookingLedger } from './bokabord-ledger.mjs';
+import { bookingGuest } from './booking-guest.mjs';
+
+test('guest booking credential is private, persistent and isolated without account authentication', () => {
+  const headers = {};
+  const res = {setHeader:(name,value)=>{headers[name]=value;}};
+  assert.equal(bookingGuest({headers:{}},res),null);
+  const owner = bookingGuest({headers:{}},res,true);
+  const cookie = headers['Set-Cookie'];
+  assert.match(cookie,/HttpOnly; Secure; SameSite=Lax/);
+  assert.equal(bookingGuest({headers:{cookie}},res),owner);
+  assert.notEqual(bookingGuest({headers:{}},res,true),owner);
+  assert.equal(bookingGuest({headers:{cookie:'velvet_booking_guest=chosen-owner'}},res),null);
+  assert.ok(!cookie.includes(owner));
+});
 import { allowedRequest, matchesApprovedBooking, BokabordMirror } from './bokabord-mirror.mjs';
 
 const approval = { date: '2026-10-19', time: '17:00', party: 1, firstname: 'Test', lastname: 'Guest', email: 'test@example.com', phone: '+46700000000', terms: true };
