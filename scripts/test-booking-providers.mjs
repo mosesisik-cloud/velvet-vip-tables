@@ -29,7 +29,7 @@ for (const url of [
 ]) assert.equal(resolveEmbeddedBooking({ test: { ...row, url } }, 'test'), null);
 assert.equal(resolveEmbeddedBooking(registry, 'not-reviewed'), null);
 assert.equal(resolveEmbeddedBooking(registry, '__proto__'), null);
-assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 44);
+assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 45);
 assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 64);
 assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 64);
 for (const id of ['osm-IBZ-ama-lur', 'osm-MRB-the-farm', 'osm-STT-gaio', 'osm-STT-l-opera', 'osm-STT-le-cafe']) {

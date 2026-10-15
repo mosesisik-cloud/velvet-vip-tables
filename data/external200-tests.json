@@ -9,7 +9,7 @@
     {
       "command": "node scripts/test-booking-providers.mjs",
       "result": "passed",
-      "coverage": "126 active mappings including two new external200 additions; destination guards and cache protection"
+      "coverage": "128 active mappings including two new external200 additions; destination guards and cache protection"
     },
     {
       "command": "node scripts/test-booking-selection.mjs",
