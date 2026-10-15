@@ -1,6 +1,6 @@
 # External200 booking audit
 
-This review covers exactly the 200 stable restaurant IDs in `data/external200-manifest.json`, divided into the original ten groups of twenty. Based on origin/main `7fc49f4`, checked 15 October 2026. No production deployment or active registry change is included.
+This review covers exactly the 200 stable restaurant IDs in `data/external200-manifest.json`, divided into the original ten groups of twenty. Research initially based on origin/main `7fc49f4`, checked 15 October 2026. Branch refreshed against origin/main `3abce96` and local validation rerun on 16 October 2026. No production deployment or active registry change is included.
 
 The machine-readable decisions are `data/external200-group01.json` through `external200-group10.json`. Each group's reviewed adapter-compatible additions are also exported in `data/external200-registry-groupNN.json`; `{}` means none qualified. The combined proposed registry is `data/external200-registry-additions.json`. It is deliberately not loaded by the application. The release owner can import reviewed entries into the active registry after reconciliation with current main, then update its count assertions and rerun provider, selection and language tests. Do not replace the entire active registry.
 
@@ -26,3 +26,7 @@ Shellona has officially closed to make way for Loulou even though its old SevenR
 Run `node scripts/external200-validate.mjs`. It checks exactly 200 IDs, twenty per manifest group, allowed claims/statuses, proposal consistency, existing resolver acceptance, and rejection of changed hosts/venues or an unearned embed upgrade. Existing provider, selection and language tests also pass on the unchanged active registry. The registry unit tests do not simulate reservations.
 
 `node scripts/external200-browser-probe.mjs --live` is an optional fresh read-only render probe after dependency installation. It performs no control clicks; successful navigation is not treated as form or availability success. Evidence from the actual interactive checks is in the decision records, group reports and `data/external200-browser-evidence.json`. Selected screenshots: `docs/external200-sella-mobile.png`, `docs/external200-carluccio-mobile.png`. Viewport emulation is not a physical-device/iOS test. Search observations expire as inventory changes. Cancellation/guarantee/prepayment conditions not visible before a potentially mutating step remain unknown.
+
+## CI follow-up, 16 October 2026
+
+Route integrity initially rejected a group08 limitation that began with an HTTPS URL followed by prose. The URL is now recorded separately in the structured fetch attempt; the limitation still records failure without inferring closure. No test was weakened or changed. Route integrity, exact-scope validation, provider, selection and language checks pass locally against the refreshed main branch.

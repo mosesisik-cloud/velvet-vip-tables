@@ -863,14 +863,23 @@
       },
       "limitations": [
         "Repository contains only a destination-level address and no coordinates for this ID.",
-        "https://www.focacciabistro.com fetch failed; no closure inference.",
+        "Fetch of the candidate website failed; this does not establish closure.",
         "No reservation confirmation, payment, waitlist or contact request submitted."
       ],
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
         "query": "\"Focaccia Bistro\" Miami restaurant official reservation"
-      }
+      },
+      "attempts": [
+        {
+          "date": "2026-10-15",
+          "method": "read_only_http_get",
+          "url": "https://www.focacciabistro.com",
+          "result": "fetch_failed",
+          "closureInferred": false
+        }
+      ]
     }
   ]
 }
