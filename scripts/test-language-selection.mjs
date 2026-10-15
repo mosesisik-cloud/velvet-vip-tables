@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+Object.defineProperty(globalThis,'navigator',{value:{languages:['de-DE','fr-FR'],language:'de-DE'},configurable:true});
+globalThis.localStorage={getItem:()=>null};
+const {resolveLanguage,getLang}=await import('../js/i18n.js');
+assert.equal(getLang(),'fr');
+assert.equal(resolveLanguage({saved:'es',languages:['sv-SE'],country:'FR'}),'es');
+assert.equal(resolveLanguage({languages:['en-GB'],country:'SE'}),'en');
+assert.equal(resolveLanguage({languages:['de-DE'],country:'SE'}),'sv');
+assert.equal(resolveLanguage({languages:[],country:'CH'}),'en');
+assert.equal(resolveLanguage({saved:'invalid',languages:['es-MX']}),'es');
+console.log('PASS language priority: explicit choice, ordered browser languages, country fallback, English');

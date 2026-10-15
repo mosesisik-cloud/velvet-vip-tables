@@ -35,15 +35,28 @@ export class AvailabilitySearch {
       for (const [day, shifts] of Object.entries(data.data.availability)) {
         if (day !== q.date || !Array.isArray(shifts)) continue;
         for (const shift of shifts) for (const slot of shift.times || []) {
-          const time = String(slot.time_iso || '').slice(11,16) || String(slot.time || '');
+          // The date bucket can contain another day's experience. Compare the
+          // provider's local date literally; timezone conversion would change it.
+          const iso = String(slot.time_iso || '');
+          if (iso && (!/^\d{4}-\d{2}-\d{2}[T ]([01]\d|2[0-3]):[0-5]\d/.test(iso) || iso.slice(0,10) !== q.date)) continue;
+          const time = iso ? iso.slice(11,16) : String(slot.time || '');
           if (slot.type !== 'book' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(time) || Math.abs(minutes(time)-minutes(q.time)) > 90) continue;
           // The provider rechecks the chosen date and party in its original form.
           const booking = new URL(row.url);
           if (booking.pathname.includes('/explore/')) { booking.searchParams.set('date',q.date); booking.searchParams.set('party_size',q.party); booking.searchParams.set('start_time',time); }
           else { booking.searchParams.set('default_date',q.date); booking.searchParams.set('default_party_size',q.party); booking.searchParams.set('default_time',time); }
-          // Different experiences can share a time. Preserve any card requirement
-          // instead of letting a later non-card experience erase it.
-          slots.set(time,{time,bookingUrl:booking.href,requiresCard:slots.get(time)?.requiresCard === true || slot.require_credit_card === true});
+          // These flags mean ANY option at this time, not every experience.
+          // An absent card flag never establishes that booking is fee-free.
+          const requiresPrepayment = slot.cc_payment_rule === 'advanced_payment';
+          const requiresCard = requiresPrepayment || slot.require_credit_card === true;
+          const requirement = requiresPrepayment ? 'prepayment' : requiresCard ? 'card' : 'not_specified';
+          const previous = slots.get(time);
+          slots.set(time,{
+            time,bookingUrl:booking.href,
+            requiresCard:previous?.requiresCard === true || requiresCard,
+            requiresPrepayment:previous?.requiresPrepayment === true || requiresPrepayment,
+            paymentRequirement:previous && previous.paymentRequirement !== requirement ? 'mixed' : requirement
+          });
         }
       }
       base.checkedAt = new Date(this.now()).toISOString();

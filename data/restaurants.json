@@ -624,7 +624,7 @@
           "cuisine": "italian"
         },
         {
-          "placeId": "osm-DXB-",
+          "placeId": "osm-DXB-u250cb83b7574",
           "name": "باب المنصور",
           "rating": null,
           "reviewCount": 0,
@@ -649,7 +649,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-DXB-",
+          "placeId": "osm-DXB-ud1aecdbe724f",
           "name": "ريم البوادي",
           "rating": null,
           "reviewCount": 0,
@@ -2879,7 +2879,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKT-",
+          "placeId": "osm-HKT-u9652e72e518c",
           "name": "ครัวพริกแกง@ภูเก็ต",
           "rating": null,
           "reviewCount": 0,
@@ -2904,7 +2904,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKT-",
+          "placeId": "osm-HKT-u88caf8193724",
           "name": "ก๋วยเตี๋ยวเบรคแตก",
           "rating": null,
           "reviewCount": 0,
@@ -2930,7 +2930,7 @@
           "cuisine": "thai"
         },
         {
-          "placeId": "osm-HKT-",
+          "placeId": "osm-HKT-u172a3c9fa68f",
           "name": "มาลัย อาหารตามสั่ง",
           "rating": null,
           "reviewCount": 0,
@@ -2943,7 +2943,7 @@
           "cuisine": "thai"
         },
         {
-          "placeId": "osm-HKT-",
+          "placeId": "osm-HKT-u0bb8a4bb7e3a",
           "name": "ไม้หมอน ฟอเรสต์",
           "rating": null,
           "reviewCount": 0,
@@ -3061,7 +3061,7 @@
           "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
         },
         {
-          "placeId": "osm-HKT-",
+          "placeId": "osm-HKT-uf6b9db1d32b4",
           "name": "ร้านอาหาร ระย้า",
           "rating": null,
           "reviewCount": 0,
@@ -3099,7 +3099,7 @@
           "images": []
         },
         {
-          "placeId": "osm-HKT-",
+          "placeId": "osm-HKT-u85f393ba80c7",
           "name": "วันจันทร์ บ้านอาหารไทย",
           "rating": null,
           "reviewCount": 0,
@@ -3271,7 +3271,7 @@
           "cuisine": "chinese_chicken_rice"
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-u766eb06f006a",
           "name": "เม้งโภชนา",
           "rating": null,
           "reviewCount": 0,
@@ -3333,7 +3333,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-uc3b438c644de",
           "name": "ลูกชิ้นปลานายง้ำ",
           "rating": null,
           "reviewCount": 0,
@@ -3361,7 +3361,7 @@
           "menuVerifiedAt": "2026-09-18T13:20:20.951Z"
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-u127bbd90e852",
           "name": "ข้าวต้มบวร",
           "rating": null,
           "reviewCount": 0,
@@ -3410,7 +3410,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-uca22dc274c49",
           "name": "ปาท่องโก๋",
           "rating": null,
           "reviewCount": 0,
@@ -3437,7 +3437,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-u1eb4b19647a0",
           "name": "กิมเซี้ย",
           "rating": null,
           "reviewCount": 0,
@@ -3487,7 +3487,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-uad3e8810ecbe",
           "name": "ร้านพี่เอียด",
           "rating": null,
           "reviewCount": 0,
@@ -3537,7 +3537,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-u7336980ff96c",
           "name": "ห้องอาหารไกรสีห์",
           "rating": null,
           "reviewCount": 0,
@@ -3549,7 +3549,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-ufbfc075e98d5",
           "name": "แหม่ม ต้มยำกุ้ง บางลำพู",
           "rating": null,
           "reviewCount": 0,
@@ -3562,7 +3562,7 @@
           "cuisine": "thai"
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-u972fd6ebc22d",
           "name": "ครัวญาดา",
           "rating": null,
           "reviewCount": 0,
@@ -3575,7 +3575,7 @@
           "cuisine": "thai"
         },
         {
-          "placeId": "osm-BKK-",
+          "placeId": "osm-BKK-u7179573ef178",
           "name": "ร้านต้มยำกุ้งบางลำพู",
           "rating": null,
           "reviewCount": 0,
@@ -4361,11 +4361,15 @@
           "reviewCount": 0,
           "address": "Miami, USA",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Lokal%20Burgers%20and%20Beer%2C%20Miami",
-          "website": "https://www.lokalmiami.com/",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
           "curated": true,
-          "cuisine": "burger"
+          "cuisine": "burger",
+          "images": [],
+          "websiteVerification": "removed_wrong_content",
+          "operatingStatus": "permanently_closed",
+          "operatingStatusSource": "https://kushhospitality.com/lokal/",
+          "operatingStatusCheckedAt": "2026-10-15"
         },
         {
           "placeId": "osm-MIA-mister-01",
@@ -4483,20 +4487,12 @@
           "reviewCount": 0,
           "address": "Miami, USA",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Kao%20Sushi%20%26%20Grill%2C%20Miami",
-          "website": "https://www.kaosushigrill.com/location-contact/",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
           "curated": true,
           "cuisine": "sushi",
-          "images": [
-            "https://d33egg70nrp50s.cloudfront.net/Images/banners/home/DesktopID-2832-20260903133742.jpeg",
-            "https://d33egg70nrp50s.cloudfront.net/Images/banners/home/DesktopID-2760-20260813203138.jpeg",
-            "https://d33egg70nrp50s.cloudfront.net/Images/banners/home/DesktopID-2684-20260803102135.jpeg",
-            "https://d33egg70nrp50s.cloudfront.net/Images/banners/home/DesktopID-2836-20260904170620.jpeg",
-            "https://d33egg70nrp50s.cloudfront.net/Images/banners/home/DesktopID-2824-20260903115132.jpeg"
-          ],
-          "imageSource": "https://www.mainstreetbrewerycortez.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "images": [],
+          "websiteVerification": "removed_wrong_content"
         },
         {
           "placeId": "osm-MIA-pummarola-coral-gable",
@@ -5991,7 +5987,7 @@
           "cuisine": "italian_pizza;italian"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-ub474ccf0d69f",
           "name": "Μπαρμπουνάκι",
           "rating": null,
           "reviewCount": 0,
@@ -6006,7 +6002,7 @@
           "menuVerifiedAt": "2026-09-18T13:20:23.524Z"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-u41f6aa389b07",
           "name": "Λουιζιδης",
           "rating": null,
           "reviewCount": 0,
@@ -6032,7 +6028,7 @@
           "cuisine": "international"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-u2489ed8556a3",
           "name": "Ιθάκη",
           "rating": null,
           "reviewCount": 0,
@@ -6044,7 +6040,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-u5e90ab6fbd6b",
           "name": "ΛΑΤΙΝΙ",
           "rating": null,
           "reviewCount": 0,
@@ -6104,7 +6100,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-u324ecca045bc",
           "name": "Γιαλός",
           "rating": null,
           "reviewCount": 0,
@@ -6203,7 +6199,7 @@
           "cuisine": "greek"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-u6a7c48c989d3",
           "name": "Φωλιά των Κυνηγών",
           "rating": null,
           "reviewCount": 0,
@@ -6216,7 +6212,7 @@
           "cuisine": "barbecue"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-u18fed1f38720",
           "name": "Τα Βλάχικα",
           "rating": null,
           "reviewCount": 0,
@@ -6237,7 +6233,7 @@
           "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-u4bb2037b22dd",
           "name": "Η Βοσκοπούλα",
           "rating": null,
           "reviewCount": 0,
@@ -6261,7 +6257,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-u81d6eb45b20e",
           "name": "Μπαρμπα Χαράλαμπος",
           "rating": null,
           "reviewCount": 0,
@@ -6273,7 +6269,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-u7bb10f65675f",
           "name": "Ο Τσολιάς",
           "rating": null,
           "reviewCount": 0,
@@ -6285,7 +6281,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-uce99279b774d",
           "name": "Ψαροταβέρνα \"Ο Μπάμπης\"",
           "rating": null,
           "reviewCount": 0,
@@ -6298,7 +6294,7 @@
           "cuisine": "fish"
         },
         {
-          "placeId": "osm-ATH-",
+          "placeId": "osm-ATH-ud863a0968fff",
           "name": "Γευστικόν",
           "rating": null,
           "reviewCount": 0,
@@ -6497,7 +6493,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-IST-",
+          "placeId": "osm-IST-u7e5b2e46dee5",
           "name": "ресторан рыбны на улице на набережной",
           "rating": null,
           "reviewCount": 0,
@@ -9576,7 +9572,7 @@
           "menuVerifiedAt": "2026-09-18T13:20:27.131Z"
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-u1b0ea4f52786",
           "name": "東北餃子",
           "rating": null,
           "reviewCount": 0,
@@ -9600,7 +9596,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-u051914a323f9",
           "name": "粥君好",
           "rating": null,
           "reviewCount": 0,
@@ -9612,7 +9608,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-u19c6d6df7171",
           "name": "豪景茶餐廳",
           "rating": null,
           "reviewCount": 0,
@@ -9637,7 +9633,7 @@
           "cuisine": "seafood"
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-ub4100aef7fd9",
           "name": "紅興港式懷舊小食",
           "rating": null,
           "reviewCount": 0,
@@ -9710,7 +9706,7 @@
           "cuisine": "sushi"
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-u8d6744e930fe",
           "name": "利隆火鍋食店",
           "rating": null,
           "reviewCount": 0,
@@ -9759,7 +9755,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-u47ee089214ae",
           "name": "誠記",
           "rating": null,
           "reviewCount": 0,
@@ -9771,7 +9767,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-ufc4d4c688c11",
           "name": "珍品小炒",
           "rating": null,
           "reviewCount": 0,
@@ -9783,7 +9779,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-u7fb07f941a89",
           "name": "友明",
           "rating": null,
           "reviewCount": 0,
@@ -9844,7 +9840,7 @@
           "curated": true
         },
         {
-          "placeId": "osm-HKG-",
+          "placeId": "osm-HKG-u8ac58ca2b549",
           "name": "厚興瑜記",
           "rating": null,
           "reviewCount": 0,
