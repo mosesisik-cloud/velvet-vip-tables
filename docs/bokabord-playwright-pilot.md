@@ -1,14 +1,20 @@
 # Bokabord speglat i Velvet
 
-## Vad som är byggt
+Velvet visar originalformuläret från en isolerad Chromium-session. Klick, scroll och kontaktinmatning går genom Playwright. Bilder överförs som förlustfri PNG och klienten verifierar SHA-256 före visning. Uppdateringen sker efter varje åtgärd, med nätverksfördröjning.
 
-En valbar inspektionspilot i Zinks befintliga restaurangvy. Velvet visar bilder av det verkliga Bokabord-formuläret från en dold Chromium-session på servern. Klick och scroll skickas till Playwright, som returnerar en ny bild och formulärets text. Det är originalets renderade gränssnitt, inte en ombyggnad av deras HTML och inte en iframe till leverantören.
+## Körlägen
 
-Varje inloggad operatör får en separat BrowserContext. Sessions-ID kontrolleras mot serverns användaridentitet vid varje åtgärd. Max fyra samtidiga sessioner, en per operatör, tio minuters inaktivitet. Gamla bildrevisioner kan inte användas för nya klick. Bilder/cookies sparas inte på disk. Chromium kör med normala säkerhetsinställningar.
+API-serverns `VELVET_BOKABORD_MIRROR=inspect` är fortfarande en inspektionspilot för inloggade operatörer. Den stoppar vid kontaktuppgifter. Utan flaggan används tidigare bokningsflöde. Ingen produktion har driftsatts med dessa ändringar.
 
-Piloten är **endast inspektion**: gästens kontaktuppgifter kan inte matas in, inga tangenter skickas och alla klick stoppas när Kontaktuppgifter syns. Nätverksfiltret blockerar bokningsinlämning och okända POST-anrop. Det gamla webbridge/book-anropet spärras också när inspektionsläget är aktivt. Inga testbokningar har skapats.
+Den lokala förhandsvisningen stöder `MIRROR_MODE=prepare`: kontaktfält placeras över originalbilden och synkas till leverantörens formulär. Båda marknadsföringsvalen avmarkeras. `/current` återupptar en befintlig session.
 
-## Kör
+Skarp inlämning kräver dessutom `MIRROR_APPROVAL_FILE`, en absolut sökväg till privat JSON med `date` (YYYY-MM-DD), `time` (HH:mm), `party` (tal), `firstname`, `lastname`, `email`, `phone` och `terms: true`. Skapa filen först efter uttryckligt godkännande av uppgifter och villkor. Kontaktuppgifter och bekräftelselänkar får aldrig läggas i Git.
+
+Endast exakt saveBooking-endpoint kan tillåtas under en explicit submit-åtgärd. Begärans uppgifter måste matcha godkännandet, med tom produktlista, ingen väntelista och ingen marknadsföring. En atomiskt skapad `.attempt`-fil bredvid godkännandefilen reserverar försöket före sändning och blockerar upprepning även efter omstart. Radera inte filen för att försöka igen vid osäkert resultat: kontrollera först hos leverantören.
+
+Avbrott efter inlämning innebär okänd status, utan automatisk ombokning. Lyckat leverantörssvar med boknings-ID ger bekräftelse; betalningskrav har separat status. Piloten genomför inga betalningar. Kontoinloggning och kodutskick stöds inte. Det verifierade flödet använder ”Fortsätt utan konto”, ”Kontrollera din bokning” och ”Slutför bokningen”.
+
+## Kör lokalt
 
 Node 22 eller senare:
 
@@ -20,20 +26,20 @@ npm run test:rails
 node scripts/preview-bokabord-mirror.mjs
 ```
 
-Öppna http://127.0.0.1:4174. Förhandsvisningsservern binder endast till loopback och är inte en produktionsserver. Den har eget värd-/origin-/cookie-skydd och använder inga Velvet-konton.
+Öppna http://127.0.0.1:4174. Förhandsvisningen binder endast till loopback, har värd-/origin-/cookie-skydd och använder inga Velvet-konton. Publicera inte denna server. Sätt miljövariablerna ovan före start för förberedelse eller godkänd engångsbokning.
 
-För den befintliga Velvet-servern: installera beroenden och Chromium på API-värden, sätt `VELVET_BOKABORD_MIRROR=inspect`, starta om API:t och publicera frontend tillsammans med `js/bokabord-mirror.js`. Logga in som befintlig Velvet-operatör. Utan flaggan behålls det tidigare bokningsflödet. På Linux behövs även Playwrights systemberoenden (`npx playwright install --with-deps chromium`). GitHub Pages kan bara servera frontend; Chromium måste köras på API-servern. Ingen ändring av produktionen har gjorts.
+API-serverns inspektionspilot behöver Chromium på API-värden. Linux behöver även `npx playwright install --with-deps chromium`. GitHub Pages kan endast servera frontend. Produktionsaktivering är ett separat steg.
+
+## Skydd och begränsningar
+
+Varje operatör har separat BrowserContext, med ägarskaps- och revisionskontroll. Högst fyra sessioner, en per operatör, tio minuters inaktivitet. Motorbilder och cookies sparas inte på disk; godkännandefilen innehåller däremot privata kontaktuppgifter. Sparade testbilder hålls också utanför Git.
+
+Endast restauranger i fast register stöds. Okända mutationer, betalningar och ändring/avbokning är blockerade. Produktionspilotens gräns på 30 POST/minut gäller även speglingen.
+
+Tillgänglighet, autofyllning, mobilinmatning, snabb redigering av flera fält, beständig bokningshistorik och återhämtning efter serveravbrott behöver fortsatt arbete före kundlansering. Andra restauranger behöver verifieras separat eftersom måltider, tillval och villkor kan skilja sig.
 
 ## Verifierat 2026-10-15
 
-`npm run test:zink:live -- 2026-10-19` går genom det riktiga gränssnittet: Middag → två gäster → måndag 19 oktober → tillgänglig tid → Kontaktuppgifter. Scriptet anropar samma speglingsmotor som Velvet och verifierar att nästa klick stoppas. Vid kontrollen visades 17.00, 17.30, 18.00, 18.30, 19.00, 19.30, 20.00, 20.30 och 21.00. Tillgängligheten ändras; detta är inga reservationer.
+Ett godkänt skarpt test genomfördes via Velvet: Middag → 1 gäst → datum/tid → kontaktuppgifter → fortsätt utan konto → kontrollera → slutför → bekräftelse. Leverantörens svar matchade godkända kontaktuppgifter, datum, tid och antal. Bekräftelsesidan uppgav att mejl skickats. Velvet-bildens SHA-256 matchade originalets PNG. Privata bilder och bokningsreferens hålls utanför repot.
 
-Kontaktsteget innehåller förnamn, efternamn, mobilnummer, e-post och önskemål. Restaurangens nyhetsbrev är förvalt; Bokabords nyhetsbrev är inte förvalt. Knappen heter Nästa och sidan länkar till leverantörens villkor och integritetspolicy. Stegen efter Nästa och den slutliga bekräftelsen är **inte verifierade**; inga kontaktuppgifter har skickats för att ta oss vidare.
-
-## Kvar innan skarp bokning
-
-Fastställ antal gäster, tid och kontaktuppgifter. Kartlägg därefter resterande steg med dessa uppgifter, hantera uttryckliga villkor och eventuella betalningar, avmarkera marknadsföring om gästen inte väljer den, och implementera en separat slutlig bekräftelse. Behåll nätverksspärren tills detta är verifierat. En omstart eller timeout efter inlämning måste ge okänd status, inte automatiskt nytt försök. Ingen live-flagga finns i den här piloten.
-
-Bildspegling är visuellt trogen men ännu inte likvärdig med ett vanligt formulär för tangentbord, skärmläsare, autofyllning eller mobilens tangentbord. Textversion och scrollknappar finns för inspektion. Fullständig tillgänglighet, textinmatning, återanslutning och bokningshistorik återstår före kundlansering. Befintlig 30 POST/minut-gräns gäller även piloten.
-
-Andra Bokabord-restauranger kan läggas i serverns fasta register och använda samma motor. Ändra startverifieringen till respektive restaurangs namn och testa deras variant; bokningsvillkor, måltider, tillval och betalning kan skilja sig. Webbläsaren får aldrig godtyckliga mål-URL:er från klienten.
+`npm test` testar nätverksspärrar, sessionsägarskap, revisioner, godkända detaljer, slutknappen, avbruten inlämning och skydd mot upprepning utan bokningar. `npm run test:rails` kör befintliga tester. `npm run test:zink:live -- YYYY-MM-DD` är separat inspektion som stannar vid kontaktuppgifter.

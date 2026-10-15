@@ -6,10 +6,16 @@ export const RESTAURANTS = Object.freeze({
 });
 const TTL = 10 * 60_000;
 const MAX_SESSIONS = 4;
+const CONTACT_FIELDS = {
+  firstname: 'input[name="firstname"]:visible', lastname: 'input[name="lastname"]:visible',
+  phone: 'input[name="phone"]:visible', email: 'input[name="email"]:visible',
+  comment: 'textarea[ng-model="booking.comment"]:visible',
+};
 // Exploration only. Unknown mutations fail closed, including final booking.
 export function allowedRequest(method, address) {
   const url = new URL(address);
   if (url.protocol !== 'https:') return false;
+  if (['unpkg.com', 'cdnjs.cloudflare.com', 'js.stripe.com', 'use.fontawesome.com', 'fonts.googleapis.com', 'fonts.gstatic.com'].includes(url.hostname)) return method === 'GET';
   if (!['app.bokabord.se', 'www.waiteraid.com'].includes(url.hostname)) return false;
   if (/save|confirm|payment|checkout|login|register|cancel|delete/i.test(url.pathname)) return false;
   if (['GET', 'HEAD'].includes(method)) return true;
@@ -18,12 +24,24 @@ export function allowedRequest(method, address) {
 export class MirrorError extends Error {
   constructor(code, status = 400) { super(code); this.status = status; }
 }
+export function matchesApprovedBooking(query, approved) {
+  if (!query || !approved || approved.terms !== true) return false;
+  const phone = value => String(value || '').replace(/\D/g, '').replace(/^0046/, '46').replace(/^0/, '46');
+  return String(query.date) === approved.date && String(query.time) === approved.time && Number(query.amount) === approved.party
+    && query.firstname === approved.firstname && query.lastname === approved.lastname && query.email === approved.email
+    && phone(query.phone) === phone(approved.phone) && query.waitlist === false && query.terms?.general === true
+    && query.terms?.restaurant === false && query.terms?.bokabord === false
+    && Array.isArray(query.products) && query.products.length === 0;
+}
 export class BokabordMirror {
   sessions = new Map();
   browserPromise = null;
   pending = 0;
   pendingOwners = new Set();
-  constructor() {
+  constructor({ prepare = false, authorizeSubmission = null, reserveSubmission = null } = {}) {
+    this.prepare = prepare;
+    this.authorizeSubmission = authorizeSubmission;
+    this.reserveSubmission = reserveSubmission;
     this.timer = setInterval(() => this.expire(), 30_000);
     this.timer.unref();
   }
@@ -52,13 +70,28 @@ export class BokabordMirror {
       sessionId = s.id;
       await context.route('**/*', async route => {
         const r = route.request();
+        if (r.method() === 'POST' && r.url() === 'https://app.bokabord.se/reservation/api/booking/saveBooking' && s.armed && !s.submitted) {
+          let query;
+          try { query = r.postDataJSON(); } catch {}
+          if (!matchesApprovedBooking(query, s.approval)) { s.blocked = true; s.result = { status: 'payload_mismatch' }; return route.abort(); }
+          try { await this.reserveSubmission(s.approval); } catch { s.result = { status: 'already_attempted' }; return route.abort(); }
+          s.submitted = true; s.result = { status: 'unknown' };
+          return route.continue();
+        }
         if (!allowedRequest(r.method(), r.url())) {
-          if (r.isNavigationRequest() || /saveBooking/i.test(r.url())) s.blocked = true;
+          if ((r.isNavigationRequest() && r.frame() === s.page?.mainFrame()) || /saveBooking/i.test(r.url())) s.blocked = true;
           return route.abort();
         }
         return route.continue();
       });
       s.page = await context.newPage();
+      s.page.on('response', async response => {
+        if (!s.submitted || response.url() !== 'https://app.bokabord.se/reservation/api/booking/saveBooking') return;
+        const data = await response.json().catch(() => null);
+        if (data?.success === true && Number(data.booking?.id) > 0) {
+          s.result = { status: Number(data.booking.status) === 0 ? 'payment_required' : 'confirmed', reference: String(data.booking.id), booking: data.booking };
+        } else if (data?.success === false) s.result = { status: 'rejected' };
+      });
       s.page.setDefaultTimeout(12_000);
       context.on('page', page => { if (page !== s.page) page.close().catch(() => {}); });
       await s.page.goto(address, { waitUntil: 'domcontentloaded' });
@@ -78,19 +111,60 @@ export class BokabordMirror {
   async snapshot(s) {
     // No screenshot or personal fields are persisted to disk.
     const contact = await s.page.getByRole('heading', { name: 'Kontaktuppgifter', exact: true }).isVisible();
+    if (contact && this.prepare && !s.contactInitialized) {
+      // No marketing opt-in is inferred from a booking request.
+      for (const box of await s.page.locator('input[type="checkbox"]:visible').all()) await box.uncheck();
+      s.contactInitialized = true;
+    }
+    const fields = [];
+    if (contact && this.prepare) {
+      for (const [name, selector] of Object.entries(CONTACT_FIELDS)) {
+        const input = s.page.locator(selector);
+        if (await input.count() === 1) fields.push({ name, value: await input.inputValue(), rect: await input.boundingBox() });
+      }
+    }
+    const review = await s.page.getByRole('heading', { name: 'Kontrollera din bokning', exact: true }).isVisible();
     const text = (await s.page.locator('body').innerText()).slice(0, 16_000);
-    const shot = await s.page.screenshot({ type: 'jpeg', quality: 85, animations: 'disabled' });
+    const shot = await s.page.screenshot({ type: 'png', animations: 'disabled' });
     s.revision++;
-    return { id: s.id, revision: s.revision, width: s.width, height: s.height, image: `data:image/jpeg;base64,${shot.toString('base64')}`, text, contact, blocked: s.blocked, mode: 'inspect', expiresIn: TTL / 1000 };
+    const canSubmit = !!(this.prepare && this.reserveSubmission && !s.submitted && await this.authorizeSubmission?.());
+    const snapshot = { id: s.id, revision: s.revision, width: s.width, height: s.height, image: `data:image/png;base64,${shot.toString('base64')}`, imageHash: crypto.createHash('sha256').update(shot).digest('hex'), capturedAt: new Date().toISOString(), fields, text, contact, review, blocked: s.blocked, mode: this.prepare ? 'prepare' : 'inspect', canSubmit, result: s.result || null, expiresIn: TTL / 1000 };
+    s.lastSnapshot = snapshot;
+    return snapshot;
+  }
+  current(owner) {
+    const s = [...this.sessions.values()].find(row => row.owner === owner);
+    if (!s) return { error: 'session_expired' };
+    this.owned(s.id, owner);
+    return s.lastSnapshot;
   }
   async action(id, owner, action) {
     const s = this.owned(id, owner);
     if (s.busy) throw new MirrorError('busy', 409);
     if (action.revision !== s.revision) throw new MirrorError('stale_view', 409);
-    if (!['click', 'scroll', 'refresh'].includes(action.type)) throw new MirrorError('inspect_only');
+    if (!['click', 'scroll', 'refresh', ...(this.prepare ? ['fill'] : []), ...(this.authorizeSubmission && this.reserveSubmission ? ['submit'] : [])].includes(action.type)) throw new MirrorError('inspect_only');
     s.busy = true; s.touched = Date.now();
     try {
-      if (action.type === 'click') {
+      if (action.type === 'submit') {
+        if (s.submitted || s.armed) throw new MirrorError('already_attempted', 409);
+        if (action.confirm !== true) throw new MirrorError('confirmation_required', 409);
+        const approval = await this.authorizeSubmission();
+        if (!approval) throw new MirrorError('confirmation_required', 409);
+        const review = await s.page.getByRole('heading', { name: 'Kontrollera din bokning', exact: true }).isVisible();
+        if (!review && !await s.page.getByRole('heading', { name: 'Kontaktuppgifter', exact: true }).isVisible()) throw new MirrorError('contact_required');
+        s.approval = approval; s.armed = true;
+        const response = s.page.waitForResponse(r => r.url() === 'https://app.bokabord.se/reservation/api/booking/saveBooking', { timeout: 20_000 }).catch(() => null);
+        await s.page.getByRole('button', { name: review ? /Slutför bokningen/i : 'Nästa', exact: !review }).click();
+        await response;
+        await s.page.waitForURL(/\/reservation\/booking\//, { timeout: 5000 }).catch(() => {});
+        s.armed = false;
+      } else if (action.type === 'fill') {
+        if (!await s.page.getByRole('heading', { name: 'Kontaktuppgifter', exact: true }).isVisible()) throw new MirrorError('contact_required');
+        const selector = CONTACT_FIELDS[action.field];
+        if (!selector || typeof action.value !== 'string' || action.value.length > 300) throw new MirrorError('field');
+        await s.page.locator(selector).fill(action.value);
+        await s.page.locator(selector).blur();
+      } else if (action.type === 'click') {
         if (await s.page.getByRole('heading', { name: 'Kontaktuppgifter', exact: true }).isVisible()) throw new MirrorError('contact_stop', 409);
         const { x, y } = action;
         if (!Number.isFinite(x) || !Number.isFinite(y) || x < 0 || y < 0 || x >= s.width || y >= s.height) throw new MirrorError('coordinates');
@@ -105,7 +179,7 @@ export class BokabordMirror {
       await s.page.waitForLoadState('networkidle', { timeout: 2500 }).catch(() => {});
       await s.page.waitForTimeout(350); // Angular may schedule a redraw after the network becomes idle.
       return await this.snapshot(s);
-    } finally { s.busy = false; }
+    } finally { s.armed = false; s.busy = false; }
   }
   async remove(id, owner) {
     const s = this.sessions.get(id);

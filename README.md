@@ -12,7 +12,7 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 
 ## Playwright-pilot för Zink (ej publicerad)
 
-En valbar spegling av det riktiga Bokabord-formuläret finns nu bakom `VELVET_BOKABORD_MIRROR=inspect`. Den använder en dold webbläsare på servern och stoppar vid kontaktsteget. Ingen skarp bokning är implementerad i speglingsläget. Se [körinstruktioner och verifiering](docs/bokabord-playwright-pilot.md).
+En valbar spegling av det riktiga Bokabord-formuläret finns bakom `VELVET_BOKABORD_MIRROR=inspect`. API-serverns pilot stoppar vid kontaktsteget. Den lokala förhandsvisningen stöder också kontaktinmatning och en uttryckligen godkänd engångsbokning, verifierad genom ett skarpt test. Se [körinstruktioner och verifiering](docs/bokabord-playwright-pilot.md).
 
 ## Vad som är på riktigt i V4
 

@@ -1924,6 +1924,7 @@ const server = http.createServer(async (req, res) => {
       // Pilot access only: remote browsers consume significant server resources.
       if (!isOperator(user)) return send(res, 403, { error: "operator" });
       try {
+        if (req.method === "POST" && url.pathname === "/restaurant-bookings/mirror/current") return send(res, 200, bokabordMirror.current(user.id), { "Cache-Control": "no-store" });
         if (req.method === "POST" && url.pathname === "/restaurant-bookings/mirror") {
           const b = await readBody(req, 4096);
           return send(res, 201, await bokabordMirror.create(user.id, b.restaurantId, b.width), { "Cache-Control": "no-store" });

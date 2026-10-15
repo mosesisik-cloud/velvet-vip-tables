@@ -3,7 +3,12 @@ import http from 'node:http';
 import fs from 'node:fs/promises';
 import crypto from 'node:crypto';
 import { BokabordMirror } from '../api/bokabord-mirror.mjs';
-const mirror = new BokabordMirror();
+const approvalFile = process.env.MIRROR_APPROVAL_FILE;
+const mirror = new BokabordMirror({
+  prepare: process.env.MIRROR_MODE === 'prepare',
+  authorizeSubmission: approvalFile ? async () => {try {return JSON.parse(await fs.readFile(approvalFile,'utf8'));} catch {return null;}} : null,
+  reserveSubmission: approvalFile ? async approval => {await fs.writeFile(approvalFile+'.attempt', JSON.stringify({at:new Date().toISOString(),digest:crypto.createHash('sha256').update(JSON.stringify(approval)).digest('hex')}),{flag:'wx'});} : null,
+});
 const port = Number(process.env.MIRROR_PREVIEW_PORT || 4174);
 const host = `127.0.0.1:${port}`;
 const token = crypto.randomBytes(24).toString('hex');
@@ -18,6 +23,7 @@ const server = http.createServer(async (req, res) => {
     let raw='';for await(const chunk of req){raw+=chunk;if(raw.length>4096)return send(413,{error:'size'});}
     const body=raw?JSON.parse(raw):{};
     const prefix='/api/restaurant-bookings/mirror';
+    if(req.method==='POST'&&req.url===prefix+'/current')return send(200,mirror.current('local-preview'));
     if(req.method==='POST'&&req.url===prefix)return send(201,await mirror.create('local-preview',body.restaurantId,body.width));
     const match=req.url.match(/^\/api\/restaurant-bookings\/mirror\/([a-f0-9-]{36})(\/action)?$/);
     if(match&&req.method==='POST'&&match[2])return send(200,await mirror.action(match[1],'local-preview',body));

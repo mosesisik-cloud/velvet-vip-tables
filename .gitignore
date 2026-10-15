@@ -6,3 +6,6 @@ scripts/__pycache__/
 
 node_modules/
 api/store.json
+*.approval.json
+*.approval.json.attempt
+zink-booking-approval.json*
