@@ -1,6 +1,6 @@
-import { getBookingCopy, requestBookingNotes } from './booking-copy.js';
+import { getBookingCopy, requestBookingNotes } from './booking-copy.js?v=180';
 import { placeBrandHTML } from './place-brand.js?v=178';
-import { availabilityCopy } from './availability-copy.js?v=179';
+import { availabilityCopy } from './availability-copy.js?v=180';
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const localDate = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 export function availabilityCities(restaurants) {

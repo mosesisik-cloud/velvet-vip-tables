@@ -1,6 +1,6 @@
 import { MEMBER_ACCOUNTS_ENABLED } from "./release-features.js";
 import { loadPlaceBrands, placeBrandHTML } from './place-brand.js?v=178';
-import {getBookingCopy, formatBookingCopy} from './booking-copy.js';
+import {getBookingCopy, formatBookingCopy} from './booking-copy.js?v=180';
 import { restaurantCopy } from './restaurant-copy.js?v=175';
 import { primarySection, isDiscoveryList, safeDiscoveryReturn } from './navigation-state.js';
 import { authOptions, authCopy } from './auth-options.js';
@@ -8,8 +8,8 @@ import { parseBookingSelection, withBookingSelection } from './booking-selection
 import { mountBookingReport } from './booking-report.js';
 import { uxT } from './ux-copy.js?v=175';
 import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo, resolveAuthReturn, joinResponse } from './ux-booking.js?v=175';
-import { mountAvailabilitySearch } from './availability-search.js?v=179';
-import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
+import { mountAvailabilitySearch } from './availability-search.js?v=180';
+import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js?v=180';
 import { mountBokabordMirror } from "./bokabord-mirror.js";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
 import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=177";
