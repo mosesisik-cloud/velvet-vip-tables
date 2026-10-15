@@ -2564,7 +2564,7 @@ async function renderRestaurantDetail(placeId) {
         <section ${permanentlyClosed || scopedBookingPanel || contactBookingPanel ? "hidden" : ""} class="booking-cancellation-notice" aria-label="${esc(bookingCopy.policyHeading)}">
           <strong>${esc(bookingCopy.policyHeading)}</strong>
           <p>${esc(bookingCopy.policyCheck)}</p>
-          ${embeddedBooking?.cancellationPolicy ? `<p lang="sv">${esc(embeddedBooking.cancellationPolicy.summary)}</p><p><a href="${esc(embeddedBooking.cancellationPolicy.source)}" target="_blank" rel="noopener noreferrer">${esc(bookingCopy.policySource)}</a> · ${esc(formatBookingCopy(bookingCopy.policyChecked,{date:embeddedBooking.cancellationPolicy.checkedAt}))} ${esc(bookingCopy.comparePolicy)}${currentLang() !== 'sv' ? ' (Svenska)' : ''}</p>` : `<p>${esc(bookingCopy.unknownPolicy)}</p>`}
+          ${embeddedBooking?.cancellationPolicy ? `<p lang="sv">${esc(embeddedBooking.cancellationPolicy.summary)}</p><p><a href="${esc(embeddedBooking.cancellationPolicy.source)}" target="_blank" rel="noopener noreferrer">${esc(bookingCopy.policySource)}</a> · ${esc(formatBookingCopy(bookingCopy.policyChecked,{date:embeddedBooking.cancellationPolicy.checkedAt}))} ${esc(bookingCopy.comparePolicy)}${currentLang() !== 'sv' ? ' (Svenska)' : ''}</p>` : `<p>${esc(bookingCopy.unknownPolicy)}</p>${(() => { try { const source = new URL(restaurant.cancellationPolicySource); return source.protocol === 'https:' && !source.username && !source.password ? `<p><a href="${esc(source.href)}" target="_blank" rel="noopener noreferrer">${esc(bookingCopy.policySource)}</a></p>` : ''; } catch { return ''; } })()}`}
         </section>
 
         ${bookingPanel}
