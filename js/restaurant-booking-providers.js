@@ -6,6 +6,7 @@ let registryPromise;
 let reviewedRegistry = {};
 export const hasEmbeddedBooking = id => !!resolveEmbeddedBooking(reviewedRegistry, id);
 const PROVIDER_HOSTS = Object.freeze({
+  'FoodBooking / GloriaFood': ['www.foodbooking.com'],
   TABLFY: ['www.lumabali.com'],
   Meitre: ['lahuella.meitre.com', 'lasusana.meitre.com', 'oro.meitre.com', 'fasano.meitre.com'],
   Elyra: ['widget.elyrasystems.com'], Guestplan: ['angelicabooking.guestplan.io'],
@@ -14,7 +15,7 @@ const PROVIDER_HOSTS = Object.freeze({
   Revasi: ['revasi.net'],
   'Restaurant website': ['booking.baolicannes.com'],
   'Prenota Web': ['franchino.prenota-web.it'],
-  OpenTable: ['www.opentable.com', 'www.opentable.co.uk', 'www.opentable.com.au', 'www.opentable.sg'],
+  OpenTable: ['www.opentable.it', 'www.opentable.com', 'www.opentable.co.uk', 'www.opentable.com.au', 'www.opentable.sg'],
   TableCheck: ['www.tablecheck.com'], Zenchef: ['bookings.zenchef.com'],
   'ResDiary / Dish Cult': ['booking.resdiary.com'], Tableo: ['app.tableo.com'],
   Restoo: ['palomaibiza.myrestoo.net'], 'Eat App': ['eatapp.co'],
@@ -22,7 +23,7 @@ const PROVIDER_HOSTS = Object.freeze({
   Resy: ['resy.com'], Tock: ['www.exploretock.com'], OMAKASE: ['omakase.in'],
 });
 const EMBED_PROVIDERS = new Set(['TABLFY', 'Meitre', 'Elyra', 'Guestplan', 'TableCheck', 'Zenchef', 'ResDiary / Dish Cult', 'Tableo', 'Restoo', 'Eat App']);
-const IDENTITY_PARAMS = new Set(['rid', 'restref', 'restaurantid', 'restaurant_id', 'venue', 'venue_id', 'id']);
+const IDENTITY_PARAMS = new Set(['rid', 'restref', 'restaurantid', 'restaurant_id', 'venue', 'venue_id', 'id', 'restaurant_uid', 'reservation']);
 function venueKey(url) {
   const identity = [...url.searchParams].filter(([key]) => IDENTITY_PARAMS.has(key.toLowerCase()))
     .map(([key, value]) => [key.toLowerCase(), value]).sort(([a, av], [b, bv]) => a.localeCompare(b) || av.localeCompare(bv));
@@ -60,6 +61,7 @@ export function resolveEmbeddedBooking(registry, restaurantId) {
     }
     if (!Object.hasOwn(PROVIDER_HOSTS, row.provider) || !PROVIDER_HOSTS[row.provider].includes(url.hostname)
       || !row.venueKey || row.venueKey !== venueKey(url)) return null;
+    if (row.provider === 'FoodBooking / GloriaFood' && (url.pathname !== '/ordering/restaurant/menu' || url.searchParams.get('reservation') !== 'true')) return null;
     // Dineplan cross-site guest selection failed; use the original standalone flow.
     if (row.provider === 'Dineplan' && row.integrationMode === 'native_embed') return null;
     const embedded = row.integrationMode === 'native_embed' && row.verification === 'embedded_form_loaded' && EMBED_PROVIDERS.has(row.provider);

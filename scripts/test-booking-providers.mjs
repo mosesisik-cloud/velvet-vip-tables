@@ -30,8 +30,8 @@ for (const url of [
 assert.equal(resolveEmbeddedBooking(registry, 'not-reviewed'), null);
 assert.equal(resolveEmbeddedBooking(registry, '__proto__'), null);
 assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 36);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 58);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 46);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 59);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 49);
 for (const original of Object.values(registry).filter(row => row.provider !== 'SevenRooms' || row.integrationMode === 'external_link')) {
   const wrongVenue = new URL(original.url); wrongVenue.pathname += '/wrong-restaurant';
   const wrongHost = new URL(original.url); wrongHost.hostname += '.evil.example';

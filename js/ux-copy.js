@@ -1,4 +1,4 @@
-import { currentLang } from './i18n.js?v=176';
+import { currentLang } from './i18n.js?v=177';
 
 // Shared cleanup copy: keys map to Swedish, English, Spanish and French.
 const copy = {
