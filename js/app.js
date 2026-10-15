@@ -1,7 +1,7 @@
 import { MEMBER_ACCOUNTS_ENABLED } from "./release-features.js";
 import { external200BookingPanel } from './external200-booking.js?v=184';
 import { loadPlaceBrands, placeBrandHTML } from './place-brand.js?v=178';
-import {getBookingCopy, formatBookingCopy} from './booking-copy.js?v=180';
+import {getBookingCopy, formatBookingCopy} from './booking-copy.js?v=185';
 import { restaurantCopy } from './restaurant-copy.js?v=175';
 import { primarySection, isDiscoveryList, safeDiscoveryReturn } from './navigation-state.js';
 import { authOptions, authCopy } from './auth-options.js';
@@ -2515,14 +2515,18 @@ async function renderRestaurantDetail(placeId) {
   if (location.hash !== restaurantRoute) return;
   const bookingCopy = getBookingCopy(currentLang());
   const scopedBookingPanel = external200BookingPanel(restaurant.placeId, embeddedBooking, currentLang());
-  const permanentlyClosed = restaurant.operatingStatus === 'permanently_closed';
+  const closureKind = restaurant.operatingStatus === 'permanently_closed' ? 'permanent' : restaurant.operatingStatus === 'seasonally_closed' ? 'seasonal' : '';
+  const closedToBooking = closureKind !== '';
   let closureSource = '';
   try {
     const source = new URL(restaurant.operatingStatusSource);
     if (source.protocol === 'https:' && !source.username && !source.password) closureSource = source.href;
   } catch {}
-  const bookingPanel = permanentlyClosed
-    ? `<div class="restaurant-closed-notice" role="status"><p>${esc(bookingCopy.closedMessage)}</p>${closureSource ? `<a href="${esc(closureSource)}" target="_blank" rel="noopener noreferrer">${esc(bookingCopy.closedSource)}</a>` : ''}</div>`
+  const closedHeading = closureKind === 'seasonal' ? bookingCopy.seasonalHeading : bookingCopy.closedHeading;
+  const closedMessage = closureKind === 'seasonal' ? bookingCopy.seasonalMessage : bookingCopy.closedMessage;
+  const closedSourceLabel = closureKind === 'seasonal' ? bookingCopy.seasonalSource : bookingCopy.closedSource;
+  const bookingPanel = closedToBooking
+    ? `<div class="restaurant-closed-notice" role="status"><p>${esc(closedMessage)}</p>${closureSource ? `<a href="${esc(closureSource)}" target="_blank" rel="noopener noreferrer">${esc(closedSourceLabel)}</a>` : ''}</div>`
     : embeddedBooking
     ? `<div id="restaurant-provider-booking"></div>`
     : scopedBookingPanel
@@ -2549,15 +2553,15 @@ async function renderRestaurantDetail(placeId) {
     <a class="back-link" href="#/restaurants?dest=${encodeURIComponent(destination.code)}" data-nav>← ${esc(rt("restaurantsIn", {name: destination.destination}))}</a>
     <div class="restaurant-detail-hero">
       <div><div class="eyebrow">${esc(restaurant.cuisine || rt("restaurant"))}</div><h1>${placeBrandHTML(restaurant, "detail")}</h1><p class="restaurant-lead">${esc(restaurant.description || rt("restaurantIn", {name: destination.destination}))}</p>
-        <div class="restaurant-detail-actions">${permanentlyClosed ? "" : `<button type="button" class="btn btn-gold" id="restaurant-book-jump" aria-controls="restaurant-booking-panel">${esc(uxT("jumpBooking"))}</button>`}${favBtnHTML(restaurantFavId(restaurant.placeId), restaurant.name)}${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">${esc(rt("website"))} ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuViewHref)}" data-nav>${esc(rt("menu"))}</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">${esc(rt("map"))} ↗</a>` : ""}</div>
+        <div class="restaurant-detail-actions">${closedToBooking ? "" : `<button type="button" class="btn btn-gold" id="restaurant-book-jump" aria-controls="restaurant-booking-panel">${esc(uxT("jumpBooking"))}</button>`}${favBtnHTML(restaurantFavId(restaurant.placeId), restaurant.name)}${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">${esc(rt("website"))} ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuViewHref)}" data-nav>${esc(rt("menu"))}</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">${esc(rt("map"))} ↗</a>` : ""}</div>
       </div>
       <div class="restaurant-detail-rating">${Number.isFinite(rating) && rating > 0 ? `<strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span><small>${esc(String(restaurant.reviewCount || 0))} ${esc(rt("reviews"))} · ${esc(restaurant.reviewSource || "Google")}</small>` : `<small>${esc(rt("noRating"))}</small>`}</div>
     </div>
     ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} ${esc(rt("photos"))} · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">${esc(rt("source"))} ↗</a></div></div>` : `<div class="restaurant-detail-placeholder"><b aria-hidden="true">${esc(String(restaurant.name || "R").slice(0, 1).toUpperCase())}</b><span>${esc(restaurant.name)}</span><small>${esc(uxT("noRestaurantPhoto"))}</small></div>`}
     <div class="restaurant-detail-grid">
-      <aside class="detail-panel restaurant-book-panel" id="restaurant-booking-panel" data-restaurant-id="${esc(restaurant.placeId)}" aria-labelledby="restaurant-booking-heading"><span class="eyebrow">${esc(restaurant.name)}</span><h2 id="restaurant-booking-heading" tabindex="-1">${permanentlyClosed ? esc(bookingCopy.closedHeading) : esc(uxT("jumpBooking"))}</h2>
-        ${bookingSelection && !permanentlyClosed && !scopedBookingPanel ? `<p class="booking-selection-summary">${esc(uxT('bookingChoice').replace('{date}',bookingSelection.date).replace('{time}',bookingSelection.time).replace('{party}',bookingSelection.party))}</p>` : ''}
-        <section ${permanentlyClosed || scopedBookingPanel ? "hidden" : ""} class="booking-cancellation-notice" aria-label="${esc(bookingCopy.policyHeading)}">
+      <aside class="detail-panel restaurant-book-panel" id="restaurant-booking-panel" data-restaurant-id="${esc(restaurant.placeId)}" aria-labelledby="restaurant-booking-heading"><span class="eyebrow">${esc(restaurant.name)}</span><h2 id="restaurant-booking-heading" tabindex="-1">${closedToBooking ? esc(closedHeading) : esc(uxT("jumpBooking"))}</h2>
+        ${bookingSelection && !closedToBooking && !scopedBookingPanel ? `<p class="booking-selection-summary">${esc(uxT('bookingChoice').replace('{date}',bookingSelection.date).replace('{time}',bookingSelection.time).replace('{party}',bookingSelection.party))}</p>` : ''}
+        <section ${closedToBooking || scopedBookingPanel ? "hidden" : ""} class="booking-cancellation-notice" aria-label="${esc(bookingCopy.policyHeading)}">
           <strong>${esc(bookingCopy.policyHeading)}</strong>
           <p>${esc(bookingCopy.policyCheck)}</p>
           ${embeddedBooking?.cancellationPolicy ? `<p lang="sv">${esc(embeddedBooking.cancellationPolicy.summary)}</p><p><a href="${esc(embeddedBooking.cancellationPolicy.source)}" target="_blank" rel="noopener noreferrer">${esc(bookingCopy.policySource)}</a> · ${esc(formatBookingCopy(bookingCopy.policyChecked,{date:embeddedBooking.cancellationPolicy.checkedAt}))} ${esc(bookingCopy.comparePolicy)}${currentLang() !== 'sv' ? ' (Svenska)' : ''}</p>` : `<p>${esc(bookingCopy.unknownPolicy)}</p>`}

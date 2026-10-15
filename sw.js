@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-184-reviewed-fallbacks";
+const VERSION = "v4-real-185-laguerite-cannes-season";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
