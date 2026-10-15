@@ -1048,7 +1048,7 @@ body.light-shell .photo-attr, body.light-shell .restaurant-source { color: #748b
   html { scroll-behavior: auto; }
 }
 
-@media (max-width: 1100px) {
+@media (max-width: 1350px) {
   /* Nav → hamburger + dropdown-panel (språk i menyn när headern är trång) */
   .site-header, .nav { overflow: visible; }
   .nav { padding: 10px 14px 10px 20px; }
@@ -3154,3 +3154,19 @@ body.light-shell .restaurant-detail .restaurant-book-panel:has(.booking-provider
 .booking-report input { width:100%; min-width:0; padding:10px; border:1px solid #555; border-radius:6px; background:#141414; color:white; }
 
 .booking-selection-summary { padding:12px 14px; border:1px solid var(--border); border-radius:8px; font-size:14px; line-height:1.6; }
+
+/* Give the original booking form room to use its own desktop layout. */
+.restaurant-detail-grid:has(.booking-provider-frame) { grid-template-columns:minmax(0,1fr); }
+.restaurant-detail-grid:has(.booking-provider-frame) > .restaurant-book-panel { grid-column:1; grid-row:1; }
+.restaurant-detail-grid:has(.booking-provider-frame) > .restaurant-detail-main { grid-column:1; grid-row:2; }
+.booking-provider-stage { scroll-margin-top:88px; }
+
+.booking-cancellation-notice { margin: 16px 0; padding: 16px; border: 1px solid var(--border, #d8d4cc); border-radius: 8px; }
+.booking-cancellation-notice p { font-size: 14px; line-height: 1.6; margin: 8px 0 0; }
+/* TableCheck's email validation hint needs more room than a padded mobile card. */
+@media (max-width: 600px) {
+  .restaurant-detail .restaurant-book-panel .booking-provider-stage:has(.booking-provider-frame[src*="tablecheck.com/"]) {
+    width: calc(100vw - 16px);
+    margin-left: calc((100% - 100vw + 16px) / 2);
+  }
+}

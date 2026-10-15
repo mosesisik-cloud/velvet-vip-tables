@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
+import {chromium} from 'playwright';
 import {BookingAssetCache} from '../api/booking-asset-cache.mjs';
-import {BokabordAvailability,selectBookableTimes,safeBokabordRegistry,allowedAvailabilityRequest} from '../api/providers/bokabord-availability.mjs';
+import {BokabordAvailability,selectBookableTimes,safeBokabordRegistry,allowedAvailabilityRequest,BOKABORD_MEAL_SELECTOR} from '../api/providers/bokabord-availability.mjs';
 assert.deepEqual(selectBookableTimes([{time:'17:00',bookable:true},{time:'18:00',bookable:false},{time:'18:30',bookable:true},{time:'18:30',bookable:true},{time:'20:01',bookable:true},{time:'99:00',bookable:true}], '18:30'),['17:00','18:30']);
 assert.equal(safeBokabordRegistry({url:'https://evil.example/reservation/?hash=abcd',hash:'abcd'}),false);
 for(const [method,url] of [['POST','https://app.bokabord.se/reservation/api/booking/saveBooking'],['GET','https://app.bokabord.se/reservation/api/booking/saveBooking'],['POST','https://app.bokabord.se/reservation/api/unknown'],['GET','https://app.bokabord.se/reservation/api/unknown'],['POST','https://app.bokabord.se/booking-widget/api/createTemporaryBooking'],['POST','https://evil.example/booking-widget/api/getTimes']])assert.equal(allowedAvailabilityRequest(method,url),false,url);
@@ -18,6 +19,7 @@ for(const [method,type,url] of [['GET','document','https://app.bokabord.se/reser
 publicAssets.put('public.js',{'cache-control':'public, max-age=300','content-type':'application/javascript'},Buffer.from('public'),200);assert.equal(publicAssets.entries.size,1);
 for(const headers of [{'cache-control':'private, max-age=300','content-type':'application/javascript'},{'cache-control':'public, max-age=300','content-type':'application/json'},{'cache-control':'public, max-age=300','content-type':'text/html'},{'cache-control':'public, max-age=300','content-type':'application/javascript','set-cookie':'private=1'}])publicAssets.put('private',headers,Buffer.from('private'),200);
 assert.equal(publicAssets.entries.size,1,'no private/HTML/JSON responses retained');
+const selectorBrowser=await chromium.launch();try{const page=await selectorBrowser.newPage();await page.setContent(`<ul><li ng-click="selectMeal(meal,$event)"><div class="meal-attrs"><h3>Set Menu</h3></div></li><li ng-click="selectGiftcard(giftcard,$event)"><div class="meal-attrs"><h3>Presentkort</h3></div></li></ul>`);assert.deepEqual(await page.locator(BOKABORD_MEAL_SELECTOR+' h3').allTextContents(),['Set Menu'],'gift-card purchase must not become a meal or availability error');}finally{await selectorBrowser.close();}
 const adapter=new BokabordAvailability();
 try {assert.equal((await adapter.searchVenue({id:'unknown'},{date:'2026-10-19',time:'19:00',party:2})).status,'unsupported');
 if(process.env.BOKABORD_LIVE_READONLY==='1'){
