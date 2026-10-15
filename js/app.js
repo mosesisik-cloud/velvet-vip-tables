@@ -2506,6 +2506,11 @@ async function renderRestaurantDetail(placeId) {
         <div class="detail-panel"><h2>Sociala medier & recensioner</h2><div class="restaurant-socials">${socials.length ? socials.map(([name, url]) => `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)} ↗</a>`).join("") : `<span class="events-meta">Inga verifierade sociala länkar ännu.</span>`}</div>${restaurant.reviewUrl ? `<p class="restaurant-review-link"><a class="link-gold" href="${esc(restaurant.reviewUrl)}" target="_blank" rel="noopener">Läs verifierade recensioner på ${esc(restaurant.reviewSource || "Google")} ↗</a></p>` : ""}</div>
       </div>
       <aside class="detail-panel restaurant-book-panel"><span class="eyebrow">${esc(restaurant.name)}</span><h2>Boka bord</h2>
+        <section class="booking-cancellation-notice" aria-label="Avbokningsvillkor">
+          <strong>Avbokningsvillkor</strong>
+          <p>Kontrollera sista tid för kostnadsfri avbokning, lokal tidszon och eventuell avgift för sen avbokning eller uteblivet besök innan du bekräftar. Kortgaranti och förskottsbetalning kan ha särskilda villkor.</p>
+          ${embeddedBooking?.cancellationPolicy ? `<p>${esc(embeddedBooking.cancellationPolicy.summary)}</p><p><a href="${esc(embeddedBooking.cancellationPolicy.source)}" target="_blank" rel="noopener noreferrer">Restaurangens avbokningsvillkor ↗</a> · Kontrollerade ${esc(embeddedBooking.cancellationPolicy.checkedAt)}. Jämför med villkoren för just din bokning innan du bekräftar.</p>` : `<p>De aktuella villkoren för ditt val visas av restaurangen i bokningsformuläret. Velvet har ännu ingen separat verifierad sammanfattning. Om villkoren saknas eller är otydliga, kontakta restaurangen före bokning.</p>`}
+        </section>
         ${bookingPanel}
       </aside>
     </div>

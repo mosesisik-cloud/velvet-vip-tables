@@ -3092,20 +3092,11 @@
           "reviewCount": 0,
           "address": "Phuket, Thailand",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Ubuntu%20Eat%2C%20Phuket",
-          "website": "https://www.ubuntueat.com",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
           "curated": true,
           "cuisine": "thai;indian;lebanese;kebab;shawarma",
-          "images": [
-            "https://i0.wp.com/ubuntueat.com/wp-content/uploads/2022/03/Copy-of-Copy-of-Kamut-1920-%C3%97-1080px-2-1.jpg?fit=1024%2C576&ssl=1",
-            "https://i0.wp.com/ubuntueat.com/wp-content/uploads/2022/03/Copy-of-Copy-of-Kamut-1920-%C3%97-1080px-3-1.jpg?fit=1024%2C576&ssl=1",
-            "https://i0.wp.com/ubuntueat.com/wp-content/uploads/2024/04/Bengali-Cuisine_Biryani-2.jpg?fit=300%2C300&ssl=1",
-            "https://i0.wp.com/ubuntueat.com/wp-content/uploads/2024/04/Bengali-Cuisine_Biryani-2.jpg?w=900&ssl=1",
-            "https://i0.wp.com/ubuntueat.com/wp-content/uploads/2024/04/Bengali-Cuisine_Biryani-2.jpg?resize=300%2C300&ssl=1"
-          ],
-          "imageSource": "https://ubuntueat.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "images": []
         },
         {
           "placeId": "osm-HKT-",
@@ -3152,21 +3143,11 @@
           "reviewCount": 0,
           "address": "Phuket, Thailand",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Baraka%2C%20Phuket",
-          "website": "https://baraka-restaurant-phuket.com/",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
           "curated": true,
           "cuisine": "georgian",
-          "images": [
-            "https://www.baraka-restaurant-phuket.com/media/11062b_3b0b781103d2433dafa942c5337d5c19-mv2_jpg/v1/fill/w_980-h_653-al_c-q_85-usm_0.66_1.00_0.01-enc_avif-quality_auto/11062b_3b0b781103d2433dafa942c5337d5c19-mv2.jpg",
-            "https://static.wixstatic.com/media/1cce5b_ef6e1d8cbcf74f6084c52dfcec9bb681~mv2.png",
-            "https://static.wixstatic.com/media/1cce5b_f84c429746074fe49333224593b2ace2~mv2.png/v1/fill/w_560,h_93,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/1cce5b_f84c429746074fe49333224593b2ace2~mv2.png"
-          ],
-          "imageSource": "https://www.baraka-restaurant-phuket.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z",
-          "menuUrl": "https://www.baraka-restaurant-phuket.com/menu",
-          "menuSource": "https://baraka-restaurant-phuket.com/",
-          "menuVerifiedAt": "2026-09-18T13:20:21.577Z"
+          "images": []
         },
         {
           "placeId": "osm-HKT-yunnan",
@@ -7646,19 +7627,11 @@
           "reviewCount": 0,
           "address": "Paris, France",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Septime%2C%20Paris",
-          "website": "https://timenightclub.com",
           "primaryType": "restaurant",
           "source": "VELVET curated",
           "curated": true,
-          "images": [
-            "https://timenightclub.com/wp-content/uploads/2023/07/night-clubs-birthday-party-vip-nightclub-private-events.jpg",
-            "https://timenightclub.com/wp-content/uploads/2022/03/03112020-TIME-Nightclub-JAKEWESTPHOTO-0144_5963-1024x684.jpg",
-            "https://timenightclub.com/wp-content/uploads/2023/07/night-clubs-birthday-party-vip-nightclub-private-events-768x512.jpg",
-            "https://timenightclub.com/wp-content/uploads/2023/07/night-clubs-birthday-party-vip-nightclub-private-events-600x400.jpg",
-            "https://timenightclub.com/wp-content/uploads/2023/07/night-clubs-birthday-party-vip-nightclub-private-events-680x454.jpg"
-          ],
-          "imageSource": "https://timenightclub.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "images": [],
+          "website": "https://www.septime-charonne.fr/"
         },
         {
           "placeId": "osm-PAR-korner-speciale",
