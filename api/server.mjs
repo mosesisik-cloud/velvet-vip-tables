@@ -1,4 +1,6 @@
 import http from "node:http";
+import { BokabordMirror } from "./bokabord-mirror.mjs";
+const bokabordMirror = new BokabordMirror();
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -1912,6 +1914,36 @@ const server = http.createServer(async (req, res) => {
     if (req.method === "GET" && (url.pathname === "/health" || url.pathname === "/")) {
       return send(res, 200, { ok: true, service: "velvet-api" });
     }
+    if (url.pathname === "/restaurant-bookings/mirror/config") {
+      return send(res, 200, { enabled: process.env.VELVET_BOKABORD_MIRROR === "inspect", mode: "inspect" }, { "Cache-Control": "no-store" });
+    }
+    if (url.pathname.startsWith("/restaurant-bookings/mirror")) {
+      if (process.env.VELVET_BOKABORD_MIRROR !== "inspect") return send(res, 503, { error: "mirror_disabled" });
+      const user = sessionPublicUser(req, load());
+      if (!user) return send(res, 401, { error: "auth" });
+      // Pilot access only: remote browsers consume significant server resources.
+      if (!isOperator(user)) return send(res, 403, { error: "operator" });
+      try {
+        if (req.method === "POST" && url.pathname === "/restaurant-bookings/mirror/current") return send(res, 200, bokabordMirror.current(user.id), { "Cache-Control": "no-store" });
+        if (req.method === "POST" && url.pathname === "/restaurant-bookings/mirror") {
+          const b = await readBody(req, 4096);
+          return send(res, 201, await bokabordMirror.create(user.id, b.restaurantId, b.width), { "Cache-Control": "no-store" });
+        }
+        const match = url.pathname.match(/^\/restaurant-bookings\/mirror\/([a-f0-9-]{36})(\/action)?$/);
+        if (!match) return send(res, 404, { error: "not_found" });
+        if (req.method === "DELETE" && !match[2]) {
+          await bokabordMirror.remove(match[1], user.id);
+          return send(res, 200, { ok: true });
+        }
+        if (req.method === "POST" && match[2]) {
+          const b = await readBody(req, 4096);
+          return send(res, 200, await bokabordMirror.action(match[1], user.id, b), { "Cache-Control": "no-store" });
+        }
+        return send(res, 405, { error: "method" });
+      } catch (error) {
+        return send(res, error.status || 502, { error: error.status ? error.message : "provider_unavailable" }, { "Cache-Control": "no-store" });
+      }
+    }
     if (req.method === "GET" && url.pathname === "/events") {
       const data = loadEventsFile();
       const st = loadCrawlStatus();
@@ -2581,6 +2613,7 @@ const server = http.createServer(async (req, res) => {
       }
     }
     if (req.method === "POST" && url.pathname === "/restaurant-bookings/webbridge/book") {
+      if (process.env.VELVET_BOKABORD_MIRROR === "inspect") return send(res, 409, { error: "inspect_only" });
       const b = await readBody(req, 2e5);
       const db = load();
       const user = sessionPublicUser(req, db);
