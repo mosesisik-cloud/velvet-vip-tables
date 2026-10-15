@@ -1,5 +1,5 @@
 import { bookingLanguage } from './booking-language.js';
-import { getBookingCopy, formatBookingCopy, requestBookingNotes } from './booking-copy.js?v=180';
+import { getBookingCopy, formatBookingCopy, requestBookingNotes } from './booking-copy.js?v=188';
 // Only reviewed restaurant -> provider mappings are enabled. Discovery results
 // must never be used as booking destinations without checking the venue.
 let registryPromise;
