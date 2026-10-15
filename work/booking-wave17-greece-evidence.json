@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-16",
+  "agent": "gabbe-wave17-01a02152/greece-review",
+  "claimOwner": "gabbe-wave17-01a02152",
+  "scope": "Read-only evidence for two confirmed parent-owned issues. Proposed mappings only; no registry, catalogue, canonical worklist, UI or remote issue edited.",
+  "safety": {
+    "reservationsCreated": 0,
+    "holdsCreated": 0,
+    "messagesSent": 0,
+    "personalDataSubmitted": false,
+    "paymentSubmitted": false,
+    "accessControlsBypassed": false
+  },
+  "browserLimitations": [
+    "CUA inventory returned no available browsers; createBrowserTab('iab') returned Browser is not available. Native embedded-form rendering was not tested.",
+    "Web retrieval was used for official page identity, linked destinations and public provider page text. Unresolved template text is not evidence of available inventory or booking success."
+  ],
+  "records": [
+    {
+      "issue": 55,
+      "restaurantId": "curated-ATH-island-athens-riviera",
+      "name": "Island Athens Riviera",
+      "city": "Athens Riviera",
+      "country": "Greece",
+      "identity": {
+        "status": "official_identity_verified",
+        "officialName": "Island Club Restaurant",
+        "address": "27th km Athens-Sounio Ave., 166 72 Varkiza, Athens Riviera, Greece",
+        "website": "https://www.islandresortathensriviera.com/clubrestaurant",
+        "basis": "The www variant of the catalogue domain redirects to the current Club Restaurant page. The restaurant subpage and dedicated reservation contact page identify the same restaurant, Varkiza address and original islandclubrestaurant.gr reservation mailbox. The resort also offers Cabanas and events; those separate routes were excluded."
+      },
+      "sources": [
+        {
+          "url": "https://www.islandclubrestaurant.gr/",
+          "observation": "Redirected to https://www.islandresortathensriviera.com/clubrestaurant. Exact restaurant identity and original-domain continuity established."
+        },
+        {
+          "url": "https://www.islandresortathensriviera.com/clubrestaurant/therestaurant",
+          "observation": "Official restaurant page identifies the Varkiza address and restaurant reservation phone/email; its Reserve your experience and Reservations links target the dedicated contact page."
+        },
+        {
+          "url": "https://www.islandresortathensriviera.com/clubrestaurant/contact",
+          "observation": "Dedicated Club Restaurant Reservations page offers phone +30 210 9653 563-564, WhatsApp +30 698 181 7000 and reservations@islandclubrestaurant.gr. No date/party/time inventory widget observed in retrieved page. No contact link activated."
+        }
+      ],
+      "classification": "official_manual_reservation_route",
+      "proposedMapping": null,
+      "proposedRecord": {
+        "registryEntry": null,
+        "reason": "Main b0a3b6d already supports reviewed per-restaurant manual email contacts in js/restaurant-contact.js. Use that exact-ID binding instead of adding a Restaurant website host or representing a contact page as a booking engine.",
+        "manualContactCandidate": {
+          "type": "email",
+          "value": "reservations@islandclubrestaurant.gr",
+          "source": "https://www.islandresortathensriviera.com/clubrestaurant/contact"
+        },
+        "semantics": {
+          "integrationMode": "manual_contact",
+          "bookingMode": "request_only",
+          "verification": "official_contact_link_verified",
+          "cancellationPolicyStatus": "unknown",
+          "paymentRequirement": "unknown",
+          "liveAvailabilitySupported": false,
+          "completionTracking": "unsupported"
+        },
+        "expectedHref": "mailto:reservations@islandclubrestaurant.gr",
+        "targetBinding": "js/restaurant-contact.js contacts[curated-ATH-island-athens-riviera]"
+      },
+      "integrationRequirements": [
+        "Add the frozen type/value/source triple under this exact restaurantId using the existing independent reviewed-contact binding. Do not add to data/booking-providers.json or widen provider allowlists.",
+        "The existing email contact renderer is sufficient: it creates only a plain mailto link and official information link, plus request-only, unknown cancellation and unknown payment disclosures.",
+        "Retain no query, prefilled message, subject, body, bcc, guest form, slot selector, iframe, availability request or success state. Opening an email client is not a sent inquiry or confirmed booking.",
+        "Extend exact-contact tampering and real app route tests for this ID. Source, email value, type and extra fields must be rejected if changed."
+      ],
+      "limitations": [
+        "The non-www catalogue domain was inaccessible in the web tool; the www domain did resolve to the current official page.",
+        "No automated inventory connection found from the reviewed official pages. This mapping is an honest manual route, not an in-Velvet completed-booking integration.",
+        "Seasonal opening, live availability, cancellation terms, embedded-form support and booking completion were not established."
+      ]
+    },
+    {
+      "issue": 56,
+      "restaurantId": "curated-ATH-varoulko-seaside",
+      "name": "Varoulko Seaside",
+      "city": "Athens Riviera",
+      "country": "Greece",
+      "identity": {
+        "status": "official_identity_verified",
+        "officialName": "Varoulko Seaside",
+        "address": "Akti Koumoundourou 54, Piraeus 18533, Greece",
+        "website": "https://www.varoulko.gr/",
+        "basis": "Official homepage identifies Varoulko Seaside and chef Lefteris Lazarou. Its location link and contact page give Akti/Koumoundourou Coast 54, Piraeus 18533. This is the Piraeus restaurant within the catalogue's Athens Riviera destination; no restaurant ID-prefix inference was used.",
+        "addressDiscrepancy": "The contact footer separately prints Koumoundourou Coast 54-56, 10435 Piraeus, inconsistent with the same page's location link and homepage. Preserve the observed discrepancy; do not silently infer a corrected street range/postcode."
+      },
+      "sources": [
+        {
+          "url": "https://www.varoulko.gr/",
+          "observation": "Official Make a reservation and Book a table controls both link directly to https://www.i-host.gr/reservations/new?channel=website&lang=en&restaurant=232. Homepage identifies Varoulko Seaside, Piraeus address and +30 210 5228400."
+        },
+        {
+          "url": "https://www.varoulko.gr/contact-us/",
+          "observation": "Official contact and location information confirms exact Varoulko identity. Make a reservation uses the same i-host restaurant=232 destination. Contact form is distinct from this provider link."
+        },
+        {
+          "url": "https://www.i-host.gr/reservations/new?channel=website&lang=en&restaurant=232",
+          "observation": "The exact official destination was retrievable and identifies i-host as its platform, but text extraction shows unresolved restaurantDetails/title and reservation templates. Initial browser form, provider identity display, inventory and embedded compatibility remain unverified. No form field or next step was used."
+        }
+      ],
+      "classification": "official_external_provider_link_verified",
+      "rootBrowserObservation": {
+        "checkedAt": "2026-10-16",
+        "observer": "gabbe-wave17-01a02152/root",
+        "method": "CUA browser accessibility observation supplied by parent agent",
+        "url": "https://www.i-host.gr/reservations/new?channel=website&lang=en&restaurant=232",
+        "result": "Original standalone initial form rendered Reservation Options, English, a People select with 1-20, Friday 16 October date field, Select Time options 13:00-23:30 and a disabled Reserve control.",
+        "restaurantIdentityVisible": false,
+        "identityBasis": "No restaurant name/address appeared in the accessibility tree. The exact i-host destination linked by the official Varoulko site remains the venue identity evidence.",
+        "fieldsChanged": false,
+        "searchSubmitted": false,
+        "slotSelected": false,
+        "nativeEmbeddingObserved": false,
+        "liveAvailabilityObserved": false,
+        "confirmedReservation": false,
+        "limitation": "Initial time-selector options are not an availability response or bookable inventory. A standalone form is not proof of embedding support."
+      },
+      "proposedMapping": {
+        "name": "Varoulko Seaside",
+        "city": "Athens Riviera",
+        "provider": "i-host",
+        "url": "https://www.i-host.gr/reservations/new?channel=website&lang=en&restaurant=232",
+        "venueKey": "www.i-host.gr/reservations/new?restaurant=232",
+        "source": "https://www.varoulko.gr/",
+        "checkedAt": "2026-10-16",
+        "verification": "official_link_only",
+        "integrationMode": "external_link",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "integrationRequirements": [
+        "i-host is not an existing allowlisted provider in current main. Prefer a stable-ID-specific exact external URL/source guard for this first reviewed mapping.",
+        "The existing generic IDENTITY_PARAMS does not include restaurant, so merely adding www.i-host.gr to the provider host allowlist would fail to pin restaurant=232. Guard the exact complete URL or explicitly validate and test the restaurant identifier plus allowed query parameters.",
+        "Keep the official lang=en query unchanged unless provider language support is independently verified. Do not infer Swedish support from the Velvet locale."
+      ],
+      "limitations": [
+        "Official source-to-provider relationship verified and root observed the original standalone initial form. No native embedding, live availability, hold, payment, final guest journey or completed reservation observed.",
+        "Provider source contains generic reservation terms but no reviewed restaurant-specific cancellation summary was established. Do not populate cancellation terms from hidden or unresolved templates."
+      ]
+    }
+  ]
+}
