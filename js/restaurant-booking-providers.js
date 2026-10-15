@@ -6,6 +6,7 @@ export const hasEmbeddedBooking = id => !!resolveEmbeddedBooking(reviewedRegistr
 const PROVIDER_HOSTS = Object.freeze({
   Meitre: ['lasusana.meitre.com', 'oro.meitre.com', 'fasano.meitre.com'],
   Elyra: ['widget.elyrasystems.com'], Guestplan: ['angelicabooking.guestplan.io'],
+  Dineplan: ['calendar.dineplan.com', 'account.dineplan.com', 'www.dineplan.com'],
   CoverManager: ['www.covermanager.com'],
   Revasi: ['revasi.net'],
   OpenTable: ['www.opentable.com', 'www.opentable.co.uk', 'www.opentable.com.au', 'www.opentable.sg'],
@@ -15,7 +16,7 @@ const PROVIDER_HOSTS = Object.freeze({
   TheFork: ['widget.thefork.com', 'module.lafourchette.com'],
   Resy: ['resy.com'], Tock: ['www.exploretock.com'], OMAKASE: ['omakase.in'],
 });
-const EMBED_PROVIDERS = new Set(['Meitre', 'Elyra', 'Guestplan', 'TableCheck', 'Zenchef', 'ResDiary / Dish Cult', 'Tableo', 'Restoo', 'Eat App']);
+const EMBED_PROVIDERS = new Set(['Dineplan', 'Meitre', 'Elyra', 'Guestplan', 'TableCheck', 'Zenchef', 'ResDiary / Dish Cult', 'Tableo', 'Restoo', 'Eat App']);
 const IDENTITY_PARAMS = new Set(['rid', 'restref', 'restaurantid', 'restaurant_id', 'venue', 'venue_id', 'id']);
 function venueKey(url) {
   const identity = [...url.searchParams].filter(([key]) => IDENTITY_PARAMS.has(key.toLowerCase()))
@@ -46,6 +47,10 @@ export function resolveEmbeddedBooking(registry, restaurantId) {
     }
     if (!Object.hasOwn(PROVIDER_HOSTS, row.provider) || !PROVIDER_HOSTS[row.provider].includes(url.hostname)
       || !row.venueKey || row.venueKey !== venueKey(url)) return null;
+    // Only Salsify's original Dineplan calendar was verified as an embedded form.
+    if (row.provider === 'Dineplan' && row.integrationMode === 'native_embed'
+      && (restaurantId !== 'curated-CPT-salsify-at-the-roundhouse'
+        || url.hostname !== 'calendar.dineplan.com' || url.pathname !== '/m0w4SxVp')) return null;
     const embedded = row.integrationMode === 'native_embed' && row.verification === 'embedded_form_loaded' && EMBED_PROVIDERS.has(row.provider);
     if (!embedded && (row.integrationMode !== 'external_link' || !['official_restaurant_link_verified', 'official_link_only', 'provider_page_loaded'].includes(row.verification))) return null;
     if (row.provider === 'Resy') { url.searchParams.delete('date'); url.searchParams.delete('seats'); }
