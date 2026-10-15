@@ -25,3 +25,4 @@ jobs:
       - run: node scripts/test-restaurant-ids.mjs
       - run: node scripts/test-card-setup.mjs
       - run: node scripts/test-external-destinations.mjs
+      - run: node scripts/test-place-brand.mjs

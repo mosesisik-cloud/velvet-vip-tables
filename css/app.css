@@ -916,7 +916,7 @@ body.light-shell .photo-attr, body.light-shell .restaurant-source { color: #748b
 .venue-intro-scene .venue-media-emblem { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 0; opacity: .38; }
 .venue-intro-shade { z-index: 2; pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,.18), transparent 34%, rgba(0,0,0,.18) 58%, rgba(4,4,6,.94)); }
 .venue-intro-copy { position: absolute; z-index: 3; left: max(24px, calc((100vw - 1240px) / 2)); bottom: clamp(70px, 12vh, 140px); max-width: min(940px, 84vw); color: #fff; pointer-events: none; }
-.venue-intro-copy span { color: var(--gold); text-transform: uppercase; letter-spacing: .2em; font-size: .72rem; }
+.venue-intro-copy > span { color: var(--gold); text-transform: uppercase; letter-spacing: .2em; font-size: .72rem; }
 .venue-intro-copy h1 { margin: 10px 0 12px; font-family: var(--font-display); font-size: clamp(3.8rem, 10vw, 9rem); line-height: .86; letter-spacing: -.055em; text-shadow: 0 12px 42px rgba(0,0,0,.55); }
 .venue-intro-copy p { margin: 0; color: rgba(255,255,255,.78); font-size: clamp(.85rem, 1.5vw, 1.05rem); letter-spacing: .08em; text-transform: uppercase; }
 .venue-intro-progress { position: absolute; z-index: 4; left: 0; right: 0; bottom: 0; height: 3px; background: rgba(255,255,255,.14); }
