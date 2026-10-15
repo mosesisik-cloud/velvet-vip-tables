@@ -226,6 +226,8 @@ function checkRestaurants() {
       fail("direct-booking-ui", "empty provider responses must not be reported as real no-availability");
     } else if (!app.includes("Önskad tid · inte live-verifierad") || !app.includes('requestMode: "concierge"') || !server.includes("restaurantStatusM")) {
       fail("direct-booking-ui", "native concierge fallback and operator status flow are required");
+    } else if (!app.includes("PENDING_RESTAURANT_BOOKING_KEY") || !app.includes('dismissable && opts.returnTo ? "Avbryt – stanna på bokningen"')) {
+      fail("direct-booking-ui", "restaurant login cancel/return must keep the user and booking intent on the restaurant");
     } else ok("direct-booking-ui", "native VELVET WebBridge only; no provider page or iframe fallback");
   }
 }
