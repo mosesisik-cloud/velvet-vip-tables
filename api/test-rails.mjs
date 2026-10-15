@@ -217,11 +217,16 @@ function checkRestaurants() {
       fail("zink-direct-booking", JSON.stringify(zink && { bookingUrl: zink.bookingUrl, bookingProvider: zink.bookingProvider, bookingDirect: zink.bookingDirect }));
     } else ok("zink-direct-booking", "official BokaBord flow is primary");
     const app = fs.readFileSync(path.join(ROOT, "js", "app.js"), "utf8");
+    const server = fs.readFileSync(path.join(ROOT, "api", "server.mjs"), "utf8");
     if (!app.includes("const zinkPilot = restaurant.placeId") || !app.includes("/restaurant-bookings/webbridge/availability") || !app.includes("/restaurant-bookings/webbridge/book") || !app.includes("Bekräfta riktig bokning") || !app.includes("VELVET WebBridge")) {
       fail("direct-booking-ui", "Zink must use the native VELVET WebBridge flow");
-    } else if (!app.includes("if (openProviderFallback(values))") || !app.includes('event.origin !== "https://app.bokabord.se"') || app.includes("Problem med vyn? Öppna separat")) {
-      fail("direct-booking-ui", "provider fallback must be scoped to WebBridge failure, origin-checked and stay inside VELVET");
-    } else ok("direct-booking-ui", "native WebBridge with an in-app live fallback when production API is stale");
+    } else if (app.includes("openProviderFallback") || app.includes("restaurant-provider-frame") || app.includes("app.bokabord.se/reservation")) {
+      fail("direct-booking-ui", "Zink must never open or embed the provider booking interface");
+    } else if (!server.includes('reason: integrationRequired ? "integration_required"')) {
+      fail("direct-booking-ui", "empty provider responses must not be reported as real no-availability");
+    } else if (!app.includes("Önskad tid · inte live-verifierad") || !app.includes('requestMode: "concierge"') || !server.includes("restaurantStatusM")) {
+      fail("direct-booking-ui", "native concierge fallback and operator status flow are required");
+    } else ok("direct-booking-ui", "native VELVET WebBridge only; no provider page or iframe fallback");
   }
 }
 
@@ -424,6 +429,21 @@ async function runApi() {
     const zinkHistory = await req(base, "GET", "/restaurant-bookings", null, pilotHeaders);
     if (zinkHistory.status !== 200 || !Array.isArray(zinkHistory.json.bookings)) fail("zink-history", JSON.stringify(zinkHistory.json));
     else ok("zink-history", "authenticated history is available without submitting a test reservation");
+
+    const concierge = await req(base, "POST", "/restaurant-bookings", {
+      restaurantId: "curated-STO-zink-italian-cuisine", restaurant: "Zink Italian Cuisine", destination: "Stockholm",
+      date: pilotDate, time: "19:00", party: 2, name: "Pilot Guest", email: "pilot@example.com", phone: "+46701234567",
+      note: "Testförfrågan", requestMode: "concierge",
+    }, pilotHeaders);
+    if (concierge.status !== 201 || concierge.json.booking?.status !== "request" || !concierge.json.booking?.id) {
+      fail("zink-concierge-request", JSON.stringify(concierge.json));
+    } else ok("zink-concierge-request", concierge.json.booking.id + " pending confirmation");
+
+    const statusDenied = await req(base, "POST", `/restaurant-bookings/${encodeURIComponent(concierge.json.booking?.id || "missing")}/status`, {
+      status: "confirmed", providerReference: "TEST-ONLY",
+    }, pilotHeaders);
+    if (statusDenied.status !== 403 || statusDenied.json.error !== "operator") fail("zink-concierge-operator", JSON.stringify(statusDenied.json));
+    else ok("zink-concierge-operator", "guest cannot confirm a restaurant request");
 
     const intent = await req(base, "POST", "/pay/intent", {
       tableId: "nope",

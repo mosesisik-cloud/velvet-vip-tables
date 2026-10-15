@@ -12,10 +12,10 @@ Ren statisk SPA — HTML/CSS/vanilla JS, inga ramverk, ingen build-step. Svensk 
 
 ## Vad som är på riktigt i V4
 
-- **V160: inga döda tider i publicerad preview.** Om produktions-API:t ännu saknar den nya WebBridge-routen öppnar VELVET automatiskt Zinks officiella livebokning i en skyddad helskärmsvy inne i appen. Native tider används automatiskt så snart API-deployen är klar.
-- **V158: riktig bokning utan att lämna VELVET.** Zink-piloten öppnar restaurangens officiella BokaBord/WaiterAid-widget i en helskärmsvy inne i VELVET. Datum och antal följer med, lediga tider kommer direkt från Zink och BokaBords egen `reservationSuccess` är den enda signal som får markera bokningen som bekräftad. Om VELVET-API:t ännu inte är deployat kan bokningen ändå slutföras hos BokaBord; den sparas då lokalt tills serversynk finns.
+- **V162: Velvet Concierge för Zink.** När live-API:t inte är aktiverat kan gästen välja en tydligt märkt önsketid direkt i Velvet. Servern skapar en riktig, spårbar bokningsförfrågan med referens-ID. Gabbe/Moses ser kontaktuppgifterna i bokningsvyn och kan markera mottagen, bekräftad eller avböjd. En önsketid visas aldrig som ledig och blir aldrig “bokad” innan Zink har bekräftat.
+- **V161: enbart native bokning.** Zink-piloten öppnar aldrig BokaBords webbplats, en ny flik eller en inbäddad leverantörssida. Datum, lediga tider, gästuppgifter och bekräftelse får endast visas i VELVETs egna komponenter. Om den officiella WaiterAid-anslutningen inte är aktiv visas ett ärligt anslutningsfel i stället för en extern fallback eller påhittade tider.
 - **V157: riktig pilotinloggning.** En godkänd passkey skapar en 180-dagars, återkallelig HttpOnly-session på VELVET-domänen. API:t litar inte längre på ett lokalt användar-id för restaurangbokningar, och sessionen återställs automatiskt efter omladdning eller om appen öppnas igen.
-- **V157: Zink live webbridge.** Zinks officiella BokaBord-widget körs inuti restaurangvyn. Datum och antal skickas till BokaBord, som äger tillgänglighet, kontaktuppgifter och slutlig bokningsbekräftelse. VELVET sparar `in_progress` och uppdaterar till `provider_confirmed` först när widgeten skickar sin egen `reservationSuccess`-signal.
+- **V157: Zink live webbridge.** VELVETs server synkar tillgänglighet och slutlig bokningsbekräftelse med Zinks WaiterAid/BokaBord-system. Webbläsaren visar endast VELVETs eget gränssnitt.
 
 - **Förfrågan, inte fake-bokning.** Ni fyller i värd, datum, paket och sällskap. Förfrågan går till VELVET-teamet (Gabbe) via e-post. Bekräftelsen säger *förfrågan skickad* — aldrig att bordet är reserverat.
 - **Inga påhittade paketpriser.** Appen visar inte fejkade EUR-paket. Pris kommer från klubbens sajt eller deras svar. Evenemang hämtas från officiella kalendrar.
