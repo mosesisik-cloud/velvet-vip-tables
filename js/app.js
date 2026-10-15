@@ -1,5 +1,7 @@
 import { primarySection, isDiscoveryList, safeDiscoveryReturn } from './navigation-state.js';
 import { mountBookingReport } from './booking-report.js';
+import { uxT } from './ux-copy.js';
+import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo } from './ux-booking.js';
 import { mountAvailabilitySearch } from './availability-search.js';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
 import { mountBokabordMirror } from "./bokabord-mirror.js";
@@ -1164,8 +1166,7 @@ async function publishTable(table) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(table),
   });
-  if (remote?.error) return remote;
-  return remote?.table || table;
+  return remote || { error: 'unavailable' };
 }
 async function listOpenTables() {
   const remote = await apiJSON("/tables");
@@ -1529,13 +1530,13 @@ function promoterCardHTML(p, opts = {}) {
   <div class="person-row">
     ${avatar}
     <div class="person-info">
-      <div class="person-name">${esc(name)} <span class="chip-mini">${esc(t("promoterVerified"))}</span></div>
+      <div class="person-name">${esc(name)} <span class="chip-mini">${esc(t("promoter"))}</span></div>
       <div class="person-meta">
         ${p.provider ? `<span class="soc-pill">${esc(p.provider)}</span>` : ""}
         ${handle ? (p.socialUrl
           ? `<a class="person-handle" href="${esc(p.socialUrl)}" target="_blank" rel="noopener">${esc(handle)}</a>`
           : `<span class="person-handle">${esc(handle)}</span>`) : ""}
-        <span class="idv-badge ok">✓ ${esc(badge)}</span>
+        <span class="idv-badge${p.idv === "verified" ? " ok" : ""}">${p.idv === "verified" ? "✓ " : ""}${esc(badge)}</span>
         ${where ? `<span>${esc(where)}</span>` : ""}
       </div>
     </div>
@@ -1638,7 +1639,7 @@ function promoterLockHTML(kind) {
   if (kind === "card") {
     return `
     <div class="promo-lock">
-      <p class="idv-badge ok">${esc(t("payingCustomer"))}</p>
+      <p class="idv-badge">${esc(uxT("cardRequired"))}</p>
       <h2>${esc(t("cardTitle"))}</h2>
       <p>${esc(t("cardLockedBody"))}</p>
       <a class="btn btn-gold" href="#/card" data-nav id="ch-card">${esc(t("cardCta"))}</a>
@@ -1646,7 +1647,7 @@ function promoterLockHTML(kind) {
   }
   return `
     <div class="promo-lock">
-      <p class="idv-badge ok">${esc(t("verifiedMember"))}</p>
+      <p class="idv-badge">${esc(uxT("verificationRequired"))}</p>
       <h2>${esc(t("verifiedPerkPromoter"))}</h2>
       <p>${esc(t("promoterLockedBody"))}</p>
       <a class="btn btn-gold" href="#/verify" data-nav id="ch-verify">${esc(t("verifyCta"))}</a>
@@ -3821,17 +3822,17 @@ async function openBookingModal(v, preselectedPackageId = "") {
         </div>
 
         <div class="form-group">
-          <label class="chk-row"><input type="checkbox" id="m-open" checked> ${t("openSeats")}</label>
+          <label class="chk-row"><input type="checkbox" id="m-open"> ${t("openSeats")}</label>
           <p class="stepper-hint">${t("openSeatsHint")}</p>
           <div class="stepper" id="m-open-row" role="group" aria-label="${t("openSeatsCount")}">
             <button type="button" id="m-open-minus" aria-label="−">−</button>
             <span class="stepper-val" id="m-open-val">2</span>
             <button type="button" id="m-open-plus" aria-label="+">+</button>
           </div>
-          <label class="stepper-hint" style="display:block;margin-top:10px">${esc(t("openForLabel"))}
-            ${openForSelectHTML("m-open-for", "women")}
+          <div id="m-sharing-options" class="hidden"><label class="stepper-hint" style="display:block;margin-top:10px">${esc(t("openForLabel"))}
+            ${openForSelectHTML("m-open-for", "anyone")}
           </label>
-          <p class="stepper-hint">${esc(t("openForHint"))}</p>
+          <p class="stepper-hint">${esc(t("openForHint"))}</p></div>
         </div>
 
         <div class="form-group">
@@ -4029,6 +4030,7 @@ async function openBookingModal(v, preselectedPackageId = "") {
   const syncOpen = () => {
     const on = $("#m-open")?.checked;
     openRow?.classList.toggle("hidden", !on);
+    $("#m-sharing-options")?.classList.toggle("hidden", !on);
     if ($("#m-open-val")) $("#m-open-val").textContent = openSeats;
   };
   $("#m-open")?.addEventListener("change", syncOpen);
@@ -4129,6 +4131,11 @@ async function openBookingModal(v, preselectedPackageId = "") {
     booking.delivery = sent;
     saveBookings([...loadBookings(), booking]);
     const remote = await publishTable(booking);
+    booking.published = publicationConfirmed(remote, booking.id);
+    // Keep local records honest even when the public table API is unavailable.
+    if (openOn && !booking.published) booking.status = "local-pending";
+    saveBookings(loadBookings().map((item) => item.id === booking.id ? booking : item));
+    saveLocalTables(loadLocalTables().map((item) => item.id === booking.id ? booking : item));
     if (remote?.error === "idv_required" || remote?.error === "card_required") {
       btn.disabled = false;
       btn.textContent = t("sendRequest");
@@ -4174,7 +4181,7 @@ function showConfirmation(b, opener) {
         <div class="split-total">${esc(moneyOrClub(b.total))}</div>
       </div>
       <p class="price-disclaimer">${esc(sent ? t("confirmSentHint") : t("confirmSavedHint"))}</p>
-      ${b.openSeats ? `<p class="invite-joined" role="status">${esc(t("openPublished"))}</p>` : ""}
+      ${b.openSeats ? `<p class="invite-joined" role="status">${esc(b.published ? t("openPublished") : uxT("notPublished"))}</p>` : ""}
       <div class="confirm-actions">
         ${b.openSeats ? `<a class="btn btn-gold" href="#/table/${encodeURIComponent(b.id)}" data-nav id="c-go">${esc(t("viewParty"))}</a>` : `<a class="btn btn-gold" href="#/bookings" data-nav id="c-go">${esc(t("navBookings"))}</a>`}
         <button class="btn btn-ghost" id="c-copy">${esc(t("copyInvite"))}</button>
@@ -4268,24 +4275,19 @@ async function renderBookings() {
           <a class="btn btn-gold btn-sm" href="#/table/${encodeURIComponent(b.id)}" data-nav>${esc(t("viewParty"))}</a>
           ${b.delivery !== "sent" ? `<a class="btn btn-ghost btn-sm" href="${mailtoFor(b)}">${esc(t("openMail"))}</a>` : ""}
           <button class="btn btn-ghost btn-sm btn-share" data-share="${esc(b.id)}">${esc(t("sharePlace"))}</button>
-          <button class="btn btn-ghost btn-sm btn-danger" data-cancel="${esc(b.id)}">${esc(t("remove"))}</button>
+          <div><button class="btn btn-ghost btn-sm btn-danger" data-cancel="${esc(b.id)}">${esc(uxT("removeLocal"))}</button><p class="stepper-hint">${esc(uxT("removeHint"))}</p></div>
         </div>
       </div>`).join("")}
     ${restaurantBookings.length ? `<div class="restaurant-booking-history"><span class="eyebrow">RESTAURANGBOKNINGAR</span><h2>Dina restaurangbokningar</h2>${restaurantBookings.map((booking) => {
       const confirmed = booking.status === "confirmed" || booking.status === "provider_confirmed";
       const declined = booking.status === "declined" || booking.status === "provider_error" || booking.status === "provider_rejected";
-      const received = booking.status === "received";
-      const requested = booking.status === "request" || booking.status === "local-pending";
-      const status = booking.status === "guest_reported" ? "Bekräftelse uppgiven av gästen" : confirmed ? "Bekräftad av restaurangen" : declined ? "Inte bekräftad" : received ? "Mottagen av restaurangen" : requested ? "Väntar på Velvet Concierge" : booking.status === "unknown" ? "Resultatet behöver kontrolleras" : "Behandlas";
-      const delivery = booking.status === "guest_reported" ? "Sparad från gästens uppgifter. Velvet har ännu inte verifierat bekräftelsen hos bokningssystemet." : confirmed
-        ? "Restaurangen har bekräftat bokningen."
-        : declined ? "Restaurangen kunde inte bekräfta den önskade tiden."
-          : received ? "Velvet har lämnat förfrågan till restaurangen och väntar på svar."
-            : "Detta är en riktig förfrågan, men ännu ingen bekräftad reservation.";
-      const operatorControls = restaurantOperator && booking.status !== 'guest_reported' && !confirmed && !declined && booking.status !== 'unknown' && booking.status !== 'payment_required'
+      const statusKey = restaurantStatusKey(booking.status);
+      const status = uxT(statusKey);
+      const delivery = uxT(statusKey + "Hint");
+      const operatorControls = restaurantOperator && booking.status !== 'local-pending' && booking.status !== 'guest_reported' && !confirmed && !declined && booking.status !== 'unknown' && booking.status !== 'payment_required'
         ? `<div class="restaurant-operator-status"><select data-restaurant-status="${esc(booking.id)}"><option value="received">Mottagen av Zink</option><option value="confirmed">Bekräftad av Zink</option><option value="declined">Avböjd</option></select><input data-restaurant-reference="${esc(booking.id)}" placeholder="Zinks bokningsreferens"><button class="btn btn-gold btn-sm" type="button" data-restaurant-status-submit="${esc(booking.id)}">Uppdatera status</button></div>`
         : "";
-      return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${esc(delivery)}</div>${restaurantOperator && booking.name ? `<div class="booking-delivery">${esc(booking.name)} · ${esc(booking.email || "")} · ${esc(booking.phone || "")}</div>` : ""}${operatorControls}</div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${confirmed ? "Visa restaurangen" : "Till bokningen"}</a></div>`;
+      return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${esc(delivery)}</div>${restaurantOperator && booking.name ? `<div class="booking-delivery">${esc(booking.name)} · ${esc(booking.email || "")} · ${esc(booking.phone || "")}</div>` : ""}${operatorControls}</div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${esc(uxT("viewRestaurant"))}</a></div>`;
     }).join("")}</div>` : ""}
   </section>`;
 
@@ -4913,7 +4915,13 @@ function countryList() {
 function openOnboarding(opts = {}) {
   const root = document.getElementById("onboarding-root");
   if (!root || root.innerHTML) return; // redan öppen
-  const dismissable = !!opts.dismissable;
+  if (opts.phase === "auth") {
+    try {
+      const returnTo = loginReturnTo(opts.returnTo || location.hash);
+      if (returnTo && (opts.returnTo || !sessionStorage.getItem("velvet_after_login"))) sessionStorage.setItem("velvet_after_login", returnTo);
+    } catch { /* Storage is optional; authentication remains available. */ }
+  }
+  const dismissable = opts.phase === "auth" || !!opts.dismissable;
   const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
   const langPicked = () => { try { return !!localStorage.getItem("velvet_lang_picked"); } catch { return false; } };
   let phase = opts.phase
@@ -4960,6 +4968,9 @@ function openOnboarding(opts = {}) {
   };
   const close = (refocus = true) => {
     closed = true;
+    if (refocus && opts.phase === "auth") {
+      try { sessionStorage.removeItem("velvet_after_login"); } catch { /* optional */ }
+    }
     cleanup();
     root.innerHTML = "";
     if (refocus) restoreFocus(opener);
@@ -5446,7 +5457,7 @@ async function renderTable(id) {
     if (btn) btn.disabled = true;
     const r = await joinOpenTable(tb.id, tb);
     if (r.error === "auth") openOnboarding({ dismissable: false, phase: "auth" });
-    else if (r.error === "idv_required") location.hash = "#/verify";
+    else if (r.error === "idv_required") { rememberAfterIdv(`#/table/${encodeURIComponent(tb.id)}`); location.hash = "#/verify"; }
     else if (r.error === "too_young") { showToast(tooYoungText(r, VENUES.find((x) => x.venue_id === tb.venue_id))); if (btn) btn.disabled = false; }
     else if (r.error === "seat_pref") { showToast(t("seatPref").replace("{who}", openForLabel(r.openFor || tb.openFor).toLowerCase())); if (btn) btn.disabled = false; }
     else renderTable(id);
@@ -5503,7 +5514,7 @@ async function renderPay(tableId) {
     return;
   }
   const mine = (tb.members || []).find((m) => m.id === me.id);
-  const canPay = !!(mine && !mine.paid);
+  const canPay = canStartPayment(mine);
   const startAmt = Number(mine?.paidAmount) || 0;
   setTitle(`${t("payShare")} · ${tb.venue}`);
   view().innerHTML = `
@@ -5522,11 +5533,11 @@ async function renderPay(tableId) {
       ${Number(tb.per_person) > 0 ? `<p class="price-disclaimer">${esc(t("guestBudget").replace("{amount}", fmtEUR(tb.per_person)))}</p>` : `<p class="price-disclaimer">${esc(t("clubSetsPrice"))}</p>`}
     </div>
     ${mine?.paid ? `<p class="invite-joined">✓ ${esc(t("paid"))}${mine.paidVia ? ` · ${esc(mine.paidVia)}` : ""}</p>` : ""}
-    ${mine?.paidPending ? `<p class="invite-joined">${esc(t("payWait"))}</p>` : ""}
+    ${mine?.paidPending ? `<p class="invite-joined" role="status">${esc(uxT("pendingPayment"))}</p>` : ""}
     ${!mine ? `<p class="price-disclaimer">${esc(t("payNeedJoin"))}</p>` : ""}
     ${!cfg.ready && isOperatorUser(me) ? `<p style="margin:0 0 14px"><a class="btn btn-gold" href="#/payout" data-nav>${esc(t("paySetup"))}</a></p>` : ""}
     <div class="pay-grid" id="pay-grid">
-      ${PAY_METHODS.map((m) => {
+      ${PAY_METHODS.filter((m) => (cfg.methods || []).some((spec) => spec.id === m.id && spec.enabled)).map((m) => {
         const spec = (cfg.methods || []).find((x) => x.id === m.id);
         const on = !!(spec && spec.enabled);
         return `<button type="button" class="pay-method${on ? "" : " off"}" data-method="${m.id}" ${on && canPay ? "" : "disabled"}>
@@ -5537,6 +5548,7 @@ async function renderPay(tableId) {
       }).join("")}
     </div>
     <div id="pay-bank" class="pay-bank hidden"></div>
+    ${!(cfg.methods || []).some((spec) => spec.enabled && PAY_METHODS.some((m) => m.id === spec.id)) ? `<p role="status">${esc(uxT("noMethods"))}</p>` : ""}
     <div class="field-error hidden" id="pay-err" role="alert"></div>
     <p class="price-disclaimer">${esc(t("payHonest"))}</p>
   </section>`;
@@ -7230,7 +7242,6 @@ async function renderBookSite(id) {
   };
   const kindLabel = t("bridgeTitle");
   const engineName = adapter.engineLabel || "";
-  const enginePhrase = engineName || t("bridgeAnySystem");
   const openHref = adapter.widgetUrl || adapter.officialUrl || b.url;
   const openLabel = engineName ? t("bookOnSiteOpenEngine").replace("{engine}", engineName) : t("bookOnSiteOpen");
   const young = venueTooYoung(v);
@@ -7270,7 +7281,7 @@ async function renderBookSite(id) {
       <div class="book-site-copy">
         <p class="detail-kicker">${esc(v.destination)} · ${esc(kindLabel)}${engineName ? ` · ${esc(engineName)}` : ""}${host ? ` · ${esc(host)}` : ""}</p>
         <h1>${esc(v.name)}</h1>
-        <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(t("bridgeSub").replace("{name}", v.name).replace("{engine}", enginePhrase))}</p>
+        <p class="ob-sub" style="text-align:left;margin:8px 0 0">${esc(uxT("bridgeIntro").replace("{name}", v.name))}</p>
         ${adapter.vipHow ? `<p class="events-meta">${esc(t("bridgeReadLive"))}: ${esc(adapter.vipHow)}</p>` : `<p class="events-meta">${esc(t("bridgeReadLive"))}</p>`}
         <div class="book-desk-card">
         ${tooYoung ? `
@@ -7298,7 +7309,7 @@ async function renderBookSite(id) {
             <input type="number" id="br-amount" min="0" step="1" inputmode="decimal" placeholder="EUR" value="${pending?.amount ? esc(String(pending.amount)) : ""}">
           </label>
           <p class="events-meta">${esc(isPayingMember() ? t("guestVerified") : t("bridgeNeed"))}${adapter.clubPay ? ` · ${esc(t("clubHasPay"))}` : ""}</p>
-          <button type="button" class="btn btn-gold" id="br-make" style="width:100%">${esc(t("bridgeCta").replace("{name}", v.name))}</button>
+          <button type="button" class="btn btn-gold" id="br-make" style="width:100%">${esc(uxT("prepareRequest"))}</button>
         </div>
         <div class="bridge-packet hidden" id="bridge-out"></div>`}
         </div>
@@ -7339,7 +7350,7 @@ async function renderBookSite(id) {
       : "";
     el.innerHTML = `
       <h2 class="detail-panel-title">${esc(t("bridgePacket"))} · ${esc(bridge.id)}</h2>
-      <p class="idv-badge ok">${esc(t("bridgeStatus"))}</p>
+      <p class="events-meta" role="status">${esc(uxT("preparedHint"))}</p>
       <pre class="bridge-pre">${esc(bridge.packet || "")}</pre>
       <div class="book-site-actions" style="margin-top:12px">
         ${(bridge.handoffUrl || adapter.widgetUrl || adapter.officialUrl || b.url) ? `<a class="btn btn-gold" id="br-open" href="${esc(bridge.handoffUrl || adapter.widgetUrl || adapter.officialUrl || b.url)}" target="_blank" rel="noopener noreferrer">${esc(t("bridgeOpen"))} ↗</a>` : ""}
@@ -7417,7 +7428,7 @@ async function renderBookSite(id) {
     stashPending();
     rememberAfterIdv(returnHash());
     if (!loadUser()) {
-      openOnboarding({ dismissable: true, phase: "auth" });
+      openOnboarding({ dismissable: true, phase: "auth", returnTo: returnHash() });
       return true;
     }
     if (!isIdvOk()) { location.hash = "#/verify"; return true; }
@@ -7453,21 +7464,10 @@ async function renderBookSite(id) {
     if (r?.bridge) {
       clearPendingBridge();
       paintPacket(r.bridge);
-      const amt = Number($("#br-amount")?.value || r.bridge.payment?.amount || 0);
-      if (r.payReady && amt > 0) {
-        const pay = await apiJSON("/pay/intent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            user: loadUser(),
-            venueId: v.venue_id,
-            bridgeId: r.bridge.id,
-            amount: amt,
-            method: "card",
-          }),
-        });
-        if (pay?.url) location.href = pay.url;
-      }
+      // Payment is a separate explicit action in the prepared summary.
+    } else {
+      stashPending();
+      showToast(uxT("requestFailed"));
     }
   });
   if (pending && isPayingMember() && !tooYoung && q.get("go") === "1") {
