@@ -1434,5 +1434,47 @@
     "checkedAt": "2026-10-15",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-LIS-alma": {
+    "name": "Alma",
+    "city": "Lisbon",
+    "provider": "SevenRooms",
+    "url": "https://www.sevenrooms.com/reservations/alma",
+    "source": "https://www.almalisboa.pt/",
+    "venueKey": "www.sevenrooms.com/reservations/alma",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-15",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "venueId": "alma"
+  },
+  "curated-STT-gigi-ramatuelle": {
+    "name": "Gigi Ramatuelle",
+    "city": "Saint-Tropez",
+    "provider": "SevenRooms",
+    "url": "https://www.sevenrooms.com/experiences/GigiSaint-Tropez",
+    "source": "https://gigi-restaurant.com/saint-tropez-fr/",
+    "venueKey": "www.sevenrooms.com/experiences/GigiSaint-Tropez",
+    "integrationMode": "external_link",
+    "verification": "official_link_no_current_offers",
+    "checkedAt": "2026-10-15",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "venueId": "GigiSaint-Tropez",
+    "availabilityNote": "Provider experience page currently says no offers available. No bookable-time claim."
+  },
+  "osm-BAL-luma": {
+    "name": "Luma",
+    "city": "Bali",
+    "provider": "TABLFY",
+    "url": "https://www.lumabali.com/book",
+    "source": "https://www.lumabali.com/",
+    "venueKey": "www.lumabali.com/book",
+    "integrationMode": "native_embed",
+    "verification": "embedded_form_loaded",
+    "checkedAt": "2026-10-15",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
