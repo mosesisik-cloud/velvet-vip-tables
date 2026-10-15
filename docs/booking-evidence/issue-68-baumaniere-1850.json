@@ -1,0 +1,98 @@
+{
+  "issue": 68,
+  "agent": "codex-worker-3-323f",
+  "claimCommentId": 6204110448,
+  "restaurantId": "curated-CRV-baumaniere-1850",
+  "checkedAt": "2026-10-16",
+  "status": "ready_for_review",
+  "identity": {
+    "catalogName": "Baumanière 1850",
+    "currentOfficialDiningPageName": "Slalom 1850",
+    "venue": "Hôtel Le Strato",
+    "address": "661 Rue de Bellecôte, 73120 Courchevel 1850, France",
+    "website": "https://www.hotelstrato.com/",
+    "finding": "The hotel's restaurant landing page names Slalom 1850. Its separate restaurant SEO page still names Baumanière 1850 and links to that same restaurant landing page. This supports the same hotel restaurant location, but the naming transition and date are not explicitly explained. Current operation under the exact catalog name remains unconfirmed.",
+    "conflict": "Coordinator must review the mixed official names before changing catalog identity. Preserve the stable restaurantId.",
+    "duplicateCheck": "Case-insensitive search for Baumani, Slalom and Strato in data/restaurants.json found only this catalog restaurant; no additional matching ID found. This is a name-based scan, not an exhaustive geographic duplicate audit."
+  },
+  "sources": [
+    {
+      "url": "https://www.hotelstrato.com/fr/page/hotel-restaurant-courchevel.4375.html",
+      "kind": "official_hotel",
+      "observed": "Slalom 1850 section, hotel street address, and its reservation button opening panel 1703. The separate S Corner button opens panel 815 and was not selected."
+    },
+    {
+      "url": "https://www.hotelstrato.com/fr/pagex/restaurant-etoile-courchevel.5036.html",
+      "kind": "official_hotel",
+      "observed": "Still names Baumanière 1850 and links its restaurant to the same dining landing page."
+    },
+    {
+      "url": "https://www.hotelstrato.com/fr/ajax/fspanel?key=1703&ctx_type=&ctx_code=",
+      "kind": "official_hotel_panel",
+      "observed": "Read-only panel GET derived from the site's fspanel code. Panel reservation-restaurant contains an iframe with src about:blank and src_org https://module.lafourchette.com/fr_FR/module/746638-05a75. No iframe script was executed."
+    },
+    {
+      "url": "https://courchevel.com/en/a/slalom-1850-185100/",
+      "kind": "official_destination",
+      "observed": "Lists Slalom 1850 at Le Strato on Route de Bellecôte in Courchevel 1850 and points to the hotel's website."
+    }
+  ],
+  "bookingRoute": {
+    "category": "A",
+    "provider": "TheFork",
+    "url": "https://module.lafourchette.com/fr_FR/module/746638-05a75",
+    "verification": "official_link_only",
+    "observation": "Exact restaurant-specific destination extracted from the official hotel's Slalom reservation panel. Direct provider GET returned HTTP 403; the web reader also could not access it. The hotel's iframe markup is not proof of a working embedded form.",
+    "reservationOrRequest": "unknown",
+    "language": "Official destination uses fr_FR; actual provider language controls unverified.",
+    "cancellationPolicy": "unknown",
+    "cardGuarantee": "unknown",
+    "prepayment": "unknown",
+    "mobileRestrictions": "unknown",
+    "liveAvailability": "unknown",
+    "confirmedReservation": false,
+    "fallback": "Official restaurant landing page; no independently verified manual booking route is asserted."
+  },
+  "integrationProposal": {
+    "applyAutomatically": false,
+    "owner": "booking coordinator / shared registry integrator",
+    "proposedRegistryFile": "data/booking-providers.json",
+    "candidateMapping": {
+      "provider": "TheFork",
+      "url": "https://module.lafourchette.com/fr_FR/module/746638-05a75",
+      "source": "https://www.hotelstrato.com/fr/page/hotel-restaurant-courchevel.4375.html",
+      "venueKey": "module.lafourchette.com/fr_FR/module/746638-05a75",
+      "integrationMode": "external_link",
+      "verification": "official_link_only",
+      "liveAvailabilitySupported": false,
+      "completionTracking": "unsupported"
+    },
+    "implementation": "Evidence fragment only. Shared registry, canonical worklist, catalog identity and branding unchanged. Existing TheFork external-link adapter can represent the proposed mapping, subject to coordinator acceptance."
+  },
+  "tests": {
+    "local": [
+      "PASS: JSON parsed; candidate accepted by existing resolveEmbeddedBooking as external_link.",
+      "PASS: native_embed, HTTP and mismatched venueKey rejected by existing resolver.",
+      "PASS: sv/en/es/fr language handling preserves the official URL and returns languageUnknown.",
+      "PASS: candidate URL exactly matches src_org in retrieved official panel HTML."
+    ],
+    "liveReadOnly": [
+      "Official restaurant HTML and panel retrieved successfully using GET without executing scripts.",
+      "Provider GET returned HTTP 403. No access-control bypass attempted."
+    ],
+    "notVerified": [
+      "Provider restaurant name/address inside its form",
+      "Working embedded form or desktop/mobile browser rendering",
+      "Date, party size, actual available times, language controls or checkout",
+      "Cancellation terms, card guarantee or payment requirements"
+    ],
+    "safety": "No provider JavaScript executed, forms submitted, dates or times selected, holds, reservations, payments or restaurant messages created."
+  },
+  "limitations": [
+    "Mixed official restaurant names require coordinator review.",
+    "HTTP 403 does not establish closure or lack of availability.",
+    "Evidence supports an official external destination only; production integration is not complete."
+  ],
+  "publication": "not_published",
+  "nextStep": "Coordinator reviews name continuity and official-link-only evidence, then decides whether to integrate the candidate mapping and consolidate the canonical worklist. Keep claim locked pending accepted handoff."
+}
