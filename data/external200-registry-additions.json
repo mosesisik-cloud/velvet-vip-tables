@@ -14,6 +14,38 @@
     "completionTracking": "unsupported",
     "venueKey": "www.sevenrooms.com/reservations/shangpalacedubai"
   },
+  "curated-SBH-bonito-saint-barth": {
+    "provider": "SevenRooms",
+    "name": "Bonito Saint Barth",
+    "city": "St. Barts",
+    "venueId": "bonitostbarth",
+    "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
+    "source": "https://www.bonitosbh.com/",
+    "checkedAt": "2026-10-16",
+    "verification": "official_link_only",
+    "providerTitle": "Reservation at BONITO St Barth",
+    "integrationMode": "external_link",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "venueKey": "www.sevenrooms.com/reservations/bonitostbarth",
+    "locality": "Gustavia"
+  },
+  "osm-SBH-bonito": {
+    "provider": "SevenRooms",
+    "name": "Bonito Saint Barth",
+    "city": "St. Barts",
+    "venueId": "bonitostbarth",
+    "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
+    "source": "https://www.bonitosbh.com/",
+    "checkedAt": "2026-10-16",
+    "verification": "official_link_only",
+    "providerTitle": "Reservation at BONITO St Barth",
+    "integrationMode": "external_link",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "venueKey": "www.sevenrooms.com/reservations/bonitostbarth",
+    "locality": "Gustavia"
+  },
   "osm-SBH-fishcorner": {
     "name": "FishCorner",
     "city": "Gustavia",

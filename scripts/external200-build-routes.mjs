@@ -21,7 +21,7 @@ const routes = Object.fromEntries(records.map(r => {
     assert.ok(binding, `Unreviewed source/destination binding: ${r.restaurantId}`);
     row.source = binding.source;
     row.externalUrl = binding.url;
-    row.bookingMode = r.bookingMode === 'request_only' ? 'request_only' : 'unknown';
+    row.bookingMode = binding.bookingMode || (r.bookingMode === 'request_only' ? 'request_only' : 'unknown');
   }
   if (verified && r.contact?.bookingExplicit === true) {
     const contact = resolveExternal200ReviewedContact(r.restaurantId, r.contact);

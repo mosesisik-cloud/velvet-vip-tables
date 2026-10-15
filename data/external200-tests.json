@@ -9,7 +9,7 @@
     {
       "command": "node scripts/test-booking-providers.mjs",
       "result": "passed",
-      "coverage": "128 active mappings including two new external200 additions; destination guards and cache protection"
+      "coverage": "136 active mappings including two Bonito external-link additions; destination guards and cache protection"
     },
     {
       "command": "node scripts/test-booking-selection.mjs",
@@ -24,17 +24,22 @@
     {
       "command": "node scripts/test-route-integrity.mjs",
       "result": "passed",
-      "coverage": "No route issues, external URL problems or merge markers after updating branch to origin/main 3abce96"
+      "coverage": "No route issues, external URL problems or merge markers in this branch"
     },
     {
       "command": "node scripts/external200-test-routes.mjs",
       "result": "passed",
-      "coverage": "Exact scope, four languages, generated-data freshness, provider precedence, safe contacts, no synthetic forms; independent exact per-ID source/destination bindings reject altered URL, source, ID, query, host and protocol in compiler and runtime for all15 links; independently pinned18 manual contacts and combined URL/source/LINE tampering across200 IDs"
+      "coverage": "Exact200, four languages, independent bindings for19 links/18contacts, combined tampering, pinned Pummarola branch/service/request-only notice before CTA"
     },
     {
       "command": "node scripts/external200-test-browser.mjs",
       "result": "passed",
-      "coverage": "400 local guest app routes; desktop/mobile, locale switch, no external writes. Provider pages excluded."
+      "coverage": "400 actual guest routes desktop/mobile; Pummarola branch instructions before request link; provider precedence, locales and no network writes"
+    },
+    {
+      "command": "node scripts/external200-round4-probe.cjs --live",
+      "result": "passed_with_limitations",
+      "coverage": "Six guarded original page displays across three physical venues; no controls used; Pummarola mobile desktop scaling and cookie overlap; no submission or availability proof"
     }
   ],
   "notProven": [

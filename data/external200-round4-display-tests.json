@@ -1,0 +1,297 @@
+{
+  "checkedAt": "2026-10-15T23:20:53.631Z",
+  "guard": "GET/HEAD only; service workers blocked; no interactions",
+  "meaning": "Original-page rendering only; no controls used, no requests submitted. Pummarola mobile layout limited.",
+  "results": [
+    {
+      "name": "pummarola",
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "requestedUrl": "https://www.pummarola.us/reservations",
+      "url": "https://www.pummarola.us/reservations",
+      "title": "Reservations | Pummarola | Pizzeria Napoletana",
+      "blocked": [
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://sentry-next.wixpress.com/api/68/store/"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bpm"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bolt-performance"
+        }
+      ]
+    },
+    {
+      "name": "pummarola",
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "requestedUrl": "https://www.pummarola.us/reservations",
+      "url": "https://www.pummarola.us/reservations",
+      "title": "Reservations | Pummarola | Pizzeria Napoletana",
+      "blocked": [
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bpm"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bolt-performance"
+        },
+        {
+          "method": "POST",
+          "url": "https://panorama.wixapps.net/api/v1/bulklog"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/"
+        },
+        {
+          "method": "POST",
+          "url": "https://frog.wix.com/bolt-performance"
+        }
+      ]
+    },
+    {
+      "name": "bonito",
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "requestedUrl": "https://www.sevenrooms.com/reservations/bonitostbarth",
+      "url": "https://www.sevenrooms.com/explore/bonitostbarth/reservations/create/search",
+      "title": "Reservation at BONITO St Barth",
+      "blocked": [
+        {
+          "method": "POST",
+          "url": "https://rs.fullstory.com/rec/page"
+        },
+        {
+          "method": "POST",
+          "url": "https://region1.google-analytics.com/g/collect"
+        }
+      ]
+    },
+    {
+      "name": "bonito",
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "requestedUrl": "https://www.sevenrooms.com/reservations/bonitostbarth",
+      "url": "https://www.sevenrooms.com/explore/bonitostbarth/reservations/create/search",
+      "title": "Reservation at BONITO St Barth",
+      "blocked": [
+        {
+          "method": "POST",
+          "url": "https://rs.fullstory.com/rec/page"
+        },
+        {
+          "method": "POST",
+          "url": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://m.stripe.com/6"
+        }
+      ]
+    },
+    {
+      "name": "eddys",
+      "device": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "requestedUrl": "https://eddysghetto.com/",
+      "url": "https://eddysghetto.com/",
+      "title": "Eddy's Ghetto – French Cuisine with a local touch in St Barth",
+      "blocked": [
+        {
+          "method": "POST",
+          "url": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/recaptcha/api2/reload"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/recaptcha/api2/clr"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/recaptcha/api2/clr"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/recaptcha/api2/clr"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/recaptcha/api2/clr"
+        }
+      ]
+    },
+    {
+      "name": "eddys",
+      "device": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "requestedUrl": "https://eddysghetto.com/",
+      "url": "https://eddysghetto.com/",
+      "title": "Eddy's Ghetto – French Cuisine with a local touch in St Barth",
+      "blocked": [
+        {
+          "method": "POST",
+          "url": "https://region1.google-analytics.com/g/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/recaptcha/api2/reload"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/recaptcha/api2/clr"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/recaptcha/api2/clr"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/recaptcha/api2/clr"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/recaptcha/api2/clr"
+        }
+      ]
+    }
+  ]
+}

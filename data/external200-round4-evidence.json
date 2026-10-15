@@ -1,0 +1,1095 @@
+{
+  "checkedAt": "2026-10-16",
+  "reviewed": 23,
+  "newExternalLinkRecords": 4,
+  "newUniqueVenueOnlineRoutes": 3,
+  "newlyResolvedRecords": 1,
+  "confirmedReservations": 0,
+  "contexts": [
+    {
+      "checkedAt": "2026-10-16",
+      "owner": "/root/groups_1_3",
+      "scope": "Six different unresolved assigned IDs; excludes previous priority10",
+      "reviewed": 6,
+      "newApprovedRoutes": 0,
+      "newVerifiedWalkIn": 0,
+      "newVerifiedClosure": 0,
+      "methods": [
+        "Official/secondary web search",
+        "Read-only GET of public HTML and Derin script.js to inspect hrefs, labels, metadata",
+        "Public social-page reads; access failures retained without bypass"
+      ],
+      "safety": "No browser context created, no remote JS executed. Only HTTP GET/web research. No provider POST, booking, hold, WhatsApp launch, payment or message. Rendering/form tests not performed."
+    },
+    {
+      "status": "complete_evidence_handoff",
+      "owner": "/root/groups_4_6",
+      "checkedAt": "2026-10-16",
+      "scope": "Six existing groups04-06 IDs excluding previous ten; no new scope claims",
+      "coordinationRead": "docs/restaurant-coordination.md",
+      "safety": "Search and read-only web retrieval plus raw-HTML GET. No browser execution in this round, no provider interaction, form submission, bookings, holds, payments or messages. Throttled reads not retried.",
+      "summary": {
+        "reviewed": 6,
+        "existingVerifiedIdentity": 3,
+        "newOfficialExternalBookingLinks": 0,
+        "functioningOriginalForms": 0,
+        "liveAvailability": 0,
+        "newVerifiedManualTableRoutes": 0,
+        "registryAdditions": 0,
+        "stillUnresolvedBooking": 6
+      },
+      "sharedChecks": {
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "officialExternalBookingLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "verifiedManualTableBooking": false,
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Search absence does not prove absence of bookings.",
+        "Null terms mean unknown, not absent.",
+        "Raw HTML retrieval is not desktop/mobile flow validation.",
+        "No runtime, groupdata or documentation edits. No commit, PR or publication."
+      ],
+      "nextAction": "Parent may integrate investigation notes only. No runtime booking additions proposed."
+    },
+    {
+      "checkedAt": "2026-10-16",
+      "scope": "8 IDs not in previous10;6 verified manual IDs prioritized for missing original routes,1 verified unresolved branch,1 unresolved historical venue",
+      "probeScript": "work/external200-round4-safeprobe.cjs",
+      "probeResults": "work/external200-round4-safeprobe.json",
+      "safety": "GET/HEAD only, serviceworkersblocked; no date/time/guest/input/submit/contact interaction"
+    },
+    {
+      "checkedAt": "2026-10-16",
+      "scope": "Three existing group10 records; additional official-source research only",
+      "safety": "Read-only web/HTTP GET; no browser controls, messages, reservations, payments or holds. No new form or inventory claim."
+    }
+  ],
+  "records": [
+    {
+      "restaurantId": "osm-BAL-la-rosa",
+      "result": "Verified venue identity retained. Official Linktree HTML publishes WhatsApp6287817661749 and newly resolved precise Instagram handle larosa_canggu_. Neither Linktree text nor WhatsApp href states reservation intent. Official-linked Facebook and Instagram inaccessible. Do not confuse La Santa Rosa Jimbaran or La Reserve hotel booking.",
+      "candidate": {
+        "city": "Canggu, Badung",
+        "address": "Jl. Pantai Batu Bolong",
+        "contact": {
+          "type": "whatsapp",
+          "value": "+6287817661749",
+          "bookingExplicit": false
+        }
+      },
+      "sources": [
+        {
+          "url": "https://linktr.ee/larosa_canggu",
+          "kind": "official",
+          "supports": "HTTP200; address plus generic WhatsApp, Instagram and Facebook hrefs."
+        },
+        {
+          "url": "https://www.instagram.com/larosa_canggu_",
+          "kind": "official_linked_social",
+          "supports": "Exact href from operator Linktree; web fetch throttled, no content verified."
+        },
+        {
+          "url": "https://web.facebook.com/profile.php?id=61568623000900",
+          "kind": "official_linked_social",
+          "supports": "Exact Facebook profile ID from Linktree; not accessible."
+        }
+      ],
+      "blocker": "Official reservation policy still absent; generic contact is not a confirmed booking route.",
+      "checkedAt": "2026-10-16",
+      "priorStatus": "unresolved",
+      "priorIdentityStatus": "verified",
+      "approvedRestaurantBookingRoute": null,
+      "registryAddition": null,
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested"
+      },
+      "cancellation": null,
+      "cardGuarantee": null,
+      "prepayment": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-BDR-derin-balik",
+      "result": "New operator site Derin Restorant Beach & Bar explicitly invites table reservations by phone and WhatsApp. Phone matches historical Derin Balik Evi at Carsi7/B, but official site identifies Cumhuriyet147Kumbahce and separate Tripadvisor records exist for both venues. No explicit relocation or same-branch continuity found; do not silently move the stable ID.",
+      "candidate": {
+        "name": "Derin Restorant Beach & Bar",
+        "city": "Bodrum",
+        "address": "Kumbahce Mahallesi, Cumhuriyet Caddesi No:147",
+        "contacts": [
+          {
+            "type": "phone",
+            "value": "+905327896887",
+            "bookingExplicit": true
+          },
+          {
+            "type": "whatsapp",
+            "value": "+905326486332",
+            "bookingExplicit": true
+          }
+        ],
+        "languages": [
+          "tr",
+          "en",
+          "de",
+          "ru",
+          "fr",
+          "ar"
+        ]
+      },
+      "sources": [
+        {
+          "url": "https://derinrestorant.com.tr/",
+          "kind": "official_candidate",
+          "supports": "HTTP200 public HTML; reservations/contact text, address147 and tel+905327896887. WhatsApp anchors populated by script."
+        },
+        {
+          "url": "https://derinrestorant.com.tr/script.js",
+          "kind": "official_candidate",
+          "supports": "Read-only HTTP GET; WA_PHONE905326486332 and generated wa.me link with explicit reservation-prefill in six languages. No code executed or WA link opened."
+        },
+        {
+          "url": "https://www.tripadvisor.com.tr/Restaurant_Review-g298658-d12035467-Reviews-Derin_Balik_Evi-Bodrum_City_Bodrum_District_Mugla_Province_Turkish_Aegean_Coast.html",
+          "kind": "secondary",
+          "supports": "Claimed DerinBalikEvi Carsi7/B and exact same+905327896887, not proof of relocation."
+        },
+        {
+          "url": "https://www.tripadvisor.com/Restaurant_Review-g298658-d19298643-Reviews-Derin_Beach_Bar_Restaurant-Bodrum_City_Bodrum_District_Mugla_Province_Turkish_Ae.html",
+          "kind": "secondary",
+          "supports": "Separate restaurant record at Cumhuriyet147; reinforces branch/continuity question."
+        }
+      ],
+      "blocker": "Need operator statement linking historical Carsi7/B to current147, or another exact catalogue identity anchor. Candidate route is official for147 only.",
+      "checkedAt": "2026-10-16",
+      "priorStatus": "unresolved",
+      "priorIdentityStatus": "unresolved",
+      "approvedRestaurantBookingRoute": null,
+      "registryAddition": null,
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested"
+      },
+      "cancellation": null,
+      "cardGuarantee": null,
+      "prepayment": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-BDR-zoe-restaurant-cocktail-bar",
+      "result": "New dated event listing explicitly reports reservation phone05322173179 at SanatOkulu14 and links operator Instagram zoebodrum. However event is10April2026, the site labels content AI-assisted, and operator Instagram fetch throttled. The directory reservation instruction is not promoted to official authority.",
+      "candidate": {
+        "city": "Bodrum",
+        "address": "Carsi, Sanat Okulu Cd. No:14",
+        "contact": {
+          "type": "phone",
+          "value": "+905322173179",
+          "bookingExplicit": "secondary_only"
+        }
+      },
+      "sources": [
+        {
+          "url": "https://www.bodrumflow.com/event/16939?lang=tr",
+          "kind": "secondary",
+          "supports": "April10 event phone and venue address; explicitly AI-assisted compilation. HTTP HTML confirms Instagram href."
+        },
+        {
+          "url": "https://www.instagram.com/zoebodrum/",
+          "kind": "operator_social_candidate",
+          "supports": "Linked exact venue handle; fetch throttled. No bypass."
+        }
+      ],
+      "blocker": "Read operator-origin reservation statement; do not treat AI-generated event summary as verified venue policy.",
+      "checkedAt": "2026-10-16",
+      "priorStatus": "unresolved",
+      "priorIdentityStatus": "unresolved",
+      "approvedRestaurantBookingRoute": null,
+      "registryAddition": null,
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested"
+      },
+      "cancellation": null,
+      "cardGuarantee": null,
+      "prepayment": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-BAL-warung-nonii",
+      "result": "New evidence separates WaroengNonii PantaiBatuBolong72 from another RayaSemerKerobokan listing. Both have secondary permanent-closure reports, while OtherBali describes current takeaway and links waroengnonii. Conflicts remain; official social pages unreadable.",
+      "candidate": {
+        "city": null,
+        "address": null,
+        "addresses": [
+          "Pantai Batu Bolong No:72, Canggu",
+          "Jl. Raya Semer, Kerobokan"
+        ]
+      },
+      "sources": [
+        {
+          "url": "https://www.otherbali.com/places/warung-nonii",
+          "kind": "secondary",
+          "supports": "HTTP200 HTML exact Instagram href; purported current Canggu takeaway, not operator policy."
+        },
+        {
+          "url": "https://wanderlog.com/place/details/3635432/waroeng-nonii",
+          "kind": "secondary",
+          "supports": "BatuBolong72 closed report and081236081580."
+        },
+        {
+          "url": "https://wanderlog.com/place/details/3061061/waroeng-nonii",
+          "kind": "secondary",
+          "supports": "Separate RayaSemer listing and0361737586; closed report."
+        },
+        {
+          "url": "https://www.instagram.com/waroengnonii/",
+          "kind": "operator_social_candidate",
+          "supports": "Fetch failed."
+        },
+        {
+          "url": "https://www.facebook.com/WaroengNonii/",
+          "kind": "operator_social_candidate",
+          "supports": "Fetch throttled."
+        }
+      ],
+      "blocker": "Current operator/branch and closure or takeaway policy unverified; no closure/walk-in upgrade.",
+      "checkedAt": "2026-10-16",
+      "priorStatus": "unresolved",
+      "priorIdentityStatus": "unresolved",
+      "approvedRestaurantBookingRoute": null,
+      "registryAddition": null,
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested"
+      },
+      "cancellation": null,
+      "cardGuarantee": null,
+      "prepayment": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-BAL-warung-varuna",
+      "result": "GoogleMaps and BaliReady now agree on89xPantaiBatuBolong and082144849037. RestaurantGuru instead gives081805518790 and no-booking label. Directory reservation label merely targets Facebook; operator page throttled. New exact-address corroboration does not establish reservation policy.",
+      "candidate": {
+        "city": "Canggu, Badung",
+        "address": "Jl. Pantai Batu Bolong No:89x"
+      },
+      "sources": [
+        {
+          "url": "https://www.google.com/maps/search/Dinner%2Bat%2BWarung%2BVaruna%2C%2BCanggu%2C%2BBali%2C%2BIndonesia",
+          "kind": "secondary",
+          "supports": "Address89x,082144849037 and Facebook website; Claim this business label."
+        },
+        {
+          "url": "https://www.baliready.com/en-AU/directory/restaurants/67738b7af66b1cf443a15f2d",
+          "kind": "secondary",
+          "supports": "Same address/phone, reservations href points Facebook rather than booking system."
+        },
+        {
+          "url": "https://restaurantguru.com/Warung-Canggu-Bali",
+          "kind": "secondary",
+          "supports": "Conflicting phone and no-booking label; not accepted as official walk-in policy."
+        },
+        {
+          "url": "https://m.facebook.com/warungvaruna/",
+          "kind": "operator_social_candidate",
+          "supports": "Read throttled; no retry or bypass."
+        }
+      ],
+      "blocker": "Need readable operator policy and current contact reconciliation; no walk-in designation inferred.",
+      "checkedAt": "2026-10-16",
+      "priorStatus": "unresolved",
+      "priorIdentityStatus": "unresolved",
+      "approvedRestaurantBookingRoute": null,
+      "registryAddition": null,
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested"
+      },
+      "cancellation": null,
+      "cardGuarantee": null,
+      "prepayment": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-BKK-mango-vegetarian-vegan",
+      "result": "Read-only HTML of directory resolves full operator-candidate Facebook ID821759707838666 and Instagram mango_love_vegan. Both reads throttled. Directoryphone0934451515 differs from merchant-labelled Wongnai0933539879/0614126325; booking label remains secondary.",
+      "candidate": {
+        "city": "Bangkok",
+        "address": "13 Tanao / Soi Damnoen Klang Nuea, Phra Nakhon"
+      },
+      "sources": [
+        {
+          "url": "https://restaurantguru.com/MANGO-Vegetarian-and-Vegan-Restaurant-and-Art-Gallery-Bangkok",
+          "kind": "secondary",
+          "supports": "HTTP200 hrefs for exact Facebook/Instagram; booking feature tag and0934451515."
+        },
+        {
+          "url": "https://www.wongnai.com/restaurants/157243PS-mango-vegetarian-and-vegan",
+          "kind": "merchant_labelled_directory",
+          "supports": "OFFICIAL badge, address13 and alternative contacts. No explicit table-reservation instruction observed."
+        },
+        {
+          "url": "https://www.instagram.com/mango_love_vegan/",
+          "kind": "operator_social_candidate",
+          "supports": "Fetch throttled."
+        },
+        {
+          "url": "https://www.facebook.com/pages/MANGO-Vegetarian-Vegan-Reastaurant-and-Art-Gallery/821759707838666",
+          "kind": "operator_social_candidate",
+          "supports": "Exact directory href; fetch throttled."
+        }
+      ],
+      "blocker": "No readable operator booking policy or reconciled phone; do not turn directory booking feature into approved channel.",
+      "checkedAt": "2026-10-16",
+      "priorStatus": "unresolved",
+      "priorIdentityStatus": "unresolved",
+      "approvedRestaurantBookingRoute": null,
+      "registryAddition": null,
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested"
+      },
+      "cancellation": null,
+      "cardGuarantee": null,
+      "prepayment": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-CPT-jean-s-kitchen",
+      "name": "Jean's Kitchen",
+      "queries": [
+        "Jean Kitchen UCT reservations",
+        "Jean Kitchen UCT contact",
+        "Jean Kitchen UCT Facebook"
+      ],
+      "sources": [
+        {
+          "url": "https://www.morasha.co.za/visitors/where-to-stay-where-to-eat/",
+          "kind": "secondary",
+          "supports": "Community directory dated September 2024 lists UCT Kaplan Centre, corner Library and Madiba Circle, jeansatuct@gmail.com and 0845074819. Restaurant/catering listings only; no explicit table-reservation invitation."
+        }
+      ],
+      "decision": "Retain existing verified identity. Community phone/email not promoted to table-booking route.",
+      "blocker": "No current operator-controlled reservation policy located; acceptance unknown.",
+      "proposedChange": null,
+      "registryAddition": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-CPT-picnic-cafe-and-deli",
+      "name": "Picnic Cafe and Deli",
+      "queries": [
+        "Picnic Cafe Montebello book",
+        "Picnic Cafe and Deli book a table"
+      ],
+      "sources": [
+        {
+          "url": "https://picniccafe.co.za/",
+          "kind": "official",
+          "supports": "Raw HTML GET succeeded after web-reader timeout. All 14 anchor hrefs are internal sections, images/Menu.pdf or designer LinkedIn. Explicit contact invitation concerns parties, events and functions. No booking-provider href."
+        }
+      ],
+      "decision": "Retain verified identity and unresolved table-booking status. Event enquiry is explicitly event-only and cannot establish ordinary table acceptance.",
+      "blocker": "Official site does not establish ordinary table-reservation acceptance. No provider found.",
+      "proposedChange": null,
+      "registryAddition": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-HKG-u19c6d6df7171",
+      "name": "Ho King Restaurant",
+      "queries": [
+        "Ho King Restaurant 53 booking",
+        "Ho King Restaurant official reservations"
+      ],
+      "sources": [
+        {
+          "url": "https://www.foodpanda.hk/restaurant/w7kz/ho-king-restaurant",
+          "kind": "provider_delivery",
+          "supports": "Read-only delivery menu listing found; delivery is not a table reservation."
+        },
+        {
+          "url": "https://www.tripadvisor.com/Restaurant_Review-g294217-d33992044-Reviews-Ho_King_Restaurant-Hong_Kong.html",
+          "kind": "secondary",
+          "supports": "Search excerpt lists 53 Belchers Street, +85234818840, unclaimed page. Direct read throttled without retry; Website href not verified."
+        }
+      ],
+      "decision": "Retain existing government-verified identity. Do not promote delivery URL or third-party contact.",
+      "blocker": "No operator booking invitation. Directory phone differs from historical FEHD evidence.",
+      "proposedChange": null,
+      "registryAddition": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-CPT-the-trufood-station",
+      "name": "The Trufood Station",
+      "queries": [
+        "The Trufood Station contact",
+        "The Trufood Station website",
+        "trufood_station book",
+        "trufood_station reservations"
+      ],
+      "sources": [
+        {
+          "url": "https://www.bitcoinfriendlysa.co.za/businesses/the-trufood-station",
+          "kind": "secondary",
+          "supports": "Lists dietitians Shelly Meltzer and Jenny-Ann Smuts, Great Westerford 240 Main Road; Visit Website href targets Instagram trufood_station. Generic phone/email and template Appointment Only amenity do not prove table reservations."
+        },
+        {
+          "url": "https://www.instagram.com/trufood_station/",
+          "kind": "candidate_operator",
+          "supports": "Followed directory social-link candidate; read throttled, not retried. Operator ownership/content not established."
+        }
+      ],
+      "decision": "No identity or booking promotion. Earlier MiChange Boundary Road location conflict remains.",
+      "blocker": "Candidate operator inaccessible through reader; location and reservation policy unresolved.",
+      "proposedChange": null,
+      "registryAddition": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-HKG-hku-hill-view-restaurant",
+      "name": "HKU Hill View Restaurant",
+      "queries": [
+        "site.cedars.hku.hk Hill View Restaurant",
+        "HKU catering student village II restaurant current Pokfulam 111"
+      ],
+      "sources": [
+        {
+          "url": "https://www.cedars.hku.hk/nonlocal/publication/prepguide1718.pdf",
+          "kind": "official_historical",
+          "supports": "2017/18 guide identifies Hill View canteen at 111 Pokfulam Road, Student Village II. Historical identity only."
+        },
+        {
+          "url": "https://catering.hku.hk/en/eateries/",
+          "kind": "official",
+          "supports": "Current campus directory includes October 2026 notice and outlet list. Hill View not listed. Other outlets' Order Now links and general Venue Booking do not establish a route for Hill View."
+        }
+      ],
+      "decision": "Retain unresolved current identity/access/booking. Directory absence is not evidence of closure.",
+      "blocker": "Current Hill View operator and operation not established; cannot map another campus outlet.",
+      "proposedChange": null,
+      "registryAddition": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-HKT-noy-pochana",
+      "name": "Noy Pochana",
+      "queries": [
+        "Noy Pochana Phuket Facebook",
+        "Noy Pochana Phuket official",
+        "Thai exact-name Noy Pochana Phuket reservations"
+      ],
+      "sources": [
+        {
+          "url": "https://www.eatingthaifood.com/restaurants/spicy-southern-thai-food-phuket-town/",
+          "kind": "secondary",
+          "supports": "Article explicitly distinguishes Noy from Yoy Pochana; candidate address 21 Thanon Montri, Talad Yai, Phuket. No operator or booking link."
+        },
+        {
+          "url": "https://thailand.worldplaces.me/th/review/211797253.html",
+          "kind": "secondary",
+          "supports": "Thai-name search points to Montri Road candidate; directory result only, no operator verification."
+        }
+      ],
+      "decision": "Keep unresolved. Candidate address is a secondary lead only; reject similarly named Yoy and Suphan Buri venues.",
+      "blocker": "No current operator source, verified catalog lineage or explicit reservation route.",
+      "proposedChange": null,
+      "registryAddition": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-MIA-pummarola-coral-gable",
+      "name": "Pummarola Coral Gable",
+      "batch": 9,
+      "checkedAt": "2026-10-16",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Coral Gables",
+        "address": "141 Aragon Avenue, Coral Gables, FL 33134",
+        "notes": "Explicit Coral Gables catalogue name and Florida licensing address match. Official original table-request page verified; receipt, acceptance and table confirmation not tested. Select only Coral Gables and Dine-In Reservation."
+      },
+      "sources": [
+        {
+          "url": "https://www.pummarola.us/bookonline",
+          "kind": "official",
+          "supports": "Official Wix page config lists public /reservations route; pizza class links on this page are not table booking."
+        },
+        {
+          "url": "https://www.pummarola.us/reservations",
+          "kind": "official",
+          "supports": "HTTP200 original Wix request form; Coral Gables checkbox and Dine-In Reservation radio; source includes email-followup success copy without submit."
+        },
+        {
+          "url": "https://www.pummarola.us/",
+          "kind": "official",
+          "supports": "Operator brand and Coral Gables pizza video; catalog website matches."
+        },
+        {
+          "url": "https://www2.myfloridalicense.com/abt/documents/CityFeeDistribution3rdQtr2025-2026.pdf",
+          "kind": "government",
+          "supports": "Existing independently verified141 Aragon Avenue Coral Gables branch"
+        }
+      ],
+      "outcome": "New external request-only candidate; exact catalog branch already identityverified. Independent review groups_1_3 preliminary accepts, retaining unlisted/unknown acceptance limitations.",
+      "proposedRegistryAddition": null,
+      "proposedExternalRoute": {
+        "url": "https://www.pummarola.us/reservations",
+        "source": "https://www.pummarola.us/reservations",
+        "bookingMode": "request_only",
+        "provider": "Wix original request form",
+        "requiredSelections": {
+          "restaurantLocation": "Coral Gables",
+          "reservationType": "Dine-In Reservation"
+        },
+        "prefillSupported": false
+      },
+      "contacts": [],
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "original form visible1440x1000; GET/HEAD guard; no input or submit",
+        "mobile": "Original form rendered at390x844; root screenshot review found980px documentwidth/desktop scaling and cookie banner covering fields; mobile usability limited, not mobile-adapted PASS.",
+        "languages": [
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "No visible navigation href to /reservations found on home/locations/contact; discovered in operator page config.",
+        "Unlisted/noindex page and operational acceptance unverified.",
+        "No supported branch query documented; do not invent parameters. Location checkboxes permit multiple branches; instruct only Coral Gables plus Dine-In Reservation.",
+        "Static all-day quarter-hour dropdown and automatic default date/time are not availability. Success text was inspected in HTML only; no request submitted.",
+        "No visible cancellation, card guarantee or prepayment terms in initial form.",
+        "Independent review is by groups_1_3; root owns activation and copy.",
+        "Root screenshot review: mobile documentwidth980px atviewport390; scaled desktop layout and cookie banner overlaps fields. No cookie interaction performed."
+      ],
+      "integratorDecision": "accepted_external_route_no_completion_or_inventory_claim"
+    },
+    {
+      "restaurantId": "curated-SBH-bonito-saint-barth",
+      "name": "Bonito Saint Barth",
+      "batch": 9,
+      "checkedAt": "2026-10-16",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "Rue Lubin Brin, Gustavia, 97133 Saint-Barthélemy",
+        "notes": "Official Bonito address and booking email verified. Hydrated operator page embeds SevenRooms bonitostbarth; canonical URL redirects to the same provider route. Both stable IDs retained."
+      },
+      "sources": [
+        {
+          "url": "https://www.bonitosbh.com/",
+          "kind": "official",
+          "supports": "Hydrated official desktop creates SevenRooms iframe /explore/bonitostbarth/reservations/create/search; operator address Rue Lubin Brin Gustavia and booking email."
+        },
+        {
+          "url": "https://www.sevenrooms.com/explore/bonitostbarth/reservations/create/search",
+          "kind": "official",
+          "supports": "Observed official iframe origin URL; provider identifies BONITO St Barth at6 Rue Lubin Brin Gustavia."
+        },
+        {
+          "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
+          "kind": "official",
+          "supports": "Canonical reuseSevenRooms URL redirects to exact observed official iframe route."
+        }
+      ],
+      "outcome": "New independently sourced SevenRooms operator binding; both stableIDs identify same physical venue.",
+      "proposedRegistryAddition": {
+        "provider": "SevenRooms",
+        "name": "Bonito Saint Barth",
+        "city": "Gustavia",
+        "venueId": "bonitostbarth",
+        "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
+        "source": "https://www.bonitosbh.com/",
+        "checkedAt": "2026-10-16",
+        "verification": "official_link_only",
+        "providerTitle": "Reservation at BONITO St Barth",
+        "integrationMode": "external_link",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported",
+        "venueKey": "www.sevenrooms.com/reservations/bonitostbarth"
+      },
+      "proposedExternalRoute": null,
+      "contacts": [
+        {
+          "type": "email",
+          "value": "booking@bonitosbh.com",
+          "bookingExplicit": true,
+          "source": "https://www.bonitosbh.com/"
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "Official hydrated iframe observed; provider canonical read-only original UI rendered.",
+        "mobile": "Canonical SevenRooms original UI rendered390x844, BONITO St Barth,6 Rue Lubin Brin Gustavia, EN/FR selector; no inputs or clicks.",
+        "languages": [
+          "en",
+          "fr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": "Initial provider UI automatically offered21Oct2026 slots for2 guests, labelled EUR180 prepayment; no slot selected, perperson basis not established."
+      },
+      "limitations": [
+        "No slot selected, no date/guest change, no submission, no completion tracking.",
+        "Automatically offered times are point-in-time UI observations only, not actively verified safe-search availability; liveAvailability remainsfalse.",
+        "Do not count two stableIDs as two unique restaurants.",
+        "Cancellation and card guarantee details not inspected beyond initial page; no policy inferred."
+      ],
+      "integratorDecision": "accepted_external_route_no_completion_or_inventory_claim"
+    },
+    {
+      "restaurantId": "osm-SBH-bonito",
+      "name": "Bonito",
+      "batch": 9,
+      "checkedAt": "2026-10-16",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "Rue Lubin Brin, Gustavia, 97133 Saint-Barthélemy",
+        "notes": "Official Bonito address and booking email verified. Hydrated operator page embeds SevenRooms bonitostbarth; canonical URL redirects to the same provider route. Both stable IDs retained."
+      },
+      "sources": [
+        {
+          "url": "https://www.bonitosbh.com/",
+          "kind": "official",
+          "supports": "Hydrated official desktop creates SevenRooms iframe /explore/bonitostbarth/reservations/create/search; operator address Rue Lubin Brin Gustavia and booking email."
+        },
+        {
+          "url": "https://www.sevenrooms.com/explore/bonitostbarth/reservations/create/search",
+          "kind": "official",
+          "supports": "Observed official iframe origin URL; provider identifies BONITO St Barth at6 Rue Lubin Brin Gustavia."
+        },
+        {
+          "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
+          "kind": "official",
+          "supports": "Canonical reuseSevenRooms URL redirects to exact observed official iframe route."
+        }
+      ],
+      "outcome": "New independently sourced SevenRooms operator binding; both stableIDs identify same physical venue.",
+      "proposedRegistryAddition": {
+        "provider": "SevenRooms",
+        "name": "Bonito Saint Barth",
+        "city": "Gustavia",
+        "venueId": "bonitostbarth",
+        "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
+        "source": "https://www.bonitosbh.com/",
+        "checkedAt": "2026-10-16",
+        "verification": "official_link_only",
+        "providerTitle": "Reservation at BONITO St Barth",
+        "integrationMode": "external_link",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported",
+        "venueKey": "www.sevenrooms.com/reservations/bonitostbarth"
+      },
+      "proposedExternalRoute": null,
+      "contacts": [
+        {
+          "type": "email",
+          "value": "booking@bonitosbh.com",
+          "bookingExplicit": true,
+          "source": "https://www.bonitosbh.com/"
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "Official hydrated iframe observed; provider canonical read-only original UI rendered.",
+        "mobile": "Canonical SevenRooms original UI rendered390x844, BONITO St Barth,6 Rue Lubin Brin Gustavia, EN/FR selector; no inputs or clicks.",
+        "languages": [
+          "en",
+          "fr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": "Initial provider UI automatically offered21Oct2026 slots for2 guests, labelled EUR180 prepayment; no slot selected, perperson basis not established."
+      },
+      "limitations": [
+        "No slot selected, no date/guest change, no submission, no completion tracking.",
+        "Automatically offered times are point-in-time UI observations only, not actively verified safe-search availability; liveAvailability remainsfalse.",
+        "Do not count two stableIDs as two unique restaurants.",
+        "Cancellation and card guarantee details not inspected beyond initial page; no policy inferred."
+      ],
+      "integratorDecision": "accepted_external_route_no_completion_or_inventory_claim"
+    },
+    {
+      "restaurantId": "curated-SBH-le-toiny-restaurant",
+      "name": "Le Toiny Restaurant",
+      "batch": 9,
+      "checkedAt": "2026-10-16",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Toiny",
+        "address": "Anse de Toiny, 97133 Saint-Barthélemy",
+        "notes": "Official hotel identifies La Table and Beach Club and directs restaurant reservations to restaurant@letoiny.com. Restaurant-specific manual contact retained; no hotel reservation engine substituted."
+      },
+      "sources": [
+        {
+          "url": "https://letoiny.com/",
+          "kind": "official",
+          "supports": "Restaurant-specific email under both La Table and Beach Club Reservation controls and footer; hotel email explicitly separate."
+        },
+        {
+          "url": "https://letoiny.com/the-restaurants/",
+          "kind": "official",
+          "supports": "Operator restaurant page."
+        }
+      ],
+      "outcome": "Retain verified manual email, no new provider found.",
+      "proposedRegistryAddition": null,
+      "proposedExternalRoute": null,
+      "contacts": [
+        {
+          "type": "email",
+          "value": "restaurant@letoiny.com",
+          "bookingExplicit": true,
+          "source": "https://letoiny.com/"
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "en",
+          "fr",
+          "es"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Selfbook is hotel room engine; not restaurant booking.",
+        "La Table and Beach Club share email; customer must identify desired restaurant in request.",
+        "Languages are visible navigation options, not fully tested translations."
+      ],
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "curated-SBH-tamarin-st-barth",
+      "name": "Tamarin St Barth",
+      "batch": 9,
+      "checkedAt": "2026-10-16",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Saline",
+        "address": "Route de Saline, 97133 Saint-Barthélemy",
+        "notes": "Official contact page explicitly asks all reservation requests by email to info@tamarinstbarth.com. Telephone +590 590 29 27 74 is also listed."
+      },
+      "sources": [
+        {
+          "url": "https://tamarinstbarth.com/contact/",
+          "kind": "official",
+          "supports": "Explicit English/French request-to-email instruction with info@tamarinstbarth.com; Route de Saline."
+        }
+      ],
+      "outcome": "Retain manual email; no dedicated online tableprovider found in href or page.",
+      "proposedRegistryAddition": null,
+      "proposedExternalRoute": null,
+      "contacts": [
+        {
+          "type": "email",
+          "value": "info@tamarinstbarth.com",
+          "bookingExplicit": true,
+          "source": "https://tamarinstbarth.com/contact/"
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "en",
+          "fr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Email not sent. Other page/social destinations are not verified booking systems."
+      ],
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-SBH-eddy-s",
+      "name": "Eddy's",
+      "batch": 9,
+      "checkedAt": "2026-10-16",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "12 rue Samuel Fahlberg, Gustavia 97133 Saint-Barthélemy",
+        "notes": "Official site labels reservation contact and gives +590 590 27 54 17; also eddysghetto@gmail.com. No table inventory found."
+      },
+      "sources": [
+        {
+          "url": "https://eddysghetto.com/",
+          "kind": "official",
+          "supports": "Reservation section with original Contact Form7 form; textarea asks when table required and party count; phone fallback; exact12 Rue Samuel Fahlberg Gustavia."
+        }
+      ],
+      "outcome": "New request-only external originalform candidate alongside existingphone.",
+      "proposedRegistryAddition": null,
+      "proposedExternalRoute": {
+        "url": "https://eddysghetto.com/",
+        "source": "https://eddysghetto.com/",
+        "bookingMode": "request_only",
+        "provider": "Contact Form7 original restaurant request form",
+        "sectionAnchor": "#contact"
+      },
+      "contacts": [
+        {
+          "type": "phone",
+          "value": "+590590275417",
+          "bookingExplicit": true,
+          "source": "https://eddysghetto.com/"
+        }
+      ],
+      "checks": {
+        "officialExternalLink": true,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "Booking-specific textarea visible under guard1440x1000; no input/submit",
+        "mobile": "Booking-specific textarea visible under guard390x844; no input/submit",
+        "languages": [
+          "en",
+          "fr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "reCAPTCHA present; challenge and POST traffic not executed; no bypass.",
+        "Original form requests date/party via free text, not live inventory.",
+        "Form submission/delivery untested. Do not label working end-to-end booking.",
+        "No visible cancellation/card guarantee/prepayment terms found."
+      ],
+      "integratorDecision": "accepted_external_route_no_completion_or_inventory_claim"
+    },
+    {
+      "restaurantId": "osm-SBH-l-isoletta",
+      "name": "L'Isoletta",
+      "batch": 9,
+      "checkedAt": "2026-10-16",
+      "identity": {
+        "status": "verified",
+        "actualCity": "Gustavia",
+        "address": "Rue du Roi Oscar II, Gustavia, Saint-Barthélemy",
+        "notes": "Official contact page says reserve by +590 590 52 02 02 or visit; reservations@isolettastbarth.com also listed. No provider inventory found."
+      },
+      "sources": [
+        {
+          "url": "https://www.isolettastbarth.com/contact",
+          "kind": "official",
+          "supports": "Official Reservations nav href mailto:reservations@isolettastbarth.com?subject=Reservation Request; exactaddress and explicit phonebooking."
+        }
+      ],
+      "outcome": "New explicit booking email alternative; retain existingphone priority if UI only supports one.",
+      "proposedRegistryAddition": null,
+      "proposedExternalRoute": null,
+      "contacts": [
+        {
+          "type": "email",
+          "value": "reservations@isolettastbarth.com",
+          "bookingExplicit": true,
+          "source": "https://www.isolettastbarth.com/contact",
+          "observedHref": "mailto:reservations@isolettastbarth.com?subject=Reservation Request"
+        },
+        {
+          "type": "phone",
+          "value": "+590590520202",
+          "bookingExplicit": true,
+          "source": "https://www.isolettastbarth.com/contact"
+        }
+      ],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Generic contact form not promoted to table request route; explicit Reservations mailto is the supported evidence.",
+        "No email/contact submission."
+      ],
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-SBH-bart-s-food-lounge",
+      "name": "Bart's Food Lounge",
+      "batch": 9,
+      "checkedAt": "2026-10-16",
+      "identity": {
+        "status": "unresolved",
+        "actualCity": null,
+        "address": null,
+        "notes": "Exact-name OSM-derived candidate on Rue du Général de Gaulle. No restaurant-owned current identity, operation or reservation source verified."
+      },
+      "sources": [
+        {
+          "url": "https://www.sbhonline.com/forums/threads/french-macarons.89959/",
+          "kind": "secondary",
+          "supports": "January2017 discussion places historical Bart's in former CafeVictoire near LePalace."
+        },
+        {
+          "url": "https://www.cartogiraffe.com/france/saint-barth%C3%A9lemy/saint-barth%C3%A9lemy/bart%2Bs%2Bfood%2Blounge/",
+          "kind": "secondary",
+          "supports": "OSM-derived Rue General de Gaulle candidate; no operatorbooking."
+        }
+      ],
+      "outcome": "Historical successor hint only; remain unresolved. No currentoperator source or bookingpolicy.",
+      "proposedRegistryAddition": null,
+      "proposedExternalRoute": null,
+      "contacts": [],
+      "checks": {
+        "officialExternalLink": false,
+        "embeddedOriginalForm": false,
+        "liveAvailability": false,
+        "simulatedValidation": false,
+        "confirmedReservation": false,
+        "desktop": "not_tested",
+        "mobile": "not_tested",
+        "languages": [],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "limitations": [
+        "Do not map contemporary Victoire or other neighbor to thisID. No official current closure confirmed."
+      ],
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-SBH-nyama",
+      "outcome": "Official tourism authority corroborates Nyama in Corossol. Operator Facebook URL traced from original opening article, but direct read was throttled. Booking contact remains unapproved without accessible operator evidence.",
+      "sources": [
+        {
+          "url": "https://www.saintbarth-tourisme.com/locations/corossol",
+          "kind": "official",
+          "supports": "Names Nyama and Franco-Asian cuisine in Corossol; no booking instructions."
+        },
+        {
+          "url": "https://www.pasha-stbarth.com/blogs/infos/nyama-french-asian-food-new-restaurant-in-st-barth",
+          "kind": "secondary",
+          "supports": "Opening report links facebook.com/nyamasbh and instagram.com/nyama_sbh; reservation contacts are historical third-party claims."
+        },
+        {
+          "url": "https://www.facebook.com/nyamasbh",
+          "kind": "official_candidate",
+          "supports": "Direct read throttled; no retry or bypass."
+        }
+      ],
+      "approvedNewRoute": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-SBH-megumi-sushi",
+      "outcome": "Operator-linked English menu corroborates 27 Rue Jeanne d'Arc, Gustavia and takeaway/delivery/dine-in. No reservation instruction in extracted menu. Image-page screenshot retrieval timed out; no inference about unseen content. Ordering remains separate from table booking.",
+      "sources": [
+        {
+          "url": "https://www.megumi.fr/",
+          "kind": "official",
+          "supports": "Links English and French menu PDFs."
+        },
+        {
+          "url": "https://www.megumi.fr/MEGUMI-english.pdf",
+          "kind": "official",
+          "supports": "Address, phone and takeaway/delivery/dine-in on final page; no table-booking instructions in extracted text."
+        }
+      ],
+      "approvedNewRoute": null,
+      "integratorDecision": "retain_existing_status"
+    },
+    {
+      "restaurantId": "osm-SBH-le-bar-de-l-oubli",
+      "outcome": "Official HTML links 2026 menu and operator social channels. Menu fetch redirects to Squarespace and web retrieval failed; no new booking policy verified. Existing call-to-order contact is not promoted to table reservation.",
+      "sources": [
+        {
+          "url": "https://www.bardeloubli.com/",
+          "kind": "official",
+          "supports": "Current menu and operator social links traced in HTML."
+        },
+        {
+          "url": "https://www.bardeloubli.com/s/Menu-Web-2026.pdf",
+          "kind": "official",
+          "supports": "Operator-linked menu; redirected document retrieval unavailable."
+        }
+      ],
+      "approvedNewRoute": null,
+      "integratorDecision": "retain_existing_status"
+    }
+  ]
+}

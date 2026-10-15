@@ -263,6 +263,11 @@
         "checkedAt": "2026-10-16",
         "query": "Jean’s Kitchen UCT booking",
         "result": "Kosher SA Dec2025/Jan2026 list confirms UCT Kaplan contact; no explicit table-booking invitation."
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     },
     {
@@ -474,6 +479,11 @@
         "checkedAt": "2026-10-16",
         "query": "Picnic Cafe Montebello reservations",
         "result": "Official page identifies Montebello deli; no explicit table-booking invitation. Australia Picnic bookings result rejected."
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     },
     {
@@ -575,6 +585,11 @@
         "checkedAt": "2026-10-16",
         "query": "Trufood Station official Cape Town",
         "result": "BitcoinFriendlySA lists GreatWesterford240MainRoad, while MiChange lists Sports Science Institute BoundaryRoad. Conflicting locations need reconciliation."
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     },
     {

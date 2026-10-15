@@ -2,6 +2,10 @@
 // Deliberately NOT generated from audit rows. Changing a destination requires
 // evidence review here as well as in the corresponding group decision.
 const reviewed = {
+  'osm-MIA-pummarola-coral-gable': ['https://www.pummarola.us/reservations', 'https://www.pummarola.us/reservations'],
+  'curated-SBH-bonito-saint-barth': ['https://www.bonitosbh.com/', 'https://www.sevenrooms.com/reservations/bonitostbarth'],
+  'osm-SBH-bonito': ['https://www.bonitosbh.com/', 'https://www.sevenrooms.com/reservations/bonitostbarth'],
+  'osm-SBH-eddy-s': ['https://eddysghetto.com/', 'https://eddysghetto.com/'],
   'osm-BDR-musto-bistro': ['https://www.mustorestaurantbistro.com/', 'https://www.mustorestaurantbistro.com/'],
   'osm-BDR-yelken-bal-k': ['https://www.yelkenbalik.com.tr/iletisim', 'https://www.yerimhazir.com/isletme/yelken-balik-bodrum/373'],
   'osm-DXB-carluccio-s': ['https://carlucciosme.com/locations/the-dubai-mall/', 'https://eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a'],
@@ -76,5 +80,7 @@ export function resolveExternal200ReviewedLink(restaurantId, source, destination
     try { const u = new URL(value); if (u.protocol !== 'https:' || u.username || u.password || u.port || u.hash) return null; }
     catch { return null; }
   }
-  return Object.freeze({source:approvedSource, url:approvedDestination});
+  return Object.freeze({source:approvedSource, url:approvedDestination,
+    selection: restaurantId === 'osm-MIA-pummarola-coral-gable' ? Object.freeze({branch:'Coral Gables', reservationType:'Dine-In Reservation'}) : null,
+    bookingMode: ['osm-MIA-pummarola-coral-gable','osm-SBH-eddy-s'].includes(restaurantId) ? 'request_only' : null});
 }

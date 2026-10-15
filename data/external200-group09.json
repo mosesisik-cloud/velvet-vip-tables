@@ -470,16 +470,16 @@
         "status": "verified",
         "actualCity": "Coral Gables",
         "address": "141 Aragon Avenue, Coral Gables, FL 33134",
-        "notes": "Manifest explicitly names Coral Gables. Operator site identifies Coral Gables; Florida licensing source confirms exact address. No table-reservation route verified. Pizza class booking and food ordering must not be used as table booking."
+        "notes": "Explicit Coral Gables catalogue name and Florida licensing address match. Official original table-request page verified; receipt, acceptance and table confirmation not tested. Select only Coral Gables and Dine-In Reservation."
       },
-      "status": "unresolved",
-      "provider": null,
-      "bookingUrl": null,
+      "status": "official_external_link",
+      "provider": "Wix original request form",
+      "bookingUrl": "https://www.pummarola.us/reservations",
       "sources": [
         {
           "url": "https://www.pummarola.us/",
           "kind": "official",
-          "supports": "Manifest explicitly names Coral Gables. Operator site identifies Coral Gables; Florida licensing source confirms exact address. No table-reservation route verified. Pizza class booking and food ordering must not be used as table booking."
+          "supports": "Operator domain and Coral Gables identity; separate /reservations form explicitly supports dine-in table requests."
         },
         {
           "url": "https://www2.myfloridalicense.com/abt/documents/CityFeeDistribution3rdQtr2025-2026.pdf",
@@ -490,23 +490,38 @@
           "url": "https://www.pummarola.us/bookonline",
           "kind": "official",
           "supports": "Booking page is pizza classes, not table reservations."
+        },
+        {
+          "url": "https://www.pummarola.us/reservations",
+          "kind": "official",
+          "supports": "HTTP200 original Wix request form; Coral Gables checkbox and Dine-In Reservation radio; source includes email-followup success copy without submit."
         }
       ],
       "checks": {
-        "officialExternalLink": false,
+        "officialExternalLink": true,
         "embeddedOriginalForm": false,
         "liveAvailability": false,
         "simulatedValidation": false,
         "confirmedReservation": false,
-        "desktop": "not_tested",
-        "mobile": "not_tested",
-        "languages": [],
+        "desktop": "original form visible1440x1000; GET/HEAD guard; no input or submit",
+        "mobile": "Original form rendered at390x844; root screenshot review found980px documentwidth/desktop scaling and cookie banner covering fields; mobile usability limited, not mobile-adapted PASS.",
+        "languages": [
+          "en"
+        ],
         "cancellation": null,
         "cardGuarantee": null,
-        "prepayment": null
+        "prepayment": null,
+        "originalFormLoaded": true
       },
       "limitations": [
-        "No reservation confirmation, payment, waitlist or contact request submitted."
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "No visible navigation href to /reservations found on home/locations/contact; discovered in operator page config.",
+        "Unlisted/noindex page and operational acceptance unverified.",
+        "No supported branch query documented; do not invent parameters. Location checkboxes permit multiple branches; instruct only Coral Gables plus Dine-In Reservation.",
+        "Static all-day quarter-hour dropdown and automatic default date/time are not availability. Success text was inspected in HTML only; no request submitted.",
+        "No visible cancellation, card guarantee or prepayment terms in initial form.",
+        "Independent review is by groups_1_3; root owns activation and copy.",
+        "Root screenshot review: mobile documentwidth980px atviewport390; scaled desktop layout and cookie banner overlaps fields. No cookie interaction performed."
       ],
       "registryAddition": null,
       "research": {
@@ -520,6 +535,22 @@
           "blocker": "Official Pummarola still promotes pizza-making classes; third-party claims reservations lack officialtable URL. Keep verified Coral Gables identity but table route unresolved.",
           "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
         }
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Reviewed external route added; no completed booking or inventory claim."
+      },
+      "followupCheckedAt": "2026-10-16",
+      "bookingMode": "request_only",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "New external request-only candidate; exact catalog branch already identityverified. Independent review groups_1_3 preliminary accepts, retaining unlisted/unknown acceptance limitations.",
+        "blocker": "External original route only. Submission, current inventory and reservation completion are not verified."
+      },
+      "requiredSelections": {
+        "restaurantLocation": "Coral Gables",
+        "reservationType": "Dine-In Reservation"
       }
     },
     {
@@ -587,44 +618,70 @@
         "status": "verified",
         "actualCity": "Gustavia",
         "address": "Rue Lubin Brin, Gustavia, 97133 Saint-Barthélemy",
-        "notes": "Official Bonito site confirms address and booking@bonitosbh.com / +590 590 27 96 96. Browser shows Make a Reservation heading but no provider widget or specific online booking link."
+        "notes": "Official Bonito address and booking email verified. Hydrated operator page embeds SevenRooms bonitostbarth; canonical URL redirects to the same provider route. Both stable IDs retained."
       },
-      "status": "manual_email",
-      "provider": null,
-      "bookingUrl": null,
+      "status": "official_external_link",
+      "provider": "SevenRooms",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth",
       "sources": [
         {
           "url": "https://www.bonitosbh.com/",
           "kind": "official",
-          "supports": "Official Bonito site confirms address and booking@bonitosbh.com / +590 590 27 96 96. Browser shows Make a Reservation heading but no provider widget or specific online booking link."
+          "supports": "Official Bonito address and booking email verified. Hydrated operator page embeds SevenRooms bonitostbarth; canonical URL redirects to the same provider route. Both stable IDs retained."
         },
         {
           "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
           "kind": "secondary",
           "supports": "FoundSevenRoomsbonitostbarth via secondarydirectory, correctprovider title, but no link in officialBonito HTML. Keep manualverified email; candidate not admitted without operatorlink.",
           "checkedAt": "2026-10-16"
+        },
+        {
+          "url": "https://www.sevenrooms.com/explore/bonitostbarth/reservations/create/search",
+          "kind": "official",
+          "supports": "Observed official iframe origin URL; provider identifies BONITO St Barth at6 Rue Lubin Brin Gustavia."
         }
       ],
       "checks": {
-        "officialExternalLink": false,
+        "officialExternalLink": true,
         "embeddedOriginalForm": false,
         "liveAvailability": false,
         "simulatedValidation": false,
         "confirmedReservation": false,
-        "desktop": "official site inspected in browser; reservation contacts visible, no booking widget identified",
-        "mobile": "not_tested",
+        "desktop": "Official hydrated iframe observed; provider canonical read-only original UI rendered.",
+        "mobile": "Canonical SevenRooms original UI rendered390x844, BONITO St Barth,6 Rue Lubin Brin Gustavia, EN/FR selector; no inputs or clicks.",
         "languages": [
-          "en"
+          "en",
+          "fr"
         ],
         "cancellation": null,
         "cardGuarantee": null,
-        "prepayment": null
+        "prepayment": "Initial provider UI automatically offered21Oct2026 slots for2 guests, labelled EUR180 prepayment; no slot selected, perperson basis not established.",
+        "originalFormLoaded": true
       },
       "limitations": [
         "Likely duplicate venue represented by curated-SBH-bonito-saint-barth and osm-SBH-bonito; IDs preserved, no merge.",
-        "No reservation confirmation, payment, waitlist or contact request submitted."
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "No slot selected, no date/guest change, no submission, no completion tracking.",
+        "Automatically offered times are point-in-time UI observations only, not actively verified safe-search availability; liveAvailability remainsfalse.",
+        "Do not count two stableIDs as two unique restaurants.",
+        "Cancellation and card guarantee details not inspected beyond initial page; no policy inferred."
       ],
-      "registryAddition": null,
+      "registryAddition": {
+        "provider": "SevenRooms",
+        "name": "Bonito Saint Barth",
+        "city": "St. Barts",
+        "venueId": "bonitostbarth",
+        "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
+        "source": "https://www.bonitosbh.com/",
+        "checkedAt": "2026-10-16",
+        "verification": "official_link_only",
+        "providerTitle": "Reservation at BONITO St Barth",
+        "integrationMode": "external_link",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported",
+        "venueKey": "www.sevenrooms.com/reservations/bonitostbarth",
+        "locality": "Gustavia"
+      },
       "research": {
         "checkedAt": "2026-10-15",
         "query": "\"Bonito Saint Barth\" St. Barts restaurant official reservation",
@@ -644,10 +701,17 @@
         "source": "https://www.bonitosbh.com/",
         "checkedAt": "2026-10-16"
       },
-      "candidateBooking": {
-        "provider": "SevenRooms",
-        "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
-        "reason": "Provider title matches; secondary discovery only, official operator link not established; not for activation."
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Reviewed external route added; no completed booking or inventory claim."
+      },
+      "followupCheckedAt": "2026-10-16",
+      "bookingMode": "unknown",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "New independently sourced SevenRooms operator binding; both stableIDs identify same physical venue.",
+        "blocker": "External original route only. Submission, current inventory and reservation completion are not verified."
       }
     },
     {
@@ -716,6 +780,11 @@
         "bookingExplicit": true,
         "source": "https://letoiny.com/",
         "checkedAt": "2026-10-16"
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     },
     {
@@ -776,6 +845,11 @@
         "bookingExplicit": true,
         "source": "https://tamarinstbarth.com/contact/",
         "checkedAt": "2026-10-16"
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     },
     {
@@ -886,6 +960,11 @@
           "blocker": "Exact-name search still returns OSM-derived Rue Generalde Gaulle only; restaurant absent from current 81-venue directory is not proofclosure. Need currentoperator identity.",
           "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
         }
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     },
     {
@@ -952,44 +1031,70 @@
         "status": "verified",
         "actualCity": "Gustavia",
         "address": "Rue Lubin Brin, Gustavia, 97133 Saint-Barthélemy",
-        "notes": "Official Bonito site confirms address and booking@bonitosbh.com / +590 590 27 96 96. Browser shows Make a Reservation heading but no provider widget or specific online booking link."
+        "notes": "Official Bonito address and booking email verified. Hydrated operator page embeds SevenRooms bonitostbarth; canonical URL redirects to the same provider route. Both stable IDs retained."
       },
-      "status": "manual_email",
-      "provider": null,
-      "bookingUrl": null,
+      "status": "official_external_link",
+      "provider": "SevenRooms",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth",
       "sources": [
         {
           "url": "https://www.bonitosbh.com/",
           "kind": "official",
-          "supports": "Official Bonito site confirms address and booking@bonitosbh.com / +590 590 27 96 96. Browser shows Make a Reservation heading but no provider widget or specific online booking link."
+          "supports": "Official Bonito address and booking email verified. Hydrated operator page embeds SevenRooms bonitostbarth; canonical URL redirects to the same provider route. Both stable IDs retained."
         },
         {
           "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
           "kind": "secondary",
           "supports": "Bonito duplicate stableID retained; samecandidateSevenRooms and officialemail as curatedBonito. Noautomerge or newproviderclaim.",
           "checkedAt": "2026-10-16"
+        },
+        {
+          "url": "https://www.sevenrooms.com/explore/bonitostbarth/reservations/create/search",
+          "kind": "official",
+          "supports": "Observed official iframe origin URL; provider identifies BONITO St Barth at6 Rue Lubin Brin Gustavia."
         }
       ],
       "checks": {
-        "officialExternalLink": false,
+        "officialExternalLink": true,
         "embeddedOriginalForm": false,
         "liveAvailability": false,
         "simulatedValidation": false,
         "confirmedReservation": false,
-        "desktop": "official site inspected in browser; reservation contacts visible, no booking widget identified",
-        "mobile": "not_tested",
+        "desktop": "Official hydrated iframe observed; provider canonical read-only original UI rendered.",
+        "mobile": "Canonical SevenRooms original UI rendered390x844, BONITO St Barth,6 Rue Lubin Brin Gustavia, EN/FR selector; no inputs or clicks.",
         "languages": [
-          "en"
+          "en",
+          "fr"
         ],
         "cancellation": null,
         "cardGuarantee": null,
-        "prepayment": null
+        "prepayment": "Initial provider UI automatically offered21Oct2026 slots for2 guests, labelled EUR180 prepayment; no slot selected, perperson basis not established.",
+        "originalFormLoaded": true
       },
       "limitations": [
         "Likely duplicate venue represented by curated-SBH-bonito-saint-barth and osm-SBH-bonito; IDs preserved, no merge.",
-        "No reservation confirmation, payment, waitlist or contact request submitted."
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "No slot selected, no date/guest change, no submission, no completion tracking.",
+        "Automatically offered times are point-in-time UI observations only, not actively verified safe-search availability; liveAvailability remainsfalse.",
+        "Do not count two stableIDs as two unique restaurants.",
+        "Cancellation and card guarantee details not inspected beyond initial page; no policy inferred."
       ],
-      "registryAddition": null,
+      "registryAddition": {
+        "provider": "SevenRooms",
+        "name": "Bonito Saint Barth",
+        "city": "St. Barts",
+        "venueId": "bonitostbarth",
+        "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
+        "source": "https://www.bonitosbh.com/",
+        "checkedAt": "2026-10-16",
+        "verification": "official_link_only",
+        "providerTitle": "Reservation at BONITO St Barth",
+        "integrationMode": "external_link",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported",
+        "venueKey": "www.sevenrooms.com/reservations/bonitostbarth",
+        "locality": "Gustavia"
+      },
       "research": {
         "checkedAt": "2026-10-15",
         "query": "\"Bonito\" St. Barts restaurant official reservation",
@@ -1009,10 +1114,17 @@
         "source": "https://www.bonitosbh.com/",
         "checkedAt": "2026-10-16"
       },
-      "candidateBooking": {
-        "provider": "SevenRooms",
-        "url": "https://www.sevenrooms.com/reservations/bonitostbarth",
-        "reason": "Provider title matches; secondary discovery only, official operator link not established; not for activation."
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Reviewed external route added; no completed booking or inventory claim."
+      },
+      "followupCheckedAt": "2026-10-16",
+      "bookingMode": "unknown",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "New independently sourced SevenRooms operator binding; both stableIDs identify same physical venue.",
+        "blocker": "External original route only. Submission, current inventory and reservation completion are not verified."
       }
     },
     {
@@ -1025,9 +1137,9 @@
         "address": "12 rue Samuel Fahlberg, Gustavia 97133 Saint-Barthélemy",
         "notes": "Official site labels reservation contact and gives +590 590 27 54 17; also eddysghetto@gmail.com. No table inventory found."
       },
-      "status": "manual_phone",
-      "provider": null,
-      "bookingUrl": null,
+      "status": "official_external_link",
+      "provider": "Contact Form7 original restaurant request form",
+      "bookingUrl": "https://eddysghetto.com/",
       "sources": [
         {
           "url": "https://eddysghetto.com/",
@@ -1036,22 +1148,28 @@
         }
       ],
       "checks": {
-        "officialExternalLink": false,
+        "officialExternalLink": true,
         "embeddedOriginalForm": false,
         "liveAvailability": false,
         "simulatedValidation": false,
         "confirmedReservation": false,
-        "desktop": "not_tested",
-        "mobile": "not_tested",
+        "desktop": "Booking-specific textarea visible under guard1440x1000; no input/submit",
+        "mobile": "Booking-specific textarea visible under guard390x844; no input/submit",
         "languages": [
-          "en"
+          "en",
+          "fr"
         ],
         "cancellation": null,
         "cardGuarantee": null,
-        "prepayment": null
+        "prepayment": null,
+        "originalFormLoaded": true
       },
       "limitations": [
-        "No reservation confirmation, payment, waitlist or contact request submitted."
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "reCAPTCHA present; challenge and POST traffic not executed; no bypass.",
+        "Original form requests date/party via free text, not live inventory.",
+        "Form submission/delivery untested. Do not label working end-to-end booking.",
+        "No visible cancellation/card guarantee/prepayment terms found."
       ],
       "registryAddition": null,
       "research": {
@@ -1072,6 +1190,18 @@
         "bookingExplicit": true,
         "source": "https://eddysghetto.com/",
         "checkedAt": "2026-10-16"
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Reviewed external route added; no completed booking or inventory claim."
+      },
+      "followupCheckedAt": "2026-10-16",
+      "bookingMode": "request_only",
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "result": "New request-only external originalform candidate alongside existingphone.",
+        "blocker": "External original route only. Submission, current inventory and reservation completion are not verified."
       }
     },
     {
@@ -1211,6 +1341,11 @@
         "bookingExplicit": true,
         "source": "https://www.isolettastbarth.com/contact",
         "checkedAt": "2026-10-16"
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     }
   ],

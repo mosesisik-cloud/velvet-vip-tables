@@ -632,6 +632,11 @@
         "checkedAt": "2026-10-16",
         "query": "Noy Pochana Phuket official",
         "result": "EatingThaiFood historical venue report remains sole identified match, no current operator booking route."
+      },
+      "latestResearch": {
+        "checkedAt": "2026-10-16",
+        "evidence": "data/external200-round4-evidence.json",
+        "decision": "Existing route/status retained; new evidence and blockers recorded."
       }
     },
     {
