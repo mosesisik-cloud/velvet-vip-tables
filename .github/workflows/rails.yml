@@ -26,3 +26,4 @@ jobs:
       - run: node scripts/test-card-setup.mjs
       - run: node scripts/test-external-destinations.mjs
       - run: node scripts/test-place-brand.mjs
+      - run: node scripts/test-delicity-availability.mjs
