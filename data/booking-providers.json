@@ -1919,6 +1919,40 @@
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
   },
+  "curated-LIS-cura": {
+    "name": "CURA",
+    "city": "Lisbon",
+    "provider": "Restaurant website",
+    "venueKey": "www.fourseasons.com/lisbon/dining/restaurants/cura/",
+    "url": "https://www.fourseasons.com/lisbon/dining/restaurants/cura/",
+    "source": "https://www.fourseasons.com/lisbon/dining/restaurants/cura/",
+    "checkedAt": "2026-10-16",
+    "verification": "official_link_only",
+    "integrationMode": "external_link",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "cancellationPolicyStatus": "unknown"
+  },
+  "curated-PAR-arpege": {
+    "provider": "Zenchef",
+    "name": "Arpège",
+    "city": "Paris",
+    "venueId": "354036",
+    "url": "https://bookings.zenchef.com/results?rid=354036&lang=fr",
+    "source": "https://www.alain-passard.com/",
+    "checkedAt": "2026-10-16",
+    "verification": "provider_page_loaded",
+    "providerTitle": "Restaurant Arpège Paris - Réservation en ligne",
+    "integrationMode": "external_link",
+    "venueKey": "bookings.zenchef.com/results?rid=354036",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "cancellationPolicy": {
+      "summary": "Enligt den observerade bokningssidan är ändring och avbokning kostnadsfri fram till 48 timmar före besöket. Kontrollera villkoren för den valda bokningen; villkor och eventuell avgift efter denna frist har inte verifierats.",
+      "source": "https://bookings.zenchef.com/results?rid=354036&lang=fr",
+      "checkedAt": "2026-10-16"
+    }
+  },
   "curated-SBH-bonito-saint-barth": {
     "provider": "SevenRooms",
     "name": "Bonito Saint Barth",

@@ -9,7 +9,7 @@
     {
       "command": "node scripts/test-booking-providers.mjs",
       "result": "passed",
-      "coverage": "134 active mappings including two Bonito external-link additions; destination guards and cache protection"
+      "coverage": "136 active mappings including two Bonito external-link additions; destination guards and cache protection"
     },
     {
       "command": "node scripts/test-booking-selection.mjs",
