@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-15T23:07:29.838Z",
+  "generatedAt": "2026-10-15T23:18:52.135Z",
   "scope": "770 stable catalog IDs. Declared evidence and test reports are separate from publication; no live booking or test execution inferred.",
   "warnings": [
     "Branding is a local snapshot; ongoing branding work may be pending. Asset presence does not establish live publication or visual QA.",
@@ -14,7 +14,7 @@
     },
     {
       "file": "data/booking-providers.json",
-      "sha256": "d36b7d7d737cf3dc503302e63bad67aa0444e118ad3c8ff09cedf565eaaa3f9a"
+      "sha256": "cb2d414bed3385b88ea15520015ce39f75efc1084865383abdb711bfd101c3ae"
     },
     {
       "file": "data/external200-group01.json",
@@ -70,7 +70,7 @@
     },
     {
       "file": "data/restaurant-route-evidence.json",
-      "sha256": "418cf0bac146b76b1d19b040c9c68981dadc2227e2854ac7caa9d9d9f3167a3d"
+      "sha256": "b3b636fcb35816854127c414423d67ff09ea57c62e313af6ca4b75a2ba8c9cc0"
     },
     {
       "file": "data/restaurants.json",
@@ -85,13 +85,13 @@
     "url": "https://b2b.bakemyday.se/velvet/data/booking-providers.json",
     "status": "fetched",
     "error": null,
-    "checkedAt": "2026-10-15T23:07:29.838Z"
+    "checkedAt": "2026-10-15T23:18:52.135Z"
   },
   "publicBrandComparison": {
     "url": "https://b2b.bakemyday.se/velvet/data/restaurant-brands.json",
     "status": "fetched",
     "error": null,
-    "checkedAt": "2026-10-15T23:07:29.838Z"
+    "checkedAt": "2026-10-15T23:18:52.135Z"
   },
   "counts": {
     "restaurants": 770,
@@ -119,26 +119,27 @@
       "Resy": 3,
       "Revasi": 1,
       "Rezervem": 1,
-      "SevenRooms": 48,
+      "SevenRooms": 49,
       "TableCheck": 5,
       "Tableo": 1,
       "TABLFY": 1,
       "TheFork": 6,
       "Tock": 7,
       "TURK direct reservation": 1,
+      "Typeform": 1,
       "Yerim Hazir": 1,
       "Zenchef": 12,
-      "unknown": 610
+      "unknown": 608
     },
     "implementation": {
       "bokabord_mirror_configured": 22,
-      "not_integrated": 618,
-      "external_link": 66,
+      "not_integrated": 616,
+      "external_link": 68,
       "native_embed": 64
     },
     "publication": {
-      "unknown": 640,
-      "exact_public_registry_match": 128,
+      "unknown": 638,
+      "exact_public_registry_match": 130,
       "absent_public_registry": 2
     },
     "owners": {
@@ -146,14 +147,15 @@
       "01a14189-8468-7353-97ad-3549532fc728": 200
     },
     "bookingRoutes": {
-      "reviewed_provider_link": 150,
+      "reviewed_provider_link": 151,
       "official_external_link": 9,
-      "unresolved": 104,
+      "official_request_form": 1,
+      "unresolved": 105,
       "manual_whatsapp": 1,
       "manual_phone": 6,
       "manual_email": 5,
       "manual_message": 2,
-      "unknown": 424,
+      "unknown": 421,
       "takeaway": 1,
       "unresolved_branch": 63,
       "blocked": 1,
@@ -8668,8 +8670,8 @@
       "provider": "SevenRooms",
       "source": "https://paolinocapri.com/en/prenota-un-tavolo/",
       "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
-      "blocker": "Mapping not published",
-      "next": "Verify publication against reviewed mapping",
+      "blocker": null,
+      "next": "Validate remaining guest journey without live booking",
       "checked": "2026-10-16",
       "status": {
         "identity": "reviewed_mapping",
@@ -8690,7 +8692,7 @@
           }
         },
         "publication": {
-          "status": "absent_public_registry",
+          "status": "exact_public_registry_match",
           "basis": "https://b2b.bakemyday.se/velvet/data/booking-providers.json"
         },
         "logo": {
@@ -11109,6 +11111,169 @@
       }
     },
     {
+      "restaurantId": "curated-MYK-scorpios-mykonos",
+      "name": "Scorpios Mykonos",
+      "city": "Mykonos",
+      "cityCode": "MYK",
+      "country": "Greece",
+      "provider": "SevenRooms",
+      "source": "https://scorpios.com/mykonos",
+      "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
+      "blocker": "Mapping not published",
+      "next": "Verify publication against reviewed mapping",
+      "checked": "2026-10-16",
+      "status": {
+        "identity": "reviewed_mapping",
+        "bookingRoute": "reviewed_provider_link",
+        "implementation": "external_link",
+        "tests": {
+          "status": "unknown",
+          "confirmedReservation": "unknown",
+          "basis": null
+        },
+        "publication": {
+          "status": "absent_public_registry",
+          "basis": "https://b2b.bakemyday.se/velvet/data/booking-providers.json"
+        },
+        "logo": {
+          "status": "verified",
+          "assetStatus": "local_asset_present",
+          "owner": "01a14138-697b-7681-aac3-72cf68a8f205",
+          "source": "https://scorpios.com/mykonos",
+          "checkedAt": "2026-10-16",
+          "publication": {
+            "status": "exact_public_manifest_match",
+            "basis": "https://b2b.bakemyday.se/velvet/data/restaurant-brands.json"
+          }
+        }
+      },
+      "priority": 1,
+      "evidence": {
+        "catalog": {
+          "file": "data/restaurants.json",
+          "website": "https://scorpios.com/mykonos",
+          "address": "Mykonos, Greece",
+          "locationSource": null,
+          "locationVerifiedAt": null
+        },
+        "mapping": {
+          "file": "data/booking-providers.json",
+          "record": {
+            "provider": "SevenRooms",
+            "venueId": "scorpiosmykonosrestaurant",
+            "name": "Scorpios Mykonos",
+            "city": "Mykonos",
+            "url": "https://www.sevenrooms.com/reservations/scorpiosmykonosrestaurant",
+            "source": "https://scorpios.com/mykonos",
+            "checkedAt": "2026-10-16",
+            "verification": "official_link_only",
+            "integrationMode": "external_link",
+            "liveAvailabilitySupported": false,
+            "completionTracking": "unsupported",
+            "venueKey": "www.sevenrooms.com/reservations/scorpiosmykonosrestaurant"
+          }
+        },
+        "audit": null,
+        "externalWorklist": null,
+        "routeReview": {
+          "file": "data/restaurant-route-evidence.json",
+          "record": {
+            "issue": 99,
+            "claim": "velvet-root-scorpios-20261016",
+            "owner": "/root/opentable_destinations",
+            "restaurantId": "curated-MYK-scorpios-mykonos",
+            "checkedAt": "2026-10-15T23:13:37.943Z",
+            "status": "complete",
+            "classification": "verified_official_restaurant_provider_route_external_only",
+            "identity": {
+              "name": "Scorpios Mykonos Restaurant",
+              "city": "Mykonos",
+              "country": "Greece",
+              "source": "https://scorpios.com/mykonos-restaurant"
+            },
+            "binding": {
+              "source": "https://scorpios.com/mykonos",
+              "sourceStatus": 200,
+              "control": "<input type=\"radio\" data-space=\"mykonos_restaurant\" name=\"space\" id=\"mykonos_restaurant\" data-venue=\"scorpiosmykonosrestaurant\">",
+              "label": "Restaurant",
+              "bundleUrl": "https://scorpios.com/layout/scripts/bundle.js?1785741448485",
+              "initializationCode": "initialiseSevenRooms(e){const t={venueId:e,allVenues:[],triggerId:this.checkAvailButtonId,type:\"reservations\",styleButton:!1};\"scorpiosmykonosgroup\"==e&&(t.allVenues=this.spaces.filter((e=>e.getAttribute(\"data-space\").startsWith(\"mykonos_\")&&e.hasAttribute(\"data-venue\")&&\"scorpiosmykonosgroup\"!=e.getAttribute(\"data-venue\"))).map((e=>e.getAttribute(",
+              "providerWidgetSource": "https://www.sevenrooms.com/widget/embed.js",
+              "construction": "Observed SevenRooms widget constructs getDomain(env) + /reservations/ + venueId; official selector supplies exact restaurant venueId.",
+              "url": "https://www.sevenrooms.com/reservations/scorpiosmykonosrestaurant",
+              "sourceBindingTest": true
+            },
+            "providerProbe": {
+              "method": "GET",
+              "status": 200,
+              "finalUrl": "https://www.sevenrooms.com/reservations/scorpiosmykonosrestaurant",
+              "title": "Scorpios Mykonos Restaurant Reservations",
+              "renderedInitialForm": false
+            },
+            "excludedExperiences": [
+              "scorpiosmykonosbeach",
+              "scorpiosmykonossunsetbeach",
+              "scorpiosmykonosterrace events",
+              "scorpiosmykonosgroup",
+              "all Bodrum spaces"
+            ],
+            "guard": {
+              "onlyGet": true,
+              "browserJavaScriptExecuted": false,
+              "serviceWorkers": "not started; HTTP document and public script text fetch only",
+              "postRequests": 0,
+              "slotsSelected": 0,
+              "holds": 0,
+              "reservations": 0,
+              "payments": 0
+            },
+            "availability": "unknown",
+            "cancellationPolicyStatus": "unknown",
+            "paymentRequirement": "unknown",
+            "season": "not verified",
+            "limitations": [
+              "Only official configuration and provider HTML title verified; no interactive form or iframe proof.",
+              "No availability, guest-validation, payment, cancellation, confirmation or selected-time journey verified.",
+              "External-only candidate requires normal root integration guards/tests."
+            ],
+            "nextAction": "Root can integrate exact SevenRooms venueId/source/url as external_link with liveAvailabilitySupported false; browser journey needed before native_embed/live promotion.",
+            "files": [
+              "work/issue99-evidence.json",
+              "work/issue99-registry.json"
+            ],
+            "publication": "not_published"
+          }
+        },
+        "brandReview": {
+          "file": "docs/restaurant-brand-review.json",
+          "record": {
+            "placeId": "curated-MYK-scorpios-mykonos",
+            "name": "Scorpios Mykonos",
+            "status": "verified",
+            "reason": "Official Scorpios Mykonos location page includes the restaurant and the selected Scorpios wordmark. Logo visually verified on a light/dark contact sheet.",
+            "evidence": [
+              "https://scorpios.com/mykonos",
+              "https://scorpios.com/assets/Scorpios-Logotype-white.svg"
+            ],
+            "checkedAt": "2026-10-16",
+            "identityEvidence": "Official Scorpios Mykonos location page includes the restaurant and the selected Scorpios wordmark."
+          }
+        },
+        "logo": {
+          "file": "data/restaurant-brands.json",
+          "record": {
+            "src": "media/brands/restaurant-curated-myk-scorpios-mykonos.svg",
+            "source": "https://scorpios.com/mykonos",
+            "sourceAsset": "https://scorpios.com/assets/Scorpios-Logotype-white.svg",
+            "verifiedAt": "2026-10-16",
+            "surface": "dark",
+            "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+            "identityEvidence": "Official Scorpios Mykonos location page includes the restaurant and the selected Scorpios wordmark."
+          }
+        }
+      }
+    },
+    {
       "restaurantId": "curated-MYK-zuma-mykonos",
       "name": "Zuma Mykonos",
       "city": "Mykonos",
@@ -11303,8 +11468,8 @@
       "provider": "SevenRooms",
       "source": "https://www.marriott.com/en-us/hotels/olblc-hotel-cala-di-volpe-a-luxury-collection-hotel-costa-smeralda/dining/",
       "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
-      "blocker": "Mapping not published",
-      "next": "Verify publication against reviewed mapping",
+      "blocker": null,
+      "next": "Validate remaining guest journey without live booking",
       "checked": "2026-10-16",
       "status": {
         "identity": "reviewed_mapping",
@@ -11325,7 +11490,7 @@
           }
         },
         "publication": {
-          "status": "absent_public_registry",
+          "status": "exact_public_registry_match",
           "basis": "https://b2b.bakemyday.se/velvet/data/booking-providers.json"
         },
         "logo": {
@@ -16133,6 +16298,186 @@
             "surface": "dark",
             "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
             "identityEvidence": "Official TURK Fatih Tutak homepage lists Yeniyol Sk. No 2, Şişli, İstanbul."
+          }
+        }
+      }
+    },
+    {
+      "restaurantId": "curated-TUL-hartwood",
+      "name": "Hartwood",
+      "city": "Tulum",
+      "cityCode": "TUL",
+      "country": "Mexico",
+      "provider": "Typeform",
+      "source": "https://www.hartwoodtulum.com/",
+      "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
+      "blocker": "Provider processes a request; no instant confirmation",
+      "next": "Verify publication against reviewed mapping",
+      "checked": "2026-10-16",
+      "status": {
+        "identity": "reviewed_mapping",
+        "bookingRoute": "official_request_form",
+        "implementation": "external_link",
+        "tests": {
+          "status": "reported_checks",
+          "confirmedReservation": "reported_not_confirmed",
+          "basis": "data/restaurant-route-evidence.json",
+          "reported": {
+            "officialExternalLink": true,
+            "embeddedOriginalForm": true,
+            "liveAvailability": false,
+            "confirmedReservation": false,
+            "simulatedValidation": false,
+            "method": "Playwright serviceWorkers blocked, route guard onlyGET/HEAD. No BOOK NOW click, no inputs, no search or submit. Form-open telemetry POST blocked."
+          }
+        },
+        "publication": {
+          "status": "absent_public_registry",
+          "basis": "https://b2b.bakemyday.se/velvet/data/booking-providers.json"
+        },
+        "logo": {
+          "status": "verified",
+          "assetStatus": "local_asset_present",
+          "owner": "01a14138-697b-7681-aac3-72cf68a8f205",
+          "source": "https://www.hartwoodtulum.com/",
+          "checkedAt": "2026-10-16",
+          "publication": {
+            "status": "exact_public_manifest_match",
+            "basis": "https://b2b.bakemyday.se/velvet/data/restaurant-brands.json"
+          }
+        }
+      },
+      "priority": 1,
+      "evidence": {
+        "catalog": {
+          "file": "data/restaurants.json",
+          "website": null,
+          "address": "Tulum, Mexico",
+          "locationSource": null,
+          "locationVerifiedAt": null
+        },
+        "mapping": {
+          "file": "data/booking-providers.json",
+          "record": {
+            "name": "Hartwood",
+            "city": "Tulum",
+            "provider": "Typeform",
+            "venueId": "f6JtAUPI",
+            "venueKey": "www.hartwoodtulum.com/reservation",
+            "url": "https://www.hartwoodtulum.com/reservation",
+            "source": "https://www.hartwoodtulum.com/",
+            "checkedAt": "2026-10-16",
+            "verification": "official_link_only",
+            "integrationMode": "external_link",
+            "bookingMode": "request_only",
+            "responseTimeHours": {
+              "max": 24
+            },
+            "cancellationPolicyStatus": "unknown",
+            "liveAvailabilitySupported": false,
+            "completionTracking": "unsupported"
+          }
+        },
+        "audit": null,
+        "externalWorklist": null,
+        "routeReview": {
+          "file": "data/restaurant-route-evidence.json",
+          "record": {
+            "issue": 105,
+            "claim": "velvet-root-hartwood-20261016",
+            "restaurantId": "curated-TUL-hartwood",
+            "checkedAt": "2026-10-16",
+            "identity": {
+              "status": "verified",
+              "name": "Hartwood",
+              "city": "Tulum",
+              "country": "Mexico",
+              "source": "https://www.hartwoodtulum.com/",
+              "proof": "Exact Hartwood Tulum website title and local Reserve a Table link to /reservation. Provider form belongs to wrapper linked by restaurant. Catalog name/city match; detailed postal address not independently established from official text."
+            },
+            "bookingRoute": {
+              "status": "official_request_form",
+              "provider": "Typeform",
+              "url": "https://www.hartwoodtulum.com/reservation",
+              "source": "https://www.hartwoodtulum.com/",
+              "venueId": "f6JtAUPI",
+              "observedEmbed": "https://form.typeform.com/to/f6JtAUPI",
+              "bookingMode": "request_only",
+              "responseTimeHours": {
+                "max": 24
+              },
+              "liveAvailabilitySupported": false,
+              "completionTracking": "unsupported",
+              "proof": "Official wrapper renders reservation policy and Typeform. Public GET response form definition contains contact/date/preferred time/party/notes questions and follow-up email within24h ending. Ending inspected in delivered definition; never submitted/reached live."
+            },
+            "contact": {
+              "email": "reservations@hartwoodtulum.com",
+              "whatsapp": "+529841328700",
+              "source": "https://www.hartwoodtulum.com/reservation",
+              "role": "Form explicitly offers email instead and same-day requests by visit or WhatsApp."
+            },
+            "policy": {
+              "cancellationPolicyStatus": "unknown",
+              "cardGuarantee": null,
+              "prepayment": null,
+              "walkIns": "welcome",
+              "singleGuest": "first come, first served",
+              "formPartyRange": {
+                "min": 2,
+                "max": 23
+              },
+              "hours": "Wednesday-Sunday18:00-22:00; closedMondayTuesday",
+              "source": "https://www.hartwoodtulum.com/reservation",
+              "limitation": "Static preferred times18:00-21:30 are choices, never live inventory. Generic Typeform payment translations/assets are not evidence of this form requiring payment."
+            },
+            "checks": {
+              "officialExternalLink": true,
+              "embeddedOriginalForm": true,
+              "liveAvailability": false,
+              "confirmedReservation": false,
+              "simulatedValidation": false,
+              "method": "Playwright serviceWorkers blocked, route guard onlyGET/HEAD. No BOOK NOW click, no inputs, no search or submit. Form-open telemetry POST blocked."
+            },
+            "decision": "accept_external_request_only_wrapper",
+            "guardRecommendation": "Bind exact restaurantID,Typeform,venueId f6JtAUPI, official wrapper URL+source. Do not generally allow arbitrary Typeform links or infer instant availability. Existing response UI must support max-only24h without inventing minimum.",
+            "evidenceFiles": [
+              "work/issue105-home-browser.json",
+              "work/issue105-reservation-browser.json",
+              "work/issue105-form-definition.json"
+            ],
+            "publication": "not_changed",
+            "limitations": [
+              "No full customer journey or form submission tested.",
+              "No real-time inventory; no cancellation fee or card policy observed."
+            ],
+            "next": "Root integrate strict external request-only wrapper mapping and max24h notice; no instant-booking claim."
+          }
+        },
+        "brandReview": {
+          "file": "docs/restaurant-brand-review.json",
+          "record": {
+            "placeId": "curated-TUL-hartwood",
+            "name": "Hartwood",
+            "status": "verified",
+            "reason": "Official Hartwood Tulum site identifies the Tulum restaurant and uses the selected Hartwood header mark. Logo visually verified on a light/dark contact sheet.",
+            "evidence": [
+              "https://www.hartwoodtulum.com/",
+              "https://cdn.prod.website-files.com/5dbb258ef54c0afee9c12ad1/5dbb26abbe2d93067c13784a_logo.png"
+            ],
+            "checkedAt": "2026-10-16",
+            "identityEvidence": "Official Hartwood Tulum site identifies the Tulum restaurant and uses the selected Hartwood header mark."
+          }
+        },
+        "logo": {
+          "file": "data/restaurant-brands.json",
+          "record": {
+            "src": "media/brands/restaurant-curated-tul-hartwood.png",
+            "source": "https://www.hartwoodtulum.com/",
+            "sourceAsset": "https://cdn.prod.website-files.com/5dbb258ef54c0afee9c12ad1/5dbb26abbe2d93067c13784a_logo.png",
+            "verifiedAt": "2026-10-16",
+            "surface": "dark",
+            "identityEvidence": "Official Hartwood Tulum site identifies the Tulum restaurant and uses the selected Hartwood header mark.",
+            "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
           }
         }
       }
@@ -21568,6 +21913,178 @@
             "identityEvidence": "Official restaurant source identifies ร้านอาหารในภูเก็ต อิ่มอร่อยกับเมนูซีฟู๊ด และอาหารพื้นบ้านใจกลางเมืองภูเก็ต ไม้หมอนซีฟู๊ด แอนด์ คาราโอเกะ. Original restaurant logo visually verified in contact sheet second."
           }
         }
+      }
+    },
+    {
+      "restaurantId": "curated-STT-verde-beach",
+      "name": "Verde Beach",
+      "city": "Saint-Tropez",
+      "cityCode": "STT",
+      "country": "France",
+      "provider": null,
+      "source": "https://cotedazurfrance.fr/offres/verde-beach-ramatuelle-fr-2911728/",
+      "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
+      "blocker": "No active reviewed provider mapping",
+      "next": "Review booking route and provider integration",
+      "checked": "2026-10-15T23:13:04.010Z",
+      "status": {
+        "identity": "verified_official_tourism",
+        "bookingRoute": "unresolved",
+        "implementation": "not_integrated",
+        "tests": {
+          "status": "reported_checks",
+          "confirmedReservation": "reported_not_confirmed",
+          "basis": "data/restaurant-route-evidence.json",
+          "reported": {
+            "officialDomainRendered": true,
+            "exactBookingLinkVerified": false,
+            "embeddedOriginalForm": false,
+            "liveAvailability": false,
+            "simulatedCheckout": false,
+            "confirmedReservation": false,
+            "guard": "GET/HEAD only and serviceWorkers:block; no controls clicked, no contact/messages/holds/payments"
+          }
+        },
+        "publication": {
+          "status": "unknown",
+          "basis": null
+        },
+        "logo": {
+          "status": "source_unavailable",
+          "assetStatus": "unknown",
+          "owner": "01a14138-697b-7681-aac3-72cf68a8f205",
+          "source": "https://verde-beach.com/",
+          "checkedAt": "2026-10-16",
+          "publication": {
+            "status": "unknown",
+            "basis": "https://b2b.bakemyday.se/velvet/data/restaurant-brands.json"
+          }
+        }
+      },
+      "priority": 2,
+      "evidence": {
+        "catalog": {
+          "file": "data/restaurants.json",
+          "website": null,
+          "address": "Saint-Tropez, France",
+          "locationSource": null,
+          "locationVerifiedAt": null
+        },
+        "mapping": null,
+        "audit": null,
+        "externalWorklist": null,
+        "routeReview": {
+          "file": "data/restaurant-route-evidence.json",
+          "record": {
+            "issue": 104,
+            "claim": "velvet-root-verde-20261016",
+            "restaurantId": "curated-STT-verde-beach",
+            "checkedAt": "2026-10-15T23:13:04.010Z",
+            "guard": "GET/HEAD only;serviceWorkers:block;no controls clicked",
+            "blocked": 0,
+            "observation": {
+              "url": "https://verde-beach.com/",
+              "title": "Verde Beach",
+              "text": "Aller au contenu\n\nVerde Beach\n\nWishlist\nWishlist\nWishlist\nUn engagement en faveur de lâ€™innovation et de la durabilitÃ©\n\nÃ‰tudes est un cabinet pionnier qui fusionne harmonieusement la crÃ©ativitÃ© et la fonctionnalitÃ© pour redÃ©finir lâ€™excellence architecturale.\n\nÃ€ propos\nUne passion pour la crÃ©ation dâ€™espaces\n\nNotre gamme complÃ¨te de services professionnels sâ€™adresse Ã  une clientÃ¨le diversifiÃ©e, allant des propriÃ©taires aux promotrices ou promoteurs commerciaux.\n\nRÃ©novation et restauration\n\nDÃ©couvrez la fusion de lâ€™imagination et de lâ€™expertise avec Ã‰tudes Architectural Solutions.\n\nSupport continu\n\nDÃ©couvrez la fusion de lâ€™imagination et de lâ€™expertise avec Ã‰tudes Architectural Solutions.\n\nAccÃ¨s Ã  lâ€˜application\n\nDÃ©couvrez la fusion de lâ€™imagination et de lâ€™expertise avec Ã‰tudes Architectural Solutions.\n\nConseil\n\nDÃ©couvrez la fusion de lâ€™imagination et de lâ€™expertise avec Ã‰tudes Architectural Solutions.\n\nGestion de projet\n\nDÃ©couvrez la fusion de lâ€™imagination et de lâ€™expertise avec Ã‰tudes Architectural Solutions.\n\nArchitectural Solutions\n\nVivez lâ€™expÃ©rience de la fusion entre lâ€™imagination et lâ€™expertise avec Ã‰tudes Architectural Solutions.\n\nUn tableau de ressources\n\nNotre suite complÃ¨te de services professionnels sâ€™adresse Ã  une clientÃ¨le diversifiÃ©e, allant des propriÃ©taires au dÃ©veloppeurs commerciaux.\n\nApplication Ã‰tudes Architect\nCollaborez avec dâ€™autres architectes.\nPrÃ©sentez vos projets.\nDÃ©couvrez le monde de lâ€™architecture.\nNewsletter Ã‰tudes\nUn monde dâ€™articles stimulants.\nÃ‰tudes de cas qui cÃ©lÃ¨brent lâ€™architecture.\nAccÃ¨s exclusif aux connaissances en design.\n\nÂ«Â Ã‰tudes nous a fait gagner des milliers dâ€™heures de travail et a rÃ©vÃ©lÃ© des perspectives auxquelles nous nâ€™aurions jamais pensÃ© possible.Â Â»\n\nAnnie Steiner\n\nPDG, Greenprint\n\nRegardez, lisez, Ã©coutez\n\nAucune publication nâ€™a Ã©tÃ© trouvÃ©e.\n\nRejoignez plus de 900 abonnÃ©s/abonnÃ©es\n\nRestez au courant de tout ce que vous devez savoir.\n\nSâ€™inscrire\n\nVerde Beach\n\nÃ€ propos\nÃ‰quipe\nHistoire\nEmplois\nConfidentialitÃ©\nPolitique de confidentialitÃ©\nConditions gÃ©nÃ©rales\nNous contacter\nRÃ©seaux sociaux\nFacebook\nInstagram\nTwitter/X\n\nConÃ§u avec WordPress",
+              "links": [
+                {
+                  "text": "Facebook",
+                  "url": "https://verde-beach.com/#"
+                }
+              ],
+              "frames": []
+            },
+            "additionalReads": [
+              {
+                "url": "https://verde-beach.com/es/",
+                "finalUrl": "https://verde-beach.com/es/",
+                "title": [
+                  "Verde Beach"
+                ],
+                "links": []
+              },
+              {
+                "url": "https://verde-beach.com/contact-us/",
+                "finalUrl": "https://verde-beach.com/contact-us/",
+                "title": [
+                  "Verde Beach"
+                ],
+                "links": []
+              },
+              {
+                "url": "https://www.verde-beach.com/",
+                "error": "<urlopen error [Errno 11001] getaddrinfo failed>"
+              }
+            ],
+            "status": "blocked",
+            "identity": {
+              "status": "verified_official_tourism",
+              "name": "Verde Beach",
+              "city": "Saint-Tropez",
+              "locality": "Ramatuelle",
+              "address": "1149 Chemin de l’Épi, Plage de Pampelonne, 83350 Ramatuelle, France",
+              "source": "https://cotedazurfrance.fr/offres/verde-beach-ramatuelle-fr-2911728/",
+              "corroboration": "https://www.ramatuelle-tourisme.com/fr/sorties/restaurant/ramatuelle/plage-verde-5263750/",
+              "limitation": "Restaurant domain currently no longer renders the previously indexed venue page."
+            },
+            "bookingRoute": {
+              "status": "unresolved",
+              "provider": null,
+              "url": null,
+              "liveAvailabilitySupported": false,
+              "completionTracking": "unsupported"
+            },
+            "blocker": "Official domain now renders generic WordPress Etudes architecture placeholder for homepage, /es/ and /contact-us/. No real restaurant booking links/iframes/contact destinations in fresh rendered or raw GET responses. Previously indexed restaurant content is stale relative to live responses. Exact current official source-to-provider binding cannot be verified.",
+            "rejected": [
+              {
+                "source": "https://verde-paris.fr/fr_fr/reservations",
+                "reason": "Search title incorrectly suggests beach; content identifies Paris24AvenueGeorgeV, phone+33142887575, SevenRooms verdeparis; wrong branch."
+              },
+              {
+                "source": "https://misana-group.com/en/reservations/verde-beach",
+                "reason": "Third-party concierge request service; not restaurant-controlled provider binding."
+              },
+              {
+                "source": "indexed old verde-beach.com locale pages",
+                "reason": "Cached booking headings without exact endpoint, superseded by fresh placeholder content."
+              }
+            ],
+            "policy": {
+              "cancellation": null,
+              "cardGuarantee": null,
+              "prepayment": null,
+              "season": null,
+              "operatingStatus": "unknown"
+            },
+            "tests": {
+              "officialDomainRendered": true,
+              "exactBookingLinkVerified": false,
+              "embeddedOriginalForm": false,
+              "liveAvailability": false,
+              "simulatedCheckout": false,
+              "confirmedReservation": false,
+              "guard": "GET/HEAD only and serviceWorkers:block; no controls clicked, no contact/messages/holds/payments"
+            },
+            "decision": "no_registry_fragment_do_not_guess_slug_or_infer_closure",
+            "next": "Keep #104 blocked for source-to-provider verification until restaurant site returns or another restaurant-controlled channel explicitly identifies the exact Ramatuelle booking endpoint. Do not activate Paris or a guessed SevenRooms slug. Official tourism phone is general contact, not independently verified booking route.",
+            "publication": "not_changed"
+          }
+        },
+        "brandReview": {
+          "file": "docs/restaurant-brand-review.json",
+          "record": {
+            "placeId": "curated-STT-verde-beach",
+            "name": "Verde Beach",
+            "status": "source_unavailable",
+            "reason": "Search linked official Verde Beach domain, but live fetch returns generic WordPress architecture/template content, not restaurant branding.",
+            "evidence": [
+              "https://verde-beach.com/"
+            ],
+            "searchQuery": "Verde Beach Saint Tropez official restaurant",
+            "checkedAt": "2026-10-16"
+          }
+        },
+        "logo": null
       }
     },
     {
@@ -69826,85 +70343,6 @@
       }
     },
     {
-      "restaurantId": "curated-MYK-scorpios-mykonos",
-      "name": "Scorpios Mykonos",
-      "city": "Mykonos",
-      "cityCode": "MYK",
-      "country": "Greece",
-      "provider": null,
-      "source": "https://scorpios.com/mykonos",
-      "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
-      "blocker": "No active reviewed provider mapping",
-      "next": "Verify exact restaurant identity and official booking route",
-      "checked": null,
-      "status": {
-        "identity": "unknown",
-        "bookingRoute": "unknown",
-        "implementation": "not_integrated",
-        "tests": {
-          "status": "unknown",
-          "confirmedReservation": "unknown",
-          "basis": null
-        },
-        "publication": {
-          "status": "unknown",
-          "basis": null
-        },
-        "logo": {
-          "status": "verified",
-          "assetStatus": "local_asset_present",
-          "owner": "01a14138-697b-7681-aac3-72cf68a8f205",
-          "source": "https://scorpios.com/mykonos",
-          "checkedAt": "2026-10-16",
-          "publication": {
-            "status": "exact_public_manifest_match",
-            "basis": "https://b2b.bakemyday.se/velvet/data/restaurant-brands.json"
-          }
-        }
-      },
-      "priority": 3,
-      "evidence": {
-        "catalog": {
-          "file": "data/restaurants.json",
-          "website": "https://scorpios.com/mykonos",
-          "address": "Mykonos, Greece",
-          "locationSource": null,
-          "locationVerifiedAt": null
-        },
-        "mapping": null,
-        "audit": null,
-        "externalWorklist": null,
-        "routeReview": null,
-        "brandReview": {
-          "file": "docs/restaurant-brand-review.json",
-          "record": {
-            "placeId": "curated-MYK-scorpios-mykonos",
-            "name": "Scorpios Mykonos",
-            "status": "verified",
-            "reason": "Official Scorpios Mykonos location page includes the restaurant and the selected Scorpios wordmark. Logo visually verified on a light/dark contact sheet.",
-            "evidence": [
-              "https://scorpios.com/mykonos",
-              "https://scorpios.com/assets/Scorpios-Logotype-white.svg"
-            ],
-            "checkedAt": "2026-10-16",
-            "identityEvidence": "Official Scorpios Mykonos location page includes the restaurant and the selected Scorpios wordmark."
-          }
-        },
-        "logo": {
-          "file": "data/restaurant-brands.json",
-          "record": {
-            "src": "media/brands/restaurant-curated-myk-scorpios-mykonos.svg",
-            "source": "https://scorpios.com/mykonos",
-            "sourceAsset": "https://scorpios.com/assets/Scorpios-Logotype-white.svg",
-            "verifiedAt": "2026-10-16",
-            "surface": "dark",
-            "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
-            "identityEvidence": "Official Scorpios Mykonos location page includes the restaurant and the selected Scorpios wordmark."
-          }
-        }
-      }
-    },
-    {
       "restaurantId": "curated-PAR-arpege",
       "name": "Arpège",
       "city": "Paris",
@@ -77988,73 +78426,6 @@
       }
     },
     {
-      "restaurantId": "curated-STT-verde-beach",
-      "name": "Verde Beach",
-      "city": "Saint-Tropez",
-      "cityCode": "STT",
-      "country": "France",
-      "provider": null,
-      "source": null,
-      "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
-      "blocker": "No active reviewed provider mapping",
-      "next": "Verify exact restaurant identity and official booking route",
-      "checked": null,
-      "status": {
-        "identity": "unknown",
-        "bookingRoute": "unknown",
-        "implementation": "not_integrated",
-        "tests": {
-          "status": "unknown",
-          "confirmedReservation": "unknown",
-          "basis": null
-        },
-        "publication": {
-          "status": "unknown",
-          "basis": null
-        },
-        "logo": {
-          "status": "source_unavailable",
-          "assetStatus": "unknown",
-          "owner": "01a14138-697b-7681-aac3-72cf68a8f205",
-          "source": "https://verde-beach.com/",
-          "checkedAt": "2026-10-16",
-          "publication": {
-            "status": "unknown",
-            "basis": "https://b2b.bakemyday.se/velvet/data/restaurant-brands.json"
-          }
-        }
-      },
-      "priority": 3,
-      "evidence": {
-        "catalog": {
-          "file": "data/restaurants.json",
-          "website": null,
-          "address": "Saint-Tropez, France",
-          "locationSource": null,
-          "locationVerifiedAt": null
-        },
-        "mapping": null,
-        "audit": null,
-        "externalWorklist": null,
-        "routeReview": null,
-        "brandReview": {
-          "file": "docs/restaurant-brand-review.json",
-          "record": {
-            "placeId": "curated-STT-verde-beach",
-            "name": "Verde Beach",
-            "status": "source_unavailable",
-            "reason": "Search linked official Verde Beach domain, but live fetch returns generic WordPress architecture/template content, not restaurant branding.",
-            "evidence": [
-              "https://verde-beach.com/"
-            ],
-            "searchQuery": "Verde Beach Saint Tropez official restaurant",
-            "checkedAt": "2026-10-16"
-          }
-        },
-        "logo": null
-      }
-    },
-    {
       "restaurantId": "osm-STT-a-l-amitie",
       "name": "À L'amitié",
       "city": "Saint-Tropez",
@@ -83708,85 +84079,6 @@
           }
         },
         "logo": null
-      }
-    },
-    {
-      "restaurantId": "curated-TUL-hartwood",
-      "name": "Hartwood",
-      "city": "Tulum",
-      "cityCode": "TUL",
-      "country": "Mexico",
-      "provider": null,
-      "source": null,
-      "owner": "01a14080-83ed-7991-ac52-7f57761f13e7",
-      "blocker": "No active reviewed provider mapping",
-      "next": "Verify exact restaurant identity and official booking route",
-      "checked": null,
-      "status": {
-        "identity": "unknown",
-        "bookingRoute": "unknown",
-        "implementation": "not_integrated",
-        "tests": {
-          "status": "unknown",
-          "confirmedReservation": "unknown",
-          "basis": null
-        },
-        "publication": {
-          "status": "unknown",
-          "basis": null
-        },
-        "logo": {
-          "status": "verified",
-          "assetStatus": "local_asset_present",
-          "owner": "01a14138-697b-7681-aac3-72cf68a8f205",
-          "source": "https://www.hartwoodtulum.com/",
-          "checkedAt": "2026-10-16",
-          "publication": {
-            "status": "exact_public_manifest_match",
-            "basis": "https://b2b.bakemyday.se/velvet/data/restaurant-brands.json"
-          }
-        }
-      },
-      "priority": 3,
-      "evidence": {
-        "catalog": {
-          "file": "data/restaurants.json",
-          "website": null,
-          "address": "Tulum, Mexico",
-          "locationSource": null,
-          "locationVerifiedAt": null
-        },
-        "mapping": null,
-        "audit": null,
-        "externalWorklist": null,
-        "routeReview": null,
-        "brandReview": {
-          "file": "docs/restaurant-brand-review.json",
-          "record": {
-            "placeId": "curated-TUL-hartwood",
-            "name": "Hartwood",
-            "status": "verified",
-            "reason": "Official Hartwood Tulum site identifies the Tulum restaurant and uses the selected Hartwood header mark. Logo visually verified on a light/dark contact sheet.",
-            "evidence": [
-              "https://www.hartwoodtulum.com/",
-              "https://cdn.prod.website-files.com/5dbb258ef54c0afee9c12ad1/5dbb26abbe2d93067c13784a_logo.png"
-            ],
-            "checkedAt": "2026-10-16",
-            "identityEvidence": "Official Hartwood Tulum site identifies the Tulum restaurant and uses the selected Hartwood header mark."
-          }
-        },
-        "logo": {
-          "file": "data/restaurant-brands.json",
-          "record": {
-            "src": "media/brands/restaurant-curated-tul-hartwood.png",
-            "source": "https://www.hartwoodtulum.com/",
-            "sourceAsset": "https://cdn.prod.website-files.com/5dbb258ef54c0afee9c12ad1/5dbb26abbe2d93067c13784a_logo.png",
-            "verifiedAt": "2026-10-16",
-            "surface": "dark",
-            "identityEvidence": "Official Hartwood Tulum site identifies the Tulum restaurant and uses the selected Hartwood header mark.",
-            "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
-          }
-        }
       }
     },
     {
