@@ -1,0 +1,45 @@
+{
+  "issue": 57,
+  "agent": "codex-20261016-01",
+  "restaurantId": "curated-BCN-disfrutar",
+  "checkedAt": "2026-10-16",
+  "status": "ready_for_review",
+  "identity": {
+    "name": "Disfrutar",
+    "address": "C. de Villarroel, 163, 08036 Barcelona, Spain",
+    "website": "https://www.disfrutarbarcelona.com/",
+    "operatingEvidence": "Current official restaurant and booking pages describe this restaurant and offer reservations; no visit or reservation made.",
+    "catalogMatches": ["curated-BCN-disfrutar"],
+    "duplicateCheck": "Searched all catalog records for Disfrutar or Villarroel followed by 163. One match; aliases without those strings are not excluded."
+  },
+  "bookingRoute": {
+    "categoriesVerified": ["A", "E"],
+    "preferredGuestUrl": "https://www.disfrutarbarcelona.com/bookings",
+    "provider": "CoverManager",
+    "providerUrl": "https://www.covermanager.com/reservation/module_restaurant/resaurante-disfrutar/english",
+    "linkProvenance": "Official home BOOKING link leads to /bookings. Its HTML constructs iframe #bookings-engine with this exact CoverManager src.",
+    "reservationType": "Official terms describe reservations and a separate waiting list when the requested date is unavailable; neither was submitted.",
+    "phone": "+34933486896",
+    "phoneEvidence": "The official bookings page explicitly offers phone reservations Monday-Friday 10:30-22:00.",
+    "languages": {"observedPage": "en", "officialNavigation": ["ca", "es", "fr"], "providerUrlLanguage": "english", "otherLanguagesTested": false},
+    "paymentRequirement": "card_guarantee",
+    "cancellationPolicy": "Official terms section 3.1: no charge for cancellation up to 15 days before; later cancellation or no-show EUR 150 per person. Card details required.",
+    "prepayment": "Section 7 states reservation payment on dining day, subject to cancellation penalties; checkout not inspected.",
+    "liveAvailabilitySupported": false,
+    "confirmedReservation": false,
+    "completionTracking": "unsupported"
+  },
+  "sources": [
+    "https://www.disfrutarbarcelona.com/?lang=en",
+    "https://www.disfrutarbarcelona.com/bookings",
+    "https://www.disfrutarbarcelona.com/terms-conditions-booking",
+    "https://www.covermanager.com/reservation/module_restaurant/resaurante-disfrutar/english"
+  ],
+  "integration": {
+    "status": "not_integrated",
+    "recommendation": "Use the official /bookings page as the guest destination because the restaurant identifies its own website as its official channel. Keep the exact CoverManager URL as provenance, not an automatically approved direct-link mapping.",
+    "sharedFilesOwner": "01a14080-83ed-7991-ac52-7f57761f13e7",
+    "nextAction": "Integrator reviews this evidence, chooses the approved official-site route under existing validation rules, and consolidates the canonical worklist.",
+    "publication": "not_published"
+  }
+}
