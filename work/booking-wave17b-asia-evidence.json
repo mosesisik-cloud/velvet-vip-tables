@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-16",
+  "claimOwner": "gabbe-wave17-01a02152",
+  "records": [
+    {
+      "issue": 89,
+      "restaurantId": "curated-HKG-caprice",
+      "name": "Caprice",
+      "identity": {
+        "name": "Caprice",
+        "address": "6/F, Four Seasons Hotel Hong Kong, 8 Finance Street, Central, Hong Kong",
+        "source": "https://www.fourseasons.com/hongkong/dining/restaurants/caprice/",
+        "addressSource": "https://www.fourseasons.com/hongkong/getting-here/",
+        "status": "verified",
+        "note": "Restaurant page identifies Caprice on 6/F; official hotel location page supplies the street address. Caprice Bar, other hotel restaurants and hotel-room booking links are separate entities/routes."
+      },
+      "sources": [
+        {
+          "url": "https://www.fourseasons.com/hongkong/dining/restaurants/caprice/",
+          "observation": "Official restaurant page identifies Caprice, floor 6, a Reserve A Table action and Reservations and Inquiries phone +85231968882. Parent clicked the official Reserve A Table action and observed an initial same-page reservation form, with date, people and time controls and Find A Table button. No active maintenance error appeared. Search-indexed maintenance fallback text is not treated as a current outage."
+        },
+        {
+          "url": "https://www.fourseasons.com/hongkong/getting-here/",
+          "observation": "Official hotel location gives 8 Finance Street, Central, Hong Kong, matching the named property."
+        },
+        {
+          "url": "https://www.opentable.hk/r/four-seasons-hong-kong-caprice-central",
+          "observation": "Search found a matching provider listing at 8 Finance Street. This search result alone does not establish an official restaurant-to-provider link, exact numeric provider ID or current availability; no booking action or inventory test performed."
+        }
+      ],
+      "classification": "official_restaurant_booking_form_external_only",
+      "proposedMapping": {
+        "provider": "Restaurant website",
+        "name": "Caprice",
+        "city": "Hong Kong",
+        "url": "https://www.fourseasons.com/hongkong/dining/restaurants/caprice/",
+        "source": "https://www.fourseasons.com/hongkong/dining/restaurants/caprice/",
+        "venueKey": "www.fourseasons.com/hongkong/dining/restaurants/caprice/",
+        "checkedAt": "2026-10-16",
+        "verification": "official_restaurant_link_verified",
+        "integrationMode": "external_link",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported",
+        "notes": "Exact official restaurant page exposes a date/people/time search form after Reserve A Table. Backend provider identity remains unverified. No search submitted, inventory checked or reservation completed. Do not label telephone-only or currently under maintenance."
+      },
+      "manualContactCandidate": {
+        "type": "phone",
+        "value": "+85231968882",
+        "source": "https://www.fourseasons.com/hongkong/dining/restaurants/caprice/"
+      },
+      "checks": {
+        "officialIdentityVerified": true,
+        "officialProviderLinkVerified": false,
+        "officialReservationPageVerified": true,
+        "initialStandaloneFormObserved": true,
+        "observedBy": "/root",
+        "observation": "Parent CUA clicked Reserve A Table on the official restaurant page. Make A Reservation form appeared at the same URL: date 16 October, people options 1-20 (default 2), time options 00:00-23:30 (default 19:00), Find A Table control. Form action was # with JavaScript behavior; no provider iframe. No search submission or field change.",
+        "nativeEmbeddingObserved": false,
+        "availabilityObserved": false,
+        "confirmedReservation": false,
+        "bookingOrHoldCreated": null,
+        "personalDataSubmitted": false
+      },
+      "inspectionSafety": {
+        "backgroundSideEffects": "unknown",
+        "serviceWorkerBlocking": "not_recorded",
+        "requestWriteInterception": "not_recorded",
+        "networkAudit": "not_recorded",
+        "writeFreeEndToEndCertified": false,
+        "basis": "Evidence records visible initial form state and deliberate agent actions only. No agent field changes or search submission were observed. Contemporaneous network auditing, service-worker blocking and write-request interception provenance were not recorded; background requests and side effects remain unknown."
+      },
+      "limitations": [
+        "No network audit or safeguard provenance for service-worker blocking and write-request interception was recorded. Absence of deliberate form submission does not certify zero background side effects or a write-free end-to-end inspection.",
+        "Proposed record is the official restaurant page, not an OpenTable mapping. Exact backend provider destination/ID was not verified because Find A Table was not submitted.",
+        "The current resolver does not allow this Restaurant website host/path. Integrator must add an exact reviewed restaurant-ID/host/path rule and tests before activation; do not broadly allow arbitrary Four Seasons pages.",
+        "Worker browser/network surfaces were unavailable; initial form evidence is attributed to parent CUA. No Velvet iframe rendering tested.",
+        "No active maintenance error was observed in the parent browser. Search-indexed fallback text is not proof of outage or telephone-only policy.",
+        "No availability search, slot selection, card guarantee, cancellation, payment or completed-booking test."
+      ],
+      "publication": "not_published"
+    },
+    {
+      "issue": 102,
+      "restaurantId": "curated-SIN-burnt-ends",
+      "name": "Burnt Ends",
+      "identity": {
+        "name": "Burnt Ends Restaurant",
+        "address": "7 Dempsey Road, #01-02, Singapore 249671",
+        "source": "https://burntends.com.sg/contact/",
+        "status": "verified",
+        "note": "Official contact page distinguishes restaurant #01-02 from Burnt Ends Cocktail Bar #01-04 at the same street address. Bakery, Cellars, Meatsmith and other group brands are not this restaurant. Search-discovered burntendsrestaurant.com at River Valley Road is not used."
+      },
+      "sources": [
+        {
+          "url": "https://burntends.com.sg/contact/",
+          "observation": "Operator contact page provides the restaurant-specific #01-02 address, restaurant hours and general enquiry email. Cocktail bar #01-04 is separately identified."
+        },
+        {
+          "url": "https://burntendshospitalitygroup.com/reservations/",
+          "observation": "The Burnt Ends restaurant section has Reserve link https://burntends.com.sg/reservation/ which redirects to https://burntends.com.sg/reservations/. Other group venues have distinct entries."
+        },
+        {
+          "url": "https://burntends.com.sg/reservations/",
+          "observation": "Parent CUA inspected the official reservation page DOM and expanded its original iframe. Exact iframe source is https://www.restaurants.sg/modules/booking/book_form_section.php?bkrestaurant=SG_SG_R_BurntEnds&bktracking=WEBSITE&title=Burnt%20Ends . Provider form identifies Burnt Ends Restaurant and is powered by Weeloy. Static web extraction only showed the separate seating-gallery preview; the parent browser establishes the actual form."
+        },
+        {
+          "url": "https://www.restaurants.sg/modules/booking/book_form_section.php?bkrestaurant=SG_SG_R_BurntEnds&bktracking=WEBSITE&title=Burnt%20Ends",
+          "observation": "Exact original iframe URL from the official restaurant booking page, observed by parent. Initial form has restaurant identity, restaurant seating options separately from cocktail-bar options, two guests, lunch/dinner choice and October 2026 calendar. Date remains unselected; no real time slots or reservation confirmation observed."
+        }
+      ],
+      "classification": "official_provider_form_on_operator_site_external_only",
+      "proposedMapping": {
+        "provider": "Weeloy",
+        "name": "Burnt Ends",
+        "city": "Singapore",
+        "url": "https://www.restaurants.sg/modules/booking/book_form_section.php?bkrestaurant=SG_SG_R_BurntEnds&bktracking=WEBSITE&title=Burnt%20Ends",
+        "source": "https://burntends.com.sg/reservations/",
+        "venueKey": "SG_SG_R_BurntEnds",
+        "checkedAt": "2026-10-16",
+        "verification": "official_restaurant_link_verified",
+        "providerTitle": "Burnt Ends Restaurant",
+        "integrationMode": "external_link",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported",
+        "notes": "Exact Weeloy form and bkrestaurant identity observed within the official operator page only. Restaurant seating is distinct from cocktail-bar seating. No date/slot selected or booking submitted. Velvet embedding has not been tested."
+      },
+      "manualContactCandidate": null,
+      "officialReservationPage": "https://burntends.com.sg/reservations/",
+      "checks": {
+        "officialIdentityVerified": true,
+        "officialReservationPageVerified": true,
+        "officialProviderLinkVerified": true,
+        "initialStandaloneFormObserved": false,
+        "embeddedOnOperatorObserved": true,
+        "observedBy": "/root",
+        "observation": "Parent CUA expanded the operator iframe. Heading Burnt Ends Restaurant; Main Dining Area(Table) initially selected. Restaurant options include private dining, chefs counter and study room; separate cocktail-bar sections are also present. Two guests, lunch/dinner options, October 2026 calendar, Please Select A Date and Continue. Powered by Weeloy. No field changes, date selection, search or Continue submission.",
+        "nativeEmbeddingObserved": false,
+        "availabilityObserved": false,
+        "confirmedReservation": false,
+        "bookingOrHoldCreated": null,
+        "personalDataSubmitted": false
+      },
+      "inspectionSafety": {
+        "backgroundSideEffects": "unknown",
+        "serviceWorkerBlocking": "not_recorded",
+        "requestWriteInterception": "not_recorded",
+        "networkAudit": "not_recorded",
+        "writeFreeEndToEndCertified": false,
+        "basis": "Evidence records the visible initial operator iframe and deliberate agent actions only. No agent date selection or Continue submission was observed. Contemporaneous network auditing, service-worker blocking and write-request interception provenance were not recorded; background requests and side effects remain unknown."
+      },
+      "limitations": [
+        "No network audit or safeguard provenance for service-worker blocking and write-request interception was recorded. Absence of deliberate form submission does not certify zero background side effects or a write-free end-to-end inspection.",
+        "Current resolver does not support Weeloy/restaurants.sg. Integrator must add exact restaurant-ID, HTTPS host/path and full-query checks before activation, preserving bkrestaurant=SG_SG_R_BurntEnds. No provider-wide wildcard allowlist.",
+        "Original provider form was observed embedded on the operator site only, not Velvet and not independently tested as a standalone page. External-only proposed mapping does not certify in-app embedding.",
+        "Provider form includes separate cocktail-bar options alongside restaurant areas. Do not silently choose the cocktail bar or confuse #01-04 with the restaurant at #01-02.",
+        "Worker CUA/network unavailable; form evidence is attributed to parent CUA. No inventory inferred from calendar or seating-gallery preview.",
+        "General enquiry email eat@burntends.com.sg is not asserted to be a reservation-only route.",
+        "No deliberate agent availability search, slot selection, contact-detail or card-data entry, payment action or reservation submission was observed. This action record is not an audit of automatic provider traffic."
+      ],
+      "publication": "not_published"
+    }
+  ]
+}

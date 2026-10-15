@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-16",
+  "claimOwner": "gabbe-wave17-01a02152",
+  "records": [
+    {
+      "issue": 91,
+      "restaurantId": "curated-HKT-acqua-restaurant-phuket",
+      "name": "Acqua Restaurant Phuket",
+      "identity": {
+        "name": "Acqua Restaurant Phuket",
+        "address": "324/15 Prabaramee Road, Kalim Bay, Patong, Kathu, 83150 Phuket, Thailand",
+        "source": "https://www.acquarestaurantphuket.com/",
+        "status": "official_branch_verified",
+        "excludedBranches": "Official Phuket homepage separately links Acqua Restaurant Bangkok. Neither that branch nor the differently spelled Aqua at Pullman Phuket is this restaurant."
+      },
+      "sources": [
+        {
+          "url": "https://www.acquarestaurantphuket.com/",
+          "observation": "Fresh official homepage identifies Phuket and its Kalim Bay address. It contains an onsite booking-request form, requires at least two hours' notice and says confirmation comes by reply. The page publishes reservations@acquarestaurantphuket.com and links Bangkok separately."
+        },
+        {
+          "url": "https://www.acquarestaurantphuket.com/contactbookings.html",
+          "observation": "Earlier catalogue research pointed to this legacy page. Search-indexed copy shows the same request-based approach, but fresh retrieval fails with HTTP 400. Do not use it instead of the working official homepage."
+        },
+        {
+          "url": "https://guide.michelin.com/en/phuket-region/phuket/restaurant/acqua",
+          "observation": "Independent guide matches Acqua in Phuket at 324/15 Phra Barami Road and says the restaurant manages its own bookings. Identity corroboration only; no provider URL imported from the guide."
+        }
+      ],
+      "classification": "official_onsite_request_form",
+      "proposedMapping": {
+        "provider": "Restaurant website",
+        "name": "Acqua Restaurant Phuket",
+        "city": "Phuket",
+        "url": "https://www.acquarestaurantphuket.com/",
+        "venueKey": "www.acquarestaurantphuket.com/",
+        "source": "https://www.acquarestaurantphuket.com/",
+        "checkedAt": "2026-10-16",
+        "verification": "official_link_only",
+        "integrationMode": "external_link",
+        "bookingMode": "request_only",
+        "cancellationPolicyStatus": "unknown",
+        "paymentRequirement": "unknown",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "manualContactCandidate": {
+        "type": "email",
+        "value": "reservations@acquarestaurantphuket.com",
+        "source": "https://www.acquarestaurantphuket.com/"
+      },
+      "rootBrowserObservation": {
+        "observer": "gabbe-wave17-01a02152/root",
+        "checkedAt": "2026-10-16",
+        "source": "https://www.acquarestaurantphuket.com/",
+        "method": "Parent-supplied CUA observation of the original standalone page",
+        "finding": "Phuket address, email and booking-request form rendered. Visible fields cover name, party size, email, phone, date, time and comments, followed by Submit. Parent observed the advance-notice and reply-confirmation conditions; no fields changed or submitted.",
+        "phoneMismatch": {
+          "displayed": "+66 (0)937645605 or 076 618127",
+          "href": "tel:+66936127000",
+          "action": "No phone contact proposed because the rendered number and destination disagree."
+        }
+      },
+      "observedRequestConditions": {
+        "minimumNoticeHours": 2,
+        "confirmationMethod": "restaurant_reply_required",
+        "responseTimeHours": null,
+        "source": "https://www.acquarestaurantphuket.com/"
+      },
+      "checks": {
+        "officialIdentityRead": true,
+        "officialRequestFormInRetrievedPage": true,
+        "standaloneBrowserFormObserved": true,
+        "nativeEmbeddingObserved": false,
+        "availabilityObserved": false,
+        "confirmedReservation": false,
+        "fieldsChanged": false,
+        "searchSubmitted": false,
+        "slotSelected": false,
+        "personalDataSubmitted": false,
+        "messageSent": false,
+        "paymentSubmitted": false,
+        "holdsCreated": null,
+        "reservationsCreated": null,
+        "accessControlsBypassed": false
+      },
+      "inspectionSafety": {
+        "backgroundSideEffects": "unknown",
+        "serviceWorkerBlocking": "not_recorded",
+        "requestWriteInterception": "not_recorded",
+        "networkAudit": "not_recorded",
+        "writeFreeEndToEndCertified": false,
+        "basis": "Evidence records visible initial request-form state and deliberate agent actions only. The false submission/message flags describe unperformed agent actions, not certified system outcomes. No agent field changes or form submission were observed. Contemporaneous network auditing, service-worker blocking and write-request interception provenance were not recorded; background requests and side effects remain unknown."
+      },
+      "integrationRequirements": [
+        "Proposed external route is the restaurant's own request form, not a live-inventory provider. Pin exact restaurantId, HTTPS homepage, venueKey and source rather than broadly trusting Restaurant website hosts.",
+        "An alternative reviewed manual email binding must pin the exact contact above. Neither opening the form nor sending an inquiry establishes a confirmed table.",
+        "Two hours is the required advance notice, not a guaranteed response time. Do not populate responseTimeHours from this rule.",
+        "No third-party provider URL was observed. Do not reuse Acqua Bangkok's booking route or the inaccessible legacy contact page."
+      ],
+      "limitations": [
+        "No network audit or safeguard provenance for service-worker blocking and write-request interception was recorded. Absence of deliberate form submission does not certify zero background side effects or a write-free end-to-end inspection.",
+        "Worker CUA was unavailable. Parent subsequently verified the original standalone form in CUA, as attributed above; neither worker nor parent tested an iframe or submitted the form.",
+        "Rendered phone text and tel destination disagree. Only the consistent published email is proposed as a manual contact.",
+        "No deliberate agent value entry, availability search, request submission, message-sending action or payment action was observed. Booking, hold and message outcomes in automatic background traffic were not audited.",
+        "Submission delivery, restaurant reply, cancellation policy and current bookable inventory remain untested. Published opening hours are not an availability response.",
+        "Evidence-only proposal; no shared registry, catalogue, manual-contact binding, UI or canonical worklist changed."
+      ],
+      "publication": "not_published"
+    }
+  ]
+}
