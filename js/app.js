@@ -1,8 +1,8 @@
-import { restaurantContactPanel } from './restaurant-contact.js';
+import { restaurantContactPanel } from './restaurant-contact.js?v=185';
 import { MEMBER_ACCOUNTS_ENABLED } from "./release-features.js";
 import { external200BookingPanel } from './external200-booking.js?v=184';
 import { loadPlaceBrands, placeBrandHTML } from './place-brand.js?v=178';
-import {getBookingCopy, formatBookingCopy} from './booking-copy.js?v=180';
+import {getBookingCopy, formatBookingCopy} from './booking-copy.js?v=185';
 import { restaurantCopy } from './restaurant-copy.js?v=175';
 import { primarySection, isDiscoveryList, safeDiscoveryReturn } from './navigation-state.js';
 import { authOptions, authCopy } from './auth-options.js';
