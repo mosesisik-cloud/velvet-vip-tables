@@ -8,7 +8,7 @@ import { parseBookingSelection, withBookingSelection } from './booking-selection
 import { mountBookingReport } from './booking-report.js';
 import { uxT } from './ux-copy.js?v=175';
 import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo, resolveAuthReturn, joinResponse } from './ux-booking.js?v=175';
-import { mountAvailabilitySearch } from './availability-search.js?v=178';
+import { mountAvailabilitySearch } from './availability-search.js?v=179';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
 import { mountBokabordMirror } from "./bokabord-mirror.js";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
