@@ -1,0 +1,28 @@
+{
+  "checkedAt": "2026-10-15T23:07:17.948Z",
+  "method": "JavaScript disabled; service workers blocked; only same-origin document/CSS/image/font GET or HEAD allowed; no interaction. Static page inspection only, not functional booking validation.",
+  "results": [
+    {
+      "mode": "desktop",
+      "status": 200,
+      "url": "https://deltarestaurant.gr/portfolio/reservations/",
+      "title": "Book an unforgettable dining experience | Delta Restaurant",
+      "termsCheckboxCount": 1,
+      "tockContainerCount": 1,
+      "tockLinkCount": 0,
+      "bodyScrollWidth": 1365,
+      "viewportWidth": 1365
+    },
+    {
+      "mode": "mobile",
+      "status": 200,
+      "url": "https://deltarestaurant.gr/portfolio/reservations/",
+      "title": "Book an unforgettable dining experience | Delta Restaurant",
+      "termsCheckboxCount": 1,
+      "tockContainerCount": 1,
+      "tockLinkCount": 0,
+      "bodyScrollWidth": 390,
+      "viewportWidth": 390
+    }
+  ]
+}
