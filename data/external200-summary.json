@@ -1,6 +1,6 @@
 {
   "assignmentId": "velvet-external-200-20261015",
-  "checkedAt": "2026-10-15",
+  "checkedAt": "2026-10-16",
   "definitions": {
     "reviewed": "Source research completed; does not mean identity resolved.",
     "officialExternalLinks": "Includes official request forms; not necessarily inventory or an adapter-ready route.",
@@ -11,19 +11,19 @@
   },
   "total": {
     "reviewed": 200,
-    "officialIdentity": 42,
-    "officialExternalLinks": 10,
+    "officialIdentity": 43,
+    "officialExternalLinks": 15,
     "embeddedOriginalForms": 4,
-    "liveAvailability": 4,
+    "liveAvailability": 5,
     "simulatedValidation": 0,
     "confirmedReservations": 0,
-    "manualRoutes": 16,
+    "manualRoutes": 18,
     "walkIn": 1,
     "takeaway": 1,
     "closed": 1,
     "closedReported": 2,
-    "unresolved": 169,
-    "registryAdditions": 6
+    "unresolved": 167,
+    "registryAdditions": 2
   },
   "groups": [
     {
@@ -46,18 +46,18 @@
     {
       "batch": 2,
       "reviewed": 20,
-      "officialIdentity": 5,
-      "officialExternalLinks": 0,
+      "officialIdentity": 6,
+      "officialExternalLinks": 2,
       "embeddedOriginalForms": 0,
       "liveAvailability": 0,
       "simulatedValidation": 0,
       "confirmedReservations": 0,
-      "manualRoutes": 4,
+      "manualRoutes": 5,
       "walkIn": 0,
       "takeaway": 0,
       "closed": 0,
       "closedReported": 0,
-      "unresolved": 16,
+      "unresolved": 15,
       "registryAdditions": 0
     },
     {
@@ -92,24 +92,24 @@
       "closed": 0,
       "closedReported": 0,
       "unresolved": 18,
-      "registryAdditions": 1
+      "registryAdditions": 0
     },
     {
       "batch": 5,
       "reviewed": 20,
       "officialIdentity": 3,
-      "officialExternalLinks": 0,
+      "officialExternalLinks": 1,
       "embeddedOriginalForms": 0,
-      "liveAvailability": 0,
+      "liveAvailability": 1,
       "simulatedValidation": 0,
       "confirmedReservations": 0,
-      "manualRoutes": 0,
+      "manualRoutes": 1,
       "walkIn": 1,
       "takeaway": 0,
       "closed": 0,
       "closedReported": 1,
-      "unresolved": 18,
-      "registryAdditions": 0
+      "unresolved": 17,
+      "registryAdditions": 1
     },
     {
       "batch": 6,
@@ -132,7 +132,7 @@
       "batch": 7,
       "reviewed": 20,
       "officialIdentity": 4,
-      "officialExternalLinks": 3,
+      "officialExternalLinks": 4,
       "embeddedOriginalForms": 1,
       "liveAvailability": 1,
       "simulatedValidation": 0,
@@ -166,7 +166,7 @@
       "batch": 9,
       "reviewed": 20,
       "officialIdentity": 10,
-      "officialExternalLinks": 2,
+      "officialExternalLinks": 3,
       "embeddedOriginalForms": 1,
       "liveAvailability": 1,
       "simulatedValidation": 0,
@@ -194,7 +194,7 @@
       "closed": 1,
       "closedReported": 1,
       "unresolved": 13,
-      "registryAdditions": 4
+      "registryAdditions": 0
     }
   ]
 }

@@ -24,5 +24,5 @@ const id=ids[1],row=registry[id];for(const query of ['venues=legrill,pavyllonyan
 assert.equal(resolveEmbeddedBooking({[id]:{...row,venueId:'legrill'}},id),null);
 const join=registry[ids[0]];for(const query of ['lang=en','lang=','Lang=fr','lang=fr&lang=fr'])assert.equal(resolveEmbeddedBooking({[ids[0]]:{...join,url:join.url.split('?')[0]+'?'+query}},ids[0]),null);
 const other=Object.entries(registry).find(([id,r])=>r.provider==='SevenRooms'&&r.integrationMode==='external_link'&&id!==ids[1]);assert.equal(resolveEmbeddedBooking({[other[0]]:{...other[1],url:other[1].url+'?venues=anything'}},other[0]),null);
-assert.equal(Object.keys(registry).length,126);assert.equal(Object.values(registry).filter(r=>r.integrationMode==='native_embed').length,64);assert.equal(Object.values(registry).filter(r=>r.integrationMode==='external_link').length,62);
-console.log('PASS exact reviewed JoinOko/Pavyllon links, hostile URLs/source/identity/query, language preservation and disabled upstream inventory;126 mappings.');
+assert.equal(Object.keys(registry).length,128);assert.equal(Object.values(registry).filter(r=>r.integrationMode==='native_embed').length,64);assert.equal(Object.values(registry).filter(r=>r.integrationMode==='external_link').length,64);
+console.log('PASS exact reviewed JoinOko/Pavyllon links, hostile URLs/source/identity/query, language preservation and disabled upstream inventory;128 mappings.');

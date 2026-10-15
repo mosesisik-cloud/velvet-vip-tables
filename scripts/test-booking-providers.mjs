@@ -29,9 +29,9 @@ for (const url of [
 ]) assert.equal(resolveEmbeddedBooking({ test: { ...row, url } }, 'test'), null);
 assert.equal(resolveEmbeddedBooking(registry, 'not-reviewed'), null);
 assert.equal(resolveEmbeddedBooking(registry, '__proto__'), null);
-assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 44);
+assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 45);
 assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 64);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 62);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 64);
 for (const id of ['osm-IBZ-ama-lur', 'osm-MRB-the-farm', 'osm-STT-gaio', 'osm-STT-l-opera', 'osm-STT-le-cafe']) {
   assert.equal(registry[id].liveAvailabilitySupported, false, 'Initial form evidence must not enable live inventory');
   assert.equal(registry[id].completionTracking, 'unsupported');
@@ -101,3 +101,13 @@ handlers.fetch({ request: {method:'GET',url:'https://velvet.test/velvet-api/rest
 assert.equal(fetched.length,1);
 assert.equal(fetched[0].options.cache,'no-store','Private booking state must bypass all caches');
 console.log('PASS: provider navigation and private booking state bypass service-worker caches');
+
+for (const [id, provider, expectedUrl] of [
+ ['osm-DXB-shang-palace','SevenRooms','https://www.sevenrooms.com/reservations/shangpalacedubai'],
+ ['osm-SBH-fishcorner','Zenchef','https://bookings.zenchef.com/results?pid=1001&rid=388090'],
+]) {
+ const row=resolveEmbeddedBooking(registry,id);
+ assert.equal(row.provider,provider);assert.equal(row.url,expectedUrl);
+ assert.equal(row.integrationMode,'external_link');assert.equal(row.liveAvailabilitySupported,false);assert.equal(row.completionTracking,'unsupported');
+ assert.equal(resolveEmbeddedBooking({[id]:{...registry[id],url:expectedUrl.replace('shangpalacedubai','wrongvenue').replace('388090','388091')}},id),null);
+}

@@ -9,7 +9,7 @@
     {
       "command": "node scripts/test-booking-providers.mjs",
       "result": "passed",
-      "coverage": "Unchanged active registry and provider destination guards"
+      "coverage": "128 active mappings including two new external200 additions; destination guards and cache protection"
     },
     {
       "command": "node scripts/test-booking-selection.mjs",
@@ -25,6 +25,16 @@
       "command": "node scripts/test-route-integrity.mjs",
       "result": "passed",
       "coverage": "No route issues, external URL problems or merge markers after updating branch to origin/main 3abce96"
+    },
+    {
+      "command": "node scripts/external200-test-routes.mjs",
+      "result": "passed",
+      "coverage": "Exact scope, four languages, generated-data freshness, provider precedence, safe contacts, no synthetic forms; independent exact per-ID source/destination bindings reject altered URL, source, ID, query, host and protocol in compiler and runtime for all15 links; independently pinned18 manual contacts and combined URL/source/LINE tampering across200 IDs"
+    },
+    {
+      "command": "node scripts/external200-test-browser.mjs",
+      "result": "passed",
+      "coverage": "400 local guest app routes; desktop/mobile, locale switch, no external writes. Provider pages excluded."
     }
   ],
   "notProven": [
@@ -32,6 +42,7 @@
     "Production-origin iframe compatibility",
     "Physical-device/iOS behavior",
     "Current inventory after observation time",
-    "Absence of hold side-effects for Neolokal request-form time selection"
+    "Absence of hold side-effects for Neolokal request-form time selection",
+    "Absence of provider-JavaScript side effects in earlier unguarded no-click probes and Shang Palace search"
   ]
 }

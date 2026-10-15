@@ -11,7 +11,8 @@
     "walkIn": 0,
     "closed": 0,
     "unresolved": 19,
-    "registryAdditions": 0
+    "registryAdditions": 0,
+    "verifiedManualContacts": 1
   },
   "records": [
     {
@@ -32,6 +33,12 @@
           "url": "https://www.gelik.com.tr/gelikatakoy/",
           "kind": "official",
           "supports": "Official Ataköy page provides telephone reservations and Kennedy Caddesi 20. Gelik is a multi-branch name; manifest does not identify which branch."
+        },
+        {
+          "url": "https://www.geliklevent.com/",
+          "kind": "official",
+          "supports": "Official Gelik1972 site explains2018 operator split:AtakoyDenizer versusLevent/Acarkent/Firuzkoy/BeylikduzuDuruk. GenericID cannot select these distinct operators.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -54,7 +61,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Gelik\" Istanbul restaurant official reservation"
+        "query": "\"Gelik\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Official Gelik 1972 site explains 2018 operator split:Atakoy Denizer versus Levent/Acarkent/Firuzkoy/Beylikduzu Duruk. Generic ID cannot select these distinct operators.",
+          "blocker": "Official Gelik 1972 site explains 2018 operator split:Atakoy Denizer versus Levent/Acarkent/Firuzkoy/Beylikduzu Duruk. Generic ID cannot select these distinct operators.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -99,7 +114,22 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Gümüş Kanat\" Istanbul restaurant official reservation"
+        "query": "\"Gümüş Kanat\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Official eatbu text explicitly accepts reservations via 02126444162. Added structured verified phone contact; DISH-hosted brochure is not Dish Cult table inventory.",
+          "blocker": null,
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
+      },
+      "contact": {
+        "type": "phone",
+        "value": "+902126444162",
+        "bookingExplicit": true,
+        "source": "https://gumuskanat.eatbu.com/?lang=en",
+        "checkedAt": "2026-10-16"
       }
     },
     {
@@ -142,7 +172,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Güvenç Konyalı\" Istanbul restaurant official reservation"
+        "query": "\"Güvenç Konyalı\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Official Sirkeci eatbu plus Gungoren Gulbayir candidate confirm branch ambiguity; latest catalog has no locator. Need exact branch before booking.",
+          "blocker": "Official Sirkeci eatbu plus Gungoren Gulbayir candidate confirm branch ambiguity; latest catalog has no locator. Need exact branch before booking.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -163,6 +201,12 @@
           "url": "https://menuburada.com/basak-borekcisi-sumer-istanbul/",
           "kind": "secondary",
           "supports": "Exact misspelled name search did not resolve official identity. Nearby directory candidate Has Adıyaman Çiğköftecisi in Sümer is insufficient to map this ID."
+        },
+        {
+          "url": "https://turkey-streets.openalfa.com/streets/merv-caddesi-suemer-mahallesi",
+          "kind": "secondary",
+          "supports": "OSM MervCaddesi mirror contains exact misspellinghasadiyman; no operator identity. Do not normalize to arbitraryHasAdiyaman franchise.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -185,7 +229,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"has adıyman\" Istanbul restaurant official reservation"
+        "query": "\"has adıyman\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "OSM Merv Caddesi mirror contains exact misspellinghasadiyman; no operator identity. Do not normalize to arbitrary Has Adiyaman franchise.",
+          "blocker": "OSM Merv Caddesi mirror contains exact misspellinghasadiyman; no operator identity. Do not normalize to arbitrary Has Adiyaman franchise.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -228,7 +280,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Haznedar Meydan Gece Ciğercisi\" Istanbul restaurant official reservation"
+        "query": "\"Haznedar Meydan Gece Ciğercisi\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "OSM-derived Gungoren directory supplies Bagcilar Caddesi/02125560037, but expressly secondary sourcing. Need operator confirmation; no call made.",
+          "blocker": "OSM-derived Gungoren directory supplies Bagcilar Caddesi/02125560037, but expressly secondary sourcing. Need operator confirmation; no call made.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -271,7 +331,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"İskenderun Kral Dürüm\" Istanbul restaurant official reservation"
+        "query": "\"İskenderun Kral Dürüm\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Instagram-focused exact-name query failed to establish operator; previous Merter/Gungoren address variants unresolved. Need official branch identity.",
+          "blocker": "Instagram-focused exact-name query failed to establish operator; previous Merter/Gungoren address variants unresolved. Need official branch identity.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -292,6 +360,12 @@
           "url": "https://menuburada.com/izmir-balikcisi-mimar-sinan-istanbul/",
           "kind": "secondary",
           "supports": "Candidate in Çekmeköy at Mimar Sinan Cd.15/A; generic name and absent manifest locator prevent exact branch identification."
+        },
+        {
+          "url": "https://izmirbalik.com/hikaye",
+          "kind": "official",
+          "supports": "Found officialIzmirBalik brand inFethiye/Mugla, explicitly different city and rejected. IstanbulMimarSinan candidate still directory only.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -314,7 +388,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"İzmir Balıkçısı\" Istanbul restaurant official reservation"
+        "query": "\"İzmir Balıkçısı\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Found official Izmir Balik brand in Fethiye/Mugla, explicitly different city and rejected. Istanbul Mimar Sinan candidate still directory only.",
+          "blocker": "Found official Izmir Balik brand in Fethiye/Mugla, explicitly different city and rejected. Istanbul Mimar Sinan candidate still directory only.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -357,7 +439,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Limgarden Kafe&Restoran&Ev Yemekleri\" Istanbul restaurant official reservation"
+        "query": "\"Limgarden Kafe&Restoran&Ev Yemekleri\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Directory explicitly discloses OSM provenance and not official business site; Vezir 9/B retained only as candidate despite verified badge. Need operator source.",
+          "blocker": "Directory explicitly discloses OSM provenance and not official business site; Vezir 9/B retained only as candidate despite verified badge. Need operator source.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -400,7 +490,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"mahmud usta kebap\" Istanbul restaurant official reservation"
+        "query": "\"mahmud usta kebap\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Exact name found on Merv Caddesi OSM mirror; AI directory flags 50percent/unverified. Neither establishes current operation or walk-in policy.",
+          "blocker": "Exact name found on Merv Caddesi OSM mirror; AI directory flags 50percent/unverified. Neither establishes current operation or walk-in policy.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -443,7 +541,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"öz baba döner\" Istanbul restaurant official reservation"
+        "query": "\"öz baba döner\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Merv Caddesi OSM candidate differs from Seyitnizam 17 directory candidate. Need branch locator and official contact; no chain/site chosen.",
+          "blocker": "Merv Caddesi OSM candidate differs from Seyitnizam 17 directory candidate. Need branch locator and official contact; no chain/site chosen.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -486,7 +592,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Paşa Döner\" Istanbul restaurant official reservation"
+        "query": "\"Paşa Döner\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Official branch selector re-read; generic Pasa Doner cannot identify branch. Food ordering and menu links not table reservations.",
+          "blocker": "Official branch selector re-read; generic Pasa Doner cannot identify branch. Food ordering and menu links not table reservations.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -502,7 +616,14 @@
       "status": "unresolved",
       "provider": null,
       "bookingUrl": null,
-      "sources": [],
+      "sources": [
+        {
+          "url": "https://turkey-streets.openalfa.com/streets/merv-caddesi-suemer-mahallesi",
+          "kind": "secondary",
+          "supports": "NewOSM mirror narrowsroyaltavuk toMervCaddesi, but no operator address/phone/policy. Need exact venue source; unrelatedRoyal menus rejected.",
+          "checkedAt": "2026-10-16"
+        }
+      ],
       "checks": {
         "officialExternalLink": false,
         "embeddedOriginalForm": false,
@@ -524,7 +645,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"royal tavuk\" Istanbul restaurant official reservation"
+        "query": "\"royal tavuk\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "New OSM mirror narrowsroyaltavuk to Merv Caddesi, but no operator address/phone/policy. Need exact venue source; unrelated Royal menus rejected.",
+          "blocker": "New OSM mirror narrowsroyaltavuk to Merv Caddesi, but no operator address/phone/policy. Need exact venue source; unrelated Royal menus rejected.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -567,7 +696,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Safran Karadeniz\" Istanbul restaurant official reservation"
+        "query": "\"Safran Karadeniz\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Exact-name official search did not resolve Sumer versus Atasehir candidate; unrelated Safran suppliers rejected. Need restaurant-owned source.",
+          "blocker": "Exact-name official search did not resolve Sumer versus Atasehir candidate; unrelated Safran suppliers rejected. Need restaurant-owned source.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -610,7 +747,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Şenkardeşler\" Istanbul restaurant official reservation"
+        "query": "\"Şenkardeşler\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Merv Caddesi OSM mirror confirms only candidate locality; spelling Senkardesler still no operator reservation channel. Need source node/current operator.",
+          "blocker": "Merv Caddesi OSM mirror confirms only candidate locality; spelling Senkardesler still no operator reservation channel. Need source node/current operator.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -626,7 +771,14 @@
       "status": "unresolved_branch",
       "provider": null,
       "bookingUrl": null,
-      "sources": [],
+      "sources": [
+        {
+          "url": "https://mapcarta.com/N5667661136",
+          "kind": "secondary",
+          "supports": "Exact Russian string is mapped nearRadissonBluOttomare/Zeytinburnu inOSM mirror. Descriptive label is not venue identity; do not assign hotel restaurant.",
+          "checkedAt": "2026-10-16"
+        }
+      ],
       "checks": {
         "officialExternalLink": false,
         "embeddedOriginalForm": false,
@@ -648,7 +800,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"ресторан рыбны на улице на набережной\" Istanbul restaurant official reservation"
+        "query": "\"ресторан рыбны на улице на набережной\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Exact Russian string is mapped near Radisson Blu Ottomare/Zeytinburnu in OSM mirror. Descriptive label is not venue identity; do not assign hotel restaurant.",
+          "blocker": "Exact Russian string is mapped near Radisson Blu Ottomare/Zeytinburnu in OSM mirror. Descriptive label is not venue identity; do not assign hotel restaurant.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -691,7 +851,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Urfa Dergah Kebap\" Istanbul restaurant official reservation"
+        "query": "\"Urfa Dergah Kebap\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Second directory corroborates Merv 149 B and 02124160063 but no operator-owned booking source; similar Urfa Dergah Sofrasi elsewhere rejected.",
+          "blocker": "Second directory corroborates Merv 149 B and 02124160063 but no operator-owned booking source; similar Urfa Dergah Sofrasi elsewhere rejected.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -734,7 +902,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"vargeller kebap\" Istanbul restaurant official reservation"
+        "query": "\"vargeller kebap\" Istanbul restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Istanbul, Türkiye",
+          "catalogWebsite": null,
+          "outcome": "Current Yemeksepeti link remains delivery/group-food-order menu, not table reservation; no operator booking source found.",
+          "blocker": "Current Yemeksepeti link remains delivery/group-food-order menu, not table reservation; no operator booking source found.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -760,6 +936,12 @@
           "url": "https://www.yellowpages.com/miami-fl/akashi-restaurant",
           "kind": "secondary",
           "supports": "Multiple Akashi locations, including historical Main Highway branch; ambiguity only."
+        },
+        {
+          "url": "https://coconutgrove.com/wp-content/uploads/2024/05/CoconutGrove_AnnualReport_2022_PRINT3.pdf",
+          "kind": "official",
+          "supports": "NewCoconutGroveBID report namesVarsolbyAkashi; government license3423MainHwy differs from oldAkashi3444MainHwy and officialSouthMiami5830SDixie. Rebrand/branch continuity unproven.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -782,7 +964,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Akashi Japanese Restaurant\" Miami restaurant official reservation"
+        "query": "\"Akashi Japanese Restaurant\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": null,
+          "outcome": "New Coconut Grove BID report names Varsolby Akashi; government license 3423 Main Hwy differs from old Akashi 3444 Main Hwy and official South Miami 5830 SDixie. Rebrand/branch continuity unproven.",
+          "blocker": "New Coconut Grove BID report names Varsolby Akashi; government license 3423 Main Hwy differs from old Akashi 3444 Main Hwy and official South Miami 5830 SDixie. Rebrand/branch continuity unproven.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -803,6 +993,12 @@
           "url": "https://hashtag.org/local/fl/miami/restaurants/focaccia-bistro-node2475858794",
           "kind": "secondary",
           "supports": "Exact-name search found only El Taquitos as nearby restaurant in an OSM-derived Coconut Grove listing. No official identity, address or reservation page found."
+        },
+        {
+          "url": "https://callejero-florida.openalfa.com/miami-ccd/restauracion",
+          "kind": "secondary",
+          "supports": "OSM mirror now providesElTaquitos3414MainHighway; no operator website or booking policy. DifferentElTaquito1388SW8thStreet rejected.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -825,7 +1021,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"El Taquitos\" Miami restaurant official reservation"
+        "query": "\"El Taquitos\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": null,
+          "outcome": "OSM mirror now provides El Taquitos 3414 Main Highway; no operator website or booking policy. Different El Taquito 1388 SW 8th Street rejected.",
+          "blocker": "OSM mirror now provides El Taquitos 3414 Main Highway; no operator website or booking policy. Different El Taquito 1388 SW 8th Street rejected.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       }
     },
     {
@@ -846,6 +1050,12 @@
           "url": "https://www.allmenus.com/fl/miami/337927-focaccia-bistro/menu/",
           "kind": "secondary",
           "supports": "Historical Focaccia Bistro at 3111 Grand Avenue. Manifest domain could not be fetched; directory presence does not establish current operation or booking."
+        },
+        {
+          "url": "https://brokebaker.com/2013/12/19/focaccia-bistro-a-review/",
+          "kind": "secondary",
+          "supports": "2017review update claims permanent closure; fresh generic hours directory explicitly says hours not venue-confirmed. No official closure announcement: keep unresolved, no live link.",
+          "checkedAt": "2026-10-16"
         }
       ],
       "checks": {
@@ -869,7 +1079,15 @@
       "registryAddition": null,
       "research": {
         "checkedAt": "2026-10-15",
-        "query": "\"Focaccia Bistro\" Miami restaurant official reservation"
+        "query": "\"Focaccia Bistro\" Miami restaurant official reservation",
+        "deepReview": {
+          "checkedAt": "2026-10-16",
+          "catalogAddress": "Miami, USA",
+          "catalogWebsite": "http://www.focacciabistro.com",
+          "outcome": "2017review update claims permanent closure; fresh generic hours directory explicitly says hours not venue-confirmed. No official closure announcement: keep unresolved, no live link.",
+          "blocker": "2017review update claims permanent closure; fresh generic hours directory explicitly says hours not venue-confirmed. No official closure announcement: keep unresolved, no live link.",
+          "browserRetest": "not_performed; IAB unavailable; no slot/Continue/submit interactions this pass"
+        }
       },
       "attempts": [
         {
@@ -881,5 +1099,6 @@
         }
       ]
     }
-  ]
+  ],
+  "lastDeepReviewAt": "2026-10-16"
 }

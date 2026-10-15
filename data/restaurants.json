@@ -8869,16 +8869,11 @@
           "reviewCount": 0,
           "address": "St. Barts, Caribbean",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Restaurant%20Le%20Cr%C3%AAperie%2C%20St.%20Barts",
-          "website": "https://creperiestbarth.com",
+          "website": "",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
           "curated": true,
-          "cuisine": "french",
-          "images": [
-            "https://creperiestbarth.com/uploads/img/media/webp/author-christoph-schroth.webp"
-          ],
-          "imageSource": "https://creperiestbarth.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "cuisine": "french"
         },
         {
           "placeId": "osm-SBH-fishcorner",
@@ -9172,7 +9167,10 @@
           "website": "",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
-          "curated": true
+          "curated": true,
+          "operatingStatus": "permanently_closed",
+          "operatingStatusSource": "https://www.hotelsbarriere.com/collection-fouquet-s/saint-barth/restaurants-et-bars",
+          "operatingStatusCheckedAt": "2026-10-16"
         },
         {
           "placeId": "osm-SBH-mayas-to-go",

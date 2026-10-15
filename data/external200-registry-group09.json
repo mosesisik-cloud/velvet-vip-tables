@@ -1,15 +1,16 @@
 {
-  "osm-SBH-bagatelle": {
-    "provider": "SevenRooms",
-    "name": "Bagatelle",
+  "osm-SBH-fishcorner": {
+    "name": "FishCorner",
     "city": "Gustavia",
-    "venueId": "bagatellestbarth",
-    "venueKey": "www.sevenrooms.com/reservations/bagatellestbarth",
-    "url": "https://www.sevenrooms.com/reservations/bagatellestbarth",
-    "source": "https://bagatelle.com/venues/st-barths/booking/",
-    "checkedAt": "2026-10-15",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?pid=1001&rid=388090",
+    "source": "https://www.fishcornerstbarth.com/en/book-online",
+    "venueKey": "bookings.zenchef.com/results?rid=388090",
+    "integrationMode": "external_link",
     "verification": "official_link_only",
-    "providerTitle": "Bagatelle St. Barth Reservations",
-    "integrationMode": "external_link"
+    "checkedAt": "2026-10-16",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "identityNote": "Official restaurant page at41RueRepubliqueGustavia links this exactZenchefID; phonefallback retained."
   }
 }

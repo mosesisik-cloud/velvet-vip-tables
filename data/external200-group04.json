@@ -22,6 +22,11 @@
           "url": "https://www.eatout.co.za/venue/chippies-prego-rondebosch/",
           "kind": "secondary",
           "supports": "Search Chippies Prego Cape Town found Rondebosch at Silwood Centre plus historical Fabrica rebranding and Observatory/Sea Point locations. Generic source ID has no street or coordinates; current branch and booking policy unresolved."
+        },
+        {
+          "url": "https://chippies.co.za/",
+          "kind": "official",
+          "supports": "chippies.co.za is sauce business; EatOut Rondebosch remains a takeaway candidate. No unique source branch anchor."
         }
       ],
       "checks": {
@@ -43,7 +48,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Chippies Prego official booking Cape Town",
+        "result": "chippies.co.za is sauce business; EatOut Rondebosch remains a takeaway candidate. No unique source branch anchor."
+      }
     },
     {
       "restaurantId": "osm-CPT-food-and-connect",
@@ -65,6 +75,11 @@
           "url": "https://foodandconnect.co.za/main/",
           "kind": "official",
           "supports": "Official Food & Connect describes multiple UCT outlets; head office is not a restaurant branch. Source record cannot distinguish campus outlet."
+        },
+        {
+          "url": "https://foodandconnect.co.za/careers/",
+          "kind": "official",
+          "supports": "Official operator and UCT evidence still identify multiple campus outlets. No record-specific outlet or table policy."
         }
       ],
       "checks": {
@@ -86,7 +101,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Food and Connect UCT outlets bookings",
+        "result": "Official operator and UCT evidence still identify multiple campus outlets. No record-specific outlet or table policy."
+      }
     },
     {
       "restaurantId": "osm-CPT-furley-s-bar-grill",
@@ -108,6 +128,11 @@
           "url": "https://south-africa-streets.openalfa.com/newlands/eating-drinking",
           "kind": "secondary",
           "supports": "Search Furley’s Cape Town / Furleys Newlands found Dean Street listing and historical licence, but no current official venue booking channel. US Mr Furleys result rejected as wrong country."
+        },
+        {
+          "url": "https://furleys.co.za/",
+          "kind": "secondary",
+          "supports": "Claimed Tripadvisor lists bookings@furleys.co.za and 1 Dean St. Ordinary Chromium visit to furleys.co.za returned unrelated Tubidy music site (HTTP200); old domain/email cannot be treated as current restaurant authority."
         }
       ],
       "checks": {
@@ -129,7 +154,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Furley bookings@furleys",
+        "result": "Claimed Tripadvisor lists bookings@furleys.co.za and 1 Dean St. Ordinary Chromium visit to furleys.co.za returned unrelated Tubidy music site (HTTP200); old domain/email cannot be treated as current restaurant authority."
+      }
     },
     {
       "restaurantId": "osm-CPT-gogi-korean",
@@ -151,6 +181,11 @@
           "url": "https://www.dining-out.co.za/md/Gogi-Korean-BBQ/11069",
           "kind": "secondary",
           "supports": "Gogi Korean Newlands search found listing with 1 Dean Street and 082 361 5588, but old COVID in-house dining restriction makes booking policy unreliable. Other-country Gogi sites rejected."
+        },
+        {
+          "url": "https://briefly.co.za/facts-lifehacks/services/227916-gogi-korean-bbq-newlands-menu-updated-2025-prices/",
+          "kind": "secondary",
+          "supports": "Secondary article links @cpt_gogi and Shop8 1DeanStreet; official Instagram fetch failed. Other material mentions Observatory too; identity/branch and current reservation route need confirmation."
         }
       ],
       "checks": {
@@ -172,7 +207,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Gogi cpt_gogi reservations",
+        "result": "Secondary article links @cpt_gogi and Shop8 1DeanStreet; official Instagram fetch failed. Other material mentions Observatory too; identity/branch and current reservation route need confirmation."
+      }
     },
     {
       "restaurantId": "osm-CPT-jean-s-kitchen",
@@ -192,6 +232,11 @@
           "url": "https://uct.ac.za/research-innovation-uct-and-un-sdgs/goal-2-zero-hunger/2-3-4",
           "kind": "official",
           "supports": "UCT confirms Kaplan Centre cafeteria identity; official booking policy not found. Community directory provides contact but not verified reservation support."
+        },
+        {
+          "url": "https://www.koshersa.co.za/wp-content/uploads/2025/12/December-2025-January-2026-Kosher-SA-Newsletter-2.pdf",
+          "kind": "official",
+          "supports": "Kosher SA Dec2025/Jan2026 list confirms UCT Kaplan contact; no explicit table-booking invitation."
         }
       ],
       "checks": {
@@ -213,7 +258,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Jean’s Kitchen UCT booking",
+        "result": "Kosher SA Dec2025/Jan2026 list confirms UCT Kaplan contact; no explicit table-booking invitation."
+      }
     },
     {
       "restaurantId": "osm-CPT-kobe-sushi",
@@ -235,6 +285,11 @@
           "url": "https://www.eatout.co.za/venue/kobe-sushi-bar/",
           "kind": "secondary",
           "supports": "Search Kobe Sushi Cape Town found Newlands listing and another SALT Food Market branch. Source lacks coordinates; current branch and reservation policy unresolved."
+        },
+        {
+          "url": "https://kobesushi.co.za/?page_id=52",
+          "kind": "official",
+          "supports": "Official operator lists Newlands and Plumstead food-ordering branches. Generic source record cannot choose branch; food ordering is not table booking."
         }
       ],
       "checks": {
@@ -256,7 +311,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Kobe Sushi official Newlands Plumstead",
+        "result": "Official operator lists Newlands and Plumstead food-ordering branches. Generic source record cannot choose branch; food ordering is not table booking."
+      }
     },
     {
       "restaurantId": "osm-CPT-mc-donalds",
@@ -278,6 +338,11 @@
           "url": "https://www.mcdonalds.co.za/locate",
           "kind": "official",
           "supports": "Official locator lists many Cape Town branches including Rondebosch. Source only says Cape Town; no branch can be chosen. Ordering/dine-in listings are not table reservations."
+        },
+        {
+          "url": "https://www.mcdonalds.co.za/templates/_layout/location.php",
+          "kind": "official",
+          "supports": "Official locator includes Newlands in Pretoria and other similarly named locations; no original branch anchor. Do not infer Cape Town from prefix."
         }
       ],
       "checks": {
@@ -299,7 +364,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "site.mcdonalds.co.za Newlands restaurant",
+        "result": "Official locator includes Newlands in Pretoria and other similarly named locations; no original branch anchor. Do not infer Cape Town from prefix."
+      }
     },
     {
       "restaurantId": "osm-CPT-nando-s",
@@ -321,6 +391,11 @@
           "url": "https://store.nandos.co.za/details/long-street",
           "kind": "official",
           "supports": "Search official Cape Town Nandos found Long Street branch, but source supplies no branch/address/coordinates. Do not attach this candidate or food delivery as booking."
+        },
+        {
+          "url": "https://store.nandos.co.za/details/newlands-west",
+          "kind": "official",
+          "supports": "Official Newlands West result is Durban. Rejected as evidence of Cape Town branch; exact record outlet remains unknown."
         }
       ],
       "checks": {
@@ -342,7 +417,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "site.nandos.co.za Newlands Cape Town",
+        "result": "Official Newlands West result is Durban. Rejected as evidence of Cape Town branch; exact record outlet remains unknown."
+      }
     },
     {
       "restaurantId": "osm-CPT-picnic-cafe-and-deli",
@@ -389,6 +469,11 @@
         "phone": "084 516 0530",
         "email": "picniccafeanddeli@gmail.com",
         "tableReservationAcceptance": "unknown"
+      },
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Picnic Cafe Montebello reservations",
+        "result": "Official page identifies Montebello deli; no explicit table-booking invitation. Australia Picnic bookings result rejected."
       }
     },
     {
@@ -432,7 +517,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Thai Ping Newlands restaurant reservation",
+        "result": "Only OSM-derived DeanStreet result; no official identity or booking source found."
+      }
     },
     {
       "restaurantId": "osm-CPT-the-trufood-station",
@@ -454,6 +544,11 @@
           "url": "https://www.bitcoinfriendlysa.co.za/businesses/the-trufood-station",
           "kind": "secondary",
           "supports": "Exact-name search found café kiosk listing at Great Westerford; third-party phone and Instagram candidate do not establish reservation policy."
+        },
+        {
+          "url": "https://michange.org/",
+          "kind": "official",
+          "supports": "BitcoinFriendlySA lists GreatWesterford240MainRoad, while MiChange lists Sports Science Institute BoundaryRoad. Conflicting locations need reconciliation."
         }
       ],
       "checks": {
@@ -475,7 +570,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Trufood Station official Cape Town",
+        "result": "BitcoinFriendlySA lists GreatWesterford240MainRoad, while MiChange lists Sports Science Institute BoundaryRoad. Conflicting locations need reconciliation."
+      }
     },
     {
       "restaurantId": "osm-DXB-abd-el-wahab-restaurant",
@@ -518,7 +618,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Abd el Wahab Dubai official reservations",
+        "result": "Official/landlord SoukAlBahar candidate remains distinct from other Dubai outlets. Source record lacks branch anchor."
+      }
     },
     {
       "restaurantId": "osm-DXB-acai-co",
@@ -540,6 +645,11 @@
           "url": "https://acaiandco.com/",
           "kind": "official",
           "supports": "Manifest domain opened but yielded no readable content. Search found Central Park and Dakakeen branches in 2GIS; no branch anchor or booking system verified."
+        },
+        {
+          "url": "https://www.mat3am.net/restaurant/21099/branches/Acai-and-Co-branches-in-Dubai?lang=en",
+          "kind": "secondary",
+          "supports": "Multiple DIFC, Deira and central-kitchen listings; no exact original outlet or table reservation route."
         }
       ],
       "checks": {
@@ -561,7 +671,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Acai and Co Dubai official locations",
+        "result": "Multiple DIFC, Deira and central-kitchen listings; no exact original outlet or table reservation route."
+      }
     },
     {
       "restaurantId": "osm-DXB-al-hallab-and-sweets",
@@ -583,6 +698,11 @@
           "url": "https://alhallabrestaurant.com/",
           "kind": "official",
           "supports": "Official website lists Garhoud, Dubai Mall, Mall of Emirates and Bab El Bahr with different phones and booking buttons. Manifest/source have no branch anchor."
+        },
+        {
+          "url": "https://alhallabrestaurant.com/links/",
+          "kind": "official",
+          "supports": "Official links page supplies four serVme forms. DubaiMall oid1452, Garhoud1454, MOE1679; source record cannot choose branch, so do not activate any."
         }
       ],
       "checks": {
@@ -604,7 +724,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Al Hallab reservations Dubai official",
+        "result": "Official links page supplies four serVme forms. DubaiMall oid1452, Garhoud1454, MOE1679; source record cannot choose branch, so do not activate any."
+      }
     },
     {
       "restaurantId": "osm-DXB-asado",
@@ -624,6 +749,11 @@
           "url": "https://www.addresshotels.com/en/restaurant/palace-downtown/asado/",
           "kind": "official",
           "supports": "Official Asado page identifies Palace Downtown and publishes +97144287961. Shared Eat App dining selector omits Asado; generic hidden confirmation example is not a reservation or availability proof. Phone enquiry only. Manual-route re-review: official page publishes a contact phone but no explicit restaurant-specific invitation to reserve by phone. Shared dining selector omits Asado. Table reservation acceptance is unknown."
+        },
+        {
+          "url": "https://wanderlog.com/place/details/422814/asado-restaurant",
+          "kind": "secondary",
+          "supports": "Secondary current closure reports conflict with legacy official hotel page; no current provider route. Treat as unresolved operational status rather than officially closed."
         }
       ],
       "checks": {
@@ -651,6 +781,11 @@
         "phone": "+97144287961",
         "email": null,
         "tableReservationAcceptance": "unknown"
+      },
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Asado Dubai permanently closed",
+        "result": "Secondary current closure reports conflict with legacy official hotel page; no current provider route. Treat as unresolved operational status rather than officially closed."
       }
     },
     {
@@ -673,6 +808,11 @@
           "url": "https://ae.linkedin.com/company/be-super-natural",
           "kind": "official",
           "supports": "Brand profile identifies BeStro at Galeries Lafayette Dubai Mall; historical guide also says Be Super Natural Kitchen. No current official reservation route or operating status verified."
+        },
+        {
+          "url": "https://www.happycow.net/reviews/super-natural-kitchen-dubai-46519",
+          "kind": "secondary",
+          "supports": "HappyCow labels Super Natural Kitchen closed; no operator closure confirmation or current reservation route."
         }
       ],
       "checks": {
@@ -694,7 +834,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Be Super Natural Kitchen Dubai closed",
+        "result": "HappyCow labels Super Natural Kitchen closed; no operator closure confirmation or current reservation route."
+      }
     },
     {
       "restaurantId": "osm-DXB-carluccio-s",
@@ -775,20 +920,8 @@
         "Original form works on provider official site; Velvet embedding and completion tracking not tested.",
         "Initial direct HTTP fetch 403; ordinary browser loaded normally without bypass."
       ],
-      "registryAddition": {
-        "provider": "Eat App",
-        "name": "Carluccio's The Dubai Mall",
-        "city": "Dubai",
-        "venueKey": "eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a",
-        "url": "https://eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a",
-        "source": "https://carlucciosme.com/locations/the-dubai-mall/",
-        "checkedAt": "2026-10-15",
-        "verification": "official_restaurant_link_verified",
-        "providerTitle": "Carluccio's The Dubai Mall",
-        "integrationMode": "external_link",
-        "liveAvailabilitySupported": false,
-        "completionTracking": "unsupported"
-      }
+      "registryAddition": null,
+      "registryState": "already_integrated_on_main"
     },
     {
       "restaurantId": "osm-DXB-karam-beirut",
@@ -810,6 +943,11 @@
           "url": "https://www.karambeirut.ae/",
           "kind": "official",
           "supports": "Manifest brand website inaccessible through web tool. Search confirms multiple Dubai locations; generic brand ID cannot safely choose Dubai Mall, Mall of Emirates or Festival City."
+        },
+        {
+          "url": "https://thedubaimall.com/en/shop/karam-beirut",
+          "kind": "official",
+          "supports": "DubaiMall landlord confirms LowerGroundFloor candidate but chain has other Dubai branches; no source branch anchor."
         }
       ],
       "checks": {
@@ -831,7 +969,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Karam Beirut Dubai official branches booking",
+        "result": "DubaiMall landlord confirms LowerGroundFloor candidate but chain has other Dubai branches; no source branch anchor."
+      }
     },
     {
       "restaurantId": "osm-DXB-karma-kafe",
@@ -843,7 +986,7 @@
         "address": "Level 3, Souk Al Bahar",
         "notes": "Current venue site and Emaar mall directory agree phone +971 4 570 0493 at Souk Al Bahar; reservation@karma-dubai.com. Legacy official Linktree Eat App link currently says unable to accept bookings. Withhold legacy integration; manual enquiry only. Manual-route re-review: official current site explicitly invites contact for reservations or enquiries immediately above phone/email details. Book CTA also points to WhatsApp. This verifies an offered manual request route, not acceptance of any requested table."
       },
-      "status": "manual_phone",
+      "status": "manual_message",
       "provider": null,
       "bookingUrl": null,
       "sources": [
@@ -875,9 +1018,19 @@
       ],
       "registryAddition": null,
       "contact": {
-        "phone": "+971 4 570 0493",
+        "type": "whatsapp",
+        "value": "+971585772863",
+        "bookingExplicit": true,
+        "source": "https://karma-dubai.com/",
+        "url": "https://wa.me/971585772863",
+        "phone": "+97145700493",
         "email": "reservation@karma-dubai.com",
         "tableReservationAcceptance": "manual_request_offered_not_confirmed"
+      },
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Official Karma Dubai Book link",
+        "result": "Official Book CTA links WhatsApp971585772863. Only link inspected; no chat opened or message sent. Phone and email remain official alternatives."
       }
     },
     {
@@ -900,6 +1053,11 @@
           "url": "https://margauxpastryboutique.com/",
           "kind": "official",
           "supports": "Search found current Margaux pastry boutique at Jumeirah Mina Al Salam and historical French Margaux restaurant at Souk Al Bahar. Source cuisine French and generic city insufficient to determine intended venue. Do not replace old restaurant with pastry boutique."
+        },
+        {
+          "url": "https://restaurantguru.com/Margaux-Dubai",
+          "kind": "secondary",
+          "supports": "Historical SoukAlBahar French restaurant remains distinct from current MinaAlSalam patisserie. No official equivalence or branch anchor."
         }
       ],
       "checks": {
@@ -921,7 +1079,13 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Margaux Souk Al Bahar closed",
+        "result": "Historical SoukAlBahar French restaurant remains distinct from current MinaAlSalam patisserie. No official equivalence or branch anchor."
+      }
     }
-  ]
+  ],
+  "followupCheckedAt": "2026-10-16"
 }

@@ -4,7 +4,7 @@ Checked 2026-10-15. Exactly the 20 manifest IDs in group 9; stable IDs preserved
 
 All records received an exact-name/city web search and source review. “Reviewed” means the evidence and uncertainty were assessed, not that all identities or bookability were verified. Repository source has no street address/coordinates for these IDs. Directory and OSM mirrors are discovery evidence only. Missing policies remain null.
 
-Counts: {"reviewed":20,"identityVerified":10,"embeddedOriginalForms":1,"officialExternalLinks":2,"liveAvailability":1,"manualBookingRoutes":7,"walkIn":0,"closed":0,"unresolved":11,"registryAdditions":1}.
+Counts: {"reviewed":20,"identityVerified":10,"embeddedOriginalForms":1,"officialExternalLinks":3,"liveAvailability":1,"manualBookingRoutes":6,"walkIn":0,"closed":0,"unresolved":11,"registryAdditions":1,"verifiedManualContacts":7}.
 
 Registry additions are recorded per restaurant and counted above; Bagatelle uses the existing SevenRooms external-link schema. Official custom/request links are evidence only. No production edits.
 
@@ -43,3 +43,103 @@ JSON count and exact manifest membership checked by generator. This is an eviden
 - Bonito: desktop — official site inspected in browser; reservation contacts visible, no booking widget identified; mobile — not_tested.
 
 Where desktop/mobile says not_tested, only source text was inspected. No claim of responsive or end-to-end booking functionality is made.
+
+
+## Follow-up 2026-10-16
+
+All20 IDs reconciled against latest catalog. Browser retest unavailable (IAB unavailable); provider fetch for FishCorner restricted. No new slot selection, Continue, request submission, contact action or CAPTCHA bypass. Earlier UI observations remain dated2026-10-15; Neolokal prior hold-side-effect uncertainty is preserved. No new availability or mobile pass claimed. Bagatelle already present in main, excluded from new additions.
+
+### osm-MIA-fuku
+
+Official Fuku Coral Gables remains 135 Miracle Mile; latest generic catalog cannot establish branch. Resy editorial Find more info is not a restaurant-specific booking link.
+
+### osm-MIA-genuine-pizza
+
+Historicaloperator brand changes Genuine Pizza/Harrys do not identify catalog branch. Need explicit branch continuity; no replacement restaurant link assigned.
+
+### osm-MIA-le-petit-cafe
+
+Further Coconut Grove search finds historical Miami Beach 91071st Street namesake, not exact Miami identity. Need street address; no unrelated NYC/Paris link.
+
+### osm-MIA-lulu
+
+Indexed Spanish site/2022guide corroborate 3105 Commodore but currentroot unrelated content previously observed. Visa gives only phone referral. Need current verified operator domain.
+
+### osm-MIA-miller-s-ale-house
+
+Municipal 2019record anchors Miller Coral Gables to 101 Miracle Mile. Restaurantji saysclosed; officialbranch URL 404. Historicalmunicipal evidence not currentclosure authority; retain unresolved.
+
+### osm-MIA-monty-s
+
+Official Montys Raw Bar gives 2550 SBayshore Miami, while Sunset official is 300 Alton Miami Beach. Genericcatalog no branch; no specific booking form on Raw Bar homepage.
+
+### osm-MIA-panorama-restaurant-sky-lounge
+
+Coconut Grove BID identifies Hotel Arya(former Sonesta) at 2889 Mc Farlane and Panorama restaurant. Current operator booking route remains unverified; hotel room engine excluded.
+
+### osm-MIA-poke-305-grove
+
+Operator-linkedpoke 305.com returns 403; no bypass attempted. Grove address candidate exists but Clover generic homepage remains unsuitable for table booking.
+
+### osm-MIA-pummarola-coral-gable
+
+Official Pummarola still promotes pizza-making classes; third-party claims reservations lack officialtable URL. Keep verified Coral Gables identity but table route unresolved.
+
+### osm-MIA-the-cheesecake-factory
+
+Open Table Coconut Grove 3015 Grand page explicitly not on bookingnetwork and even shows mismatchedmenu. Historicaloperator release confirmsold Grove branch, not thisgeneric ID/current operation.
+
+### curated-SBH-bonito-saint-barth
+
+Found Seven Roomsbonitostbarth via secondarydirectory, correctprovider title, but no link in official Bonito HTML. Keep manualverified email; candidate not admitted without operator link.
+
+Explicit booking contact: email booking@bonitosbh.com ([official source](https://www.bonitosbh.com/)).
+
+### curated-SBH-le-toiny-restaurant
+
+Officialhotel search result still expressly assignsrestaurant@letoiny.com to bothdiningconcepts. Old The Fork 215803 conflicts fullyreserved/FAQavailable and is not linkedofficially; do notadmit.
+
+Explicit booking contact: email restaurant@letoiny.com ([official source](https://letoiny.com/)).
+
+### curated-SBH-tamarin-st-barth
+
+Officialcontact still explicitly emailrequests; opening-hours page hasgenericreservationform but conflictinghours. Keep emailroute; no inventory claim.
+
+Explicit booking contact: email info@tamarinstbarth.com ([official source](https://tamarinstbarth.com/contact/)).
+
+### osm-SBH-bagatelle
+
+Bagatelle existingmerged Seven Rooms mapping retained as alreadylive, not newproposal. Priorpoint-in-timeinventory preserved, no newslot selection.
+
+### osm-SBH-bart-s-food-lounge
+
+Exact-name search still returns OSM-derived Rue Generalde Gaulle only; restaurant absent from current 81-venue directory is not proofclosure. Need currentoperator identity.
+
+### osm-SBH-black-ginger
+
+Explicitstaff-confirmation requestform preserved, booking Mode request_only. No CAPTCHA/submit. Browser unavailable for fresh responsive retest.
+
+### osm-SBH-bonito
+
+Bonito duplicate stable ID retained; samecandidate Seven Rooms and officialemail as curated Bonito. Noautomerge or newproviderclaim.
+
+Explicit booking contact: email booking@bonitosbh.com ([official source](https://www.bonitosbh.com/)).
+
+### osm-SBH-eddy-s
+
+Officialreservationsection explicitly givesphone; structuredcontact added. re CAPTCHA contactform is a request, not availability; noform submission.
+
+Explicit booking contact: phone +590590275417 ([official source](https://eddysghetto.com/)).
+
+### osm-SBH-fishcorner
+
+Official Fish Corner BOOK link now exposes Zenchef rid 388090 pid 1001. Provider fetchrestricted; external-link proposal only, noembed oravailability. Telephonefallback remains verified.
+
+Explicit booking contact: phone +590590513633 ([official source](https://www.fishcornerstbarth.com/en/book-online)).
+
+### osm-SBH-l-isoletta
+
+Officialcontact explicitly reservesbyphone and navigation givesreservationsemail; structuredphonecontact added. Generalcontactform nottable inventory.
+
+Explicit booking contact: phone +590590520202 ([official source](https://www.isolettastbarth.com/contact)).
+

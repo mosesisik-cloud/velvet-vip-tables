@@ -1,16 +1,1 @@
-{
-  "osm-DXB-carluccio-s": {
-    "provider": "Eat App",
-    "name": "Carluccio's The Dubai Mall",
-    "city": "Dubai",
-    "venueKey": "eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a",
-    "url": "https://eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a",
-    "source": "https://carlucciosme.com/locations/the-dubai-mall/",
-    "checkedAt": "2026-10-15",
-    "verification": "official_restaurant_link_verified",
-    "providerTitle": "Carluccio's The Dubai Mall",
-    "integrationMode": "external_link",
-    "liveAvailabilitySupported": false,
-    "completionTracking": "unsupported"
-  }
-}
+{}

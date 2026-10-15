@@ -1,6 +1,6 @@
 {
   "batch": 2,
-  "checkedAt": "2026-10-15",
+  "checkedAt": "2026-10-16",
   "scope": "Exactly manifest group; read-only audit, no bookings, holds, payments or messages.",
   "records": [
     {
@@ -26,6 +26,11 @@
           "url": "https://www.tripadvisor.com.tr/Restaurant_Review-g298658-d23742045-Reviews-HADI_BALIK_BISTRO_Bodrum-Bodrum_City_Bodrum_District_Mugla_Province_Turkish_Aege.html",
           "kind": "secondary",
           "supports": "Carsi Sk 2/13 closure report; branch history."
+        },
+        {
+          "url": "https://www.yerimhazir.com/isletme/hadi-balik/378",
+          "kind": "secondary",
+          "supports": "Provider candidate only; no official delegation or intended branch proof."
         }
       ],
       "checks": {
@@ -48,6 +53,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Hadi Balik Bodrum restaurant / official / reservations",
           "result": "Official Hadi Balik now promotes Turgutreis bistro; older Carsi listing is reported closed and Aspat branch also appears. Missing input address prevents safe redirect to another branch."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Hadi Balik Bodrum official",
+          "queryIsSummary": true,
+          "result": "Official site still promotes Turgutreis bistro; YerimHazir lists Hadi Balik378, but provenance to intended older city record remains unresolved."
         }
       ],
       "limitations": [
@@ -55,7 +67,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Resolve central/Aspat/Turgutreis branch and official delegation to provider378."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-harem",
@@ -102,6 +118,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Harem Bodrum restaurant / official / reservations",
           "result": "Harem listed at Neyzen Tevfik 14 by Tripadvisor; third-party reservation intermediary uses its own shared phone, which is not a verified operator booking route. Official operator source not found."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Harem Restaurant Bodrum official reservation",
+          "queryIsSummary": true,
+          "result": "Additional Odarama directory has a reservation note; no operator-controlled source or delegation to intermediary established."
         }
       ],
       "limitations": [
@@ -109,7 +132,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Verify venue-owned booking channel; do not expose intermediary phone as restaurant phone."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-izmir-kumru",
@@ -156,6 +183,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "İzmir Kumru Bodrum restaurant / official / reservations",
           "result": "Operator Eatbu page gives Neyzen Tevfik 58, but other Izmir Kumru branches exist and Yandex reports this location inactive. Cannot establish input branch/current operation."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Izmir Kumru Bodrum official",
+          "queryIsSummary": true,
+          "result": "Official Eatbu rechecked: NeyzenTevfik58, delivery/takeaway and contact; distinct Turkbuku merchant also found."
         }
       ],
       "limitations": [
@@ -163,7 +197,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Resolve source branch and current operation before linking; no table form verified."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-joy-art-cafe",
@@ -183,6 +221,11 @@
           "url": "https://menuburada.com/joy-art-cafe-bodrum-sahil-mugla/",
           "kind": "secondary",
           "supports": "Candidate name/address and phone."
+        },
+        {
+          "url": "https://www.turgutreisrehberi.com/firma/mugla-bodrum-kafe/136124",
+          "kind": "secondary",
+          "supports": "Joy Art Cafe candidate and obsolete business.site link; no current official route."
         }
       ],
       "checks": {
@@ -205,6 +248,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Joy art cafe Bodrum restaurant / official / reservations",
           "result": "Directory matches Joy Art Cafe at Neyzen Tevfik 46A; no operator source or table booking evidence found."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Joy Art Cafe Bodrum",
+          "queryIsSummary": true,
+          "result": "Secondary directory identifies obsolete joy-art-cafe.business.site plus phone05550192783 and Tepecik/Yanki location."
         }
       ],
       "limitations": [
@@ -212,7 +262,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Find current operator source; business.site listing and secondary phone do not establish table booking."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-kalamare",
@@ -255,7 +309,8 @@
       "contact": {
         "type": "phone",
         "value": "+902523167076",
-        "bookingExplicit": true
+        "bookingExplicit": true,
+        "source": "https://www.kalamarebodrum.com/iletisim/"
       },
       "attempts": [
         {
@@ -263,6 +318,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Kalamare Bodrum restaurant / official / reservations",
           "result": "Official Kalamare contact page explicitly labels reservation phone numbers and confirms Sanat Okulu 9. Homepage form is an event enquiry that promises a later reply, not live table inventory."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Kalamare Bodrum rezervasyon resmi",
+          "queryIsSummary": true,
+          "result": "Official page retains reservation phone and event-enquiry form; form promises later reply, not live inventory."
         }
       ],
       "limitations": [
@@ -270,7 +332,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Only manual booking route verified; terms and dates require venue response."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-meat-burger-steak-house",
@@ -290,6 +356,11 @@
           "url": "https://yandex.com.tr/maps/org/meat_burger_steak_house/1256902077/",
           "kind": "secondary",
           "supports": "Candidate address and contact."
+        },
+        {
+          "url": "https://www.tumisyeri.com/meat-burger-steak-house",
+          "kind": "secondary",
+          "supports": "Closed report conflicts with newer directory/review activity; closure not established."
         }
       ],
       "checks": {
@@ -312,6 +383,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "mEAT Burger & Steak House Bodrum restaurant / official / reservations",
           "result": "Yandex matches mEAT at Kibris Sehitleri 79/A, but no operator source or table-reservation channel was identified."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "mEAT Burger Bodrum",
+          "queryIsSummary": true,
+          "result": "Claimed Tripadvisor and TumIsyeri report closure, while Yandex/RestaurantGuru retain hours and recent Trip.com reviews; conflict documented."
         }
       ],
       "limitations": [
@@ -319,7 +397,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Resolve operation/closure via operator before activating restaurant or booking link."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-mezemore",
@@ -344,6 +426,11 @@
           "url": "https://mezabodrum.com/",
           "kind": "official",
           "supports": "Different Meza brand; excluded as unproven replacement."
+        },
+        {
+          "url": "https://restaurantguru.com/Mezemore-Bodrum",
+          "kind": "secondary",
+          "supports": "Adliye6 and phone conflict with another listing; candidate only."
         }
       ],
       "checks": {
@@ -366,6 +453,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Mezemore Bodrum restaurant / official / reservations",
           "result": "Mezemore directory lists Adliye Sk 8. Search also returns Meza Bodrum at nearby 8/B, but no official evidence connects these brands. Directory booking form cannot be treated as operator-authorized."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Mezemore Bodrum instagram",
+          "queryIsSummary": true,
+          "result": "Directory now gives @mezemorebodrum but conflicts on Adliye6 versus8 and phones; Instagram fetch failed."
         }
       ],
       "limitations": [
@@ -373,7 +467,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Read operator identity/contact and resolve street/phone conflict; Meza is not a proven successor."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-mosyo",
@@ -420,6 +518,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Mösyö Bodrum restaurant / official / reservations",
           "result": "Mosyo candidate at Belediye Meydani 6 appears consistently in directories. Candidate official site inaccessible; intermediary form not accepted as official booking."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Mosyo Bodrum rezervasyon official",
+          "queryIsSummary": true,
+          "result": "Official-domain retry remained inaccessible; no alternate operator booking route established."
         }
       ],
       "limitations": [
@@ -427,7 +532,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Recover readable operator channel; third-party listing is insufficient authority for request submission."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-musto-bistro",
@@ -439,18 +548,23 @@
         "address": "Eskiçeşme Mah. Neyzen Tevfik Cad. No:130, 48400 Bodrum / Muğla",
         "notes": "Official Musto site confirms Neyzen Tevfik 130. Reservation form explicitly constructs a WhatsApp request to the venue; it does not display current availability or confirm a table."
       },
-      "status": "manual_whatsapp",
-      "provider": null,
-      "bookingUrl": null,
+      "status": "official_external_link",
+      "provider": "Official website / WhatsApp",
+      "bookingUrl": "https://www.mustorestaurantbistro.com/",
       "sources": [
         {
           "url": "https://www.mustorestaurantbistro.com/",
           "kind": "official",
           "supports": "Address, phone and manual WhatsApp reservation form."
+        },
+        {
+          "url": "https://mustobistro.eatbu.com/?lang=tr",
+          "kind": "official",
+          "supports": "Restaurant-hosted site corroborates Neyzen Tevfik 130 and manual reservation contact."
         }
       ],
       "checks": {
-        "officialExternalLink": false,
+        "officialExternalLink": true,
         "embeddedOriginalForm": false,
         "liveAvailability": false,
         "simulatedValidation": false,
@@ -470,7 +584,8 @@
       "contact": {
         "type": "whatsapp",
         "value": "+905332027575",
-        "bookingExplicit": true
+        "bookingExplicit": true,
+        "source": "https://www.mustorestaurantbistro.com/"
       },
       "attempts": [
         {
@@ -487,6 +602,13 @@
             "work/external200-musto-mobile.txt"
           ],
           "result": "Desktop and mobile DOM contain name, date, time (latest 22:30), party 2 to 7+, optional phone/note and WhatsApp-send content. TR/EN labels observed on desktop. Modal visibility/functionality and submission not tested."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Musto Bistro Bodrum official reservation",
+          "queryIsSummary": true,
+          "result": "Original WhatsApp request form remains published; restaurant-hosted Eatbu corroborates same Neyzen130 and asks customers to contact for reservations."
         }
       ],
       "limitations": [
@@ -494,7 +616,12 @@
         "Desktop and mobile read-only rendering inspected; no form filling, submission, live inventory or embedding test. DOM form content alone does not establish visibility or functionality.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "External form composes a manual WhatsApp request; no live table inventory or confirmation verified."
+      ],
+      "followUpReviewedAt": "2026-10-16",
+      "bookingMode": "request_only"
     },
     {
       "restaurantId": "osm-BDR-nazikana",
@@ -546,6 +673,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "nazikANA Bodrum restaurant / official / reservations",
           "result": "Nazik Ana official candidate domain has historical indexed content and reservation label, but current fetch failed. Directories list central Eski Hukumet 5 and an Islamhaneleri namesake. Input does not resolve location."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Nazikana Bodrum restaurant rezervasyon",
+          "queryIsSummary": true,
+          "result": "Claimed central listing retains EskiHukumet5 and info@nazikanarestaurant.com; non-www domain retry inaccessible and namesake conflict remains."
         }
       ],
       "limitations": [
@@ -553,7 +687,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Resolve central versus Islamhaneleri and retrieve current operator booking authority."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-nokta-sebzeli-bodrum-doneri",
@@ -600,6 +738,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "nokta sebzeli bodrum döneri Bodrum restaurant / official / reservations",
           "result": "Directories identify Nokta at Dr Alimbey 31 (one says Ataturk 31). No official reservation route found. Takeout/doner service does not prove walk-in-only."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Nokta Sebzeli Bodrum Doneri resmi",
+          "queryIsSummary": true,
+          "result": "Additional Tripadvisor gives DrAlimbey31 and mobile05418482719, while directory says Ataturk31/02523164929."
         }
       ],
       "limitations": [
@@ -607,7 +752,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Verify current operator contact/address; no reservation or walk-in policy established."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-otantik-ocakasi",
@@ -627,6 +776,11 @@
           "url": "https://guide.michelin.com/gb/en/mugla/bodrum_2806351/restaurant/otantik-ocakbas%C4%B1",
           "kind": "secondary",
           "supports": "Candidate spelling, address and phone-booking indication."
+        },
+        {
+          "url": "https://www.facebook.com/otantikocakbasi/",
+          "kind": "official",
+          "supports": "Michelin-linked operator Facebook; temporarily blocked during read, no protection bypass."
         }
       ],
       "checks": {
@@ -649,6 +803,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Otantik Ocakasi Bodrum restaurant / official / reservations",
           "result": "Likely misspelling of Otantik Ocakbasi. Michelin gives Ataturk 46 and direct-contact booking, but no operator source inspected confirms input identity. No registry addition."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Otantik Ocakbasi Bodrum resmi rezervasyon",
+          "queryIsSummary": true,
+          "result": "Michelin again identifies Ataturk46 and direct booking phone; linked operator Facebook returns temporarily blocked page."
         }
       ],
       "limitations": [
@@ -656,7 +817,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Confirm typo match and operator channel when publicly readable; access block not bypassed."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-rasit-in-yeri",
@@ -681,6 +846,11 @@
           "url": "https://www.bodrum.bel.tr/upload/basili_kaynaklar/Mazimdeki_Bodrum_ve_Bodrumlular.pdf",
           "kind": "official",
           "supports": "Historical Yali Kahvesi / Rasit in Yeri, not current operation proof."
+        },
+        {
+          "url": "https://www.bodrumguncelhaber.com/101424-2/",
+          "kind": "secondary",
+          "supports": "2025 historical account describes replacement of Rasit; no current operator confirmation."
         }
       ],
       "checks": {
@@ -703,6 +873,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Raşit'in Yeri Bodrum restaurant / official / reservations",
           "result": "Rasit in Yeri appears on OSM-derived map near harbour master and in historical municipal material as Yali Kahvesi. Current official operating identity and booking channel remain unknown."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Rasitin Yeri Bodrum cafe",
+          "queryIsSummary": true,
+          "result": "2025 local history describes historic Rasit cafe replaced by Bodrum Cafe; OSM still has restaurant label."
         }
       ],
       "limitations": [
@@ -710,7 +887,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Determine whether manifest is a stale historical place, without auto-mapping to successor."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-red-dragon",
@@ -735,6 +916,11 @@
           "url": "https://www.reddragon.com.tr/rezervasyon",
           "kind": "official",
           "supports": "Original chain reservation request form only; no submission made."
+        },
+        {
+          "url": "https://www.quandoo.com.tr/en/place/red-dragon-bodrum-16956",
+          "kind": "secondary",
+          "supports": "Redirects to old menu page; no operator delegation or current inventory proven, excluded as booking route."
         }
       ],
       "checks": {
@@ -758,7 +944,8 @@
       "contact": {
         "type": "phone",
         "value": "+902523168537",
-        "bookingExplicit": true
+        "bookingExplicit": true,
+        "source": "https://www.reddragon.com.tr/"
       },
       "attempts": [
         {
@@ -775,6 +962,13 @@
             "work/external200-reddragon-mobile.txt"
           ],
           "result": "Desktop and mobile DOM contain reservation page person/phone/calendar/party icons and Turkish/English labels. No form fill, submission or branch-specific inventory tested."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Red Dragon Bodrum reservation official",
+          "queryIsSummary": true,
+          "result": "Official chain request form rechecked. Quandoo16956 exists but redirects to old menu and no operator backlink was found."
         }
       ],
       "limitations": [
@@ -782,7 +976,11 @@
         "Desktop and mobile read-only rendering inspected; no form filling, submission, live inventory or embedding test. DOM form content alone does not establish visibility or functionality.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Use Bodrum phone; chain form lacks verified branch targeting and Quandoo activation remains unproven."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-sahil-koftecisi",
@@ -829,6 +1027,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Sahil Köftecisi Bodrum restaurant / official / reservations",
           "result": "Sahil Koftecisi candidate at Neyzen Tevfik 64/A has a Yandex inactive report and other directories retaining operation/contact details. Official current status not found; closure not asserted."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Sahil Koftecisi Bodrum instagram",
+          "queryIsSummary": true,
+          "result": "Another directory names Marina Sahil Restaurant at NeyzenTevfik with reservation tag/02523166157; legacy inactive conflict remains."
         }
       ],
       "limitations": [
@@ -836,19 +1041,23 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Verify operator-controlled identity and whether Marina Sahil equals manifest record."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-the-place",
       "name": "The place",
       "manifestCity": "Bodrum",
       "identity": {
-        "status": "unresolved",
-        "actualCity": null,
-        "address": null,
-        "notes": "Directory points to The Place operator Eatbu site; fetched page had no readable content. Generic name and missing input address prevent confident identity or booking identification."
+        "status": "verified",
+        "actualCity": "Bodrum",
+        "address": "Carsi, Cumhuriyet Caddesi No:26, 48400 Bodrum / Mugla",
+        "notes": "Restaurant-hosted Eatbu page names operator A. Macit Oguzata, Cumhuriyet 26, phone and reservation instructions. Its map coordinates 37.0334658,27.4329601 locate the venue in Bodrum, corroborated by the directory that links this exact domain."
       },
-      "status": "unresolved",
+      "status": "manual_phone",
       "provider": null,
       "bookingUrl": null,
       "sources": [
@@ -861,6 +1070,16 @@
           "url": "https://theplacerestaurant.eatbu.com/",
           "kind": "official",
           "supports": "Candidate operator site; zero extracted text."
+        },
+        {
+          "url": "https://theplacerestaurant.eatbu.com/?lang=en",
+          "kind": "official",
+          "supports": "Readable 2026-10-16: imprint, Cumhuriyet 26, map location and explicit phone reservations. Generic online-service prose does not establish an enabled booking form."
+        },
+        {
+          "url": "https://theplacerestaurant.eatbu.com/?lang=tr",
+          "kind": "official",
+          "supports": "Explicit phone/email reservation instructions."
         }
       ],
       "checks": {
@@ -871,18 +1090,34 @@
         "confirmedReservation": false,
         "desktop": "not_tested",
         "mobile": "not_tested",
-        "languages": [],
+        "languages": [
+          "en",
+          "tr"
+        ],
         "cancellation": null,
         "cardGuarantee": null,
-        "prepayment": null
+        "prepayment": null,
+        "languageSwitch": "page_text_observed_not_interactively_switched"
       },
-      "contact": null,
+      "contact": {
+        "type": "phone",
+        "value": "+905433708384",
+        "bookingExplicit": true,
+        "source": "https://theplacerestaurant.eatbu.com/?lang=en"
+      },
       "attempts": [
         {
           "date": "2026-10-15",
           "method": "web_search_and_read_only_source_inspection",
           "query": "The place Bodrum restaurant / official / reservations",
           "result": "Directory points to The Place operator Eatbu site; fetched page had no readable content. Generic name and missing input address prevent confident identity or booking identification."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "The Place Bodrum eatbu",
+          "queryIsSummary": true,
+          "result": "Official Eatbu is readable today, explicitly accepts phone/email reservations at Cumhuriyet26; official map coordinates place it in Bodrum, matching domain-linked directory."
         }
       ],
       "limitations": [
@@ -890,7 +1125,19 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Manual route verified. Text mentions online service but no enabled original booking form was demonstrated."
+      ],
+      "followUpReviewedAt": "2026-10-16",
+      "alternateContacts": [
+        {
+          "type": "email",
+          "value": "theplacebodrum48@gmail.com",
+          "bookingExplicit": true,
+          "source": "https://theplacerestaurant.eatbu.com/?lang=tr"
+        }
+      ]
     },
     {
       "restaurantId": "osm-BDR-trafo",
@@ -910,6 +1157,11 @@
           "url": "https://www.bodrumbelediyeas.com.tr/tesis.php?slug=trafo-bodrum-cafe-restaurant",
           "kind": "official",
           "supports": "Exact venue address and telephone."
+        },
+        {
+          "url": "https://www.meyhankoli.com/restoran/trafo-cafe-5904",
+          "kind": "secondary",
+          "supports": "Directory explicitly says online reservation system is not active."
         }
       ],
       "checks": {
@@ -928,7 +1180,8 @@
       "contact": {
         "type": "phone",
         "value": "+905331688986",
-        "bookingExplicit": false
+        "bookingExplicit": false,
+        "source": "https://www.bodrumbelediyeas.com.tr/tesis.php?slug=trafo-bodrum-cafe-restaurant"
       },
       "attempts": [
         {
@@ -936,6 +1189,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Trafo Bodrum restaurant / official / reservations",
           "result": "Municipal operator confirms Trafo Cafe & Restaurant at Dr Alim Bey 4 and phone. No explicit table reservation route found, so contact alone is not counted as manual booking."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Trafo Bodrum rezervasyon",
+          "queryIsSummary": true,
+          "result": "Municipal identity unchanged. Meyhankoli expressly says online reservation system is not activated; no operator booking statement."
         }
       ],
       "limitations": [
@@ -943,7 +1203,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Confirm table reservation policy with operator source; do not use inactive intermediary form."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BDR-yelken-bal-k",
@@ -953,35 +1217,56 @@
         "status": "verified",
         "actualCity": "Bodrum",
         "address": "Eskiçeşme, Neyzen Tevfik Cd. No:134, Bodrum, Muğla",
-        "notes": "Official reservation/contact page identifies Bodrum branch at Neyzen Tevfik 134 with a branch-specific reservation contact. Ankara branches must not be substituted. Third-party development booking URL excluded."
+        "notes": "Official contact page links Yerim Hazir search. Its Bodrum branch373 matches official Neyzen Tevfik134 with provider address134A/3. Original request form uses phone verification and venue notification; no submission or availability confirmation performed."
       },
-      "status": "manual_phone",
-      "provider": null,
-      "bookingUrl": null,
+      "status": "official_external_link",
+      "provider": "Yerim Hazir",
+      "bookingUrl": "https://www.yerimhazir.com/isletme/yelken-balik-bodrum/373",
       "sources": [
         {
           "url": "https://www.yelkenbalik.com.tr/iletisim",
           "kind": "official",
           "supports": "Bodrum branch reservation phone and address."
+        },
+        {
+          "url": "https://www.yerimhazir.com/ara?arama=yelken",
+          "kind": "official",
+          "supports": "Reservation provider delegated by operator contact page; results distinguish Bodrum373 from Ankara branches."
+        },
+        {
+          "url": "https://www.yerimhazir.com/isletme/yelken-balik-bodrum/373",
+          "kind": "official",
+          "supports": "Delegated Bodrum-specific original request form and Neyzen Tevfik134A/3 address. Date/time/party and personal details plus verification steps; no submission performed."
+        },
+        {
+          "url": "https://yerimhazir.com/rezervasyoniframe/373",
+          "kind": "official",
+          "supports": "Read-only HTTP response exposes original provider request form. Endpoint loading is not an embedding or completion test."
         }
       ],
       "checks": {
-        "officialExternalLink": false,
+        "officialExternalLink": true,
         "embeddedOriginalForm": false,
         "liveAvailability": false,
         "simulatedValidation": false,
         "confirmedReservation": false,
-        "desktop": "not_tested",
-        "mobile": "not_tested",
-        "languages": [],
+        "desktop": "read_only_render_1365x900_branch_page_reservation_button",
+        "mobile": "read_only_render_390x844_branch_page_reservation_button",
+        "languages": [
+          "tr",
+          "en"
+        ],
         "cancellation": null,
         "cardGuarantee": null,
-        "prepayment": null
+        "prepayment": null,
+        "originalRequestFormObserved": true,
+        "languageSwitch": "labels_and_source_text_observed_not_switched"
       },
       "contact": {
         "type": "phone",
         "value": "+905322578252",
-        "bookingExplicit": true
+        "bookingExplicit": true,
+        "source": "https://www.yelkenbalik.com.tr/iletisim"
       },
       "attempts": [
         {
@@ -989,14 +1274,34 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Yelken Balık Bodrum restaurant / official / reservations",
           "result": "Official reservation/contact page identifies Bodrum branch at Neyzen Tevfik 134 with a branch-specific reservation contact. Ankara branches must not be substituted. Third-party development booking URL excluded."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Yelken Balik Bodrum rezervasyon",
+          "queryIsSummary": true,
+          "result": "Official site links YerimHazir search; its Bodrum373 result matches NeyzenTevfik134A/3 and exposes original request form with verification/venue notification."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "coordinator_chromium_read_only_render",
+          "evidenceFiles": [
+            "work/external200-form-render-followup.json"
+          ],
+          "result": "Desktop1365x900 and mobile390x844 rendered Yelken Balik Bodrum, Neyzen Tevfik134A/3 and Rezervasyon Yap control. No control clicked, no form interaction, availability check or submission. Original request-form content was separately observed through read-only source inspection."
         }
       ],
       "limitations": [
         "Source restaurant record supplies only destination-level address, without street address, coordinates or original OSM node ID.",
-        "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
+        "Desktop and mobile branch pages rendered read-only; no reservation control clicked and no form interaction, embedding or availability test.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "External request only; do not submit Create Reservation or OTP. Live inventory and completion not verified by this review."
+      ],
+      "followUpReviewedAt": "2026-10-16",
+      "bookingMode": "request_only"
     },
     {
       "restaurantId": "osm-BDR-zoe-restaurant-cocktail-bar",
@@ -1016,6 +1321,11 @@
           "url": "https://isletmeara.com/firma/zoe-restaurant-ve-cocktail-bar-bodrum",
           "kind": "secondary",
           "supports": "Candidate address and phone."
+        },
+        {
+          "url": "https://www.tripadvisor.com.my/Restaurant_Review-g298658-d33347462-Reviews-Zoe_Bodrum-Bodrum_City_Bodrum_District_Mugla_Province_Turkish_Aegean_Coast.html",
+          "kind": "secondary",
+          "supports": "Claimed Sanat14 candidate, insufficient operator booking evidence."
         }
       ],
       "checks": {
@@ -1038,6 +1348,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "ZOE Restaurant & Cocktail Bar Bodrum restaurant / official / reservations",
           "result": "ZOE appears in directories at Sanat Okulu 14; no operator source or officially delegated reservation system established."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Zoe Restaurant Bodrum Sanat official",
+          "queryIsSummary": true,
+          "result": "Claimed Tripadvisor Zoe Bodrum matches SanatOkulu14 and existing phone; no restaurant-owned booking source or delegate found."
         }
       ],
       "limitations": [
@@ -1045,7 +1362,11 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Verify operator source and current reservation channel rather than relying on claimed-directory tags."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     },
     {
       "restaurantId": "osm-BKK-duklong",
@@ -1070,6 +1391,11 @@
           "url": "https://www.facebook.com/duklongcafe/",
           "kind": "official",
           "supports": "Candidate operator page; throttled."
+        },
+        {
+          "url": "https://wanderlog.com/place/details/2611981/duklong-cafe-and-eat",
+          "kind": "secondary",
+          "supports": "Duklong candidate; no verified current operator booking route."
         }
       ],
       "checks": {
@@ -1092,6 +1418,13 @@
           "method": "web_search_and_read_only_source_inspection",
           "query": "Duklong Bangkok restaurant / official / reservations",
           "result": "Duklong Cafe and Eat candidate at 71/4-5 Ban Phan Thom found; linked Facebook read throttled. Different Duklong cafe exists in Nakhon Nayok. No verified operator booking route."
+        },
+        {
+          "date": "2026-10-16",
+          "method": "web_search_and_read_only_source_inspection",
+          "query": "Duklong cafe Bangkok facebook",
+          "queryIsSummary": true,
+          "result": "Wanderlog links newer Facebook profile61565651161271 for Bangkok71/4-5, whereas original candidate Facebook and NakhonNayok namesake differ."
         }
       ],
       "limitations": [
@@ -1099,7 +1432,12 @@
         "Desktop and mobile interactive booking tests not performed; no verified restaurant-specific inventory flow available.",
         "Cancellation, card guarantee and prepayment terms not established; null is unknown, not no-charge."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "remainingBlockers": [
+        "Resolve operator social-page continuity and current reservation policy."
+      ],
+      "followUpReviewedAt": "2026-10-16"
     }
-  ]
+  ],
+  "followUpScope": "Read-only follow-up of every assigned record, including official/provider and catalogue searches. Prior browser observations retain their original date."
 }

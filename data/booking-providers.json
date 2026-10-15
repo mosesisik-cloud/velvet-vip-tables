@@ -1822,5 +1822,34 @@
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported",
     "notes": "Official initial form identifies Pavyllon at Hotel Hermitage Monte-Carlo. Original fixed venues query retained; sister venues may appear. No full journey or booking confirmation verified."
+  },
+  "osm-DXB-shang-palace": {
+    "provider": "SevenRooms",
+    "name": "Shang Palace Dubai",
+    "city": "Dubai",
+    "venueId": "shangpalacedubai",
+    "url": "https://www.sevenrooms.com/reservations/shangpalacedubai",
+    "source": "https://www.shangri-la.com/ru/dubai/shangrila/offer-detail/dining/experience-shang-palace/",
+    "checkedAt": "2026-10-16",
+    "verification": "official_link_only",
+    "providerTitle": "Shang Palace Dubai Reservations",
+    "integrationMode": "external_link",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "venueKey": "www.sevenrooms.com/reservations/shangpalacedubai"
+  },
+  "osm-SBH-fishcorner": {
+    "name": "FishCorner",
+    "city": "St. Barts",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?pid=1001&rid=388090",
+    "source": "https://www.fishcornerstbarth.com/en/book-online",
+    "venueKey": "bookings.zenchef.com/results?rid=388090",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-16",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "identityNote": "Official restaurant page at41RueRepubliqueGustavia links this exactZenchefID; phonefallback retained."
   }
 }

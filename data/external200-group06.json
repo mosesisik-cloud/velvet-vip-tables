@@ -43,7 +43,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "利隆火鍋食店 訂座 官方; Li Lung Hot Pot Kennedy reservation",
+        "result": "No operator or provider source resolved; map/directory candidate insufficient."
+      }
     },
     {
       "restaurantId": "osm-HKG-ub4100aef7fd9",
@@ -80,7 +85,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "紅興港式懷舊小食 香港",
+        "result": "Exact-name query produced no reliable current restaurant/operator match."
+      }
     },
     {
       "restaurantId": "osm-HKG-ufc4d4c688c11",
@@ -102,6 +112,11 @@
           "url": "https://mapcarta.com/W71379535",
           "kind": "secondary",
           "supports": "Exact 珍品小炒 search found nearby OSM-derived name at Smithfield Municipal Services Building. Taiwan 珍品小館 results rejected. No official identity/booking route."
+        },
+        {
+          "url": "https://restaurant.eatsmart.gov.hk/files/pdf/cooksmart_issue_12.pdf",
+          "kind": "official",
+          "supports": "Government EatSmart newsletter names TreasureGradeRestaurant phone34838779; historical mention cannot establish current reservation acceptance."
         }
       ],
       "checks": {
@@ -123,7 +138,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "珍品小炒 香港 訂座",
+        "result": "Government EatSmart newsletter names TreasureGradeRestaurant phone34838779; historical mention cannot establish current reservation acceptance."
+      }
     },
     {
       "restaurantId": "osm-HKG-wah-fung",
@@ -166,7 +186,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Wah Fung Kennedy Town restaurant reservation",
+        "result": "Search returns Central and NewYork businesses; NewYork reservation sites rejected as wrong country. No source branch anchor."
+      }
     },
     {
       "restaurantId": "osm-HKG-wai-kee-cafe",
@@ -188,6 +213,11 @@
           "url": "https://eatoutmap.com/en/hong-kong/kennedy-town/near/kennedy-town",
           "kind": "secondary",
           "supports": "Exact 維記 Forbes query found 36 Forbes Street café candidate in travel guide and OSM-derived map. No current official identity or reservations verified."
+        },
+        {
+          "url": "https://www.openrice.com/zh/hongkong/r-%E7%B6%AD%E8%A8%98cafe-%E8%A5%BF%E7%92%B0-%E6%B8%AF%E5%BC%8F-r880483",
+          "kind": "secondary",
+          "supports": "OpenRice lists36ForbesStreet and two branches, with generic WhatsApp63760998. No operator reservation invitation; do not activate generic contact."
         }
       ],
       "checks": {
@@ -209,7 +239,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Wai Kee Cafe 36 Hong Kong",
+        "result": "OpenRice lists36ForbesStreet and two branches, with generic WhatsApp63760998. No operator reservation invitation; do not activate generic contact."
+      }
     },
     {
       "restaurantId": "osm-HKT-1000009-thai-noodle-restaurant-phuket-9",
@@ -252,7 +287,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "1000009 Phuket restaurant official",
+        "result": "Wongnai exact-name merchant listing found, no independently verified table-booking provider or policy."
+      }
     },
     {
       "restaurantId": "osm-HKT-breakfast-place",
@@ -289,7 +329,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Breakfast Place Phuket restaurant official",
+        "result": "Generic-name search returns non-specific menu and unrelated results; insufficient official identity."
+      }
     },
     {
       "restaurantId": "osm-HKT-come-back",
@@ -332,7 +377,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Come Back Phuket restaurant Montri",
+        "result": "PhuketNet95/18Montri cafe conflicts with Wichit ComeBackRestaurant candidate; source has no street anchor."
+      }
     },
     {
       "restaurantId": "osm-HKT-five-loaves",
@@ -354,6 +404,11 @@
           "url": "https://www.phuket.net/directory/profile/five-loaves-burgers/",
           "kind": "secondary",
           "supports": "Search found Phuket Town 169/1 Phangnga and Kathu 46/367 candidates. Manifest lacks branch anchor. Wongnai official-labelled listing has inconsistent Kathu directions. No safe branch mapping."
+        },
+        {
+          "url": "https://www.wongnai.com/restaurants/231882aN-five-loaves-bergers",
+          "kind": "secondary",
+          "supports": "Wongnai merchant listing and Kathu/PhuketTown branches found; no exact source branch anchor."
         }
       ],
       "checks": {
@@ -375,7 +430,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Five Loaves Phuket official branches",
+        "result": "Wongnai merchant listing and Kathu/PhuketTown branches found; no exact source branch anchor."
+      }
     },
     {
       "restaurantId": "osm-HKT-khao-tom-thanon-di-buk",
@@ -397,6 +457,11 @@
           "url": "https://www.phuket101.net/khaotom-thanon-dibuk-phuket/",
           "kind": "secondary",
           "supports": "Exact name search identifies relocated porridge shop on Phangnga Road, not Dibuk Road. No owner reservation source verified."
+        },
+        {
+          "url": "https://joinpearl.co/restaurants/phuket/khao-tom-thanon-di-buk",
+          "kind": "secondary",
+          "supports": "Pearl directory and Michelin-related reporting found; no operator-authorized booking system or original form."
         }
       ],
       "checks": {
@@ -418,7 +483,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Khao Tom Thanon Di Buk official reservation",
+        "result": "Pearl directory and Michelin-related reporting found; no operator-authorized booking system or original form."
+      }
     },
     {
       "restaurantId": "osm-HKT-love2eat",
@@ -461,7 +531,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Love2Eat Phuket restaurant official",
+        "result": "Thai directory187/3PhangNgaRoad retained; Indian love2eat.co.in rejected as different business."
+      }
     },
     {
       "restaurantId": "osm-HKT-nigi-express",
@@ -504,7 +579,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Nigi Express Phuket official",
+        "result": "Wongnai NigiExpressxHormHormPhuket candidate found. LINE Bangsue result rejected as different city/branch."
+      }
     },
     {
       "restaurantId": "osm-HKT-noy-pochana",
@@ -547,7 +627,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Noy Pochana Phuket official",
+        "result": "EatingThaiFood historical venue report remains sole identified match, no current operator booking route."
+      }
     },
     {
       "restaurantId": "osm-HKT-pint-factory",
@@ -590,7 +675,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Pint Factory Phuket official Facebook",
+        "result": "Tourism directory96SuthatSoi2 differs from old Limelight location; Wanderlog marks latter temporarilyclosed. Branch/relocation unresolved."
+      }
     },
     {
       "restaurantId": "osm-HKT-reach",
@@ -612,6 +702,11 @@
           "url": "https://www.tripadvisor.com/Restaurant_Review-g1215781-d25197960-Reviews-Reach_Vegan_Kitchen-Phuket_Town_Phuket.html",
           "kind": "secondary",
           "supports": "Reach Phuket search found unclaimed Reach Vegan Kitchen at Phangnga Road. Generic source name insufficient for official identity or booking policy."
+        },
+        {
+          "url": "https://www.happycow.net/reviews/reach-plant-based-kitchen-phuket-224152",
+          "kind": "secondary",
+          "supports": "HappyCow reports135Phangnga closedJuly2024/replacedUbuntu; other directories show Rawai and Thalang. Conflicting relocation/current identity remains unresolved."
         }
       ],
       "checks": {
@@ -633,7 +728,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Reach vegan Phuket reservation",
+        "result": "HappyCow reports135Phangnga closedJuly2024/replacedUbuntu; other directories show Rawai and Thalang. Conflicting relocation/current identity remains unresolved."
+      }
     },
     {
       "restaurantId": "osm-HKT-sab-nua-restaurant",
@@ -670,7 +770,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Sab Nua Restaurant Phuket official",
+        "result": "No reliable exact official identity/provider result; similar-name ChoengThale candidate not safely mapped."
+      }
     },
     {
       "restaurantId": "osm-HKT-the-barrel-wine-beer-bistro-bar",
@@ -692,6 +797,11 @@
           "url": "https://thebarrel.asia/contact-us.html",
           "kind": "official",
           "supports": "Official chain site lists Phuket Town, Rawai and Cherng Talay branches. Generic source lacks street/coordinates. Wine ordering and LINE contact not live table availability."
+        },
+        {
+          "url": "https://www.thebarrel.asia/the-barrel/the-barrel-phuket-town.html",
+          "kind": "official",
+          "supports": "Official site lists PhuketTown plus Rawai/CherngTalay. PhuketTown page generic information contact only; no exact source branch anchor."
         }
       ],
       "checks": {
@@ -713,7 +823,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "The Barrel Phuket reservation official",
+        "result": "Official site lists PhuketTown plus Rawai/CherngTalay. PhuketTown page generic information contact only; no exact source branch anchor."
+      }
     },
     {
       "restaurantId": "osm-HKT-the-tent-phuket",
@@ -756,7 +871,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "The Tent Phuket official booking",
+        "result": "PhuketNet lists generic phuketthetent@gmail.com; no operator-authorized table-booking invitation."
+      }
     },
     {
       "restaurantId": "osm-HKT-toy-tor-toe",
@@ -778,6 +898,11 @@
           "url": "https://au.trip.com/restaurant/thailand/phuket/detail/toy-tor-toe-148195856/",
           "kind": "secondary",
           "supports": "Exact Romanized name matches ต๋อย ต่อ โต๊ะ noodle venue on Thep Krasattri Road; third-party phone +66898747053 only. Official reservation route unverified."
+        },
+        {
+          "url": "https://yandex.com/maps/org/toy_tor_toe/202430217069/",
+          "kind": "secondary",
+          "supports": "Yandex map candidate only; no official current identity or table-booking route."
         }
       ],
       "checks": {
@@ -799,7 +924,12 @@
         "No booking/hold/payment/message created. Browser forms and responsive interaction not tested unless explicitly recorded.",
         "Cancellation, card guarantee and prepayment not established; null means unknown, not absent."
       ],
-      "registryAddition": null
+      "registryAddition": null,
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Toy Tor Toe Phuket official",
+        "result": "Yandex map candidate only; no official current identity or table-booking route."
+      }
     },
     {
       "restaurantId": "osm-HKT-u0bb8a4bb7e3a",
@@ -843,12 +973,18 @@
       ],
       "registryAddition": null,
       "contact": {
-        "phone": "076-211-208 / 089-619-1845",
-        "email": "maimornforest@gmail.com",
-        "tableReservationAcceptance": "manual_request_offered_not_confirmed",
-        "bookingChannel": "LINE",
-        "bookingHandle": "@maimornforest"
+        "type": "line",
+        "value": "@maimornforest",
+        "bookingExplicit": true,
+        "source": "https://www.maimornforest.com/contact-us.php",
+        "tableReservationAcceptance": "manual_request_offered_not_confirmed"
+      },
+      "followup": {
+        "checkedAt": "2026-10-16",
+        "query": "Official Maimorn contact page recheck",
+        "result": "Previous explicit Thai table-booking LINE handle preserved. Re-fetch returned502; no invented LINE deep link and no message sent."
       }
     }
-  ]
+  ],
+  "followupCheckedAt": "2026-10-16"
 }
