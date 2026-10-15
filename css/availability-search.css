@@ -28,7 +28,7 @@
 .availability-other summary { cursor:pointer; padding:8px 0; }
 .availability-other ul { list-style:none; margin:12px 0 0; }
 .availability-other li { display:flex; justify-content:space-between; gap:16px; align-items:center; padding:15px 0; border-bottom:1px solid var(--border-soft,#1e1e27); }
-.availability-other li a { color:var(--text,#f2efe9); }
+.availability-other li a { display:inline-flex; align-items:center; min-height:44px; color:var(--text,#f2efe9); }
 .availability-other li p { font-size:12px; margin-top:4px; }
 .availability-detail { font-size:12px; text-align:right; }
 .availability-disclaimer { font-size:12px; max-width:720px; margin-top:28px; }

@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-UX173";
+const VERSION = "v4-UX174";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -27,6 +27,7 @@ const SHELL_ASSETS = [
   "./js/booking-selection.js",
   "./js/booking-report.js",
   "./js/availability-search.js",
+  "./js/availability-copy.js",
   "./js/restaurant-booking-providers.js",
   "./js/ux-booking.js",
   "./js/ux-copy.js",

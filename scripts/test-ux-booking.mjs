@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo } from '../js/ux-booking.js';
+import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo, resolveAuthReturn } from '../js/ux-booking.js';
 
 // Failed delivery, an ambiguous provider outcome and self-reported confirmation
 // must never be presented as a verified restaurant reservation.
@@ -26,6 +26,19 @@ assert.equal(canStartPayment({ paid: false, paidPending: false }), true);
 
 for (const route of ['#/table/RQ-1', '#/pay/RQ-1', '#/book-site/club?date=2026-10-15&go=1']) assert.equal(loginReturnTo(route), route);
 for (const route of ['https://example.com', '//example.com', '#/login', '#/auth/callback', null]) assert.equal(loginReturnTo(route), '');
+for (const route of ['#/not-a-route', '#//example.com', '#/pay-return', '#/account/again', '#/restaurant/', '#/venue/%ZZ', '#/account#auth', '#/account\n', '#/venue\\evil']) assert.equal(loginReturnTo(route), '');
+for (const route of ['#/', '#/account', '#/verify', '#/card', '#/favorites', '#/menu/restaurant/zink', '#/restaurant/a%20b?date=2030-10-20&party=4']) assert.equal(loginReturnTo(route), route);
+
+const bridgeReturn = '#/book-site/club?date=2030-10-20&party=4&go=1';
+assert.equal(resolveAuthReturn({explicit:bridgeReturn,oauthFrom:'#/account'}), bridgeReturn, 'explicit booking intent wins over OAuth launch page');
+assert.equal(resolveAuthReturn({explicit:'https://example.com',oauthFrom:'#/table/RQ-1'}), '#/table/RQ-1', 'invalid explicit target falls through to valid OAuth context');
+assert.equal(resolveAuthReturn({explicit:'#/unknown',oauthFrom:'#/pay/RQ-1'}), '#/pay/RQ-1');
+assert.equal(resolveAuthReturn({oauthFrom:'#/restaurant/zink?date=2030-10-20&time=19%3A00&party=4'}), '#/restaurant/zink?date=2030-10-20&time=19%3A00&party=4');
+assert.equal(resolveAuthReturn({explicit:'#/auth/callback',oauthFrom:'#/pay-return',fallback:'//example.com'}), '#/account');
+assert.equal(resolveAuthReturn(), '#/account');
+assert.equal(resolveAuthReturn({explicit:'#/account',oauthFrom:bridgeReturn}), '#/account', 'an explicit account destination remains stable');
+assert.equal(resolveAuthReturn({explicit:resolveAuthReturn()}), '#/account', 'fallback never cycles through an auth route');
+assert.equal(resolveAuthReturn({fallback:'#/verify'}), '#/verify', 'passkey may retain its existing verification fallback');
 
 // All booking status labels and explanations must be localized, never raw keys.
 globalThis.localStorage = { getItem: () => 'sv' };

@@ -16,6 +16,19 @@ export function canStartPayment(member) {
 }
 
 export function loginReturnTo(candidate) {
-  return typeof candidate === 'string' && /^#\//.test(candidate)
-    && !/^#\/(?:login|auth)(?:[/?]|$)/.test(candidate) ? candidate : '';
+  if (typeof candidate !== 'string' || /[\s\\\u0000-\u001f\u007f]/.test(candidate)) return '';
+  const [path] = candidate.split('?');
+  // Reject malformed encoding and nested fragments before retaining query state.
+  try { decodeURIComponent(candidate); } catch { return ''; }
+  if (candidate.slice(1).includes('#')) return '';
+  const page = /^#\/(?:destinations|venues|restaurants|availability|map|bookings|open|verify|card|account|promoters|payout|favorites|villkor|integritet)?$/.test(path);
+  const detail = /^#\/(?:venue|restaurant|destination|join|list|user|promoter|book-site|table|pay)\/[^/?#]+$/.test(path)
+    || /^#\/menu\/(?:restaurant|venue)\/[^/?#]+$/.test(path);
+  // Authentication and payment callbacks are not user destinations. Returning
+  // to them can restart a callback without its original one-time credentials.
+  return page || detail ? candidate : '';
+}
+
+export function resolveAuthReturn({ explicit = '', oauthFrom = '', fallback = '#/account' } = {}) {
+  return loginReturnTo(explicit) || loginReturnTo(oauthFrom) || loginReturnTo(fallback) || '#/account';
 }

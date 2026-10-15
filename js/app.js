@@ -1,9 +1,9 @@
 import { primarySection, isDiscoveryList, safeDiscoveryReturn } from './navigation-state.js';
 import { parseBookingSelection, withBookingSelection } from './booking-selection.js';
 import { mountBookingReport } from './booking-report.js';
-import { uxT } from './ux-copy.js';
-import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo } from './ux-booking.js';
-import { mountAvailabilitySearch } from './availability-search.js';
+import { uxT } from './ux-copy.js?v=174';
+import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo, resolveAuthReturn } from './ux-booking.js?v=174';
+import { mountAvailabilitySearch } from './availability-search.js?v=174';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js';
 import { mountBokabordMirror } from "./bokabord-mirror.js";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
@@ -984,8 +984,9 @@ async function loginWithPasskey() {
   saveUser(user);
   let returnTo = "";
   try {
-    returnTo = sessionStorage.getItem("velvet_after_login") || "";
+    returnTo = resolveAuthReturn({explicit:sessionStorage.getItem("velvet_after_login"), fallback:user.idvStatus === "verified" ? "#/" : "#/verify"});
     sessionStorage.removeItem("velvet_after_login");
+    sessionStorage.removeItem("velvet_oauth_from");
   } catch {}
   location.hash = returnTo || (user.idvStatus === "verified" ? "#/" : "#/verify");
   return user;
@@ -2443,8 +2444,8 @@ async function renderRestaurantDetail(placeId) {
     ? `<div class="restaurant-provider-intro"><span>01 · DATUM</span><i></i><span>02 · TID</span><i></i><span>03 · BEKRÄFTA</span></div>
        <div class="webbridge-badge"><span aria-hidden="true">↔</span><div><strong>VELVET WebBridge</strong><small>Säker koppling till Zinks bokningssystem</small></div><b>PILOT</b></div>
        <form id="restaurant-webbridge-search" class="restaurant-book-form restaurant-provider-start">
-         <label>Datum<input name="date" type="date" min="${today}" value="${nextBookableDay}" required></label>
-         <label>Antal gäster<select name="party" required>${Array.from({length: 8}, (_, i) => `<option value="${i + 1}" ${i === 1 ? "selected" : ""}>${i + 1} ${i ? "gäster" : "gäst"}</option>`).join("")}</select></label>
+         <label>Datum<input name="date" type="date" min="${today}" value="${bookingSelection?.date >= today ? bookingSelection.date : nextBookableDay}" required></label>
+         <label>Antal gäster<select name="party" required>${Array.from({length: 8}, (_, i) => `<option value="${i + 1}" ${i + 1 === (bookingSelection?.party <= 8 ? bookingSelection.party : 2) ? "selected" : ""}>${i + 1} ${i ? "gäster" : "gäst"}</option>`).join("")}</select></label>
          <button class="btn btn-gold btn-block restaurant-live-book" type="submit">Visa riktiga lediga tider</button>
        </form>
        <p class="stepper-hint restaurant-live-note">Tider, gästuppgifter och bekräftelse visas direkt här. Ingen extern sida öppnas.</p>
@@ -2457,13 +2458,13 @@ async function renderRestaurantDetail(placeId) {
     : `<form id="restaurant-book-form" class="restaurant-book-form"><label>Datum<input name="date" type="date" min="${today}" required></label><label>Tid<select name="time" required><option value="">Välj tid</option>${["17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00"].map((time) => `<option>${time}</option>`).join("")}</select></label><label>Antal gäster<select name="party" required>${Array.from({length: 12}, (_, i) => `<option value="${i + 1}">${i + 1} ${i ? "gäster" : "gäst"}</option>`).join("")}</select></label><label>Namn<input name="name" autocomplete="name" required></label><label>E-post<input name="email" type="email" autocomplete="email" required></label><label>Önskemål<textarea name="note" rows="3" placeholder="Allergier, barnstol eller annat"></textarea></label><button class="btn btn-gold btn-block" type="submit">Skicka bokningsförfrågan via VELVET</button>${restaurant.bookingUrl ? `<a class="restaurant-official-book" href="${esc(restaurant.bookingUrl)}" target="_blank" rel="noopener">Eller boka direkt hos restaurangen ↗</a>` : ""}</form><div id="restaurant-book-result" aria-live="polite"></div>`;
   view().innerHTML = `<section class="section restaurant-detail">
     <a class="back-link" href="#/restaurants?dest=${encodeURIComponent(destination.code)}" data-nav>← Restauranger i ${esc(destination.destination)}</a>
-    ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} officiella bilder · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">källa ↗</a></div></div>` : `<div class="restaurant-detail-placeholder"><b aria-hidden="true">${esc(String(restaurant.name || "R").slice(0, 1).toUpperCase())}</b><span>${esc(restaurant.name)}</span><small>Ingen generisk bild visas · officiell originalbild verifieras</small></div>`}
     <div class="restaurant-detail-hero">
       <div><div class="eyebrow">${esc(restaurant.cuisine || "Restaurang")}</div><h1>${esc(restaurant.name)}</h1><p class="restaurant-lead">${esc(restaurant.description || `Restaurang i ${destination.destination}.`)}</p>
-        <div class="restaurant-detail-actions">${favBtnHTML(restaurantFavId(restaurant.placeId), restaurant.name)}${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuViewHref)}" data-nav>Meny</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">Karta ↗</a>` : ""}</div>
+        <div class="restaurant-detail-actions"><button type="button" class="btn btn-gold" id="restaurant-book-jump" aria-controls="restaurant-booking-panel">${esc(uxT("jumpBooking"))}</button>${favBtnHTML(restaurantFavId(restaurant.placeId), restaurant.name)}${restaurant.website ? `<a class="btn" href="${esc(restaurant.website)}" target="_blank" rel="noopener">Hemsida ↗</a>` : ""}${menuHref ? `<a class="btn" href="${esc(menuViewHref)}" data-nav>Meny</a>` : ""}${restaurant.mapsUrl ? `<a class="btn" href="${esc(restaurant.mapsUrl)}" target="_blank" rel="noopener">Karta ↗</a>` : ""}</div>
       </div>
       <div class="restaurant-detail-rating">${Number.isFinite(rating) && rating > 0 ? `<strong>${esc(String(rating))}</strong><span>${esc(googleStars(rating))}</span><small>${esc(String(restaurant.reviewCount || 0))} recensioner · ${esc(restaurant.reviewSource || "Google")}</small>` : `<small>Inget verifierat betyg publicerat ännu</small>`}</div>
     </div>
+    ${images.length ? `<div class="restaurant-gallery"><div class="restaurant-gallery-track">${images.map((image, index) => `<figure><img src="${esc(image)}" alt="${esc(restaurant.name)} ${index + 1}" ${index ? "loading=\"lazy\"" : ""}></figure>`).join("")}</div><div class="restaurant-gallery-meta">${images.length} officiella bilder · <a href="${esc(restaurant.imageSource || restaurant.website)}" target="_blank" rel="noopener">källa ↗</a></div></div>` : `<div class="restaurant-detail-placeholder"><b aria-hidden="true">${esc(String(restaurant.name || "R").slice(0, 1).toUpperCase())}</b><span>${esc(restaurant.name)}</span><small>${esc(uxT("noRestaurantPhoto"))}</small></div>`}
     <div class="restaurant-detail-grid">
       <div class="restaurant-detail-main">
         <div class="detail-panel"><h2>Om restaurangen</h2><dl class="restaurant-facts">
@@ -2474,19 +2475,22 @@ async function renderRestaurantDetail(placeId) {
         <div class="detail-panel restaurant-menu-panel"><span class="eyebrow">Mat & dryck</span><h2>Meny</h2><p>${esc(menuNote)}</p>${menuHref ? `<a class="btn btn-gold" href="${esc(menuViewHref)}" data-nav>${esc(menuLabel)} i VELVET →</a>` : ""}</div>
         <div class="detail-panel"><h2>Sociala medier & recensioner</h2><div class="restaurant-socials">${socials.length ? socials.map(([name, url]) => `<a class="btn" href="${esc(url)}" target="_blank" rel="noopener">${esc(name)} ↗</a>`).join("") : `<span class="events-meta">Inga verifierade sociala länkar ännu.</span>`}</div>${restaurant.reviewUrl ? `<p class="restaurant-review-link"><a class="link-gold" href="${esc(restaurant.reviewUrl)}" target="_blank" rel="noopener">Läs verifierade recensioner på ${esc(restaurant.reviewSource || "Google")} ↗</a></p>` : ""}</div>
       </div>
-      <aside class="detail-panel restaurant-book-panel"><span class="eyebrow">${esc(restaurant.name)}</span><h2>Boka bord</h2>
+      <aside class="detail-panel restaurant-book-panel" id="restaurant-booking-panel" aria-labelledby="restaurant-booking-heading"><span class="eyebrow">${esc(restaurant.name)}</span><h2 id="restaurant-booking-heading" tabindex="-1">${esc(uxT("jumpBooking"))}</h2>
+        ${bookingSelection ? `<p class="booking-selection-summary">${esc(uxT('bookingChoice').replace('{date}',bookingSelection.date).replace('{time}',bookingSelection.time).replace('{party}',bookingSelection.party))}</p>` : ''}
         ${bookingPanel}
       </aside>
     </div>
   </section>`;
   bindFavButtons(view());
+  document.getElementById('restaurant-book-jump')?.addEventListener('click', () => {
+    const heading = document.getElementById('restaurant-booking-heading');
+    heading?.focus({preventScroll:true});
+    heading?.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  });
   const providerContainer = document.getElementById("restaurant-provider-booking");
   if (providerContainer && embeddedBooking) {
     mountEmbeddedBooking(providerContainer, embeddedBooking);
     if (bookingSelection) {
-      const selected = document.createElement('p'); selected.className = 'booking-selection-summary';
-      selected.textContent = `Ditt sökval: ${bookingSelection.date} kl. ${bookingSelection.time} · ${bookingSelection.party} gäster. Kontrollera att samma val visas i restaurangens formulär.`;
-      providerContainer.prepend(selected);
       if (embeddedBooking.provider === 'SevenRooms') providerContainer.querySelector('button')?.click();
     }
     const reportContainer = document.createElement('div');
@@ -4053,17 +4057,18 @@ async function openBookingModal(v, preselectedPackageId = "") {
 
   const pkgEls = [...root.querySelectorAll("[data-pkg]")];
   pkgEls.forEach((el, idx) => {
+    el.tabIndex = el.getAttribute("aria-checked") === "true" ? 0 : -1;
     const pick = () => {
-      pkgEls.forEach((x) => { x.classList.remove("selected"); x.setAttribute("aria-checked", "false"); });
-      el.classList.add("selected"); el.setAttribute("aria-checked", "true");
+      pkgEls.forEach((x) => { x.classList.remove("selected"); x.setAttribute("aria-checked", "false"); x.tabIndex = -1; });
+      el.classList.add("selected"); el.setAttribute("aria-checked", "true"); el.tabIndex = 0;
       sel = pkgs.find((p) => p.id === el.dataset.pkg);
       update();
     };
     el.addEventListener("click", pick);
     el.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(); }
-      else if (e.key === "ArrowDown" || e.key === "ArrowRight") { e.preventDefault(); pkgEls[(idx + 1) % pkgEls.length].focus(); }
-      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") { e.preventDefault(); pkgEls[(idx - 1 + pkgEls.length) % pkgEls.length].focus(); }
+      else if (e.key === "ArrowDown" || e.key === "ArrowRight") { e.preventDefault(); const next = pkgEls[(idx + 1) % pkgEls.length]; next.click(); next.focus(); }
+      else if (e.key === "ArrowUp" || e.key === "ArrowLeft") { e.preventDefault(); const previous = pkgEls[(idx - 1 + pkgEls.length) % pkgEls.length]; previous.click(); previous.focus(); }
     });
   });
   $("#m-minus").addEventListener("click", () => { party = Math.max(minParty(), party - 1); openSeats = Math.min(openSeats, Math.max(0, party - minParty())); update(); });
@@ -7947,8 +7952,10 @@ async function init() {
   const authError = bootParams.get("auth_error") || "";
   const authProvider = bootParams.get("provider") || "";
   const passkeyRequested = bootParams.get("passkey") === "1";
+  let authenticatedOnBoot = false;
   const serverSession = await apiJSON("/auth/session");
   if (serverSession?.user) {
+    authenticatedOnBoot = true;
     saveUser({ ...serverSession.user, created: serverSession.user.created || new Date().toISOString() });
   } else if (location.hostname === "b2b.bakemyday.se") {
     // På den riktiga domänen är en HttpOnly-session sanningen. En gammal
@@ -7957,8 +7964,9 @@ async function init() {
     try { localStorage.removeItem(USER_KEY); } catch {}
   }
   if (authTok) {
+    authenticatedOnBoot = false;
     const sess = await apiJSON("/auth/session?token=" + encodeURIComponent(authTok));
-    if (sess?.user) saveUser({ ...sess.user, created: sess.user.created || new Date().toISOString() });
+    if (sess?.user) { authenticatedOnBoot = true; saveUser({ ...sess.user, created: sess.user.created || new Date().toISOString() }); }
   }
   const existing = loadUser();
   if (existing) registerUser(existing);
@@ -7967,11 +7975,12 @@ async function init() {
     const rest = bootParams.toString();
     history.replaceState(null, "", location.pathname + (rest ? `?${rest}` : "") + (location.hash || "#/"));
   }
-  if (loadUser() && (authTok || authProvider)) {
+  if (authenticatedOnBoot && !authError && (authTok || authProvider)) {
     try {
-      const oauthFrom = sessionStorage.getItem("velvet_oauth_from") || "";
+      const returnTo = resolveAuthReturn({explicit:sessionStorage.getItem("velvet_after_login"), oauthFrom:sessionStorage.getItem("velvet_oauth_from"), fallback:location.hash || "#/account"});
+      sessionStorage.removeItem("velvet_after_login");
       sessionStorage.removeItem("velvet_oauth_from");
-      if (/^#\/restaurant\//.test(oauthFrom)) location.hash = oauthFrom;
+      location.hash = returnTo;
     } catch {}
   }
   const sid = bootParams.get("session_id");

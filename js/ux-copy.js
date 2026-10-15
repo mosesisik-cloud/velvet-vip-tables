@@ -2,6 +2,9 @@ import { currentLang } from './i18n.js?v=159b';
 
 // Shared cleanup copy: keys map to Swedish, English, Spanish and French.
 const copy = {
+  bookingChoice: ['Ditt sökval: {date} kl. {time} · {party} gäster. Kontrollera valen i bokningsformuläret.', 'Your search: {date} at {time} · {party} guests. Check the choices in the booking form.', 'Tu búsqueda: {date} a las {time} · {party} personas. Comprueba los datos en el formulario de reserva.', 'Votre recherche : {date} à {time} · {party} personnes. Vérifiez les choix dans le formulaire de réservation.'],
+  jumpBooking: ['Boka bord', 'Book a table', 'Reservar mesa', 'Réserver une table'],
+  noRestaurantPhoto: ['Bilder kommer snart', 'Photos coming soon', 'Fotos próximamente', 'Photos à venir'],
   draft: ['Utkast – inte skickat', 'Draft – not sent', 'Borrador – sin enviar', 'Brouillon – non envoyé'],
   requested: ['Förfrågan skickad', 'Request sent', 'Solicitud enviada', 'Demande envoyée'],
   received: ['Mottagen av restaurangen', 'Received by the restaurant', 'Recibida por el restaurante', 'Reçue par le restaurant'],
