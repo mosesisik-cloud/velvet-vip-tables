@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "issue": 106,
+  "agent": "codex-worker-4-fab7",
+  "claimCommentId": 6204253429,
+  "claimCommit": "954b301d2ea93f52ef17030e1b88449baa32a119",
+  "restaurantId": "curated-TYO-den",
+  "checkedAt": "2026-10-16",
+  "timezone": "Europe/Stockholm",
+  "status": "ready_for_review",
+  "identity": {
+    "status": "verified",
+    "name": "DEN",
+    "address": "Architect house hall JIA, 2-3-18 Jingumae, Shibuya Ku, Tokyo, Japan",
+    "source": "https://www.jimbochoden.com/en/",
+    "exclusion": "Den Kushi Flori is a separate group restaurant. Its external booking link must not be assigned to Den."
+  },
+  "bookingRoute": {
+    "status": "manual_phone",
+    "provider": null,
+    "phone": "+81364555433",
+    "suggestedUri": "tel:+81364555433",
+    "officialInstructions": "https://www.jimbochoden.com/en/reserve/",
+    "policy": "Guests must call directly; online platforms and third-party reservations are explicitly excluded.",
+    "reservationHours": "Monday-Saturday 12:00-17:00 restaurant local time",
+    "restaurantTimezone": "Asia/Tokyo",
+    "timezoneBasis": "Inferred from verified Tokyo location; page does not explicitly label timezone.",
+    "advanceWindow": "Up to two calendar months, same date",
+    "maxPartySize": 4,
+    "confirmation": "Restaurant email confirmation completes the reservation; a telephone link alone does not.",
+    "liveAvailability": "not_supported_by_this_route",
+    "confirmedReservation": "not_tested",
+    "openingCaveat": "The official page lists October-December holiday exceptions without an explicit year. Do not convert those entries into permanent closure or definitive dated availability."
+  },
+  "implementation": "evidence_only_pending_integrator",
+  "publication": "not_published",
+  "tests": {
+    "status": "passed",
+    "observedAtUtc": "2026-10-15T23:16:56.126Z",
+    "httpStatus": 200,
+    "formCount": 0,
+    "observedTelLink": false,
+    "telUriBasis": "Suggested normalized URI derived from the explicitly published reservation number; no existing tel anchor observed.",
+    "blockedResources": ["ajax.googleapis.com script", "www.google-analytics.com script"],
+    "reproduce": "node scripts/inspect-den.cjs",
+    "checks": "HTTP status, official policy wording, identity/address, phone; inventory links and forms.",
+    "safeguards": "Service workers and WebSockets blocked; only same-host GET resources allowed; all fetch/XHR and external requests blocked.",
+    "limitations": "No call, email, booking, hold, payment or availability request. No Velvet integration or production test."
+  },
+  "next": "Integrator should consolidate identity and a guest-initiated manual telephone route with official instructions; do not add an online provider or concierge booking path.",
+  "sources": [
+    "https://www.jimbochoden.com/en/",
+    "https://www.jimbochoden.com/en/reserve/",
+    "https://www.jimbochoden.com/top/reserve/"
+  ]
+}
