@@ -2453,8 +2453,8 @@ async function renderRestaurantDetail(placeId) {
   const nextBookableDay = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
   const zinkPilot = restaurant.placeId === "curated-STO-zink-italian-cuisine" && restaurant.bookingProvider === "BokaBord" && restaurant.bookingUrl;
   const pendingRestaurantBooking = loadPendingRestaurantBooking(restaurant.placeId);
-  const mirrorConfig = zinkPilot ? await apiJSON("/restaurant-bookings/mirror/config") : null;
-  const bookingPanel = mirrorConfig?.enabled
+  const mirrorConfig = destination.code === 'STO' ? await apiJSON("/restaurant-bookings/mirror/config") : null;
+  const bookingPanel = mirrorConfig?.enabled && mirrorConfig.restaurantIds?.includes(restaurant.placeId)
     ? `<div id="bokabord-mirror"></div>`
     : zinkPilot
     ? `<div class="restaurant-provider-intro"><span>01 · DATUM</span><i></i><span>02 · TID</span><i></i><span>03 · BEKRÄFTA</span></div>
@@ -2497,7 +2497,7 @@ async function renderRestaurantDetail(placeId) {
     </div>
   </section>`;
   const mirrorContainer = document.getElementById("bokabord-mirror");
-  if (mirrorContainer) mountBokabordMirror(mirrorContainer, apiJSON);
+  if (mirrorContainer) mountBokabordMirror(mirrorContainer, apiJSON, { restaurantId: restaurant.placeId, restaurantName: restaurant.name, onLogin: () => { const returnTo = `#/restaurant/${restaurant.placeId}`; try { sessionStorage.setItem('velvet_after_login', returnTo); } catch {} openOnboarding({ dismissable: true, phase: 'auth', returnTo }); } });
   const webbridgeForm = document.getElementById("restaurant-webbridge-search");
   const webbridgeResult = document.getElementById("restaurant-webbridge-result");
   if (webbridgeForm && webbridgeResult) {
@@ -4374,21 +4374,21 @@ async function renderBookings() {
           <button class="btn btn-ghost btn-sm btn-danger" data-cancel="${esc(b.id)}">${esc(t("remove"))}</button>
         </div>
       </div>`).join("")}
-    ${restaurantBookings.length ? `<div class="restaurant-booking-history"><span class="eyebrow">RESTAURANGBOKNINGAR</span><h2>Zink-piloten</h2>${restaurantBookings.map((booking) => {
+    ${restaurantBookings.length ? `<div class="restaurant-booking-history"><span class="eyebrow">RESTAURANGBOKNINGAR</span><h2>Dina restaurangbokningar</h2>${restaurantBookings.map((booking) => {
       const confirmed = booking.status === "confirmed" || booking.status === "provider_confirmed";
       const declined = booking.status === "declined" || booking.status === "provider_error" || booking.status === "provider_rejected";
       const received = booking.status === "received";
       const requested = booking.status === "request" || booking.status === "local-pending";
-      const status = confirmed ? "Bekräftad av Zink" : declined ? "Inte bekräftad" : received ? "Mottagen av Zink" : requested ? "Väntar på Velvet Concierge" : "Behandlas";
+      const status = confirmed ? "Bekräftad av restaurangen" : declined ? "Inte bekräftad" : received ? "Mottagen av restaurangen" : requested ? "Väntar på Velvet Concierge" : booking.status === "unknown" ? "Resultatet behöver kontrolleras" : "Behandlas";
       const delivery = confirmed
-        ? "Bokningen är manuellt kontrollerad och bekräftad."
+        ? "Restaurangen har bekräftat bokningen."
         : declined ? "Restaurangen kunde inte bekräfta den önskade tiden."
           : received ? "Velvet har lämnat förfrågan till restaurangen och väntar på svar."
             : "Detta är en riktig förfrågan, men ännu ingen bekräftad reservation.";
-      const operatorControls = restaurantOperator && !confirmed && !declined
+      const operatorControls = restaurantOperator && !confirmed && !declined && booking.status !== 'unknown' && booking.status !== 'payment_required'
         ? `<div class="restaurant-operator-status"><select data-restaurant-status="${esc(booking.id)}"><option value="received">Mottagen av Zink</option><option value="confirmed">Bekräftad av Zink</option><option value="declined">Avböjd</option></select><input data-restaurant-reference="${esc(booking.id)}" placeholder="Zinks bokningsreferens"><button class="btn btn-gold btn-sm" type="button" data-restaurant-status-submit="${esc(booking.id)}">Uppdatera status</button></div>`
         : "";
-      return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${esc(delivery)}</div>${restaurantOperator && booking.name ? `<div class="booking-delivery">${esc(booking.name)} · ${esc(booking.email || "")} · ${esc(booking.phone || "")}</div>` : ""}${operatorControls}</div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${confirmed ? "Visa Zink" : "Till bokningen"}</a></div>`;
+      return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${esc(delivery)}</div>${restaurantOperator && booking.name ? `<div class="booking-delivery">${esc(booking.name)} · ${esc(booking.email || "")} · ${esc(booking.phone || "")}</div>` : ""}${operatorControls}</div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${confirmed ? "Visa restaurangen" : "Till bokningen"}</a></div>`;
     }).join("")}</div>` : ""}
   </section>`;
 

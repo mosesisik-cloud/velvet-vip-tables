@@ -1,6 +1,6 @@
 import http from "node:http";
-import { BokabordMirror } from "./bokabord-mirror.mjs";
-const bokabordMirror = new BokabordMirror();
+import { BokabordMirror, RESTAURANTS } from "./bokabord-mirror.mjs";
+import { BookingLedger } from "./bokabord-ledger.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -13,6 +13,13 @@ import { parseTd3, extractMrzFromText, nameMatch, publicFields, legalName, ageYe
 import { bookingAdapter, handoffUrl, packetText, publicBridge, officialEventUrl, destInventory } from "./book-bridge.mjs";
 
 const __dir = path.dirname(fileURLToPath(import.meta.url));
+const mirrorMode = process.env.VELVET_BOKABORD_MIRROR || 'disabled';
+const mirrorLedger = new BookingLedger(path.join(__dir, 'mirror-attempts'));
+const bokabordMirror = new BokabordMirror({
+  prepare: mirrorMode === 'live', live: mirrorMode === 'live',
+  reserveSubmission: (approval, session) => mirrorLedger.reserve(approval, session),
+  recordResult: session => mirrorLedger.record(session),
+});
 
 // ---------- SevenRooms live-inventarie (offentligt widget-API, ingen nyckel) ----------
 // Verifierade slugs per VELVET-venue (api/sr-venues.json). Läs bara — ingen skrivning
@@ -1915,14 +1922,15 @@ const server = http.createServer(async (req, res) => {
       return send(res, 200, { ok: true, service: "velvet-api" });
     }
     if (url.pathname === "/restaurant-bookings/mirror/config") {
-      return send(res, 200, { enabled: process.env.VELVET_BOKABORD_MIRROR === "inspect", mode: "inspect" }, { "Cache-Control": "no-store" });
+      return send(res, 200, { enabled: ['inspect','live'].includes(mirrorMode), mode: mirrorMode, restaurantIds: Object.keys(RESTAURANTS) }, { "Cache-Control": "no-store" });
     }
     if (url.pathname.startsWith("/restaurant-bookings/mirror")) {
-      if (process.env.VELVET_BOKABORD_MIRROR !== "inspect") return send(res, 503, { error: "mirror_disabled" });
+      if (req.headers.origin && !corsOriginFor(req)) return send(res, 403, { error: "origin" });
+      if (!['inspect','live'].includes(mirrorMode)) return send(res, 503, { error: "mirror_disabled" });
       const user = sessionPublicUser(req, load());
       if (!user) return send(res, 401, { error: "auth" });
       // Pilot access only: remote browsers consume significant server resources.
-      if (!isOperator(user)) return send(res, 403, { error: "operator" });
+      if (mirrorMode === 'inspect' && !isOperator(user)) return send(res, 403, { error: "operator" });
       try {
         if (req.method === "POST" && url.pathname === "/restaurant-bookings/mirror/current") return send(res, 200, bokabordMirror.current(user.id), { "Cache-Control": "no-store" });
         if (req.method === "POST" && url.pathname === "/restaurant-bookings/mirror") {
@@ -2581,7 +2589,7 @@ const server = http.createServer(async (req, res) => {
       const user = sessionPublicUser(req, db);
       if (!user) return send(res, 401, { error: "auth" });
       const operator = isOperator(user);
-      const bookings = (db.restaurantBookings || [])
+      const bookings = [...mirrorLedger.list(), ...(db.restaurantBookings || [])]
         .filter((booking) => operator || booking.userId === user.id)
         .slice(0, 100)
         .map(operator ? operatorRestaurantBooking : publicRestaurantBooking);
@@ -2613,7 +2621,7 @@ const server = http.createServer(async (req, res) => {
       }
     }
     if (req.method === "POST" && url.pathname === "/restaurant-bookings/webbridge/book") {
-      if (process.env.VELVET_BOKABORD_MIRROR === "inspect") return send(res, 409, { error: "inspect_only" });
+      if (['inspect','live'].includes(mirrorMode)) return send(res, 409, { error: "use_mirror" });
       const b = await readBody(req, 2e5);
       const db = load();
       const user = sessionPublicUser(req, db);

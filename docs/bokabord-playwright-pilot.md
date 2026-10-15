@@ -43,3 +43,13 @@ Tillgänglighet, autofyllning, mobilinmatning, snabb redigering av flera fält, 
 Ett godkänt skarpt test genomfördes via Velvet: Middag → 1 gäst → datum/tid → kontaktuppgifter → fortsätt utan konto → kontrollera → slutför → bekräftelse. Leverantörens svar matchade godkända kontaktuppgifter, datum, tid och antal. Bekräftelsesidan uppgav att mejl skickats. Velvet-bildens SHA-256 matchade originalets PNG. Privata bilder och bokningsreferens hålls utanför repot.
 
 `npm test` testar nätverksspärrar, sessionsägarskap, revisioner, godkända detaljer, slutknappen, avbruten inlämning och skydd mot upprepning utan bokningar. `npm run test:rails` kör befintliga tester. `npm run test:zink:live -- YYYY-MM-DD` är separat inspektion som stannar vid kontaktuppgifter.
+
+## Produktionsläge för Stockholm
+
+`VELVET_BOKABORD_MIRROR=live` aktiverar kontaktinmatning och skarp inlämning för inloggade Velvet-användare. Restaurangerna kommer från `api/bokabord-restaurants.json`, med bokningshash och officiell källa. Klienten visar originalbilden och kräver ett nytt villkorsgodkännande innan varje inlämningssteg. Det som godkänns binds till aktuell bildrevision och leverantörens formulärmodell. Ingen generell godkännandefil används i produktion.
+
+`api/mirror-attempts/` är en privat, beständig volym: varje bokningsförsök reserveras atomiskt före sändning, inklusive efter omstart. Bokningshistoriken läser dessa poster. Inget okänt försök skickas automatiskt igen. Produktionsläget använder samma inloggning som övriga Velvet och kontrollerar sessionsägare vid varje åtgärd.
+
+22 Stockholmrestauranger har verifierade Bokabord-widgetar. Frantzén visade enbart väntelista på det kontrollerade datumet. Kortgaranti, obligatoriska tillval och väntelista behöver slutföras i leverantörens säkra formulär; Velvet visar en tydlig länk och skickar ingen reservation för dessa val. Vanliga bokningar utan dessa krav genomförs i Velvet. Övriga bokningsleverantörer omfattas inte av adaptern.
+
+Driftbilden byggs med `deploy/Dockerfile.bokabord` från projektets låsta Playwright-version. Chromium ingår; API-data och försöksjournal måste ligga på beständiga volymer. Frontendens service worker är uppdaterad till version 164. Den lokala förhandsvisningsservern ska fortfarande aldrig publiceras.
