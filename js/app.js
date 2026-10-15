@@ -1061,19 +1061,6 @@ async function apiJSON(path, opts) {
 
 const RESTAURANT_BOOKINGS_KEY = "velvetRestaurantBookings";
 
-function buildBokaBordUrl(baseUrl, { date = "", party = 0, mealId = "", lang = "sv" } = {}) {
-  try {
-    const url = new URL(String(baseUrl || ""));
-    if (url.protocol !== "https:" || url.hostname !== "app.bokabord.se") return "";
-    if (/^\d{4}-\d{2}-\d{2}$/.test(String(date))) url.searchParams.set("date", String(date));
-    if (Number(party) > 0) url.searchParams.set("amount", String(Math.max(1, Math.min(20, Number(party)))));
-    if (/^\d+$/.test(String(mealId))) url.searchParams.set("mealid", String(mealId));
-    url.searchParams.set("version", "new");
-    url.searchParams.set("lang", String(lang) === "sv" ? "sw" : String(lang || "en").slice(0, 2));
-    return url.toString();
-  } catch { return ""; }
-}
-
 function loadLocalRestaurantBookings() {
   try {
     const rows = JSON.parse(localStorage.getItem(RESTAURANT_BOOKINGS_KEY) || "[]");
@@ -2493,65 +2480,6 @@ async function renderRestaurantDetail(placeId) {
   const webbridgeForm = document.getElementById("restaurant-webbridge-search");
   const webbridgeResult = document.getElementById("restaurant-webbridge-result");
   if (webbridgeForm && webbridgeResult) {
-    let fallbackValues = null;
-    const openProviderFallback = (values) => {
-      const officialUrl = buildBokaBordUrl(restaurant.bookingUrl, {
-        date: values.date,
-        party: Number(values.party),
-        mealId: "9778",
-        lang: currentLang(),
-      });
-      const root = document.getElementById("modal-root");
-      if (!officialUrl || !root) return false;
-      if (modalTeardown) modalTeardown();
-      fallbackValues = values;
-      const opener = document.activeElement;
-      root.innerHTML = `<div class="restaurant-provider-modal" id="restaurant-provider-modal">
-        <section class="restaurant-provider-shell" role="dialog" aria-modal="true" aria-labelledby="restaurant-provider-title" tabindex="-1">
-          <header class="restaurant-provider-head">
-            <button class="restaurant-provider-close" id="restaurant-provider-close" type="button" aria-label="Stäng bokningen">←</button>
-            <div><span>LIVE INUTI VELVET</span><strong id="restaurant-provider-title">Zinks lediga tider</strong></div>
-            <b class="restaurant-provider-status" id="restaurant-provider-status">LIVE · BOKABORD</b>
-          </header>
-          <div class="restaurant-provider-frame-wrap">
-            <iframe id="restaurant-provider-frame" src="${esc(officialUrl)}" title="Zinks riktiga lediga tider via BokaBord" allow="payment" referrerpolicy="strict-origin-when-cross-origin"></iframe>
-          </div>
-          <footer class="restaurant-provider-foot">Tillgänglighet och bekräftelse kommer direkt från Zinks bokningssystem.</footer>
-        </section>
-      </div>`;
-      const modal = document.getElementById("restaurant-provider-modal");
-      const shell = root.querySelector(".restaurant-provider-shell");
-      const untrap = trapFocus(shell);
-      document.body.classList.add("modal-lock");
-      setAppInert(true);
-      const close = () => {
-        untrap();
-        document.removeEventListener("keydown", onKey);
-        root.innerHTML = "";
-        document.body.classList.remove("modal-lock");
-        setAppInert(false);
-        if (modalTeardown === close) modalTeardown = null;
-        restoreFocus(opener);
-      };
-      const onKey = (event) => { if (event.key === "Escape") close(); };
-      document.addEventListener("keydown", onKey);
-      document.getElementById("restaurant-provider-close")?.addEventListener("click", close);
-      modal?.addEventListener("click", (event) => { if (event.target === modal) close(); });
-      modalTeardown = close;
-      shell?.focus();
-      return true;
-    };
-    const providerMessage = (event) => {
-      const frame = document.getElementById("restaurant-provider-frame");
-      if (event.origin !== "https://app.bokabord.se" || !frame || event.source !== frame.contentWindow) return;
-      const signal = typeof event.data === "string" ? event.data : event.data?.type;
-      if (signal !== "reservationSuccess") return;
-      const status = document.getElementById("restaurant-provider-status");
-      if (status) { status.textContent = "✓ BOKNING BEKRÄFTAD"; status.classList.add("is-confirmed"); }
-      webbridgeResult.innerHTML = `<div class="restaurant-book-success webbridge-confirmed"><div class="big">✓</div><h3>Bokningen är bekräftad av BokaBord</h3><p>${esc(String(fallbackValues?.party || ""))} gäster · ${esc(fallbackValues?.date || "")}</p><small>Zinks bokningskod visas i bokningsvyn och skickas till kontaktuppgifterna du angav.</small></div>`;
-    };
-    window.addEventListener("message", providerMessage);
-    window.addEventListener("hashchange", () => window.removeEventListener("message", providerMessage), { once: true });
     webbridgeForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       const values = Object.fromEntries(new FormData(webbridgeForm));
@@ -2566,14 +2494,67 @@ async function renderRestaurantDetail(placeId) {
       if (submit) { submit.disabled = false; submit.textContent = "Uppdatera tider"; }
       const times = Array.isArray(availability?.times) ? availability.times : [];
       if (!availability?.ok || !times.length) {
-        if (openProviderFallback(values)) {
-          webbridgeResult.innerHTML = `<div class="webbridge-state is-fallback"><strong>Zinks livebokning är öppnad</strong><p>Den körs inne i VELVET medan den nya serverkopplingen väntar på produktionsdeploy.</p></div>`;
-          return;
-        }
         const message = availability?.error === "no_availability"
           ? "Det finns inga bokningsbara tider för valet. Testa ett annat datum eller antal gäster."
-          : "WebBridge kan inte läsa Zinks live-tider just nu. Ingen bokning har skapats.";
-        webbridgeResult.innerHTML = `<div class="webbridge-state is-error"><strong>Inga tider att visa</strong><p>${esc(message)}</p></div>`;
+          : availability?.error === "integration_required"
+            ? "Zinks WaiterAid-koppling väntar på restaurangens API-aktivering. Ingen extern sida öppnas och ingen bokning har skapats."
+            : "Velvet kan inte läsa Zinks live-tider just nu. Ingen extern sida öppnas och ingen bokning har skapats.";
+        const user = loadUser() || {};
+        const desiredTimes = ["17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:30"];
+        webbridgeResult.innerHTML = `<div class="webbridge-state is-error"><strong>Live-tiderna är inte anslutna</strong><p>${esc(message)}</p><small>Velvet visar aldrig uppskattade tider som lediga.</small></div>
+          <div class="webbridge-state is-concierge"><strong>Fortsätt via Velvet Concierge</strong><p>Välj en önskad tid. Förfrågan får ett riktigt Velvet-ID och är väntande tills Zink bekräftar den.</p></div>
+          <form id="restaurant-concierge-request" class="webbridge-book-form">
+            <fieldset><legend>Önskad tid · inte live-verifierad</legend><div class="webbridge-times">${desiredTimes.map((time, index) => `<label><input type="radio" name="time" value="${time}" ${index === 4 ? "checked" : ""} required><span>${time}</span></label>`).join("")}</div></fieldset>
+            <div class="webbridge-contact"><label>Namn<input name="name" value="${esc(user.legalName || user.name || "")}" autocomplete="name" required></label><label>E-post<input name="email" type="email" value="${esc(user.email || "")}" autocomplete="email" required></label><label>Mobilnummer<input name="phone" type="tel" value="${esc(user.phone || "")}" autocomplete="tel" placeholder="+46 70 123 45 67" required></label></div>
+            <label>Önskemål<textarea name="note" rows="3" maxlength="500" placeholder="Allergier, barnstol eller annat"></textarea></label>
+            <label class="webbridge-terms"><input name="terms" type="checkbox" required><span>Jag förstår att detta är en bokningsförfrågan och att bordet blir bokat först när Zink har bekräftat.</span></label>
+            <button class="btn btn-gold btn-block" type="submit">Skicka riktig bokningsförfrågan</button>
+          </form>`;
+        document.getElementById("restaurant-concierge-request")?.addEventListener("submit", async (requestEvent) => {
+          requestEvent.preventDefault();
+          if (!loadUser()) {
+            try { sessionStorage.setItem("velvet_after_login", `#/restaurant/${restaurant.placeId}`); } catch {}
+            openOnboarding({ dismissable: true, phase: "auth" });
+            return;
+          }
+          const form = requestEvent.currentTarget;
+          const requestValues = Object.fromEntries(new FormData(form));
+          const requestSubmit = form.querySelector('button[type="submit"]');
+          if (requestSubmit) { requestSubmit.disabled = true; requestSubmit.textContent = "Skickar till Velvet…"; }
+          const payload = {
+            restaurantId: restaurant.placeId,
+            restaurant: restaurant.name,
+            destination: destination.destination,
+            date: values.date,
+            time: requestValues.time,
+            party: Number(values.party),
+            name: requestValues.name,
+            email: requestValues.email,
+            phone: requestValues.phone,
+            note: requestValues.note || "",
+            requestMode: "concierge",
+          };
+          const remote = await apiJSON("/restaurant-bookings", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          if (remote?.error === "auth") {
+            if (requestSubmit) { requestSubmit.disabled = false; requestSubmit.textContent = "Skicka riktig bokningsförfrågan"; }
+            try { sessionStorage.setItem("velvet_after_login", `#/restaurant/${restaurant.placeId}`); } catch {}
+            openOnboarding({ dismissable: true, phase: "auth" });
+            return;
+          }
+          if (!remote?.ok || !remote?.booking?.id) {
+            if (requestSubmit) { requestSubmit.disabled = false; requestSubmit.textContent = "Försök skicka igen"; }
+            form.insertAdjacentHTML("beforeend", `<div class="webbridge-state is-error"><strong>Förfrågan skickades inte</strong><p>Velvet-servern svarade inte. Ingen bokning eller förfrågan är registrerad.</p></div>`);
+            return;
+          }
+          const booking = { ...payload, ...remote.booking, serverSynced: true };
+          upsertLocalRestaurantBooking(booking);
+          webbridgeForm.hidden = true;
+          webbridgeResult.innerHTML = `<div class="restaurant-book-success webbridge-requested"><div class="big">✓</div><h3>Förfrågan är registrerad i Velvet</h3><p>${esc(String(booking.party))} gäster · ${esc(booking.date)} · önskad tid ${esc(booking.time)}</p><small>Referens: ${esc(booking.id)} · Väntar på bekräftelse från Zink.</small><p><a class="btn btn-ghost btn-sm" href="#/bookings" data-nav>Följ bokningen</a></p></div>`;
+        });
         return;
       }
       const user = loadUser() || {};
@@ -4265,6 +4246,7 @@ async function renderBookings() {
   const bookings = loadBookings();
   const restaurantRemote = loadUser() ? await apiJSON("/restaurant-bookings") : null;
   const remoteRestaurantBookings = Array.isArray(restaurantRemote?.bookings) ? restaurantRemote.bookings : [];
+  const restaurantOperator = restaurantRemote?.operator === true;
   const remoteRestaurantIds = new Set(remoteRestaurantBookings.map((booking) => booking.id));
   const restaurantBookings = [...remoteRestaurantBookings, ...loadLocalRestaurantBookings().filter((booking) => !remoteRestaurantIds.has(booking.id))]
     .sort((a, b) => String(b.updatedAt || b.createdAt || "").localeCompare(String(a.updatedAt || a.createdAt || "")));
@@ -4307,9 +4289,19 @@ async function renderBookings() {
       </div>`).join("")}
     ${restaurantBookings.length ? `<div class="restaurant-booking-history"><span class="eyebrow">RESTAURANGBOKNINGAR</span><h2>Zink-piloten</h2>${restaurantBookings.map((booking) => {
       const confirmed = booking.status === "confirmed" || booking.status === "provider_confirmed";
-      const failed = booking.status === "provider_error" || booking.status === "provider_rejected";
-      const status = confirmed ? "Bekräftad av Zink" : failed ? "Inte bekräftad" : "Behandlas av WebBridge";
-      return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${confirmed ? "Reservationen är skapad i Zinks bokningssystem." : failed ? "Ingen bekräftad reservation skapades." : "Kontrollera status innan du försöker igen."}</div></div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${confirmed ? "Visa Zink" : "Till bokningen"}</a></div>`;
+      const declined = booking.status === "declined" || booking.status === "provider_error" || booking.status === "provider_rejected";
+      const received = booking.status === "received";
+      const requested = booking.status === "request" || booking.status === "local-pending";
+      const status = confirmed ? "Bekräftad av Zink" : declined ? "Inte bekräftad" : received ? "Mottagen av Zink" : requested ? "Väntar på Velvet Concierge" : "Behandlas";
+      const delivery = confirmed
+        ? "Bokningen är manuellt kontrollerad och bekräftad."
+        : declined ? "Restaurangen kunde inte bekräfta den önskade tiden."
+          : received ? "Velvet har lämnat förfrågan till restaurangen och väntar på svar."
+            : "Detta är en riktig förfrågan, men ännu ingen bekräftad reservation.";
+      const operatorControls = restaurantOperator && !confirmed && !declined
+        ? `<div class="restaurant-operator-status"><select data-restaurant-status="${esc(booking.id)}"><option value="received">Mottagen av Zink</option><option value="confirmed">Bekräftad av Zink</option><option value="declined">Avböjd</option></select><input data-restaurant-reference="${esc(booking.id)}" placeholder="Zinks bokningsreferens"><button class="btn btn-gold btn-sm" type="button" data-restaurant-status-submit="${esc(booking.id)}">Uppdatera status</button></div>`
+        : "";
+      return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${esc(delivery)}</div>${restaurantOperator && booking.name ? `<div class="booking-delivery">${esc(booking.name)} · ${esc(booking.email || "")} · ${esc(booking.phone || "")}</div>` : ""}${operatorControls}</div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${confirmed ? "Visa Zink" : "Till bokningen"}</a></div>`;
     }).join("")}</div>` : ""}
   </section>`;
 
@@ -4335,6 +4327,32 @@ async function renderBookings() {
         btn.classList.remove("copied");
         btn.disabled = false;
       }, 1800);
+    });
+  });
+
+  document.querySelectorAll("[data-restaurant-status-submit]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.restaurantStatusSubmit;
+      const status = document.querySelector(`[data-restaurant-status="${CSS.escape(id)}"]`)?.value || "";
+      const providerReference = document.querySelector(`[data-restaurant-reference="${CSS.escape(id)}"]`)?.value || "";
+      if (status === "confirmed" && !providerReference.trim()) {
+        showToast("Lägg in Zinks bokningsreferens innan du bekräftar.");
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = "Sparar…";
+      const result = await apiJSON(`/restaurant-bookings/${encodeURIComponent(id)}/status`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status, providerReference }),
+      });
+      if (!result?.ok) {
+        btn.disabled = false;
+        btn.textContent = "Försök igen";
+        showToast("Statusen kunde inte sparas.");
+        return;
+      }
+      renderBookings();
     });
   });
 }
