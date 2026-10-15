@@ -655,20 +655,12 @@
           "reviewCount": 0,
           "address": "Dubai, UAE",
           "mapsUrl": "https://www.google.com/maps/search/?api=1&query=%D8%B1%D9%8A%D9%85%20%D8%A7%D9%84%D8%A8%D9%88%D8%A7%D8%AF%D9%8A%2C%20Dubai",
-          "website": "https://www.reemalbawadi.com/",
           "primaryType": "restaurant",
           "source": "OpenStreetMap",
           "curated": true,
           "cuisine": "arab",
-          "images": [
-            "https://superelectricmn.com/images/mudah4dbanner.jpg",
-            "https://superelectricmn.com/images/mudah4dbanner1.jpg",
-            "https://superelectricmn.com/images/telegram-bot-banner-desktop-id_8bbe4b38.webp",
-            "https://superelectricmn.com/images/DT_001_9f10aff1.jpg",
-            "https://superelectricmn.com/images/DT_002_82ac235c.jpg"
-          ],
-          "imageSource": "https://superelectricmn.com/",
-          "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+          "images": [],
+          "websiteVerification": "removed_wrong_content"
         },
         {
           "placeId": "osm-DXB-pizza-pino",
