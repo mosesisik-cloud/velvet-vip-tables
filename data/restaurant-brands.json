@@ -276,5 +276,1755 @@
     "sourceAsset": "https://mezalounge.se/wp-content/uploads/2021/05/LML_logo.svg",
     "verifiedAt": "2026-10-15",
     "surface": "dark"
+  },
+  "curated-MRB-mamzel-marbella": {
+    "src": "media/brands/restaurant-curated-mrb-mamzel-marbella.svg",
+    "source": "https://mamzelmarbella.com/",
+    "sourceAsset": "https://mamzelmarbella.com/wp-content/uploads/2026/04/logo-mamzel-1.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Mamzel official site explicitly identifies its dinner-show restaurant at Finca Besaya in Marbella."
+  },
+  "curated-MYK-scorpios-mykonos": {
+    "src": "media/brands/restaurant-curated-myk-scorpios-mykonos.svg",
+    "source": "https://scorpios.com/mykonos",
+    "sourceAsset": "https://scorpios.com/assets/Scorpios-Logotype-white.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Scorpios Mykonos location page includes the restaurant and the selected Scorpios wordmark."
+  },
+  "curated-MCO-amazonico-monte-carlo": {
+    "src": "media/brands/restaurant-curated-mco-amazonico-monte-carlo.svg",
+    "source": "https://www.amazonicorestaurant.com/monte-carlo/",
+    "sourceAsset": "https://www.amazonicorestaurant.com/wp-content/uploads/2024/08/Gupo-Paraguas_Logos_1_Amazonico-Negro.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Dedicated official Amazónico Monte-Carlo page identifies the Monaco restaurant and uses the selected Amazónico mark."
+  },
+  "osm-MRB-buenos-aires-steak-house": {
+    "src": "media/brands/restaurant-osm-mrb-buenos-aires-steak-house.png",
+    "source": "https://buenosairesmarbella.com/",
+    "sourceAsset": "https://buenosairesmarbella.com/assets/img/brand/logo-light.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Buenos Aires Steakhouse site identifies the independent restaurant in Marbella Old Town, operating since 2012."
+  },
+  "curated-STT-club-55": {
+    "src": "media/brands/restaurant-curated-stt-club-55.png",
+    "source": "https://www.club55.fr/",
+    "sourceAsset": "https://www.club55.fr/assets/img/logo-club-55.webp",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Le Club 55 site gives its restaurant address as 43 Boulevard Patch, Ramatuelle, on Pampelonne beach."
+  },
+  "osm-IBZ-can-pilot": {
+    "src": "media/brands/restaurant-osm-ibz-can-pilot.png",
+    "source": "https://asadorcanpilot.com/",
+    "sourceAsset": "https://asadorcanpilot.com/Portals/88/Images/logo_canpilot.png?ver=2017-10-05-093050-827",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Asador Can Pilot site gives Carretera Eivissa a Sant Antoni, Sant Rafael, Ibiza."
+  },
+  "curated-CNS-la-guerite-cannes": {
+    "src": "media/brands/restaurant-curated-cns-la-guerite-cannes.png",
+    "source": "https://www.restaurantlaguerite.com/",
+    "sourceAsset": "https://www.restaurantlaguerite.com/wp-content/uploads/2023/02/logo-light2-4-1-1-300x49.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official La Guérite site explicitly lists Cannes, Ile Sainte Marguerite, and displays the selected restaurant wordmark."
+  },
+  "osm-MRB-pizzeria-bella-mbriana-marbella": {
+    "src": "media/brands/restaurant-osm-mrb-pizzeria-bella-mbriana-marbella.png",
+    "source": "https://www.bellambriananelmondo.com/it",
+    "sourceAsset": "https://www.bellambriananelmondo.com/_next/image?url=%2Fimages%2Flogo.png&w=384&q=75&dpl=dpl_6TUSJDUZmd83oQcJrEHkz3Wh8Gim",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Bella Mbriana site lists Marbella at Calle Misericordia 13, 29602 Marbella, and uses the selected shared restaurant brand."
+  },
+  "osm-BAL-sazon": {
+    "src": "media/brands/restaurant-osm-bal-sazon.png",
+    "source": "https://sazonbali.com/",
+    "sourceAsset": "https://sazonbali.com/wp-content/uploads/2025/01/cropped-Artboard-2.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Sazón site describes its Mediterranean restaurant in Canggu, Bali."
+  },
+  "osm-BAL-lulu-bistrot": {
+    "src": "media/brands/restaurant-osm-bal-lulu-bistrot.png",
+    "source": "https://www.lulubistrot.com/",
+    "sourceAsset": "https://images.squarespace-cdn.com/content/v1/63ea37188c5a3757a85b160b/cecf130f-3168-4769-8148-d40a4b9d48f9/LULU_LOGO_HUNTER+GREEN.png?format=1500w",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Lulu Bistrot site gives Jl. Pantai Batu Bolong 72, Canggu, Bali."
+  },
+  "curated-MIA-mila-miami": {
+    "src": "media/brands/restaurant-curated-mia-mila-miami.png",
+    "source": "https://mila-miami.com/",
+    "sourceAsset": "https://images.squarespace-cdn.com/content/v1/61d2ccabbc553c1fec7c16e9/0ff41a94-383f-417e-9f83-4749a8899761/MILA_light.png?format=1500w",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official MILA Miami site identifies the rooftop restaurant in Miami Beach and uses the selected MILA mark."
+  },
+  "osm-MIA-sipsip-rum-bar": {
+    "src": "media/brands/restaurant-osm-mia-sipsip-rum-bar.png",
+    "source": "https://www.mayfairhousemiami.com/dining/sipsip/",
+    "sourceAsset": "https://www.mayfairhousemiami.com/content/uploads/2024/10/Wordmark-White-1.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Dedicated official Mayfair House Sipsip page uses the Sipsip wordmark and gives 3000 Florida Avenue, Miami."
+  },
+  "osm-IBZ-la-chickeria-ibiza": {
+    "src": "media/brands/restaurant-osm-ibz-la-chickeria-ibiza.png",
+    "source": "https://lachickeria.es/",
+    "sourceAsset": "https://lachickeria.es/wp-content/uploads/2019/07/LogoSTG1-Chickeria-blanco-300x302.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official La Chickeria website identifies the Ibiza chicken restaurant; its selected mark explicitly says Santa Gertrudis."
+  },
+  "osm-HKT-day-night-of-phuket": {
+    "src": "media/brands/restaurant-osm-hkt-day-night-of-phuket.png",
+    "source": "https://www.dayandnight.co.th/phuket/",
+    "sourceAsset": "https://www.dayandnight.co.th/wp-content/uploads/2022/08/DAYANDNIGHT-logo-01-1400x702.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Dedicated official Day and Night Phuket page identifies the Dibuk Road restaurant in Phuket old town."
+  },
+  "osm-CER-il-guscio": {
+    "src": "media/brands/restaurant-osm-cer-il-guscio.png",
+    "source": "https://ristoranteilguscio.it/",
+    "sourceAsset": "https://www.ristoranteilguscio.it/wp-content/uploads/dark-logo-194x52.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Il Guscio site identifies its restaurant and pizzeria in Baja Sardinia, Costa Smeralda."
+  },
+  "osm-SBH-la-guerite": {
+    "src": "media/brands/restaurant-osm-sbh-la-guerite.png",
+    "source": "https://www.restaurantlaguerite.com/saint-barth-gustavia/",
+    "sourceAsset": "https://www.restaurantlaguerite.com/wp-content/uploads/2025/03/Logo-La-Guerite-blanc-2025_SBH-300x84.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": " Saint Barth &#8211; Gustavia &#8211; Restaurant La Guérite DESTINATIONS Français À Propos Restaurant  | te a décidé de transporter ce succès dans le cadre idyllique de Saint Barthélemy. C’est sur la pointe du port de Gustavia, entre les bateaux de pêches et les yachts,"
+  },
+  "osm-AMF-antichi-orti-del-sole-agriturismo": {
+    "src": "media/brands/restaurant-osm-amf-antichi-orti-del-sole-agriturismo.svg",
+    "source": "https://antichiortidelsole.it/",
+    "sourceAsset": "https://antichiortidelsole.it/wp-content/themes/antichiortidelsole/assets/images/aos-logotipo-02.svg?v=1752602477",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Antichi Orti del Sole site gives Via degli Ontanelli, 80051 Agerola, and describes its Amalfi Coast location."
+  },
+  "osm-CRV-la-fromagerie": {
+    "src": "media/brands/restaurant-osm-crv-la-fromagerie.png",
+    "source": "https://www.maisontournier.com/fr/page/restaurant-fromagerie-courchevel-maison-tournier.5012.html?preview=577bcc914f9e55d5e4e4f82f9f00e7d4",
+    "sourceAsset": "https://api.hapidam.com/share/b4f25f36-895a-4d07-8d19-59f79f5e50d7/LOGO-FROMAGERIE-BLANC.png.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Dedicated Maison Tournier La Fromagerie page uses the restaurant-specific mark and gives Rue des Tovets, Courchevel 1850."
+  },
+  "osm-CER-iyo-poltu-quatu": {
+    "src": "media/brands/restaurant-osm-cer-iyo-poltu-quatu.svg",
+    "source": "https://www.iyo-poltuquatu.com/",
+    "sourceAsset": "https://www.iyo-poltuquatu.com/wp-content/themes/poltu/img/logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official IYO Poltu Quatu website identifies this seasonal restaurant beside Poltu Quatu marina; selected mark explicitly includes Poltu Quatu."
+  },
+  "osm-SBH-ristorante-l-isola": {
+    "src": "media/brands/restaurant-osm-sbh-ristorante-l-isola.png",
+    "source": "https://www.lisolastbarth.com/",
+    "sourceAsset": "https://www.lisolastbarth.com/_next/image?url=%2Fimages%2Flisola-logo.webp&w=3840&q=75",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official L’Isola site identifies the Italian restaurant in Saint Barth, established in 2008; selected mark includes Saint Barth."
+  },
+  "curated-IBZ-lio-ibiza": {
+    "src": "media/brands/restaurant-curated-ibz-lio-ibiza.svg",
+    "source": "https://www.liogroup.com/ibiza",
+    "sourceAsset": "https://www.liogroup.com/ibiza",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 1,
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Dedicated official Lío Ibiza page identifies the original Ibiza restaurant and cabaret and uses the selected Lío mark."
+  },
+  "curated-LIS-alma": {
+    "src": "media/brands/restaurant-curated-lis-alma.svg",
+    "source": "https://www.almalisboa.pt/",
+    "sourceAsset": "https://www.almalisboa.pt/",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 0,
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official ALMA site identifies Henrique Sá Pessoa’s restaurant at Rua Anchieta 15, Chiado, Lisboa."
+  },
+  "curated-RIO-lasai": {
+    "src": "media/brands/restaurant-curated-rio-lasai.svg",
+    "source": "https://lasai.com.br/",
+    "sourceAsset": "https://lasai.com.br/",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 1,
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Lasai site identifies its restaurant in Botafogo, Rio de Janeiro; the logo explicitly includes Rio-Brasil."
+  },
+  "curated-CDM-quintonil": {
+    "src": "media/brands/restaurant-curated-cdm-quintonil.svg",
+    "source": "https://quintonil.com/",
+    "sourceAsset": "https://quintonil.com/wp-content/uploads/2021/11/LogoBlanco.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Quintonil site identifies the restaurant founded in Ciudad de México in 2012."
+  },
+  "curated-CPT-la-colombe": {
+    "src": "media/brands/restaurant-curated-cpt-la-colombe.png",
+    "source": "https://www.lacolombe.restaurant/la-colombe",
+    "sourceAsset": "https://static.wixstatic.com/media/fc642b_1d2ddba2fd0e480daad409269050afd6~mv2.png/v1/crop/x_0,y_3,w_1990,h_266/fill/w_399,h_53,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/LA%20COLOMBE%20LOGO%20transparent_edited_edite.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Dedicated official La Colombe restaurant page identifies James Gaag and Silvermist Estate, Hout Bay, Western Cape; selected La Colombe mark is present on this page.",
+    "identitySource": "https://www.lacolombe.restaurant/la-colombe"
+  },
+  "curated-DXB-zuma-dubai": {
+    "src": "media/brands/restaurant-curated-dxb-zuma-dubai.svg",
+    "source": "https://www.zumarestaurant.com/en/dubai",
+    "sourceAsset": "https://www.zumarestaurant.com/assets/images/zuma_logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Dedicated official Zuma Dubai page identifies the Dubai restaurant and displays the selected Zuma wordmark."
+  },
+  "osm-MCO-pirouette": {
+    "src": "media/brands/restaurant-osm-mco-pirouette.png",
+    "source": "https://lesagitateurs.com/pirouette",
+    "sourceAsset": "https://static.tildacdn.net/tild3561-3734-4830-a430-383034353031/logo_pirouette_noir_.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Pirouette page identifies the Nice restaurant near the port, matching the catalog address at 34 rue Bonaparte, Nice."
+  },
+  "osm-STT-l-opera": {
+    "src": "media/brands/restaurant-osm-stt-l-opera.png",
+    "source": "https://www.opera-saint-tropez.com/fr/reservation/",
+    "sourceAsset": "https://www.opera-saint-tropez.com/media/images/logo.png?c=780",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official L’Opéra Saint-Tropez reservation page uses the selected mark, which explicitly includes Saint Tropez."
+  },
+  "curated-AMF-don-alfonso-1890": {
+    "src": "media/brands/restaurant-curated-amf-don-alfonso-1890.png",
+    "source": "https://www.donalfonso.com/en/hotel-with-restaurant-sorrento-coast",
+    "sourceAsset": "https://www.donalfonso.com/loghi/1229/logo.png?fv=1656431085",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Don Alfonso 1890 restaurant page gives Corso Sant’Agata 11/13, Sant’Agata Sui Due Golfi, on the Sorrento/Amalfi Coast."
+  },
+  "curated-LAS-sw-steakhouse": {
+    "src": "media/brands/restaurant-curated-las-sw-steakhouse.png",
+    "source": "https://www.wynnlasvegas.com/dining/fine-dining/sw-steakhouse?external_browser_redirect=true",
+    "sourceAsset": "https://cdn.wynnresorts.com/image/upload/f_auto/q_auto/v1779834681/Wynn%20Las%20Vegas/Dining/logos/sw-steakhouse-logo-wynn-las-vegas.png?width=3840&quality=100",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Dedicated official Wynn Las Vegas SW Steakhouse page labels the selected image as the SW Steakhouse at Wynn Las Vegas logo."
+  },
+  "curated-SIN-odette": {
+    "src": "media/brands/restaurant-curated-sin-odette.png",
+    "source": "https://odetterestaurant.com/reservations/",
+    "sourceAsset": "https://odetterestaurant.com/wp-content/uploads/2025/11/Odette_Brand_Logo_RGB_251028-e1762425849241.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Odette contact page gives 1 St Andrew’s Road #01-04, Singapore 178957.",
+    "identitySource": "https://odetterestaurant.com/contact/"
+  },
+  "curated-LON-core-by-clare-smyth": {
+    "src": "media/brands/restaurant-curated-lon-core-by-clare-smyth.png",
+    "source": "https://corebyclaresmyth.com/",
+    "sourceAsset": "https://corebyclaresmyth.com/wp-content/uploads/2023/10/core-ornamented-logo-x2.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official CORE by Clare Smyth site gives 92 Kensington Park Road, London W11 2PN."
+  },
+  "curated-HKT-pru": {
+    "src": "media/brands/restaurant-curated-hkt-pru.svg",
+    "source": "https://www.prurestaurant.com/reservation/",
+    "sourceAsset": "https://www.prurestaurant.com/wp-content/themes/prurestaurant/images/logo--pru-restaurant.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official PRU restaurant site gives 60/1 Moo 6, Srisoonthorn Road, Cherngtalay, Thalang, Phuket."
+  },
+  "osm-SBH-sella": {
+    "src": "media/brands/restaurant-osm-sbh-sella.png",
+    "source": "https://sellasaintbarth.com/fr/",
+    "sourceAsset": "https://sellasaintbarth.com/application/themes/sella/images/logo-hero.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Sella site gives Plage de Public, Saint Barthélemy, 97133."
+  },
+  "curated-BAL-locavore-nxt": {
+    "src": "media/brands/restaurant-curated-bal-locavore-nxt.png",
+    "source": "https://locavorenxt.com/",
+    "sourceAsset": "https://locavorenxt.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fnxt_logo.3lvl_ze85r6f6.png&w=3840&q=75",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Locavore NXT site identifies the restaurant in Ubud, Bali, and uses the selected NXT logo."
+  },
+  "osm-CPT-michael-s-kitchen-bar": {
+    "src": "media/brands/restaurant-osm-cpt-michael-s-kitchen-bar.png",
+    "source": "https://www.michaelskitchenandbar.co.za/",
+    "sourceAsset": "https://www.michaelskitchenandbar.co.za/wp-content/uploads/2020/02/logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original artwork; transparent outer padding trimmed where needed; raster sources normalized as PNG",
+    "identityEvidence": "Official Michael’s Kitchen and Bar site gives 88 Campground Road, Rondebosch, Cape Town."
+  },
+  "curated-TUL-hartwood": {
+    "src": "media/brands/restaurant-curated-tul-hartwood.png",
+    "source": "https://www.hartwoodtulum.com/",
+    "sourceAsset": "https://cdn.prod.website-files.com/5dbb258ef54c0afee9c12ad1/5dbb26abbe2d93067c13784a_logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official Hartwood Tulum site identifies the Tulum restaurant and uses the selected Hartwood header mark.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "curated-ATH-delta-restaurant": {
+    "src": "media/brands/restaurant-curated-ath-delta-restaurant.png",
+    "source": "https://deltarestaurant.gr/",
+    "sourceAsset": "https://deltarestaurant.gr/wp-content/uploads/2025/01/delta-logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official Delta restaurant site gives the SNFCC building, Syggrou Avenue 364, Kallithea, Athens.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "curated-IST-mikla": {
+    "src": "media/brands/restaurant-curated-ist-mikla.svg",
+    "source": "https://www.miklarestaurant.com/tr",
+    "sourceAsset": "https://www.miklarestaurant.com/dist/img/logo/logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official Mikla site gives The Marmara Pera, Meşrutiyet Caddesi 15, Beyoğlu, Istanbul.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "curated-SBH-tamarin-st-barth": {
+    "src": "media/brands/restaurant-curated-sbh-tamarin-st-barth.png",
+    "source": "https://tamarinstbarth.com/home/",
+    "sourceAsset": "https://tamarinstbarth.com/wp-content/uploads/2021/11/LOGO-HOME-PAGE-NOV.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Tamarin site gives Route de Saline, 97133 Saint Barthélemy; mark explicitly says St Barth.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "curated-LAX-providence": {
+    "src": "media/brands/restaurant-curated-lax-providence.png",
+    "source": "https://providencela.com/reservations/",
+    "sourceAsset": "https://providencela.com/wp-content/themes/providence/img/providence_wh.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official Providence reservations page gives 5955 Melrose Avenue, Los Angeles, California 90038, and displays the restaurant mark.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "curated-HVA-gariful": {
+    "src": "media/brands/restaurant-curated-hva-gariful.png",
+    "source": "https://hvar-gariful.hr/",
+    "sourceAsset": "https://hvar-gariful.hr/wp-content/uploads/2022/04/GARIFUL_logo-370x99.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official Restaurant Gariful site gives Riva 21, 21450 Hvar, Croatia; mark explicitly includes Hvar Croatia.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "curated-BCN-disfrutar": {
+    "src": "media/brands/restaurant-curated-bcn-disfrutar.png",
+    "source": "https://www.disfrutarbarcelona.com/?lang=es",
+    "sourceAsset": "https://www.disfrutarbarcelona.com/web/img//logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Disfrutar site gives C. de Villarroel 163, 08036 Barcelona and uses the selected Disfrutar wordmark.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "curated-CAP-da-paolino": {
+    "src": "media/brands/restaurant-curated-cap-da-paolino.png",
+    "source": "https://paolinocapri.com/it_it/",
+    "sourceAsset": "https://paolinocapri.com/wp-content/uploads/2023/07/Logo-Paolino-Capri.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Paolino Capri site identifies the Capri restaurant; selected mark explicitly includes Capri.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-PAR-bigbang": {
+    "src": "media/brands/restaurant-osm-par-bigbang.png",
+    "source": "https://sevres.bigbang-restaurant.fr/fr/",
+    "sourceAsset": "https://assets.joinoko.com/legacy/784893b8aceb4e017dddef37/H5uynmxZetoPv8LN4.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Bigbang Sèvres site gives 40-44 Grande Rue, 92310 Sèvres and uses the selected Korean restaurant mark.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "curated-ASP-matsuhisa-aspen": {
+    "src": "media/brands/restaurant-curated-asp-matsuhisa-aspen.png",
+    "source": "https://www.matsuhisarestaurants.com/aspen/about/",
+    "sourceAsset": "https://www.matsuhisarestaurants.com/wp-content/uploads/2016/05/WHITE-LOGO-ASPEN.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Dedicated official Matsuhisa Aspen page describes the original Aspen restaurant opened in 1998; selected mark explicitly includes Aspen.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "curated-AMS-ciel-bleu": {
+    "src": "media/brands/restaurant-curated-ams-ciel-bleu.svg",
+    "source": "https://www.cielbleu.nl/",
+    "sourceAsset": "https://irp.cdn-website.com/0191fca8/import/clib/cielbleu_nl/dms3rep/multi/Mask+group+%2834%29-100x100.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official Ciel Bleu Amsterdam site uses this cb monogram in its header and identifies the restaurant in Amsterdam.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-BDR-hadi-balik": {
+    "src": "media/brands/restaurant-osm-bdr-hadi-balik.png",
+    "source": "https://www.hadibalik.com/teslimat",
+    "sourceAsset": "https://static.wixstatic.com/media/4c451b_4f54b75ce2164714b0351907172c802a~mv2.webp/v1/fill/w_162,h_66,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/hadi-balik-logo-yatay-cmyk-01.webp",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Hadi Balık Bodrum homepage explicitly promotes Hadi Balık Bistro in Turgutreis and uses the selected Hadi Balık Bodrum mark.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed",
+    "identitySource": "https://www.hadibalik.com/"
+  },
+  "osm-BDR-kalamare": {
+    "src": "media/brands/restaurant-osm-bdr-kalamare.png",
+    "source": "https://www.kalamarebodrum.com/",
+    "sourceAsset": "https://www.kalamarebodrum.com/wp-content/uploads/2022/03/KALAMARE-WEB-LOGO-YAZI.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Kalamare Bodrum site gives Çarşı Mahallesi, Sanat Okulu Cad. 9, Bodrum, Muğla.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-CER-crazy-pizza-porto-cervo": {
+    "src": "media/brands/restaurant-osm-cer-crazy-pizza-porto-cervo.svg",
+    "source": "https://crazypizza.com/porto-cervo/it/",
+    "sourceAsset": "https://crazypizza.com/porto-cervo/wp-content/uploads/sites/12/2025/10/logo-crazy-pizza-porto-cervo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Dedicated official Crazy Pizza Porto Cervo page uses the selected location-specific mark, explicitly including Porto Cervo.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-HVA-pizza-kogo": {
+    "src": "media/brands/restaurant-osm-hva-pizza-kogo.png",
+    "source": "https://kogohvar.com/",
+    "sourceAsset": "https://kogohvar.com/wp-content/uploads/2023/03/cropped-logo-02.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Kogo Hvar restaurant site identifies its Hvar location and uses the selected Kogo mark.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-ATH-garbi": {
+    "src": "media/brands/restaurant-osm-ath-garbi.png",
+    "source": "https://garbi.gr/en/the-restaurant/",
+    "sourceAsset": "https://garbi.gr/wp-content/uploads/2024/08/garbi-logo-white-trim.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official Garbi restaurant page gives Iliou 21 and Selinis, Kavouri, on the Athens coast.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-ATH-u5e90ab6fbd6b": {
+    "src": "media/brands/restaurant-osm-ath-u5e90ab6fbd6b.png",
+    "source": "https://latini.gr/",
+    "sourceAsset": "https://latini.gr/wp-content/uploads/2017/10/logo-7.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Latini restaurant site gives 3 Posidonos Avenue, 16672 Varkiza, matching the Athens Riviera location.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-CAP-al-grottino": {
+    "src": "media/brands/restaurant-osm-cap-al-grottino.png",
+    "source": "https://www.ristorantealgrottino.net/menu.html",
+    "sourceAsset": "https://www.ristorantealgrottino.net/images/Logo-ok-vers.4.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Al Grottino site describes Capri cuisine and gives Via Longano 27, 80073 Capri.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-AMF-hotel-le-due-torri": {
+    "src": "media/brands/restaurant-osm-amf-hotel-le-due-torri.png",
+    "source": "https://www.hotelleduetorri.it/en/",
+    "sourceAsset": "https://www.hotelleduetorri.it/wp-content/uploads/2016/03/logo_due_torri-2.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Hotel Le Due Torri site describes its restaurant and gives Via Divina Costiera 11, Bomerano, Agerola; selected mark says Hotel Ristorante 2 Torri.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-BKK-ethos": {
+    "src": "media/brands/restaurant-osm-bkk-ethos.png",
+    "source": "https://ethosbangkok.com/",
+    "sourceAsset": "https://ethosbangkok.com/wp-content/uploads/sites/12/2018/08/site_logo_ethos149px-1.gif",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Ethos site identifies its vegetarian and vegan restaurant near Khaosan Road, Bangkok.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-CRV-la-folie-douce": {
+    "src": "media/brands/restaurant-osm-crv-la-folie-douce.png",
+    "source": "https://www.lafoliedouce.com/fr/restaurant-meribel-courchevel.html",
+    "sourceAsset": "https://www.lafoliedouce.com/media/yootheme/cache/59/folie-douce-corporate-blanc-59064043.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Dedicated official La Folie Douce Méribel-Courchevel restaurant page identifies this location and uses the selected La Folie Douce mark.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-SBH-black-ginger": {
+    "src": "media/brands/restaurant-osm-sbh-black-ginger.png",
+    "source": "https://blackgingersbh.com/en/contact-us/",
+    "sourceAsset": "https://blackgingersbh.com/wp-content/uploads/2022/08/logo-black-ginger-restaurant-gustavia-st-barts.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official Black Ginger restaurant contact page gives Rue Samuel Fahlberg, Gustavia, 97133 Saint Barthélemy.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-CAP-isidoro": {
+    "src": "media/brands/restaurant-osm-cap-isidoro.svg",
+    "source": "https://www.isidorocapri.com/",
+    "sourceAsset": "https://www.isidorocapri.com/inc/img/logo-isidoro.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Ristorante Isidoro site gives Via Roma 17/19, 80073 Capri and uses the selected Isidoro mark.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-AMF-la-corte-degli-dei": {
+    "src": "media/brands/restaurant-osm-amf-la-corte-degli-dei.svg",
+    "source": "https://www.lacortedeglidei.it/menu/",
+    "sourceAsset": "https://www.lacortedeglidei.it/menu/",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official La Corte degli Dei restaurant menu page gives Via Armando Diaz 26 and links its own Pianillo, Agerola listing; selected header SVG spells the restaurant name.",
+    "sourceType": "inline-svg",
+    "inlineSvgIndex": 0,
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-CRV-les-verdons": {
+    "src": "media/brands/restaurant-osm-crv-les-verdons.png",
+    "source": "https://www.les-verdons-courchevel.com/en/",
+    "sourceAsset": "https://www.les-verdons-courchevel.com/wp-content/uploads/2021/06/LesVerdons-500-300x300.jpg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Les Verdons site identifies the Courchevel 1850 mountain restaurant at the Verdons gondola and Saulire cable car.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-CRV-prends-ta-luge-et-tire-toi": {
+    "src": "media/brands/restaurant-osm-crv-prends-ta-luge-et-tire-toi.png",
+    "source": "https://www.prendstalugeettiretoi.com/",
+    "sourceAsset": "https://static.wixstatic.com/media/76f202_b7fcff7a0edb4986a4befd9f83ac5e0e~mv2.png/v1/crop/x_0,y_11,w_1511,h_721/fill/w_591,h_282,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Ptlcond-blancorange.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official Prends ta Luge et Tire Toi site identifies its snack bar at Centre Commercial Le Forum, 73120 Courchevel 1850.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "curated-NYC-le-bernardin": {
+    "src": "media/brands/restaurant-curated-nyc-le-bernardin.png",
+    "source": "https://www.le-bernardin.com/",
+    "sourceAsset": "https://www.le-bernardin.com/dist/logo-dark.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Official Le Bernardin site data identifies the New York restaurant; its own frontend script uses the selected Le Bernardin logo-dark.png as the header mark.",
+    "assetTreatment": "Original artwork; raster sources normalized as PNG with transparent outer padding trimmed"
+  },
+  "osm-MCO-asia-food": {
+    "src": "media/brands/restaurant-osm-mco-asia-food.png",
+    "source": "https://www.asiafood79.com/",
+    "sourceAsset": "https://www.asiafood79.com/_next/image?url=%2Fimages%2Flogo.png&w=96&q=75",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official Asia Food 79 website identifies the Vietnamese restaurant in Nice, matching the corrected NCE catalog entry. Header logo visually verified."
+  },
+  "osm-IBZ-can-caus": {
+    "src": "media/brands/restaurant-osm-ibz-can-caus.png",
+    "source": "https://cancaus.com/",
+    "sourceAsset": "https://cancaus.com/system/images/logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Can Caus, Restaurante - Grill Ibiza. Original logo taken from this restaurant source."
+  },
+  "curated-MYK-nammos-mykonos": {
+    "src": "media/brands/restaurant-curated-myk-nammos-mykonos.svg",
+    "source": "https://www.nammos.com/mykonos",
+    "sourceAsset": "https://www.nammos.com/sites/default/files/nammos_world_logo_black.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies NAMMOS Mykonos | Nammos. Original logo taken from this restaurant source."
+  },
+  "osm-MRB-altamirano": {
+    "src": "media/brands/restaurant-osm-mrb-altamirano.png",
+    "source": "https://baraltamirano.es/",
+    "sourceAsset": "https://baraltamirano.es/wp-content/uploads/2023/06/logo_Altamirano_cortado.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Inicio - Bar Altamirano. Original logo taken from this restaurant source."
+  },
+  "osm-MRB-stuzzikini": {
+    "src": "media/brands/restaurant-osm-mrb-stuzzikini.png",
+    "source": "https://stuzzikini.com/",
+    "sourceAsset": "https://stuzzikini.com/wp-content/uploads/2015/07/logo-stuzzikini-retina-dark1.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Stuzzikini - Italian Restaurant in Marbella's Old Town. Original logo taken from this restaurant source."
+  },
+  "curated-STT-gigi-ramatuelle": {
+    "src": "media/brands/restaurant-curated-stt-gigi-ramatuelle.svg",
+    "source": "https://gigi-restaurant.com/saint-tropez-fr/",
+    "sourceAsset": "https://gigi-restaurant.com/saint-tropez-fr/uploads/sites/5/2023/09/gigi-logo-1.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Gigi Saint-Tropez | Gigi Rigolatto. Original logo taken from this restaurant source."
+  },
+  "osm-STT-salama": {
+    "src": "media/brands/restaurant-osm-stt-salama.png",
+    "source": "https://www.salama-saint-tropez.com/fr/",
+    "sourceAsset": "https://www.salama-saint-tropez.com/images/salama-saint-tropez.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Faithful PNG export of official SVG for safe lightweight delivery; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Restaurant marocain et couscous st tropez - Salama Saint-Tropez. Original logo taken from this restaurant source."
+  },
+  "curated-CNS-baoli-cannes": {
+    "src": "media/brands/restaurant-curated-cns-baoli-cannes.svg",
+    "source": "https://baolicannes.com/",
+    "sourceAsset": "https://baolicannes.com/wp-content/uploads/2026/04/baoli-logo-cannes.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies BÂOLI Cannes | Restaurant, Club, Événements privés. Original logo taken from this restaurant source."
+  },
+  "osm-IBZ-las-dos-lunas": {
+    "src": "media/brands/restaurant-osm-ibz-las-dos-lunas.png",
+    "source": "https://lasdoslunas.com/",
+    "sourceAsset": "https://lasdoslunas.com//wp-content/uploads/2018/04/logo5.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Las Dos Lunas &#8211; Restaurant, Bar & Boutique. Since 1981. Original logo taken from this restaurant source."
+  },
+  "curated-TUL-arca-tulum": {
+    "src": "media/brands/restaurant-curated-tul-arca-tulum.png",
+    "source": "https://arcatulum.com/",
+    "sourceAsset": "https://arcatulum.com/assets/arca-logo-BBHYnnyb.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies ARCA Tulum | Contemporary Mexican Fine Dining in Tulum. Original logo taken from this restaurant source."
+  },
+  "osm-MIA-malakor-thai-isaan": {
+    "src": "media/brands/restaurant-osm-mia-malakor-thai-isaan.png",
+    "source": "https://malakorthaiisaan.com/",
+    "sourceAsset": "https://malakorthaiisaan.com/img/background/logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Malakor Thai Isaan || The new Thai Isaan vibes in Coral Gables, FL. Original logo taken from this restaurant source."
+  },
+  "osm-CER-l-approdo": {
+    "src": "media/brands/restaurant-osm-cer-l-approdo.png",
+    "source": "https://www.ristorantelapprodobajasardinia.com/",
+    "sourceAsset": "https://irp.cdn-website.com/dacdbf1a/dms3rep/multi/opt/logo_approdo_color-230w.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Piatti di mare | Baja Sardinia | Ristorante Pizzeria L'Approdo. Original logo taken from this restaurant source."
+  },
+  "osm-CER-hivaoa-ristorante-pizzeria": {
+    "src": "media/brands/restaurant-osm-cer-hivaoa-ristorante-pizzeria.png",
+    "source": "https://www.ristorantehivaoa.com/",
+    "sourceAsset": "https://irp.cdn-website.com/d55ab78c/dms3rep/multi/opt/66A84F05-7FCB-4E1E-9D13-25931A7310A3-419w.PNG",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official page states Hivaoa Porto Cervo, Italian restaurant and pizzeria; contact address Via della Marina, 07021 Porto Cervo. The original header mark itself reads HIVAOA PORTO CERVO."
+  },
+  "osm-HVA-dalmatino": {
+    "src": "media/brands/restaurant-osm-hva-dalmatino.png",
+    "source": "https://dalmatino-hvar.com/",
+    "sourceAsset": "https://dalmatino-hvar.com/wp-content/uploads/2022/05/Dalmatino-Logo-Black.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Dalmatino HVAR &#8211; Steak and fish house. Original logo taken from this restaurant source."
+  },
+  "osm-MIA-pummarola-coral-gable": {
+    "src": "media/brands/restaurant-osm-mia-pummarola-coral-gable.png",
+    "source": "https://www.pummarola.us/",
+    "sourceAsset": "https://static.wixstatic.com/media/eaa6a9_d62bc1929bec47f1b47796c3c160b958~mv2.png/v1/fill/w_327,h_116,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/Pummarola%20Transparent%20Logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Pummarola | Pizza Napoletana. Original logo taken from this restaurant source."
+  },
+  "osm-ATH-agora-riviera-restaurant": {
+    "src": "media/brands/restaurant-osm-ath-agora-riviera-restaurant.png",
+    "source": "https://agorariviera.gr/",
+    "sourceAsset": "https://agorariviera.gr/wp-content/uploads/2019/11/logo-agora-riviera-gold.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Agora Riviera Restaurant - Εστιατόριο Νότια Προάστια - Αίθουσα Εκδηλώσεων -. Original logo taken from this restaurant source."
+  },
+  "osm-CER-carnissage-poltu-quatu": {
+    "src": "media/brands/restaurant-osm-cer-carnissage-poltu-quatu.png",
+    "source": "https://carnissage.com/it/home/",
+    "sourceAsset": "https://carnissage.com/wp-content/uploads/2026/03/footer-logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official Carnissage site explicitly lists Poltu Quatu as its restaurant location; source uses the Carnissage wordmark for this restaurant brand."
+  },
+  "osm-CRV-sumosan-courchevel": {
+    "src": "media/brands/restaurant-osm-crv-sumosan-courchevel.svg",
+    "source": "https://sumosan.com/",
+    "sourceAsset": "https://sumosan.com/wp-content/uploads/2021/01/logo-nav-menu.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official Sumosan restaurant website explicitly lists Courchevel and labels its restaurant image Sumosan Courchevel; shared Sumosan restaurant wordmark is used on that site."
+  },
+  "osm-AMF-franchino-ristorante": {
+    "src": "media/brands/restaurant-osm-amf-franchino-ristorante.png",
+    "source": "https://ristorantefranchino.com/",
+    "sourceAsset": "https://ristorantefranchino.com/wp-content/uploads/2024/10/logo-risotrante-franchino.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Ristorante Franchino: L'Autentico Sapore della Costiera a Praiano. Original logo taken from this restaurant source."
+  },
+  "curated-SYD-saint-peter": {
+    "src": "media/brands/restaurant-curated-syd-saint-peter.png",
+    "source": "https://www.saintpeter.com.au/",
+    "sourceAsset": "https://images.squarespace-cdn.com/content/v1/56b1581001dbae20b9c6edb1/b7c02762-682c-42f7-827e-5e70f7c28d84/saint+peter+logo+transparent+backgorund++SIDE+BY+SIDE.png?format=1500w",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Saint Peter. Original logo taken from this restaurant source."
+  },
+  "osm-CRV-bagatelle": {
+    "src": "media/brands/restaurant-osm-crv-bagatelle.png",
+    "source": "https://bagatelle.com/venues/courchevel/",
+    "sourceAsset": "https://bagatelle.com/app/uploads/2021/01/logo-blue-3.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Treat Yourself to Luxury Mediterranean Cuisine in Courchevel Restaurant. Original logo taken from this restaurant source."
+  },
+  "curated-TYO-florilege": {
+    "src": "media/brands/restaurant-curated-tyo-florilege.svg",
+    "source": "https://www.aoyama-florilege.jp/",
+    "sourceAsset": "https://www.aoyama-florilege.jp/assets/img/logo_type_bk.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Restaurant Florilège｜フロリレージュ. Original logo taken from this restaurant source."
+  },
+  "curated-CDM-rosetta": {
+    "src": "media/brands/restaurant-curated-cdm-rosetta.svg",
+    "source": "https://rosetta.com.mx/",
+    "sourceAsset": "https://rosetta.com.mx/wp-content/themes/rosetta-2025/images/logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Rosetta. Original logo taken from this restaurant source."
+  },
+  "curated-CPT-salsify-at-the-roundhouse": {
+    "src": "media/brands/restaurant-curated-cpt-salsify-at-the-roundhouse.svg",
+    "source": "https://salsify.co.za/",
+    "sourceAsset": "https://salsify.co.za/wp-content/uploads/2025/12/Salsify-2025-Logo-01.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source names Chef Ryan Cole’s Salsify at the Roundhouse in Cape Town, with Atlantic and Camps Bay views; same original restaurant logo shown in header."
+  },
+  "osm-AMF-agriturismo-serafina": {
+    "src": "media/brands/restaurant-osm-amf-agriturismo-serafina.png",
+    "source": "https://www.agriturismoserafina.it/",
+    "sourceAsset": "https://www.agriturismoserafina.it/wp-content/uploads/2025/01/cropped-logo-1-170x57.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Splendido Agriturismo Costiera Amalfitana-b&b-Furore. Original logo taken from this restaurant source."
+  },
+  "curated-RIO-oro": {
+    "src": "media/brands/restaurant-curated-rio-oro.png",
+    "source": "https://ororestaurante.com.br/",
+    "sourceAsset": "https://ororestaurante.com.br/wp-content/themes/oro/assets/img/oro-logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Oro — Felipe Bronze · Cozinha brasileira de vanguarda no Leblon, Rio de Janeiro. Original logo taken from this restaurant source."
+  },
+  "osm-SIN-greenwood-fish-market-quayside-isle": {
+    "src": "media/brands/restaurant-osm-sin-greenwood-fish-market-quayside-isle.png",
+    "source": "https://greenwoodfishmarket.com/quayside-isle-sentosa/",
+    "sourceAsset": "https://cdn-klebp.nitrocdn.com/tWEAoSDvtZQOiVxQRkXYwsFduggXsuiV/assets/images/optimized/rev-0462414/greenwoodfishmarket.com/wp-content/uploads/2018/08/cropped-GFM002A-16_Logo_r3.1_White.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Quayside Isle | Greenwood Fish Market. Original logo taken from this restaurant source."
+  },
+  "osm-STT-au-caprice-des-deux": {
+    "src": "media/brands/restaurant-osm-stt-au-caprice-des-deux.svg",
+    "source": "https://www.aucapricedesdeux.com/",
+    "sourceAsset": "https://www.aucapricedesdeux.com/files/caprice-logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Au Caprice des Deux | Restaurant bistronomique à Saint-Tropez. Original logo taken from this restaurant source."
+  },
+  "curated-DXB-coya-dubai": {
+    "src": "media/brands/restaurant-curated-dxb-coya-dubai.svg",
+    "source": "https://coyarestaurant.com/dubai/en/",
+    "sourceAsset": "https://coyarestaurant.com/themes/wits-basic/images/icons/coyatext.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Discover the Flavors of Peru at Coya Restaurant Dubai. Original logo taken from this restaurant source."
+  },
+  "curated-MIA-cote-miami": {
+    "src": "media/brands/restaurant-curated-mia-cote-miami.svg",
+    "source": "https://www.cotekoreansteakhouse.com/locations/cotemiami",
+    "sourceAsset": "https://cdn.prod.website-files.com/64dc46f3bd5126f2de6e5a04/658c3d7907972c865ade1f26_Frame%203466506.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies COTE Korean Steakhouse – COTE Miami. Original logo taken from this restaurant source."
+  },
+  "osm-BAL-meimei": {
+    "src": "media/brands/restaurant-osm-bal-meimei.svg",
+    "source": "https://meimeibali.com/",
+    "sourceAsset": "https://cdn.prod.website-files.com/6742bea4cc0f0083031595de/6748650dad18bbde54ba5fe6_meimei.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Meimei | Woodfired Modern Asian Restaurant in Canggu. Original logo taken from this restaurant source."
+  },
+  "curated-BAL-aperitif-restaurant": {
+    "src": "media/brands/restaurant-curated-bal-aperitif-restaurant.svg",
+    "source": "https://www.aperitif.com/reservations/",
+    "sourceAsset": "https://www.aperitif.com/wp-content/themes/aperitif/images/aperitif-circle-logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Apéritif Reservations | Apéritif Restaurant Ubud Bali. Original logo taken from this restaurant source."
+  },
+  "osm-BAL-luma": {
+    "src": "media/brands/restaurant-osm-bal-luma.png",
+    "source": "https://www.lumabali.com/",
+    "sourceAsset": "https://www.lumabali.com/luma-bali/wordmark-ink.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Luma Bali | Mediterranean dining in the heart of Canggu. Original logo taken from this restaurant source."
+  },
+  "curated-BDR-zuma-bodrum": {
+    "src": "media/brands/restaurant-curated-bdr-zuma-bodrum.svg",
+    "source": "https://www.zumarestaurant.com/en/bodrum/book-a-table",
+    "sourceAsset": "https://www.zumarestaurant.com/assets/images/zuma_logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies book a table | best Japanese restaurant - Zuma restaurant. Original logo taken from this restaurant source."
+  },
+  "curated-BCN-lasarte": {
+    "src": "media/brands/restaurant-curated-bcn-lasarte.svg",
+    "source": "https://www.restaurantlasarte.com/es/reserva",
+    "sourceAsset": "https://cdn-static.webmanager.tech/uploads/7e716abf-c034-4d40-a313-275407618c8e/originals/logo-color.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Reservas y Contacto | Restaurante Lasarte en Barcelona. Original logo taken from this restaurant source."
+  },
+  "curated-SIN-les-amis": {
+    "src": "media/brands/restaurant-curated-sin-les-amis.png",
+    "source": "https://www.lesamis.com.sg/reservation/",
+    "sourceAsset": "https://www.lesamis.com.sg/assets/templates/lesamis/images/logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Reservation  - Les Amis. Original logo taken from this restaurant source."
+  },
+  "curated-BKK-sorn": {
+    "src": "media/brands/restaurant-curated-bkk-sorn.png",
+    "source": "https://sornfinesouthern.com/reservations/",
+    "sourceAsset": "https://sornfinesouthern.com/wp-content/themes/sorn/assets/images/logo-black.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Reservations - SORN - Fine Southern Thai Cuisine. Original logo taken from this restaurant source."
+  },
+  "curated-CER-zuma-porto-cervo": {
+    "src": "media/brands/restaurant-curated-cer-zuma-porto-cervo.svg",
+    "source": "https://www.zumarestaurant.com/en/porto-cervo/book-a-table",
+    "sourceAsset": "https://www.zumarestaurant.com/assets/images/zuma_logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies reserve your table at Zuma Porto Cervo | dine with a view of Tyrrhenian Sea. Original logo taken from this restaurant source."
+  },
+  "osm-SBH-la-petite-plage": {
+    "src": "media/brands/restaurant-osm-sbh-la-petite-plage.webp",
+    "source": "https://www.restaurant-lapetiteplage.com/saint-barthelemy",
+    "sourceAsset": "https://cdn.prod.website-files.com/67e51580d1804b4d2ffaf9b6/67e51580d1804b4d2ffafa02_AFG-STZ-LA%20PETITE%20PLAGE_logo%202%20lignes-CMJN-SBH.webp",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies La Petite Plage St-Barthélemy | Cuisine d’été par Eric Frechon. Original logo taken from this restaurant source."
+  },
+  "curated-NYC-eleven-madison-park": {
+    "src": "media/brands/restaurant-curated-nyc-eleven-madison-park.png",
+    "source": "https://www.elevenmadisonpark.com/",
+    "sourceAsset": "https://images.squarespace-cdn.com/content/v1/661d75b635d9930903bb9d39/525e8347-df31-4eef-8833-f02fc4db7f9c/ElevenMadisonPark-Leaves_Wordmark.png?format=1500w",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official source page identifies Eleven Madison Park. Original logo taken from this restaurant source."
+  },
+  "curated-LAX-n-naka": {
+    "src": "media/brands/restaurant-curated-lax-n-naka.svg",
+    "source": "https://n-naka.com/",
+    "sourceAsset": "https://n-naka.com/wp-content/uploads/2022/03/naka-logo-optimized.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies n/naka &#8211; a michelin-starred restaurant in los angeles by chef niki nakayama. Original logo taken from this restaurant source."
+  },
+  "curated-ASP-cache-cache-aspen": {
+    "src": "media/brands/restaurant-curated-asp-cache-cache-aspen.jpg",
+    "source": "https://cachecache.com/",
+    "sourceAsset": "https://cachecache.com/wp-content/uploads/2022/12/CacheCache.jpg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official source page identifies Cache Cache - Aspen Restaurant. Original logo taken from this restaurant source."
+  },
+  "osm-MCO-gigi-tavola": {
+    "src": "media/brands/restaurant-osm-mco-gigi-tavola.png",
+    "source": "https://www.gigitavola.com/",
+    "sourceAsset": "https://www.gigitavola.com/wp-content/uploads/2023/07/cropped-NVX-logo-gigi-noir-copie.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official page title: Gigi Tavola Port de Nice. Catalog destinationCode NCE (stable ID retains MCO)."
+  },
+  "curated-AMS-rijks": {
+    "src": "media/brands/restaurant-curated-ams-rijks.svg",
+    "source": "https://www.rijksrestaurant.nl/",
+    "sourceAsset": "https://www.rijksrestaurant.nl/",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Official inline SVG extracted without geometry or color changes.",
+    "identityEvidence": "Official restaurant source identifies RIJKS® &#x2d; Amsterdam. Original restaurant logo visually verified in contact sheet second."
+  },
+  "curated-ATH-varoulko-seaside": {
+    "src": "media/brands/restaurant-curated-ath-varoulko-seaside.png",
+    "source": "https://www.varoulko.gr/",
+    "sourceAsset": "https://www.varoulko.gr/wp-content/uploads/2022/04/big-top-logo-white.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official restaurant source identifies Varoulko Seaside restaurant | A Michelin Start Experience in Greece. Original restaurant logo visually verified in contact sheet second."
+  },
+  "curated-HVA-dalmatino-hvar": {
+    "src": "media/brands/restaurant-curated-hva-dalmatino-hvar.png",
+    "source": "https://dalmatino-hvar.com/",
+    "sourceAsset": "https://dalmatino-hvar.com/wp-content/uploads/2022/05/Dalmatino-Logo-Black.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official restaurant source identifies Dalmatino HVAR &#8211; Steak and fish house. Original restaurant logo visually verified in contact sheet second."
+  },
+  "curated-IST-neolokal": {
+    "src": "media/brands/restaurant-curated-ist-neolokal.png",
+    "source": "https://www.neolokal.com/",
+    "sourceAsset": "https://www.neolokal.com/wp-content/uploads/2020/06/neolokal-logotype.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official restaurant source identifies Neolokal: Dürüst Yemek, Geleneksel Lezzet. Original restaurant logo visually verified in contact sheet second."
+  },
+  "curated-MCO-pavyllon-monte-carlo": {
+    "src": "media/brands/restaurant-curated-mco-pavyllon-monte-carlo.svg",
+    "source": "https://www.yannick-alleno.com/en/les-etablissements-du-groupe/pavyllon-monte-carlo",
+    "sourceAsset": "https://cdn.prod.website-files.com/66daade3585c0d5f40bc4f5c/67175ed2a56c238a03014e75_logo-pavyllon-MC.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official restaurant source identifies PAVYLLON MONTE-CARLO — Le Groupe Yannick Alléno. Original restaurant logo visually verified in contact sheet second."
+  },
+  "curated-PDE-la-susana": {
+    "src": "media/brands/restaurant-curated-pde-la-susana.png",
+    "source": "https://www.lasusana.com/",
+    "sourceAsset": "https://static.wixstatic.com/media/d552e3_a49c44d68b6d49f095547757b8620b76~mv2.png/v1/fill/w_250,h_144,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/1.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official restaurant source identifies La Susana | La Susana Beach Restaurant | José Ignacio Uruguay. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-AMF-il-fiordo": {
+    "src": "media/brands/restaurant-osm-amf-il-fiordo.png",
+    "source": "https://www.ilfiordo.com/",
+    "sourceAsset": "https://www.ilfiordo.com/themes/frontend/assets/img/generali/il-fiordo-logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official restaurant source identifies Il Fiordo | Ristorante e pizzeria della Costiera Amalfitana. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-ATH-40forty-day-night-bar-restaurant": {
+    "src": "media/brands/restaurant-osm-ath-40forty-day-night-bar-restaurant.png",
+    "source": "https://www.40forty.gr/about",
+    "sourceAsset": "https://static.wixstatic.com/media/80ddef_928e196148ac4d65afd8ae18061baf21~mv2.png/v1/crop/x_0,y_3,w_1481,h_894/fill/w_101,h_61,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/40logoblue2018.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official restaurant source identifies ABOUT | 40Forty | Day Night. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-BAL-milk-madu-beach-road": {
+    "src": "media/brands/restaurant-osm-bal-milk-madu-beach-road.png",
+    "source": "https://milkandmadu.com/",
+    "sourceAsset": "https://milkandmadu.com/wp-content/uploads/2025/12/LOGO.webp",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official restaurant source identifies Milk &amp; Madu - Bali&#039;s Best Café. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-BDR-red-dragon": {
+    "src": "media/brands/restaurant-osm-bdr-red-dragon.png",
+    "source": "https://www.reddragon.com.tr/iletisim",
+    "sourceAsset": "https://www.reddragon.com.tr/images/tema/images/logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official restaurant source identifies Red Dragon Çin Restoranı / İletişim. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-CAP-capri-pasta": {
+    "src": "media/brands/restaurant-osm-cap-capri-pasta.png",
+    "source": "https://www.capripasta.com/",
+    "sourceAsset": "https://www.capripasta.com/images/capri-pasta-logo-mobile.png?v=1",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official restaurant source identifies Capri Pasta - Rosticceria e catering. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-CAP-le-camerelle": {
+    "src": "media/brands/restaurant-osm-cap-le-camerelle.png",
+    "source": "https://lecamerelle.it/",
+    "sourceAsset": "https://lecamerelle.it/wp-content/uploads/2023/02/logo-bg-transp-1.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official restaurant source identifies Ristorante Le Camerelle: Un equilibrio perfetto di colori e sapori. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-CER-baia-blu": {
+    "src": "media/brands/restaurant-osm-cer-baia-blu.svg",
+    "source": "https://www.ristorantebaiablu.it/",
+    "sourceAsset": "https://www.ristorantebaiablu.it/wp-content/uploads/ristorante-baia-blu-baia-sardinia-sassari-sardegna200.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official restaurant source identifies Ristorante Baia Blu, Baja Sardinia - Un viaggio di sapori mediterranei. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-CER-el-porteno-porto-cervo": {
+    "src": "media/brands/restaurant-osm-cer-el-porteno-porto-cervo.png",
+    "source": "https://www.elporteno.it/location/porto-cervo/el-porteno-porto-cervo/",
+    "sourceAsset": "https://www.elporteno.it/wp-content/uploads/2022/10/LOGO-elporteno.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official restaurant source identifies El Porte&ntilde;o Porto Cervo: Ristorante di Carne Argentina in Costa Smeralda. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-CPT-kobe-sushi": {
+    "src": "media/brands/restaurant-osm-cpt-kobe-sushi.png",
+    "source": "https://kobesushi.co.za/?page_id=52",
+    "sourceAsset": "https://kobesushi.co.za/wp-content/uploads/2024/10/Logo-removebg-preview-1.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official contact page states Kobe Sushi Newlands and Dean Street, Newlands. Header uses the Kobe Sushi restaurant logo."
+  },
+  "osm-HKT-u0bb8a4bb7e3a": {
+    "src": "media/brands/restaurant-osm-hkt-u0bb8a4bb7e3a.png",
+    "source": "https://www.maimornforest.com/",
+    "sourceAsset": "https://www.maimornforest.com/assets/img/logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official restaurant source identifies ร้านอาหารในภูเก็ต อิ่มอร่อยกับเมนูซีฟู๊ด และอาหารพื้นบ้านใจกลางเมืองภูเก็ต ไม้หมอนซีฟู๊ด แอนด์ คาราโอเกะ. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-HVA-dva-ribara": {
+    "src": "media/brands/restaurant-osm-hva-dva-ribara.png",
+    "source": "https://dvaribara.com/en/",
+    "sourceAsset": "https://dvaribara.com/wp-content/themes/dvaribara/assets/img/logo-bijeli.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official restaurant source identifies Dva Ribara Hvar - fresh seafood on the waterfront. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-HVA-mediterraneo-restaurant": {
+    "src": "media/brands/restaurant-osm-hva-mediterraneo-restaurant.png",
+    "source": "https://mediterraneohvar.hr/",
+    "sourceAsset": "https://mediterraneohvar.hr/wp-content/uploads/2022/03/Logo-mali.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official restaurant source identifies MEDITERRANEO DINE &amp; WINE RESTAURANT in HVAR. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-HVA-silk": {
+    "src": "media/brands/restaurant-osm-hva-silk.svg",
+    "source": "https://silkizakaya.com/en/hvar",
+    "sourceAsset": "https://silkizakaya.com/content/silk.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official restaurant source identifies Hvar - Silk Fusion Asian restaurant. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-IBZ-bambuddha": {
+    "src": "media/brands/restaurant-osm-ibz-bambuddha.webp",
+    "source": "https://www.bambuddha.com/es",
+    "sourceAsset": "https://cdn.cms.boooooooooost.com/cmr0n48190000j90a8saxash2/sections/1782825753630-67f214nzw1a.webp",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped. Proportionally bounded to 960 pixels and lossless WebP encoded for lightweight delivery; original colors retained.",
+    "identityEvidence": "Official restaurant source identifies Cocina MediterrAsian en Bambuddha Ibiza. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-IBZ-finca-la-plaza": {
+    "src": "media/brands/restaurant-osm-ibz-finca-la-plaza.png",
+    "source": "https://www.fincalaplaza.com/",
+    "sourceAsset": "https://www.fincalaplaza.com/wp-content/uploads/2019/04/FincaLaPlaza_White-300x38.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official page description identifies Finca La Plaza in Santa Gertrudis, Ibiza, serving artisanal cuisine; footer supplies the Finca La Plaza wordmark."
+  },
+  "osm-SBH-bonito": {
+    "src": "media/brands/restaurant-osm-sbh-bonito.png",
+    "source": "https://www.bonitosbh.com/",
+    "sourceAsset": "https://static.wixstatic.com/media/2abbe5_03bdb66a2d4c465eaa6e69d78eaf97bc~mv2.png/v1/fill/w_247,h_105,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo%20bonito_edited.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged. Fully transparent outer pixels removed losslessly; no visible artwork cropped.",
+    "identityEvidence": "Official restaurant source identifies Bonito Saint Barth | Restaurant | Gustavia. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-SBH-l-isoletta": {
+    "src": "media/brands/restaurant-osm-sbh-l-isoletta.webp",
+    "source": "https://www.isolettastbarth.com/",
+    "sourceAsset": "https://www.isolettastbarth.com/images/isoletta-logo.webp",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official restaurant source identifies L&#x27;Isoletta St Barth - Authentic Italian Pizzeria. Original restaurant logo visually verified in contact sheet second."
+  },
+  "osm-STT-gaio": {
+    "src": "media/brands/restaurant-osm-stt-gaio.svg",
+    "source": "https://www.gaio.club/",
+    "sourceAsset": "https://www.gaio.club/",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Official inline SVG extracted without geometry or color changes.",
+    "identityEvidence": "Official restaurant source identifies GAÏO - Restaurant, Cabaret et Club. Original restaurant logo visually verified in contact sheet second."
+  },
+  "curated-MRB-nobu-marbella": {
+    "src": "media/brands/restaurant-curated-mrb-nobu-marbella.png",
+    "source": "https://www.noburestaurants.com/marbella/home",
+    "sourceAsset": "https://www.noburestaurants.com/themes/nobu/images/nobuLogo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Faithful PNG export of official SVG; colors and geometry unchanged.",
+    "identityEvidence": "On noburestaurants.com/marbella/home, body RestaurantHomePage: restaurant-info header places nobuLogo.svg beside restaurant-info-name Marbella linking /marbella. Logo links Nobu Restaurants Homepage; not a hotel footer."
+  },
+  "osm-AMF-le-bonta-del-capo": {
+    "src": "media/brands/restaurant-osm-amf-le-bonta-del-capo.png",
+    "sourceAsset": "https://lebontadelcapo.it/wp-content/uploads/2026/03/le-bonta-del-capo-HOME.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official PNG, unchanged.",
+    "identityEvidence": "Official source names Le Bontà del Capo on Amalfi Coast; structured logo and original image explicitly read Ristorante-Pizzeria Le Bontà del Capo, Conca Dei Marini.",
+    "source": "https://lebontadelcapo.it/en/home-en/"
+  },
+  "osm-MCO-chez-pipo": {
+    "src": "media/brands/restaurant-osm-mco-chez-pipo.png",
+    "source": "https://www.chezpipo.fr/fr/",
+    "sourceAsset": "https://www.chezpipo.fr/assets/img/interface/logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Faithful PNG export of official SVG; colors and geometry unchanged.",
+    "identityEvidence": "Official Chez Pipo website identifies the restaurant at 13 rue Bavastro, 06300 Nice; catalog is now corrected to Nice (NCE), retaining its stable ID."
+  },
+  "osm-MCO-aradhana": {
+    "src": "media/brands/restaurant-osm-mco-aradhana.png",
+    "source": "https://aradhana.fr/",
+    "sourceAsset": "https://aradhana.fr/data/files/Logo2.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset; colors and geometry unchanged.",
+    "identityEvidence": "Official Aradhana website identifies the restaurant at 4 boulevard Lech Walesa, 06300 Nice; catalog is now corrected to Nice (NCE), retaining its stable ID."
+  },
+  "curated-ASP-bosq": {
+    "src": "media/brands/restaurant-curated-ASP-bosq.webp",
+    "source": "https://www.bosqaspen.com/",
+    "sourceAsset": "https://images.squarespace-cdn.com/content/v1/6a74ff271a568f43cc67649b/1786052402890-N44WETYG3KKII4AQRZ3N/Logo_Bosq_Antler+Only_White.png?format=1500w",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Bosq official homepage explicitly identifies Aspen, Colorado."
+  },
+  "curated-BAL-mozaic-ubud": {
+    "src": "media/brands/restaurant-curated-BAL-mozaic-ubud.png",
+    "source": "https://www.mozaic-bali.com/mozaic-gastronomic-restaurant-bali-reservations",
+    "sourceAsset": "https://cdn.prod.website-files.com/69cb65f6044536ce5707503c/69cb6f49b9ec1135b6c23b7d_mozaic-logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official reservation page identifies Mozaic Gastronomic Restaurant in Ubud, Bali."
+  },
+  "curated-BCN-cocina-hermanos-torres": {
+    "src": "media/brands/restaurant-curated-BCN-cocina-hermanos-torres.png",
+    "source": "https://cocinahermanostorres.com/en/reserve/",
+    "sourceAsset": "https://cocinahermanostorres.com/wp-content/themes/hnostorres/images/img/torres_logo_grey.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official reservation page lists Cocina Hermanos Torres, C. de Taquígraf Serra 20, Barcelona."
+  },
+  "curated-BKK-le-du": {
+    "src": "media/brands/restaurant-curated-BKK-le-du.png",
+    "source": "https://www.ledubkk.com/reservation",
+    "sourceAsset": "https://www.ledubkk.com/assets/img/LeDuLogo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Le Du reservation page lists 399/3 Silom 7 Alley, Bang Rak, Bangkok."
+  },
+  "curated-CPT-fyn": {
+    "src": "media/brands/restaurant-curated-CPT-fyn.png",
+    "source": "https://www.fynrestaurant.com/",
+    "sourceAsset": "https://cdn.prod.website-files.com/683ed7576df9acabbbcd4185/68401cfd09a0344286f2225e_Logo%201.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official page title identifies FYN Restaurant Cape Town."
+  },
+  "curated-CRV-bagatelle-courchevel": {
+    "src": "media/brands/restaurant-curated-CRV-bagatelle-courchevel.png",
+    "source": "https://bagatelle.com/venues/courchevel/",
+    "sourceAsset": "https://bagatelle.com/app/uploads/2021/01/logo-white-3.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Bagatelle Courchevel venue page and asset both identify Courchevel."
+  },
+  "curated-HKT-suay-cherngtalay": {
+    "src": "media/brands/restaurant-curated-HKT-suay-cherngtalay.webp",
+    "source": "https://www.suayrestaurant.com/",
+    "sourceAsset": "https://www.suayrestaurant.com/assets/suay-logo.webp",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official page identifies SUAY Cherngtalay, Phuket."
+  },
+  "curated-IBZ-la-paloma-ibiza": {
+    "src": "media/brands/restaurant-curated-IBZ-la-paloma-ibiza.svg",
+    "source": "https://palomaibiza.com/",
+    "sourceAsset": "https://palomaibiza.com/wp-content/uploads/2024/03/Paloma_Logo_Blue.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official La Paloma Ibiza homepage describes the same day café and night restaurant."
+  },
+  "curated-LIS-belcanto": {
+    "src": "media/brands/restaurant-curated-LIS-belcanto.svg",
+    "source": "https://www.belcanto.pt/",
+    "sourceAsset": "https://www.belcanto.pt/wp-content/themes/st4rt3r_theme/images/logo_belcanto.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official page title identifies Restaurante Belcanto in Lisboa."
+  },
+  "curated-MIA-joe-s-stone-crab": {
+    "src": "media/brands/restaurant-curated-MIA-joe-s-stone-crab.png",
+    "source": "https://www.joesstonecrab.com/reservations/",
+    "sourceAsset": "https://images.getbento.com/accounts/4bd482c90037bbda7b43d62cf6f2df4e/media/images/4398header-logo-white-blue.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official reservation page identifies Joe’s Stone Crab in Miami Beach, Florida."
+  },
+  "curated-MRB-skina": {
+    "src": "media/brands/restaurant-curated-MRB-skina.webp",
+    "source": "https://www.restauranteskina.com/en/booking/",
+    "sourceAsset": "https://www.restauranteskina.com/wp-content/uploads/2024/10/skina_logo_ppal.webp",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Skina reservation page lists Avda. Cánovas del Castillo 9, Marbella."
+  },
+  "curated-MYK-zuma-mykonos": {
+    "src": "media/brands/restaurant-curated-MYK-zuma-mykonos.svg",
+    "source": "https://www.zumarestaurant.com/en/mykonos/book-a-table",
+    "sourceAsset": "https://www.zumarestaurant.com/assets/images/zuma_logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official location-specific reservation page identifies Zuma Mykonos; this is its displayed restaurant wordmark."
+  },
+  "curated-PAR-septime": {
+    "src": "media/brands/restaurant-curated-PAR-septime.svg",
+    "source": "https://www.septime-charonne.fr/",
+    "sourceAsset": "https://www.septime-charonne.fr/images/septime-logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Septime page lists 80 rue de Charonne, Paris 11."
+  },
+  "curated-PDE-parador-la-huella": {
+    "src": "media/brands/restaurant-curated-PDE-parador-la-huella.png",
+    "source": "https://paradorlahuella.com/",
+    "sourceAsset": "https://paradorlahuella.com/wp-content/themes/bootclean-lahuella/images/theme/logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Parador La Huella official page lists Playa Brava, José Ignacio, Uruguay."
+  },
+  "curated-RIO-oteque": {
+    "src": "media/brands/restaurant-curated-RIO-oteque.webp",
+    "source": "https://www.oteque.com/",
+    "sourceAsset": "https://images.squarespace-cdn.com/content/v1/67329e304d98ce34497dcd18/b43b205b-8491-40c5-b7f0-975554910473/oteque_logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "OTEQUE official page lists Conde de Irajá 581, Rio de Janeiro."
+  },
+  "osm-AMF-melchio-restaurant": {
+    "src": "media/brands/restaurant-osm-AMF-melchio-restaurant.png",
+    "source": "https://www.melchio.it/",
+    "sourceAsset": "https://www.melchio.it/wp-content/uploads/2025/05/logo-2.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Melchiò page lists Via Santa Maria Vecchia 5, Furore, Amalfi coast."
+  },
+  "osm-BAL-billy-ho": {
+    "src": "media/brands/restaurant-osm-BAL-billy-ho.png",
+    "source": "https://billyho.co/booking/",
+    "sourceAsset": "https://billyho.co/wp-content/uploads/2026/10/billy-ho-primary-silk-768x164.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Billy Ho reservation page lists Jl. Pantai Batu Bolong, Canggu."
+  },
+  "osm-BAL-masonry": {
+    "src": "media/brands/restaurant-osm-BAL-masonry.webp",
+    "source": "https://masonrybali.com/canggu",
+    "sourceAsset": "https://cdn.prod.website-files.com/68c234b7023a902c90432f95/6a4ccc1ba0bf6ba5ee3ecfe5_masonry-black-logo.webp",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Masonry Canggu page explicitly describes the Canggu restaurant."
+  },
+  "osm-BAL-yuki-canggu": {
+    "src": "media/brands/restaurant-osm-BAL-yuki-canggu.png",
+    "source": "https://www.yuki-bali.com/",
+    "sourceAsset": "https://cdn.prod.website-files.com/6a2265469c8f7e2c52586704/6a262605311fc74d4f1f8713_yuki-logo-p-500.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official YUKI Bali site lists its Canggu venue; logo is its shared YUKI restaurant wordmark."
+  },
+  "osm-CAP-angelica-capri": {
+    "src": "media/brands/restaurant-osm-CAP-angelica-capri.png",
+    "source": "https://angelicacapri.com/",
+    "sourceAsset": "https://angelicacapri.com/wp-content/uploads/2021/10/logo.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Faithful PNG rendering of official SVG at original intrinsic dimensions; preserves shape, color, transparency and margins. SVG contains embedded raster image.",
+    "identityEvidence": "Official Angelica Capri homepage explicitly identifies Capri."
+  },
+  "osm-CAP-da-tonino": {
+    "src": "media/brands/restaurant-osm-CAP-da-tonino.png",
+    "source": "https://www.ristorantedatonino.com/",
+    "sourceAsset": "https://www.ristorantedatonino.com/wp-content/uploads/2020/11/Da-Tonino-Ristorante_Logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Ristorante Da Tonino page identifies its Capri restaurant."
+  },
+  "osm-CER-su-entu": {
+    "src": "media/brands/restaurant-osm-CER-su-entu.png",
+    "source": "https://www.su-entu.it/",
+    "sourceAsset": "https://www.su-entu.it/wp-content/uploads/2025/03/Logo-suentu-1.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Su Entu Restaurant page identifies Baja Sardinia."
+  },
+  "osm-CRV-le-monchu-meribel": {
+    "src": "media/brands/restaurant-osm-CRV-le-monchu-meribel.svg",
+    "source": "https://www.lemonchu-meribel.com/",
+    "sourceAsset": "https://www.lemonchu-meribel.com/wp-content/uploads/2024/10/logo-le-monchu-02.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Le Monchu page identifies the restaurant on Piste des Rhodos, Méribel."
+  },
+  "osm-DXB-carluccio-s": {
+    "src": "media/brands/restaurant-osm-DXB-carluccio-s.svg",
+    "source": "https://carlucciosme.com/locations/the-dubai-mall/",
+    "sourceAsset": "https://carlucciosme.com//wp-content//uploads//2021//09//logo-dark.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Carluccio’s location page identifies Lower Ground Floor Boardwalk, The Dubai Mall."
+  },
+  "osm-DXB-rowley-s": {
+    "src": "media/brands/restaurant-osm-DXB-rowley-s.png",
+    "source": "https://rowleysrestaurants.com/",
+    "sourceAsset": "https://rowleysrestaurants.com/wp-content/uploads/2026/03/rowleys-logo-white.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Rowley’s page title identifies its Dubai steakhouse with Burj Khalifa views."
+  },
+  "osm-HVA-sol-cafe": {
+    "src": "media/brands/restaurant-osm-HVA-sol-cafe.png",
+    "source": "https://solhvar.com/",
+    "sourceAsset": "https://solhvar.com/wp-content/uploads/2024/05/cropped-SOL-LOGO.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official SŌL Café site identifies its Hvar café."
+  },
+  "osm-IBZ-ama-lur": {
+    "src": "media/brands/restaurant-osm-IBZ-ama-lur.png",
+    "source": "https://amaluribiza.com/reservas/",
+    "sourceAsset": "https://amaluribiza.com/wp-content/uploads/2022/03/Amalur-logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Amalur Ibiza reservation page identifies the restaurant."
+  },
+  "osm-IBZ-restaurante-santa-gertrudis": {
+    "src": "media/brands/restaurant-osm-IBZ-restaurante-santa-gertrudis.png",
+    "source": "https://www.restaurantesantagertrudis.com/",
+    "sourceAsset": "https://www.restaurantesantagertrudis.com/images/logo_restaurante_santa_gertrudis_2_negro.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Restaurante Santa Gertrudis site explicitly identifies Ibiza, Baleares."
+  },
+  "osm-MIA-mayfair-grill": {
+    "src": "media/brands/restaurant-osm-MIA-mayfair-grill.png",
+    "source": "https://www.mayfair-grill.com/",
+    "sourceAsset": "https://images.getbento.com/accounts/dfdeee2249dedb4897c4e5e4bf24459c/media/images/59202Mayfair_Grill_Logo_Deep_Cream.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Mayfair Grill homepage identifies Coconut Grove, Florida."
+  },
+  "osm-PAR-gitanjali": {
+    "src": "media/brands/restaurant-osm-PAR-gitanjali.png",
+    "source": "https://gitanjali.fr/",
+    "sourceAsset": "https://gitanjali.fr/wp-content/uploads/2022/02/logo-gitanjali_resize.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Gitanjali page identifies Paris Pont de Sèvres."
+  },
+  "osm-PAR-nino": {
+    "src": "media/brands/restaurant-osm-PAR-nino.png",
+    "source": "https://nino-sevres.fr/fr",
+    "sourceAsset": "https://uniiti.com/images/shops/logos/a94210beb81abdb39dcf54fd9cfd01122f8accb9.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official NINO page lists 5 Rue de Ville d’Avray, Sèvres."
+  },
+  "osm-SBH-bagatelle": {
+    "src": "media/brands/restaurant-osm-SBH-bagatelle.png",
+    "source": "https://bagatelle.com/venues/st-barths/booking/",
+    "sourceAsset": "https://bagatelle.com/app/uploads/2021/01/logo-white.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Bagatelle St. Barth booking page identifies Gustavia Harbor; logo explicitly says St. Barth."
+  },
+  "osm-SBH-le-cafe": {
+    "src": "media/brands/restaurant-osm-SBH-le-cafe.png",
+    "source": "https://www.lecafe.fr/en/saint-barthelemy-restaurant",
+    "sourceAsset": "https://cdn.prod.website-files.com/67e51582cffd6bbe6a1aeb11/67e51582cffd6bbe6a1aebb2_LE%20CAFE-SBH-white.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Le Café Saint-Barthélemy page identifies Gustavia; selected asset says Saint Barth."
+  },
+  "osm-SBH-megumi-sushi": {
+    "src": "media/brands/restaurant-osm-SBH-megumi-sushi.png",
+    "source": "https://www.megumi.fr/",
+    "sourceAsset": "https://www.megumi.fr//wp-content//uploads//2023//12//megumi-logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Megumi Sushi page identifies Gustavia, St Barth."
+  },
+  "osm-STT-la-pesquiere-le-mazagran-et-lou-revelen": {
+    "src": "media/brands/restaurant-osm-STT-la-pesquiere-le-mazagran-et-lou-revelen.png",
+    "source": "https://www.lapesquiere.fr/",
+    "sourceAsset": "https://www.lapesquiere.fr/wp-content/uploads/2024/05/cropped-Logo-Pesquiere-vert.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official La Pesquière page identifies the restaurant in Saint-Tropez and displays the La Pesquière/Le Mazagran combined brand."
+  },
+  "osm-STT-la-petite-plage": {
+    "src": "media/brands/restaurant-osm-STT-la-petite-plage.svg",
+    "source": "https://www.restaurant-lapetiteplage.com/saint-tropez",
+    "sourceAsset": "https://cdn.prod.website-files.com/67e51580d1804b4d2ffaf9b6/67e51580d1804b4d2ffaf9cc_La-petite-plage_logo-1.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official La Petite Plage Saint-Tropez location page; logo explicitly says Saint-Tropez."
+  },
+  "osm-STT-le-cafe": {
+    "src": "media/brands/restaurant-osm-STT-le-cafe.svg",
+    "source": "https://www.lecafe.fr/saint-tropez-restaurant/contact",
+    "sourceAsset": "https://cdn.prod.website-files.com/67e51582cffd6bbe6a1aeb11/67e51582cffd6bbe6a1aeb3e_LOGOSAINTTROPEZ.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Le Café Saint-Tropez contact page lists Place des Lices, Saint-Tropez."
+  },
+  "osm-STT-le-girelier": {
+    "src": "media/brands/restaurant-osm-STT-le-girelier.svg",
+    "source": "https://www.legirelier.fr/",
+    "sourceAsset": "https://cdn.prod.website-files.com/67e51579fee3fbcaa29e5b54/67e51579fee3fbcaa29e5b89_logo3.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Le Girelier page identifies its Saint-Tropez port restaurant; logo explicitly says Saint-Tropez."
+  },
+  "osm-DXB-karma-kafe": {
+    "src": "media/brands/restaurant-osm-DXB-karma-kafe.png",
+    "source": "https://www.buddhabar.com/en/karmakafe/karma-kafe-dubai/",
+    "sourceAsset": "https://www.buddhabar.com/wp-content/themes/buddha-bar-v2/assets/logos/logo-main-karmakafe.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official Buddha-Bar venue page explicitly identifies Karma Kafé Dubai, Downtown and Dubai Fountain/Burj Khalifa. Selected logo is Karma, not the parent Buddha-Bar logo.",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw."
+  },
+  "osm-DXB-u250cb83b7574": {
+    "src": "media/brands/restaurant-osm-DXB-u250cb83b7574.png",
+    "source": "https://babalmansour.ae/ar/",
+    "sourceAsset": "https://babalmansour.ae/wp-content/uploads/2019/07/web-logo-ar.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "identityEvidence": "Bab Al Mansour official Arabic homepage lists Sheikh Mohammed bin Rashid Boulevard, Downtown Dubai, and displays the matching Arabic restaurant wordmark.",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw."
+  },
+  "osm-MRB-nolita": {
+    "src": "media/brands/restaurant-osm-MRB-nolita.png",
+    "source": "https://www.restaurantnolita.es/en",
+    "sourceAsset": "https://www.restaurantnolita.es/en/thumbnail/full/wNbBp/logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "identityEvidence": "Official Nolita homepage lists Calle Ancha 3, 29601 Marbella.",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw."
+  },
+  "curated-CNS-la-mome-plage": {
+    "src": "media/brands/restaurant-curated-CNS-la-mome-plage.png",
+    "source": "https://www.lamomeplage.com/",
+    "sourceAsset": "https://www.lamomeplage.com/wp-content/uploads/2024/07/LA_MOME_PLAGE_LOGOTYPES_15-04-24-02.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official La Môme Plage page identifies Boulevard de la Croisette, Cannes. Selected logo explicitly says Plage; the separate Cannes city restaurant logo was rejected."
+  },
+  "curated-IST-turk-fatih-tutak": {
+    "src": "media/brands/restaurant-curated-IST-turk-fatih-tutak.svg",
+    "source": "https://turkft.com/",
+    "sourceAsset": "https://turkft.com/dist/img/icon-turk-text.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official TURK Fatih Tutak homepage lists Yeniyol Sk. No 2, Şişli, İstanbul."
+  },
+  "curated-SBH-bonito-saint-barth": {
+    "src": "media/brands/restaurant-curated-SBH-bonito-saint-barth.png",
+    "source": "https://www.bonitosbh.com/",
+    "sourceAsset": "https://static.wixstatic.com/media/2abbe5_03bdb66a2d4c465eaa6e69d78eaf97bc~mv2.png/v1/fill/w_247,h_105,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/logo%20bonito_edited.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Bonito Saint Barth page lists Rue Lubin Brin, Gustavia, St Barthélemy. Selected asset is Bonito, not sister brands Betula or Barby."
+  },
+  "curated-SIN-burnt-ends": {
+    "src": "media/brands/restaurant-curated-SIN-burnt-ends.png",
+    "source": "https://burntends.com.sg/",
+    "sourceAsset": "https://burntends.com.sg/wp-content/uploads/2024/08/BE_BarGrill_Logo_Transparent_W-e1639646185316.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Burnt Ends restaurant site; official contact page lists 7 Dempsey Road, Singapore."
+  },
+  "osm-ATH-panorama": {
+    "src": "media/brands/restaurant-osm-ATH-panorama.png",
+    "source": "https://www.panoramarestaurant.gr/en/",
+    "sourceAsset": "https://www.panoramarestaurant.gr/img/logo2.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Panorama page lists 4 Iliou Street, Kavouri, Vouliagmeni, Athens Riviera."
+  },
+  "osm-CAP-buonocore": {
+    "src": "media/brands/restaurant-osm-CAP-buonocore.png",
+    "source": "https://buonocorecapri.it/",
+    "sourceAsset": "https://buonocorecapri.it/wp-content/uploads/2021/06/cropped-logo-buonocore-vettoriale.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Buonocore Capri website identifies its gelateria/rosticceria on Capri; Capri tourism confirms Via Vittorio Emanuele 35."
+  },
+  "osm-CER-belvedere": {
+    "src": "media/brands/restaurant-osm-CER-belvedere.png",
+    "source": "https://www.ristorantegastronomiabelvedere.com/",
+    "sourceAsset": "https://irp.cdn-website.com/8e442369/dms3rep/multi/opt/logo_2-1920w.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Ristorante Gastronomia Belvedere page identifies Via Monti di Mola, Abbiadori, Porto Cervo. Original combined restaurant/lounge artwork retained."
+  },
+  "osm-CER-spinnaker": {
+    "src": "media/brands/restaurant-osm-CER-spinnaker.png",
+    "source": "https://www.ristorantespinnakerportocervo.com/",
+    "sourceAsset": "https://irp.cdn-website.com/dc2aaa2f/dms3rep/multi/opt/logo_OVALE-155h.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Spinnaker site lists Viale Giovanni Maria Orecchioni, Liscia di Vacca, Porto Cervo."
+  },
+  "osm-CPT-picnic-cafe-and-deli": {
+    "src": "media/brands/restaurant-osm-CPT-picnic-cafe-and-deli.png",
+    "source": "https://picniccafe.co.za/",
+    "sourceAsset": "https://picniccafe.co.za/images/big-logo.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Picnic Cafe and Deli site identifies Montebello design centre; corroborated by Cape Town venue listing at 31 Newlands Avenue."
+  },
+  "osm-PAR-pizzeria-dello-stretto": {
+    "src": "media/brands/restaurant-osm-PAR-pizzeria-dello-stretto.png",
+    "source": "https://pizzeriadello-stretto.fr/",
+    "sourceAsset": "https://pizzeriadello-stretto.fr/wp-content/uploads/2022/05/LOGO-PIZZA-V2-1024x720.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Pizzeria Dello Stretto site lists 10 place Stalingrad, Suresnes, Paris region."
+  },
+  "osm-SBH-shellona": {
+    "src": "media/brands/restaurant-osm-SBH-shellona.png",
+    "source": "https://shellona.com/en/home-st-barth/",
+    "sourceAsset": "https://shellona.com/wp-content/uploads/2025/03/zuperla-logo-light.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Shellona Saint-Barth page lists Shell Beach, Gustavia, St-Barthélemy."
+  },
+  "curated-AMS-de-kas": {
+    "src": "media/brands/restaurant-curated-AMS-de-kas.webp",
+    "source": "https://restaurantdekas.com/",
+    "sourceAsset": "https://static1.squarespace.com/static/5cde8b273da6ea0001fcc7e8/t/5e626306750be224081b411c/1583506183918/KAS-logo-def-6k21+white+-+block+-+retouch.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official De Kas information page identifies Kamerlingh Onneslaan 3, Amsterdam.",
+    "identitySource": "https://restaurantdekas.com/nl/info-"
+  },
+  "osm-MRB-zozoi": {
+    "src": "media/brands/restaurant-osm-MRB-zozoi.svg",
+    "source": "https://zozoi.com/es/reserva-3/",
+    "sourceAsset": "https://zozoi.com/wp-content/uploads/2022/05/logo_zozoi.svg",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Zozoï homepage explicitly identifies its restaurant in Marbella old town.",
+    "identitySource": "https://zozoi.com/es/"
+  },
+  "curated-HVA-black-pepper-hvar": {
+    "src": "media/brands/restaurant-curated-HVA-black-pepper-hvar.png",
+    "source": "https://blackpepperhvar.com/",
+    "sourceAsset": "https://blackpepperhvar.com/wp-content/uploads/2024/05/Asset-3.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Black Pepper site identifies its restaurant in Hvar old town. Catalog contains curated and OSM records of the same named Hvar venue."
+  },
+  "osm-HVA-black-pepper": {
+    "src": "media/brands/restaurant-osm-HVA-black-pepper.png",
+    "source": "https://blackpepperhvar.com/",
+    "sourceAsset": "https://blackpepperhvar.com/wp-content/uploads/2024/05/Asset-3.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Black Pepper site identifies its restaurant in Hvar old town. Catalog contains curated and OSM records of the same named Hvar venue."
+  },
+  "curated-NYC-atomix": {
+    "src": "media/brands/restaurant-curated-NYC-atomix.webp",
+    "source": "https://www.atomixnyc.com/about",
+    "sourceAsset": "https://images.squarespace-cdn.com/content/v1/5ac3bec4aa49a18caab02bf4/1523437166773-BMESH1T230H0MXBVLNXR/Artboard+1.png?format=original",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Atomix about page identifies its New York City restaurant; displayed brand symbol is from header."
+  },
+  "osm-HVA-macondo": {
+    "src": "media/brands/restaurant-osm-HVA-macondo.png",
+    "source": "https://www.macondo.com.hr/",
+    "sourceAsset": "https://static.wixstatic.com/media/7a4a5a_7454a4b1530f4b349f5086050b542496~mv2.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "dark",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official Macondo page identifies Hvar, Croatia and its old town restaurant; asset alt text says Macondo logo."
+  },
+  "curated-TYO-narisawa": {
+    "src": "media/brands/restaurant-curated-TYO-narisawa.png",
+    "source": "https://www.narisawa-yoshihiro-en.com/",
+    "sourceAsset": "https://custom-images.strikinglycdn.com/res/hrscywv4p/image/upload/c_limit,fl_lossy,h_300,w_300,f_auto,q_auto/1334583/603118_803444.png",
+    "verifiedAt": "2026-10-16",
+    "surface": "light",
+    "assetTreatment": "Original official asset bytes; no crop, recoloring or redraw.",
+    "identityEvidence": "Official NARISAWA English site displays this wordmark; reservation page lists Minami Aoyama 2-6-15, Minato-ku, Tokyo.",
+    "identitySource": "https://www.narisawa-yoshihiro-en.com/reservation"
   }
 }

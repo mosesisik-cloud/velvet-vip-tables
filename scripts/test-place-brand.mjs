@@ -98,12 +98,19 @@ test('curated registries reference known places, real local assets and recorded 
       const source = new URL(entry.source);
       assert.equal(source.protocol, 'https:', id);
       assert.equal(source.username + source.password, '', id);
+      const originalAsset = new URL(entry.sourceAsset);
+      assert.equal(originalAsset.protocol, 'https:', `Original asset provenance: ${id}`);
+      assert.equal(originalAsset.username + originalAsset.password, '', id);
+      for (const url of [source, originalAsset]) {
+        assert.ok(!['reemalbawadi.com', 'creperiestbarth.com', 'superelectricmn.com', 'baraka-restaurant-phuket.com'].some(domain => url.hostname === domain || url.hostname.endsWith('.' + domain)), `Compromised source: ${id}`);
+      }
       assert.match(entry.verifiedAt, /^\d{4}-\d{2}-\d{2}(?:$|T)/, id);
       assert.ok(Number.isFinite(Date.parse(entry.verifiedAt)), id);
       const assetPath = path.resolve(root, entry.src);
       assert.ok(assetPath.startsWith(path.join(root, 'media', 'brands') + path.sep), id);
       const bytes = await fs.readFile(assetPath);
       assert.ok(bytes.length > 0, `Empty asset: ${entry.src}`);
+      assert.ok(bytes.length <= 512 * 1024, `Oversized logo needs optimization: ${entry.src}`);
       if (/\.svg$/i.test(entry.src)) {
         const svg = bytes.toString('utf8');
         assert.match(svg, /<svg[\s>]/i, entry.src);
