@@ -59,6 +59,11 @@ export const KOMMENDOREN_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: '4dcf4bbddfb1d7c4f3f0d2d5186d4f00', mealid: 3501, mealType: 2, maxParty: 2,
 });
 
+export const ASTRID_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-brasserie-astrid', name: 'Brasserie Astrid',
+  hash: 'e3a1940c68c7fcb34cb950162eeaaaef', mealid: 55508, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
