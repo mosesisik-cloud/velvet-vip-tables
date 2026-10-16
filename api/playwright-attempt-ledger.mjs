@@ -24,7 +24,7 @@ function validate(input) {
   const clean = {};
   for (const key of ['owner', 'provider', 'restaurantId', 'sessionId']) clean[key] = token(input[key], `invalid_${key}`);
   if (!['live', 'fixture'].includes(input.mode)) fail('invalid_mode');
-  const cartPhase=['cart','cart_update'].includes(phaseOf(input));
+  const cartPhase=['cart_init','cart','cart_update'].includes(phaseOf(input));
   if (!['hold', 'booking'].includes(phaseOf(input)) && !(cartPhase && input.provider==='TableCheck'
     && input.restaurantId==='osm-BAL-sazon' && input.party===2)) fail('invalid_phase');
   if (typeof input.idempotencyKey !== 'string' || !/^[a-zA-Z0-9_-]{16,128}$/.test(input.idempotencyKey)) fail('invalid_idempotency_key');
@@ -139,7 +139,7 @@ export class PlaywrightAttemptLedger {
       if (attempt.phase === 'hold' && !holdStates.has(evidence.status)) throw new AttemptLedgerError('invalid_hold_status');
       if (attempt.phase === 'hold' && evidence.reference !== undefined && evidence.reference !== null)
         throw new AttemptLedgerError('hold_reference_private');
-      if (['cart','cart_update'].includes(attempt.phase)) {
+      if (['cart_init','cart','cart_update'].includes(attempt.phase)) {
         if (!holdStates.has(evidence.status)) throw new AttemptLedgerError('invalid_cart_status');
         if (evidence.reference != null) throw new AttemptLedgerError('cart_reference_private');
       }

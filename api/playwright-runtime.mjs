@@ -71,7 +71,7 @@ export class PlaywrightRuntime {
       if (snapshot.restaurantId !== entry.restaurantId || snapshot.mode !== 'prepare'
         || snapshot.provider !== entry.provider || snapshot.image !== null) throw new PlaywrightRuntimeError('provider_binding',409);
       return {...snapshot,mode:'prepare',phase:'preparation',operatorOnly:true,preparation:true,
-        canHold:false,canSubmit:false,result:null,liveBooking:false,semanticContract:false};
+        canCart:false,canHold:false,canSubmit:false,result:null,liveBooking:false,semanticContract:false};
     }
     if (this.mode(entry) === 'live') {
       if (snapshot.restaurantId !== entry.restaurantId) throw new PlaywrightRuntimeError('provider_binding', 409);

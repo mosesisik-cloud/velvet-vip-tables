@@ -89,7 +89,7 @@ test('Sazon server cart phases require explicit venue opt-in and never enter boo
   try{
     assert.throws(()=>make(false).reserveAttempt(request),/intent_binding/);
     const journal=make(true);
-    for(const phase of ['cart','cart_update']){
+    for(const phase of ['cart_init','cart','cart_update']){
       const scoped={...request,phase};const {attempt}=journal.reserveAttempt(scoped);
       assert.equal(attempt.phase,phase);
       const result=journal.recordAttempt({intent:scoped,attempt,result:{status:'confirmed',reference:'PRIVATE-CART',accessToken:'PRIVATE-TOKEN'}});

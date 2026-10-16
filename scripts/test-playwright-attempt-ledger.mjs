@@ -262,14 +262,14 @@ test('unknown holds survive restart and elapsed time without granting retry; rej
 test('Sazon cart and cart_update are separate consumed phases without persisted capabilities',async()=>onDisk(file=>{
   let ledger=new PlaywrightAttemptLedger(file);const base=review({provider:'TableCheck',restaurantId:'osm-BAL-sazon'});
   try{
-    for(const phase of ['cart','cart_update','booking'])assert(ledger.reserve({...base,phase}).sendAllowed);
+    for(const phase of ['cart_init','cart','cart_update','booking'])assert(ledger.reserve({...base,phase}).sendAllowed);
     const cart=ledger.list(base.owner).find(a=>a.phase==='cart');
     assert.throws(()=>ledger.record(base.owner,cart.attemptId,evidence(cart)),/invalid_cart_status/);
     assert.throws(()=>ledger.record(base.owner,cart.attemptId,evidence(cart,{status:'pending',reference:'PRIVATE-CART'})),/cart_reference_private/);
     const result=ledger.record(base.owner,cart.attemptId,evidence(cart,{status:'unknown',verified:false,reference:null,cartId:'PRIVATE-CART',accessToken:'PRIVATE-TOKEN'}));
     assert(!JSON.stringify(result).includes('PRIVATE'));
     ledger.close();ledger=new PlaywrightAttemptLedger(file);
-    for(const phase of ['cart','cart_update','booking']){
+    for(const phase of ['cart_init','cart','cart_update','booking']){
       const retry=ledger.reserve({...base,phase,idempotencyKey:'rotated-key-00000001',sessionId:'rotated',reviewFingerprint:'c'.repeat(64)});
       assert.equal(retry.sendAllowed,false);assert.equal(retry.reason,`${phase}_already_attempted`);
     }

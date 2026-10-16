@@ -18,7 +18,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     createdAt:attempt.createdAt,updatedAt:attempt.updatedAt,
   });
   function scope(intent) {
-    const cartPhase=['cart','cart_update'].includes(intent?.phase) && provider==='TableCheck'
+    const cartPhase=['cart_init','cart','cart_update'].includes(intent?.phase) && provider==='TableCheck'
       && intent.restaurantId==='osm-BAL-sazon' && venue(intent.restaurantId)?.cartPreparation===true;
     if (!intent || intent.provider !== provider || !venue(intent.restaurantId)
       || (!['hold','booking'].includes(intent.phase) && !cartPhase) || !intent.owner || !intent.sessionId

@@ -122,7 +122,7 @@ test('operator preparation has a fixed non-mutative action ceiling and never gra
   await assert.rejects(runtime.create('guest',false,{provider:'TableCheck',restaurantId:snapshot.restaurantId}),/operator/);
   const session=await runtime.create('operator',true,{provider:'TableCheck',restaurantId:snapshot.restaurantId});
   assert.equal(session.canHold,false);assert.equal(session.canSubmit,false);assert.equal(session.result,null);
-  for(const type of ['cart','cart_update','hold','fill','submit','checkout','checkout_status'])
+  for(const type of ['cart_init','cart','cart_update','hold','fill','submit','checkout','checkout_status'])
     await assert.rejects(runtime.run(session.id,'operator',true,'action',{type,confirm:true,terms:true,reviewFingerprint:'a'.repeat(64)}),/inspect_only/);
   await assert.rejects(runtime.run(session.id,'operator',false,'action',{type:'search'}),/operator/);
   await assert.rejects(runtime.run(session.id,'other',true,'current'),/session_expired/);
