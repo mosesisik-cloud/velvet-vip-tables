@@ -54,6 +54,12 @@ export const BALZAC_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: 'a0dd019e24669fadaaa6486567307f61', mealid: 354, mealType: 2, maxParty: 2,
 });
 
+// Ordinary two-guest Lunch uses provider review; custom/group requests excluded.
+export const ASTRID_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-brasserie-astrid', name: 'Brasserie Astrid',
+  hash: 'e3a1940c68c7fcb34cb950162eeaaaef', mealid: 55508, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
