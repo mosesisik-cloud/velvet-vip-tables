@@ -83,6 +83,13 @@ if (childMode) {
       process.send?.({ kind: 'browser-context-start', at: Date.now() });
       const context = await newContext({ ...options, serviceWorkers: 'block' });
       process.send?.({ kind: 'browser-context-ready', at: Date.now() });
+      if (fishcorner) context.on('page', page => {
+        page.on('pageerror', error => process.send?.({kind:'supplier-fixture-script-error',message:error.message}));
+        page.on('domcontentloaded', () => page.evaluate(() => ({
+          path:location.pathname,fields:[...document.querySelectorAll('[data-testid]')].map(el=>el.getAttribute('data-testid')),
+          text:document.body?.innerText.slice(0,160),
+        })).then(state=>process.send?.({kind:'supplier-fixture-dom',...state})).catch(()=>{}));
+      });
       const route = context.route.bind(context);
       await context.routeWebSocket('**/*', socket => socket.close());
       // A final guard also catches requests not registered by the production adapter.
@@ -217,9 +224,12 @@ async function main() {
     child.on('message', message => messages.push(message));
     child.stdout.on('data', chunk => { childLog += chunk; });
     child.stderr.on('data', chunk => { childLog += chunk; });
-    for (let i = 0; i < 150; i++) {
+    // Cold Windows process/module startup can exceed 15s under concurrent runs.
+    // Wait for health once; never retry a booking or replace a failed child.
+    const startupDeadline = Date.now() + 60_000;
+    while (Date.now() < startupDeadline) {
       if (child.exitCode !== null) throw new Error('API startup failed: ' + childLog.slice(-2000));
-      try { if ((await fetch(backend + '/health')).ok) return; } catch {}
+      try { if ((await fetch(backend + '/health',{signal:AbortSignal.timeout(1000)})).ok) return; } catch {}
       await new Promise(resolve => setTimeout(resolve, 100));
     }
     throw new Error('API startup timeout: ' + childLog.slice(-2000));
@@ -230,8 +240,8 @@ async function main() {
     child.kill();
     await exited;
   }
-  async function makeView(width = 390) {
-    const context = await browser.newContext({ viewport: { width, height: 900 }, serviceWorkers: 'block' });
+  async function makeView(width = 390, storageState) {
+    const context = await browser.newContext({ viewport: { width, height: 900 }, serviceWorkers: 'block', storageState });
     await context.route('**/*', route => new URL(route.request().url()).origin === base ? route.continue() : route.abort());
     await context.routeWebSocket('**/*', socket => socket.close());
     await context.addInitScript(() => localStorage.setItem('velvet_lang', 'sv'));
@@ -298,7 +308,7 @@ async function main() {
   try {
     if (fishcorner) {
       await start('confirmed'); browser = await chromium.launch();
-      const flow = async view => {
+      const flow = async (view, expectedDispatches = 1) => {
         const page = view.page;
         const action = async click => {
           const pending = page.waitForResponse(r => r.request().method() === 'POST'
@@ -321,8 +331,8 @@ async function main() {
         await action(() => panel(page).locator('[data-review]').click());
         assert.equal(await panel(page).locator('[data-submit]').isDisabled(), true, 'Explicit consent required');
         const before = submits(); await panel(page).locator('[data-terms]').check();
-        const result = await action(() => panel(page).locator('[data-submit]').evaluate(button => {button.click();button.click();}));
-        assert.equal(submits(), before + 1, 'Only one supplier boundary dispatch');
+        const result = await action(() => panel(page).locator('[data-submit]').dblclick());
+        assert.equal(submits(), before + expectedDispatches, 'Supplier boundary dispatch count');
         return result;
       };
       first = await makeView();
@@ -357,6 +367,10 @@ async function main() {
       const replay = await api(second.page,`/restaurant-bookings/playwright/${lost.body.id}/action`,{
         method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(lost.request)});
       assert.ok([404,409].includes(replay.status)); assert.equal(submits(),2);
+      // The same owner in a fresh UI session must not bypass the durable guard.
+      third = await makeView(390, await second.context.storageState());
+      const repeated = await flow(third, 0);
+      assert.equal(repeated.body.result.status,'unknown'); assert.equal(submits(),2);
       assert.equal(messages.filter(m=>['unexpected-supplier-request','blocked-node-network'].includes(m.kind)).length,0);
       console.log('PASS FishCorner lost supplier reply: durable unknown, owner isolation, refresh/restart without replay');
       console.log(JSON.stringify({status:'PASS',restaurantId,evidence:'real_local_app_api_native_zenchef_journal_with_supplier_fixture',
@@ -435,6 +449,18 @@ async function main() {
   } catch (error) {
     console.error('Integrated fixture failure:', error.message);
     for (const [name, view] of Object.entries({ first, second, third })) {
+      if (fishcorner && view && !view.page.isClosed()) {
+        const screenshot = path.join(root,'..',`fishcorner-failure-${name}.png`);
+        await view.page.screenshot({path:screenshot,fullPage:true}).catch(()=>{});
+        console.error('FishCorner layout:',JSON.stringify({name,screenshot,layout:await view.page.evaluate(()=>{
+          const selectors=['#provider-playwright-booking','#provider-playwright-booking section','#provider-playwright-booking footer',
+            '#provider-playwright-booking [data-refresh]','#restaurant-booking-panel','.restaurant-detail-main','.restaurant-detail-main .detail-panel'];
+          return selectors.map(selector=>{const el=document.querySelector(selector);if(!el)return {selector};
+            const r=el.getBoundingClientRect(),s=getComputedStyle(el);
+            return {selector,rect:r.toJSON(),position:s.position,height:s.height,maxHeight:s.maxHeight,overflow:s.overflow,
+              flex:s.flex,hit:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)?.outerHTML.slice(0,180)};});
+        }).catch(()=>null)}));
+      }
       if (view && !view.page.isClosed()) console.error('UI diagnostic:', JSON.stringify({ name,
         state: await panel(view.page).evaluate(el => ({ busy: el.getAttribute('aria-busy'),
           status: el.querySelector('[data-status]')?.textContent,
