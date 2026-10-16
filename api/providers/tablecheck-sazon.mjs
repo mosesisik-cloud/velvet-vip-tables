@@ -167,6 +167,10 @@ export function sazonCheckoutPayload(sessionRef) {
   return { allow_provider_marketing: false, locale: 'en', session_ref: sessionRef };
 }
 function exactOrders(rows) {
+  // qty=1 is source-backed on the outgoing Experience request. Requiring it
+  // on saved raw rows is an unverified conservative adapter hypothesis: native
+  // saved mapping forces group quantity to 1 regardless of the returned qty.
+  // Do not enable live verification until the raw saved representation is known.
   return Array.isArray(rows) && rows.length === 1 && rows[0]?.menu_item_id === SAZON.menuId
     && rows[0].qty === 1 && rows[0].is_group_order === true;
 }
