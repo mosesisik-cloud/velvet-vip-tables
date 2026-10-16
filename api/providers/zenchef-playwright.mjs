@@ -79,6 +79,29 @@ export function zenchefBookingResult(status, data, approval = null) {
   return { status: 'unknown' };
 }
 
+// Source: booking.getByUuid -> bookings/{uuid}; loadBookingWithUuid reads
+// id/status/day/shift_date/time/nb_guests/wish.booking_room_id. UUID is obtained
+// only from this attempt's native POST, never from client action parameters.
+function ownReadbackUrl(created) {
+  if (!created || created.status !== 'confirmed' || created.error || created.charge || created.requires_action
+    || !/^[1-9]\d*$/.test(String(created.id)) || typeof created.uuid !== 'string'
+    || !/^[A-Za-z0-9_-]{8,128}$/.test(created.uuid)) return null;
+  return `https://bookings-middleware.zenchef.com/bookings/${created.uuid}?restaurantId=362908`;
+}
+function savedRoomResult(status, data, binding) {
+  const approval = binding.approval;
+  if (status < 200 || status >= 300 || !data || data.error || data.charge || data.requires_action
+    || String(data.id) !== binding.bookingId || data.status !== 'confirmed'
+    || (data.uuid !== undefined && data.uuid !== binding.uuid)
+    || data.wish?.booking_room_id !== approval.roomId || data.day !== approval.date
+    || (data.shift_date != null && data.shift_date !== approval.date)
+    || data.time !== approval.time || data.nb_guests !== approval.party) return { status: 'unknown' };
+  return { status: 'confirmed', reference: binding.bookingId };
+}
+const attemptMatchesApproval = (attempt, approval) => !!attempt?.attemptId && !!attempt?.idempotencyKey
+  && ['provider', 'restaurantId', 'sessionId', 'mode', 'phase', 'reviewFingerprint', 'date', 'time', 'party']
+    .every(key => attempt[key] === approval[key]);
+
 export function zenchefSearchUrl(query, venue = ZENCHEF_ARPEGE) {
   const { date, party } = query || {};
   const parsed = new Date(String(date) + 'T12:00:00Z');
@@ -219,6 +242,23 @@ export class ZenchefPlaywright {
         busy: false, attempted: false, state: 'inspect_only', result: null, blockedRequests: 0 };
       await context.route('**/*', async route => {
         const r = route.request();
+        const readback = s.readback;
+        if (readback && r.url() === readback.url && ['GET', 'OPTIONS'].includes(r.method()) && !r.redirectedFrom()
+          && ['fetch', 'xhr'].includes(r.resourceType()) && this.readbackBound(s, readback)) {
+          const preflight = r.method() === 'OPTIONS';
+          if (preflight ? readback.preflightUsed : readback.used) return route.abort();
+          if (preflight) readback.preflightUsed = true; else readback.used = true;
+          try {
+            // Native browser GET (or its CORS preflight), no POST headers copied.
+            const response = await route.fetch({ maxRedirects: 0, maxRetries: 0, timeout: 8000 });
+            if (!preflight) {
+              const data = await response.json().catch(() => null);
+              if (this.readbackBound(s, readback)) readback.result = savedRoomResult(response.status(), data, readback);
+            }
+            if (response.status() < 200 || response.status() >= 300) return route.abort();
+            return route.fulfill({ response });
+          } catch { return route.abort().catch(() => {}); }
+        }
         const bookingUrl = `https://bookings-middleware.zenchef.com/booking?restaurantId=${venue.venueId}`;
         if (this.mode === 'prepare' && r.method() === 'POST' && r.url() === bookingUrl && s.armed && !s.attempted && s.noCardAllowed
           && [ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE].includes(venue)) {
@@ -228,16 +268,22 @@ export class ZenchefPlaywright {
             if (!payload || r.redirectedFrom()) throw new ZenchefError('payload_mismatch');
             const reserved = await bounded(() => this.reserveSubmission(s.approval, s), 5000);
             if (reserved?.sendAllowed !== true || !reserved.attempt?.attemptId || !reserved.attempt?.idempotencyKey || this.#closed) throw new ZenchefError('attempt_not_authorized');
-            s.attempt = reserved.attempt;
+            if (venue.rooms && !attemptMatchesApproval(reserved.attempt, s.approval)) throw new ZenchefError('attempt_binding_mismatch');
+            s.attempt = structuredClone(reserved.attempt);
             // Exactly one transmission, no redirects/retries. Unknown stays locked.
             const response = await route.fetch({ maxRedirects: 0, maxRetries: 0, timeout: 20000, postData: JSON.stringify(payload) });
             const data = await response.json().catch(() => null);
             s.result = zenchefBookingResult(response.status(), data, s.approval);
+            if (venue === ZENCHEF_PESQUIERE && response.status() >= 200 && response.status() < 300
+              && data?.wish?.booking_room_id === undefined && ownReadbackUrl(data)) {
+              s.result = await this.readOwnBooking(s, data);
+            }
             s.result.verification = { verified: ['confirmed', 'pending', 'payment_required'].includes(s.result.status), source: 'provider', provider: 'Zenchef', mode: 'live', phase: 'booking', restaurantId,
               policySource: venue.policySource || ZENCHEF_POLICY_SOURCE, reviewFingerprint: s.review.digest,
-              sessionId: s.id, attemptId: reserved.attempt.attemptId, idempotencyKey: reserved.attempt.idempotencyKey,
+              sessionId: s.id, attemptId: s.attempt.attemptId, idempotencyKey: s.attempt.idempotencyKey,
               detailsDigest: s.review.digest,
-              ...(venue.rooms ? { roomId: s.approval.roomId, roomName: s.approval.roomName } : {}) };
+              ...(venue.rooms ? { roomId: s.approval.roomId, roomName: s.approval.roomName,
+                ...(s.readbackVerified ? { roomEvidence: 'own_booking_readback' } : {}) } : {}) };
             try { await bounded(() => this.recordResult(s), 5000); }
             catch { s.result = { status: 'unknown', reason: 'result_persistence_failed' }; }
             await route.fulfill({ response });
@@ -284,6 +330,54 @@ export class ZenchefPlaywright {
     if (!s) throw new ZenchefError('session_expired', 404);
     this.owned(s.id, owner);
     return structuredClone({ ...s.lastSnapshot, ...(s.submissionStarted ? { state: s.state, canSubmit: false, result: s.result } : {}) });
+  }
+  readbackBound(s, binding) {
+    return !this.#closed && s.readback === binding && s.attempted && s.submissionStarted
+      && s.owner === binding.owner && s.id === binding.sessionId
+      && s.attempt?.attemptId === binding.attemptId && s.attempt?.idempotencyKey === binding.idempotencyKey
+      && s.review?.digest === binding.reviewFingerprint && s.approval?.reviewFingerprint === binding.reviewFingerprint
+      && attemptMatchesApproval(s.attempt, binding.approval);
+  }
+  async readOwnBooking(s, created) {
+    const url = ownReadbackUrl(created);
+    if (!url || !attemptMatchesApproval(s.attempt, s.approval)) return { status: 'unknown' };
+    // Immutable identity/approval; only transport completion flags are mutable.
+    const binding = { url, owner: s.owner, sessionId: s.id, attemptId: s.attempt.attemptId,
+      idempotencyKey: s.attempt.idempotencyKey, reviewFingerprint: s.review.digest,
+      bookingId: String(created.id), uuid: created.uuid, approval: Object.freeze(structuredClone(s.approval)),
+      used: false, preflightUsed: false, result: { status: 'unknown' } };
+    for (const key of ['url', 'owner', 'sessionId', 'attemptId', 'idempotencyKey', 'reviewFingerprint', 'bookingId', 'uuid', 'approval'])
+      Object.defineProperty(binding, key, { writable: false });
+    s.readback = binding;
+    try {
+      const completed = await bounded(() => s.page.evaluate(async url => {
+        const headers = {};
+        // Source getMetadata uses the normally available AWS SDK. Never
+        // manufacture, log or replay a token. Absent SDK has the native no-metadata
+        // fallback; an available SDK failure is conservatively treated as unknown.
+        if (typeof window.AwsWafIntegration?.getToken === 'function') {
+          let timer;
+          try {
+            const token = await Promise.race([window.AwsWafIntegration.getToken(), new Promise((_, reject) => {
+              timer = setTimeout(() => reject(Error('metadata_timeout')), 3000);
+            })]);
+            if (typeof token !== 'string' || !token) return false;
+            headers['x-aws-waf-token'] = token;
+          } catch { return false; } finally { clearTimeout(timer); }
+        }
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), 8000);
+        try {
+          const response = await fetch(url, { method: 'GET', headers, redirect: 'error', credentials: 'same-origin', signal: controller.signal });
+          await response.arrayBuffer();
+          return response.ok;
+        } catch { return false; } finally { clearTimeout(timer); }
+      }, url), 12000);
+      if (!completed || !binding.used || !this.readbackBound(s, binding)) return { status: 'unknown' };
+      s.readbackVerified = binding.result.status === 'confirmed';
+      return binding.result;
+    } catch { return { status: 'unknown' }; }
+    finally { s.readback = null; }
   }
   async verifyNativeRoom(s) {
     if (!s.venue.rooms) return;
@@ -464,7 +558,7 @@ export class ZenchefPlaywright {
             const done = new Promise(resolve => { s.submitDone = resolve; });
             s.armed = true;
             await s.page.locator('[data-testid="validate-btn"]').click();
-            await bounded(() => done, 32000);
+            await bounded(() => done, 45000);
           } catch { s.result = { status: 'unknown' }; }
           finally { s.armed = false; s.state = 'result'; }
           return await this.snapshot(s);
