@@ -35,6 +35,13 @@ export const RICHE_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: '4a8d2f702a18092521b0b031fbfb4d4a', mealid: 7180, mealType: 2, maxParty: 8,
 });
 
+// Contact Next is final: reuse the native review and phone read used by Riche.
+// Provider Lunch permits 1–10; initial Velvet scope is deliberately capped at 2.
+export const STUREHOF_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-sturehof', name: 'Sturehof',
+  hash: '07415d5b4d24177e713964f3bc75eeaf', mealid: 3913, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
