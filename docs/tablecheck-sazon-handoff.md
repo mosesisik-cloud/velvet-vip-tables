@@ -192,6 +192,21 @@ to this adapter; the ledger's separate phase slots alone cannot provide it.
 
 ### Exact remaining production gaps
 
+Cart token transport audit (same original client SHA): hydration at 102776
+calls getCart with cart_id/token/locale; definition at 196097 puts token in
+the GET query. Storage is at 3311113/344400. In contrast updateCart at 195900
+and checkoutCart at 198276 carry cartId plus their serialized bodies, with
+no cart-access-token header/query/body field. Transform S at 178177 reads
+`getAuthToken()` for an optional **diner login** Bearer, not the cart token.
+The generic request wrapper at 29206 defaults withCredentials to false;
+neither write descriptor opts into cookies. The guest-only contract therefore
+does not invent a cart-token header. Private token binding in this adapter is
+an integrity guard, not a claim that the write API consumes that token.
+Provider server authorization semantics still cannot be inferred from this
+client alone. Also, the generic wrapper at 29478 concatenates pre-encoded query
+values directly; own readback email/phone are encoded exactly once, with a
+regression assertion for plus-sign phone and email at-sign.
+
 - Native Experience mount invokes cart/init, but does not inspect or await its
   response. Its server effects and whether create/update depend on that call
   are not established. No init request or grant is added or silently skipped
