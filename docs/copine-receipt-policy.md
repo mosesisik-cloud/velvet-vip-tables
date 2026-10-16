@@ -57,3 +57,20 @@ payment. Exact gap is payment/product handling, no contact probe or relaxation.
 Initial HTML SHA256 `5379226526ad21336360d5e46c2b70f0e40a0da44eda690a185150b248918e39`.
 Copine was the sole motivated fallback (ordinary unpaid lunch); no other candidate,
 old-blocker probe or broad inventory.
+
+## Integrated validation
+
+Runtime candidate ccd3526d6df26bec1e835ff231a5bd63b4263026 on release214 passes
+all23 focused tests and scoped review with no concrete blockers. The additive
+source/test conflict resolution preserves Italiano; common verifier, journal
+and De Kas code remain unchanged.
+
+Actual full-app guest flow passes193 API calls / ten restarts / nine mocked
+POSTs, zero real supplier writes. Test-only handoff #215, commit
+8bcf02d56be01402e4a0e190423e2eaf0d00abbc. Checks include native guest continuation,
+phone readback, fresh consent, SQLite before network, original matching receipt,
+missing-document unknown, owner isolation, replay/restart and public history.
+Response exclusions4788/5303/9196/amount3/require_noshow/must_pay_directly remain
+unknown even with matching receipt text. Existing harness modes are preserved.
+Positive receipts are simulated; successful actual supplier booking remains
+unobserved. No unchanged broad regression loop was needed.
