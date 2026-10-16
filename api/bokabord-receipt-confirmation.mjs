@@ -42,6 +42,13 @@ export const STUREHOF_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: '07415d5b4d24177e713964f3bc75eeaf', mealid: 3913, mealType: 2, maxParty: 2,
 });
 
+// Source-backed guest/account-choice route reaches the provider's own review.
+// Lunch is unpaid; dinner's card requirement and all special meals are excluded.
+export const BEIRUT_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-beirut-cafe', name: 'Beirut Café',
+  hash: 'ca902bc03574cc4643a6f071e93e2a98', mealid: 30471, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
