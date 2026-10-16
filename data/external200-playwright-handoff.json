@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-16",
+  "repositoryBase": "7c0e45d",
+  "purpose": "Research handoff to canonical backend Playwright adapters; not an activation registry or completed booking implementation",
+  "coordination": "https://github.com/mosesisik-cloud/velvet-vip-tables/issues/129",
+  "manifestSha256": "4f4c32e5849e709e39911c7f4637970c05f686bcd51e06a3265dee0ec525c0e4",
+  "counts": {
+    "reviewed": 200,
+    "candidate": 18,
+    "manual_only": 11,
+    "unresolved": 166,
+    "unavailable": 5,
+    "backendPlaywrightImplemented": 0,
+    "backendPlaywrightTested": 0,
+    "supplierConfirmationVerified": 0
+  },
+  "providers": [
+    {
+      "provider": "SevenRooms",
+      "restaurantIds": [
+        "osm-DXB-shang-palace",
+        "curated-SBH-bonito-saint-barth",
+        "osm-SBH-bagatelle",
+        "osm-SBH-bonito",
+        "osm-SBH-la-guerite",
+        "osm-SBH-la-petite-plage",
+        "osm-SBH-le-cafe",
+        "osm-SBH-sella"
+      ],
+      "verifiedProviderVenueIds": [
+        "shangpalacedubai",
+        "bonitostbarth",
+        "bagatellestbarth",
+        "lagueritedb",
+        "lapetiteplagesaintbarth",
+        "lecafesaintbarth",
+        "restaurantsella"
+      ]
+    },
+    {
+      "provider": "Contact Form 7 / direct request",
+      "restaurantIds": [
+        "osm-SBH-black-ginger"
+      ],
+      "verifiedProviderVenueIds": []
+    },
+    {
+      "provider": "Contact Form7 original restaurant request form",
+      "restaurantIds": [
+        "osm-SBH-eddy-s"
+      ],
+      "verifiedProviderVenueIds": []
+    },
+    {
+      "provider": "Eat App",
+      "restaurantIds": [
+        "osm-DXB-carluccio-s"
+      ],
+      "verifiedProviderVenueIds": []
+    },
+    {
+      "provider": "Mikla direct form",
+      "restaurantIds": [
+        "curated-IST-mikla"
+      ],
+      "verifiedProviderVenueIds": []
+    },
+    {
+      "provider": "Raya direct request",
+      "restaurantIds": [
+        "osm-HKT-uf6b9db1d32b4"
+      ],
+      "verifiedProviderVenueIds": []
+    },
+    {
+      "provider": "Rezervem",
+      "restaurantIds": [
+        "curated-IST-neolokal"
+      ],
+      "verifiedProviderVenueIds": []
+    },
+    {
+      "provider": "TURK direct reservation",
+      "restaurantIds": [
+        "curated-IST-turk-fatih-tutak"
+      ],
+      "verifiedProviderVenueIds": []
+    },
+    {
+      "provider": "Wix original request form",
+      "restaurantIds": [
+        "osm-MIA-pummarola-coral-gable"
+      ],
+      "verifiedProviderVenueIds": []
+    },
+    {
+      "provider": "Yerim Hazir",
+      "restaurantIds": [
+        "osm-BDR-yelken-bal-k"
+      ],
+      "verifiedProviderVenueIds": [
+        "373"
+      ]
+    },
+    {
+      "provider": "Zenchef",
+      "restaurantIds": [
+        "osm-SBH-fishcorner"
+      ],
+      "verifiedProviderVenueIds": [
+        "388090"
+      ]
+    }
+  ],
+  "exclusions": {
+    "manualRoutes": "Do not automate phone, email, WhatsApp or LINE messages.",
+    "unresolved": "Do not guess the branch or provider.",
+    "unavailable": "Preserve walk-in, takeaway and closure distinctions in original group records."
+  },
+  "activationRequirements": [
+    "Canonical provider owner validates exact restaurant identity and provider venue ID against official source.",
+    "Reuse authenticated owner/session/revision, concurrency and durable attempt protections from the canonical integration.",
+    "Observe provider-specific search, hold, guest, terms, submit and confirmation boundaries; no generic Continue or arbitrary URL automation.",
+    "Request acceptance, inventory, payment requirement and confirmed reservation stay separate; static time options are not availability.",
+    "Guest approves current venue/date/party/experience/price/terms before any mutation; development never performs real holds/bookings/payments.",
+    "Require reviewed provider outcome tied to the same attempt before reporting confirmation; unknown outcomes never trigger automatic retry.",
+    "CAPTCHA or access protection stops automation; no bypass. Payment handling requires separately reviewed provider-secure flow.",
+    "Record implementation, fixture test, read-only live test, supplier confirmation and deployment evidence separately."
+  ]
+}

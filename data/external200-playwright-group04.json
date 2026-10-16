@@ -1,0 +1,450 @@
+{
+  "schemaVersion": 1,
+  "group": 4,
+  "reviewedAt": "2026-10-15T23:59:49.371075+00:00",
+  "restaurants": [
+    {
+      "restaurantId": "osm-CPT-chippies-prego",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Search Chippies Prego Cape Town found Rondebosch at Silwood Centre plus historical Fabrica rebranding and Observatory/Sea Point locations. Generic source ID has no street or coordinates; current branch and booking policy unresolved.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://www.eatout.co.za/venue/chippies-prego-rondebosch/",
+        "https://chippies.co.za/"
+      ]
+    },
+    {
+      "restaurantId": "osm-CPT-food-and-connect",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Official Food & Connect describes multiple UCT outlets; head office is not a restaurant branch. Source record cannot distinguish campus outlet.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://foodandconnect.co.za/main/",
+        "https://foodandconnect.co.za/careers/"
+      ]
+    },
+    {
+      "restaurantId": "osm-CPT-furley-s-bar-grill",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Search Furley’s Cape Town / Furleys Newlands found Dean Street listing and historical licence, but no current official venue booking channel. US Mr Furleys result rejected as wrong country.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://south-africa-streets.openalfa.com/newlands/eating-drinking",
+        "https://furleys.co.za/"
+      ]
+    },
+    {
+      "restaurantId": "osm-CPT-gogi-korean",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Gogi Korean Newlands search found listing with 1 Dean Street and 082 361 5588, but old COVID in-house dining restriction makes booking policy unreliable. Other-country Gogi sites rejected.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://www.dining-out.co.za/md/Gogi-Korean-BBQ/11069",
+        "https://briefly.co.za/facts-lifehacks/services/227916-gogi-korean-bbq-newlands-menu-updated-2025-prices/"
+      ]
+    },
+    {
+      "restaurantId": "osm-CPT-jean-s-kitchen",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://uct.ac.za/research-innovation-uct-and-un-sdgs/goal-2-zero-hunger/2-3-4",
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "UCT confirms Kaplan Centre cafeteria identity; official booking policy not found. Community directory provides contact but not verified reservation support.",
+        "Official identity is established, but no explicit verified table-booking route is available for automation.",
+        "No current operator-controlled reservation policy located; acceptance unknown."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://uct.ac.za/research-innovation-uct-and-un-sdgs/goal-2-zero-hunger/2-3-4",
+        "https://www.koshersa.co.za/wp-content/uploads/2025/12/December-2025-January-2026-Kosher-SA-Newsletter-2.pdf",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-CPT-kobe-sushi",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Search Kobe Sushi Cape Town found Newlands listing and another SALT Food Market branch. Source lacks coordinates; current branch and reservation policy unresolved.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://www.eatout.co.za/venue/kobe-sushi-bar/",
+        "https://kobesushi.co.za/?page_id=52"
+      ]
+    },
+    {
+      "restaurantId": "osm-CPT-mc-donalds",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Official locator lists many Cape Town branches including Rondebosch. Source only says Cape Town; no branch can be chosen. Ordering/dine-in listings are not table reservations.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://www.mcdonalds.co.za/locate",
+        "https://www.mcdonalds.co.za/templates/_layout/location.php"
+      ]
+    },
+    {
+      "restaurantId": "osm-CPT-nando-s",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Search official Cape Town Nandos found Long Street branch, but source supplies no branch/address/coordinates. Do not attach this candidate or food delivery as booking.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://store.nandos.co.za/details/long-street",
+        "https://store.nandos.co.za/details/newlands-west"
+      ]
+    },
+    {
+      "restaurantId": "osm-CPT-picnic-cafe-and-deli",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://picniccafe.co.za/",
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Official page confirms Montebello venue and invites phone/email enquiries for parties/events: 084 516 0530; picniccafeanddeli@gmail.com. Ordinary table acceptance is not established. Manual-route re-review: official phone/email invitation is specifically for parties, events and functions. Ordinary restaurant-table reservation acceptance is unknown; generic/event contact is not counted as a verified manual table-booking route.",
+        "Official identity is established, but no explicit verified table-booking route is available for automation.",
+        "Official site does not establish ordinary table-reservation acceptance. No provider found."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://picniccafe.co.za/",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-CPT-thai-ping",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Exact Thai Ping Cape Town/Newlands searches located Dean Street map entry only. US Thai Ping unrelated. No official identity/current booking route verified.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://south-africa-streets.openalfa.com/newlands/eating-drinking"
+      ]
+    },
+    {
+      "restaurantId": "osm-CPT-the-trufood-station",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Exact-name search found café kiosk listing at Great Westerford; third-party phone and Instagram candidate do not establish reservation policy.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID.",
+        "Candidate operator inaccessible through reader; location and reservation policy unresolved."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://www.bitcoinfriendlysa.co.za/businesses/the-trufood-station",
+        "https://michange.org/",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-DXB-abd-el-wahab-restaurant",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Official landlord confirms Souk Al Bahar venue; Dubai Marina Mall also lists Abdel Wahab. Source ID has no branch anchor; cannot select one.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://www.emaarmalls.ae/malls-shop-details/souk-al-bahar/abdulwahab-abdulwahab-loungeabdulwahab-abdulwahab-lounge/"
+      ]
+    },
+    {
+      "restaurantId": "osm-DXB-acai-co",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Manifest domain opened but yielded no readable content. Search found Central Park and Dakakeen branches in 2GIS; no branch anchor or booking system verified.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://acaiandco.com/",
+        "https://www.mat3am.net/restaurant/21099/branches/Acai-and-Co-branches-in-Dubai?lang=en"
+      ]
+    },
+    {
+      "restaurantId": "osm-DXB-al-hallab-and-sweets",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Official website lists Garhoud, Dubai Mall, Mall of Emirates and Bab El Bahr with different phones and booking buttons. Manifest/source have no branch anchor.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://alhallabrestaurant.com/",
+        "https://alhallabrestaurant.com/links/"
+      ]
+    },
+    {
+      "restaurantId": "osm-DXB-asado",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://www.addresshotels.com/en/restaurant/palace-downtown/asado/",
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Official Asado page identifies Palace Downtown and publishes +97144287961. Shared Eat App dining selector omits Asado; generic hidden confirmation example is not a reservation or availability proof. Phone enquiry only. Manual-route re-review: official page publishes a contact phone but no explicit restaurant-specific invitation to reserve by phone. Shared dining selector omits Asado. Table reservation acceptance is unknown.",
+        "Official identity is established, but no explicit verified table-booking route is available for automation."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://www.addresshotels.com/en/restaurant/palace-downtown/asado/",
+        "https://wanderlog.com/place/details/422814/asado-restaurant"
+      ]
+    },
+    {
+      "restaurantId": "osm-DXB-be-super-natural-kitchen",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Brand profile identifies BeStro at Galeries Lafayette Dubai Mall; historical guide also says Be Super Natural Kitchen. No current official reservation route or operating status verified.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://ae.linkedin.com/company/be-super-natural",
+        "https://www.happycow.net/reviews/super-natural-kitchen-dubai-46519"
+      ]
+    },
+    {
+      "restaurantId": "osm-DXB-carluccio-s",
+      "providerCandidate": "Eat App",
+      "providerVenueId": null,
+      "officialSource": "https://carlucciosme.com/locations/the-dubai-mall/",
+      "bookingUrl": "https://eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "Canonical backend Playwright provider adapter is not implemented or tested for this stable ID.",
+        "Availability, selection, any hold-producing transition, payment requirements and supplier-confirmation semantics require provider-contract review before activation.",
+        "No supplier-confirmed reservation has been created or verified. Existing original-form/availability observations do not establish an end-to-end Velvet booking."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://carlucciosme.com/locations/the-dubai-mall/",
+        "https://eatapp.co/reserve/carluccio-s-the-dubai-mall-049b9a",
+        "data/booking-providers.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-DXB-karam-beirut",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Manifest brand website inaccessible through web tool. Search confirms multiple Dubai locations; generic brand ID cannot safely choose Dubai Mall, Mall of Emirates or Festival City.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://www.karambeirut.ae/",
+        "https://thedubaimall.com/en/shop/karam-beirut"
+      ]
+    },
+    {
+      "restaurantId": "osm-DXB-karma-kafe",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://karma-dubai.com/",
+      "bookingUrl": null,
+      "currentRouteStatus": "manual_message",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "manual_only",
+      "blockers": [
+        "Only an explicit manual reservation request/contact route is verified; no inventory-backed provider automation or supplier-confirmation integration exists."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://karma-dubai.com/"
+      ]
+    },
+    {
+      "restaurantId": "osm-DXB-margaux",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Search found current Margaux pastry boutique at Jumeirah Mina Al Salam and historical French Margaux restaurant at Souk Al Bahar. Source cuisine French and generic city insufficient to determine intended venue. Do not replace old restaurant with pastry boutique.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group04.json",
+        "https://margauxpastryboutique.com/",
+        "https://restaurantguru.com/Margaux-Dubai"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,435 @@
+{
+  "schemaVersion": 1,
+  "group": 8,
+  "reviewedAt": "2026-10-15T23:59:40.136830+00:00",
+  "restaurants": [
+    {
+      "restaurantId": "osm-IST-gelik",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official Ataköy page provides telephone reservations and Kennedy Caddesi 20. Gelik is a multi-branch name; manifest does not identify which branch."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://www.gelik.com.tr/gelikatakoy/",
+        "https://www.geliklevent.com/"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-gumus-kanat",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://gumuskanat.eatbu.com/?lang=en",
+      "bookingUrl": null,
+      "currentRouteStatus": "manual_phone",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "manual_only",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Only an explicit manual contact route is verified; no automated table inventory or confirmation contract established.",
+        "Restaurant-owned eatbu site explicitly directs table reservations to +90 212 644 41 62. Site contact/message form is not an availability engine."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://gumuskanat.eatbu.com/?lang=en"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-guvenc-konyal",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official site identifies Sirkeci at Ankara Cad, Hocapaşa Hamamı Sk.4, Fatih, and discusses other branches. Manifest lacks locator; official contact form is not table booking."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://guvenckonyali.com.tr/"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-has-ad-yman",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact misspelled name search did not resolve official identity. Nearby directory candidate Has Adıyaman Çiğköftecisi in Sümer is insufficient to map this ID."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://menuburada.com/basak-borekcisi-sumer-istanbul/",
+        "https://turkey-streets.openalfa.com/streets/merv-caddesi-suemer-mahallesi"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-haznedar-meydan-gece-cigercisi",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "OSM-derived candidate at Haznedar Meydanı, Güngören; no restaurant-owned source or reservation route."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://travelingturkiye.com/en/places/istanbul-haznedar-meydan-gece-cigercisi"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-iskenderun-kral-durum",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Directory candidate in Mehmet Nezih Özmen/Güngören; other listings use different Merter street addresses. No official exact branch verification."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://kolaykaydet.com.tr/firma/iskenderun-kral-durum-istanbul-mehmet-nezih-ozmen-mah"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-izmir-bal-kc-s",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Candidate in Çekmeköy at Mimar Sinan Cd.15/A; generic name and absent manifest locator prevent exact branch identification."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://menuburada.com/izmir-balikcisi-mimar-sinan-istanbul/",
+        "https://izmirbalik.com/hikaye"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-limgarden-kafe-restoran-ev-yemekleri",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "OSM-derived page says Vezir Sokak 9/B, Güngören, telephone 0212 642 41 34; URL says Catalca. No official source to resolve discrepancy."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://isletmeara.com/firma/limgarden-kafe-ve-restoran-ve-ev-yemekleri-catalca"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-mahmud-usta-kebap",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Candidate on Merv Caddesi, Sümer; AI/OSM-derived page explicitly marks data unverified. Reservation and walk-in claims not accepted."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://www.restaurantsistanbul.com/istanbul/mahmud-usta-kebap"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-oz-baba-doner",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Candidate at Seyitnizam Cd.17 Zeytinburnu; another Öz Baba appears in Küçükçekmece. No manifest locator or official match."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://mekan.com/mekan/oz-baba-doner"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-pasa-doner",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official branch selector confirms multi-branch chain. Manifest only says Istanbul; no branch-specific table booking assigned."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://www.pasadoneronline.com/subelerimiz"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-royal-tavuk",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact-name royal tavuk Istanbul search did not establish a usable restaurant-owned identity or booking route."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://turkey-streets.openalfa.com/streets/merv-caddesi-suemer-mahallesi"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-safran-karadeniz",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Candidate in Sümer/Zeytinburnu; another Safran Karadeniz Pide & Lahmacun exists in Ataşehir. Exact branch and official reservation policy unresolved."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://yandex.com.tr/maps/org/safran_karadeniz_et_lokantasi/1056680911/"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-senkardesler",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Candidate on Merv Caddesi Sümer. AI directory says unverified; no restaurant-owned source."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://www.restaurantsistanbul.com/istanbul/senkardesler"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-u7e5b2e46dee5",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Russian text is a generic description meaning roughly fish restaurant on waterfront, not a verifiable venue name. Exact-string search found no official identity."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://mapcarta.com/N5667661136"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-urfa-dergah-kebap",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Directory gives Merv Caddesi 149/B, Sümer and 0212 416 00 63. No restaurant-owned reservation evidence verified."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://menuburada.com/urfa-dergah-kebap-zeytinburnu-istanbul/"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-vargeller-kebap",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Delivery listing gives Şehit Er Yavuz Bahar Sk.12 Sümer; delivery/pickup catalogue is not table reservation. Official dining reservation policy unverified."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://www.yemeksepeti.com/restaurant/pkp7/vargeller-kebap"
+      ]
+    },
+    {
+      "restaurantId": "osm-MIA-akashi-japanese-restaurant",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official site currently names South Miami at 5830 S Dixie Hwy. Historical Coconut Grove branch at 3444 Main Hwy also matches the generic manifest name. Do not conflate South Miami with Miami or select branch without locator."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://akashisushi.com/",
+        "https://www.yellowpages.com/miami-fl/akashi-restaurant",
+        "https://coconutgrove.com/wp-content/uploads/2024/05/CoconutGrove_AnnualReport_2022_PRINT3.pdf"
+      ]
+    },
+    {
+      "restaurantId": "osm-MIA-el-taquitos",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact-name search found only El Taquitos as nearby restaurant in an OSM-derived Coconut Grove listing. No official identity, address or reservation page found."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://hashtag.org/local/fl/miami/restaurants/focaccia-bistro-node2475858794",
+        "https://callejero-florida.openalfa.com/miami-ccd/restauracion"
+      ]
+    },
+    {
+      "restaurantId": "osm-MIA-focaccia-bistro",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Historical Focaccia Bistro at 3111 Grand Avenue. Manifest domain could not be fetched; directory presence does not establish current operation or booking."
+      ],
+      "evidence": [
+        "data/external200-group08.json",
+        "https://www.allmenus.com/fl/miami/337927-focaccia-bistro/menu/",
+        "https://brokebaker.com/2013/12/19/focaccia-bistro-a-review/"
+      ]
+    }
+  ]
+}

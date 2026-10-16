@@ -1,0 +1,433 @@
+{
+  "schemaVersion": 1,
+  "group": 6,
+  "reviewedAt": "2026-10-15T23:59:40.136830+00:00",
+  "restaurants": [
+    {
+      "restaurantId": "osm-HKG-u8d6744e930fe",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "利隆火鍋食店 search found Smithfield market directory/maps candidate and phone 2817 3533; no official booking policy."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://transport.pokeguide.com/en/hong_kong/pois/kennedy-town"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKG-ub4100aef7fd9",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact 紅興港式懷舊小食 search returned unrelated snack/recipe results. No reliable venue-specific official source found; no identity inferred from prefix."
+      ],
+      "evidence": [
+        "data/external200-group06.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKG-ufc4d4c688c11",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact 珍品小炒 search found nearby OSM-derived name at Smithfield Municipal Services Building. Taiwan 珍品小館 results rejected. No official identity/booking route."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://mapcarta.com/W71379535",
+        "https://restaurant.eatsmart.gov.hk/files/pdf/cooksmart_issue_12.pdf"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKG-wah-fung",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Wah Fung Kennedy Town query found historical roast meat business with Central and Kennedy Town branches; no source address or current official booking route."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://www.scmp.com/lifestyle/article/1845549/how-three-small-hong-kong-businesses-thrived-after-kids-took-over"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKG-wai-kee-cafe",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact 維記 Forbes query found 36 Forbes Street café candidate in travel guide and OSM-derived map. No current official identity or reservations verified."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://eatoutmap.com/en/hong-kong/kennedy-town/near/kennedy-town",
+        "https://www.openrice.com/zh/hongkong/r-%E7%B6%AD%E8%A8%98cafe-%E8%A5%BF%E7%92%B0-%E6%B8%AF%E5%BC%8F-r880483"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-1000009-thai-noodle-restaurant-phuket-9",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact name matches unclaimed listing; no official source or table-booking policy verified."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://www.tripadvisor.com/Restaurant_Review-g1215781-d26998179-Reviews-1000009_Thai_Noodle_Restaurant_Phuket-Phuket_Town_Phuket.html"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-breakfast-place",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact Breakfast place Phuket query returns descriptive breakfast lists, not a uniquely identifiable business. Generic source name and no coordinates prevent reliable mapping."
+      ],
+      "evidence": [
+        "data/external200-group06.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-come-back",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Come Back Phuket search found Comeback café Montri Road and Come Back Restaurant Wichit. Generic source cannot distinguish these."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://www.phuket.net/directory/profile/come-back-phuket-cafe/"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-five-loaves",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Search found Phuket Town 169/1 Phangnga and Kathu 46/367 candidates. Manifest lacks branch anchor. Wongnai official-labelled listing has inconsistent Kathu directions. No safe branch mapping."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://www.phuket.net/directory/profile/five-loaves-burgers/",
+        "https://www.wongnai.com/restaurants/231882aN-five-loaves-bergers"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-khao-tom-thanon-di-buk",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact name search identifies relocated porridge shop on Phangnga Road, not Dibuk Road. No owner reservation source verified."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://www.phuket101.net/khaotom-thanon-dibuk-phuket/",
+        "https://joinpearl.co/restaurants/phuket/khao-tom-thanon-di-buk"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-love2eat",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact Love2eat Phuket query found directory address/phone 086 954 6665 and social candidate. Los Angeles Luv2Eat rejected. No official booking policy."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://www.thaithurkic.com/love-eat_11x-086-954-6665"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-nigi-express",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact name search finds Nigi Express x Hom Hom Ramen at 2/10 Dibuk, phone 0835211142. No official provider or reservation policy confirmed."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://www.wongnai.com/restaurants/1721914Ae-nigi-express-x-%E0%B8%AB%E0%B8%AD%E0%B8%A1%E0%B8%AB%E0%B8%AD%E0%B8%A1-ramen"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-noy-pochana",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact Noy Pochana search distinguishes Noy from similarly named Yoy Pochana. Article supports Phuket Town candidate only, no official booking system or policy."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://www.eatingthaifood.com/restaurants/spicy-southern-thai-food-phuket-town/",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-pint-factory",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official tourism listing gives 96 Suthat Soi 2; older owner-feature article gives Limelight Avenue 2/23 Dibuk. Source has no street anchor. Relocation/branch unresolved; no booking route enabled."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://thailandtourismdirectory.go.th/en/restaurants/90874"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-reach",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Reach Phuket search found unclaimed Reach Vegan Kitchen at Phangnga Road. Generic source name insufficient for official identity or booking policy."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://www.tripadvisor.com/Restaurant_Review-g1215781-d25197960-Reviews-Reach_Vegan_Kitchen-Phuket_Town_Phuket.html",
+        "https://www.happycow.net/reviews/reach-plant-based-kitchen-phuket-224152"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-sab-nua-restaurant",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Sab Nua Phuket search found similarly named Sab Nua Krua Sarakham near Choeng Thale property listings but no exact official restaurant identity. No source street/coordinates; do not attach nearby candidate."
+      ],
+      "evidence": [
+        "data/external200-group06.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-the-barrel-wine-beer-bistro-bar",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official chain site lists Phuket Town, Rawai and Cherng Talay branches. Generic source lacks street/coordinates. Wine ordering and LINE contact not live table availability."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://thebarrel.asia/contact-us.html",
+        "https://www.thebarrel.asia/the-barrel/the-barrel-phuket-town.html"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-the-tent-phuket",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact name search found 16 Thepkasattri Road, phone 076217775 and phuketthetent@gmail.com. No official current reservation policy found."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://www.phuket.net/directory/profile/the-tent-phuket/"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-toy-tor-toe",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact Romanized name matches ต๋อย ต่อ โต๊ะ noodle venue on Thep Krasattri Road; third-party phone +66898747053 only. Official reservation route unverified."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://au.trip.com/restaurant/thailand/phuket/detail/toy-tor-toe-148195856/",
+        "https://yandex.com/maps/org/toy_tor_toe/202430217069/"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-u0bb8a4bb7e3a",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://www.maimornforest.com/contact-us.php",
+      "bookingUrl": null,
+      "currentRouteStatus": "manual_message",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "manual_only",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Only an explicit manual contact route is verified; no automated table inventory or confirmation contract established.",
+        "Official Maimorn Forest contact page gives 076-211-208 / 089-619-1845, maimornforest@gmail.com and LINE @maimornforest. Book-table CTA leads to LINE, a manual messaging route; no message sent. Manual-route re-review: official จองโต๊ะ (book table) CTA points to LINE and page identifies @maimornforest. Explicit manual messaging reservation route verified; generic published phone is not independently verified as a telephone booking route."
+      ],
+      "evidence": [
+        "data/external200-group06.json",
+        "https://www.maimornforest.com/contact-us.php"
+      ]
+    }
+  ]
+}
