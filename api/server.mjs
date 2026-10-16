@@ -11,7 +11,7 @@ import { RequestBudget } from "./request-budget.mjs";
 import { PlaywrightRuntime } from './playwright-runtime.mjs';
 import { PlaywrightAttemptLedger } from './playwright-attempt-ledger.mjs';
 import { createBookingJournalHooks } from './playwright-booking-journal.mjs';
-import { NOEMA_LUNCH_RECEIPT_POLICY, CICCIOS_DINING_RECEIPT_POLICY, RICHE_LUNCH_RECEIPT_POLICY, STUREHOF_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
+import { BEIRUT_LUNCH_RECEIPT_POLICY, NOEMA_LUNCH_RECEIPT_POLICY, CICCIOS_DINING_RECEIPT_POLICY, RICHE_LUNCH_RECEIPT_POLICY, STUREHOF_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
 import { createProviderJournal } from './provider-booking-journal.mjs';
 import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
@@ -270,6 +270,7 @@ const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
 const bookingRegister = new BookingRegister(process.env.VELVET_BOOKINGS_DB || path.join(path.dirname(DATA), 'bookings.sqlite'));
 bookingJournal = createBookingJournalHooks({ ledger: playwrightAttempts, legacyLedger: mirrorLedger, register: bookingRegister, restaurants: RESTAURANT_DETAILS,
   receiptPolicies:[
+    ...(process.env.VELVET_BEIRUT_RECEIPT === 'enabled' ? [BEIRUT_LUNCH_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_NOEMA_RECEIPT === 'enabled' ? [NOEMA_LUNCH_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_CICCIOS_RECEIPT === 'enabled' ? [CICCIOS_DINING_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_RICHE_RECEIPT === 'enabled' ? [RICHE_LUNCH_RECEIPT_POLICY] : []),
