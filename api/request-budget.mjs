@@ -3,7 +3,7 @@ export class RequestBudget {
   entries = new Map();
   constructor(now = Date.now) { this.now = now; }
   take(ip, method, pathname) {
-    const interactive = method === 'POST' && /^\/restaurant-bookings\/mirror\/(?:current|[a-f0-9-]{36}\/action)$/.test(pathname);
+    const interactive = method === 'POST' && /^\/restaurant-bookings\/(?:mirror|playwright)\/(?:current|[a-f0-9-]{36}\/(?:action|current))$/.test(pathname);
     const bucket = interactive ? 'mirror' : ['GET','HEAD'].includes(method) ? 'read' : 'write';
     const limit = bucket === 'write' ? 30 : 120;
     const now = this.now(), key = ip + ':' + bucket;

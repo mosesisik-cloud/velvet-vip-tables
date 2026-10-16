@@ -1,0 +1,82 @@
+import assert from 'node:assert/strict';
+import { test } from 'node:test';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { BokabordMirror, RESTAURANT_DETAILS } from '../api/bokabord-mirror.mjs';
+import { BookingLedger } from '../api/bokabord-ledger.mjs';
+import { PlaywrightAttemptLedger } from '../api/playwright-attempt-ledger.mjs';
+import { createBookingJournalHooks } from '../api/playwright-booking-journal.mjs';
+const restaurantId = 'curated-STO-zink-italian-cuisine';
+const approval = {date:'2030-01-15',time:'19:00',party:2,firstname:'Test',lastname:'Person',email:'test@example.com',phone:'0700000000',comment:'',mealid:9778,hash:RESTAURANT_DETAILS[restaurantId].hash,terms:true};
+async function nativeFixture(hooks) {
+  let routeHandler, sent=0, aborted=0;
+  const events=new Map();
+  const page={on:(name,listener)=>events.set(name,listener),setDefaultTimeout(){},goto:async()=>{},locator:()=>({first:()=>({waitFor:async()=>{}})})};
+  const context={route:async(_pattern,handler)=>{routeHandler=handler;},newPage:async()=>page,on(){},close:async()=>{}};
+  const mirror=new BokabordMirror({prepare:true,live:true,...hooks});
+  mirror.browser=async()=>({newContext:async()=>context}); mirror.settle=async()=>{};
+  mirror.snapshot=async s=>(s.lastSnapshot={id:s.id,revision:0,canSubmit:true,result:null});
+  await mirror.create('owner',restaurantId);
+  const session=[...mirror.sessions.values()][0];
+  session.armed=true;session.approval=approval;
+  const transmit=()=>routeHandler({request:()=>({method:()=> 'POST',url:()=> 'https://app.bokabord.se/reservation/api/booking/saveBooking',postDataJSON:()=>({...approval,amount:approval.party,terms:{general:true,restaurant:false,bokabord:false},products:[],waitlist:false,giftcard:null,linked_meals:[],bookingid:null})}),continue:async()=>{sent++;},abort:async()=>{aborted++;}});
+  return {mirror,session,transmit,events,counts:()=>({sent,aborted})};
+}
+test('actual native route + shared hook permits one mock transmission; restart/key rotation cannot resend',async()=>{
+  const directory=fs.mkdtempSync(path.join(os.tmpdir(),'velvet-journal-'));
+  const file=path.join(directory,'attempts.sqlite'), legacyLedger=new BookingLedger(path.join(directory,'legacy'));
+  let ledger=new PlaywrightAttemptLedger(file);
+  const rows=[];
+  const hooks=()=>createBookingJournalHooks({ledger,legacyLedger,register:{upsert:r=>rows.push(r)},restaurants:RESTAURANT_DETAILS});
+  let first,second,third;
+  try {
+    first=await nativeFixture(hooks()); await first.transmit();
+    assert.deepEqual(first.counts(),{sent:1,aborted:0});
+    assert.equal(ledger.list('owner')[0].status,'unknown');
+    assert.equal(ledger.list('other').length,0);
+    await first.mirror.close(); first=null; ledger.close(); ledger=new PlaywrightAttemptLedger(file);
+    second=await nativeFixture(hooks()); await second.transmit();
+    assert.deepEqual(second.counts(),{sent:0,aborted:1});
+    assert.equal(second.session.result.status,'already_attempted');
+    assert.equal(ledger.list('owner').length,1);
+    assert.equal(fs.existsSync(legacyLedger.directory),false,'no dual journal writes');
+    const recovered=hooks().recover('owner');assert.equal(recovered[0].status,'unknown');
+    assert(!JSON.stringify(recovered).includes('test@example.com'));
+    // An existing legacy attempt is a read-only barrier even if its JSON is corrupt.
+    fs.mkdirSync(legacyLedger.directory);
+    fs.writeFileSync(path.join(legacyLedger.directory,legacyLedger.key(approval,{owner:'owner',restaurantId})+'.json'),'partial');
+    third=await nativeFixture(hooks());await third.transmit();
+    assert.deepEqual(third.counts(),{sent:0,aborted:1});
+  } finally {
+    await first?.mirror.close(); await second?.mirror.close(); await third?.mirror.close(); ledger.close();
+    fs.rmSync(directory,{recursive:true,force:true});
+  }
+});
+test('actual response listener verifies the narrow Zink policy and persists matching proof',async()=>{
+  const directory=fs.mkdtempSync(path.join(os.tmpdir(),'velvet-confirmation-'));
+  const ledger=new PlaywrightAttemptLedger(path.join(directory,'attempts.sqlite'));
+  const rows=[];
+  const hooks=createBookingJournalHooks({ledger,legacyLedger:new BookingLedger(path.join(directory,'legacy')),register:{upsert:r=>rows.push(r)},restaurants:RESTAURANT_DETAILS});
+  let f;
+  try {
+    f=await nativeFixture(hooks);await f.transmit();
+    const data={success:true,booking:{id:123,status:1,confirmed:0,restid:1359,mealid:9778,meal:{type:3},
+      date:approval.date,time:approval.time,amount:approval.party,firstname:approval.firstname,lastname:approval.lastname,
+      email:approval.email,phone:46700000000,waitlist:0,products:[],require_noshow:false,group_booking:false,parent_order:null}};
+    const result=hooks.verifyResult(data,f.session);
+    assert.equal(result.status,'confirmed');
+    assert.equal(result.verification.detailsDigest,f.session.playwrightAttempt.reviewFingerprint);
+    // A proof copied from another session must not be written as confirmed.
+    f.session.result={...result,verification:{...result.verification,sessionId:'wrong-session'}};
+    hooks.recordResult(f.session);assert.equal(ledger.list('owner')[0].status,'unknown');
+    f.events.get('response')({url:()=> 'https://app.bokabord.se/reservation/api/booking/saveBooking',ok:()=>true,json:async()=>data});
+    await f.session.resultPromise;
+    const saved=ledger.list('owner')[0];assert.equal(saved.status,'confirmed');assert.equal(saved.reference,'123');
+    assert.equal(saved.verification.reviewFingerprint,result.verification.detailsDigest);
+    assert.equal(f.mirror.current('owner').result.status,'confirmed');
+    assert.equal(f.mirror.current('owner').canSubmit,false);
+    assert.equal(rows.at(-1).status,'confirmed');assert.equal(f.counts().sent,1);
+    assert(!JSON.stringify(saved).includes('test@example.com'));
+  } finally {await f?.mirror.close();ledger.close();fs.rmSync(directory,{recursive:true,force:true});}
+});

@@ -1,6 +1,7 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import { BookingAssetCache } from './booking-asset-cache.mjs';
+import { classifyBokabordResult, bookingAttemptSnapshot, publicBookingResult } from './booking-result.mjs';
 
 // Registry, not user-supplied URLs. Other restaurants can share this adapter.
 export const RESTAURANT_DETAILS = Object.freeze(JSON.parse(fs.readFileSync(new URL('./bokabord-restaurants.json', import.meta.url), 'utf8')));
@@ -58,12 +59,13 @@ export class BokabordMirror {
   browserPromise = null;
   pending = 0;
   pendingOwners = new Set();
-  constructor({ prepare = false, live = false, authorizeSubmission = null, reserveSubmission = null, recordResult = null } = {}) {
+  constructor({ prepare = false, live = false, authorizeSubmission = null, reserveSubmission = null, recordResult = null, verifyResult = null } = {}) {
     this.prepare = prepare;
     this.authorizeSubmission = authorizeSubmission;
     this.reserveSubmission = reserveSubmission;
     this.live = live;
     this.recordResult = recordResult;
+    this.verifyResult = verifyResult;
     this.timer = setInterval(() => this.expire(), 30_000);
     this.timer.unref();
   }
@@ -113,9 +115,7 @@ export class BokabordMirror {
         if (!s.submitted || response.url() !== 'https://app.bokabord.se/reservation/api/booking/saveBooking') return;
         s.resultPromise = (async () => {
         const data = await response.json().catch(() => null);
-        if (data?.success === true && Number(data.booking?.id) > 0) {
-          s.result = { status: Number(data.booking.status) === 0 ? 'payment_required' : 'confirmed', reference: String(data.booking.id), booking: data.booking };
-        } else if (data?.success === false) s.result = { status: 'rejected' };
+        s.result = response.ok?.() === true ? (this.verifyResult ? await this.verifyResult(data, s) : classifyBokabordResult(data)) : { status: 'unknown', reason: 'supplier_http_error' };
         if (s.result) await this.recordResult?.(s);
       })().catch(() => { s.result = { status: 'unknown' }; }); });
       s.page.setDefaultTimeout(12_000);
@@ -164,7 +164,7 @@ export class BokabordMirror {
     const shot = await s.page.screenshot({ type: 'png', animations: 'disabled' });
     s.revision++;
     const canSubmit = !!(this.prepare && this.reserveSubmission && !s.submitted && !s.result && (this.live ? details : await this.authorizeSubmission?.()));
-    const snapshot = { id: s.id, restaurantId: s.restaurantId, restaurant: s.restaurant, revision: s.revision, width: s.width, height: s.height, image: `data:image/png;base64,${shot.toString('base64')}`, imageHash: crypto.createHash('sha256').update(shot).digest('hex'), capturedAt: new Date().toISOString(), fields, text, contact, review, details, blocked: s.blocked, mode: this.prepare ? 'prepare' : 'inspect', canSubmit, result: s.result ? {status:s.result.status, reference:s.result.reference} : null, expiresIn: TTL / 1000 };
+    const snapshot = { id: s.id, restaurantId: s.restaurantId, restaurant: s.restaurant, revision: s.revision, width: s.width, height: s.height, image: `data:image/png;base64,${shot.toString('base64')}`, imageHash: crypto.createHash('sha256').update(shot).digest('hex'), capturedAt: new Date().toISOString(), fields, text, contact, review, details, blocked: s.blocked, mode: this.prepare ? 'prepare' : 'inspect', canSubmit, result: s.result ? publicBookingResult(s.result) : null, expiresIn: TTL / 1000 };
     snapshot.handoff = s.handoffReason ? { reason: s.handoffReason, url: RESTAURANTS[s.restaurantId] } : null;
     s.lastSnapshot = snapshot;
     return snapshot;
@@ -186,7 +186,7 @@ export class BokabordMirror {
     const s = [...this.sessions.values()].find(row => row.owner === owner);
     if (!s) return { error: 'session_expired' };
     this.owned(s.id, owner);
-    return s.lastSnapshot;
+    return bookingAttemptSnapshot(s);
   }
   async action(id, owner, action) {
     const s = this.owned(id, owner);

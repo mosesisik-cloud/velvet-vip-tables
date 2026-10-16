@@ -1,26 +1,43 @@
 // Actual provider pixels from an isolated server browser, never a provider iframe.
 export function mountBokabordMirror(container, api, { restaurantId = 'curated-STO-zink-italian-cuisine', restaurantName = 'Zink', onLogin = null } = {}) {
-  container.innerHTML = `<div class="booking-source"><span>Bokning via Bokabord</span><span>Utan Velvet-konto</span></div><p class="booking-intro">Välj datum, tid och antal gäster.</p><button class="btn btn-gold" data-start>Hitta ett bord</button><p role="status" aria-live="polite" data-status></p><div data-screen hidden><div data-stage style="position:relative"><img data-image alt="Restaurangens bokningsformulär" style="display:block;width:100%;cursor:pointer"><div data-inputs></div><span class="booking-click" hidden aria-hidden="true" data-click></span></div><div class="booking-navigation"><button class="btn" data-up aria-label="Visa övre delen av formuläret">↑ Upp</button><button class="btn" data-down aria-label="Visa nedre delen av formuläret">↓ Ned</button><button class="btn" data-refresh>Uppdatera</button><button class="btn" data-close>Stäng</button></div><label data-consent hidden><input type="checkbox" data-terms> Jag har kontrollerat uppgifterna och godkänner <a href="https://www.waiteraid.com/terms/" target="_blank" rel="noopener">Bokabords villkor</a> och har läst <a href="https://www.waiteraid.com/privacy-policy/" target="_blank" rel="noopener">personuppgiftspolicyn</a>.</label><button class="btn btn-gold" data-submit hidden>Fortsätt</button><p data-handoff hidden></p><details class="booking-accessible"><summary>Visa formuläret som text</summary><pre data-text style="white-space:pre-wrap;font:inherit"></pre></details></div>`;
+  container.style.maxWidth = '420px';
+  container.style.marginInline = 'auto';
+  container.innerHTML = `<div class="booking-source"><span>Bokning via Bokabord</span><span>Utan Velvet-konto</span></div><p class="booking-intro">Välj datum, tid och antal gäster.</p><button class="btn btn-gold" data-start>Hitta ett bord</button><p role="status" aria-live="polite" data-status></p><div data-screen hidden><div style="max-height:55dvh;overflow:auto"><div data-stage style="position:relative"><img data-image alt="Restaurangens bokningsformulär" style="display:block;width:100%;cursor:pointer"><div data-inputs></div><span class="booking-click" hidden aria-hidden="true" data-click></span></div></div><div class="booking-navigation"><button class="btn" data-up aria-label="Visa övre delen av formuläret">↑ Upp</button><button class="btn" data-down aria-label="Visa nedre delen av formuläret">↓ Ned</button><button class="btn" data-refresh>Uppdatera</button><button class="btn" data-close>Stäng</button><button class="btn" data-retry-fields hidden>Försök spara uppgifterna igen</button><button class="btn" data-restart hidden>Börja om med ett nytt formulär</button></div><label data-consent hidden><input type="checkbox" data-terms> Jag har kontrollerat uppgifterna och godkänner <a href="https://www.waiteraid.com/terms/" target="_blank" rel="noopener">Bokabords villkor</a> och har läst <a href="https://www.waiteraid.com/privacy-policy/" target="_blank" rel="noopener">personuppgiftspolicyn</a>.</label><button class="btn btn-gold" data-submit hidden>Fortsätt</button><p data-handoff hidden></p><details class="booking-accessible"><summary>Visa formuläret som text</summary><pre data-text style="white-space:pre-wrap;font:inherit"></pre></details></div>`;
   const status = container.querySelector('[data-status]');
   const start = container.querySelector('[data-start]');
   const screen = container.querySelector('[data-screen]');
   const img = container.querySelector('[data-image]');
-  let state, busy = false, disposed = false;
+  let state, busy = false, disposed = false, reconcile = false, submissionStarted = false, expired = false, expiryConfirmed = false, failedFill = false;
   const pendingFields = new Map();
   let editTimer;
   const overlay = container.querySelector('[data-inputs]');
-  function syncPending() {
+  function syncPending(retry = false) {
     clearTimeout(editTimer);
-    if (busy || !pendingFields.size || disposed) return;
+    if (busy || !pendingFields.size || disposed || expired || reconcile || (failedFill && !retry)) return;
     const fields = Object.fromEntries(pendingFields);
     pendingFields.clear();
     perform({type:'fill',fields});
   }
   function controls() {
     container.querySelectorAll('button').forEach(b => b.disabled = busy || pendingFields.size > 0);
-    overlay.querySelectorAll('input,textarea').forEach(b => b.disabled = busy && !state?.contact);
+    overlay.querySelectorAll('input,textarea').forEach(b => b.disabled = expired || reconcile || (busy && !state?.contact));
+    container.querySelector('[data-refresh]').disabled = busy;
+    container.querySelector('[data-close]').disabled = busy || submissionStarted || reconcile || !!state?.result;
+    const retry = container.querySelector('[data-retry-fields]');
+    retry.hidden = !failedFill || expired || reconcile;
+    retry.disabled = busy || !pendingFields.size;
+    const restart = container.querySelector('[data-restart]');
+    restart.hidden = !(expired && expiryConfirmed && !submissionStarted && !reconcile && !state?.result);
+    restart.disabled = busy;
     terms.disabled = busy || pendingFields.size > 0;
     container.querySelector('[data-submit]').disabled = busy || pendingFields.size > 0;
+    if (reconcile || expired) {
+      container.querySelectorAll('button:not([data-refresh]),input,textarea').forEach(el => el.disabled = true);
+      container.querySelector('[data-submit]').hidden = true;
+      container.querySelector('[data-consent]').hidden = true;
+      if (expired && expiryConfirmed && !submissionStarted && !reconcile && !state?.result) restart.disabled = busy;
+      if (expired && !submissionStarted && !reconcile && !state?.result) container.querySelector('[data-close]').disabled = busy;
+    }
   }
   const terms = container.querySelector('[data-terms]');
   const endpoint = '/restaurant-bookings/mirror';
@@ -28,21 +45,28 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
   const post = (path, body) => api(path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   async function perform(action) {
     if (disposed) return;
+    if ((reconcile || expired) && action?.type !== 'refresh') return;
     if (busy) { if (action?.type === 'fill') for (const [field,value] of Object.entries(action.fields)) pendingFields.set(field,value); return; }
     let succeeded = false;
+    if (action?.type === 'refresh') { clearTimeout(editTimer); if (pendingFields.size) failedFill = true; }
+    if (action?.type === 'submit') submissionStarted = true;
     busy = true; container.setAttribute('aria-busy','true');
     if (action?.type !== 'fill') status.textContent = state ? 'Uppdaterar…' : 'Öppnar bokningen…';
     controls();
     try {
-      const result = state ? await post(`${endpoint}/${state.id}/action`, { ...action, revision: state.revision }) : await post(endpoint, { restaurantId, resume:true, width: Math.max(320, Math.round(container.clientWidth)) });
+      const result = action?.type === 'refresh' ? await post(`${endpoint}/current`, {}) : state ? await post(`${endpoint}/${state.id}/action`, { ...action, revision: state.revision }) : await post(endpoint, { restaurantId, resume:true, width: Math.max(320, Math.round(container.clientWidth)) });
       if (!result?.image) throw new Error(result?.error || 'connection');
-      if (disposed) { await api(`${endpoint}/${result.id}`, { method: 'DELETE' }); return; }
+      if (disposed) { if (!submissionStarted && !reconcile && !result.result) await api(`${endpoint}/${result.id}`, { method: 'DELETE' }); return; }
       // Keep coordinates paired with the image actually decoded on screen.
       const next = new Image(); next.src = result.image; await next.decode();
       const bytes = Uint8Array.from(atob(result.image.split(',')[1]), c => c.charCodeAt(0));
       const digest = [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(n => n.toString(16).padStart(2, '0')).join('');
       if (digest !== result.imageHash) throw new Error('image_mismatch');
-      state = result; img.src = result.image;
+      state = result; expired = false; expiryConfirmed = false;
+      // A cached pre-submit snapshot cannot prove that a timed-out attempt was not sent.
+      reconcile = reconcile || !!result.result;
+      if (action?.type === 'fill') failedFill = false;
+      img.src = result.image;
       img.dataset.revision = String(result.revision);
       img.dataset.sourceHash = digest;
       const rendered = new Set();
@@ -60,7 +84,7 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
         input.dataset.verifiedValue = field.value;
         input.style.cssText = `position:absolute;box-sizing:border-box;left:${100*rect.x/result.width}%;top:${100*rect.y/result.height}%;width:${100*rect.width/result.width}%;height:${100*rect.height/result.height}%;background:${document.activeElement === input || pendingFields.has(field.name) ? 'white' : 'transparent'};color:${document.activeElement === input || pendingFields.has(field.name) ? '#222' : 'transparent'};border:0;outline:${document.activeElement === input ? '2px solid #d5b880' : '0'};resize:none;padding:8px;font:16px Arial;`;
         input.onfocus = () => {input.style.background='white';input.style.color='#222';input.style.outline='2px solid #d5b880';};
-        input.onblur = () => {input.style.outline='0';if(input.value === input.dataset.verifiedValue){input.style.background='transparent';input.style.color='transparent';}syncPending();};
+        input.onblur = event => {input.style.outline='0';if(input.value === input.dataset.verifiedValue){input.style.background='transparent';input.style.color='transparent';}if(event.relatedTarget?.matches('[data-refresh]')){clearTimeout(editTimer);if(pendingFields.size) failedFill=true;controls();return;}syncPending();};
         input.oninput = () => {
           terms.checked = false;
           pendingFields.set(field.name, input.value);
@@ -87,21 +111,69 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
         status.textContent = result.result.status === 'confirmed' ? `${restaurantName} har bekräftat bokningen. Referens: ${result.result.reference}` : 'Bokningen är inte verifierad. Skicka inte en ny bokning; resultatet måste kontrolleras.';
         container.querySelector('.booking-intro').hidden = true;
       }
+      if (reconcile && !result.result) status.textContent = 'Bokningsresultatet är fortfarande okänt. Kontrollera status eller Mina bokningar. Skicka inte en ny bokning.';
       succeeded = true;
-    } catch (error) { if (action?.type === 'fill') for (const [field,value] of Object.entries(action.fields)) if (!pendingFields.has(field)) pendingFields.set(field,value); if (error.message === 'auth' && onLogin) onLogin(); status.textContent = error.message === 'other_restaurant' ? 'Du har ett formulär öppet för en annan restaurang. Stäng det där först, eller vänta tio minuter.' : messages[error.message] || 'Kopplingen kunde inte uppdateras. Uppdatera vyn och kontrollera Mina bokningar innan du försöker boka igen.'; }
-    finally { busy = false; container.setAttribute('aria-busy','false'); container.querySelector('[data-click]').hidden=true; controls(); if (succeeded) syncPending(); }
+    } catch (error) {
+      if (action?.type === 'submit') { reconcile = true; terms.checked = false; }
+      if (action?.type === 'fill') {
+        failedFill = true;
+        for (const [field,value] of Object.entries(action.fields)) if (!pendingFields.has(field)) pendingFields.set(field,value);
+      }
+      if (error.message === 'session_expired') {
+        expired = true;
+        expiryConfirmed = action?.type === 'refresh';
+        terms.checked = false;
+      }
+      if (error.message === 'auth' && onLogin) onLogin();
+      status.textContent = reconcile || (expired && submissionStarted)
+        ? 'Bokningsresultatet är fortfarande okänt. Kontrollera status eller Mina bokningar. Skicka inte en ny bokning.'
+        : expired ? (expiryConfirmed ? 'Sessionen har gått ut. Börja om med ett nytt formulär; osparade uppgifter rensas.' : 'Sessionen verkar ha gått ut. Tryck på Uppdatera för att kontrollera innan du börjar om.')
+        : failedFill ? 'Uppgifterna kunde inte sparas. Dina ändringar finns kvar. Tryck på Försök spara uppgifterna igen.'
+        : error.message === 'other_restaurant' ? 'Du har ett formulär öppet för en annan restaurang. Stäng det där först, eller vänta tio minuter.'
+        : messages[error.message] || 'Kopplingen kunde inte uppdateras. Uppdatera vyn och kontrollera Mina bokningar innan du försöker boka igen.';
+    }
+    finally {
+      if (action?.type === 'refresh') {
+        clearTimeout(editTimer);
+        if (pendingFields.size) {
+          failedFill = true;
+          if (succeeded && !expired && !reconcile) status.textContent = 'Du har osparade ändringar. Tryck på Försök spara uppgifterna igen för att spara dem.';
+        }
+      }
+      busy = false; container.setAttribute('aria-busy','false'); container.querySelector('[data-click]').hidden=true; controls();
+      if (succeeded && action?.type !== 'refresh') syncPending();
+    }
   }
   start.onclick = () => perform();
   container.querySelector('[data-submit]').onclick = () => { if (busy || pendingFields.size) return; if (!terms.checked) { status.textContent = 'Kontrollera uppgifterna och godkänn villkoren först.'; return; } perform({type:'submit',confirm:true,terms:true}); };
-  img.onclick = e => { if (busy || !state || state.contact || state.review || state.result) return; const r = img.getBoundingClientRect(); const marker=container.querySelector('[data-click]'); marker.style.left=`${100*(e.clientX-r.left)/r.width}%`; marker.style.top=`${100*(e.clientY-r.top)/r.height}%`; marker.hidden=false; perform({ type: 'click', x: (e.clientX - r.left) * state.width / r.width, y: (e.clientY - r.top) * state.height / r.height }); };
+  img.onclick = e => { if (busy || expired || reconcile || !state || state.contact || state.review || state.result) return; const r = img.getBoundingClientRect(); const marker=container.querySelector('[data-click]'); marker.style.left=`${100*(e.clientX-r.left)/r.width}%`; marker.style.top=`${100*(e.clientY-r.top)/r.height}%`; marker.hidden=false; perform({ type: 'click', x: (e.clientX - r.left) * state.width / r.width, y: (e.clientY - r.top) * state.height / r.height }); };
   container.querySelector('[data-up]').onclick = () => perform({ type: 'scroll', dy: -500 });
   container.querySelector('[data-down]').onclick = () => perform({ type: 'scroll', dy: 500 });
   container.querySelector('[data-refresh]').onclick = () => perform({ type: 'refresh' });
-  async function close() {
-    if (busy) return;
-    if (state) await api(`${endpoint}/${state.id}`, { method: 'DELETE' });
+  container.querySelector('[data-retry-fields]').onclick = () => syncPending(true);
+  container.querySelector('[data-restart]').onclick = () => {
+    if (busy || !expired || !expiryConfirmed || submissionStarted || reconcile || state?.result) return;
+    resetView();
+    perform();
+  };
+  function resetView() {
     clearTimeout(editTimer); pendingFields.clear(); overlay.replaceChildren();
-    state = null; screen.hidden = true; start.hidden = false; img.removeAttribute('src'); status.textContent = 'Bokningsformuläret är stängt.';
+    state = null; expired = false; expiryConfirmed = false; failedFill = false;
+    screen.hidden = true; start.hidden = false; img.removeAttribute('src'); terms.checked = false;
+    controls();
+  }
+  async function close() {
+    if (busy || submissionStarted || reconcile || state?.result) return;
+    busy = true; controls();
+    try {
+      if (state) {
+        const result = await api(`${endpoint}/${state.id}`, { method: 'DELETE' });
+        if (result?.error && result.error !== 'session_expired') throw new Error(result.error);
+      }
+      resetView(); status.textContent = 'Bokningsformuläret är stängt.';
+    } catch {
+      status.textContent = 'Formuläret kunde inte stängas. Dina uppgifter finns kvar. Försök stänga igen eller kontrollera status.';
+    } finally { busy = false; controls(); }
   }
   container.querySelector('[data-close]').onclick = close;
   const observer = new MutationObserver(() => { if (!container.isConnected) { disposed = true; close(); observer.disconnect(); } });

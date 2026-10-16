@@ -12,7 +12,7 @@ import { uxT } from './ux-copy.js?v=175';
 import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturnTo, resolveAuthReturn, joinResponse } from './ux-booking.js?v=175';
 import { mountAvailabilitySearch } from './availability-search.js?v=188';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js?v=189';
-import { mountBokabordMirror } from "./bokabord-mirror.js";
+import { mountBokabordMirror } from "./bokabord-mirror.js?v=195";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
 import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=177";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=159";
@@ -2529,12 +2529,12 @@ async function renderRestaurantDetail(placeId) {
   const closedSourceLabel = closureKind === 'seasonal' ? bookingCopy.seasonalSource : bookingCopy.closedSource;
   const bookingPanel = closedToBooking
     ? `<div class="restaurant-closed-notice" role="status"><p>${esc(closedMessage)}</p>${closureSource ? `<a href="${esc(closureSource)}" target="_blank" rel="noopener noreferrer">${esc(closedSourceLabel)}</a>` : ''}</div>`
+    : mirrorConfig?.mode === 'live' && mirrorConfig?.enabled && mirrorConfig.restaurantIds?.includes(restaurant.placeId)
+    ? `<div id="bokabord-mirror"></div>`
     : embeddedBooking
     ? `<div id="restaurant-provider-booking"></div>`
     : scopedBookingPanel
     ? scopedBookingPanel
-    : mirrorConfig?.enabled && mirrorConfig.restaurantIds?.includes(restaurant.placeId)
-    ? `<div id="bokabord-mirror"></div>`
     : contactBookingPanel
     ? contactBookingPanel
     : zinkPilot
