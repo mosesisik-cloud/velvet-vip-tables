@@ -37,6 +37,13 @@ Public confirmation includes the bound room fields. No guest/contact data is
 added to the ledger. Existing duplicate hashes remain unchanged deliberately:
 changing room cannot re-arm the same owner's same venue/date/time/party booking.
 
-16 adapter tests and28 runtime/journal/ledger tests passed on candidate22fde2e.
-Actual full-chain and shared-boundary review are required before activation.
+Release204 runtime candidate2b4f7eade252b17362befc4718c6fcf7196bbed3 passed
+16 adapter tests plus28 runtime/journal/ledger tests; register/result checks pass.
+The source-backed exclusive-readback fix and shared marker enforcement passed
+narrow independent review. Actual app/API/native Chromium/SQLite integration:
+Pesquiere282API/15restarts/12mockPOST, FishCorner42API/2restarts/2mockPOST;
+Sturehof120API/4restarts/3mockPOST on the same shared changes. Zero actual supplier
+requests. The final harness49eaa03 verifies pending ledger state before readback,
+matching and mismatched GET evidence, POST echo bypass denial, public room proof,
+history, guest isolation and no replay after restart or room changes.
 No real reservation, hold, payment or code is created for testing.
