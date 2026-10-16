@@ -10,6 +10,8 @@ export const ZENCHEF_ARPEGE = Object.freeze({
 const FIXTURE_URL = 'https://zenchef-fixture.invalid/';
 const TTL = 10 * 60_000;
 const FIELDS = ['firstname', 'lastname', 'email', 'phone'];
+const PROVIDER_FIELDS = Object.freeze({ firstname: '[data-testid="firstname-input"]',
+  lastname: '[data-testid="lastname-input"]', email: '[data-testid="email-input"]', phone: '[data-testid="phone-input"]' });
 export class ZenchefError extends Error {
   constructor(code, status = 400) { super(code); this.status = status; }
 }
@@ -23,6 +25,39 @@ export function zenchefSearchUrl(query) {
   }
   // day/pax are the provider's own public results-page parameters (2026-10-16).
   return ZENCHEF_ARPEGE.url + `&day=${date}&pax=${party}`;
+}
+
+export function zenchefFormUrl(selection) {
+  const search = zenchefSearchUrl(selection);
+  if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(selection.time)) throw new ZenchefError('time');
+  return search.replace('/results?', '/form?') + '&slot=' + encodeURIComponent(selection.time);
+}
+
+// Public bundle and rendered form observed 2026-10-16. API reads remain pinned
+// to the venue and selected month; authentication is the provider's normal GET.
+// No alternate WAF route, token injection, quotation POST or payment resource.
+export function allowedZenchefPreparationRequest(request, selection) {
+  if (request.method() !== 'GET' || request.redirectedFrom()) return false;
+  let expected, u;
+  try { expected = zenchefFormUrl(selection); u = new URL(request.url()); } catch { return false; }
+  if (request.resourceType() === 'document') return request.url() === expected;
+  if (u.origin === 'https://bookings.zenchef.com' && !u.search) {
+    return (request.resourceType() === 'script' && /^\/_next\/static\/chunks\/[A-Za-z0-9_./-]+\.js$/.test(u.pathname))
+      || (request.resourceType() === 'stylesheet' && /^\/_next\/static\/css\/[A-Za-z0-9_.-]+\.css$/.test(u.pathname))
+      || (request.resourceType() === 'font' && /^\/_next\/static\/media\/[A-Za-z0-9_.-]+\.(woff2?|ttf)$/.test(u.pathname))
+      || (['fetch', 'xhr'].includes(request.resourceType()) && /^\/locales\/fr\/(translation|validation)\.json$/.test(u.pathname));
+  }
+  if (u.origin !== 'https://bookings-middleware.zenchef.com' || !['fetch', 'xhr'].includes(request.resourceType())
+    || u.hash || u.username || u.password || u.searchParams.getAll('restaurantId').length !== 1
+    || u.searchParams.get('restaurantId') !== '354036') return false;
+  const keys = [...u.searchParams.keys()];
+  if (new Set(keys).size !== keys.length) return false;
+  if (u.pathname === '/getAuthToken') return keys.length === 1;
+  if (u.pathname !== '/getAvailabilitiesSummary' || keys.length !== 3
+    || !keys.every(k => ['restaurantId', 'date_begin', 'date_end'].includes(k))) return false;
+  const month = selection.date.slice(0, 7);
+  const last = new Date(Date.UTC(Number(month.slice(0, 4)), Number(month.slice(5)), 0)).getUTCDate();
+  return u.searchParams.get('date_begin') === month + '-01' && u.searchParams.get('date_end') === month + '-' + last;
 }
 
 // Read only the server-rendered provider state, never execute or mutate its store.
@@ -83,8 +118,8 @@ export class ZenchefPlaywright {
   #closed = false;
   constructor({ browserFactory, mode = 'inspect', fixtureHtml,
     reserveSubmission, recordResult, now = Date.now } = {}) {
-    if (!['inspect', 'fixture'].includes(mode)) throw new ZenchefError('live_not_verified');
-    if (mode === 'inspect' && fixtureHtml !== undefined) throw new ZenchefError('fixture_forbidden');
+    if (!['inspect', 'prepare', 'fixture'].includes(mode)) throw new ZenchefError('live_not_verified');
+    if (mode !== 'fixture' && fixtureHtml !== undefined) throw new ZenchefError('fixture_forbidden');
     if (mode === 'fixture' && (typeof fixtureHtml !== 'string' || !fixtureHtml)) throw new ZenchefError('fixture_required');
     this.mode = mode; this.fixtureHtml = fixtureHtml;
     this.reserveSubmission = reserveSubmission; this.recordResult = recordResult;
@@ -115,7 +150,7 @@ export class ZenchefPlaywright {
           if (r.url() === FIXTURE_URL && r.method() === 'GET' && r.resourceType() === 'document' && !r.redirectedFrom()) {
             return route.fulfill({ status: 200, contentType: 'text/html', body: this.fixtureHtml });
           }
-        } else if (allowedZenchefInspectionRequest(r, s.searchQuery)) {
+        } else if (s.formSelection ? allowedZenchefPreparationRequest(r, s.formSelection) : allowedZenchefInspectionRequest(r, s.searchQuery)) {
           // fetch with redirects disabled, then fulfill: route.continue can follow an
           // unreviewed redirect without running this route guard a second time.
           try {
@@ -162,6 +197,8 @@ export class ZenchefPlaywright {
         && !s.attempted && typeof this.reserveSubmission === 'function' && typeof this.recordResult === 'function',
       details: s.details ? structuredClone(s.details) : null, result: s.result ? { ...s.result } : null,
       availabilityEvidence: s.availabilityEvidence ? structuredClone(s.availabilityEvidence) : null,
+      reviewToken: s.review?.revision === s.revision ? s.review.token : null,
+      checkoutBlocker: s.formSelection ? 'card_and_supplier_submission_unverified' : null,
       blockedRequests: s.blockedRequests,
       blocker: this.mode === 'inspect' ? 'supplier_dom_endpoints_and_sandbox_unverified' : 'local_fixture_only' };
     s.lastSnapshot = snapshot;
@@ -171,19 +208,85 @@ export class ZenchefPlaywright {
     const s = this.owned(id, owner);
     if (s.busy) throw new ZenchefError('busy', 409);
     if (!action || action.revision !== s.revision) throw new ZenchefError('stale_view', 409);
-    if (this.mode !== 'fixture' && !['refresh', 'search'].includes(action.type)) throw new ZenchefError('inspect_only', 409);
+    if (this.mode === 'inspect' && !['refresh', 'search'].includes(action.type)) throw new ZenchefError('inspect_only', 409);
     s.busy = true; s.touched = this.now();
     try {
       if (action.type === 'refresh') return await this.snapshot(s);
-      if (this.mode === 'inspect' && action.type === 'search') {
+      if (this.mode !== 'fixture' && action.type === 'search') {
         const query = { date: action.date, party: action.party };
         const url = zenchefSearchUrl(query);
-        s.searchQuery = query; s.availabilityEvidence = null; s.state = 'inspect_only';
+        s.searchQuery = query; s.formSelection = null; s.details = null; s.review = null;
+        s.availabilityEvidence = null; s.state = 'inspect_only';
         await s.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 12000 });
         const data = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent());
         s.availabilityEvidence = zenchefAvailabilityEvidence(data, query, this.now());
         s.state = 'availability_observed';
         return await this.snapshot(s);
+      }
+      if (this.mode === 'prepare') {
+        if (action.type === 'select' && s.state === 'availability_observed') {
+          const evidence = s.availabilityEvidence;
+          const matches = evidence?.candidates.filter(row => row.time === action.time);
+          if (!matches || matches.length !== 1 || matches[0].shiftId !== action.shiftId
+            || this.now() - Date.parse(evidence.observedAt) > 120000) throw new ZenchefError('slot_stale_or_unverified', 409);
+          s.formSelection = { ...s.searchQuery, time: action.time };
+          const url = zenchefFormUrl(s.formSelection);
+          await s.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
+          await s.page.locator(PROVIDER_FIELDS.firstname).waitFor({ state: 'visible', timeout: 20000 });
+          const data = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent());
+          const form = data?.props?.initialState?.appStoreState;
+          if (s.page.url() !== url || data.page !== '/form' || form?.restaurantId !== '354036'
+            || form.wish?.day !== s.searchQuery.date || form.wish?.pax !== s.searchQuery.party
+            || form.wish?.slot !== action.time || form.wish?.waiting_list !== false) throw new ZenchefError('provider_form_mismatch', 502);
+          const supported = ['firstname', 'lastname', 'email', 'phone_number', 'country', 'civility'];
+          if (!form.mandatoryFields || Object.entries(form.mandatoryFields).some(([key, value]) => value === 'required' && !supported.includes(key))) {
+            throw new ZenchefError('provider_fields_unverified', 409);
+          }
+          s.state = 'contact'; s.review = null;
+          return await this.snapshot(s);
+        }
+        if (action.type === 'fill' && ['contact', 'review'].includes(s.state)) {
+          const fields = action.fields;
+          if (!fields || Object.keys(fields).length !== 5 || FIELDS.some(k => typeof fields[k] !== 'string'
+            || !fields[k].trim() || fields[k].length > 200) || !['mr', 'mrs', 'mx'].includes(fields.civility)
+            || !/^\+\d{7,15}$/.test(fields.phone) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) throw new ZenchefError('contact_fields');
+          s.review = null; s.state = 'contact';
+          for (const k of FIELDS) {
+            await s.page.locator(PROVIDER_FIELDS[k]).fill(fields[k]);
+            await s.page.locator(PROVIDER_FIELDS[k]).blur();
+          }
+          const radio = s.page.locator(`input[name="civility"][value="${fields.civility}"]`);
+          // Zenchef hides the native radio and handles clicks on its visible label.
+          await radio.locator('xpath=ancestor::label[1]').click();
+          if (!await radio.isChecked()) throw new ZenchefError('provider_field_not_applied', 409);
+          // Never opt into storage/marketing or infer acceptance of provider terms.
+          for (const box of await s.page.locator('input[type="checkbox"]').all()) if (await box.isChecked()) {
+            await box.locator('xpath=ancestor::label[1]').click();
+            if (await box.isChecked()) throw new ZenchefError('provider_consent_not_cleared', 409);
+          }
+          return await this.snapshot(s);
+        }
+        if (action.type === 'review' && ['contact', 'review'].includes(s.state)) {
+          const details = { ...s.formSelection, civility: await s.page.locator('input[name="civility"]:checked').inputValue() };
+          for (const k of FIELDS) details[k] = await s.page.locator(PROVIDER_FIELDS[k]).inputValue();
+          if (FIELDS.some(k => !details[k]?.trim())) throw new ZenchefError('contact_required');
+          s.details = details; s.state = 'review';
+          s.review = { token: crypto.randomUUID(), revision: s.revision + 1,
+            digest: crypto.createHash('sha256').update(JSON.stringify([s.owner, s.id, s.restaurantId, details])).digest('hex') };
+          return await this.snapshot(s);
+        }
+        if (action.type === 'submit') {
+          if (s.state !== 'review' || action.confirm !== true || action.terms !== true
+            || !s.review || s.review.revision !== s.revision || action.reviewToken !== s.review.token) throw new ZenchefError('confirmation_required', 409);
+          const actual = { ...s.formSelection, civility: await s.page.locator('input[name="civility"]:checked').inputValue() };
+          for (const k of FIELDS) actual[k] = await s.page.locator(PROVIDER_FIELDS[k]).inputValue();
+          const digest = crypto.createHash('sha256').update(JSON.stringify([s.owner, s.id, s.restaurantId, actual])).digest('hex');
+          if (digest !== s.review.digest) throw new ZenchefError('stale_review', 409);
+          // Arpège's actual form requires a card imprint; no card/booking request
+          // has been verified or authorized. Do not click its validate button.
+          throw new ZenchefError('card_and_supplier_submission_unverified', 409);
+        }
+        throw new ZenchefError('invalid_transition', 409);
       }
       if (s.attempted) throw new ZenchefError('already_attempted', 409);
       const click = name => s.page.locator(`[data-zenchef-test="${name}"]`).click();

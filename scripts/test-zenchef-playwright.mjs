@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import { chromium } from 'playwright';
 import { ZenchefPlaywright, ZENCHEF_ARPEGE, allowedZenchefInspectionRequest,
-  zenchefSearchUrl, zenchefAvailabilityEvidence } from '../api/providers/zenchef-playwright.mjs';
+  zenchefSearchUrl, zenchefAvailabilityEvidence, zenchefFormUrl, allowedZenchefPreparationRequest } from '../api/providers/zenchef-playwright.mjs';
 
 const fixture = (status = 'confirmed', reference = 'LOCAL-TEST-ONLY') => `<!doctype html><html><body>
 <h1>LOCAL FIXTURE — not supplier availability</h1>
@@ -196,4 +196,59 @@ test('readonly SSR search binds venue/day/party and excludes waitlist, closed an
   assert.equal(allowedZenchefInspectionRequest(request(url), query), true);
   assert.equal(allowedZenchefInspectionRequest(request(url + '&hold=1'), query), false);
   assert.equal(allowedZenchefInspectionRequest(request(url.replace('pax=2', 'pax=3')), query), false);
+});
+
+test('preparation guard permits only observed venue/month reads and static resources', () => {
+  const selection = { date: '2030-11-16', party: 2, time: '19:30' };
+  const request = (url, type = 'fetch', method = 'GET', redirect = null) => ({ url: () => url, method: () => method,
+    resourceType: () => type, redirectedFrom: () => redirect });
+  const base = 'https://bookings-middleware.zenchef.com';
+  assert.equal(allowedZenchefPreparationRequest(request(zenchefFormUrl(selection), 'document'), selection), true);
+  assert.equal(allowedZenchefPreparationRequest(request(base + '/getAuthToken?restaurantId=354036'), selection), true);
+  assert.equal(allowedZenchefPreparationRequest(request(base + '/getAvailabilitiesSummary?restaurantId=354036&date_begin=2030-11-01&date_end=2030-11-30'), selection), true);
+  for (const r of [request(base + '/booking?restaurantId=354036', 'fetch', 'POST'), request(base + '/quotation-preview?restaurantId=354036', 'fetch', 'POST'),
+    request(base + '/getAuthToken?restaurantId=1'), request(base + '/getAuthToken?restaurantId=354036&restaurantId=1'),
+    request(base + '/getAuthToken?restaurantId=354036&email=test'), request(base + '/getAuthToken?restaurantId=354036', 'fetch', 'GET', {}),
+    request(base + '/getAvailabilitiesSummary?restaurantId=354036&date_begin=2030-11-01&date_end=2030-12-31'),
+    request('https://js.stripe.com/v3', 'script'), request('https://evil.example/a.js', 'script')]) {
+    assert.equal(allowedZenchefPreparationRequest(r, selection), false);
+  }
+});
+
+test('actual provider field contract replay reaches review but never sends booking or card writes', async () => {
+  const date = '2030-11-16'; let providerPage; let reserveCalls = 0;
+  // Sanitized DOM contract from observed Arpège fields; synthetic data, no supplier JS.
+  const document = url => {
+    const u = new URL(url), isForm = u.pathname === '/form';
+    const state = { restaurantId: '354036', initializedSSR: true, isDisabled: 0, restaurantTimezone: 'Europe/Paris',
+      wish: { day: date, pax: 2, waiting_list: false, ...(isForm ? { slot: '19:30' } : {}) },
+      mandatoryFields: { firstname: 'required', lastname: 'required', email: 'required', phone_number: 'required', country: 'required', civility: 'required' },
+      dailyAvailabilities: { [date]: { date, shifts: [{ id: 40058, closed: false, marked_as_full: false, bookable_from: null, bookable_to: date + ' 22:00:00',
+        shift_slots: [{ name: '19:30', closed: false, marked_as_full: false, bookable_from: null, bookable_to: date + ' 19:30:00', possible_guests: [2], available_rooms: { 2: [15529] } }] }] } } };
+    const data = { page: isForm ? '/form' : '/results', query: Object.fromEntries(u.searchParams), props: { initialState: { appStoreState: state } } };
+    return `<html><body><h1>Sanitized provider field replay, not live</h1><script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
+      ${isForm ? '<input data-testid="firstname-input"><input data-testid="lastname-input"><input data-testid="email-input"><input data-testid="phone-input"><label>Mr<input style="display:none" type="radio" name="civility" value="mr"></label><label>Marketing<input type="checkbox" checked></label><button data-testid="validate-btn">Continue to card imprint</button>' : ''}</body></html>`;
+  };
+  const a = new ZenchefPlaywright({ mode: 'prepare', now: () => Date.parse('2030-11-15T12:00:00Z'), reserveSubmission: async () => { reserveCalls++; },
+    browserFactory: async () => ({ close: async () => {}, newContext: async opts => {
+      const context = await browser.newContext(opts); context.on('page', page => { providerPage = page; });
+      const route = context.route.bind(context);
+      context.route = (pattern, handler) => route(pattern, original => handler({ request: () => original.request(), abort: () => original.abort(),
+        fetch: async options => { assert.equal(options.maxRedirects, 0); return { status: () => 200 }; },
+        fulfill: () => original.fulfill({ status: 200, contentType: 'text/html', body: document(original.request().url()) }) }));
+      return context;
+    } }) });
+  adapters.push(a);
+  let s = await create(a);
+  s = await act(a, s, { type: 'search', date, party: 2 });
+  s = await act(a, s, { type: 'select', time: '19:30', shiftId: 40058 }); assert.equal(s.state, 'contact');
+  const fields = { firstname: 'Fixture', lastname: 'Guest', email: 'fixture@example.invalid', phone: '+33100000000', civility: 'mr' };
+  s = await act(a, s, { type: 'fill', fields });
+  assert.equal(await providerPage.locator('input[type=checkbox]').isChecked(), false);
+  s = await act(a, s, { type: 'review' }); assert.ok(s.reviewToken); assert.equal(s.canSubmit, false); assert.equal(s.details.firstname, 'Fixture');
+  await providerPage.locator('[data-testid="firstname-input"]').fill('Changed');
+  await assert.rejects(act(a, s, { type: 'submit', reviewToken: s.reviewToken, confirm: true, terms: true }), /stale_review/);
+  s = a.current('owner'); s = await act(a, s, { type: 'review' });
+  await assert.rejects(act(a, s, { type: 'submit', reviewToken: s.reviewToken, confirm: true, terms: true }), /card_and_supplier_submission_unverified/);
+  assert.equal(reserveCalls, 0);
 });
