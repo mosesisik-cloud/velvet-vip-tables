@@ -38,9 +38,13 @@ test('public source binds exact venue, ordinary Dinner and unpriced/no-payment p
   assert.throws(() => sazonPolicy(html(changed)), /venue_binding/);
 });
 
-test('native query equals saved one-date request except private correlation UUID', () => {
+test('Experience Book now group order is preserved separately from pax count', () => {
   const { session_ref, ...payload } = sazonSearchPayload(query, ref);
-  assert.deepEqual(payload, fixture.query);
+  assert.deepEqual(payload, { ...fixture.query,
+    orders: [{ is_group_order: true, qty: 1, menu_item_id: SAZON.menuId }] });
+  // The saved actual query used catalog flags, which native Book now overrides.
+  // Preserve that historical mistake; do not relabel its response as native evidence.
+  assert.notDeepEqual(payload.orders, fixture.query.orders);
   assert.equal(session_ref, ref);
   for (const q of [{ date: '2026-02-30', party: 2 }, { ...query, party: 3 }]) {
     assert.throws(() => sazonSearchPayload(q, ref), /search_fields/);

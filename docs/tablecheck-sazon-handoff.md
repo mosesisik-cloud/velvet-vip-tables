@@ -1,5 +1,15 @@
 # Sazón / TableCheck preparation adapter
 
+**Correction after independent quantity review:** PR219's original query used
+catalog `isGroupOrder=false` and quantity two. That was not the native experience
+order: Pages-Menu `jaKR` Book now at 872909 sets quantity one / group true;
+`qVAb` routing at 1011200 preserves it and grid at 524252 serializes that order.
+This revision corrects the payload and local details without a new query.
+The one historical negative response below belongs to the incorrect query;
+it is not evidence against availability in the corrected ordinary flow.
+The historical fixture is deliberately preserved, not rewritten to claim a
+corrected request was observed. Tests assert the correction separately.
+
 Refs #129. Owner: `codex-worker-cbfe5665-79ca-415d-91ac-5c184e516939`.
 Stable restaurant: `osm-BAL-sazon`. Shared runtime/server/UI/journal integration
 belongs to 32d5; independent source/code review belongs to e98a.
@@ -39,11 +49,19 @@ HTTP 200 returned `availability_grid.code=failure` with this menu ID rejected.
 Raw response SHA256:
 `484b23cbfe4fef2aa31eb7b89c82b1b32f90c51bbd1d2e2919059e8e68ba6fa0`.
 The saved fixture contains that exact negative response and a public SSR subset.
+That quantity was subsequently found to differ from native experience selection.
 No second date, fallback menu, selected slot, cart, hold, contact, checkout,
 capability request, payment or challenge bypass was attempted. The rejection
 does not establish whether another date or quantity would work.
 
 ## Native mutation and result boundaries
+
+Experience mount at pages 873700 also invokes `POST /v2/booking/cart/init`
+before Book now. Client 195539 sends shop_id with optional amendment ID and
+URL-query/locale/session transforms. The caller does not inspect its response.
+This is blocked along with cart creation; it is not evidence of inventory hold.
+Whether init is a required server prerequisite remains unresolved from this
+client alone. No native scripts are executed by the preparation adapter.
 
 Pages slot handler 526300 loads the selected menu then invokes the cart helper;
 it does not pass the landing branch's skip-cart option. Client helper 3254200
