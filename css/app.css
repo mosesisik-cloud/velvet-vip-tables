@@ -3152,6 +3152,21 @@ body.light-shell .dest-card::after {
 body.light-shell .restaurant-detail .restaurant-book-panel:has(.booking-provider-frame) { position: static; top: auto; min-width: 0; }
 /* Native forms stay in their grid row; the card style otherwise retains top:92px. */
 body.light-shell .restaurant-detail .restaurant-book-panel:has(#provider-playwright-booking) { position: static; top: auto; min-width: 0; }
+#provider-playwright-booking { color: #292b2d; }
+#provider-playwright-booking button { min-height: 44px; padding: 10px 14px; margin: 4px 0; border: 1px solid #b8beb8; border-radius: 8px; background: #fff; color: #315c48; font: inherit; font-size: 14px; line-height: 1.3; cursor: pointer; }
+#provider-playwright-booking button:is([data-start],[data-save],[data-review],[data-hold-button],[data-submit]) { background: #315c48; border-color: #315c48; color: #fff; }
+#provider-playwright-booking button:disabled { opacity: .5; cursor: default; }
+#provider-playwright-booking header { align-items: center; flex: none; }
+#provider-playwright-booking footer { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 12px; border-top: 1px solid #e4e1da; margin-top: 12px; }
+#provider-playwright-booking footer small { flex-basis: 100%; font-size: 12px; line-height: 1.5; }
+#provider-playwright-booking [data-status] { margin: 8px 0; font-size: 14px; line-height: 1.5; }
+#provider-playwright-booking label { display: grid; gap: 6px; margin: 10px 0; font-size: 14px; }
+#provider-playwright-booking input:not([type=checkbox]), #provider-playwright-booking select, #provider-playwright-booking textarea { width: 100%; min-height: 44px; padding: 10px; box-sizing: border-box; border: 1px solid #b8beb8; border-radius: 8px; background: #fff; color: #292b2d; font: inherit; font-size: 16px; }
+#provider-playwright-booking input[readonly] { background: #efefeb; }
+#provider-playwright-booking input[type=checkbox] { width: 20px; height: 20px; accent-color: #315c48; }
+#provider-playwright-booking [data-slots] { display: flex; flex-wrap: wrap; gap: 8px; }
+#provider-playwright-booking [data-terms-text] { font-size: 14px; line-height: 1.5; overflow-wrap: anywhere; }
+#provider-playwright-booking summary { padding: 12px 0; cursor: pointer; }
 .restaurant-detail-main { min-width: 0; }
 .restaurant-facts dd { min-width: 0; overflow-wrap: anywhere; }
 @media (max-width: 760px) { .restaurant-detail-grid { grid-template-columns: minmax(0, 1fr); } }
