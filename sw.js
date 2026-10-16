@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-197-native-booking-controls";
+const VERSION = "v4-real-198-noema-receipt";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
