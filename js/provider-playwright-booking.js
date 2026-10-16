@@ -4,8 +4,10 @@ export function mountProviderPlaywrightBooking(container, api, {
   onDismiss = null, storage = window.sessionStorage, requestTimeoutMs = 30000,
 } = {}) {
   if (!provider || !restaurantId || !endpoint.startsWith('/')) throw new Error('booking_config');
+  const isZenchef = provider.toLowerCase() === 'zenchef';
   const key = `velvet:provider:${encodeURIComponent(provider)}:${encodeURIComponent(restaurantId)}`;
   const aliases = { firstname:'Förnamn', firstName:'Förnamn', lastname:'Efternamn', lastName:'Efternamn', email:'E-post', emailAddress:'E-post', phone:'Telefon', phoneNumber:'Telefon', comment:'Önskemål' };
+  if (isZenchef) { aliases.civility = 'Tilltal'; aliases.country = 'Land (landskod)'; }
   let state = null, busy = false, disposed = false, uncertain = false, marker = null, storageOK = true;
   try {
     const value = storage.getItem(key);
@@ -24,6 +26,7 @@ export function mountProviderPlaywrightBooking(container, api, {
       <div data-screen hidden><div style="max-height:55dvh;overflow:auto"><img data-image alt="Restaurangens aktuella bokningsformulär" style="display:block;width:100%"></div>
         <div data-navigation><button type="button" data-up>↑ Upp</button><button type="button" data-down>↓ Ned</button></div>
         <form data-search hidden><label>Datum <input type="date" name="date" required></label><label>Antal gäster <input type="number" name="party" min="1" max="20" value="2" required></label><button>Sök tider</button></form>
+        <div data-slots></div>
         <div data-fields></div><button type="button" data-save hidden>Spara kontaktuppgifter</button><button type="button" data-review hidden>Kontrollera bokningen</button>
         <div data-hold hidden><p data-hold-details></p><label><input type="checkbox" data-hold-consent> Jag godkänner denna tillfälliga reservation.</label><button type="button" data-hold-button>Reservera tillfälligt</button></div>
         <div data-final hidden><p data-final-details></p><p data-terms-text></p><label><input type="checkbox" data-terms> Jag har kontrollerat uppgifterna och godkänner bokningsvillkoren ovan.</label><button type="button" data-submit>Slutför bokningen</button></div>
@@ -33,8 +36,8 @@ export function mountProviderPlaywrightBooking(container, api, {
   </section>`;
   const el = name => container.querySelector(`[data-${name}]`);
   el('title').textContent = `${restaurantName || restaurantId} · ${provider}`;
-  const write = (id, phase) => {
-    const value = { id, phase };
+  const write = (id, phase, idempotencyKey) => {
+    const value = { id, phase, ...(idempotencyKey ? { idempotencyKey } : {}) };
     storage.setItem(key, JSON.stringify(value)); marker = value;
   };
   const isSubmit = () => marker?.phase === 'submit_pending';
@@ -54,11 +57,12 @@ export function mountProviderPlaywrightBooking(container, api, {
     && fingerprint(state.holdReview.fingerprint) && !expired(state.holdReview) && marker?.phase === 'open';
   const hasReview = () => state?.phase === 'booking_review' && details(finalReview()?.details)
     && fingerprint(finalFingerprint()) && (!state.reviewFingerprint || state.reviewFingerprint === finalFingerprint())
+    && (!isZenchef || (fingerprint(state.reviewToken) && fingerprint(state.terms?.version)))
     && (finalReview().expiresAt === undefined || !expired(finalReview())) && typeof finalReview().details.termsText === 'string' && !!finalReview().details.termsText.trim();
   const canSubmit = () => state?.canSubmit === true && hasReview();
   function controls() {
     const locked = busy || uncertain || isSubmit() || !storageOK || terminal() || !!state?.blocked;
-    container.querySelectorAll('button,input,textarea').forEach(node => { node.disabled = locked; });
+    container.querySelectorAll('button,input,textarea,select').forEach(node => { node.disabled = locked; });
     el('dismiss').disabled = false;
     el('refresh').disabled = busy || !storageOK;
     el('end').disabled = busy || uncertain || isSubmit() || !marker?.id;
@@ -73,6 +77,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     if (result?.status === 'confirmed') {
       if (proof?.verified === true && proof.source === 'provider' && proof.restaurantId === restaurantId
         && proof.sessionId === snapshot.id && typeof proof.attemptId === 'string' && proof.attemptId
+        && (!isZenchef || !isSubmit() || (marker.idempotencyKey && proof.idempotencyKey === marker.idempotencyKey))
         && typeof result.reference === 'string' && result.reference.trim()) return `Bokningen är bekräftad. Referens: ${result.reference}`;
       return 'Bokningen är inte verifierad. Skicka inte en ny bokning. Kontrollera resultatet med restaurangen.';
     }
@@ -90,6 +95,14 @@ export function mountProviderPlaywrightBooking(container, api, {
     const image = new Image(); image.src = next.image; await image.decode();
     if (image.naturalWidth !== next.width || image.naturalHeight !== next.height) throw new Error('image_size');
     if (disposed) return;
+    if (isZenchef) {
+      // Project the actual Zenchef transport, without changing its wire fields.
+      const phase = next.result ? 'result' : ({availability_observed:'slots',contact:'guest',review:'booking_review'})[next.state] || 'selection';
+      next = {...next,phase,bookingReview:next.state === 'review' ? {
+        details:{...next.details,restaurantId:next.restaurantId,guest:Object.fromEntries(Object.entries(next.details || {}).filter(([name]) => Object.hasOwn(aliases,name))),termsText:next.terms?.text},
+        reviewFingerprint:next.reviewFingerprint,
+      } : null};
+    }
     if (!marker) write(next.id, 'open');
     if (marker.phase === 'hold_pending' && ['guest','booking_review'].includes(next.phase) && next.canHold !== true) write(next.id, 'hold_done');
     uncertain = marker.phase === 'hold_pending' || marker.phase === 'submit_pending';
@@ -103,16 +116,28 @@ export function mountProviderPlaywrightBooking(container, api, {
       if (!Object.hasOwn(aliases, field.name) || seen.has(field.name)) continue;
       seen.add(field.name);
       const label = document.createElement('label'); label.textContent = aliases[field.name];
-      const input = document.createElement(field.name === 'comment' ? 'textarea' : 'input');
+      const input = document.createElement(field.name === 'civility' ? 'select' : field.name === 'comment' ? 'textarea' : 'input');
       input.dataset.field = field.name; input.setAttribute('aria-label', aliases[field.name]);
-      if (field.name !== 'comment') input.type = /^email/.test(field.name) ? 'email' : /phone/i.test(field.name) ? 'tel' : 'text';
+      if (field.name === 'civility') {
+        for (const [value,text] of [['','Välj tilltal'],['mr','Mr'],['mrs','Mrs'],['mx','Mx']]) { const option = document.createElement('option'); option.value = value; option.textContent = text; input.append(option); }
+      } else if (field.name !== 'comment') input.type = /^email/.test(field.name) ? 'email' : /phone/i.test(field.name) ? 'tel' : 'text';
       input.value = drafts.get(field.name) ?? (typeof field.value === 'string' ? field.value : '');
       input.maxLength = field.name === 'comment' ? 2000 : 200;
       input.oninput = () => { drafts.set(field.name,input.value); changed(); };
       label.append(input); el('fields').append(label);
     }
     el('save').hidden = !seen.size; el('review').hidden = next.phase !== 'guest';
-    el('search').hidden = next.phase !== 'selection';
+    el('search').hidden = !['selection','slots'].includes(next.phase);
+    el('navigation').hidden = isZenchef;
+    el('slots').replaceChildren();
+    if (isZenchef && next.phase === 'slots') {
+      for (const slot of next.availabilityEvidence?.candidates || []) {
+        if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(slot.time) || !(typeof slot.shiftId === 'string' || Number.isInteger(slot.shiftId))) continue;
+        const button = document.createElement('button'); button.type = 'button'; button.textContent = `${slot.time} · Välj tid`;
+        button.dataset.slot = slot.time; button.onclick = () => run({type:'select',time:slot.time,shiftId:slot.shiftId});
+        el('slots').append(button);
+      }
+    }
     el('hold').hidden = !canHold(); el('final').hidden = !hasReview();
     if (canHold()) el('hold-details').textContent = `Tillfällig reservation: ${restaurantName}, ${next.holdReview.date} kl. ${next.holdReview.time}, ${next.holdReview.party} gäster. Giltig till ${new Date(expiry(next.holdReview.expiresAt)).toLocaleString('sv-SE')}. Detta är inte en slutlig bokning.`;
     if (hasReview()) {
@@ -121,7 +146,7 @@ export function mountProviderPlaywrightBooking(container, api, {
       el('final-details').textContent = `Slutför bokning: ${restaurantName}, ${review.date} kl. ${review.time}, ${review.party} gäster. ${guest}`;
       el('terms-text').textContent = review.termsText;
     }
-    el('status').textContent = terminal() ? outcome(next.result,next) : uncertain ? 'Resultatet måste kontrolleras. Skicka inte på nytt.' : hasReview() && !canSubmit() ? 'Uppgifterna visas för kontroll. Leverantörens slutliga bokningssteg är ännu inte tillgängligt.' : next.phase === 'guest' ? 'Tillfälligt reserverat. Fyll i och spara dina kontaktuppgifter. Bokningen är inte slutförd.' : next.blocked ? 'Leverantörens formulär är spärrat.' : 'Välj och kontrollera uppgifterna i leverantörens formulär.';
+    el('status').textContent = terminal() ? outcome(next.result,next) : uncertain ? 'Resultatet måste kontrolleras. Skicka inte på nytt.' : hasReview() && !canSubmit() ? 'Uppgifterna visas för kontroll. Leverantörens slutliga bokningssteg är ännu inte tillgängligt.' : next.phase === 'guest' ? `${held(next) ? 'Tillfälligt reserverat. ' : ''}Fyll i och spara dina kontaktuppgifter. Bokningen är inte slutförd.` : next.blocked ? 'Leverantörens formulär är spärrat.' : 'Välj och kontrollera uppgifterna i leverantörens formulär.';
     el('status').dataset.bookingStatus = next.result?.status === 'confirmed' && !el('status').textContent.startsWith('Bokningen är bekräftad.') ? 'unknown' : next.result?.status || '';
     changed();
   }
@@ -138,7 +163,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     busy = true; controls(); el('status').textContent = 'Kontrollerar…';
     try {
       if (!storageOK) throw new Error('storage');
-      if (action?.type === 'hold' || action?.type === 'submit') { write(state.id,`${action.type}_pending`); uncertain = true; }
+      if (action?.type === 'hold' || action?.type === 'submit') { write(state.id,`${action.type}_pending`,action.idempotencyKey); uncertain = true; }
       const next = action ? await post(`${endpoint}/${encodeURIComponent(state.id)}/action`,{...action,revision:state.revision})
         : marker ? await post(`${endpoint}/${encodeURIComponent(marker.id)}/current`,{})
         : await post(endpoint,{provider,restaurantId,width:Math.max(320,Math.min(560,Math.round(container.clientWidth))),resume:true});
@@ -156,7 +181,7 @@ export function mountProviderPlaywrightBooking(container, api, {
   el('start').onclick = () => run(); el('refresh').onclick = () => run();
   el('up').onclick = () => run({type:'scroll',delta:-500}); el('down').onclick = () => run({type:'scroll',delta:500});
   el('image').onclick = event => {
-    if (!state || state.phase !== 'selection' || busy || uncertain || drafts.size) return;
+    if (isZenchef || !state || state.phase !== 'selection' || busy || uncertain || drafts.size) return;
     const rect = el('image').getBoundingClientRect();
     const x = Math.floor((event.clientX-rect.left)*state.width/rect.width), y = Math.floor((event.clientY-rect.top)*state.height/rect.height);
     if (x>=0 && y>=0 && x<state.width && y<state.height) run({type:'click',x,y});
@@ -166,7 +191,9 @@ export function mountProviderPlaywrightBooking(container, api, {
   el('review').onclick = () => run({type:'review'});
   el('hold-consent').onchange = controls; el('terms').onchange = controls;
   el('hold-button').onclick = () => run({type:'hold',confirm:true,reviewFingerprint:state?.holdReview?.fingerprint});
-  el('submit').onclick = () => run({type:'submit',confirm:true,terms:true,reviewFingerprint:finalFingerprint()});
+  el('submit').onclick = () => run(isZenchef
+    ? {type:'submit',confirm:true,terms:true,reviewToken:state?.reviewToken,termsVersion:state?.terms?.version,idempotencyKey:crypto.randomUUID()}
+    : {type:'submit',confirm:true,terms:true,reviewFingerprint:finalFingerprint()});
   el('dismiss').onclick = () => { destroy(); container.hidden = true; onDismiss?.(); };
   el('end').onclick = async () => {
     if (busy || uncertain || isSubmit() || !marker) return;

@@ -24,12 +24,25 @@ async function setup(page, scenario = 'journey') {
     const bookingReview={details:{restaurantId:'venue-1',date:review.date,time:review.time,party:review.party,guest:{firstname:'Test'},termsText:'Leverantörsvillkor'},reviewFingerprint:'review-bound'};
     window.calls=[];
     let snapshot={id:'session-1',provider:'SevenRooms',restaurantId:'venue-1',revision:1,width:420,height:760,image,imageHash,mode:'prepare',phase:'selection',text:'SIMULATED PROVIDER',fields:[]};
+    const zen = scenario.startsWith('zen-');
+    if(zen) snapshot={...snapshot,provider:'Zenchef',phase:'booking',state:'inspect_only'};
     if(scenario==='hash') snapshot.imageHash='bad';
     if(scenario==='venue') snapshot.restaurantId='other';
     if(scenario==='fixture') snapshot.mode='fixture';
     if(['timeout','proof','expired','pending'].includes(scenario)) snapshot={...snapshot,phase:'booking_review',canSubmit:true,bookingReview:{...bookingReview,...(scenario==='expired'?{expiresAt:1}:{})},reviewFingerprint:'review-bound'};
     window.transport=async(path,options)=>{
       const body=JSON.parse(options.body||'{}');window.calls.push({path,method:options.method,body});
+      if(zen) {
+        if(body.type==='search') snapshot={...snapshot,state:'availability_observed',availabilityEvidence:{candidates:[{time:'12:30',shiftId:545372}]}};
+        if(body.type==='select') snapshot={...snapshot,state:'contact',fields:['firstname','lastname','email','phone','civility','country'].map(name=>({name,value:''}))};
+        if(body.type==='fill') snapshot={...snapshot,fields:Object.entries(body.fields).map(([name,value])=>({name,value}))};
+        if(body.type==='review') snapshot={...snapshot,state:'review',details:{date:'2026-12-20',party:2,time:'12:30',...Object.fromEntries(snapshot.fields.map(f=>[f.name,f.value]))},reviewToken:'opaque-review',reviewFingerprint:'bound-zen',terms:{text:'Zenchef provider terms',version:'v1'},canSubmit:true};
+        if(body.type==='submit') {
+          if(scenario==='zen-timeout')throw new Error('lost_reply');
+          snapshot={...snapshot,state:'confirmed',canSubmit:false,result:{status:'confirmed',reference:'ZEN-1',verification:{verified:true,source:'provider',restaurantId:'venue-1',sessionId:'session-1',attemptId:'zen-attempt',idempotencyKey:scenario==='zen-wrong-key'?'different':body.idempotencyKey}}};
+        }
+        return {...snapshot,revision:++snapshot.revision};
+      }
       if(body.type==='search'||body.type==='click') snapshot={...snapshot,phase:'hold_review',canHold:true,holdReview:review};
       if(body.type==='hold') {
         if(scenario==='hold-timeout') throw new Error('lost_hold_reply');
@@ -44,7 +57,7 @@ async function setup(page, scenario = 'journey') {
       }
       return {...snapshot,revision:++snapshot.revision};
     };
-    window.mount=()=>mountProviderPlaywrightBooking(document.querySelector('#booking'),window.transport,{provider:'SevenRooms',restaurantId:'venue-1',restaurantName:'Testrestaurang',requestTimeoutMs:500});
+    window.mount=()=>mountProviderPlaywrightBooking(document.querySelector('#booking'),window.transport,{provider:zen?'Zenchef':'SevenRooms',restaurantId:'venue-1',restaurantName:'Testrestaurang',requestTimeoutMs:500});
     window.ui=window.mount(); await window.ui.ready;
   },scenario);
 }
@@ -117,6 +130,31 @@ try {
       }
     }
     await page.close();console.log(`PASS ${scenario}: no duplicate write or false confirmation`);
+  }
+  for(const scenario of ['zen-journey','zen-timeout','zen-wrong-key']) {
+    const page=await context.newPage();await setup(page,scenario);await page.locator('[data-start]').click();await idle(page);
+    assert.equal(await page.locator('[data-navigation]').isHidden(),true);
+    await page.locator('[name="date"]').fill('2026-12-20');await page.locator('[data-search] button').click();await idle(page);
+    await page.locator('[data-slot="12:30"]').click();await idle(page);
+    assert(!/Tillfälligt reserverat/.test(await page.locator('[data-status]').innerText()));
+    for(const [name,value] of Object.entries({firstname:'Test',lastname:'Guest',email:'test@example.invalid',phone:'+33612345678',country:'fr'})) await page.locator(`[data-field="${name}"]`).fill(value);
+    await page.locator('[data-field="civility"]').selectOption('mx');
+    await page.locator('[data-save]').click();await idle(page);
+    await page.locator('[data-review]').click();await idle(page);
+    assert.match(await page.locator('[data-final-details]').innerText(),/12:30.*Test.*fr/);
+    assert.equal(await page.locator('[data-terms-text]').innerText(),'Zenchef provider terms');
+    await page.locator('[data-terms]').check();await page.locator('[data-submit]').click();await idle(page);
+    const calls=await page.evaluate(()=>window.calls), submit=calls.find(c=>c.body.type==='submit').body;
+    assert.equal(calls.find(c=>c.body.type==='select').body.shiftId,545372);
+    assert.equal(submit.reviewToken,'opaque-review');assert.equal(submit.termsVersion,'v1');assert.match(submit.idempotencyKey,/^[a-zA-Z0-9_-]{16,100}$/);
+    assert.equal(calls.filter(c=>c.body.type==='hold').length,0);
+    if(scenario==='zen-timeout') {
+      await page.evaluate(async()=>{window.ui.destroy();window.ui=window.mount();await window.ui.ready;});await idle(page);
+      assert.equal(await page.locator('[data-submit]').isDisabled(),true);
+      assert.equal((await page.evaluate(()=>window.calls)).filter(c=>c.body.type==='submit').length,1);
+    } else assert.equal(await page.locator('[data-status]').getAttribute('data-booking-status'),scenario==='zen-journey'?'confirmed':'unknown');
+    const saved=await page.evaluate(()=>JSON.stringify({...sessionStorage}));assert(saved.includes(submit.idempotencyKey));assert(!saved.includes('example.invalid'));
+    await page.close();console.log(`PASS ${scenario}: native select/fill/review/token/version/key contract`);
   }
   await context.close();
 } finally {await browser?.close();await new Promise(resolve=>server.close(resolve));}
