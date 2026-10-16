@@ -3,6 +3,7 @@ import { test } from 'node:test';
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
+import crypto from 'node:crypto';
 import { PlaywrightAttemptLedger } from '../api/playwright-attempt-ledger.mjs';
 
 const review = (overrides = {}) => ({ owner: 'guest:fixture-owner', provider: 'Zenchef',
@@ -168,7 +169,7 @@ test('invalid input fails before creating any attempt',()=>{
   } finally {ledger.close();}
 });
 
-test('two independent processes sharing one DB grant exactly one send',async()=>onDisk(async file=>{
+for (const phase of ['booking', 'hold']) test(`two independent processes sharing one DB grant exactly one ${phase} send`,async()=>onDisk(async file=>{
   // Initialize schema before concurrent worker startup; both workers use real transactions.
   new PlaywrightAttemptLedger(file).close();
   const moduleUrl=new URL('../api/playwright-attempt-ledger.mjs',import.meta.url).href;
@@ -177,7 +178,7 @@ test('two independent processes sharing one DB grant exactly one send',async()=>
     try { console.log(JSON.stringify(ledger.reserve(JSON.parse(process.argv[2])))); }
     finally { ledger.close(); }`;
   const worker=()=>new Promise((resolve,reject)=>{
-    const child=spawn(process.execPath,['--input-type=module','-e',code,file,JSON.stringify(review())],{windowsHide:true});
+    const child=spawn(process.execPath,['--input-type=module','-e',code,file,JSON.stringify(review({phase}))],{windowsHide:true});
     let output='',errors=''; child.stdout.on('data',chunk=>output+=chunk);child.stderr.on('data',chunk=>errors+=chunk);
     const timer=setTimeout(()=>{child.kill();reject(new Error('worker_timeout'));},15000);
     child.on('error',error=>{clearTimeout(timer);reject(error);});
@@ -186,4 +187,74 @@ test('two independent processes sharing one DB grant exactly one send',async()=>
   const results=await Promise.all([worker(),worker()]);
   assert.equal(results.filter(r=>r.sendAllowed).length,1);
   assert.equal(results[0].attempt.attemptId,results[1].attempt.attemptId);
+}));
+
+test('pre-phase v1 booking rows retain exact scope and idempotency barriers after restart',async()=>onDisk(file=>{
+  let ledger=new PlaywrightAttemptLedger(file);
+  const input=review(), {owner,...metadata}=input;
+  const legacy={attemptId:'legacy-server-attempt',...metadata,status:'unknown',createdAt:'2026-01-01T00:00:00Z',updatedAt:'2026-01-01T00:00:00Z',reference:null,verification:null};
+  const hash=value=>crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
+  const idem=hash(input.idempotencyKey);
+  const scope=hash([owner,input.mode,input.provider,input.restaurantId,input.date,input.time,input.party]);
+  ledger.db.prepare('INSERT INTO playwright_attempts_v1 VALUES(?,?,?,?,?)').run(legacy.attemptId,owner,idem,scope,JSON.stringify(legacy));
+  ledger.close();ledger=new PlaywrightAttemptLedger(file);
+  try {
+    for(const phase of [undefined,'booking']) {
+      const replay=ledger.reserve(review({phase}));
+      assert.equal(replay.sendAllowed,false);assert.equal(replay.attempt.attemptId,legacy.attemptId);
+      assert.equal(replay.attempt.phase,'booking');
+      const rotated=ledger.reserve(review({phase,idempotencyKey:'rotated-key-00000001',sessionId:'new-session'}));
+      assert.equal(rotated.sendAllowed,false);assert.equal(rotated.attempt.attemptId,legacy.attemptId);
+    }
+    assert.throws(()=>ledger.reserve(review({time:'20:00'})),/idempotency_conflict/);
+    const stored=ledger.db.prepare('SELECT idem,scope,payload FROM playwright_attempts_v1').get();
+    assert.equal(stored.idem,idem);assert.equal(stored.scope,scope);assert.equal(stored.payload,JSON.stringify(legacy));
+    assert.equal(ledger.reserve(review({phase:'hold'})).sendAllowed,true);
+    // A pre-upgrade caller may still send evidence without a phase.
+    assert.equal(ledger.record(owner,legacy.attemptId,evidence(legacy)).status,'confirmed');
+  }finally{ledger.close();}
+}));
+
+test('hold and booking get separate grants but rotating a hold key cannot re-arm it',()=>{
+  const ledger=memory();
+  try {
+    const hold=ledger.reserve(review({phase:'hold'}));
+    const booking=ledger.reserve(review());
+    assert.equal(hold.sendAllowed,true);assert.equal(booking.sendAllowed,true);
+    assert.notEqual(hold.attempt.attemptId,booking.attempt.attemptId);
+    assert.equal(booking.attempt.phase,'booking');
+    const replay=ledger.reserve(review({phase:'hold',idempotencyKey:'hold-rotated-key-01',sessionId:'new-session',reviewFingerprint:'b'.repeat(64)}));
+    assert.equal(replay.sendAllowed,false);assert.equal(replay.reason,'hold_already_attempted');
+    assert.equal(replay.attempt.attemptId,hold.attempt.attemptId);
+    assert.throws(()=>ledger.reserve(review({phase:'hold',time:'20:00'})),/idempotency_conflict/);
+    for(const phase of [null,'','payment',false])assert.throws(()=>ledger.reserve(review({phase})),/invalid_phase/);
+  }finally{ledger.close();}
+});
+
+test('hold evidence must bind the phase and can never confirm or expose provider capabilities',()=>{
+  const ledger=memory();
+  try {
+    const {attempt}=ledger.reserve(review({phase:'hold',holdId:'PRIVATE-HOLD',holdToken:'PRIVATE-TOKEN'}));
+    for(const phase of [undefined,'booking',null])assert.throws(()=>ledger.record(review().owner,attempt.attemptId,evidence(attempt,{phase,status:'pending',reference:null})),/evidence_mismatch/);
+    for(const status of ['confirmed','payment_required'])assert.throws(()=>ledger.record(review().owner,attempt.attemptId,evidence(attempt,{status,reference:null})),/invalid_hold_status/);
+    assert.throws(()=>ledger.record(review().owner,attempt.attemptId,evidence(attempt,{status:'pending',reference:'PRIVATE-HOLD'})),/hold_reference_private/);
+    const saved=ledger.record(review().owner,attempt.attemptId,evidence(attempt,{status:'pending',reference:null,holdId:'PRIVATE-HOLD',holdToken:'PRIVATE-TOKEN',expiresAt:'PRIVATE-EXPIRY'}));
+    assert.equal(saved.status,'pending');assert.equal(saved.reference,null);assert.equal(saved.verification.phase,'hold');
+    assert.doesNotMatch(JSON.stringify(ledger.list(review().owner)),/PRIVATE-/);
+    assert.doesNotMatch(ledger.db.prepare('SELECT payload FROM playwright_attempts_v1').get().payload,/PRIVATE-/);
+    assert.throws(()=>ledger.record('other-owner',attempt.attemptId,evidence(attempt,{status:'pending',reference:null})),/attempt_not_found/);
+  }finally{ledger.close();}
+});
+
+test('unknown holds survive restart and elapsed time without granting retry; rejection stays terminal',async()=>onDisk(file=>{
+  let ledger=new PlaywrightAttemptLedger(file,{now:()=>0});
+  const {attempt}=ledger.reserve(review({phase:'hold'}));ledger.close();
+  ledger=new PlaywrightAttemptLedger(file,{now:()=>Date.now()+86400000});
+  try {
+    assert.equal(ledger.get(review().owner,attempt.attemptId).status,'unknown');
+    assert.equal(ledger.reserve(review({phase:'hold'})).sendAllowed,false);
+    ledger.record(review().owner,attempt.attemptId,evidence(attempt,{status:'rejected',reference:null}));
+    assert.throws(()=>ledger.record(review().owner,attempt.attemptId,evidence(attempt,{status:'pending',reference:null})),/terminal_result_conflict/);
+    assert.equal(ledger.reserve(review({phase:'hold',idempotencyKey:'retry-hold-key-00001'})).sendAllowed,false);
+  }finally{ledger.close();}
 }));
