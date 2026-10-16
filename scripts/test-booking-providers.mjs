@@ -29,8 +29,8 @@ for (const url of [
 ]) assert.equal(resolveEmbeddedBooking({ test: { ...row, url } }, 'test'), null);
 assert.equal(resolveEmbeddedBooking(registry, 'not-reviewed'), null);
 assert.equal(resolveEmbeddedBooking(registry, '__proto__'), null);
-assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 50);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 64);
+assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 51);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 65);
 assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 72);
 for(const id of ['curated-SBH-bonito-saint-barth','osm-SBH-bonito']) {
   assert.equal(registry[id].venueId,'bonitostbarth');
