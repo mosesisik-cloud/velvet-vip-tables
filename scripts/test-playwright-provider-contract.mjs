@@ -14,7 +14,7 @@ const profiles = [createBokabordContractFixture];
 if (process.env.ZENCHEF_CONTRACT_MODULE) {
   const module = await import(pathToFileURL(path.resolve(process.env.ZENCHEF_CONTRACT_MODULE)).href);
   profiles.push(async function ZenchefContractFixture() { return createZenchefContractFixture(module); });
-} else console.log('Coverage: BokaBord only. Set ZENCHEF_CONTRACT_MODULE to a local reviewed adapter module for Zenchef.');
+} else console.log('Zenchef not covered: set ZENCHEF_CONTRACT_MODULE to a reviewed local module.');
 if (process.env.SEVENROOMS_CONTRACT_MODULE) {
   const module = await import(pathToFileURL(path.resolve(process.env.SEVENROOMS_CONTRACT_MODULE)).href);
   profiles.push(async function SevenRoomsContractFixture() { return createSevenRoomsContractFixture(module); });
