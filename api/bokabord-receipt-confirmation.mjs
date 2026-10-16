@@ -86,6 +86,12 @@ export const ITALIANO_DINING_RECEIPT_POLICY = Object.freeze({
   hash: 'db5f54c8e9643fd5e54cd57016fb2544', mealid: 22890, mealType: 3, maxParty: 2,
 });
 
+// Ordinary Lunch only; dinner/card and private-room meals stay excluded.
+export const COPINE_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-copine', name: 'Copine',
+  hash: '153ead326f6097aa89a7e5db04760c97', mealid: 4790, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   const reviewedType0 = Object.entries(DAGMAR_LUNCH_RECEIPT_POLICY)
