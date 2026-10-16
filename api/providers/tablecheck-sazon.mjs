@@ -171,6 +171,10 @@ function exactOrders(rows) {
     && rows[0].qty === 1 && rows[0].is_group_order === true;
 }
 function cartFromOwnResponse(response, details, now, previous = null) {
+  // Conservative adapter gates, NOT a provider guarantee that POST/PUT returns
+  // every field. Orders/start/pax/category are consumed in GET-cart restoration;
+  // native state also defaults missing payment fields. A partial write response
+  // therefore stays unknown here rather than inheriting native UI defaults.
   const body = response?.data, cart = body?.cart;
   requireValue(response.status === 200 && !body.error && body.availability?.type === 'success'
     && body.is_request_enabled === false && cart && opaque(cart.id) && opaque(cart.access_token)
@@ -348,7 +352,9 @@ export class TablecheckSazon {
             sazonCartPayload(s.details, s.sessionRef, s.guest));
           if (!update) return this.snapshot(s);
           try { const updated = cartFromOwnResponse(update.response, s.details, this.now(), s.cart);
-            // Do not silently replace a capability after the final review.
+            // Conservative scope, not a native invariant: native upsert accepts
+            // rotated tokens. Supporting rotation needs a new private binding
+            // and fresh review; this version does not silently replace one.
             requireValue(updated.token === s.cart.token, 'cart_capability_changed');
             s.cart.expiresAt = updated.expiresAt;
             s.updatedCart = { attemptId: update.attempt.attemptId,
