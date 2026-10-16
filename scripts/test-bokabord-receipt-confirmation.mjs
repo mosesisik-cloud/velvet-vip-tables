@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createBokabordReceiptVerifier, NOEMA_LUNCH_RECEIPT_POLICY as policy } from '../api/bokabord-receipt-confirmation.mjs';
+import { createBokabordReceiptVerifier, NOEMA_LUNCH_RECEIPT_POLICY as policy, CICCIOS_DINING_RECEIPT_POLICY as ciccios } from '../api/bokabord-receipt-confirmation.mjs';
 const verifier = createBokabordReceiptVerifier(policy);
 function fixture() {
   const approval = {hash:policy.hash,mealid:policy.mealid,date:'2030-01-15',time:'12:00',party:2,
@@ -21,6 +21,23 @@ function fixture() {
   return {approval,attempt,observation};
 }
 const run = f => verifier.verify(f.attempt,f.approval,f.observation);
+test('Ciccios Dining Room uses the same bound contract with exact provider identity and party limit',()=>{
+  const v=createBokabordReceiptVerifier(ciccios),f=fixture();
+  Object.assign(f.approval,{hash:ciccios.hash,mealid:ciccios.mealid,time:'19:00'});
+  Object.assign(f.attempt,{restaurantId:ciccios.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:ciccios.hash,mealid:ciccios.mealid,time:'19:00'});
+  Object.assign(f.observation.data.booking,{mealid:ciccios.mealid,meal:{type:3},time:'19:00'});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',ciccios.name).replace('(Lunch)','(Dining Room)').replace('12:00 - 13:30','19:00 - 20:30');
+  const check=()=>v.verify(f.attempt,f.approval,f.observation);
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  assert.ok(v.approvalDigest({...f.approval,party:7}));assert.equal(v.approvalDigest({...f.approval,party:8}),null);
+  assert.equal(v.approvalDigest({...f.approval,mealid:56067}),null,'Bar is out of scope');
+  f.observation.receipt.text=f.observation.receipt.text.replace("Ciccio's",'Ciccio’s');assert.equal(check().status,'unknown','exact observed provider name');
+  f.observation.receipt.text=f.observation.receipt.text.replace('Ciccio’s',"Ciccio's");
+  f.observation.data.booking.mealid=56067;assert.equal(check().status,'unknown');
+  assert.throws(()=>createBokabordReceiptVerifier({...ciccios,maxParty:9}));
+});
 test('complete bound synthetic transaction plus document yields fixture proof, without private data',()=>{
   const f=fixture(), result=run(f);assert.equal(result.status,'confirmed');assert.equal(result.verification.source,'fixture');
   assert.equal(result.reference,'123');assert(!JSON.stringify(result).includes('synthetic-capability'));
