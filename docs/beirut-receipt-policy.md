@@ -85,3 +85,12 @@ path has a different pre-click boundary. Both prevent unreserved provider writes
 Focused receipt tests13 and narrow independent policy/flag review pass. Existing
 Noema actual app/API/Chromium/SQLite regression passed84API/4restarts/3mockPOST
 on d3b927e, with zero real supplier requests.
+
+Final Beirut actual app/API/Chromium/SQLite harness9befae3 passed84API calls,
+4backend restarts and3simulated POSTs on runtime d3b927e. The supplier route.fetch
+boundary reads the actual SQLite file and asserts the durable unknown attempt
+already exists. Guest continuation sends no code; native contact Next copies
+phone into the model; provider review requires fresh final approval. Missing or
+wrong receipts stay unknown, exact original receipt confirms and survives
+restart, and cross-owner/replay requests cannot send again. Real supplier test
+writes are zero. The gate is before network dispatch, not before local DOM click.
