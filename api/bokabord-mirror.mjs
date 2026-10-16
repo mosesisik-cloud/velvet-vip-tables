@@ -239,9 +239,14 @@ export class BokabordMirror {
   async nativeReviewBinding(s, details) {
     const digest = this.contactFinalVerifiers.get(s.restaurantId)?.approvalDigest(details);
     if (!digest) return null;
-    const text = await s.page.locator('body').innerText();
-    if (text.length > 64_000) return null;
-    return { fingerprint: crypto.createHash('sha256').update(JSON.stringify([digest,s.page.url(),text])).digest('hex'), text };
+    const view = await s.page.evaluate(() => {
+      const visible = el => el.getClientRects().length && getComputedStyle(el).visibility !== 'hidden';
+      return {url:location.href,text:document.body.innerText,
+        links:[...document.querySelectorAll('a[href]')].filter(visible).map(el=>({text:el.innerText,href:el.href})),
+        checks:[...document.querySelectorAll('input[type=checkbox]')].filter(visible).map(el=>({name:el.name,value:el.value,checked:el.checked}))};
+    });
+    if (view.text.length > 64_000 || view.links.length > 100 || view.links.some(link=>!/^https?:/.test(link.href))) return null;
+    return { fingerprint: crypto.createHash('sha256').update(JSON.stringify([digest,view])).digest('hex'), text:view.text, links:view.links };
   }
 
   async snapshot(s) {
@@ -265,7 +270,7 @@ export class BokabordMirror {
     const contactFinal = this.contactFinalVerifiers.has(s.restaurantId);
     const binding = contactFinal && contact && !s.submitted ? await this.nativeReviewBinding(s,details) : null;
     if (s.nativeReview && (!binding || binding.fingerprint !== s.nativeReview.fingerprint || Date.now()-s.nativeReview.createdAt > 300_000)) s.nativeReview = null;
-    const nativeReview = s.nativeReview ? {token:s.nativeReview.token,details:s.nativeReview.details,termsText:s.nativeReview.text} : null;
+    const nativeReview = s.nativeReview ? {token:s.nativeReview.token,details:s.nativeReview.details,termsText:s.nativeReview.text,links:s.nativeReview.links} : null;
     if (nativeReview) { review = true; fields = []; }
     const text = (await s.page.locator('body').innerText()).slice(0, 16_000);
     const shot = await s.page.screenshot({ type: 'png', animations: 'disabled' });
