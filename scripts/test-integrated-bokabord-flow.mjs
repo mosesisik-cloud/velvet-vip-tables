@@ -50,10 +50,14 @@ if (childMode) {
   };
   const launch = chromium.launch.bind(chromium);
   chromium.launch = async options => {
+    process.send?.({ kind: 'browser-launch-start', at: Date.now() });
     const browser = await launch(options);
+    process.send?.({ kind: 'browser-launch-ready', at: Date.now() });
     const newContext = browser.newContext.bind(browser);
     browser.newContext = async options => {
+      process.send?.({ kind: 'browser-context-start', at: Date.now() });
       const context = await newContext({ ...options, serviceWorkers: 'block' });
+      process.send?.({ kind: 'browser-context-ready', at: Date.now() });
       const route = context.route.bind(context);
       await context.routeWebSocket('**/*', socket => socket.close());
       // A final guard also catches requests not registered by the production adapter.
@@ -126,8 +130,18 @@ async function main() {
     const body = Buffer.concat(chunks);
     let action;
     try { action = JSON.parse(body).type; } catch {}
-    apiCalls.push({ path: url.pathname, method: req.method, action });
+    const call = { path: url.pathname, method: req.method, action, started: Date.now() };
+    apiCalls.push(call);
     const proxy = http.request(backend + url.pathname + url.search, { method: req.method, headers: { ...req.headers, host: new URL(backend).host } }, upstream => {
+      call.status = upstream.statusCode;
+      call.responseMs = Date.now() - call.started;
+      const diagnostic = [];
+      upstream.on('data', chunk => { if (upstream.statusCode >= 400) diagnostic.push(chunk); });
+      upstream.on('end', () => {
+        if (diagnostic.length) {
+          try { call.error = JSON.parse(Buffer.concat(diagnostic)).error; } catch {}
+        }
+      });
       res.writeHead(upstream.statusCode, upstream.headers); upstream.pipe(res);
     });
     proxy.on('error', () => { res.writeHead(502); res.end('{}'); });
@@ -197,7 +211,12 @@ async function main() {
     await settled(page);
   }
   async function toReview(page) {
+    const opening = page.waitForResponse(response => response.request().method() === 'POST'
+      && new URL(response.url()).pathname === '/restaurant-bookings/mirror', { timeout: 65_000 });
     await panel(page).locator('[data-start]').click();
+    const response = await opening;
+    assert.equal(response.status(), 201, 'Mirror creation must succeed: ' + JSON.stringify(
+      response.ok() ? {} : await response.json()));
     await panel(page).locator('[data-image]').waitFor(); await settled(page);
     await pixel(page, 110); // party
     await pixel(page, 170); // date -> actual adapter's allowed supplier getTimes
@@ -291,8 +310,19 @@ async function main() {
       integrationCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
       supplierBoundaryAttempts: submits(), actualSupplierRequests: 0, liveConfirmationVerified: false,
       backendRestarts: 3, APIRequests: apiCalls.length, deployed: false }));
+    console.log('Mirror startup timings:', JSON.stringify(apiCalls.filter(call => call.method === 'POST'
+      && call.path === '/restaurant-bookings/mirror').map(({ status, responseMs }) => ({ status, responseMs }))));
+    console.log('Browser startup events:', JSON.stringify(messages.filter(event => event.kind.startsWith('browser-'))));
   } catch (error) {
     console.error('Integrated fixture failure:', error.message);
+    for (const [name, view] of Object.entries({ first, second, third })) {
+      if (view && !view.page.isClosed()) console.error('UI diagnostic:', JSON.stringify({ name,
+        state: await panel(view.page).evaluate(el => ({ busy: el.getAttribute('aria-busy'),
+          status: el.querySelector('[data-status]')?.textContent,
+          bookingStatus: el.querySelector('[data-status]')?.dataset.bookingStatus,
+          screenHidden: el.querySelector('[data-screen]')?.hidden })).catch(() => null) }));
+    }
+    console.error('API child diagnostic:', JSON.stringify({ exitCode: child?.exitCode, log: childLog.slice(-3000) }));
     console.error('Recent local API calls:', JSON.stringify(apiCalls.slice(-12)));
     console.error('Supplier boundary events:', JSON.stringify(messages));
     throw error;
