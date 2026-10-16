@@ -40,7 +40,7 @@ function fishDocument(address) {
   const data = {page:form?'/form':'/results',query:Object.fromEntries(url.searchParams),props:{initialState:{appStoreState:state}}};
   return `<html><meta charset="utf-8"><body><h1>FishCorner LOCAL TEST — no real booking</h1><script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
   ${form ? ['firstname','lastname','email'].map(k=>`<input data-testid="${k}-input">`).join('') +
-    `<div class="iti"><button type="button" class="iti__selected-country"><span class="iti__flag iti__fr"></span></button><li data-country-code="fr"></li><input data-testid="phone-input"></div>` +
+    `<div class="iti"><button type="button" class="iti__selected-country" title="France (+33)" aria-label="Selected country France"><span class="iti__flag iti__fr"></span></button><input data-testid="phone-input"></div>` +
     `<label>Mr<input type="radio" name="civility" value="mr" style="display:none"></label><label data-testid="eula-checkbox"><input type="checkbox">Synthetic test terms</label>
     <button data-testid="validate-btn">Reserve fixture</button><script>
     document.querySelector('[data-testid="validate-btn"]').onclick=()=>{

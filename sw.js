@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-200-riche-review";
+const VERSION = "v4-real-201-mobile-country";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
