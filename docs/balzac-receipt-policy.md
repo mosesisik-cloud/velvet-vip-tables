@@ -64,3 +64,17 @@ new payment requirement and missing document. The existing full-app guest-review
 harness remains required before activation; positive receipt tests are synthetic.
 The unresolved limitation is actual authorized transaction/receipt behavior, not
 an external blocker in reaching review. Public activation belongs to32d5.
+
+## Integrated verification
+
+Runtime a72f06c adds only the independent VELVET_BALZAC_RECEIPT flag to
+receiptPolicies, retaining all205 policies and contactFinal configuration.
+14 focused receipt tests and narrow independent review pass. Actual app/API/
+Chromium/SQLite guest harness90de7df passed84API calls,4backend restarts and
+3simulated supplier POSTs. Guest continuation sends no code; native Next copies
+phone; fresh final approval is required. The actual SQLite file contains the
+unknown attempt before route.fetch sends the supplier request. This is a
+pre-network-dispatch guarantee, not a pre-DOM-click guarantee. Wrong/missing
+receipts stay unknown; matching original document confirms and survives restart.
+Double-click, owner isolation and replay locks pass. Zero actual supplier test
+reservations, holds, payments or codes; real supplier completion unobserved.
