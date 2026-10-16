@@ -11,7 +11,8 @@ import { RequestBudget } from "./request-budget.mjs";
 import { PlaywrightRuntime } from './playwright-runtime.mjs';
 import { PlaywrightAttemptLedger } from './playwright-attempt-ledger.mjs';
 import { createBookingJournalHooks } from './playwright-booking-journal.mjs';
-import { ZenchefPlaywright, ZENCHEF_ARPEGE } from './providers/zenchef-playwright.mjs';
+import { createProviderJournal } from './provider-booking-journal.mjs';
+import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
 import fs from "node:fs";
 import path from "node:path";
@@ -36,13 +37,32 @@ for (const [id,row] of Object.entries(RESTAURANT_DETAILS)) availabilitySearch.re
 const mirrorMode = process.env.VELVET_BOKABORD_MIRROR || 'disabled';
 // These adapters have no verified checkout. Never accept mode/URLs from clients.
 // An explicit operator inspection switch is separate from guest booking.
-const zenchefInspection = new ZenchefPlaywright({ mode: 'inspect' });
-const sevenRoomsInspection = new SevenRoomsPlaywright();
+const fishCornerLive = process.env.VELVET_ZENCHEF_FISHCORNER === 'live';
+let zenchefJournal;
+const zenchefInspection = new ZenchefPlaywright({
+  mode: fishCornerLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive,
+  reserveSubmission: intent => zenchefJournal.reserveAttempt(intent),
+  recordResult: session => {
+    const saved = zenchefJournal.recordAttempt({intent:session.approval,attempt:session.attempt,result:session.result});
+    if (saved.status !== session.result?.status) session.result = {status:saved.status,reason:'result_not_verified'};
+    return saved;
+  },
+});
+let sevenRoomsJournal;
+const sevenRoomsInspection = new SevenRoomsPlaywright({
+  reserveAttempt: intent => sevenRoomsJournal.reserveAttempt(intent),
+  recordAttempt: evidence => sevenRoomsJournal.recordAttempt(evidence),
+});
 const playwrightRuntime = new PlaywrightRuntime({
   enabled: process.env.VELVET_PLAYWRIGHT_INSPECTION === 'enabled',
   limit: 1,
+  resultVerifier: (snapshot, owner) => snapshot.provider === 'SevenRooms' ? sevenRoomsJournal.verifySnapshot(snapshot, owner)
+    : snapshot.provider === 'Zenchef' ? zenchefJournal.verifySnapshot(snapshot, owner) : null,
   providers: {
-    Zenchef: { restaurantId: ZENCHEF_ARPEGE.restaurantId, adapter: zenchefInspection, current: (_id, owner) => zenchefInspection.current(owner) },
+    Zenchef: { restaurantId: fishCornerLive ? ZENCHEF_FISHCORNER.restaurantId : ZENCHEF_ARPEGE.restaurantId,
+      ...(fishCornerLive ? {enabled:true,mode:'live'} : {}),
+      actions:['search','select','fill','review','submit','refresh'],
+      adapter: zenchefInspection, current: (_id, owner) => zenchefInspection.current(owner) },
     SevenRooms: { restaurantId: SEVENROOMS_PILOT.restaurantId, adapter: sevenRoomsInspection, current: (id, owner) => sevenRoomsInspection.current(id, owner) },
   },
 });
@@ -240,6 +260,11 @@ async function zinkBook({ date, time, party, meal, guest, note, lang, context })
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
 const bookingRegister = new BookingRegister(process.env.VELVET_BOOKINGS_DB || path.join(path.dirname(DATA), 'bookings.sqlite'));
 bookingJournal = createBookingJournalHooks({ ledger: playwrightAttempts, legacyLedger: mirrorLedger, register: bookingRegister, restaurants: RESTAURANT_DETAILS });
+sevenRoomsJournal = createProviderJournal({ledger:playwrightAttempts,register:bookingRegister,provider:'SevenRooms',
+  restaurants:{[SEVENROOMS_PILOT.restaurantId]:{name:'Strandvägen 1',city:'Stockholm'}}});
+zenchefJournal = createProviderJournal({ledger:playwrightAttempts,register:bookingRegister,provider:'Zenchef',
+  confirmationPolicySource:ZENCHEF_POLICY_SOURCE,
+  restaurants:{[ZENCHEF_FISHCORNER.restaurantId]:{name:'FishCorner',city:'St. Barts'}}});
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);
@@ -1883,21 +1908,32 @@ const server = http.createServer(async (req, res) => {
     if (url.pathname === '/restaurant-bookings/playwright' || url.pathname.startsWith('/restaurant-bookings/playwright/')) {
       if (req.headers.origin && !corsOriginFor(req)) return send(res, 403, { error: 'origin' });
       const user = sessionPublicUser(req, load());
-      const owner = user?.id;
+      let owner = user?.id || bookingGuest(req, res);
       const operator = !!user && isOperator(user);
+      let submittedAction = null, submittedSession = null;
       try {
-        playwrightRuntime.authorize(owner, operator);
         if (req.method === 'POST' && url.pathname === '/restaurant-bookings/playwright') {
-          return send(res, 201, await playwrightRuntime.create(owner, operator, await readBody(req, 4096)), { 'Cache-Control': 'no-store' });
+          const body = await readBody(req, 4096);
+          if (!owner && playwrightRuntime.guestProvider(body.provider, body.restaurantId)) owner = bookingGuest(req, res, true);
+          return send(res, 201, await playwrightRuntime.create(owner, operator, body), { 'Cache-Control': 'no-store' });
         }
         const match = url.pathname.match(/^\/restaurant-bookings\/playwright\/([a-f0-9-]{36})(\/(current|action))?$/);
         if (!match) return send(res, 404, { error: 'not_found' });
         const operation = req.method === 'DELETE' && !match[2] ? 'remove' : req.method === 'POST' ? match[3] : null;
         if (!operation) return send(res, 405, { error: 'method' });
         const action = operation === 'action' ? await readBody(req, 4096) : null;
+        submittedAction = action;
+        submittedSession = match[1];
         return send(res, 200, await playwrightRuntime.run(match[1], owner, operator, operation, action), { 'Cache-Control': 'no-store' });
       } catch (error) {
-        return send(res, error.status || 502, { error: error.status ? error.message : 'provider_unavailable' }, { 'Cache-Control': 'no-store' });
+        // Only the adapter's explicit pre-dispatch validation can unlock review.
+        // A missing response or ordinary 409 never proves that nothing was sent.
+        const safeReview = error.status === 409 && error.message === 'stale_review'
+          && error.submissionState === 'not_dispatched' && submittedAction?.type === 'submit'
+          && /^[a-f0-9]{64}$/.test(submittedAction.reviewFingerprint || '');
+        return send(res, error.status || 502, { error: error.status ? error.message : 'provider_unavailable',
+          ...(safeReview ? {submissionState:'not_dispatched',sessionId:submittedSession,reviewFingerprint:submittedAction.reviewFingerprint} : {})
+        }, { 'Cache-Control': 'no-store' });
       }
     }
     if (req.method === 'GET' && url.pathname === "/restaurant-bookings/mirror/config") {
@@ -2585,7 +2621,11 @@ const server = http.createServer(async (req, res) => {
       const guest = bookingGuest(req, res);
       if (!user && !guest) return send(res, 401, { error: "auth" });
       const operator = !!user && isOperator(user);
-      for (const owner of new Set([user?.id, guest].filter(Boolean))) bookingJournal.recover(owner);
+      for (const owner of new Set([user?.id, guest].filter(Boolean))) {
+        bookingJournal.recover(owner);
+        sevenRoomsJournal.recover(owner);
+        zenchefJournal.recover(owner);
+      }
       for (const booking of [...mirrorLedger.list(), ...(db.restaurantBookings || [])]) bookingRegister.upsert(booking);
       const bookings = bookingRegister.list([user?.id, guest], operator)
         .map(operator ? operatorRestaurantBooking : publicRestaurantBooking);
