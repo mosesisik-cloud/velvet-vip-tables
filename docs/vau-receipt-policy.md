@@ -54,3 +54,13 @@ activation. Positive receipt is synthetic; actual authorized transaction/receipt
 is unobserved. No invented historical receipt prerequisite or external blocker.
 This is the only new complete handoff in this turn;32d5 can integrate after the
 current queue without another master acknowledgement.
+
+## Integrated verification
+
+Runtime1c01ce2 adds only the independent receipt-policy flag.17focused tests and
+narrow independent review pass. Actualapp/API/Chromium/SQLite harnessc281f99 on
+that exactruntime passed84API/4restarts/3mockPOST: exactVau De Ville receipt name,
+guest/noaccountcode,Next-onlyphone,freshconsent,SQLitebeforeNETWORK,doubleclick,
+wrong/missingreceiptunknown,matchingoriginalreceiptconfirmed and owner/restart/
+replay. Dinner exclusion is covered by the focused policy tests, not a live
+transaction. No pre-DOM-click claim;0real supplier reservations/holds/codes/payments.
