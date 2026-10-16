@@ -23,15 +23,57 @@ const BOOK_PATH = '/booking/dining/widget/strandvagen1/book';
 const GUEST_FIELDS = Object.freeze({ firstname: 'firstName', lastname: 'lastName', email: 'emailAddress', phone: 'phoneNumber' });
 const MARKETING_FIELDS = ['agreedToVenueSmsMarketingOptIn', 'agreedToVenueSpecificMarketingOptIn', 'agreedToVenueGroupMarketingOptIn', 'agreedToTailoredCommunicationOptIn'];
 const fingerprint = value => crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
+function providerTime(value) {
+  if (/^(?:[01]\d|2[0-3]):[0-5]\d(?::00)?$/.test(value || '')) return value.slice(0,5);
+  const match=/^(0?[1-9]|1[0-2]):([0-5]\d)\s*(AM|PM)$/i.exec(value || '');
+  return match ? `${String(Number(match[1])%12+(match[3].toUpperCase()==='PM'?12:0)).padStart(2,'0')}:${match[2]}` : null;
+}
 
 export function sevenRoomsHoldMatches(payload, selection) {
   const keys = ['access_persistent_id','party_size','date','shift_persistent_id','channel','time','venue'];
   return !!(payload && selection && Object.keys(payload).length === keys.length && keys.every(key => Object.hasOwn(payload, key))
     && [SEVENROOMS_PILOT.venueId, SEVENROOMS_PILOT.internalVenueId].includes(payload.venue)
     && payload.date === selection.date && payload.party_size === selection.party
-    && typeof payload.time === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d(?::00)?$/.test(payload.time)
-    && (!selection.time || payload.time.slice(0,5) === selection.time)
+    && providerTime(payload.time)
+    && (!selection.time || providerTime(payload.time) === selection.time)
     && ['access_persistent_id','shift_persistent_id','channel'].every(key => typeof payload[key] === 'string' && /^[a-zA-Z0-9_-]{1,256}$/.test(payload[key])));
+}
+
+// Field names and FormData encoding come from the public widget's nc.toServer
+// and checkout-data mapper (2026-10-16). Unsupported options fail closed. This
+// validates a request; it is not evidence of a successful supplier reservation.
+export async function sevenRoomsBookingMatches({request, details, holdId, holdPayload}) {
+  try {
+    if(request.url()!==ORIGIN+BOOK_PATH || request.method()!=='POST' || !holdPayload) return false;
+    const body=request.postDataBuffer();
+    if(!body || body.length>64_000) return false;
+    const form=await new Request(ORIGIN+BOOK_PATH,{method:'POST',headers:{'content-type':request.headers()['content-type'] || ''},body}).formData();
+    const entries=[...form.entries()];
+    if(new Set(entries.map(([k])=>k)).size!==entries.length || entries.some(([,v])=>typeof v!=='string'))return false;
+    const d=Object.fromEntries(entries);
+    const required={venue_id:holdPayload.venue,shift_persistent_id:holdPayload.shift_persistent_id,access_persistent_id:holdPayload.access_persistent_id,
+      reservation_hold_id:holdId,party_size:String(details.party),first_name:details.guest.firstname,last_name:details.guest.lastname,email:details.guest.email,channel:holdPayload.channel};
+    if(Object.entries(required).some(([k,v])=>d[k]!==v))return false;
+    const [year,month,day]=details.date.split('-');
+    if(d.date!==`${month}-${day}-${year}` || providerTime(d.time)!==details.time)return false;
+    const phone=details.guest.phone.replace(/\D/g,'');
+    if(!/^\d{1,4}$/.test(d.dial_code||'') || !/^[a-z]{2}$/.test(d.country_code||''))return false;
+    const approvedPhone=details.guest.phone.startsWith('+') && phone.startsWith(d.dial_code) ? phone.slice(d.dial_code.length) : phone;
+    if(d.phone_number!==approvedPhone)return false;
+    const allowed=new Set([...Object.keys(required),'date','time','phone_number','dial_code','country_code','widget_primary_venue_id','operation_id','request_id','new_widget_used','preferred_language_code','browser_screen_width','browser_screen_height','selected_upsells','client_tags','reservation_tags']);
+    if(d.widget_primary_venue_id && ![SEVENROOMS_PILOT.venueId,SEVENROOMS_PILOT.internalVenueId].includes(d.widget_primary_venue_id))return false;
+    if(d.new_widget_used && d.new_widget_used!=='true')return false;
+    for(const key of ['operation_id','request_id'])if(d[key]&&!/^[a-zA-Z0-9_-]{1,256}$/.test(d[key]))return false;
+    if(d.preferred_language_code&&!/^(sv|en|es|fr)(-[A-Z]{2})?$/.test(d.preferred_language_code))return false;
+    for(const key of ['browser_screen_width','browser_screen_height'])if(d[key]&&!/^\d{1,5}$/.test(d[key]))return false;
+    for(const key of ['client_tags','reservation_tags'])if(d[key]&&d[key]!=='[]')return false;
+    if(d.selected_upsells){const upsells=JSON.parse(d.selected_upsells);if(Object.keys(upsells).some(k=>!['selected_inventories','selected_categories'].includes(k))||Object.values(upsells).some(v=>!v||typeof v!=='object'||Object.keys(v).length))return false;}
+    // Boolean opt-ins/consents must remain absent or false; payment data, notes,
+    // upgrades, existing reservation/client tokens and unknown fields are refused.
+    const off=/^(?:venue_group_marketing_opt_in|venue_specific_marketing_opt_in|venue_sms_marketing_opt_in|marketing_opt_in|tailored_communication_opt_in|reservation_sms_opt_in|display_reservation_sms_opt_in)$/;
+    const zero=/^(?:charge_base_amount|charge_upsell_amount|promo_discount_amount|selected_gratuity_rate|charge_gratuity|charge_service_charge|charge_tax|charge_amount|amount_due)$/;
+    return entries.every(([k,v])=>allowed.has(k)||(off.test(k)&&v==='false')||(zero.test(k)&&/^0(?:\.0+)?$/.test(v)));
+  }catch{return false;}
 }
 
 export function sevenRoomsSearchSelection(input) {
@@ -97,7 +139,7 @@ export class SevenRoomsPlaywright {
     this.writeEnabled = writeEnabled;
     this.reserveAttempt = reserveAttempt;
     this.recordAttempt = recordAttempt;
-    this.submissionPolicy = submissionPolicy;
+    this.submissionPolicy = submissionPolicy || {matchesRequest:sevenRoomsBookingMatches,verifyConfirmation:async()=>null};
   }
   async #browser() {
     this.#browserPromise ??= Promise.resolve().then(this.browserFactory).catch(error => { this.#browserPromise = null; throw error; });
@@ -205,13 +247,13 @@ export class SevenRoomsPlaywright {
     try { payload = route.request().postDataJSON(); } catch {}
     if (s.holdAttempted || s.pendingHold || !sevenRoomsHoldMatches(payload, s.selection)
       || !s.availability || this.now() - Date.parse(s.availability.observedAt) >= 60_000
-      || !s.availability.slots.some(slot => slot.time === payload.time.slice(0,5))) return route.abort();
-    const details = { restaurantId:s.restaurantId, date:payload.date, time:payload.time.slice(0,5), party:payload.party_size };
+      || !s.availability.slots.some(slot => slot.time === providerTime(payload.time))) return route.abort();
+    const details = { restaurantId:s.restaurantId, date:payload.date, time:providerTime(payload.time), party:payload.party_size };
     const reviewFingerprint = fingerprint({ sessionId:s.id, phase:'hold', payload });
     s.state = 'hold_review';
     let finish;
     const waiting = new Promise(resolve => { finish = resolve; });
-    const pending = { route, details, reviewFingerprint, expiresAt:this.now()+60_000, finish };
+    const pending = { route, details, payload, reviewFingerprint, expiresAt:this.now()+60_000, finish };
     pending.timer = setTimeout(() => {
       if (s.pendingHold === pending) { s.pendingHold=null; s.state='hold_expired'; route.abort().catch(()=>{}); finish(); }
     },60_000);
@@ -252,6 +294,7 @@ export class SevenRoomsPlaywright {
       await route.fulfill({status:response.status(),headers:response.headers(),body});
     } catch {
       s.result={status:'unknown',phase};
+      if(phase==='hold')s.hold=null;
       await this.recordAttempt({intent,attempt:reservation.attempt,result:s.result}).catch(()=>{});
       await route.abort().catch(()=>{});
     }
@@ -261,7 +304,7 @@ export class SevenRoomsPlaywright {
     if (s.submitAttempted || !s.hold || this.now() >= s.hold.expiresAt || !this.submissionPolicy?.matchesRequest) return route.abort();
     const approval=s.submitApproval;
     let matches=false;
-    try { matches=await this.submissionPolicy.matchesRequest({request:route.request(),details:structuredClone(approval.details),holdId:s.hold.id}); } catch {}
+    try { matches=await this.submissionPolicy.matchesRequest({request:route.request(),details:structuredClone(approval.details),holdId:s.hold.id,holdPayload:structuredClone(s.holdPayload)}); } catch {}
     if (matches !== true) { s.state='payload_mismatch'; return route.abort(); }
     s.submitAttempted=true;
     try { await this.#dispatch(s,'booking',approval.details,approval.reviewFingerprint,route); } catch { s.state='submission_blocked'; await route.abort().catch(()=>{}); }
@@ -275,9 +318,33 @@ export class SevenRoomsPlaywright {
     }
     return fields;
   }
+  async #challengeRequired(s) {
+    // Read-only feature detection from the observed original frontend. No keys,
+    // tokens or React state are returned or changed; never execute a challenge.
+    return s.page.evaluate(()=>{
+      const visible=el=>!!el?.getClientRects().length;
+      if([...document.querySelectorAll('iframe[src*="recaptcha"][src*="/bframe"], iframe[title*="challenge" i]')].some(visible))return true;
+      const button=document.querySelector('[data-test="checkout-button-complete"]');
+      if(!button?.disabled)return false;
+      const key=Object.keys(button).find(k=>k.startsWith('__reactFiber$'));
+      let fiber=key?button[key]:null,blocked=false,challenge=false;
+      for(let depth=0;fiber&&depth<35;depth++,fiber=fiber.return){
+        const props=fiber.memoizedProps || {};
+        blocked ||= props.isSubmitBlocked===true;
+        if(props.recaptchaWidgets){
+          const children=[props.recaptchaWidgets.props?.children].flat(3).filter(Boolean);
+          challenge ||= children.some(child=>child.props?.mode==='visible');
+        }
+      }
+      return blocked&&challenge;
+    }).catch(()=>false);
+  }
   async #snapshot(s) {
     const text = (await s.page.locator('body').innerText()).slice(0, 12_000);
     if (/captcha|verify you are human|access denied|unusual traffic/i.test(text)) s.state = 'access_blocked';
+    s.challengeRequired=await this.#challengeRequired(s);
+    if(s.challengeRequired)s.state='challenge_required';
+    else if(s.state==='challenge_required')s.state=s.hold?'guest_details':'read_only';
     const shot = await s.page.screenshot({ type: 'png' });
     s.touched = this.now();
     s.revision++;
@@ -289,11 +356,12 @@ export class SevenRoomsPlaywright {
       image: `data:image/png;base64,${shot.toString('base64')}`, imageHash: crypto.createHash('sha256').update(shot).digest('hex'),
       capturedAt: new Date(s.touched).toISOString(), text, mode: this.prepare ? 'prepare' : 'inspect', state: s.state,
       phase:s.result?.phase==='booking' ? 'result' : s.pendingHold ? 'hold_review' : s.bookingReview ? 'booking_review' : s.hold ? 'guest' : 'selection',
-      canSubmit: !!(s.bookingReview && this.writeEnabled && this.submissionPolicy && !s.submitAttempted && s.hold?.expiresAt > this.now()),
-      canHold: !!(holdReview && this.writeEnabled && this.reserveAttempt && this.recordAttempt),
+      canSubmit: !!(!s.challengeRequired && s.bookingReview && this.writeEnabled && this.reserveAttempt && this.recordAttempt && this.submissionPolicy && !s.submitClicked && !s.submitAttempted && s.hold?.expiresAt > this.now()),
+      canHold: !!(!s.challengeRequired && holdReview && this.writeEnabled && this.reserveAttempt && this.recordAttempt),
+      challengeRequired:s.challengeRequired,
       holdReview, bookingReview:s.bookingReview ? structuredClone(s.bookingReview) : null,
       reviewFingerprint:s.bookingReview?.reviewFingerprint || null,
-      result:s.result ? {...s.result} : null, fields, blocked: ['access_blocked','unsupported_navigation','provider_write_required'].includes(s.state), blockedRequests: s.blockedRequests,
+      result:s.result ? {...s.result} : null, fields, blocked: ['challenge_required','access_blocked','unsupported_navigation','provider_write_required'].includes(s.state), blockedRequests: s.blockedRequests,
       blockedRoutes: s.blockedRoutes.map(route => ({ ...route })),
       readiness: s.availability && this.now() - Date.parse(s.availability.observedAt) < 60_000 ? 'availability_observed' : 'unverified',
       selection: s.selection ? { ...s.selection } : null,
@@ -316,6 +384,7 @@ export class SevenRoomsPlaywright {
     if (!action || action.revision !== s.revision) throw new SevenRoomsMirrorError('stale_view', 409);
     if (!['click', 'scroll', 'refresh', 'search', ...(this.prepare ? ['hold','fill','review','submit'] : [])].includes(action.type)) throw new SevenRoomsMirrorError('inspect_only');
     if (['access_blocked','unsupported_navigation','provider_write_required'].includes(s.state) && action.type !== 'refresh') throw new SevenRoomsMirrorError(s.state, 409);
+    if (!['refresh','scroll'].includes(action.type) && await this.#challengeRequired(s)) throw new SevenRoomsMirrorError('challenge_required',409);
     if ((s.pendingHold || s.holdAttempted) && ['click','search'].includes(action.type)) throw new SevenRoomsMirrorError('phase_locked',409);
     if (action.type === 'click' && (![action.x, action.y].every(Number.isFinite) || action.x < 0 || action.x >= s.width || action.y < 0 || action.y >= s.height)) throw new SevenRoomsMirrorError('coordinates');
     if (action.type === 'scroll' && (!Number.isFinite(action.delta) || Math.abs(action.delta) > 760)) throw new SevenRoomsMirrorError('scroll');
@@ -328,6 +397,7 @@ export class SevenRoomsPlaywright {
         if (action.confirm !== true || action.reviewFingerprint !== pending.reviewFingerprint) throw new SevenRoomsMirrorError('confirmation_required',409);
         if (!this.writeEnabled) throw new SevenRoomsMirrorError('write_disabled',409);
         s.holdAttempted=true; s.pendingHold=null; clearTimeout(pending.timer);
+        s.holdPayload=pending.payload;
         try { await this.#dispatch(s,'hold',pending.details,pending.reviewFingerprint,pending.route); }
         catch(error) { await pending.route.abort().catch(()=>{}); throw error; }
         finally { pending.finish(); }
@@ -335,7 +405,7 @@ export class SevenRoomsPlaywright {
       }
       if (['fill','review','submit'].includes(action.type)) {
         if (!s.hold || this.now() >= s.hold.expiresAt) throw new SevenRoomsMirrorError('hold_expired',409);
-        if (s.submitAttempted) throw new SevenRoomsMirrorError('already_attempted',409);
+        if (s.submitAttempted || s.submitClicked) throw new SevenRoomsMirrorError('already_attempted',409);
         if (await s.page.locator('iframe[src*="stripe" i]:visible, input[autocomplete="cc-number"]:visible').count()) throw new SevenRoomsMirrorError('card_required',409);
       }
       if (action.type === 'fill') {
@@ -361,6 +431,7 @@ export class SevenRoomsPlaywright {
         if (JSON.stringify(Object.fromEntries(fields.map(field=>[field.name,field.value])))!==JSON.stringify(review.details.guest)
           || (await s.page.locator('body').innerText()).slice(0,12000)!==review.details.termsText) throw new SevenRoomsMirrorError('stale_review',409);
         s.submitApproval=review;
+        s.submitClicked=true;
         let timer;
         const arrived=new Promise(resolve=>{s.resolveSubmit=resolve;timer=setTimeout(resolve,10_000);});
         try {
