@@ -54,7 +54,7 @@ export function sazonPolicy(html) {
   const policy = { shop, page, menu };
   return { version: hash(policy), source: SAZON.url, shopId: shop.id,
     menu: { id: menu.id, name: menu.nameTranslations, description: menu.descriptionTranslations,
-      count: 2, price: null, priceStatus: 'not_provided', currency: shop.currency },
+      count: 1, isGroupOrder: true, party: 2, price: null, priceStatus: 'not_provided', currency: shop.currency },
     categories: copy(shop.service_categories), terms: copy(service),
     guestRequirements: { phone: page.input_customer_phone, email: page.input_customer_email,
       purpose: page.input_purpose, roomName: page.input_room_name, questions: copy(service.questions),
@@ -70,7 +70,9 @@ export function sazonSearchPayload(query, sessionRef) {
   return { shop_id: SAZON.slug, start_at: `${query.date}T00:00:00.000+08:00`,
     pax_adult: 2, pax_senior: 0, pax_child: 0, pax_baby: 0, service_category_ids: [],
     manual_duration: null, voucher_ids: [], smoking: 'none',
-    orders: [{ is_group_order: false, qty: 2, menu_item_id: SAZON.menuId }],
+    // Experience Book now (Pages-Menu 872909) overrides catalog isGroupOrder:
+    // one group order, with the two diners bound separately in pax_adult.
+    orders: [{ is_group_order: true, qty: 1, menu_item_id: SAZON.menuId }],
     use_experience_page: true, locale: 'en', session_ref: sessionRef };
 }
 
@@ -107,7 +109,7 @@ export function sazonGrid(data, query, policy, observedAt) {
     requireValue(row.sc == null || categories.has(row.sc), 'slot_category');
     requireValue(row.exp == null || row.exp === SAZON.menuId, 'slot_menu');
     const slot = { time: local.slice(11, 16), startAt: row.t, serviceCategoryId: row.sc ?? null,
-      menuId: SAZON.menuId, count: 2 };
+      menuId: SAZON.menuId, count: 1, isGroupOrder: true };
     slot.id = hash({ query, policyVersion: policy.version, ...slot });
     if (!slots.some(other => other.id === slot.id)) slots.push(slot);
   }
