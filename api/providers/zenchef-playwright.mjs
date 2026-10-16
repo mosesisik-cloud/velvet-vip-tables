@@ -18,8 +18,15 @@ export const ZENCHEF_PESQUIERE = Object.freeze({ restaurantId: 'osm-STT-la-pesqu
   policySource: 'https://bookings.zenchef.com/gtc?rid=362908&lang=fr',
   rooms: Object.freeze([Object.freeze({ id: 51183, name: 'La Pesquiere' }),
     Object.freeze({ id: 52372, name: 'Mazagran salle' }), Object.freeze({ id: 52373, name: 'Mazagran terrasse' })]) });
+// Registry ID retains its legacy MCO prefix; this venue is physically in Nice.
+export const ZENCHEF_PIROUETTE = Object.freeze({ restaurantId: 'osm-MCO-pirouette', venueId: '363313', name: 'Pirouette',
+  url: 'https://bookings.zenchef.com/results?rid=363313&lang=fr', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
+  shiftId: 189024, source: 'https://lesagitateurs.com/pirouette',
+  policySource: 'https://bookings.zenchef.com/gtc?rid=363313&lang=fr',
+  rooms: Object.freeze([Object.freeze({ id: 52521, name: 'Salle principale' }), Object.freeze({ id: 65674, name: 'Terasse' })]) });
+const ROOM_VENUES = Object.freeze([ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE]);
 export const ZENCHEF_POLICY_SOURCE = 'https://bookings.zenchef.com/gtc?rid=388090&lang=fr';
-const VENUES = Object.freeze({ [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE });
+const VENUES = Object.freeze({ [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE, [ZENCHEF_PIROUETTE.restaurantId]: ZENCHEF_PIROUETTE });
 const FIXTURE_URL = 'https://zenchef-fixture.invalid/';
 const TTL = 10 * 60_000;
 const FIELDS = ['firstname', 'lastname', 'email', 'phone'];
@@ -41,14 +48,15 @@ const bounded = async (operation, ms) => {
 // controls. Remove those optional invitations; never add consent on the guest's behalf.
 export function approvedZenchefPayload(body, approval) {
   const keys = 'day nb_guests time lang firstname lastname civility country phone_number email comment custom_field custom_field_v2 customersheet offers partner_id type'.split(' ');
-  const roomRequired = approval?.restaurantId === ZENCHEF_PESQUIERE.restaurantId;
+  const roomVenue = ROOM_VENUES.find(venue => venue.restaurantId === approval?.restaurantId);
+  const roomRequired = !!roomVenue;
   if (roomRequired) keys.push('wish');
   const sheetKeys = 'firstname lastname civility phone email optins country lang'.split(' ');
   const exactKeys = (o, list) => o && typeof o === 'object' && !Array.isArray(o)
     && Object.keys(o).length === list.length && list.every(k => Object.hasOwn(o, k));
   const emptyArray = a => Array.isArray(a) && a.length === 0;
   if (!approval || !exactKeys(body, keys) || !exactKeys(body.customersheet, sheetKeys)) return null;
-  if (roomRequired && (!ZENCHEF_PESQUIERE.rooms.some(room => room.id === approval.roomId && room.name === approval.roomName)
+  if (roomRequired && (!roomVenue.rooms.some(room => room.id === approval.roomId && room.name === approval.roomName)
     || !exactKeys(body.wish, ['booking_room_id']) || body.wish.booking_room_id !== approval.roomId)) return null;
   const sheet = body.customersheet, phone = String(approval.phone).replace(/\s/g, '');
   if (body.day !== approval.date || body.time !== approval.time || body.nb_guests !== approval.party
@@ -70,9 +78,9 @@ export function zenchefBookingResult(status, data, approval = null) {
   if (status < 200 || status >= 300 || !data || typeof data !== 'object') return { status: 'unknown' };
   if (data.requires_action === true || data.charge) return { status: 'payment_required' };
   if (data.error || !/^[1-9]\d*$/.test(String(data.id)) || typeof data.uuid !== 'string' || !data.uuid) return { status: 'unknown' };
-  // Pesquiere confirmation always requires independent same-attempt readback.
+  // Room-venue confirmation always requires independent same-attempt readback.
   // Even a complete matching POST echo is not saved-booking evidence.
-  if (approval?.restaurantId === ZENCHEF_PESQUIERE.restaurantId && data.status === 'confirmed') return { status: 'unknown' };
+  if (ROOM_VENUES.some(venue => venue.restaurantId === approval?.restaurantId) && data.status === 'confirmed') return { status: 'unknown' };
   if (data.status === 'confirmed') return { status: 'confirmed', reference: String(data.id) };
   if (data.status === 'waiting') return { status: 'pending' };
   return { status: 'unknown' };
@@ -85,11 +93,12 @@ function ownReadbackUrl(created, approval) {
   if (!created || created.status !== 'confirmed' || created.error || created.charge || created.requires_action
     || !/^[1-9]\d*$/.test(String(created.id)) || typeof created.uuid !== 'string'
     || !/^[A-Za-z0-9_-]{8,128}$/.test(created.uuid)) return null;
-  if (!approval || approval.restaurantId !== ZENCHEF_PESQUIERE.restaurantId
+  const venue = ROOM_VENUES.find(venue => venue.restaurantId === approval?.restaurantId);
+  if (!venue
     || (created.wish?.booking_room_id !== undefined && created.wish.booking_room_id !== approval.roomId)
     || [['day', 'date'], ['shift_date', 'date'], ['time', 'time'], ['nb_guests', 'party']]
       .some(([field, key]) => created[field] !== undefined && created[field] !== approval[key])) return null;
-  return `https://bookings-middleware.zenchef.com/bookings/${created.uuid}?restaurantId=362908`;
+  return `https://bookings-middleware.zenchef.com/bookings/${created.uuid}?restaurantId=${venue.venueId}`;
 }
 function savedRoomResult(status, data, binding) {
   const approval = binding.approval;
@@ -241,7 +250,7 @@ export class ZenchefPlaywright {
       context = await browser.newContext({ viewport: { width: 420, height: 760 },
         locale: 'fr-FR', timezoneId: venue.timezone, serviceWorkers: 'block', acceptDownloads: false });
       const s = { id: crypto.randomUUID(), owner, restaurantId, restaurant: venue.name, venue,
-        provider: 'Zenchef', destination: venue === ZENCHEF_ARPEGE ? 'Paris' : venue === ZENCHEF_PESQUIERE ? 'Saint-Tropez' : 'St. Barts', context, revision: 0, touched: this.now(),
+        provider: 'Zenchef', destination: venue === ZENCHEF_ARPEGE ? 'Paris' : venue === ZENCHEF_PESQUIERE ? 'Saint-Tropez' : venue === ZENCHEF_PIROUETTE ? 'Nice' : 'St. Barts', context, revision: 0, touched: this.now(),
         busy: false, attempted: false, state: 'inspect_only', result: null, blockedRequests: 0 };
       await context.route('**/*', async route => {
         const r = route.request();
@@ -264,7 +273,7 @@ export class ZenchefPlaywright {
         }
         const bookingUrl = `https://bookings-middleware.zenchef.com/booking?restaurantId=${venue.venueId}`;
         if (this.mode === 'prepare' && r.method() === 'POST' && r.url() === bookingUrl && s.armed && !s.attempted && s.noCardAllowed
-          && [ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE].includes(venue)) {
+          && [ZENCHEF_FISHCORNER, ...ROOM_VENUES].includes(venue)) {
           s.attempted = true;
           try {
             const payload = approvedZenchefPayload(r.postDataJSON(), s.approval);
@@ -277,7 +286,7 @@ export class ZenchefPlaywright {
             const response = await route.fetch({ maxRedirects: 0, maxRetries: 0, timeout: 20000, postData: JSON.stringify(payload) });
             const data = await response.json().catch(() => null);
             s.result = zenchefBookingResult(response.status(), data, s.approval);
-            if (venue === ZENCHEF_PESQUIERE && response.status() >= 200 && response.status() < 300
+            if (ROOM_VENUES.includes(venue) && response.status() >= 200 && response.status() < 300
               && ownReadbackUrl(data, s.approval)) {
               s.result = await this.readOwnBooking(s, data);
             }
@@ -384,6 +393,11 @@ export class ZenchefPlaywright {
   }
   async verifyNativeRoom(s) {
     if (!s.venue.rooms) return;
+    if (s.venue === ZENCHEF_PIROUETTE) {
+      const seating = s.page.getByText(/^Jusqu'\u00e0 \d{2}:\d{2}$/);
+      if (await seating.count() !== 1 || !await seating.isVisible() || await seating.innerText() !== s.terms?.seatingNotice)
+        throw new ZenchefError('stale_review', 409);
+    }
     const { roomId, roomName } = s.formSelection;
     const form = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent())?.props?.initialState?.appStoreState;
     if (s.page.url() !== zenchefFormUrl(s.formSelection, s.venue) || form?.wish?.room_id !== roomId
@@ -483,8 +497,12 @@ export class ZenchefPlaywright {
             && shift.shift_slots?.some(slot => slot.name === action.time && slot.closed === false && slot.marked_as_full === false && slot.possible_guests?.includes(s.searchQuery.party))
             && shift.closed === false && shift.marked_as_full === false && shift.prepayment_param === null && shift.is_offer_required === false && shift.confirmation?.is_auto === true
             && form.isRoomMandatory === false && Array.isArray(form.wish.offers) && !form.wish.offers.length && form.wish.room_id === null;
-          if (s.venue === ZENCHEF_PESQUIERE) s.noCardAllowed = shift?.id === 136503
-            && shift.charge_param?.is_web_booking_askable === false && shift.prepayment_param === null
+          const noRoomCard = s.venue === ZENCHEF_PESQUIERE ? shift?.charge_param?.is_web_booking_askable === false
+            : s.venue === ZENCHEF_PIROUETTE && shift?.charge_param?.is_web_booking_askable === true
+              && shift.charge_param.min_guests === 3 && s.searchQuery.party === 2
+              && shift.confirmation?.is_auto_until === null;
+          if (ROOM_VENUES.includes(s.venue)) s.noCardAllowed = shift?.id === s.venue.shiftId
+            && noRoomCard && shift.prepayment_param === null
             && shift.is_offer_required === false && shift.confirmation?.is_auto === true
             && shift.closed === false && shift.marked_as_full === false
             && shift.shift_slots?.some(slot => slot.name === action.time && slot.closed === false && slot.marked_as_full === false
@@ -494,6 +512,12 @@ export class ZenchefPlaywright {
           const text = await termsLabel.count() === 1 ? await termsLabel.innerText() : '';
           s.terms = { text, version: digest([text, form.restaurantComment || null, shift || null]),
             url: `https://bookings.zenchef.com/gtc?rid=${s.venue.venueId}&lang=fr` };
+          if (s.venue === ZENCHEF_PIROUETTE) {
+            const seating = s.page.getByText(/^Jusqu'\u00e0 \d{2}:\d{2}$/);
+            if (await seating.count() !== 1 || !await seating.isVisible()) throw new ZenchefError('seating_terms_unverified', 409);
+            s.terms.seatingNotice = await seating.innerText();
+            s.terms.version = digest([s.terms.version, s.terms.seatingNotice]);
+          }
           if (!text.trim()) s.noCardAllowed = false;
           s.state = 'contact'; s.review = null;
           return await this.snapshot(s);

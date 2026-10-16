@@ -4,7 +4,7 @@ import { test, before, after, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import { chromium } from 'playwright';
-import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, approvedZenchefPayload, zenchefBookingResult, allowedZenchefInspectionRequest,
+import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, approvedZenchefPayload, zenchefBookingResult, allowedZenchefInspectionRequest,
   zenchefSearchUrl, zenchefAvailabilityEvidence, zenchefFormUrl, allowedZenchefPreparationRequest } from '../api/providers/zenchef-playwright.mjs';
 
 const fixture = (status = 'confirmed', reference = 'LOCAL-TEST-ONLY') => `<!doctype html><html><body>
@@ -260,34 +260,39 @@ test('native booking and own-booking readback bind approval without duplicate PO
     'pesquiere-readback', 'pesquiere-readback-native-metadata', 'pesquiere-readback-room', 'pesquiere-readback-missing', 'pesquiere-readback-error',
     'pesquiere-readback-challenge', 'pesquiere-readback-redirect', 'pesquiere-readback-id', 'pesquiere-readback-date',
     'pesquiere-readback-time', 'pesquiere-readback-party', 'pesquiere-readback-pending', 'pesquiere-readback-uuid',
-    'pesquiere-readback-bad-uuid', 'pesquiere-readback-metadata', 'pesquiere-readback-cross-before', 'pesquiere-readback-cross-after']) {
-    const venue = scenario.startsWith('pesquiere') ? ZENCHEF_PESQUIERE : ZENCHEF_FISHCORNER;
+    'pesquiere-readback-bad-uuid', 'pesquiere-readback-metadata', 'pesquiere-readback-cross-before', 'pesquiere-readback-cross-after',
+    'pirouette', 'pirouette-receipt', 'pirouette-card', 'pirouette-prepayment', 'pirouette-manual', 'pirouette-gift', 'pirouette-seating']) {
+    const venue = scenario.startsWith('pirouette') ? ZENCHEF_PIROUETTE : scenario.startsWith('pesquiere') ? ZENCHEF_PESQUIERE : ZENCHEF_FISHCORNER;
+    const chosenRoom = venue === ZENCHEF_PIROUETTE ? 52521 : 52372, otherRoom = venue === ZENCHEF_PIROUETTE ? 65674 : 51183;
+    const roomName = venue.rooms?.find(room=>room.id===chosenRoom)?.name;
+    const blockedPolicy = ['pirouette-card','pirouette-prepayment','pirouette-manual'].includes(scenario);
+    let providerPage;
     const date = '2030-11-16'; let sends = 0, reads = 0, reserves = 0, recorded, liveSession;
     const readCase = scenario.startsWith('pesquiere-readback');
     const fields = { firstname: 'Fixture', lastname: 'Guest', email: 'fixture@example.invalid', phone: scenario === 'swedish' ? '+46701234567' : '+33612345678', civility: 'mr', country: 'fr' };
     const payload = { day: date, nb_guests: 2, time: '12:30', lang: 'fr', firstname: fields.firstname, lastname: fields.lastname,
-      civility: 'mr', country: scenario === 'swedish' ? 'se' : 'fr', phone_number: fields.phone, email: fields.email, comment: '', custom_field: {}, custom_field_v2: [],
+      civility: 'mr', country: scenario === 'swedish' ? 'se' : 'fr', phone_number: fields.phone, email: fields.email, comment: '', custom_field: scenario === 'pirouette-gift' ? {'numero-de-bon-cadeau':'UNSUPPORTED'} : {}, custom_field_v2: [],
       customersheet: { firstname: fields.firstname, lastname: fields.lastname, civility: 'mr', phone: fields.phone,
         email: fields.email, optins: [{ type: 'review_mail', value: true }, { type: 'review_sms', value: true }], country: scenario === 'swedish' ? 'se' : 'fr', lang: 'fr' },
-      offers: [], partner_id: '1001', type: 'web', ...(venue.rooms ? { wish: { booking_room_id: 52372 } } : {}) };
+      offers: [], partner_id: '1001', type: 'web', ...(venue.rooms ? { wish: { booking_room_id: chosenRoom } } : {}) };
     if (venue.rooms) {
-      const approval={...fields,date,party:2,time:'12:30',restaurantId:venue.restaurantId,roomId:52372,roomName:'Mazagran salle'};
-      assert.ok(approvedZenchefPayload(payload,approval));
-      assert.equal(approvedZenchefPayload({...payload,wish:{booking_room_id:51183}},approval),null);
-      assert.equal(approvedZenchefPayload({...payload,wish:{booking_room_id:52372,fee:10}},approval),null);
+      const approval={...fields,date,party:2,time:'12:30',restaurantId:venue.restaurantId,roomId:chosenRoom,roomName};
+      assert.equal(!!approvedZenchefPayload(payload,approval),scenario !== 'pirouette-gift');
+      assert.equal(approvedZenchefPayload({...payload,wish:{booking_room_id:otherRoom}},approval),null);
+      assert.equal(approvedZenchefPayload({...payload,wish:{booking_room_id:chosenRoom,fee:10}},approval),null);
       assert.equal(approvedZenchefPayload(payload,{...approval,roomName:'Different room'}),null);
     }
     const document = url => {
       const u = new URL(url), isForm = u.pathname === '/form';
-      const slot = { name: '12:30', closed: false, marked_as_full: false, bookable_from: null, bookable_to: null, possible_guests: [2], available_rooms: { 2: venue.rooms ? [51183,52372,52373] : [1] } };
+      const slot = { name: '12:30', closed: false, marked_as_full: false, bookable_from: null, bookable_to: null, possible_guests: [2], available_rooms: { 2: venue.rooms ? venue.rooms.map(room=>room.id) : [1] } };
       const shift = { id: venue.shiftId, closed: false, marked_as_full: false, bookable_from: null, bookable_to: null, shift_slots: [slot],
-        charge_param: venue.rooms ? { is_web_booking_askable: false, min_guests: 1, charge_per_guests: 10 } : null,
-        prepayment_param: null, is_offer_required: false, confirmation: { is_auto: true } };
+        charge_param: venue === ZENCHEF_PIROUETTE ? { is_web_booking_askable:true,min_guests:scenario === 'pirouette-card' ? 2 : 3,charge_per_guests:50 } : venue.rooms ? { is_web_booking_askable: false, min_guests: 1, charge_per_guests: 10 } : null,
+        prepayment_param: scenario === 'pirouette-prepayment' ? {is_web_booking_askable:true} : null, is_offer_required: false, confirmation: { is_auto: scenario !== 'pirouette-manual', is_auto_until:null } };
       const state = { restaurantId: venue.venueId, initializedSSR: true, restaurantTimezone: venue.timezone, isDisabled: 0,
         wish: { day: date, pax: 2, waiting_list: false, offers: [], room_id: venue.rooms && isForm ? Number(u.searchParams.get('room_id')) : null, ...(isForm ? { slot: '12:30' } : {}) },
         rooms: venue.rooms, mandatoryFields: { firstname: 'required' }, isRoomMandatory: !!venue.rooms, dailyAvailabilities: { [date]: { date, shifts: [shift, { ...shift, id: 545347 }] } } };
       const data = { page: isForm ? '/form' : '/results', query: Object.fromEntries(u.searchParams), props: { initialState: { appStoreState: state } } };
-      return `<html><body><h1>LOCAL NATIVE CONTRACT REPLAY</h1>${venue.rooms && isForm ? '<div>Mazagran salle</div>' : ''}<script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
+      return `<html><body><h1>LOCAL NATIVE CONTRACT REPLAY</h1>${venue.rooms && isForm ? `<div>${roomName}</div>` : ''}${venue === ZENCHEF_PIROUETTE && isForm ? '<div id=seating>Jusqu&#39;&#224; 14:30</div>' : ''}<script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
         ${isForm ? ['firstname','lastname','email'].map(k=>`<input data-testid="${k}-input">`).join('') + `<div class="iti"><button type="button" class="iti__selected-country" title="Selected country" aria-label="Change country"><span class="iti__flag iti__${['swedish','country'].includes(scenario) ? 'se' : 'fr'}"></span></button><input data-testid="phone-input"></div>` +
         `<label>Mr<input type="radio" name="civility" value="mr" style="display:none"></label><label data-testid="eula-checkbox"><input type="checkbox">Test terms</label>
         <button data-testid="validate-btn" onclick='fetch("https://bookings-middleware.zenchef.com/booking?restaurantId=${venue.venueId}",{method:"POST",body:JSON.stringify(${JSON.stringify(payload)})}).catch(()=>{})'>Reserve</button>` : ''}${scenario === 'pesquiere-readback-metadata' ? '<script>window.AwsWafIntegration={getToken:()=>Promise.reject(Error("local metadata error"))}</script>' : scenario === 'pesquiere-readback-native-metadata' ? '<script>window.AwsWafIntegration={getToken:async()=>"local-synthetic-metadata"}</script>' : ''}</body></html>`;
@@ -297,7 +302,7 @@ test('native booking and own-booking readback bind approval without duplicate PO
         assert.match(intent.reviewFingerprint, /^[a-f0-9]{64}$/); return { sendAllowed: scenario !== 'denied', attempt: { ...intent, sessionId: scenario === 'pesquiere-readback-cross-before' ? 'another-session' : intent.sessionId, attemptId: 'synthetic-attempt', idempotencyKey: 'journal-owned-key' } }; },
       recordResult: async session => { recorded = structuredClone(session.result); if (scenario === 'persistence') throw Error('disk'); },
       browserFactory: async () => ({ close: async () => {}, newContext: async opts => {
-        const context = await browser.newContext(opts); const route = context.route.bind(context);
+        const context = await browser.newContext(opts); context.on('page',page=>{providerPage=page;}); const route = context.route.bind(context);
         context.route = (pattern, handler) => route(pattern, original => {
           const request = original.request(), isPost = request.method() === 'POST';
           const isRead = new URL(request.url()).pathname.startsWith('/bookings/');
@@ -309,7 +314,7 @@ test('native booking and own-booking readback bind approval without duplicate PO
                 assert.deepEqual(JSON.parse(options.postData).customersheet.optins, []);
                 responseData={ id:12345,uuid:['pesquiere-readback-bad-uuid','pesquiere-echo-bad-uuid'].includes(scenario) ? '../other' : 'synthetic-own-booking',status:'confirmed',
                   ...(scenario === 'payment' ? {requires_action:true} : {}),
-                  ...(venue.rooms && !readCase ? {wish:{booking_room_id:scenario === 'pesquiere-receipt' ? 51183 : 52372}} : {}) };
+                  ...(venue.rooms && !readCase ? {wish:{booking_room_id:scenario.endsWith('-receipt') ? otherRoom : chosenRoom}} : {}) };
                 if (scenario === 'pesquiere-echo-date') responseData.day='2030-11-17';
                 if (scenario === 'pesquiere-echo-time') responseData.time='13:00';
                 if (scenario === 'pesquiere-echo-party') responseData.nb_guests=3;
@@ -319,10 +324,10 @@ test('native booking and own-booking readback bind approval without duplicate PO
               } else if (isRead) {
                 reads++; assert.equal(request.method(),'GET'); assert.equal(options.maxRetries,0);
                 assert.equal(options.postData,undefined);
-                assert.equal(request.url(),'https://bookings-middleware.zenchef.com/bookings/synthetic-own-booking?restaurantId=362908');
+                assert.equal(request.url(),`https://bookings-middleware.zenchef.com/bookings/synthetic-own-booking?restaurantId=${venue.venueId}`);
                 if(scenario === 'pesquiere-readback-native-metadata') assert.equal(request.headers()['x-aws-waf-token'],'local-synthetic-metadata');
                 assert.equal(request.headers()['auth-token'],undefined); assert.equal(request.headers().timestamp,undefined);
-                responseData={ id:12345,status:'confirmed',day:date,time:'12:30',nb_guests:2,wish:{booking_room_id:52372} };
+                responseData={ id:12345,status:'confirmed',day:date,time:'12:30',nb_guests:2,wish:{booking_room_id:chosenRoom} };
                 if(scenario.endsWith('-room')) responseData.wish.booking_room_id=51183;
                 if(scenario.endsWith('-missing')) delete responseData.time;
                 if(scenario.endsWith('-id')) responseData.id=999;
@@ -352,16 +357,26 @@ test('native booking and own-booking readback bind approval without duplicate PO
       await assert.rejects(act(a,s,{type:'select',time:'12:30',shiftId:venue.shiftId,roomId:999}),/room_required_or_unverified/);
       s=a.current('owner');
     }
-    s = await act(a,s,{type:'select',time:'12:30',shiftId:venue.shiftId,...(venue.rooms ? {roomId:52372} : {})}); assert.equal(s.fields.length,6);
-    s = await act(a,s,{type:'fill',fields}); s = await act(a,s,{type:'review'}); assert.equal(s.canSubmit,true); assert.equal(s.details.country,['swedish','country'].includes(scenario) ? 'se' : 'fr');
+    s = await act(a,s,{type:'select',time:'12:30',shiftId:venue.shiftId,...(venue.rooms ? {roomId:chosenRoom} : {})}); assert.equal(s.fields.length,6);
+    s = await act(a,s,{type:'fill',fields}); s = await act(a,s,{type:'review'}); assert.equal(s.canSubmit,!blockedPolicy); assert.equal(s.details.country,['swedish','country'].includes(scenario) ? 'se' : 'fr');
     const command = {type:'submit',reviewToken:s.reviewToken,termsVersion:s.terms.version,terms:true,confirm:true,idempotencyKey:'local-synthetic-key-1234',uuid:'untrusted-client-uuid-ignored'};
+    if (venue === ZENCHEF_PIROUETTE) assert.equal(s.terms.seatingNotice,"Jusqu'\u00e0 14:30");
+    if (blockedPolicy) {
+      await assert.rejects(act(a,s,command),/card_and_supplier_submission_unverified/);
+      assert.equal(sends,0); assert.equal(reads,0); assert.equal(reserves,0); await a.close(); continue;
+    }
+    if (scenario === 'pirouette-seating') {
+      await providerPage.locator('#seating').evaluate(el=>{el.textContent="Jusqu'\u00e0 13:30";});
+      await assert.rejects(act(a,s,command),/stale_review/);
+      assert.equal(sends,0); assert.equal(reads,0); assert.equal(reserves,0); await a.close(); continue;
+    }
     const r = await act(a,s,command);
-    assert.equal(r.result.status, ['confirmed','swedish','pesquiere','pesquiere-readback','pesquiere-readback-native-metadata'].includes(scenario) ? 'confirmed' : scenario === 'payment' ? 'payment_required' : 'unknown');
-    assert.equal(sends, ['denied','country','pesquiere-readback-cross-before'].includes(scenario) ? 0 : 1); assert.equal(reserves, scenario === 'country' ? 0 : 1);
-    assert.equal(reads,scenario === 'pesquiere' || readCase && !['pesquiere-readback-bad-uuid','pesquiere-readback-metadata','pesquiere-readback-cross-before','pesquiere-readback-cross-after'].includes(scenario) ? 1 : 0,scenario);
+    assert.equal(r.result.status, ['confirmed','swedish','pesquiere','pesquiere-readback','pesquiere-readback-native-metadata','pirouette'].includes(scenario) ? 'confirmed' : scenario === 'payment' ? 'payment_required' : 'unknown');
+    assert.equal(sends, ['denied','country','pesquiere-readback-cross-before','pirouette-gift'].includes(scenario) ? 0 : 1); assert.equal(reserves, ['country','pirouette-gift'].includes(scenario) ? 0 : 1);
+    assert.equal(reads,['pesquiere','pirouette'].includes(scenario) || readCase && !['pesquiere-readback-bad-uuid','pesquiere-readback-metadata','pesquiere-readback-cross-before','pesquiere-readback-cross-after'].includes(scenario) ? 1 : 0,scenario);
     if(scenario === 'pesquiere-readback') { assert.equal(r.result.verification.roomEvidence,'own_booking_readback'); assert.equal(r.result.reference,'12345'); }
     assert.equal(r.canSubmit,false); assert.equal(a.current('owner').canSubmit,false);
-    if (scenario === 'pesquiere') { assert.equal(recorded.verification.roomEvidence,'own_booking_readback'); assert.equal(r.details.roomName,'Mazagran salle'); assert.equal(recorded.verification.roomId,52372); assert.equal(recorded.verification.policySource,ZENCHEF_PESQUIERE.policySource); }
+    if (['pesquiere','pirouette'].includes(scenario)) { assert.equal(recorded.verification.roomEvidence,'own_booking_readback'); assert.equal(r.details.roomName,roomName); assert.equal(recorded.verification.roomId,chosenRoom); assert.equal(recorded.verification.policySource,venue.policySource); }
     if (scenario === 'confirmed') { assert.equal(recorded.verification.attemptId,'synthetic-attempt'); assert.equal(recorded.verification.mode,'live'); assert.equal(recorded.verification.idempotencyKey,'journal-owned-key');
       r.result.verification.verified=false; assert.equal(a.current('owner').result.verification.verified,true); }
     await assert.rejects(act(a,r,command), /already_attempted/);
@@ -391,4 +406,17 @@ test('Pesquiere binds room in exact document URL, payload and supplier receipt',
   for(const data of [{id:1,uuid:'x',status:'confirmed'}, {id:1,uuid:'x',status:'confirmed',wish:{booking_room_id:51183}}])
     assert.equal(zenchefBookingResult(200,data,approval).status,'unknown');
   assert.equal(zenchefBookingResult(200,{id:1,uuid:'synthetic-own-booking',status:'confirmed',wish:{booking_room_id:52372},day:selection.date,time:selection.time,nb_guests:2},approval).status,'unknown');
+});
+
+
+test('Pirouette scope is Nice dinner for two, with exact venue/room and no POST-only confirmation', () => {
+  const venue=ZENCHEF_PIROUETTE, selection={date:'2030-11-16',party:2,time:'19:00',roomId:52521};
+  assert.equal(venue.venueId,'363313'); assert.equal(venue.shiftId,189024);
+  assert.throws(()=>zenchefSearchUrl({...selection,party:3},venue),/search_fields/);
+  assert.throws(()=>zenchefFormUrl({...selection,roomId:52372},venue),/room_required_or_unverified/);
+  const url=zenchefFormUrl(selection,venue), request=url=>({url:()=>url,method:()=>'GET',resourceType:()=>'document',redirectedFrom:()=>null});
+  assert.match(url,/rid=363313.*room_id=52521$/);
+  assert.equal(allowedZenchefPreparationRequest(request(url.replace('363313','362908')),selection,venue),false);
+  assert.equal(zenchefBookingResult(200,{id:1,uuid:'synthetic-own-booking',status:'confirmed',wish:{booking_room_id:52521}},
+    {restaurantId:venue.restaurantId,roomId:52521}).status,'unknown');
 });
