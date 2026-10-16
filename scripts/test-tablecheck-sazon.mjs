@@ -207,6 +207,9 @@ test('synthetic contract: separate grants and own raw readback are required', as
   assert.equal(h.calls[1].body.customer.email, 'guest@example.invalid');
   assert.equal(h.calls[2].body.allow_provider_marketing, false);
   assert.match(h.calls[3].url, /reservations\/synthetic-own-code\?/);
+  assert.equal(h.calls[3].url, 'https://production-booking.tablecheck.com/v2/reservations/synthetic-own-code?email=guest%40example.invalid&phone=%2B46700000000');
+  assert.equal(new URL(h.calls[3].url).searchParams.get('email'), 'guest@example.invalid');
+  assert.equal(new URL(h.calls[3].url).searchParams.get('phone'), '+46700000000');
   const publicText = JSON.stringify(result);
   assert.ok(!publicText.includes('synthetic-capability') && !publicText.includes('synthetic-cart'));
   const storedText = JSON.stringify(h.grants);

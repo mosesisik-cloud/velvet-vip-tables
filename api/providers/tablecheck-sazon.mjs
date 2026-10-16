@@ -364,12 +364,12 @@ export class TablecheckSazon {
             s.state = 'result'; return this.snapshot(s);
           }
           // One same-attempt GET only. No status PUT, URL from UI, replay or recovery.
-          const readUrl = new URL(`${API}/reservations/${code}`);
-          readUrl.searchParams.set('email', encodeURIComponent(s.guest.email));
-          readUrl.searchParams.set('phone', encodeURIComponent(s.guest.phone));
+          // Native request builder (client 29478) concatenates these already
+          // encoded values directly; URLSearchParams would encode them twice.
+          const readUrl = `${API}/reservations/${code}?email=${encodeURIComponent(s.guest.email)}&phone=${encodeURIComponent(s.guest.phone)}`;
           try {
             this.assertActive(s);
-            const receipt = await this.mutationTransport({ method: 'GET', url: readUrl.href, phase: 'readback', body: undefined });
+            const receipt = await this.mutationTransport({ method: 'GET', url: readUrl, phase: 'readback', body: undefined });
             this.assertActive(s);
             const result = sazonSavedResult(receipt, { approval, attempt: checkout.attempt, checkoutCode: code,
               cartDigest: hash([s.cart.id, s.cart.token, s.cart.attemptId]) });
