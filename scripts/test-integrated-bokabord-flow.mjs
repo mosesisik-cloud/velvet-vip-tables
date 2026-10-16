@@ -144,6 +144,17 @@ if (childMode) {
         const proxy = new Proxy(intercepted, { get(target, key) {
           if (key === 'continue' || key === 'fallback') return boundary;
           if (key === 'fetch') return async options => {
+            if (noema && target.request().method()==='POST' && target.request().url()===saveUrl) {
+              assert.equal(options.maxRedirects,0); assert.equal(options.maxRetries,0);
+              process.send?.({kind:'supplier-submit',outcome:process.env.VELVET_TEST_OUTCOME});
+              const approved=target.request().postDataJSON();
+              const data={success:true,booking:{...approved,id:999999999,status:1,meal:{type:2,bullets:{}},waitlist:0,require_noshow:false,
+                short_code:'synthetic-noema-only',phone:Number(String(approved.phone).replace(/\D/g,''))}};
+              const body=JSON.stringify(data);
+              return {status:()=>200,ok:()=>true,json:async()=>data,body:async()=>Buffer.from(body),
+                headers:()=>({'content-type':'application/json'}),url:()=>saveUrl,
+                fixture:{status:200,contentType:'application/json',body}};
+            }
             if (!fishcorner) throw new Error('fixture_forbids_route_fetch');
             const request = target.request(), url = new URL(request.url());
             assert.equal(options.maxRedirects, 0);
@@ -164,7 +175,7 @@ if (childMode) {
             }
             return {status:()=>200,json:async()=>JSON.parse(body),fixture:{status:200,contentType,body}};
           };
-          if (key === 'fulfill' && fishcorner) return options => {
+          if (key === 'fulfill' && (fishcorner || noema)) return options => {
             assert.ok(options.response?.fixture, 'Only locally constructed responses may be fulfilled');
             return target.fulfill(options.response.fixture);
           };
