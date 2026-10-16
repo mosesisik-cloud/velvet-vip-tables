@@ -69,3 +69,68 @@ test('expired sessions are removed and rejected', async () => {
   assert.equal(closed, true);
   await mirror.close();
 });
+
+import { matchesApprovedReservation } from './sevenrooms-mirror.mjs';
+
+const approval = { date: '2026-10-30', time: '19:30', party: 2, firstname: 'Test', lastname: 'Guest', email: 'test@example.com', phone: '+39089999999', terms: true };
+const approvedPayload = () => ({ venueId: 'lasponda', date: '2026-10-30', time: '19:30', party_size: 2, first_name: 'Test', last_name: 'Guest', email: 'test@example.com', phone_number: '+39089999999', reservation_notes: '', newsletter_opt_in: false });
+
+test('submission payload must reproduce the approved booking exactly', () => {
+  assert.equal(matchesApprovedReservation(approvedPayload(), approval, 'lasponda'), true);
+  // camelCase variant and nested reservationData wrapper are accepted.
+  assert.equal(matchesApprovedReservation({ reservationData: { venueId: 'lasponda', date: '2026-10-30', time: '19:30', partySize: 2, firstName: 'Test', lastName: 'Guest', email: 'test@example.com', phoneNumber: '+39089999999' } }, approval, 'lasponda'), true);
+  for (const changes of [{ date: '2026-10-31' }, { time: '20:00' }, { party_size: 4 }, { first_name: 'Other' }, { last_name: 'Other' }, { email: 'other@example.com' }, { phone_number: '+39089000000' }, { venueId: 'other-venue' }, { newsletter_opt_in: true }, { sms_opt_in: true }, { gift_card: 'x' }, { upgrades: [{}] }, { reservation_notes: 'surprise' }]) {
+    assert.equal(matchesApprovedReservation({ ...approvedPayload(), ...changes }, approval, 'lasponda'), false, JSON.stringify(changes));
+  }
+  assert.equal(matchesApprovedReservation(approvedPayload(), { ...approval, terms: false }, 'lasponda'), false);
+  assert.equal(matchesApprovedReservation(approvedPayload(), { ...approval, phone: '123' }, 'lasponda'), false);
+  assert.equal(matchesApprovedReservation(null, approval, 'lasponda'), false);
+  assert.equal(matchesApprovedReservation(approvedPayload(), approval, 'plenitude'), false);
+});
+
+test('live submission requires contact step, current details and exact revision, and never repeats', async () => {
+  const mirror = new SevenroomsMirror({ live: true, reserveSubmission: async () => {} });
+  const details = { ...approval };
+  mirror.bookingDetails = async () => details;
+  mirror.cardRequired = async () => false;
+  let clicks = 0;
+  const s = { id: 'live1', owner: 'alice', revision: 7, touched: Date.now(), busy: false, contact: true, inFlight: 0, width: 420, height: 760, lastSnapshot: { details }, context: { close: async () => {} }, page: {
+    locator: sel => sel === 'body'
+      ? { innerText: async () => 'checkout summary' }
+      : { first: () => ({ isVisible: async () => false }), filter: () => ({ last: () => ({ click: async () => { clicks++; } }) }), evaluateAll: async () => [] },
+    getByText: () => ({ first: () => ({ isVisible: async () => false }) }),
+    evaluate: async () => true,
+    title: async () => 'Checkout',
+    screenshot: async () => Buffer.from('png'),
+    waitForResponse: async () => null,
+  } };
+  mirror.sessions.set(s.id, s);
+  try {
+    await assert.rejects(mirror.action('live1', 'alice', { type: 'submit', revision: 6, confirm: true, terms: true }), /stale_view/);
+    await assert.rejects(mirror.action('live1', 'alice', { type: 'submit', revision: 7, confirm: false, terms: true }), /confirmation_required/);
+    await assert.rejects(mirror.action('live1', 'alice', { type: 'submit', revision: 7, confirm: true, terms: false }), /confirmation_required/);
+    await mirror.action('live1', 'alice', { type: 'submit', revision: 7, confirm: true, terms: true });
+    assert.equal(clicks, 1, 'provider confirm button clicked exactly once after arming');
+    assert.equal(s.armed, false, 'disarmed after the attempt');
+  } finally { await mirror.close(); }
+});
+
+test('card guarantee hands off and is never submitted through the mirror', async () => {
+  const mirror = new SevenroomsMirror({ live: true, reserveSubmission: async () => {} });
+  mirror.cardRequired = async () => true;
+  const s = { id: 'card1', owner: 'alice', revision: 1, touched: Date.now(), busy: false, contact: true, width: 420, height: 760, lastSnapshot: { details: null }, context: { close: async () => {} }, page: {} };
+  mirror.sessions.set(s.id, s);
+  try {
+    await assert.rejects(mirror.action('card1', 'alice', { type: 'submit', revision: 1, confirm: true, terms: true }), /card_required/);
+    assert.equal(s.handoffReason, 'card_required');
+  } finally { await mirror.close(); }
+});
+
+test('submit is impossible without the live reservation wiring', async () => {
+  const mirror = new SevenroomsMirror();
+  const s = { id: 'plain', owner: 'alice', revision: 1, touched: Date.now(), busy: false, contact: true, width: 420, height: 760, context: { close: async () => {} } };
+  mirror.sessions.set(s.id, s);
+  try {
+    await assert.rejects(mirror.action('plain', 'alice', { type: 'submit', revision: 1, confirm: true }), /inspect_only/);
+  } finally { await mirror.close(); }
+});
