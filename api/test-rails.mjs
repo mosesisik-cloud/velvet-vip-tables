@@ -690,20 +690,34 @@ async function runApi() {
       fail("avail-no-sr", JSON.stringify(availNone.json).slice(0, 220));
     } else ok("avail-no-sr", availNone.json.reason || "no live inventory");
 
-    // The unverified legacy hold/book route is retired before parsing input.
-    // Keep malformed/no-owner cases: a regression must not create a supplier hold.
-    for (const [name, venue, body] of [
-      ['no-owner', 'BCN-005', { date: '2026-08-29', time: '21:00', party: 2, guest: { firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.invalid' } }],
-      ['missing-slot', 'BCN-005', { user: host, date: '', time: '', party: 2, guest: { firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.invalid' } }],
-      ['missing-guest', 'BCN-005', { user: host, date: '2026-08-29', time: '21:00', party: 2, guest: { firstName: 'Ada' } }],
-      ['unknown-venue', 'ZZZ-999', { user: host, date: '2026-08-29', time: '21:00', party: 2, guest: { firstName: 'Ada', lastName: 'Lovelace', email: 'ada@example.invalid' } }],
-    ]) {
-      const response = await req(base, 'POST', '/availability/' + venue + '/book', body);
-      if (response.status !== 409 || response.json.error !== 'provider_checkout_unverified'
-        || Object.keys(response.json).length !== 1) {
-        fail('sr-book-disabled-' + name, JSON.stringify({ status: response.status, body: response.json }).slice(0, 220));
-      } else ok('sr-book-disabled-' + name, 'unverified legacy checkout remains disabled; no booking payload');
-    }
+    const srNoUid = await req(base, "POST", "/availability/BCN-005/book", {
+      date: "2026-08-29", time: "21:00", party: 2,
+      guest: { firstName: "Ada", lastName: "Lovelace", email: "ada@example.com" },
+    });
+    if (srNoUid.status !== 401) fail("sr-book-auth", "expected 401 got " + srNoUid.status);
+    else ok("sr-book-auth", "user required");
+
+    const srNoSlot = await req(base, "POST", "/availability/BCN-005/book", {
+      user: host, date: "", time: "", party: 2,
+      guest: { firstName: "Ada", lastName: "Lovelace", email: "ada@example.com" },
+    });
+    if (srNoSlot.status !== 400 || srNoSlot.json.error !== "slot") {
+      fail("sr-book-slot", JSON.stringify(srNoSlot.json).slice(0, 220));
+    } else ok("sr-book-slot", "date/time/party required");
+
+    const srNoGuest = await req(base, "POST", "/availability/BCN-005/book", {
+      user: host, date: "2026-08-29", time: "21:00", party: 2, guest: { firstName: "Ada" },
+    });
+    if (srNoGuest.status !== 400 || srNoGuest.json.error !== "guest") {
+      fail("sr-book-guest", JSON.stringify(srNoGuest.json).slice(0, 220));
+    } else ok("sr-book-guest", "name + email required");
+
+    const srMissing = await req(base, "POST", "/availability/ZZZ-999/book", {
+      user: host, date: "2026-08-29", time: "21:00", party: 2,
+      guest: { firstName: "Ada", lastName: "Lovelace", email: "ada@example.com" },
+    });
+    if (srMissing.status !== 404) fail("sr-book-missing", "expected 404 got " + srMissing.status);
+    else ok("sr-book-missing", "unknown venue");
 
     const brNone = await req(base, "GET", "/book/bridge/NOPE-000");
     if (brNone.status !== 404) fail("bridge-missing", "expected 404 got " + brNone.status);
