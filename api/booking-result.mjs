@@ -109,6 +109,7 @@ export function publicBookingResult(result) {
     for (const k of ['provider', 'restaurantId', 'sessionId', 'attemptId', 'idempotencyKey', 'detailsDigest', 'policySource']) clean.verification[k] = proof[k];
     if (Number.isSafeInteger(proof.roomId) && proof.roomId > 0 && text(proof.roomName)) {
       clean.verification.roomId=proof.roomId; clean.verification.roomName=proof.roomName;
+      if (proof.roomEvidence === 'own_booking_readback') clean.verification.roomEvidence=proof.roomEvidence;
     }
   }
   return clean;
