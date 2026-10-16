@@ -13,6 +13,9 @@ const phone = value => (typeof value === 'string' ? value
   : typeof value === 'number' && Number.isSafeInteger(value) && value > 0 ? String(value) : '')
   .replace(/\D/g, '').replace(/^0046/, '46').replace(/^0/, '46');
 const nonempty = value => typeof value === 'string' && value.trim().length > 0;
+const absent = value => value === undefined || value === null;
+const absentOrFalse = value => absent(value) || value === false;
+const emptyLinks = value => absent(value) || Array.isArray(value) && value.length === 0;
 const verify = createBookingResultVerifier({ provider: 'BokaBord',
   policySource: ZINK_CONFIRMATION_POLICY.source,
   statusRules: [{ value: 1, outcome: 'confirmed' }],
@@ -55,9 +58,12 @@ export function verifyZinkBookingConfirmation(attempt, approval, observation) {
   }
   // A provider's `confirmed` field was 0 in the actual completed booking.
   // It is deliberately NOT interpreted as a reservation outcome.
-  if (b.waitlist !== 0 || b.require_noshow !== false || b.meal?.bullets?.cc
-    || !Array.isArray(b.products) || b.products.length || b.is_temp_booking
-    || b.giftcard || b.linked_meals?.length || b.group_booking || b.parent_order) {
+  if (b.waitlist !== 0 || b.require_noshow !== false
+    || (!absent(b.meal.bullets) && (typeof b.meal.bullets !== 'object' || Array.isArray(b.meal.bullets)))
+    || !absentOrFalse(b.meal?.bullets?.cc)
+    || !Array.isArray(b.products) || b.products.length || !absentOrFalse(b.is_temp_booking)
+    || !absentOrFalse(b.giftcard) || !emptyLinks(b.linked_meals)
+    || !absentOrFalse(b.group_booking) || !absent(b.parent_order)) {
     return unknown('unsupported_booking_requirements');
   }
   if (b.date !== approval.date || b.time !== approval.time || b.amount !== approval.party

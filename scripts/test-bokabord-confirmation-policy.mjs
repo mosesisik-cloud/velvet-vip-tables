@@ -20,6 +20,14 @@ function fixture() {
   return { approval, attempt, observation };
 }
 const run = f => verifyZinkBookingConfirmation(f.attempt, f.approval, f.observation);
+test('unsupported flag shapes fail closed rather than relying on truthiness', () => {
+  for (const patch of [{linked_meals:{id:1}}, {linked_meals:''}, {linked_meals:0},
+    {is_temp_booking:0}, {group_booking:0}, {giftcard:0}, {parent_order:false},
+    {meal:{type:3,bullets:[]}}, {meal:{type:3,bullets:{cc:0}}}]) {
+    const f=fixture();Object.assign(f.observation.data.booking,patch);
+    assert.equal(run(f).status,'unknown',JSON.stringify(patch));
+  }
+});
 
 test('observed Zink shape produces a bound fixture proof, including confirmed=0', () => {
   const f = fixture(), result = run(f);
