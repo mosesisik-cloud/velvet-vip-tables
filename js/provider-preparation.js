@@ -57,7 +57,7 @@ export function mountProviderPreparation(container, api, {provider,restaurantId}
   el('search').onsubmit=event=>{event.preventDefault();run({type:'search',date:new FormData(el('search')).get('date'),party:2});};
   el('end').onclick=async()=>{
     if(busy||!state||disposed)return;busy=true;controls();
-    try{const response=await api(`${endpoint}/${encodeURIComponent(state.id)}`,{method:'DELETE'});if(response?.error)throw new Error();
+    try{const response=await api(`${endpoint}/${encodeURIComponent(state.id)}`,{method:'DELETE'});if(response?.ok!==true)throw new Error();
       if(!disposed){state=null;el('start').hidden=false;for(const name of ['search','review','refresh','end'])el(name).hidden=true;
         for(const name of ['slots','policy','selection'])el(name).replaceChildren();el('status').textContent='Förberedelsen avslutad.';}}
     catch{if(!disposed)el('status').textContent='Kunde inte avsluta förberedelsen.';}finally{busy=false;if(!disposed)controls();}
