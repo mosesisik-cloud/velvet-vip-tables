@@ -129,6 +129,7 @@ if (childMode) {
         if (message.text()==='fixture-contact-final-click') process.send?.({kind:'provider-final-click'});
       });});
       const route = context.route.bind(context);
+      let createdBooking;
       await context.routeWebSocket('**/*', socket => socket.close());
       // A final guard also catches requests not registered by the production adapter.
       await route('**/*', request => request.abort());
@@ -192,7 +193,7 @@ if (childMode) {
             if (!zenchef) throw new Error('fixture_forbids_route_fetch');
             const request = target.request(), url = new URL(request.url());
             assert.equal(options.maxRedirects, 0);
-            let body, contentType;
+            let body, contentType, responseStatus=200;
             if (request.method() === 'GET' && url.origin === 'https://bookings.zenchef.com'
               && ['/results','/form'].includes(url.pathname) && url.searchParams.get('rid') === zenchefRid) {
               process.send?.({kind:'supplier-document',page:url.pathname});
@@ -202,12 +203,35 @@ if (childMode) {
               assert.deepEqual(JSON.parse(options.postData).customersheet.optins, []);
               process.send?.({kind:'supplier-submit',outcome:process.env.VELVET_TEST_OUTCOME});
               if (process.env.VELVET_TEST_OUTCOME === 'timeout') throw new Error('synthetic_lost_supplier_reply');
-              body = JSON.stringify({id:999999998,uuid:'synthetic-zenchef-only',status:'confirmed',...(pesquiere&&process.env.VELVET_TEST_OUTCOME!=='missing-receipt-room'?{wish:{booking_room_id:process.env.VELVET_TEST_OUTCOME==='mismatch-receipt-room'?51183:JSON.parse(options.postData).wish.booking_room_id}}:{})}); contentType = 'application/json';
+              createdBooking={id:999999998,uuid:'synthetic-zenchef-only',payload:JSON.parse(options.postData)};
+              // The creation response deliberately contains no room evidence.
+              body = JSON.stringify({id:createdBooking.id,uuid:createdBooking.uuid,status:'confirmed',...(process.env.VELVET_TEST_OUTCOME.startsWith('post-echo-')?{wish:{booking_room_id:process.env.VELVET_TEST_OUTCOME==='post-echo-mismatch'?51183:createdBooking.payload.wish.booking_room_id}}:{})}); contentType = 'application/json';
+            } else if(pesquiere && request.method()==='GET' && url.origin==='https://bookings-middleware.zenchef.com' && url.pathname.startsWith('/bookings/')) {
+              assert.ok(createdBooking,'Readback must follow this context\'s own POST');
+              assert.equal(request.url(),`https://bookings-middleware.zenchef.com/bookings/${createdBooking.uuid}?restaurantId=362908`);
+              assert.equal(options.maxRetries,0);assert.equal(options.timeout,8000);
+              const outcome=process.env.VELVET_TEST_OUTCOME;
+              process.send?.({kind:'supplier-own-readback',outcome});
+              if(outcome==='confirmed')await new Promise((resolve,reject)=>{
+                const timer=setTimeout(()=>{process.off('message',receive);reject(Error('fixture_readback_gate_timeout'));},5000);
+                const receive=message=>{if(message.kind==='release-own-readback'){clearTimeout(timer);process.off('message',receive);resolve();}};
+                process.on('message',receive);
+              });
+              if(outcome==='readback-error')throw Error('synthetic_readback_transport_error');
+              const payload=createdBooking.payload;
+              const data={id:createdBooking.id,uuid:createdBooking.uuid,status:'confirmed',day:payload.day,shift_date:payload.day,time:payload.time,nb_guests:payload.nb_guests,wish:{booking_room_id:payload.wish.booking_room_id}};
+              if(outcome==='missing-receipt-room')delete data.wish;
+              if(outcome==='mismatch-receipt-room'||outcome==='post-echo-bad-readback')data.wish.booking_room_id=51183;
+              if(outcome==='mismatch-readback-id')data.id=999999997;
+              if(outcome==='mismatch-readback-uuid')data.uuid='different-synthetic-booking';
+              if(outcome==='mismatch-readback-date')data.day='2030-01-16';
+              if(outcome==='readback-http-error')responseStatus=503;
+              body=JSON.stringify(data);contentType='application/json';
             } else {
               process.send?.({kind:'unexpected-supplier-request',method:request.method(),path:url.pathname});
               throw new Error('fixture_network_denied');
             }
-            return {status:()=>200,json:async()=>JSON.parse(body),fixture:{status:200,contentType,body}};
+            return {status:()=>responseStatus,json:async()=>JSON.parse(body),fixture:{status:responseStatus,contentType,body,headers:{'access-control-allow-origin':'https://bookings.zenchef.com'}}};
           };
           if (key === 'fulfill' && (zenchef || receiptMode)) return options => {
             assert.ok(options.response?.fixture, 'Only locally constructed responses may be fulfilled');
@@ -482,15 +506,26 @@ async function main() {
         if(pesquiere)assert.ok((await panel(page).locator('[data-final-details]').innerText()).includes(rooms.find(room=>room.id===roomId).name));
         assert.equal(await panel(page).locator('[data-submit]').isDisabled(), true, 'Explicit consent required');
         const before = submits(); await panel(page).locator('[data-terms]').check();
-        const result = await action(() => panel(page).locator('[data-submit]').dblclick());
+        const readbacksBefore=messages.filter(m=>m.kind==='supplier-own-readback').length;
+        const pending=action(() => panel(page).locator('[data-submit]').dblclick());
+        if(pesquiere && before===0){
+          const deadline=Date.now()+5000;
+          while(!messages.some(m=>m.kind==='supplier-own-readback')&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,20));
+          assert.ok(messages.some(m=>m.kind==='supplier-own-readback'));
+          const pendingAttempt=await api(page,'/restaurant-bookings/playwright/attempts');
+          assert.equal(pendingAttempt.body.attempts[0].status,'unknown','POST alone cannot confirm before saved-booking readback');
+          child.send({kind:'release-own-readback'});
+        }
+        const result = await pending;
         assert.equal(submits(), before + expectedDispatches, 'Supplier boundary dispatch count');
+        if(pesquiere)assert.ok(messages.filter(m=>m.kind==='supplier-own-readback').length-readbacksBefore<=1,'At most one readback, never retry');
         return result;
       };
       first = await makeView();
       const success = await flow(first);
       assert.equal(success.body.result.status,'confirmed');
       assert.equal(success.body.result.reference,'999999998');
-      if(pesquiere){assert.equal(success.body.result.verification.roomId,52372);assert.equal(success.body.result.verification.roomName,'Mazagran salle');}
+      if(pesquiere){assert.equal(success.body.result.verification.roomId,52372);assert.equal(success.body.result.verification.roomName,'Mazagran salle');assert.equal(messages.filter(m=>m.kind==='supplier-own-readback').length,1);assert.equal(success.body.result.verification.roomEvidence,'own_booking_readback');}
       assert.notEqual(success.request.idempotencyKey,success.body.result.verification.idempotencyKey,'Server owns the durable key');
       assert.equal(await panel(first.page).locator('[data-status]').getAttribute('data-booking-status'),'confirmed');
       assert.match(await panel(first.page).locator('[data-status]').innerText(),/999999998/);
@@ -536,10 +571,25 @@ async function main() {
       assert.equal(messages.filter(m=>['unexpected-supplier-request','blocked-node-network'].includes(m.kind)).length,0);
       console.log('PASS '+zenchefName+' lost supplier reply: durable unknown, owner isolation, refresh/restart without replay');
       if(pesquiere){
-        for(const outcome of ['missing-request-room','mismatch-request-room','missing-receipt-room','mismatch-receipt-room']){
+        for(const outcome of ['missing-request-room','mismatch-request-room','missing-receipt-room','mismatch-receipt-room','readback-error','readback-http-error','mismatch-readback-id','mismatch-readback-uuid','mismatch-readback-date','post-echo-bad-readback','post-echo-mismatch','post-echo-good-readback']){
           console.log('CHECK Pesquiere '+outcome);await stop();await start(outcome);
           const view=await makeView();
-          try{const result=await flow(view,outcome.includes('request')?0:1);assert.equal(result.body.result.status,'unknown',outcome);}
+          try{
+            const readsBefore=messages.filter(m=>m.kind==='supplier-own-readback').length;
+            const result=await flow(view,outcome.includes('request')?0:1);
+            assert.equal(result.body.result.status,outcome==='post-echo-good-readback'?'confirmed':'unknown',outcome);
+            assert.equal(messages.filter(m=>m.kind==='supplier-own-readback').length-readsBefore,outcome.includes('request')||outcome==='post-echo-mismatch'?0:1,outcome+' readback count');
+            if(outcome==='readback-error'){
+              await stop();await start(outcome);
+              const attempts=await api(view.page,'/restaurant-bookings/playwright/attempts');
+              assert.equal(attempts.body.attempts[0].status,'unknown');
+              const fresh=await makeView(390,await view.context.storageState());
+              const reads=messages.filter(m=>m.kind==='supplier-own-readback').length;
+              try{assert.equal((await flow(fresh,0,52373)).body.result.status,'unknown');}
+              finally{await fresh.context.close();}
+              assert.equal(messages.filter(m=>m.kind==='supplier-own-readback').length,reads,'Restart must not replay failed readback or POST');
+            }
+          }
           finally{await view.context.close();}
         }
         console.log('PASS Pesquiere missing/mismatched request room blocks dispatch; missing/mismatched receipt room stays unknown');
@@ -547,7 +597,7 @@ async function main() {
       }
       console.log(JSON.stringify({status:'PASS',restaurantId,evidence:'real_local_app_api_native_zenchef_journal_with_supplier_fixture',
         integrationCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),supplierBoundaryAttempts:submits(),
-        actualSupplierRequests:0,liveConfirmationVerified:false,backendRestarts:pesquiere?6:2,APIRequests:apiCalls.length,deployed:false}));
+        actualSupplierRequests:0,liveConfirmationVerified:false,backendRestarts:pesquiere?15:2,APIRequests:apiCalls.length,deployed:false}));
       return;
     }
     await start('unverified-success');
