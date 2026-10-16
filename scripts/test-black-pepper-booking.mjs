@@ -71,4 +71,3 @@ try {
  if(previousDocument===undefined)delete globalThis.document;else globalThis.document=previousDocument;
 }
 console.log('PASS: Black Pepper exact venue/source/URL guards; external-only flags; duplicate/unknown IDs; four-language external renderer (mock DOM, no browser/provider calls)');
-
