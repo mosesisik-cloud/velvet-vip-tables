@@ -49,3 +49,19 @@ contracts.
 Local validation includes provider scenarios, SQLite restart/replay and metadata
 mutation tests, the shared journal/runtime tests and native UI regression tests.
 End-to-end supplier responses are local fixtures, not evidence of a real booking.
+
+## Integrated release validation
+
+Runtime candidate `aab1d6d524cd358fa642e6a0d4e78268a5ad7310` passed the actual
+Velvet UI/API/provider/journal/register chain with local supplier transport:
+De Kas 131 API calls, eight restarts, six mocked POSTs; FishCorner 42/two/two;
+Pirouette 316/17/12. All real supplier writes and real UUID reads: zero.
+Test handoff #210 (`2a2718a14acd96c82bc8633a5d65186146c028db`) adds the repeatable
+`--dekas` harness. Screenshots at 390 and 1366 pixels were inspected.
+
+The harness checks raw fill before offer selection and stale offer-version
+rejection, exact SQLite menu metadata/version before transport, POST offer
+ID/count, independent saved-offer proof, mismatching/missing saved offers,
+changed metadata, altered POST offer, restart with rotated version, and exact
+public history. Independent scoped review reported no concrete blockers;
+source contract review did not itself make a live reservation.
