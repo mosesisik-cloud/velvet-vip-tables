@@ -42,8 +42,12 @@ the module never constructs/fetches a confirmation URL and rejects action params
 Capture must occur after response/navigation and within 90 seconds of dispatch.
 Use actual server timestamps, not values from the receipt or guest.
 
-Record `respondedAt` at the intercepted save response event, before awaiting its
-JSON body. Increment a server-owned navigation generation on every main-frame
+Record `respondedAt` when the original save response becomes available, before
+awaiting its JSON body. The opt-in native route records this when its single
+`route.fetch` resolves, before fulfilling the browser; it is not the browser's
+response-header event time. This preserves the response before immediate browser
+navigation can evict its body. There are no redirects, retries or second booking
+requests. Increment a server-owned navigation generation on every main-frame
 navigation and attach `navigationId` to the successful document response. Capture
 `documentUrl=location.href` and visible body text in ONE `page.evaluate`. Require
 the same generation before and after that awaited evaluation and record it as
@@ -78,7 +82,12 @@ wrong venue/reference, stale/navigation/URL binding, changed approval, special
 requirements, and fixture/provider attempt separation. A synthetic provider-source
 branch test is explicitly not a real supplier result.
 
-Still required: independent review of the inferred shared document contract;
-runtime capture/journal wiring; actual app/API/adapter/journal integration test;
-and restaurant-specific provider/sandbox evidence before reporting Noema as a
-verified full booking. No blind extension of the old Zink status rule is made.
+The native capture/journal wiring is implemented behind
+`VELVET_NOEMA_RECEIPT=enabled`. It observes the provider's navigation and validates
+the atomically captured document against the original request and response.
+The common contract can support this scoped verifier without requiring a prior
+historical Noema booking. Actual app/API/adapter/journal integration acceptance
+is still required before activation. Synthetic receipt tests do not establish
+that a real Noema reservation has been completed; that remains a separate claim
+requiring actual supplier evidence. No blind extension of the old Zink status
+rule is made, and a missing or differently rendered receipt remains unknown.
