@@ -14,17 +14,18 @@ const root = fileURLToPath(new URL('../', import.meta.url));
 const fishcorner = process.argv.includes('--fishcorner') || process.env.VELVET_TEST_PROVIDER === 'FishCorner';
 const noema = process.argv.includes('--noema') || process.env.VELVET_TEST_PROVIDER === 'Noema';
 const ciccios = process.argv.includes('--ciccios') || process.env.VELVET_TEST_PROVIDER === 'Ciccios';
-assert.ok([fishcorner,noema,ciccios].filter(Boolean).length <= 1, 'Choose one named provider scenario');
-const receiptMode = noema || ciccios;
-const receiptName = ciccios ? "Ciccio's" : 'Noema';
-const receiptCode = ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
-const mealId = ciccios ? 2379 : noema ? 35204 : 9778;
-const mealType = noema ? 2 : 3;
-const restaurantId = fishcorner ? 'osm-SBH-fishcorner' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const riche = process.argv.includes('--riche') || process.env.VELVET_TEST_PROVIDER === 'Riche';
+assert.ok([fishcorner,noema,ciccios,riche].filter(Boolean).length <= 1, 'Choose one named provider scenario');
+const receiptMode = noema || ciccios || riche;
+const receiptName = riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
+const receiptCode = riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
+const mealId = riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
+const mealType = noema || riche ? 2 : 3;
+const restaurantId = fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
 const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[receiptMode ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 const date = '2030-01-15';
-const bookingTime = noema ? '12:00' : '19:00';
+const bookingTime = noema || riche ? '12:00' : '19:00';
 const childMode = process.env.VELVET_INTEGRATED_SUPPLIER_FIXTURE === 'child';
 
 // Sanitized native DOM/SSR contract from the canonical provider tests. No supplier JS.
@@ -64,10 +65,11 @@ screen.innerHTML=${JSON.stringify(`<h1>${receiptMode ? receiptName : 'Zink'} FIX
 document.querySelector('#party').onclick=()=>{q.amount=2;document.querySelector('#party').textContent='2 gäster valda';};
 document.querySelector('#date').onclick=async()=>{q.date='2030-01-15';const r=await fetch('/reservation/api/booking/getTimes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date:q.date,amount:q.amount,hash:q.hash})});const data=await r.json();document.querySelector('#slot').hidden=!data.times.includes('${bookingTime}');};
 document.querySelector('#slot').onclick=()=>{q.time='${bookingTime}';contact();};
-function contact(){screen.innerHTML='<h2>Kontaktuppgifter</h2><p>FIXTURE supplier form</p>'+['firstname','lastname','email','phone'].map(n=>'<label>'+n+'<input name="'+n+'" value=""></label>').join('')+'<textarea ng-model="booking.comment"></textarea><button id="next">Nästa</button>';
+function contact(){screen.innerHTML='<h2>Kontaktuppgifter</h2><p>FIXTURE supplier form</p>'+['firstname','lastname','email','phone'].map(n=>'<label>'+n+'<input name="'+n+'" value=""></label>').join('')+'<textarea ng-model="booking.comment"></textarea>${riche ? '<a id="terms-link" href="https://www.waiteraid.com/terms/fixture-a">Fixture terms</a>' : ''}<button id="next">Nästa</button>';
  for(const input of document.querySelectorAll('input,textarea'))input.oninput=()=>{q[input.name||'comment']=input.value;};
- const review=()=>{screen.innerHTML='<h2>Kontrollera din bokning</h2><p>FIXTURE '+q.date+' '+q.time+' '+q.amount+' guests${ciccios ? ' — guest choice completed' : ''}</p><button id="final">Slutför bokningen</button>';document.querySelector('#final').onclick=async()=>{try{const response=await fetch(${JSON.stringify(saveUrl)},{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});const data=await response.json();if(${receiptMode}){if(${JSON.stringify(process.env.VELVET_TEST_OUTCOME)}!=='missing-receipt')location.assign('/reservation/booking/?code='+encodeURIComponent(data.booking.short_code)+'&new=1');else screen.innerHTML='<h2>FIXTURE response only</h2>';}else{history.replaceState({},'', '/reservation/booking/fixture');screen.innerHTML='<h2>FIXTURE response received</h2>';}}catch{screen.innerHTML='<h2>FIXTURE network interrupted</h2>';}};};
- document.querySelector('#next').onclick=()=>{if(${ciccios}){screen.innerHTML='<h2>Fortsätt som gäst</h2><button id="guest">Fortsätt utan konto</button>';document.querySelector('#guest').onclick=review;}else review();};}
+ const dispatch=async()=>{if(${riche})console.log('fixture-contact-final-click');try{const response=await fetch(${JSON.stringify(saveUrl)},{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});const data=await response.json();if(${receiptMode}){if(${JSON.stringify(process.env.VELVET_TEST_OUTCOME)}!=='missing-receipt')location.assign('/reservation/booking/?code='+encodeURIComponent(data.booking.short_code)+'&new=1');else screen.innerHTML='<h2>FIXTURE response only</h2>';}else{history.replaceState({},'', '/reservation/booking/fixture');screen.innerHTML='<h2>FIXTURE response received</h2>';}}catch{screen.innerHTML='<h2>FIXTURE network interrupted</h2>';}};
+ const review=()=>{screen.innerHTML='<h2>Kontrollera din bokning</h2><p>FIXTURE '+q.date+' '+q.time+' '+q.amount+' guests${ciccios ? ' — guest choice completed' : ''}</p><button id="final">Slutför bokningen</button>';document.querySelector('#final').onclick=dispatch;};
+ document.querySelector('#next').onclick=()=>{if(${riche}){dispatch();}else if(${ciccios}){screen.innerHTML='<h2>Fortsätt som gäst</h2><button id="guest">Fortsätt utan konto</button>';document.querySelector('#guest').onclick=review;}else review();};}
 </script></body></html>`;
 }
 
@@ -101,6 +103,12 @@ if (childMode) {
           text:document.body?.innerText.slice(0,160),
         })).then(state=>process.send?.({kind:'supplier-fixture-dom',...state})).catch(()=>{}));
       });
+      if (riche) context.on('page', page => {process.on('message',message=>{
+        if(message.kind==='fixture-change-terms')page.evaluate(()=>document.querySelector('#terms-link').href='https://www.waiteraid.com/terms/fixture-b')
+          .then(()=>process.send?.({kind:'fixture-terms-changed'}));
+      });page.on('console', message => {
+        if (message.text()==='fixture-contact-final-click') process.send?.({kind:'provider-final-click'});
+      });});
       const route = context.route.bind(context);
       await context.routeWebSocket('**/*', socket => socket.close());
       // A final guard also catches requests not registered by the production adapter.
@@ -248,9 +256,10 @@ async function main() {
     backend = `http://127.0.0.1:${port}`;
     child = spawn(process.execPath, ['--import', import.meta.url, 'api/server.mjs'], { cwd: root, env: {
       ...process.env, VELVET_INTEGRATED_SUPPLIER_FIXTURE: 'child', VELVET_TEST_DIRECTORY: directory,
-      VELVET_TEST_PROVIDER: fishcorner ? 'FishCorner' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
+      VELVET_TEST_PROVIDER: fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
       VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_CICCIOS_RECEIPT: ciccios ? 'enabled' : 'disabled',
+      VELVET_RICHE_RECEIPT: riche ? 'enabled' : 'disabled',
       VELVET_ZENCHEF_FISHCORNER: fishcorner ? 'live' : 'disabled',
       VELVET_TEST_OUTCOME: outcome, PORT: String(port), PUBLIC_URL: base,
       VELVET_CRAWL: '0', VELVET_BOKABORD_MIRROR: 'live', VELVET_PLAYWRIGHT_INSPECTION: 'disabled',
@@ -309,6 +318,7 @@ async function main() {
     await page.waitForFunction(revision => document.querySelector('#bokabord-mirror [data-image]')?.dataset.revision !== revision, previous);
     await settled(page);
   }
+  let richeGuardsChecked = false;
   async function toReview(page) {
     const opening = page.waitForResponse(response => response.request().method() === 'POST'
       && new URL(response.url()).pathname === '/restaurant-bookings/mirror', { timeout: 65_000 });
@@ -327,6 +337,16 @@ async function main() {
       await settled(page);
     }
     const before = submits();
+    const finalClicks = () => messages.filter(m=>m.kind==='provider-final-click').length;
+    const clicksBefore = finalClicks();
+    const current = async () => (await api(page,'/restaurant-bookings/mirror/current',{method:'POST'})).body;
+    const rawAction = async (state, action) => api(page,`/restaurant-bookings/mirror/${state.id}/action`,{
+      method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({revision:state.revision,...action})});
+    if (riche && !richeGuardsChecked) {
+      const rejected = await rawAction(await current(),{type:'submit',confirm:true,terms:true});
+      assert.equal(rejected.status,409); assert.equal(submits(),before); assert.equal(finalClicks(),clicksBefore);
+      assert.equal((await api(page,'/restaurant-bookings/playwright/attempts')).body.attempts.length,0);
+    }
     await panel(page).locator('[data-submit]').click(); // without consent
     assert.equal(submits(), before);
     await panel(page).locator('[data-terms]').check();
@@ -336,6 +356,49 @@ async function main() {
     assert.equal(submits(), before, 'Contact-to-review must not reach supplier save');
     assert.equal(await panel(page).locator('[data-terms]').isChecked(), false, 'Review requires fresh consent');
     if (ciccios) assert.match(await panel(page).locator('[data-text]').textContent(), /guest choice completed/, 'Native adapter must traverse the guest choice');
+    if (riche) {
+      assert.equal(finalClicks(),clicksBefore,'Velvet review must not click supplier Next');
+      let frozen = await current(); assert.ok(frozen.nativeReview?.token); assert.equal(frozen.fields.length,0);
+      assert.equal(await panel(page).locator('[data-provider-view]').isHidden(),true);
+      if (!richeGuardsChecked) {
+        // Raw adversarial API actions bypass the UI closure. Refresh the actual
+        // adapter snapshot, then let the normal UI recover that fresh snapshot.
+        const refresh = async () => {await rawAction(await current(),{type:'refresh'});await panel(page).locator('[data-refresh]').click();await settled(page);};
+        const review = async () => {
+          await panel(page).locator('[data-terms]').check();await panel(page).locator('[data-submit]').click();await settled(page);
+          await panel(page).locator('[data-native-review]').waitFor(); return current();
+        };
+        const oldToken=frozen.nativeReview.token;
+        const edited=await rawAction(frozen,{type:'fill',fields:{firstname:'Changed'}});
+        assert.equal(edited.status,200); assert.equal(edited.body.nativeReview,null);
+        assert.equal((await rawAction(edited.body,{type:'submit',confirm:true,terms:true,reviewToken:oldToken})).status,409);
+        await refresh();
+        const input=panel(page).locator('[data-provider-field="firstname"]');await input.fill('Integration');await input.blur();
+        await page.waitForFunction(()=>document.querySelector('[data-provider-field="firstname"]')?.dataset.verifiedValue==='Integration');await settled(page);
+        frozen=await review();assert.notEqual(frozen.nativeReview.token,oldToken);
+        assert.equal((await rawAction(frozen,{type:'submit',confirm:true,terms:true,reviewToken:oldToken})).status,409);
+        await refresh();frozen=await review();
+        const editedToken=frozen.nativeReview.token;
+        await panel(page).locator('[data-edit-review]').click();await settled(page);
+        const editState=await current();assert.equal(editState.nativeReview,null);
+        assert.equal((await rawAction(editState,{type:'submit',confirm:true,terms:true,reviewToken:editedToken})).status,409);
+        await refresh();frozen=await review();
+        const changed=new Promise((resolve,reject)=>{
+          const timer=setTimeout(()=>reject(new Error('fixture_terms_change_timeout')),5000);
+          const receive=message=>{if(message.kind==='fixture-terms-changed'){clearTimeout(timer);child.off('message',receive);resolve();}};
+          child.on('message',receive);
+        });
+        child.send({kind:'fixture-change-terms'});await changed;
+        assert.equal((await rawAction(frozen,{type:'submit',confirm:true,terms:true,reviewToken:frozen.nativeReview.token})).status,409,'Changed visible terms URL invalidates approval');
+        await refresh();frozen=await review();
+        assert.equal(submits(),before);assert.equal(finalClicks(),clicksBefore);
+        assert.equal((await api(page,'/restaurant-bookings/playwright/attempts')).body.attempts.length,0,'Review and rejected tokens must not reserve');
+        await panel(page).screenshot({path:path.join(root,'..','riche-native-review.png')});
+        richeGuardsChecked=true;
+        console.log('PASS Riche: direct submit, edited details, old token and edit-review cannot reserve or click; fresh native review remains separate');
+      }
+      assert.equal(await panel(page).locator('[data-terms]').isChecked(),false);
+    }
   }
   async function api(page, route, options = {}) {
     return page.evaluate(async ({ route, options }) => {
@@ -424,7 +487,8 @@ async function main() {
     await toReview(first.page);
     assert.equal(submits(), 0);
     await panel(first.page).locator('[data-terms]').check();
-    await panel(first.page).locator('[data-submit]').evaluate(button => { button.click(); button.click(); });
+    if (riche) await panel(first.page).locator('[data-submit]').dblclick();
+    else await panel(first.page).locator('[data-submit]').evaluate(button => { button.click(); button.click(); });
     await first.page.waitForFunction(() => document.querySelector('#bokabord-mirror [data-status]')?.dataset.bookingStatus === 'unknown', null, { timeout: 40_000 });
     await settled(first.page);
     assert.equal(submits(), 1, 'Exactly one supplier boundary attempt');
@@ -446,7 +510,11 @@ async function main() {
     // to unknown; assert the supplier boundary block, not an internal status.
     await first.page.waitForFunction(() => document.querySelector('#bokabord-mirror [data-status]')?.dataset.bookingStatus === 'unknown', null, { timeout: 40_000 });
     assert.equal(submits(), 1, 'Restart + new session cannot repeat supplier transmission');
-    assert.equal(messages.filter(m => m.kind === 'adapter-blocked-submit').length, 1);
+    assert.equal(messages.filter(m => m.kind === 'adapter-blocked-submit').length, riche ? 0 : 1);
+    if (riche) {
+      assert.equal(messages.filter(m=>m.kind==='provider-final-click').length,1,'Replay must stop before supplier Next');
+      assert.equal(await panel(first.page).locator('[data-submit]').isHidden(),true);
+    }
     console.log('PASS actual restart/replay: persisted attempt recovered by same owner; other browser isolated; new session/key blocked');
     await stop(); await start(receiptMode ? 'missing-receipt' : 'timeout');
     await second.visit(); await toReview(second.page);
