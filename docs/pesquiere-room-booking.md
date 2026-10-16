@@ -11,9 +11,16 @@ createBookingData sends wish.booking_room_id and getBookingByUuid consumes the
 same property. The original read-only search/select/fill/review was verified by
 the adapter owner for19:00/room52372, with auto confirmation enabled, card asking
 disabled and no prepayment. No final click or supplier write was made.
-A real create-response room echo was NOT observed. This implementation therefore
-requires a same-room echo in addition to the existing confirmed/ID contract;
-missing or mismatched room evidence remains unknown, with no replay or readback.
+A real create-response room echo was NOT observed. A confirmed create response
+without room evidence now triggers one read of the same booking UUID from that
+response: GET https://bookings-middleware.zenchef.com/bookings/{uuid}?restaurantId=362908.
+The immutable server attempt, review fingerprint, session and owner remain bound.
+Saved ID, confirmed status, room, date, time and party must all match. Native
+metadata uses only the already available provider SDK. No redirects or retries
+are allowed; errors or incomplete/mismatched evidence remain unknown and consumed.
+The existing exact create-room echo path is also retained. No real supplier POST
+or UUID lookup was performed during development; contract tests use local transport.
+Source: _app-3026847bc4bd29c6.js modules70566,46712,39867 and loadBookingWithUuid.
 
 An independent VELVET_ZENCHEF_PESQUIERE=live flag adds this guest capability beside
 FishCorner. It does not activate Gigi. The existing runtime supports separate
