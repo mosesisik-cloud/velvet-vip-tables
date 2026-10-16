@@ -68,7 +68,7 @@ client alone. No native scripts are executed by the preparation adapter.
 Pages slot handler 526300 loads the selected menu then invokes the cart helper;
 it does not pass the landing branch's skip-cart option. Client helper 3254200
 creates `POST /v2/booking/cart` or updates `PUT /v2/booking/cart/:cartId` before
-native review. Response includes cart ID, access token and expiry. This is a
+native review. Its response handling can persist cart ID, access token and expiry. This is a
 server write and capability creation; the exact inventory-hold effect is not
 demonstrated. It must not run during a search or an implicitly approved local
 selection. Native landing can skip cart to show experience availability, but
@@ -155,7 +155,7 @@ using a separate journal or parallel checkout engine.
 1. Source-supported slot is selected locally and reviewed. Explicit cart
    approval requires current revision, token, fingerprint and policy version.
    `phase: cart` reserves a durable grant before the exact POST. No retries.
-2. Own response must have availability.type success, a cart ID/token/expiry,
+2. This adapter conservatively requires availability.type success, a cart ID/token/expiry,
    exact raw order and start time, no payment form/transaction/booking fee,
    and no request-only fallback. Only then does private cart state exist.
    Cart is not called held or confirmed. Capabilities never enter snapshots,
@@ -165,7 +165,7 @@ using a separate journal or parallel checkout engine.
    Explicit final consent authorizes the documented update-plus-checkout
    sequence, with a separate durable grant for **each** write.
 4. `cart_update` serializes the source guest and optional empty question
-   fields. Its exact own response must retain the cart ID/capability, valid
+   fields. This adapter requires its own response to retain the cart ID/capability, valid
    expiry, order/time and no-payment policy. It creates private verified
    update state bound to the update attempt and request digest.
 5. `booking` cannot run without that verified parent update and unchanged
@@ -212,9 +212,19 @@ regression assertion for plus-sign phone and email at-sign.
   are not established. No init request or grant is added or silently skipped
   in a purported live implementation. This is the hard production barrier.
 - No correct native grid response, native cart response or persisted booking
-  has been observed. Cart validation deliberately requires the source-consumed
-  ID/access_token/expires_at/start_at/orders/payment fields. Their presence and
-  token continuity across update remain to be validated, not assumed true.
+  has been observed. Distinguish response families: orders/start_at/pax/category
+  are consumed in **GET-cart restoration** at client 106400–108500. That does not
+  guarantee them in POST/PUT responses. The write-response mapper at 344400
+  stores ID/token conditionally, and state at 262400 defaults absent
+  showPaymentForm/paymentTransactionType to false/none. Our requirement that
+  the write response explicitly contain all selected fields is a conservative
+  adapter gate, not a native mandatory response contract. Partial responses
+  stay unknown here instead of inheriting UI defaults.
+- Unchanged token across update is likewise an adapter restriction, **not** a
+  native invariant or general external blocker. Native upsert at 344400 and
+  restoration at 103212 replace the stored token with the returned value. A
+  future patch can accept a verified own-response rotation, establish a new
+  private binding and require fresh review; this version fails closed on it.
 - Current optional guest questions are narrowly pinned. Other answers,
   required questions, experiences, prices, payment, amendments, login,
   vouchers and status polling are not supported.
