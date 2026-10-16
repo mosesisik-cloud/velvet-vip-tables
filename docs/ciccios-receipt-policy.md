@@ -49,3 +49,15 @@ this exact venue/meal. Do not enable email writes, infer success from status1, o
 enable Bar/special meals. Ce5c can reuse the existing real app/API/adapter/journal
 harness with the Ciccio's policy and guest-continuation phase. Final activation
 requires those integration checks; no new live supplier booking is claimed here.
+
+## Runtime integration
+
+The server selects this policy only when `VELVET_CICCIOS_RECEIPT=enabled`.
+This flag is independent of `VELVET_NOEMA_RECEIPT`; both default off unless
+explicitly enabled by the operator. The generic native guest-to-review bridge,
+actual-response capture and SQLite journal are unchanged. No Bar confirmation
+policy is added. Noema retains its previous party ceiling of8.
+
+Candidate8fe55e111eb71008c855eae22a2ba5b64be0b686 passed13 focused receipt and
+journal tests. Independent narrow review found no identity, default-off or
+Noema-preservation issues. Whole-chain validation is required before activation.
