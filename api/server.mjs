@@ -1074,6 +1074,9 @@ function publicRestaurantBooking(booking) {
     date: booking.date,
     time: booking.time || "",
     party: Number(booking.party) || 0,
+    ...(Number.isSafeInteger(booking.roomId) && booking.roomId > 0 && typeof booking.roomName === 'string'
+      && booking.roomName.trim() && booking.roomName.length <= 256 && !/[\x00-\x1f\x7f]/.test(booking.roomName)
+      ? {roomId:booking.roomId,roomName:booking.roomName} : {}),
     provider: booking.provider || "",
     providerReference: booking.providerReference || "",
     status: booking.status,
