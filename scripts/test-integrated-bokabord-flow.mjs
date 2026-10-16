@@ -12,10 +12,13 @@ import { chromium } from 'playwright';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const fishcorner = process.argv.includes('--fishcorner') || process.env.VELVET_TEST_PROVIDER === 'FishCorner';
-const restaurantId = fishcorner ? 'osm-SBH-fishcorner' : 'curated-STO-zink-italian-cuisine';
-const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))['curated-STO-zink-italian-cuisine'];
+const noema = process.argv.includes('--noema') || process.env.VELVET_TEST_PROVIDER === 'Noema';
+assert.ok(!(fishcorner && noema), 'Choose one named provider scenario');
+const restaurantId = fishcorner ? 'osm-SBH-fishcorner' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[noema ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 const date = '2030-01-15';
+const bookingTime = noema ? '12:00' : '19:00';
 const childMode = process.env.VELVET_INTEGRATED_SUPPLIER_FIXTURE === 'child';
 
 // Sanitized native DOM/SSR contract from the canonical provider tests. No supplier JS.
@@ -47,17 +50,17 @@ function supplierHtml() {
   return `<!doctype html><html><meta charset="utf-8"><body ng-app="fixture">
 <style>body{font:16px Arial;margin:20px}button,input,textarea{box-sizing:border-box;min-height:40px;width:260px;display:block;margin:8px 0}button{background:#eee}h1,h2{font-size:22px}#party{position:absolute;top:90px}#date{position:absolute;top:150px}#slot{position:absolute;top:210px}</style>
 <main id="screen"></main><script>
-const q={hash:${JSON.stringify(venue.hash)},mealid:9778,date:'',time:'',amount:0,firstname:'',lastname:'',email:'',phone:'',comment:'',products:[],waitlist:false,giftcard:null,linked_meals:[],bookingid:null,terms:{general:true,restaurant:false,bokabord:false}};
+const q={hash:${JSON.stringify(venue.hash)},mealid:${noema ? 35204 : 9778},date:'',time:'',amount:0,firstname:'',lastname:'',email:'',phone:'',comment:'',products:[],waitlist:false,giftcard:null,linked_meals:[],bookingid:null,terms:{general:true,restaurant:false,bokabord:false}};
 const model={meal:{bullets:{},mandatory_products:false},getQuery:()=>q};
 window.angular={element:()=>({injector:()=>({get:key=>key==='Booking'?model:key==='$http'?{pendingRequests:[]}:{$$phase:false}}),scope:()=>({isAjaxRequest:()=>false})})};
 const screen=document.querySelector('#screen');
-screen.innerHTML='<h1>Zink FIXTURE — no real booking</h1><button id="party">2 gäster</button><button id="date">2030-01-15</button><button id="slot" hidden>19:00 TESTDATA</button>';
+screen.innerHTML='<h1>${noema ? 'Noema' : 'Zink'} FIXTURE — no real booking</h1><button id="party">2 gäster</button><button id="date">2030-01-15</button><button id="slot" hidden>${bookingTime} TESTDATA</button>';
 document.querySelector('#party').onclick=()=>{q.amount=2;document.querySelector('#party').textContent='2 gäster valda';};
-document.querySelector('#date').onclick=async()=>{q.date='2030-01-15';const r=await fetch('/reservation/api/booking/getTimes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date:q.date,amount:q.amount,hash:q.hash})});const data=await r.json();document.querySelector('#slot').hidden=!data.times.includes('19:00');};
-document.querySelector('#slot').onclick=()=>{q.time='19:00';contact();};
+document.querySelector('#date').onclick=async()=>{q.date='2030-01-15';const r=await fetch('/reservation/api/booking/getTimes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date:q.date,amount:q.amount,hash:q.hash})});const data=await r.json();document.querySelector('#slot').hidden=!data.times.includes('${bookingTime}');};
+document.querySelector('#slot').onclick=()=>{q.time='${bookingTime}';contact();};
 function contact(){screen.innerHTML='<h2>Kontaktuppgifter</h2><p>FIXTURE supplier form</p>'+['firstname','lastname','email','phone'].map(n=>'<label>'+n+'<input name="'+n+'" value=""></label>').join('')+'<textarea ng-model="booking.comment"></textarea><button id="next">Nästa</button>';
  for(const input of document.querySelectorAll('input,textarea'))input.oninput=()=>{q[input.name||'comment']=input.value;};
- document.querySelector('#next').onclick=()=>{screen.innerHTML='<h2>Kontrollera din bokning</h2><p>FIXTURE '+q.date+' '+q.time+' '+q.amount+' guests</p><button id="final">Slutför bokningen</button>';document.querySelector('#final').onclick=async()=>{try{const response=await fetch(${JSON.stringify(saveUrl)},{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});await response.json();history.replaceState({},'', '/reservation/booking/fixture');screen.innerHTML='<h2>FIXTURE response received</h2>';}catch{screen.innerHTML='<h2>FIXTURE network interrupted</h2>';}};};}
+ document.querySelector('#next').onclick=()=>{screen.innerHTML='<h2>Kontrollera din bokning</h2><p>FIXTURE '+q.date+' '+q.time+' '+q.amount+' guests</p><button id="final">Slutför bokningen</button>';document.querySelector('#final').onclick=async()=>{try{const response=await fetch(${JSON.stringify(saveUrl)},{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});const data=await response.json();if(${noema}){if(${JSON.stringify(process.env.VELVET_TEST_OUTCOME)}!=='missing-receipt')location.assign('/reservation/booking/?code='+encodeURIComponent(data.booking.short_code)+'&new=1');else screen.innerHTML='<h2>FIXTURE response only</h2>';}else{history.replaceState({},'', '/reservation/booking/fixture');screen.innerHTML='<h2>FIXTURE response received</h2>';}}catch{screen.innerHTML='<h2>FIXTURE network interrupted</h2>';}};};}
 </script></body></html>`;
 }
 
@@ -99,13 +102,25 @@ if (childMode) {
         const boundary = async () => {
           const request = intercepted.request();
           const url = new URL(request.url());
+          if (noema && request.method() === 'GET' && url.origin === 'https://app.bokabord.se' && url.pathname === '/reservation/booking/') {
+            assert.equal(request.resourceType(),'document'); assert.equal(request.isNavigationRequest(),true);
+            assert.equal(request.frame().parentFrame(),null); assert.equal(url.searchParams.get('code'),'synthetic-noema-only');
+            process.send?.({kind:'supplier-receipt-navigation',outcome:process.env.VELVET_TEST_OUTCOME});
+            if (process.env.VELVET_TEST_OUTCOME === 'confirmed') await new Promise((resolve,reject)=>{
+              const timer=setTimeout(()=>{process.off('message',receive);reject(new Error('fixture_receipt_gate_timeout'));},15000);
+              const receive=message=>{if(message.kind==='release-noema-receipt'){clearTimeout(timer);process.off('message',receive);resolve();}};
+              process.on('message',receive);
+            });
+            const name = process.env.VELVET_TEST_OUTCOME === 'unverified-success' ? 'Wrong restaurant' : 'Noema';
+            return intercepted.fulfill({status:200,contentType:'text/html',body:`<html><meta charset="utf-8"><body><div>Tack för din bokning.</div><div>Du är nu klar och bekräftelse har skickats via epost.</div><div>${name}</div><div>2 pers. (Lunch)</div><div>Bokningsreferens</div><div># 999999999</div><div>Gästinformation</div></body></html>`});
+          }
           if (request.method() === 'GET' && request.url() === venue.url) {
             process.send?.({ kind: 'supplier-document' });
             return intercepted.fulfill({ status: 200, contentType: 'text/html', body: supplierHtml() });
           }
           if (request.method() === 'POST' && url.origin === 'https://app.bokabord.se' && url.pathname === '/reservation/api/booking/getTimes') {
             process.send?.({ kind: 'supplier-slots' });
-            return intercepted.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ times: ['19:00'] }) });
+            return intercepted.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ times: [bookingTime] }) });
           }
           if (request.method() === 'POST' && request.url() === saveUrl) {
             // Reaching this boundary means the REAL adapter authorized the call
@@ -117,7 +132,8 @@ if (childMode) {
             // guest data, reference, shortcode or capability URL is copied.
             const booking = { ...approved, id: 999999999, status: 1,
               restid: process.env.VELVET_TEST_OUTCOME === 'confirmed' ? 1359 : 9999,
-              meal: { type: 3, bullets: {} }, waitlist: 0, require_noshow: false,
+              meal: { type: noema ? 2 : 3, bullets: {} }, waitlist: 0, require_noshow: false,
+              ...(noema ? {short_code:'synthetic-noema-only'} : {}),
               phone: Number(String(approved.phone).replace(/\D/g, '')),
             };
             return intercepted.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, booking }) });
@@ -214,7 +230,8 @@ async function main() {
     backend = `http://127.0.0.1:${port}`;
     child = spawn(process.execPath, ['--import', import.meta.url, 'api/server.mjs'], { cwd: root, env: {
       ...process.env, VELVET_INTEGRATED_SUPPLIER_FIXTURE: 'child', VELVET_TEST_DIRECTORY: directory,
-      VELVET_TEST_PROVIDER: fishcorner ? 'FishCorner' : 'BokaBord',
+      VELVET_TEST_PROVIDER: fishcorner ? 'FishCorner' : noema ? 'Noema' : 'BokaBord',
+      VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_ZENCHEF_FISHCORNER: fishcorner ? 'live' : 'disabled',
       VELVET_TEST_OUTCOME: outcome, PORT: String(port), PUBLIC_URL: base,
       VELVET_CRAWL: '0', VELVET_BOKABORD_MIRROR: 'live', VELVET_PLAYWRIGHT_INSPECTION: 'disabled',
@@ -396,6 +413,7 @@ async function main() {
     assert.equal(recovered.body.attempts[0].status, 'unknown');
     assert.ok(!JSON.stringify(recovered.body).includes('fixture@example.invalid'));
     console.log('PASS actual app/API/Chromium/journal: explicit consent, two-step review, one double-click attempt, wrong-restaurant receipt remains unknown');
+    if (noema) assert.equal(messages.filter(m=>m.kind==='supplier-receipt-navigation').length,1);
     second = await makeView(1365);
     assert.equal((await api(second.page, '/restaurant-bookings/playwright/attempts')).status, 401);
     await stop(); await start('unverified-success');
@@ -410,7 +428,7 @@ async function main() {
     assert.equal(submits(), 1, 'Restart + new session cannot repeat supplier transmission');
     assert.equal(messages.filter(m => m.kind === 'adapter-blocked-submit').length, 1);
     console.log('PASS actual restart/replay: persisted attempt recovered by same owner; other browser isolated; new session/key blocked');
-    await stop(); await start('timeout');
+    await stop(); await start(noema ? 'missing-receipt' : 'timeout');
     await second.visit(); await toReview(second.page);
     await panel(second.page).locator('[data-terms]').check();
     await panel(second.page).locator('[data-submit]').click();
@@ -421,12 +439,25 @@ async function main() {
     assert.equal(await panel(second.page).locator('[data-submit]').isHidden(), true);
     recovered = await api(second.page, '/restaurant-bookings/playwright/attempts');
     assert.equal(recovered.body.attempts.length, 1); assert.equal(recovered.body.attempts[0].status, 'unknown');
-    console.log('PASS actual supplier-boundary timeout: unknown journal/current UI, no retry after refresh');
+    if (noema) assert.equal(messages.filter(m=>m.kind==='supplier-receipt-navigation').length,1,'Missing receipt must not trigger an adapter-constructed GET');
+    console.log(noema ? 'PASS Noema successful POST without receipt stays unknown; no constructed receipt GET or refresh retry' : 'PASS actual supplier-boundary timeout: unknown journal/current UI, no retry after refresh');
     await stop(); await start('confirmed');
     third = await makeView(1365);
     await toReview(third.page);
     await panel(third.page).locator('[data-terms]').check();
+    const receiptPending = noema ? new Promise((resolve,reject)=>{
+      const timer=setTimeout(()=>{child.off('message',receive);reject(new Error('No provider receipt navigation'));},15000);
+      const receive=message=>{if(message.kind==='supplier-receipt-navigation'){clearTimeout(timer);child.off('message',receive);resolve();}};
+      child.on('message',receive);
+    }) : null;
     await panel(third.page).locator('[data-submit]').click();
+    if (noema) {
+      await receiptPending;
+      const candidate=await api(third.page,'/restaurant-bookings/playwright/attempts');
+      assert.equal(candidate.status,200); assert.equal(candidate.body.attempts[0].status,'unknown','POST success alone cannot confirm');
+      assert.notEqual(await panel(third.page).locator('[data-status]').getAttribute('data-booking-status'),'confirmed');
+      child.send({kind:'release-noema-receipt'});
+    }
     await third.page.waitForFunction(() => document.querySelector('#bokabord-mirror [data-status]')?.dataset.bookingStatus === 'confirmed', null, { timeout: 40_000 });
     await settled(third.page);
     assert.equal(submits(), 3);
@@ -439,13 +470,20 @@ async function main() {
     await panel(third.page).locator('[data-refresh]').click(); await settled(third.page);
     assert.equal(submits(), 3);
     assert.equal(await panel(third.page).locator('[data-status]').getAttribute('data-booking-status'), 'confirmed');
-    console.log('PASS scoped positive Zink receipt through actual app/API/adapter/journal, owner recovery and reference; supplier remains simulated');
+    if (noema) {
+      assert.equal(messages.filter(m=>m.kind==='supplier-receipt-navigation').length,2);
+      assert.ok(!JSON.stringify(recovered.body).includes('synthetic-noema-only'),'Receipt capability must not be persisted in public attempts');
+      await stop(); await start('confirmed');
+      const persisted=await api(third.page,'/restaurant-bookings/playwright/attempts');
+      assert.equal(persisted.body.attempts[0].status,'confirmed'); assert.equal(persisted.body.attempts[0].reference,'999999999');
+    }
+    console.log(noema ? 'PASS Noema: POST remains unknown until provider main-frame receipt; static completion document confirms matching reference and survives restart' : 'PASS scoped positive Zink receipt through actual app/API/adapter/journal, owner recovery and reference; supplier remains simulated');
     assert.equal(messages.filter(m => m.kind === 'unexpected-supplier-request').length, 0);
     assert.equal(messages.filter(m => m.kind === 'blocked-node-network').length, 0);
     console.log(JSON.stringify({ status: 'PASS', evidence: 'real_local_app_api_adapter_journal_with_supplier_fixture',
       integrationCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
       supplierBoundaryAttempts: submits(), actualSupplierRequests: 0, liveConfirmationVerified: false,
-      backendRestarts: 3, APIRequests: apiCalls.length, deployed: false }));
+      restaurantId,backendRestarts: noema ? 4 : 3, APIRequests: apiCalls.length, deployed: false }));
     console.log('Mirror startup timings:', JSON.stringify(apiCalls.filter(call => call.method === 'POST'
       && call.path === '/restaurant-bookings/mirror').map(({ status, responseMs }) => ({ status, responseMs }))));
     console.log('Browser startup events:', JSON.stringify(messages.filter(event => event.kind.startsWith('browser-'))));
