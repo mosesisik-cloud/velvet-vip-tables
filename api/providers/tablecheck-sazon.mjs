@@ -445,7 +445,9 @@ export class TablecheckSazon {
       await this.recordResult({ approval: copy(intent), attempt: copy(attempt), result: copy(s.result) });
       return { response, intent, attempt };
     } catch {
-      await this.recordResult({ approval: copy(intent), attempt: copy(attempt), result: { status: 'unknown', phase } }).catch(() => {});
+      try {
+        await this.recordResult({ approval: copy(intent), attempt: copy(attempt), result: { status: 'unknown', phase } });
+      } catch { /* Durable dispatch remains consumed even if recording fails. */ }
       return null;
     }
   }
