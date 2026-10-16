@@ -14,12 +14,16 @@ const token = (value, name) => {
 const hash = value => crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const bindKeys = ['provider', 'restaurantId', 'sessionId', 'mode', 'idempotencyKey', 'reviewFingerprint'];
 const states = new Set(['unknown', 'pending', 'confirmed', 'rejected', 'payment_required']);
+const holdStates = new Set(['unknown', 'pending', 'rejected']);
+const phaseOf = value => value.phase === undefined ? 'booking' : value.phase;
+const decode = payload => { const attempt = JSON.parse(payload); return { ...attempt, phase: phaseOf(attempt) }; };
 
 function validate(input) {
   if (!input || typeof input !== 'object') fail('invalid_attempt');
   const clean = {};
   for (const key of ['owner', 'provider', 'restaurantId', 'sessionId']) clean[key] = token(input[key], `invalid_${key}`);
   if (!['live', 'fixture'].includes(input.mode)) fail('invalid_mode');
+  if (!['hold', 'booking'].includes(phaseOf(input))) fail('invalid_phase');
   if (typeof input.idempotencyKey !== 'string' || !/^[a-zA-Z0-9_-]{16,128}$/.test(input.idempotencyKey)) fail('invalid_idempotency_key');
   if (typeof input.reviewFingerprint !== 'string' || !/^[a-f0-9]{64}$/.test(input.reviewFingerprint)) fail('invalid_review_fingerprint');
   if (typeof input.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(input.date)) fail('invalid_date');
@@ -27,7 +31,7 @@ function validate(input) {
   if (!Number.isFinite(+date) || date.toISOString().slice(0, 10) !== input.date) fail('invalid_date');
   if (typeof input.time !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(input.time)) fail('invalid_time');
   if (!Number.isInteger(input.party) || input.party < 1 || input.party > 100) fail('invalid_party');
-  return { ...clean, mode: input.mode, idempotencyKey: input.idempotencyKey,
+  return { ...clean, mode: input.mode, phase: phaseOf(input), idempotencyKey: input.idempotencyKey,
     reviewFingerprint: input.reviewFingerprint, date: input.date, time: input.time, party: input.party };
 }
 
@@ -50,6 +54,11 @@ function validate(input) {
  * One SQLite database must be shared by workers on the same host. Independent
  * replicas/databases do not share locks; do not use SQLite WAL over network FS.
  * No automatic retry, deletion, expiry or guest/account ownership transfer here.
+ * Booking is the default phase, retaining the original v1 keys byte-for-byte.
+ * Hold uses a separate namespace, never confirms a reservation, and never stores
+ * provider hold references/tokens. Keep those in the adapter's private session.
+ * A hold grant is not permission to submit a booking: each phase needs its own
+ * explicit user approval and reserve gate. Unknown holds never auto-unlock.
  */
 export class PlaywrightAttemptLedger {
   constructor(file, { now = Date.now } = {}) {
@@ -75,18 +84,19 @@ export class PlaywrightAttemptLedger {
   reserve(input) {
     const bound = validate(input);
     // Reusing a browser key across sessions/providers is a conflict, not a new send.
-    const idem = hash(bound.idempotencyKey);
+    const idem = hash(bound.phase === 'booking' ? bound.idempotencyKey : ['hold', bound.idempotencyKey]);
     // Changing the client key/review does not re-arm the same owner's same table request.
-    const scope = hash([bound.owner, bound.mode, bound.provider, bound.restaurantId, bound.date, bound.time, bound.party]);
+    const selection = [bound.owner, bound.mode, bound.provider, bound.restaurantId, bound.date, bound.time, bound.party];
+    const scope = hash(bound.phase === 'booking' ? selection : ['hold', ...selection]);
     return this.transaction(() => {
       const replay = this.db.prepare('SELECT payload FROM playwright_attempts_v1 WHERE owner=? AND idem=?').get(bound.owner, idem);
       if (replay) {
-        const attempt = JSON.parse(replay.payload);
-        if ([...bindKeys, 'date', 'time', 'party'].some(key => attempt[key] !== bound[key])) throw new AttemptLedgerError('idempotency_conflict');
+        const attempt = decode(replay.payload);
+        if ([...bindKeys, 'phase', 'date', 'time', 'party'].some(key => attempt[key] !== bound[key])) throw new AttemptLedgerError('idempotency_conflict');
         return { sendAllowed: false, reason: 'already_attempted', attempt };
       }
       const duplicate = this.db.prepare('SELECT payload FROM playwright_attempts_v1 WHERE scope=?').get(scope);
-      if (duplicate) return { sendAllowed: false, reason: 'booking_already_attempted', attempt: JSON.parse(duplicate.payload) };
+      if (duplicate) return { sendAllowed: false, reason: bound.phase === 'hold' ? 'hold_already_attempted' : 'booking_already_attempted', attempt: decode(duplicate.payload) };
       const { owner, ...metadata } = bound;
       const timestamp = new Date(this.now()).toISOString();
       const attempt = { attemptId: crypto.randomUUID(), ...metadata, status: 'unknown',
@@ -99,20 +109,23 @@ export class PlaywrightAttemptLedger {
   get(owner, attemptId) {
     token(owner, 'invalid_owner'); token(attemptId, 'invalid_attempt_id');
     const row = this.db.prepare('SELECT payload FROM playwright_attempts_v1 WHERE owner=? AND id=?').get(owner, attemptId);
-    return row ? JSON.parse(row.payload) : null;
+    return row ? decode(row.payload) : null;
   }
   list(owner) {
     token(owner, 'invalid_owner');
     return this.db.prepare('SELECT payload FROM playwright_attempts_v1 WHERE owner=? ORDER BY rowid DESC LIMIT 100')
-      .all(owner).map(row => JSON.parse(row.payload));
+      .all(owner).map(row => decode(row.payload));
   }
   record(owner, attemptId, evidence) {
     return this.transaction(() => {
       const attempt = this.get(owner, attemptId);
       if (!attempt) throw new AttemptLedgerError('attempt_not_found', 404);
-      if (!evidence || bindKeys.some(key => evidence[key] !== attempt[key]) || evidence.attemptId !== attemptId)
+      if (!evidence || phaseOf(evidence) !== attempt.phase || bindKeys.some(key => evidence[key] !== attempt[key]) || evidence.attemptId !== attemptId)
         throw new AttemptLedgerError('evidence_mismatch');
       if (!states.has(evidence.status)) throw new AttemptLedgerError('unknown_result_status');
+      if (attempt.phase === 'hold' && !holdStates.has(evidence.status)) throw new AttemptLedgerError('invalid_hold_status');
+      if (attempt.phase === 'hold' && evidence.reference !== undefined && evidence.reference !== null)
+        throw new AttemptLedgerError('hold_reference_private');
       const expectedSource = attempt.mode === 'live' ? 'provider' : 'fixture';
       if (evidence.source !== expectedSource) throw new AttemptLedgerError('evidence_source_mismatch');
       if (evidence.status !== 'unknown' && evidence.verified !== true) throw new AttemptLedgerError('unverified_result');
@@ -128,7 +141,7 @@ export class PlaywrightAttemptLedger {
       attempt.reference = reference;
       attempt.updatedAt = new Date(this.now()).toISOString();
       attempt.verification = evidence.verified === true ? {
-        verified: true, source: expectedSource, provider: attempt.provider,
+        verified: true, source: expectedSource, provider: attempt.provider, phase: attempt.phase,
         restaurantId: attempt.restaurantId, sessionId: attempt.sessionId,
         attemptId, idempotencyKey: attempt.idempotencyKey, reviewFingerprint: attempt.reviewFingerprint,
       } : null;
