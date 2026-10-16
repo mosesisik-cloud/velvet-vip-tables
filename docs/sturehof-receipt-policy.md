@@ -67,3 +67,17 @@ release, run the existing full app harness with Sturehof policy and contact-fina
 fixture; assert review performs no save, fresh consent sends one simulated save,
 and stale/changed/replayed approvals cannot send. 32d5 integrates after the
 already queued Fish/Pesquiere work. No public activation is claimed here.
+
+## Integrated validation
+
+Runtime3dd5254 adds the policy independently to both existing contact-final and
+receipt configurations. No new adapter/phone/review/journal behavior.15 focused
+tests and narrow flag/policy preservation review passed. The existing actual
+app/API/adapter/SQLite harness --sturehof passed120 API calls,4 restarts and3
+simulated supplier POSTs with0 real supplier requests (test c79ab25).
+It enables only Sturehof while Riche is disabled, verifies Next-only phone copy
+and unmodified model during review, requires fresh consent, blocks stale/edited
+approvals and changed terms URLs before reserve/click, handles double-click as
+one attempt, and rejects missing/wrong receipts. Matching original receipt
+navigation confirms and survives restart; owner isolation and replay locks hold.
+No actual reservation, hold, code or payment was made.
