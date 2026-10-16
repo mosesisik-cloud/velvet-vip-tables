@@ -1984,5 +1984,18 @@
     "completionTracking": "unsupported",
     "venueKey": "www.sevenrooms.com/reservations/bonitostbarth",
     "locality": "Gustavia"
+  },
+  "curated-HVA-black-pepper-hvar": {
+    "provider": "i-host",
+    "venueId": "1767",
+    "url": "https://www.i-host.gr/Reservations/New?restaurant=1767&channel=website&lang=eng",
+    "source": "https://blackpepperhvar.com/",
+    "venueKey": "www.i-host.gr/Reservations/New?restaurant=1767",
+    "name": "Black Pepper Hvar",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-16",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
