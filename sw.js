@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-195-playwright-runtime";
+const VERSION = "v4-real-196-native-provider-booking";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
@@ -38,6 +38,7 @@ const SHELL_ASSETS = [
   "./js/auth-options.js",
   "./js/restaurant-copy.js",
   "./js/bokabord-mirror.js",
+  "./js/provider-playwright-booking.js",
   "./js/i18n.js",
   "./js/mrz.js",
   "./js/passport-ocr.js",

@@ -74,6 +74,11 @@ test('configured live guest sessions resume, gate writes and discard body owners
   await assert.rejects(runtime.run(session.id,'guest',false,'action',{type:'submit',revision:1,confirm:true,reviewFingerprint:'a'.repeat(64)}),/confirmation_required/);
   await runtime.run(session.id,'guest',false,'action',{type:'hold',revision:1,confirm:true,reviewFingerprint:'a'.repeat(64),owner:'forged',mode:'fixture'});
   assert.equal(calls.length,1);assert.equal(calls[0].owner,'guest');assert.equal(calls[0].action.owner,undefined);assert.equal(calls[0].action.mode,undefined);
+  await runtime.run(session.id,'guest',false,'action',{type:'submit',revision:1,confirm:true,terms:true,
+    reviewFingerprint:'a'.repeat(64),reviewToken:'native-review',termsVersion:'native-terms',idempotencyKey:'client-review-key',providerUrl:'https://untrusted.invalid'});
+  assert.equal(calls[1].action.reviewToken,'native-review');
+  assert.equal(calls[1].action.termsVersion,'native-terms');
+  assert.equal(calls[1].action.providerUrl,undefined);
   await runtime.close();
 });
 test('public runtime rejects fixture sessions and unpersisted confirmation claims',async()=>{
