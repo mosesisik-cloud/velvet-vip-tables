@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-202-pesquiere-room";
+const VERSION = "v4-real-204-pesquiere-readback";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
