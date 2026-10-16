@@ -74,10 +74,19 @@ export const BOQUERIA_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: '0195100c20f372753761a0bbb861f027', mealid: 22, mealType: 2, maxParty: 2,
 });
 
+export const DAGMAR_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-villa-dagmar', name: 'Villa Dagmar',
+  hash: 'a7eea669cf574253557648c3db0db765', mealid: 63588, mealType: 0, maxParty: 2,
+  type0Contract: 'villa-dagmar-lunch:63588:v1',
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
+  const reviewedType0 = Object.entries(DAGMAR_LUNCH_RECEIPT_POLICY)
+    .every(([key, value]) => policy[key] === value);
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
-    || !Number.isSafeInteger(policy.mealid) || policy.mealid <= 0 || ![2, 3].includes(policy.mealType)
+    || !Number.isSafeInteger(policy.mealid) || policy.mealid <= 0 || (![2, 3].includes(policy.mealType) && !reviewedType0)
+    || (policy.type0Contract !== undefined && !reviewedType0)
     || !Number.isSafeInteger(policy.maxParty) || policy.maxParty < 1 || policy.maxParty > 8) {
     throw new TypeError('reviewed_ordinary_meal_policy_required');
   }
