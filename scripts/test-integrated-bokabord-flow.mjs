@@ -251,7 +251,8 @@ async function main() {
     const visit = async () => {
       // A changed document query forces a real reload, not same-document hash
       // navigation that would leave the old mirror closure mounted after restart.
-      await page.goto(base + '/?api=' + encodeURIComponent(base) + '&fixtureVisit=' + ++visitNumber + '#/restaurant/' + restaurantId);
+      await page.goto(base + '/?api=' + encodeURIComponent(base) + '&fixtureVisit=' + ++visitNumber + '#/restaurant/' + restaurantId,
+        {waitUntil:'domcontentloaded',timeout:65_000});
       await page.locator(fishcorner ? '#provider-playwright-booking [data-start]' : '#bokabord-mirror [data-start]').waitFor();
       assert.equal(await page.locator('#restaurant-provider-booking').count(), 0, 'Native route wins over registry embed');
     };
