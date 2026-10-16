@@ -1,0 +1,479 @@
+{
+  "schemaVersion": 1,
+  "group": 10,
+  "reviewedAt": "2026-10-15T23:59:40.136830+00:00",
+  "restaurants": [
+    {
+      "restaurantId": "osm-SBH-la-cantina",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Local sources place La Cantina on Rue du Bord de Mer; current restaurant-owned source and table-booking policy not verified."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://saint-barth.org/directory/restaurants/",
+        "https://www.saintbarth-tourisme.com/wp-content/uploads/2023/10/RESTAURANTS-ST-BARTH-2023.pdf",
+        "https://www.access.sb/fr/st-barth/bars-clubs/bars-festifs/la-cantina-bar/"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-la-creperie",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Two manifest IDs may refer to the same La Creperie; no coordinates or street address in source dataset. Do not merge IDs or activate a guessed branch."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://creperiestbarth.com/",
+        "https://key-paradise.com/clients/la-creperie/"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-la-guerite",
+      "providerCandidate": "SevenRooms",
+      "providerVenueId": "lagueritedb",
+      "officialSource": "https://www.restaurantlaguerite.com/saint-barth-gustavia/",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/lagueritedb",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "No verified live inventory through a Velvet backend adapter; initial fields/default time options do not prove bookable availability.",
+        "No booking, hold, payment, or message submitted.",
+        "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered.",
+        "Previous mobile observation: Original standalone form rendered at390x844"
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://www.restaurantlaguerite.com/saint-barth-gustavia/",
+        "https://www.sevenrooms.com/reservations/lagueritedb",
+        "data/booking-providers.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-la-petite-plage",
+      "providerCandidate": "SevenRooms",
+      "providerVenueId": "lapetiteplagesaintbarth",
+      "officialSource": "https://www.restaurant-lapetiteplage.com/saint-barthelemy",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/lapetiteplagesaintbarth",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "No verified live inventory through a Velvet backend adapter; initial fields/default time options do not prove bookable availability.",
+        "Request-only route: a submitted request must remain pending until separately confirmed by the supplier.",
+        "No booking, hold, payment, or message submitted.",
+        "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered.",
+        "Provider says requests processed within24–72h; no immediate confirmation inferred. Cancellation/prepayment terms not visible at search stage.",
+        "Previous mobile observation: Original standalone form rendered at390x844",
+        "Previous cardGuarantee observation: Original provider states card guarantee required; booking remains a request pending response."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://www.restaurant-lapetiteplage.com/saint-barthelemy",
+        "https://www.sevenrooms.com/reservations/lapetiteplagesaintbarth",
+        "data/booking-providers.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-laventura",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact-name and Gustavia searches returned map-directory mentions only; no official restaurant identity or booking provider verified."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://www.cartogiraffe.com/france/saint-barth%C3%A9lemy/saint-barth%C3%A9lemy/rue%2Bdes%2Bdinzey/"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-le-bar-de-l-oubli",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://www.bardeloubli.com/",
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official site identifies location and publishes phone; phone enquiry is available but acceptance of table reservations is unverified."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://www.bardeloubli.com/",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-le-bete-a-z-ailes",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "BAZ Bar alias supported by local listings; official www.bazbar.com returned Wix domain-connection 404. Current operation and booking policy unresolved."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://www.bazbar.com/",
+        "https://www.access.sb/en/st-barts/bars-clubs/bars-after-work-en/baz-bar/",
+        "https://www.saintbarth-tourisme.com/wp-content/uploads/2023/10/RESTAURANTS-ST-BARTH-2023.pdf"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-le-cafe",
+      "providerCandidate": "SevenRooms",
+      "providerVenueId": "lecafesaintbarth",
+      "officialSource": "https://www.lecafe.fr/en/saint-barthelemy-restaurant",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/lecafesaintbarth",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "No verified live inventory through a Velvet backend adapter; initial fields/default time options do not prove bookable availability.",
+        "Request-only route: a submitted request must remain pending until separately confirmed by the supplier.",
+        "No booking, hold, payment, or message submitted.",
+        "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered.",
+        "Provider says requests processed within24–72h; no immediate confirmation inferred. Cancellation/prepayment terms not visible at search stage.",
+        "Previous mobile observation: Original standalone form rendered at390x844",
+        "Previous cardGuarantee observation: Original provider states card guarantee required; booking remains a request pending response."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://www.lecafe.fr/en/saint-barthelemy-restaurant",
+        "https://www.sevenrooms.com/reservations/lecafesaintbarth",
+        "data/booking-providers.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-le-petit-deauville",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "St Barth snack/glacier listing found. lepetitdeauville.fr belongs to Montreuil, France and must not be linked to this ID."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://saint-barth.org/directory/restaurants/",
+        "https://www.lepetitdeauville.fr/",
+        "https://www.sbhonline.com/restaurants/"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-le-repaire",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://annuaire-entreprises.data.gouv.fr/entreprise/952820389",
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Government record verifies Le Repaire at Rue de la Republique, Gustavia. KeyParadise lists phone reservations, but operator authorization/current booking acceptance is not independently established."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://key-paradise.com/clients/le-repaire/",
+        "https://annuaire-entreprises.data.gouv.fr/entreprise/952820389",
+        "https://www.saint-barths.com/en/places/restaurants/restaurant-le-repaire"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-mayas-to-go",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Historical Maya's To Go may now be Eden To Go. Official hotel source verifies new takeaway offering but does not establish continuity of this stable ID. No successor auto-mapping."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://www.oetkerhotels.com/hotels/eden-rock-st-barths/questions-answers/",
+        "https://www.sbhonline.com/restaurants/"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-megumi-sushi",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://www.megumi.fr/",
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official restaurant site identifies venue and phone. Zelty links labelled dine-in/takeaway are meal ordering, not a demonstrated table reservation system."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://www.megumi.fr/",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-natural-delights",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://naturaldelights-stbarth.fr/contact/",
+      "bookingUrl": null,
+      "currentRouteStatus": "takeaway",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unavailable",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official site offers takeaway pickup and online product orders. This is not evidence of table booking or a no-reservations policy."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://naturaldelights-stbarth.fr/contact/",
+        "https://naturaldelights-stbarth.fr/"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-nyama",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Independent local sources consistently identify Nyama at Corossol with phone/email; restaurant-owned source could not be verified. Hold contact activation."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://www.access.sb/fr/st-barth/restaurants/diner/nyama/",
+        "https://www.pasha-stbarth.com/blogs/infos/nyama-french-asian-food-new-restaurant-in-st-barth",
+        "https://key-paradise.com/en/clients/nyama-st-barth/",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-restaurant-le-creperie",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Two manifest IDs may refer to the same La Creperie; no coordinates or street address in source dataset. Do not merge IDs or activate a guessed branch."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://creperiestbarth.com/",
+        "https://key-paradise.com/clients/la-creperie/"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-restaurant-victoria",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "closed_reported",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unavailable",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Access explicitly reports permanent closure and replacement by La Petite Plage; another directory still shows old hours. Closure is secondary-reported, not independently operator-confirmed. Do not remap ID."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://www.access.sb/fr/st-barth/restaurants/diner/victoria/",
+        "https://www.saint-barths.com/fr/lieux/restaurants/restaurant-victoria-st-barth"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-sella",
+      "providerCandidate": "SevenRooms",
+      "providerVenueId": "restaurantsella",
+      "officialSource": "https://sellasaintbarth.com/fr/",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/restaurantsella",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "Historical provider UI availability observation exists only; it is not a current backend inventory or booking-completion test.",
+        "No booking, hold, payment, or message submitted.",
+        "Embedding verified on localhost harness only, not production origin. No time selected; no guarantee/checkout steps reached.",
+        "Mobile screenshot shows main four time buttons legible; alternate-date rows extend horizontally. Full mobile checkout/accessibility not tested.",
+        "Previous mobile observation: Original iframe on localhost,390x844 touch emulation: same date/party search returned four times."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://sellasaintbarth.com/fr/",
+        "https://www.sevenrooms.com/reservations/restaurantsella",
+        "data/booking-providers.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-shellona",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://www.hotelsbarriere.com/collection-fouquet-s/saint-barth/restaurants-et-bars",
+      "bookingUrl": null,
+      "currentRouteStatus": "closed",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unavailable",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Hotel operator explicitly states Shellona closed to make way for Loulou. Old site and live search shell are stale; do not map to successor."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://www.hotelsbarriere.com/collection-fouquet-s/saint-barth/restaurants-et-bars",
+        "https://shellona.com/accueil-st-barth/"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-victoire",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Name differs from Victoria. Historical Cafe Victoire and map mentions do not establish current venue. Must not inherit Victoria closure or Petite Plage booking."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://stbarthweekly.com/pdf/Weekly385.pdf",
+        "https://www.cartogiraffe.com/france/saint-barth%C3%A9lemy/saint-barth%C3%A9lemy/rue%2Bde%2Bla%2Bguadeloupe/"
+      ]
+    },
+    {
+      "restaurantId": "osm-SIN-bones-n-barrels",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official chain site lists multiple Singapore outlets; dataset has no street/coordinates. Cannot choose Alexandra/Albert Court/Sentosa/Far East/Novena."
+      ],
+      "evidence": [
+        "data/external200-group10.json",
+        "https://www.bonesnbarrels.com/index.html",
+        "https://www.bonesnbarrels.com/contact.html"
+      ]
+    }
+  ]
+}

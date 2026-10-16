@@ -1,0 +1,502 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-16",
+  "scope": "Exact external200 IDs only; research handoff to canonical SevenRooms engine owner; no runtime changes",
+  "summary": {
+    "manifestCount": 200,
+    "activeSevenRoomsIds": 8,
+    "physicalVenues": 7,
+    "requestOnlyIds": 2,
+    "enabledDirectBookingIds": 0,
+    "newLiveProviderRequests": 0,
+    "newHolds": 0,
+    "newBookings": 0
+  },
+  "sources": [
+    {
+      "url": "https://api-docs.sevenrooms.com/",
+      "checkedAt": "2026-10-16",
+      "observation": "Official documentation requires individually provisioned accounts since February26; existing credentials and permissions unchanged. New API integrators directed to partnerships form. No private endpoint contract was accessible."
+    }
+  ],
+  "records": [
+    {
+      "restaurantId": "osm-SBH-bagatelle",
+      "providerVenueId": "bagatellestbarth",
+      "name": "Bagatelle",
+      "actualCity": "Gustavia",
+      "address": "24 rue Samuel Fahlberg, Gustavia Harbor, 97133 Saint-Barthélemy",
+      "officialSource": "https://bagatelle.com/venues/st-barths/booking/",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/bagatellestbarth",
+      "registryCheckedAt": "2026-10-15",
+      "currentIntegrationMode": "external_link",
+      "liveAvailabilitySupported": false,
+      "completionTracking": "unsupported",
+      "bookingMode": "unknown",
+      "status": "candidate_pending_canonical_engine_validation",
+      "candidatePriority": 3,
+      "priorEvidence": {
+        "embeddedOriginalForm": true,
+        "liveAvailabilityObserved": true,
+        "availabilityObservation": null,
+        "desktop": "official iframe inspected; canonical provider search 2026-10-23 /2 guests offered19:00,19:30; no time selection",
+        "mobile": "390x844 screenshot of same availability results readable; no checkout tested",
+        "languages": [
+          "en"
+        ],
+        "cancellation": "For group deposit bookings, notify at least 12 hours before reservation or deposit is non-refundable.",
+        "cardGuarantee": "For 6+ guests a credit card is required, managed through Stripe with SevenRooms.",
+        "prepayment": "For 15+ guests, fixed menu and 50% deposit upon acceptance."
+      },
+      "responseTimeHours": null,
+      "blockers": [
+        "Canonical engine ownership and venue-level live-write rollout remain separate from verified source mapping",
+        "No hold, guest checkout, payment or confirmation has been verified for this venue",
+        "Provider terms must be read at chosen experience before any guest-authorized mutation"
+      ],
+      "limitations": [
+        "Seasonal closed-hours display is not treated as permanent closure.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-la-guerite",
+      "providerVenueId": "lagueritedb",
+      "name": "La Guérite",
+      "actualCity": "Gustavia",
+      "address": "La Pointe Gustavia, 97133 Saint-Barthelemy",
+      "officialSource": "https://www.restaurantlaguerite.com/saint-barth-gustavia/",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/lagueritedb",
+      "registryCheckedAt": "2026-10-15",
+      "currentIntegrationMode": "external_link",
+      "liveAvailabilitySupported": false,
+      "completionTracking": "unsupported",
+      "bookingMode": "unknown",
+      "status": "candidate_pending_canonical_engine_validation",
+      "candidatePriority": 4,
+      "priorEvidence": {
+        "embeddedOriginalForm": false,
+        "liveAvailabilityObserved": false,
+        "availabilityObservation": {
+          "checkedAt": "2026-10-15",
+          "date": "2026-10-23",
+          "guests": 3,
+          "result": "closed_on_selected_date",
+          "method": "Original standalone search"
+        },
+        "desktop": "Original standalone form rendered at1365x900",
+        "mobile": "Original standalone form rendered at390x844",
+        "languages": [
+          "fr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "responseTimeHours": null,
+      "blockers": [
+        "Canonical engine ownership and venue-level live-write rollout remain separate from verified source mapping",
+        "No hold, guest checkout, payment or confirmation has been verified for this venue",
+        "Provider terms must be read at chosen experience before any guest-authorized mutation"
+      ],
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered."
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-la-petite-plage",
+      "providerVenueId": "lapetiteplagesaintbarth",
+      "name": "La Petite Plage",
+      "actualCity": "Gustavia",
+      "address": "Angle des rues du Centenaire et du Bord de Mer, Gustavia, 97133 Saint-Barthelemy",
+      "officialSource": "https://www.restaurant-lapetiteplage.com/saint-barthelemy",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/lapetiteplagesaintbarth",
+      "registryCheckedAt": "2026-10-15",
+      "currentIntegrationMode": "external_link",
+      "liveAvailabilitySupported": false,
+      "completionTracking": "unsupported",
+      "bookingMode": "request_only",
+      "status": "request_only_not_instant_booking_candidate",
+      "candidatePriority": 5,
+      "priorEvidence": {
+        "embeddedOriginalForm": false,
+        "liveAvailabilityObserved": false,
+        "availabilityObservation": {
+          "checkedAt": "2026-10-15",
+          "date": "2026-10-15",
+          "guests": 2,
+          "result": "closed_on_selected_date",
+          "method": "Provider default search, desktop/mobile"
+        },
+        "desktop": "Original standalone form rendered at1365x900",
+        "mobile": "Original standalone form rendered at390x844",
+        "languages": [
+          "fr",
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": "Original provider states card guarantee required; booking remains a request pending response.",
+        "prepayment": null
+      },
+      "responseTimeHours": {
+        "min": 24,
+        "max": 72
+      },
+      "blockers": [
+        "Canonical engine ownership and venue-level live-write rollout remain separate from verified source mapping",
+        "No hold, guest checkout, payment or confirmation has been verified for this venue",
+        "Provider terms must be read at chosen experience before any guest-authorized mutation",
+        "Do not convert request to confirmed reservation; provider says response within24-72h and card guarantee required"
+      ],
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered.",
+        "Provider says requests processed within24–72h; no immediate confirmation inferred. Cancellation/prepayment terms not visible at search stage."
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-le-cafe",
+      "providerVenueId": "lecafesaintbarth",
+      "name": "Le Café",
+      "actualCity": "Gustavia",
+      "address": "1 rue Jeanne d'Arc, Gustavia, 97133 Saint-Barthelemy",
+      "officialSource": "https://www.lecafe.fr/en/saint-barthelemy-restaurant",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/lecafesaintbarth",
+      "registryCheckedAt": "2026-10-15",
+      "currentIntegrationMode": "external_link",
+      "liveAvailabilitySupported": false,
+      "completionTracking": "unsupported",
+      "bookingMode": "request_only",
+      "status": "request_only_not_instant_booking_candidate",
+      "candidatePriority": 5,
+      "priorEvidence": {
+        "embeddedOriginalForm": false,
+        "liveAvailabilityObserved": false,
+        "availabilityObservation": {
+          "checkedAt": "2026-10-15",
+          "date": "2026-10-15",
+          "guests": 2,
+          "result": "closed_on_selected_date",
+          "method": "Provider default search, desktop/mobile"
+        },
+        "desktop": "Original standalone form rendered at1365x900",
+        "mobile": "Original standalone form rendered at390x844",
+        "languages": [
+          "fr",
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": "Original provider states card guarantee required; booking remains a request pending response.",
+        "prepayment": null
+      },
+      "responseTimeHours": {
+        "min": 24,
+        "max": 72
+      },
+      "blockers": [
+        "Canonical engine ownership and venue-level live-write rollout remain separate from verified source mapping",
+        "No hold, guest checkout, payment or confirmation has been verified for this venue",
+        "Provider terms must be read at chosen experience before any guest-authorized mutation",
+        "Do not convert request to confirmed reservation; provider says response within24-72h and card guarantee required"
+      ],
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Standalone rendering is not an embedded-flow test; no time selected or guest/card data entered.",
+        "Provider says requests processed within24–72h; no immediate confirmation inferred. Cancellation/prepayment terms not visible at search stage."
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-sella",
+      "providerVenueId": "restaurantsella",
+      "name": "Sella",
+      "actualCity": "Public",
+      "address": "Plage de Public, 97133 Saint-Barthelemy",
+      "officialSource": "https://sellasaintbarth.com/fr/",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/restaurantsella",
+      "registryCheckedAt": "2026-10-15",
+      "currentIntegrationMode": "external_link",
+      "liveAvailabilitySupported": false,
+      "completionTracking": "unsupported",
+      "bookingMode": "unknown",
+      "status": "candidate_pending_canonical_engine_validation",
+      "candidatePriority": 2,
+      "priorEvidence": {
+        "embeddedOriginalForm": true,
+        "liveAvailabilityObserved": true,
+        "availabilityObservation": {
+          "checkedAt": "2026-10-15",
+          "date": "2026-10-23",
+          "guests": 3,
+          "searchTime": "00:00",
+          "venueLocalTimes": [
+            "19:00",
+            "19:30",
+            "21:00",
+            "21:30"
+          ],
+          "method": "Original standalone and cross-origin iframe on localhost, desktop/mobile; time buttons read only."
+        },
+        "desktop": "Original iframe on localhost,1365x900: date changed to23Oct, guests changed to3, Search returned four times.",
+        "mobile": "Original iframe on localhost,390x844 touch emulation: same date/party search returned four times.",
+        "languages": [
+          "en"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "responseTimeHours": null,
+      "blockers": [
+        "Canonical engine ownership and venue-level live-write rollout remain separate from verified source mapping",
+        "No hold, guest checkout, payment or confirmation has been verified for this venue",
+        "Provider terms must be read at chosen experience before any guest-authorized mutation"
+      ],
+      "limitations": [
+        "No booking, hold, payment, or message submitted.",
+        "Embedding verified on localhost harness only, not production origin. No time selected; no guarantee/checkout steps reached.",
+        "Mobile screenshot shows main four time buttons legible; alternate-date rows extend horizontally. Full mobile checkout/accessibility not tested."
+      ]
+    },
+    {
+      "restaurantId": "osm-DXB-shang-palace",
+      "providerVenueId": "shangpalacedubai",
+      "name": "Shang Palace Dubai",
+      "actualCity": "Dubai",
+      "address": "Level 1, Shangri-La Dubai, Sheikh Zayed Road",
+      "officialSource": "https://www.shangri-la.com/ru/dubai/shangrila/offer-detail/dining/experience-shang-palace/",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai",
+      "registryCheckedAt": "2026-10-16",
+      "currentIntegrationMode": "external_link",
+      "liveAvailabilitySupported": false,
+      "completionTracking": "unsupported",
+      "bookingMode": "unknown",
+      "status": "candidate_pending_canonical_engine_validation",
+      "candidatePriority": 1,
+      "priorEvidence": {
+        "embeddedOriginalForm": false,
+        "liveAvailabilityObserved": true,
+        "availabilityObservation": {
+          "checkedAt": "2026-10-15T22:31:27Z",
+          "date": "2026-10-16",
+          "guests": 4,
+          "requestedTime": "19:00",
+          "times": [
+            "18:15",
+            "18:30",
+            "18:45",
+            "19:00",
+            "19:15",
+            "19:30",
+            "19:45",
+            "20:00"
+          ],
+          "desktopObservedAt": "2026-10-15T22:31:17Z",
+          "mobileObservedAt": "2026-10-15T22:31:27Z",
+          "source": "https://www.sevenrooms.com/reservations/shangpalacedubai",
+          "notes": "Initial15Oct2guests19:00 search returned no same-day times and alternative16Oct times18:30–19:30. Then incremented date to16Oct and guests to4 and searched. Availability may change; no slot selected."
+        },
+        "desktop": "Chromium 1365x900: provider original search form; date increment and party increment tested; Search returns times. No slot or Continue selected.",
+        "mobile": "Chromium 390x844: same date/party search interaction and returned times. No slot or Continue selected.",
+        "languages": [
+          "English",
+          "简体中文",
+          "繁體中文"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": null
+      },
+      "responseTimeHours": null,
+      "blockers": [
+        "Canonical engine ownership and venue-level live-write rollout remain separate from verified source mapping",
+        "No hold, guest checkout, payment or confirmation has been verified for this venue",
+        "Provider terms must be read at chosen experience before any guest-authorized mutation"
+      ],
+      "limitations": [
+        "Provider original form tested standalone, not embedded inside Velvet. No embedded-form claim.",
+        "Availability is a timestamped observation, not guaranteed current inventory and not an API capability.",
+        "Cancellation, card guarantee and prepayment were not shown at search stage; remain unknown.",
+        "Standalone restaurant domain returned404; use verified official hotel-to-provider link.",
+        "No slot selected, guest information entered, or confirmation step invoked. Probe lacked network write blocking and did not capture requests; cannot prove provider JavaScript created no side effects. No confirmed reservation observed."
+      ]
+    },
+    {
+      "restaurantId": "curated-SBH-bonito-saint-barth",
+      "providerVenueId": "bonitostbarth",
+      "name": "Bonito Saint Barth",
+      "actualCity": "Gustavia",
+      "address": "Rue Lubin Brin, Gustavia, 97133 Saint-Barthélemy",
+      "officialSource": "https://www.bonitosbh.com/",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth",
+      "registryCheckedAt": "2026-10-16",
+      "currentIntegrationMode": "external_link",
+      "liveAvailabilitySupported": false,
+      "completionTracking": "unsupported",
+      "bookingMode": "unknown",
+      "status": "candidate_pending_canonical_engine_validation",
+      "candidatePriority": 5,
+      "priorEvidence": {
+        "embeddedOriginalForm": false,
+        "liveAvailabilityObserved": false,
+        "availabilityObservation": null,
+        "desktop": "Official hydrated iframe observed; provider canonical read-only original UI rendered.",
+        "mobile": "Canonical SevenRooms original UI rendered390x844, BONITO St Barth,6 Rue Lubin Brin Gustavia, EN/FR selector; no inputs or clicks.",
+        "languages": [
+          "en",
+          "fr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": "Initial provider UI automatically offered21Oct2026 slots for2 guests, labelled EUR180 prepayment; no slot selected, perperson basis not established."
+      },
+      "responseTimeHours": null,
+      "blockers": [
+        "Canonical engine ownership and venue-level live-write rollout remain separate from verified source mapping",
+        "No hold, guest checkout, payment or confirmation has been verified for this venue",
+        "Provider terms must be read at chosen experience before any guest-authorized mutation",
+        "Two stable IDs represent one physical venue; prepayment observed but amount basis unknown"
+      ],
+      "limitations": [
+        "Likely duplicate venue represented by curated-SBH-bonito-saint-barth and osm-SBH-bonito; IDs preserved, no merge.",
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "No slot selected, no date/guest change, no submission, no completion tracking.",
+        "Automatically offered times are point-in-time UI observations only, not actively verified safe-search availability; liveAvailability remainsfalse.",
+        "Do not count two stableIDs as two unique restaurants.",
+        "Cancellation and card guarantee details not inspected beyond initial page; no policy inferred."
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-bonito",
+      "providerVenueId": "bonitostbarth",
+      "name": "Bonito Saint Barth",
+      "actualCity": "Gustavia",
+      "address": "Rue Lubin Brin, Gustavia, 97133 Saint-Barthélemy",
+      "officialSource": "https://www.bonitosbh.com/",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth",
+      "registryCheckedAt": "2026-10-16",
+      "currentIntegrationMode": "external_link",
+      "liveAvailabilitySupported": false,
+      "completionTracking": "unsupported",
+      "bookingMode": "unknown",
+      "status": "candidate_pending_canonical_engine_validation",
+      "candidatePriority": 5,
+      "priorEvidence": {
+        "embeddedOriginalForm": false,
+        "liveAvailabilityObserved": false,
+        "availabilityObservation": null,
+        "desktop": "Official hydrated iframe observed; provider canonical read-only original UI rendered.",
+        "mobile": "Canonical SevenRooms original UI rendered390x844, BONITO St Barth,6 Rue Lubin Brin Gustavia, EN/FR selector; no inputs or clicks.",
+        "languages": [
+          "en",
+          "fr"
+        ],
+        "cancellation": null,
+        "cardGuarantee": null,
+        "prepayment": "Initial provider UI automatically offered21Oct2026 slots for2 guests, labelled EUR180 prepayment; no slot selected, perperson basis not established."
+      },
+      "responseTimeHours": null,
+      "blockers": [
+        "Canonical engine ownership and venue-level live-write rollout remain separate from verified source mapping",
+        "No hold, guest checkout, payment or confirmation has been verified for this venue",
+        "Provider terms must be read at chosen experience before any guest-authorized mutation",
+        "Two stable IDs represent one physical venue; prepayment observed but amount basis unknown"
+      ],
+      "limitations": [
+        "Likely duplicate venue represented by curated-SBH-bonito-saint-barth and osm-SBH-bonito; IDs preserved, no merge.",
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "No slot selected, no date/guest change, no submission, no completion tracking.",
+        "Automatically offered times are point-in-time UI observations only, not actively verified safe-search availability; liveAvailability remainsfalse.",
+        "Do not count two stableIDs as two unique restaurants.",
+        "Cancellation and card guarantee details not inspected beyond initial page; no policy inferred."
+      ]
+    }
+  ],
+  "excluded": [
+    {
+      "restaurantId": "osm-SBH-shellona",
+      "status": "closed",
+      "retiredProviderVenueId": "shellonadb",
+      "reason": "Official operator closure and replacement by Loulou; old SevenRooms shell must not activate successor under this ID",
+      "source": "https://www.hotelsbarriere.com/collection-fouquet-s/saint-barth/restaurants-et-bars"
+    }
+  ],
+  "implementationEvidence": {
+    "safeAvailabilitySource": "api/availability-search.mjs",
+    "readOnlyEndpoint": {
+      "method": "GET",
+      "path": "/api-yoa/availability/ng/widget/range",
+      "queryKeys": [
+        "venue",
+        "party_size",
+        "halo_size_interval",
+        "start_date",
+        "num_days",
+        "channel",
+        "exclude_pdr",
+        "intent"
+      ],
+      "responseShape": "status=200, data.availability[YYYY-MM-DD][] containing times[]",
+      "slotFields": [
+        "type",
+        "time_iso",
+        "time",
+        "cc_payment_rule",
+        "require_credit_card"
+      ],
+      "provenance": "Existing reviewed local implementation and mocked safety tests; not a newly observed live API contract",
+      "requiredBehavior": [
+        "Reject request_only rows before fetch",
+        "Reject liveAvailabilitySupported=false before fetch",
+        "Compare embedded slot date with selected date",
+        "Do not collapse distinct experience policies into fee-free availability",
+        "Unknown card/prepayment flags mean unknown, never free"
+      ]
+    },
+    "mutationBoundary": {
+      "path": "/api-yoa/dining/hold/add",
+      "method": "POST",
+      "evidence": "docs/sevenrooms-booking.md reports this was blocked after seating choices for Astoria outside external200; local legacy server code also calls it. No call made in this task.",
+      "implication": "A slot or Continue can create a hold before reservation submit; block before that boundary during all no-write tests."
+    },
+    "legacyMutationCode": {
+      "source": "api/server.mjs srBookSlot",
+      "status": "unverified_legacy_not_canonical_engine",
+      "paths": [
+        "/api-yoa/dining/hold/add",
+        "/booking/dining/widget/{slug}/book"
+      ],
+      "limitations": [
+        "Repository contains claimed anti-bot workaround; do not reproduce or rely on it to bypass provider protection",
+        "Local code is not current provider documentation or verified payment/confirmation contract",
+        "Do not reuse automatic range-to-hold-to-book sequence as proof of guest approval or terms acceptance"
+      ]
+    }
+  },
+  "failureStates": [
+    "identity_mismatch",
+    "provider_unavailable",
+    "closed_or_no_inventory",
+    "request_only",
+    "captcha_or_access_control",
+    "payment_or_card_guarantee_required",
+    "terms_unknown",
+    "hold_boundary_requires_explicit_guest_action",
+    "session_expired",
+    "ambiguous_submit_result_no_retry_without_reconciliation",
+    "provider_confirmation_missing"
+  ],
+  "claimLimits": [
+    "A rendered original form is not a completed booking",
+    "Historical availability does not enable live capability flag",
+    "Simulated tests must remain labeled simulated",
+    "Only provider-backed confirmed reservation evidence can be confirmed",
+    "No claims about canonical Strandvagen1 pilot outside manifest"
+  ],
+  "testPlan": [
+    "Use canonical engine fixtures for session isolation, pinned venue routing, write guards, request-only semantics, expired session, ambiguous submit reconciliation and confirmation provenance",
+    "For safe venue qualification load official original page with service workers disabled and non-GET/HEAD writes blocked, inspect initial language and terms; any safe search endpoint must be explicitly allowlisted",
+    "Keep payment and CAPTCHA in provider-controlled guest flow unless supported canonical implementation exists",
+    "Preserve all eight stable IDs and deduplicate Bonito only for physical-venue reporting"
+  ]
+}

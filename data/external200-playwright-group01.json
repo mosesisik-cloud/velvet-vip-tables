@@ -1,0 +1,474 @@
+{
+  "schemaVersion": 1,
+  "group": 1,
+  "reviewedAt": "2026-10-15T23:59:49.371075+00:00",
+  "restaurants": [
+    {
+      "restaurantId": "osm-BAL-black-white",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Resolve the manifest place against Pantai Nelayan candidate before enabling its contact.",
+        "Exact name search returned The Black & White Kitchen in Dalung, but there is no street address or coordinate in the input to establish that it is this record. Do not attach this candidate.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://www.carikulinerindonesia.com/11065390/the-black-white-kitchen-kuta-utara",
+        "https://www.tripadvisor.co.id/Restaurant_Review-g311298-d15829267-Reviews-Black_and_White_Canggu-Canggu_North_Kuta_Badung_Regency_Bali.html"
+      ]
+    },
+    {
+      "restaurantId": "osm-BAL-eternal",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Obtain current operator confirmation of Eternal name/operation and table reservation channel.",
+        "Historical official Ametis factsheet names Eternal Dine & Lounge; it is a 2018 document and does not establish current trading name, booking channel or status.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://ametisvilla.com/pdf/factsheet2018.pdf",
+        "https://www.ametisvilla.com/festivepage.html"
+      ]
+    },
+    {
+      "restaurantId": "osm-BAL-la-rosa",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://linktr.ee/larosa_canggu",
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Confirm whether published WhatsApp accepts table reservations; no message sent.",
+        "Operator Linktree identifies La Rosa beachfront cafe at Batu Bolong and publishes WhatsApp contact. It does not explicitly establish a table-reservation service; no online inventory found.",
+        "Official identity is established, but no explicit verified table-booking route is available for automation.",
+        "Official reservation policy still absent; generic contact is not a confirmed booking route."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://linktr.ee/larosa_canggu",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-BAL-mexican-grilled-sancwich",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Recover original place spelling or street/OSM feature; do not assign generic Mexican venues.",
+        "Search for the exact misspelled name Mexican Grilled Sancwich found no identity-matching official restaurant page. Generic menu results were rejected.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-BAL-papa-lee-s-taiwan-noodle-dumpling",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Resolve Canggu/Seminyak/Petitenget branch and trace its restaurant-specific reservation endpoint.",
+        "Official Papa Lee site lists Seminyak, Canggu and Petitenget locations. Input contains no street address to select a branch; Teppanyaki is a different brand and its Chope page must not be substituted.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://papaleebali.com/",
+        "https://www.chope.co/bali-restaurants/restaurant/papa-lees-teppanyaki-seminyak",
+        "https://chickenramencompany.com/papa-lee-seminyak/"
+      ]
+    },
+    {
+      "restaurantId": "osm-BAL-sari",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Establish that short manifest name is Sari Kitchen before exposing its WhatsApp.",
+        "Official Sari Kitchen and Community in Canggu is a plausible candidate. The generic input name Sari and island-only address cannot establish that this is the same place.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://www.saricanggu.com/"
+      ]
+    },
+    {
+      "restaurantId": "osm-BAL-seaweed",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://linktr.ee/seaweedcanggubali",
+      "bookingUrl": null,
+      "currentRouteStatus": "manual_whatsapp",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "manual_only",
+      "blockers": [
+        "No date/party inventory or working original form verified; use explicit manual request route only.",
+        "Only an explicit manual reservation request/contact route is verified; no inventory-backed provider automation or supplier-confirmation integration exists."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://linktr.ee/seaweedcanggubali",
+        "https://seaweedcanggu.wixsite.com/my-site/about",
+        "https://www.baliready.com/en-GB/directory/restaurants/67738af0f66b1cf443a15ee8",
+        "https://seaweedcanggu.wixsite.com/my-site"
+      ]
+    },
+    {
+      "restaurantId": "osm-BAL-warung-cucu",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Resolve branch using original source feature; then verify operator contact authority.",
+        "Search found Warung Cucu on Batu Bolong and Warung Cucu 58 in Gianyar. Input has no branch discriminator; directory reservation/contact information cannot resolve it.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://www.tripadvisor.com/Restaurant_Review-g297697-d9827974-Reviews-Warung_Cucu-Kuta_Kuta_District_Badung_Regency_Bali.html",
+        "https://menukuliner.net/menu/30665/warung-cucu-58-jl-gunung-agung-beng-gianyar"
+      ]
+    },
+    {
+      "restaurantId": "osm-BAL-warung-middle",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Identify a current operator-controlled page or explicitly published reservation policy.",
+        "Waze and directories consistently place Warung Middle at Canggu beach, but no operator source or booking system was found. Directory booking tags are not enough to assert a reservation route.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://www.waze.com/live-map/directions/id/bali/warung-middle?to=place.ChIJ8UUNpeNH0i0Rfc4cf7akvZE"
+      ]
+    },
+    {
+      "restaurantId": "osm-BAL-warung-nonii",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Inspect publicly accessible operator policy when available; no bypass attempted.",
+        "Directory identifies Waroeng Nonii and points to Instagram @waroengnonii. Direct Instagram read failed; official identity and booking channel remain unverified.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID.",
+        "Current operator/branch and closure or takeaway policy unverified; no closure/walk-in upgrade."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://www.otherbali.com/places/warung-nonii",
+        "https://www.instagram.com/waroengnonii/",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-BAL-warung-varuna",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Verify current operator contact and booking/walk-in policy instead of directory tags.",
+        "Directories identify Varuna at 89x Pantai Batu Bolong but disagree on phone and reservation support. Candidate Facebook read was throttled. Do not infer walk-in-only from third-party no-booking tag.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID.",
+        "Need readable operator policy and current contact reconciliation; no walk-in designation inferred."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://www.baliready.com/en-GB/directory/restaurants/67738b7af66b1cf443a15f2d",
+        "https://restaurantguru.com/Warung-Canggu-Bali",
+        "https://m.facebook.com/warungvaruna/",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "curated-BDR-mimoza-gumusluk",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Read current operator channel and confirm reservation contact/address; no intermediary form approved.",
+        "Gumusluk venue identified by multiple secondary sources, but street number differs (32 versus 104). Candidate official domain could not be read. Phone booking is reported, not officially confirmed in this audit.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://mesprestiges.com/en/bodrum/places/mimoza-gumusluk/reservations",
+        "https://www.tripadvisor.co.uk/Restaurant_Review-g664076-d3338623-Reviews-Mimoza-Gumusluk_Bodrum_District_Mugla_Province_Turkish_Aegean_Coast.html",
+        "https://www.mimozagumusluk.com/"
+      ]
+    },
+    {
+      "restaurantId": "osm-BDR-arka-restaurant-pizzeria",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Exact branch remains unresolved; never route to third-party reservation forms contrary to operator policy.",
+        "Official operator publishes central Bodrum (Cumhuriyet 102) and Yalikavak (Carsi 52-1D1) branches. Both follow arrival order and a waiting list rather than reservations. Catalogue provenance does not identify which branch this stable ID denotes.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://guide.michelin.com/en/mugla/bodrum_2806351/restaurant/arka-ristorante-pizzeria",
+        "https://www.arkapizzeria.com/Tr/anasayfa",
+        "https://mekanlar.com/mekan/arka-ristorante-pizzeria-yalikavak-bodrum",
+        "https://arkapizzeria.com/"
+      ]
+    },
+    {
+      "restaurantId": "osm-BDR-bal-k-pisirici",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Recover unique business identity or source OSM feature; generic seafood category cannot be linked.",
+        "Generic Balik Pisirici name appears on OSM-derived Neyzen Tevfik street directory. No distinct official business or reservation route identified.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://turkey-streets.openalfa.com/streets/neyzen-tevfik-caddesi-bodrum"
+      ]
+    },
+    {
+      "restaurantId": "osm-BDR-battalbey-cig-kofte",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Resolve branch; require explicit reservation policy before enabling any table route.",
+        "Multiple Battalbey branches exist in Bodrum, including Ismet Inonu and Artemis streets. No input address selects a branch. Delivery ordering is not table booking.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://yandex.com.tr/maps/org/battalbey_cig_kofte_bodrum/1148241325/",
+        "https://tr.restaurantguru.com/Battalbey-cigkofte-bodrum-Bodrum-2"
+      ]
+    },
+    {
+      "restaurantId": "osm-BDR-bodrum-belediyesi-carsi-kafe",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://www.bodrumbelediyeas.com.tr/tesis.php?slug=carsi-cafe",
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Published contact alone does not establish reservation acceptance.",
+        "Municipal operator confirms Carsi Cafe identity, address and public phone. No statement that this phone accepts table bookings and no reservation system observed.",
+        "Official identity is established, but no explicit verified table-booking route is available for automation."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://www.bodrumbelediyeas.com.tr/tesis.php?slug=carsi-cafe"
+      ]
+    },
+    {
+      "restaurantId": "osm-BDR-cirali",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Resolve current operation with operator confirmation; do not infer permanent closure from time-of-day closed label.",
+        "Google business-hosted page identifies Cirali Bodrum at Ataturk 26. Operator provenance and booking support were not established beyond search result; no integration approved.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://business.google.com/v/_/0656941041902172949/8053/_",
+        "https://wanderlog.com/place/details/3664357/%C3%A7%C4%B1ral%C4%B1-bodrum"
+      ]
+    },
+    {
+      "restaurantId": "osm-BDR-derin-balik",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Resolve closure conflict and confirm restaurant-owned reservation route.",
+        "Closure conflict: Restaurant Guru says permanently closed while Tripadvisor shows recent 2026 reviews and claimed listing at Carsi Sok 7/B. No official closure confirmation; neither closed nor bookable is asserted.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID.",
+        "Need operator statement linking historical Carsi7/B to current147, or another exact catalogue identity anchor. Candidate route is official for147 only."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://restaurantguru.com/Derin-Balikevi-Bodrum",
+        "https://www.tripadvisor.com/Restaurant_Review-g298658-d12035467-Reviews-Derin_Balik_Evi-Bodrum_City_Bodrum_District_Mugla_Province_Turkish_Aegean_Coast.html",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-BDR-garden-steak-kebap",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Resolve relocation/namesake relationship before selecting one contact.",
+        "Garden Steak and Kebab appears on Neyzen Tevfik while T Garden Steak Kebap appears at Ataturk 28 with a different phone. No official source resolves which is intended.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://restaurantguru.com/Garden-Steak-and-Kebab-Bodrum",
+        "https://menuburada.com/t-garden-steak-kebap-carsi-mugla/",
+        "https://www.tumisyeri.com/t-garden-steak-house-0252-313-46-00"
+      ]
+    },
+    {
+      "restaurantId": "osm-BDR-gemibas-restaurant",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://www.gemibasi.com/",
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Confirm whether published phone accepts table bookings or inspect enabled reservation control.",
+        "Official Gemibasi site is readable on follow-up and corroborates venue address/contact. No explicit table reservation procedure or original booking inventory established.",
+        "Official identity is established, but no explicit verified table-booking route is available for automation."
+      ],
+      "evidence": [
+        "data/external200-group01.json",
+        "https://www.gemibasi.com/"
+      ]
+    }
+  ]
+}

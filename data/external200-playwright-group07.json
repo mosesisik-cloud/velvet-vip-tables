@@ -1,0 +1,462 @@
+{
+  "schemaVersion": 1,
+  "group": 7,
+  "reviewedAt": "2026-10-15T23:59:40.136830+00:00",
+  "restaurants": [
+    {
+      "restaurantId": "osm-HKT-u172a3c9fa68f",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact Thai-name match appears as Genuine Thai Food; restaurant-owned address and booking policy not verified."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://es.restaurantguru.com/Genuine-thai-food-Phuket/menu"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-u85f393ba80c7",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Candidate One Chun Facebook profile was discovered via the restaurant name, but current address and reservation instructions were not readable/verified."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://www.facebook.com/OneChunPhuket",
+        "https://lnk.bio/Onechun_phuket"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-u88caf8193724",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Directory candidate is New Brake Taek by the old bus terminal, Phang Nga Soi 7; it flags possible closure. A Chalong branch also appears in search. No official confirmation of exact branch or closure."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://www.wongnai.com/restaurants/112006fE-ก๋วยเตี๋ยว-นิวเบรคแตก-บขส-เก่า"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-u9652e72e518c",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Directory gives 58 Suthat Road, Talat Yai and 061 953 9166; no restaurant-owned identity or reservation policy verified."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://www.thaithurkic.com/ครัวพริกแกง-ภูเก็ต-061-953-9166"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-uf6b9db1d32b4",
+      "providerCandidate": "Raya direct request",
+      "providerVenueId": null,
+      "officialSource": "https://www.rayarestaurant.net/",
+      "bookingUrl": "https://www.rayarestaurant.net/",
+      "currentRouteStatus": "manual_email",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "No verified live inventory through a Velvet backend adapter; initial fields/default time options do not prove bookable availability.",
+        "Request-only route: a submitted request must remain pending until separately confirmed by the supplier.",
+        "No reservation confirmation, payment, waitlist or contact request submitted."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://www.rayarestaurant.net/"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-xorin",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Xorin Old Town candidate at 42 Talat Yai; directory phone differs from Wongnai and recent press. Official social profile and current booking policy not verified."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://www.phuket.net/directory/profile/xorin-phuket-old-town/",
+        "https://www.wongnai.com/restaurants/2729697vW-xorin-phuket-old-town"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-yunnan",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Yunnan candidate at 74/23 Nanai Road, Kathu differs from OSM-derived Old Town listing at Thepkasattri Road 6. No exact branch match possible."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://www.wongnai.com/restaurants/1618258Uk-ร้านอาหารยูนนาน"
+      ]
+    },
+    {
+      "restaurantId": "osm-HKT-zero-to-nine",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact-name search for Zero to nine Phuket did not establish an official restaurant identity or booking route."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://www.facebook.com/profile.php?id=61557504632782"
+      ]
+    },
+    {
+      "restaurantId": "curated-IST-mikla",
+      "providerCandidate": "Mikla direct form",
+      "providerVenueId": null,
+      "officialSource": "https://www.miklarestaurant.com/rezervasyon",
+      "bookingUrl": "https://www.miklarestaurant.com/rezervasyon",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "No verified live inventory through a Velvet backend adapter; initial fields/default time options do not prove bookable availability.",
+        "Prepared as evidence only: provider is not admitted by an existing reviewed registry adapter; no allowlist expanded.",
+        "Native restaurant form is not a verified Velvet embed. Default 19:00 is not proof of availability.",
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "Previous mobile observation: 390x844 screenshot inspected; party selector overlaps calendar; no complete-flow claim",
+        "Previous cardGuarantee observation: Card details requested; visible no-show charge EUR 35 per person."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://www.miklarestaurant.com/rezervasyon"
+      ]
+    },
+    {
+      "restaurantId": "curated-IST-neolokal",
+      "providerCandidate": "Rezervem",
+      "providerVenueId": null,
+      "officialSource": "https://www.neolokal.com/en/neolokal_en/",
+      "bookingUrl": "https://guest.rezervem.com.tr/Neolokal/?sourceId=webSite&culture=en-US",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "No verified live inventory through a Velvet backend adapter; initial fields/default time options do not prove bookable availability.",
+        "Request-only route: a submitted request must remain pending until separately confirmed by the supplier.",
+        "Prepared as evidence only: provider is not admitted by an existing reviewed registry adapter; no allowlist expanded.",
+        "embeddedOriginalForm refers to the official restaurant site, not a Velvet iframe.",
+        "Displayed request times are not confirmed inventory; liveAvailability remains false.",
+        "Initial direct browser attempt timed out; official-site embed succeeded.",
+        "No guest/contact data or request submitted. Network/client behavior was not inspected before selecting 18:00; absence of server-side hold side-effects is unverified. Request-only wording is not evidence that selection cannot hold inventory.",
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "Previous mobile observation: 390x844 screenshot inspected; embedded content renders very small; responsive usability not passed",
+        "Previous cardGuarantee observation: Pre-authorization/prepayment must be completed 48 hours before reservation time; amount not shown.",
+        "Previous prepayment observation: Pre-authorization/prepayment required 48 hours before; amount not published in inspected form.",
+        "Previous cancellation observation: Reservation cancelled if pre-authorization/prepayment is incomplete 48 hours before; guest cancellation/refund terms not verified."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://www.neolokal.com/en/neolokal_en/",
+        "https://guest.rezervem.com.tr/Neolokal/?sourceId=webSite&culture=en-US"
+      ]
+    },
+    {
+      "restaurantId": "curated-IST-turk-fatih-tutak",
+      "providerCandidate": "TURK direct reservation",
+      "providerVenueId": null,
+      "officialSource": "https://turkft.com/reservation",
+      "bookingUrl": "https://rezervasyon.turkft.com/turk-fatih-tutak/reservation",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "Historical provider UI availability observation exists only; it is not a current backend inventory or booking-completion test.",
+        "Prepared as evidence only: provider is not admitted by an existing reviewed registry adapter; no allowlist expanded.",
+        "Underlying vendor not identified; do not invent provider. Availability is point-in-time UI evidence, not live adapter integration.",
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "Previous mobile observation: 390x844 resize produced visible client-side application exception; mobile failed",
+        "Previous prepayment observation: Current rendered policy: 9,900 TRY per guest deposit within 24 hours to confirm; deducted from bill. Cached source had 7,500; current party-reduction clause still says 7,500.",
+        "Previous cancellation observation: Policy says no refund for cancellations 72 hours or less before, full refund 72 hours or more; exact 72-hour boundary is ambiguous. Party reduction within 72 hours costs 7,500 TRY per removed guest."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://turkft.com/reservation",
+        "https://turkft.com/",
+        "https://rezervasyon.turkft.com/turk-fatih-tutak/reservation"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-akida-pilav",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact-name OSM-derived listing places Akida Pilav on 18. Sokak; no official restaurant identity or booking policy found."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://turkiye-sokaklarinda.openalfa.com/istanbul_balabanaga/yeme"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-basak-borekcisi",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Restaurant-owned eatbu page identifies Merv Caddesi 125/A, Zeytinburnu. Yandex candidate flags inactive while other directories show operating hours. Exact manifest branch/current operating status cannot be established."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://basakborek.eatbu.com/?lang=en",
+        "https://yandex.com.tr/maps/org/basak_borekcisi/17803038400/"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-bereket-sofras",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official candidate at Vatan Caddesi 57/B, Kağıthane says no reservation needed. Other search results show Bereket Sofrası in Sümer/Zeytinburnu. Manifest lacks branch locator, so do not apply the walk-in policy to this ID."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://bereketsofrasi.eatbu.com/?lang=en"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-bitas-ev-yemekleri",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact-name delivery listing and directory candidate at Şevket Dağ Sokak 4 Bahçelievler. Food delivery is not table booking; official table policy unavailable."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://www.yemeksepeti.com/restaurant/ysr0/bitas-ev-yemekleri"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-diyarzade-kunefe-katmer-baklava-ve-tatli",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact-name DİYARZADE KÜNEFE/KATMER/BAKLAVA search did not return a usable restaurant-owned identity or reservation source."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://qrdos.tr/diyarzade-kunefe"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-durum-durak",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official brand has Bahçelievler, Beylikdüzü and Halkalı branches. Manifest has no branch address; no branch-specific booking route assigned."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://durumdurak.com/"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-efendim-fas-l-rest",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official-looking eatbu page gives Kennedy Caddesi & Sahil Yolu 63/B-1 Bakırköy. A secondary listing now calls it Uras Balık Meze Meyhane (formerly Efendim Fasıl); current identity unresolved."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://efendimfasil.eatbu.com/?lang=tr",
+        "https://tr.restaurantguru.com/amp/Efendim-Fasil-Istanbul"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-elif-borek-salonu",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "OSM-derived/AI directory gives Merv Caddesi in Sümer and explicitly marks identity unverified. Its walk-in claim is not adopted."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://www.restaurantsistanbul.com/istanbul/elif-borek-salonu"
+      ]
+    },
+    {
+      "restaurantId": "osm-IST-emsal-peynircimm",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Candidate at Pelinli Sokak 5 Kartaltepe, Bakırköy is categorized as a dairy shop. No official restaurant or table-booking evidence."
+      ],
+      "evidence": [
+        "data/external200-group07.json",
+        "https://yandex.com.tr/maps/org/emsal_peynircimm/178531413936/"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,471 @@
+{
+  "schemaVersion": 1,
+  "group": 3,
+  "reviewedAt": "2026-10-15T23:59:49.371075+00:00",
+  "restaurants": [
+    {
+      "restaurantId": "osm-BKK-food-stalls",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Recover original feature and proper business name; do not map food tours or buffets.",
+        "Food stalls is a generic category, not a uniquely identifiable venue. Search yields many Bangkok street-food markets; no address/coordinates in input permit selection.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://thailand-streets.openalfa.com/banglamphu/eating-drinking"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-grove-table",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Find operating business name/alias at candidate street address and its own channel.",
+        "Exact grove table Bangkok search returned no matching official restaurant. No address or booking source could be established.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://thailand-streets.openalfa.com/banglamphu/eating-drinking"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-hachiban-ramen",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Match source feature to branch and verify table-booking policy; chain location directory is not a booking form.",
+        "Official Hachiban branch directory lists many Bangkok locations, including Banglumpoo, Siam Square One and Thapra. Input lacks street/coordinates; no branch chosen.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://hachiban.co.th/en/branch/?id=27",
+        "https://thailand-streets.openalfa.com/banglamphu/eating-drinking"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-kaodaeng-kaeng-rawn",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Resolve closure/current operation from operator; do not activate stale location.",
+        "HappyCow reports Kaodaeng Kaeng Rawn closed in April 2022. No current official source located; retain unverified closure report rather than assert current closure.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://www.happycow.net/reviews/kaodaeng-kaeng-rawn-bangkok-336",
+        "https://thailand-streets.openalfa.com/banglamphu/eating-drinking"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-mango-vegetarian-vegan",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Read operator social source and verify location wording and reservation policy.",
+        "Mango Vegetarian & Vegan candidate found at 13 Tanao, with Instagram @mango_love_vegan. No operator-controlled booking source verified; directory booking tag is insufficient.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID.",
+        "No readable operator booking policy or reconciled phone; do not turn directory booking feature into approved channel."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://restaurantguru.com/MANGO-Vegetarian-and-Vegan-Restaurant-and-Art-Gallery-Bangkok",
+        "https://www.wongnai.com/restaurants/157243PS-mango-vegetarian-and-vegan",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-oh-ma-ma-restaurant",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Find a current operator identity/alias; do not map unrelated Oh Mama brands.",
+        "Oh Ma Ma appears in OSM-derived street directory on Tani Road. No operator site or current reservation policy found.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://thailand-streets.openalfa.com/streets/sip-sam-hang-road-phra-nakhon-district-bangkok",
+        "https://thailand-streets.openalfa.com/banglamphu/eating-drinking"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-red-ginger",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Verify operator identity at Rambuttri18 and current table policy.",
+        "Search found a Red Ginger near Khao San in accommodation neighbourhood listings and unrelated Red Ginger locations. No operator identity, exact address or booking channel established.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://www.virtualtourist.com/khao-san-social-capsule-hostel-bangkok",
+        "https://thailand-streets.openalfa.com/banglamphu/eating-drinking"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-street-restaurants",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Recover proper place name/source feature; category label cannot be a booking target.",
+        "Street Restaurants is a generic category. City-only input cannot identify one business or original form; no candidate was selected.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://thailand-streets.openalfa.com/banglamphu/eating-drinking"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-sushi-express",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Establish independent shop versus chain and current operator before picking branch.",
+        "Sushi Express official corporate page confirms Thailand chain with many outlets. Input lacks branch; no restaurant-specific booking route can safely be selected.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://www.sushiexpress.com.sg/Location",
+        "https://page.line.me/sushiexpressth",
+        "https://thailand-streets.openalfa.com/banglamphu/eating-drinking"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-sushi-ninja",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Resolve manifest branch and verify table reservation acceptance.",
+        "Sushi Ninja has Banglamphu and Ratchaphruek locations. City-only input does not select one. Official-badged Wongnai merchant page is delivery-oriented and not a table-booking provider.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://www.wongnai.com/restaurants/1460132rI-%E0%B8%8B%E0%B8%B9%E0%B8%8A%E0%B8%B4%E0%B8%99%E0%B8%B4%E0%B8%99%E0%B8%88%E0%B8%B2-%E0%B8%9A%E0%B8%B2%E0%B8%87%E0%B8%A5%E0%B8%B3%E0%B8%9E%E0%B8%B9",
+        "https://www.ryoiireview.com/restaurant/view/20497"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-taketei",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Resolve stale address/branch and operation before any reservation mapping.",
+        "Taketei had Khao San and Silom locations; Khao San is reported permanently closed by two directories. Missing input address prevents selecting branch or assigning closed status.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://www.bkmagazine.com/restaurants/bangkok-restaurant-reviews/taketei/",
+        "https://restaurantguru.com/Taketei-Bangkok-4",
+        "https://www.thaithurkic.com/taketei",
+        "https://jp.soidb.com/bangkok/restaurant/taketei-khao-san.html"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-tam-kin-kan",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Verify current name/operator at329Rambuttri.",
+        "Travel blog and OSM-derived street directory mention Tam Kin Kan on Rambuttri. No operator source or reservation policy established.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://www.mangerbougervoyager.fr/bangkok-les-incontournables",
+        "https://thailand-streets.openalfa.com/banglamphu/eating-drinking"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-u127bbd90e852",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Read operator table policy; event participation/delivery do not prove reservation acceptance.",
+        "Khao Tom Bowon at 243 Phra Sumen found in directories. AutoReserve says no reservations but also disclaims user-provided data; not accepted as official walk-in policy.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://autoreserve.com/en/restaurants/ueFTPPdojCjpfU7tppH4",
+        "https://www.dataforthai.com/company/0103523017857/",
+        "https://www.bangkokdesignweek.com/en/bkkdw2026/program/153828"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-u1eb4b19647a0",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Verify operator source and current contact; no walk-in-only inference from food type.",
+        "Kim Sia noodle shop on Tanao located in reviews and historical research; no current operator reservation/contact source verified.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://www.wongnai.com/restaurants/1650Tl-%E0%B8%81%E0%B8%B4%E0%B8%A1%E0%B9%80%E0%B8%8B%E0%B8%B5%E0%B9%89%E0%B8%A2",
+        "https://www.sookjai.club/story.php?pname=670"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-u7336980ff96c",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Find operator-controlled source for218PhraSumen.",
+        "Kraisi dining-room candidate found in Wongnai reviews, but no current official site or table-booking channel identified.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://www.wongnai.com/restaurants/66772Qw-%E0%B8%AB%E0%B9%89%E0%B8%AD%E0%B8%87%E0%B8%AD%E0%B8%B2%E0%B8%AB%E0%B8%B2%E0%B8%A3%E0%B9%84%E0%B8%81%E0%B8%A3%E0%B8%AA%E0%B8%B5%E0%B8%AB%E0%B9%8C"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-u766eb06f006a",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Disambiguate Banglamphu shop and officially verify contact/reservation acceptance.",
+        "Meng Phochana directory explicitly reports table reservations and phone, but address differs between 10/15 and 10/5 Sip Sam Hang. Operator confirmation missing; manual route remains candidate only.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://www.yellowpages.co.th/profile/%E0%B9%80%E0%B8%A1%E0%B9%89%E0%B8%87%E0%B9%82%E0%B8%A0%E0%B8%8A%E0%B8%99%E0%B8%B2-93gVTmzm6",
+        "https://www.muaythaihostels.com/blog/read/55"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-u972fd6ebc22d",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Recover source feature and current operator alias for intended branch.",
+        "Yada Kitchen appears at Khao San 20/1 and in OSM at Bowon Rangsi 111. An official-badged merchant profile instead belongs to Samut Prakan. Do not use it to verify this Bangkok record.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://restaurantguru.com/Yada-Kitchen-Bangkok",
+        "https://thailand-streets.openalfa.com/streets/sip-sam-hang-road-phra-nakhon-district-bangkok",
+        "https://www.wongnai.com/restaurants/1620966Vt-%E0%B8%84%E0%B8%A3%E0%B8%B1%E0%B8%A7-%E0%B8%8D%E0%B8%B2%E0%B8%94%E0%B8%B2-yada-kitchen"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-uad3e8810ecbe",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Identify current vendor address and official policy; no assumed walk-in designation.",
+        "Pee Eiad curry shop is mentioned in Banglamphu news; exact-name search also finds Na Thawi/Songkhla restaurant and other businesses. No branch-level input or operator booking evidence.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://www.thairath.co.th/money/economics/thai_economics/1979289",
+        "https://www.thaithurkic.com/%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B8%9E%E0%B8%B5%E0%B9%88%E0%B9%80%E0%B8%AD%E0%B8%B5%E0%B8%A2%E0%B8%94_1L-065-372-9429"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-uc3b438c644de",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Verify operating identity and contact/policy from operator.",
+        "Nai Ngam fish-ball noodle shop candidate found in independent video at Sip Sam Hang opposite Wat Bowon. No current operator page or reservation route identified.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://www.youtube.com/watch?v=Q7sHFP4KXmw",
+        "https://www.youtube.com/watch?v=B6ueALi5-3g",
+        "https://thailand-streets.openalfa.com/banglamphu/eating-drinking"
+      ]
+    },
+    {
+      "restaurantId": "osm-BKK-ufbfc075e98d5",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "Verify exact Mam operator and reservation policy; do not substitute nearby Michelin venue.",
+        "Mam Tom Yum Banglamphu candidate appears on Soi Kraisi; nearby Tom Yum Goong Banglamphu original venue is a separate name. No operator source to verify exact identity or booking policy.",
+        "Exact restaurant identity/branch is not officially verified; do not bind a provider candidate to this stable ID."
+      ],
+      "evidence": [
+        "data/external200-group03.json",
+        "https://www.bkkguide-jp.com/tomyum",
+        "https://www.wongnai.com/restaurants/294949Bv-%E0%B8%A3%E0%B9%89%E0%B8%B2%E0%B8%99%E0%B9%81%E0%B8%AB%E0%B8%A1%E0%B9%88%E0%B8%A1%E0%B8%95%E0%B9%89%E0%B8%A1%E0%B8%A2%E0%B8%B3-%E0%B8%9A%E0%B8%B2%E0%B8%87%E0%B8%A5%E0%B8%B3%E0%B8%A0%E0%B8%B9/menu/items/6610120"
+      ]
+    }
+  ]
+}
