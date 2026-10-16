@@ -53,9 +53,10 @@ export function validateBookingSnapshot(value, { restaurantId, mode }) {
  */
 export function mountVelvetPlaywrightBooking(container, {
   restaurantId, restaurantName = 'Restaurangen', transport, mode = 'live',
-  storage = undefined,
+  storage = undefined, requestTimeoutMs = 30_000,
 } = {}) {
   if (!container?.ownerDocument || !string(restaurantId) || !['live', 'fixture'].includes(mode)
+    || !Number.isFinite(requestTimeoutMs) || requestTimeoutMs < 1
     || !['create', 'current', 'action', 'remove'].every(key => typeof transport?.[key] === 'function')) {
     throw new TypeError('Booking requires a container, restaurantId and normalized transport');
   }
@@ -64,6 +65,7 @@ export function mountVelvetPlaywrightBooking(container, {
   if (storage === undefined) { try { storage = window.sessionStorage; } catch { storage = null; } }
   let state = null, busy = false, disposed = false, alert = '', uncertain = false;
   let attempted = false, epoch = 0;
+  let guestDraft = null, selectionDraft = null;
   const root = document.createElement('section');
   root.dataset.vpb = ''; root.className = 'velvet-playwright-booking';
   root.setAttribute('aria-label', `Boka bord på ${restaurantName}`);
@@ -80,6 +82,14 @@ export function mountVelvetPlaywrightBooking(container, {
     return node;
   };
   const expired = () => state?.expiresAt && Date.parse(state.expiresAt) <= Date.now();
+  const bounded = async promise => {
+    let timer;
+    try {
+      return await Promise.race([promise, new Promise((_, reject) => {
+        timer = window.setTimeout(() => reject(new Error('connection_timeout')), requestTimeoutMs);
+      })]);
+    } finally { window.clearTimeout(timer); }
+  };
   const markerKey = () => `velvet-booking-attempt:${mode}:${encodeURIComponent(restaurantId)}`;
   const readMarker = () => {
     if (!storage) return null;
@@ -122,6 +132,9 @@ export function mountVelvetPlaywrightBooking(container, {
   function render() {
     if (disposed) return;
     root.replaceChildren();
+    const style = element('style');
+    style.textContent = '.velvet-playwright-booking{max-width:42rem;margin:auto;padding:1rem;border:1px solid #80735f;border-radius:12px;overflow-wrap:anywhere}.velvet-playwright-booking form,.velvet-playwright-booking label{display:grid;gap:.6rem}.velvet-playwright-booking form{gap:1rem}.velvet-playwright-booking input:not([type=checkbox]),.velvet-playwright-booking textarea{box-sizing:border-box;width:100%;min-height:44px;padding:.6rem;font:inherit}.velvet-playwright-booking button{min-height:44px;margin:.4rem .4rem .4rem 0}.velvet-playwright-booking button:focus-visible,.velvet-playwright-booking input:focus-visible,.velvet-playwright-booking a:focus-visible{outline:3px solid #a77726;outline-offset:3px}.velvet-playwright-booking dl{display:grid;grid-template-columns:minmax(5rem,1fr) minmax(0,2fr);gap:.5rem}.velvet-playwright-booking dd{margin:0}.velvet-playwright-booking [data-fixture-banner]{padding:.7rem;background:#fff0bd;color:#3d2d00;font-weight:bold}';
+    root.append(style);
     const stage = uncertain ? 'result' : state?.stage || 'start';
     root.dataset.stage = stage;
     root.append(element('h2', `Boka bord på ${restaurantName}`));
@@ -142,8 +155,8 @@ export function mountVelvetPlaywrightBooking(container, {
       status.textContent = 'Sessionen har gått ut. Kontrollera status eller stäng sessionen.';
     } else if (stage === 'selection') {
       const form = element('form');
-      const date = input(form, 'date', 'Datum', 'date', state.selection?.date || '');
-      const party = input(form, 'party', 'Antal gäster', 'number', state.selection?.party || 2);
+      const date = input(form, 'date', 'Datum', 'date', selectionDraft?.date || state.selection?.date || '');
+      const party = input(form, 'party', 'Antal gäster', 'number', selectionDraft?.party || state.selection?.party || 2);
       form.append(button('Visa tider', 'search', null, 'submit'));
       form.addEventListener('submit', event => {
         event.preventDefault();
@@ -167,7 +180,7 @@ export function mountVelvetPlaywrightBooking(container, {
       root.append(summary());
       const form = element('form');
       const labels = {firstname: 'Förnamn', lastname: 'Efternamn', email: 'E-post', phone: 'Telefon', comment: 'Önskemål'};
-      for (const name of GUEST_FIELDS) input(form, name, labels[name], name === 'email' ? 'email' : name === 'phone' ? 'tel' : 'text', state.guest?.[name] || '', name !== 'comment');
+      for (const name of GUEST_FIELDS) input(form, name, labels[name], name === 'email' ? 'email' : name === 'phone' ? 'tel' : 'text', guestDraft?.[name] ?? state.guest?.[name] ?? '', name !== 'comment');
       form.append(button('Granska bokningen', 'guest', null, 'submit'));
       form.addEventListener('submit', event => {
         event.preventDefault();
@@ -200,14 +213,22 @@ export function mountVelvetPlaywrightBooking(container, {
     if (state && !uncertain && (!attempted && state.stage !== 'result'
       || ['confirmed', 'rejected'].includes(state.result?.status))) root.append(button('Stäng bokningen', 'close', () => run('remove')));
     lockControls();
+    // Move focus to context, never to the irreversible confirmation control.
+    const heading = root.querySelector('h2'); heading.tabIndex = -1;
+    if (!busy) heading.focus({preventScroll: true});
   }
   function accept(value, operation) {
     if (value?.error) throw new Error(value.error);
-    if (value === null && operation === 'current' && !state && !attempted) return;
+    if (value === null && operation === 'current' && !attempted) {
+      state = null; uncertain = false; guestDraft = null; selectionDraft = null; return;
+    }
     let next = validateBookingSnapshot(structuredClone(value), {restaurantId, mode});
     const marker = readMarker();
     if (marker && marker.id !== next.id) throw new Error('session_mismatch');
-    if (marker && next.result?.status === 'confirmed' && next.result.verification.attemptId !== marker.key) {
+    // Ledger may assign its own attemptId. Its proof then separately echoes the
+    // client idempotencyKey; neither identifier is an authorization credential.
+    if (marker && next.result?.status === 'confirmed'
+      && (next.result.verification.idempotencyKey ?? next.result.verification.attemptId) !== marker.key) {
       next = {...next, stage: 'result', canSubmit: false, result: {status: 'unknown'}};
     }
     if (state && next.id !== state.id) throw new Error('session_mismatch');
@@ -226,17 +247,19 @@ export function mountVelvetPlaywrightBooking(container, {
     const token = ++epoch;
     try {
       let value;
-      if (operation === 'create') value = await transport.create({restaurantId, resume: true});
-      else if (operation === 'current') value = await transport.current({restaurantId});
+      if (operation === 'create') value = await bounded(transport.create({restaurantId, resume: true}));
+      else if (operation === 'current') value = await bounded(transport.current({restaurantId}));
       else if (operation === 'remove') {
-        await transport.remove({id: state.id, restaurantId});
+        await bounded(transport.remove({id: state.id, restaurantId}));
         if (!disposed && token === epoch) {
           if (attempted) storage?.removeItem(markerKey());
-          state = null; uncertain = false; attempted = false;
+          state = null; uncertain = false; attempted = false; guestDraft = null; selectionDraft = null;
         }
         return;
       } else {
         const payload = {id: state.id, restaurantId, revision: state.revision, ...action};
+        if (action.type === 'guest') guestDraft = {...action.guest};
+        if (action.type === 'search') selectionDraft = {date: action.date, party: action.party};
         if (isSubmit) {
           // Only opaque metadata is stored, never guest details or credentials.
           // Write BEFORE dispatch; a lost response/reload must not re-arm submit.
@@ -247,14 +270,14 @@ export function mountVelvetPlaywrightBooking(container, {
           if (storage.getItem(markerKey()) !== marker) throw new Error('attempt_locked');
           attempted = true;
         }
-        value = await transport.action(payload);
+        value = await bounded(transport.action(payload));
       }
       if (!disposed && token === epoch) accept(value, operation);
     } catch (error) {
       if (disposed || token !== epoch) return;
       const code = error?.code || error?.message;
-      if (operation === 'current' && !state && !attempted && code === 'session_expired') {
-        state = null;
+      if (operation === 'current' && !attempted && code === 'session_expired') {
+        state = null; uncertain = false; guestDraft = null; selectionDraft = null;
       } else {
         // On a lost acknowledgement never repeat an action automatically.
         if (isSubmit && attempted || attempted && operation === 'current') uncertain = true;
@@ -264,7 +287,7 @@ export function mountVelvetPlaywrightBooking(container, {
           : 'Bokningsvyn kunde inte uppdateras. Kontrollera status innan du fortsätter.';
         // Invalidate consent on every failed request as well as every snapshot.
         // A failed non-submit mutation may have reached the server: reconcile.
-        if (operation === 'action' && !isSubmit || operation === 'current' && state) uncertain = true;
+        if (operation === 'action' && !isSubmit || ['current', 'create', 'remove'].includes(operation)) uncertain = true;
       }
     } finally {
       if (!disposed && token === epoch) { busy = false; render(); }
@@ -275,6 +298,6 @@ export function mountVelvetPlaywrightBooking(container, {
   return {
     ready,
     refresh: () => run('current'),
-    destroy() { disposed = true; epoch++; root.replaceChildren(); root.remove(); state = null; },
+    destroy() { disposed = true; epoch++; root.replaceChildren(); root.remove(); state = null; guestDraft = null; selectionDraft = null; },
   };
 }
