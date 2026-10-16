@@ -18,8 +18,10 @@ belongs to 32d5; independent source/code review belongs to e98a.
 `action`, `remove`, `expire`, `close`). It fetches the exact public venue policy,
 performs a narrowly bound Dinner search for two adults, and implements local
 selection and review without clicking a native slot or creating a server cart.
-The adapter has no submission switch, capability reader, contact transport or
-mutation transport. `canHold` and `canSubmit` remain false.
+Production preparation has no submission switch: `canHold` and `canSubmit`
+remain false. The same adapter additionally supports explicit offline fixture
+mode for the source-derived transaction lifecycle described below. Runtime
+projection rejects fixture mode; it cannot become a guest booking route.
 
 ## Original sources and actual observation
 
@@ -90,8 +92,9 @@ category to a durable approved attempt and its own cart and returned code.
 Native UI filters unknown menu IDs and normalizes group quantity to one;
 neither behavior is suitable for verification. HTTP success, slug, redirect,
 checkmark, analytics or `reservation_auto_accept` alone cannot prove success.
-No final verifier is exported here because this version cannot originate an
-authorized cart/checkout attempt; no unused always-unknown helper is added.
+The source-derived `sazonSavedResult` verifier is now exercised by the same
+adapter's offline transaction lifecycle. It is not an unused always-unknown
+helper and does not claim observed server success.
 
 ## Shared integration handoff
 
@@ -129,11 +132,77 @@ broad: ordinary logging/cache/session correlation is not a restaurant hold.
 
 ## Validation limits
 
-Run `node --test scripts/test-tablecheck-sazon.mjs` (7 tests). Replays cover
+Run `node --test scripts/test-tablecheck-sazon.mjs` (12 tests). Replays cover
 actual policy/query/negative grid, scope-changing and capability requests,
 malformed slot rows, owner/revision/expiry guards, denied mutations without
 transport, and mounting in the existing runtime without live capability.
-No positive availability or successful reservation fixture is invented.
-Positive local selection/review branches remain source-derived and require
-a genuine suitable availability response before end-to-end validation.
+No synthetic response is represented as observed provider evidence. Five
+additional tests explicitly use generated source-contract models and in-memory
+transport to exercise positive and adversarial lifecycle cases. Positive local
+selection/review and transaction stages still require actual provider evidence
+before end-to-end validation or activation.
 No shared files, existing providers, registry, worklist or release are changed.
+
+## Source-derived offline transaction lifecycle
+
+The class accepts `mode: fixture` only with injected search transport,
+`mutationTransport`, `reserveSubmission(intent)` and `recordResult(session)`.
+Default `prepare` mode cannot execute any mutation even if hooks are supplied.
+There is no `live` mode or activation flag. No tests call real provider endpoints.
+This implements reviewable code before production authorization rather than
+using a separate journal or parallel checkout engine.
+
+1. Source-supported slot is selected locally and reviewed. Explicit cart
+   approval requires current revision, token, fingerprint and policy version.
+   `phase: cart` reserves a durable grant before the exact POST. No retries.
+2. Own response must have availability.type success, a cart ID/token/expiry,
+   exact raw order and start time, no payment form/transaction/booking fee,
+   and no request-only fallback. Only then does private cart state exist.
+   Cart is not called held or confirmed. Capabilities never enter snapshots,
+   intents, journal details or history.
+3. Local guest fields are validated. The next review binds those fields,
+   policy, raw selection and a digest of the private cart and parent attempt.
+   Explicit final consent authorizes the documented update-plus-checkout
+   sequence, with a separate durable grant for **each** write.
+4. `cart_update` serializes the source guest and optional empty question
+   fields. Its exact own response must retain the cart ID/capability, valid
+   expiry, order/time and no-payment policy. It creates private verified
+   update state bound to the update attempt and request digest.
+5. `booking` cannot run without that verified parent update and unchanged
+   guest/payload/cart digest. Its fingerprint includes the parent update
+   attempt, phase, request and final-review approval. The no-payment checkout
+   serializer excludes card, wallet, invoice, marketing consent and gateways.
+6. Checkout echo never confirms. A successful own checkout containing a safe
+   code permits **one** GET of that code with the same approved email/phone.
+   Native pre-encoding is preserved. No status PUT, capability resume, URL
+   supplied by action input, login or redirect flow is implemented.
+7. Raw receipt must match the own checkout ID/code, exact shop, timestamp,
+   all four pax counts, category and exactly one group order quantity one.
+   `accepted`/`confirmed` with no payable IOU may confirm; pending/request and
+   IOU states are separate. Waiting/attended/unknown remain unknown. Receipt
+   proof binds the exact durable booking attempt and fingerprint. A journal
+   result that fails to persist the same status downgrades to unknown.
+
+Intent interface agreed with 32d5: provider TableCheck, restaurant
+osm-BAL-sazon, phases cart/cart_update/booking, details date/time/party2.
+All additional raw metadata is fingerprint-bound, not persisted as payload.
+The fixture intents use mode fixture; future production would require live,
+but that path does not exist in this patch. Private parent validation belongs
+to this adapter; the ledger's separate phase slots alone cannot provide it.
+
+### Exact remaining production gaps
+
+- Native Experience mount invokes cart/init, but does not inspect or await its
+  response. Its server effects and whether create/update depend on that call
+  are not established. No init request or grant is added or silently skipped
+  in a purported live implementation. This is the hard production barrier.
+- No correct native grid response, native cart response or persisted booking
+  has been observed. Cart validation deliberately requires the source-consumed
+  ID/access_token/expires_at/start_at/orders/payment fields. Their presence and
+  token continuity across update remain to be validated, not assumed true.
+- Current optional guest questions are narrowly pinned. Other answers,
+  required questions, experiences, prices, payment, amendments, login,
+  vouchers and status polling are not supported.
+- Synthetic source models prove guard behavior, not API compatibility. The
+  corrected group-order request has not been executed. No fresh date query is
+  authorized by this handoff.
