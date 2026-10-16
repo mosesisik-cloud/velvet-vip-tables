@@ -1,8 +1,31 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createBokabordReceiptVerifier, NOEMA_LUNCH_RECEIPT_POLICY as policy, CICCIOS_DINING_RECEIPT_POLICY as ciccios, RICHE_LUNCH_RECEIPT_POLICY as riche, STUREHOF_LUNCH_RECEIPT_POLICY as sturehof, BEIRUT_LUNCH_RECEIPT_POLICY as beirut, BALZAC_LUNCH_RECEIPT_POLICY as balzac, KOMMENDOREN_LUNCH_RECEIPT_POLICY as kommendoren, ASTRID_LUNCH_RECEIPT_POLICY as astrid, VAU_LUNCH_RECEIPT_POLICY as vau, BOQUERIA_LUNCH_RECEIPT_POLICY as boqueria } from '../api/bokabord-receipt-confirmation.mjs';
-import { DAGMAR_LUNCH_RECEIPT_POLICY as dagmar } from '../api/bokabord-receipt-confirmation.mjs';
+import { DAGMAR_LUNCH_RECEIPT_POLICY as dagmar, COPINE_LUNCH_RECEIPT_POLICY as copine } from '../api/bokabord-receipt-confirmation.mjs';
 const verifier = createBokabordReceiptVerifier(policy);
+test('Copine Lunch excludes paid dinner and unpaid private lunch alike',()=>{
+  const v=createBokabordReceiptVerifier(copine),f=fixture();
+  Object.assign(f.approval,{hash:copine.hash,mealid:copine.mealid});
+  Object.assign(f.attempt,{restaurantId:copine.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:copine.hash,mealid:copine.mealid});
+  Object.assign(f.observation.data.booking,{mealid:copine.mealid,
+    meal:{type:2,group_booking:true,must_pay_directly:false,mandatory_products:false,bullets:{}}});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',copine.name);
+  const check=()=>v.verify(f.attempt,f.approval,f.observation);
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  assert.equal(v.approvalDigest({...f.approval,party:3}),null);
+  for(const mealid of [4788,5303,9196]){
+    assert.equal(v.approvalDigest({...f.approval,mealid}),null);
+    f.observation.data.booking.mealid=mealid;assert.equal(check().status,'unknown');
+  }
+  f.observation.data.booking.mealid=copine.mealid;
+  f.observation.data.booking.meal.bullets={cc:{sw:'Bekräftas med betalkort'}};
+  assert.equal(check().status,'unknown');f.observation.data.booking.meal.bullets={};
+  f.observation.data.booking.meal.must_pay_directly=true;assert.equal(check().status,'unknown');
+  f.observation.data.booking.meal.must_pay_directly=false;
+  delete f.observation.receipt;assert.equal(check().status,'unknown');
+});
 function dagmarFixture() {
   const v=createBokabordReceiptVerifier(dagmar),f=fixture();
   Object.assign(f.approval,{hash:dagmar.hash,mealid:dagmar.mealid});
