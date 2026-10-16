@@ -42,6 +42,13 @@ export const STUREHOF_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: '07415d5b4d24177e713964f3bc75eeaf', mealid: 3913, mealType: 2, maxParty: 2,
 });
 
+// Auth-enabled guest continuation reaches the original provider review.
+// Initial scope is two guests; other Balzac meals are intentionally excluded.
+export const BALZAC_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-balzac', name: 'Brasserie Balzac',
+  hash: 'a0dd019e24669fadaaa6486567307f61', mealid: 354, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
