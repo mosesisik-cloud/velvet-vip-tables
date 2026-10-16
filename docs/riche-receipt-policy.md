@@ -110,3 +110,25 @@ Canonical/raw number, ISO country and dial code join the frozen review binding.
 Final intercepted request must match the canonical phone and both country_code
 and dial_code. Missing or ambiguous metadata/invalid phone fails closed. Other
 restaurants retain their existing model-read behavior.
+
+### Final validation
+
+Exact runtime phone helper and mirror passed guarded real-contact reads at
+2026-10-16T03:09:17Z (source d9d24e5): bookingDetails returned the canonical
+synthetic phone, three binding reads stayed identical across snapshot/settle,
+and seeded review survived snapshot while Booking.phone stayed empty/unchanged.
+Unique input/title/E164 checks passed. This was read-only, with no final click.
+See PR172 comment6207166504. It proves actual read/retention, not dispatch.
+
+Existing actual app/API/adapter/SQLite harness --riche passed on runtime2cc956b
+(test source9811f44):120 API calls,4 restarts,3 simulated supplier POSTs,0 real
+supplier requests. The source-faithful fixture keeps phone/country/dial absent
+from Booking until Next. Review leaves them absent while displaying the canonical
+phone. Direct submit, edited details, stale token and changed terms link all stop
+before reserve/click; fresh consent gives one double-click transmission. Missing
+and wrong receipts stay unknown; original completion navigation confirms and
+survives restart. Denied replay returns locked unknown before Next. Prior failing
+phone fixture reproduced the bug on8e61730. Noema and Ciccios regression runs
+passed84 API/4 restarts/3 simulated POSTs each before the Riche-only phone delta.
+14 focused receipt/journal tests also pass. Narrow reviews accepted the final
+consent/dispatch/phone wiring. No real reservation, hold, code or payment made.
