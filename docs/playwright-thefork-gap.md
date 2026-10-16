@@ -3,7 +3,7 @@
 Owner: `codex-worker-3-323f`. Coordination: #129. Restaurant evidence: #68 / PR #85.
 Reviewed: 2026-10-16, against main `7c0e45d`.
 
-**Blocked for live implementation verification.** No TheFork Playwright adapter is delivered by this document. The official external link is research evidence, not an in-Velvet booking integration. Shared routing, UI and registry remain owned by the booking integrator.
+**Blocked for live supplier verification.** `api/providers/thefork-playwright.mjs` now implements a revisioned booking lifecycle with an explicitly injected local browser fixture. It is not a working supplier adapter: live creation fails with `provider_contract_unverified` before navigation. The official external link is research evidence, not an in-Velvet booking integration. Shared routing, UI and registry remain owned by the booking integrator.
 
 ## Exact restaurant and source chain
 
@@ -26,7 +26,7 @@ Do **not** copy Bokabord's selectors, Angular readiness code, `saveBooking` endp
 
 ## Proposed provider contract for integrator agreement
 
-Names below are a proposal aligned with the existing mirror, not a shipped shared API.
+The implementation exposes `create(owner, restaurantId)`, `current(id, owner)`, `action(id, owner, action)`, `remove(id, owner)`, `expire()` and `close()`. The table describes remaining supplier requirements, not a shipped shared route API.
 
 | Operation | Required behavior | Current TheFork evidence |
 | --- | --- | --- |
@@ -75,10 +75,20 @@ These are requirements for a future adapter. The investigation executed no provi
 | Dimension | Status |
 | --- | --- |
 | Official destination evidence | Verified in prior investigation; naming conflict retained |
-| TheFork backend adapter | Not implemented |
-| TheFork mock/sandbox journey | Not tested |
+| Backend lifecycle | Implemented for explicit local fixture; supplier driver unavailable |
+| Local mock journey | Seven Chromium-backed tests passed; no provider sandbox |
 | Read-only live availability | Not verified; access blocked |
 | Supplier-confirmed booking through Velvet | Not verified |
 | Deployment | Not performed |
 
-This PR changes only this gap analysis. No shared runtime, registry, canonical list or frontend files are changed. It cannot be counted as a restaurant with completed Playwright booking.
+## Implemented fixture contract and integration handoff
+
+The module accepts `mode: 'fixture'` only with an injected `fixtureDriverFactory`. A driver supplies `search`, `select`, `guest`, `back`, `submit`, and `close`. The test driver uses real Playwright fills/clicks on `scripts/fixtures/thefork-playwright.html` with HTTP and WebSockets blocked and service workers disabled. It is a local fixture, not TheFork's form or sandbox. Production construction rejects fixture injection and has no supplier driver or runtime enable flag.
+
+Snapshots use the proposed normalized v1 fields: id, restaurantId, revision, mode, stage, selection, availability, guest, terms, reviewToken, canSubmit and result. Actions are search/select/guest/back/submit. Contact edits invalidate the server-generated review token. Submit requires current revision, exact token and terms version plus explicit confirm/terms. The injected reserveSubmission/recordResult hooks are mandatory; attempt state is sealed before awaiting persistence. Persistence or transport uncertainty returns unknown and forbids retry in that session. current reads current state rather than a stale screenshot.
+
+Successful fixture results use `sandbox_confirmed`, `source: 'fixture'`, `supplierVerified: false`. The UI integrator must preserve this distinction: do not normalize sandbox_confirmed to a live supplier-confirmed result. All availability is source fixture; no fake production slots are generated. The lifecycle keeps no durable ledger itself: production restart idempotency, owner authentication, shared HTTP routing and UI mounting remain integrator responsibilities. The existing UI proposal must explicitly handle sandbox_confirmed before this module is wired into a test preview.
+
+Run `node --test scripts/test-thefork-playwright.mjs` with the repository's Playwright package and Chromium installed. Seven tests passed: complete local browser journey/consent, live-mode isolation, owner/revision checks, concurrent submit and uncertain outcomes, journal failures, invalid selections and token invalidation, expiry/capacity and snapshot immutability. Hook persistence is simulated; this does not prove production durability or supplier safety. The fixture viewport is 390x844; this is not a test of Velvet's real UI or supplier mobile rendering.
+
+This PR changes this analysis, the isolated provider lifecycle, its test and fixture only. No shared routing, registry, canonical list or frontend files are changed. It cannot be counted as a restaurant with completed Playwright booking.

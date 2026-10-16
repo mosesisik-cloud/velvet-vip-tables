@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>TEST FIXTURE — not TheFork</title>
+<body><h1>TEST DATA — no restaurant booking</h1>
+<section id="selection"><input id="date" type="date"><input id="party" type="number"><button id="search">Search fixture</button></section>
+<section id="slots" hidden><button id="slot">19:00 — TEST</button></section>
+<section id="guest" hidden><input id="firstname"><input id="lastname"><input id="email"><input id="phone"><textarea id="comment"></textarea><button id="review">Review fixture</button></section>
+<section id="reviewStage" hidden><p>Fixture terms v1. No booking or charge.</p><button id="submit">Confirm TEST ONLY</button></section>
+<section id="result" hidden>Fixture result</section>
+<script>
+window.fixture = { submissions: 0 };
+window.show = stage => { for (const el of document.querySelectorAll('section')) el.hidden = el.id !== stage; };
+document.querySelector('#search').onclick = () => {
+  fixture.slots = [{ id: 'fixture-slot-1900', time: '19:00', label: 'TEST DATA' }]; show('slots');
+};
+document.querySelector('#slot').onclick = () => show('guest');
+document.querySelector('#review').onclick = () => show('reviewStage');
+document.querySelector('#submit').onclick = () => {
+  fixture.submissions++; fixture.result = { status: 'fixture_confirmed', reference: 'TEST-NOT-A-BOOKING' }; show('result');
+};
+</script></body></html>
