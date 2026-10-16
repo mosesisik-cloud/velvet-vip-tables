@@ -15,14 +15,14 @@ function fixture() {
     id: 123, status: 1, confirmed: 0, restid: policy.restid, mealid: policy.mealid, meal: { type: 3 },
     date: approval.date, time: approval.time, amount: approval.party, firstname: approval.firstname,
     lastname: approval.lastname, email: approval.email, phone: 46700000000,
-    waitlist: 0, products: [], require_noshow: false, payinwidget: true, group_booking: false, parent_order: null,
+    waitlist: 0, products: [], require_noshow: false, payinwidget: true, group_booking: false, parent_order: false,
   } } };
   return { approval, attempt, observation };
 }
 const run = f => verifyZinkBookingConfirmation(f.attempt, f.approval, f.observation);
 test('unsupported flag shapes fail closed rather than relying on truthiness', () => {
   for (const patch of [{linked_meals:{id:1}}, {linked_meals:''}, {linked_meals:0},
-    {is_temp_booking:0}, {group_booking:0}, {giftcard:0}, {parent_order:false},
+    {is_temp_booking:0}, {group_booking:0}, {giftcard:0}, {parent_order:0},
     {meal:{type:3,bullets:[]}}, {meal:{type:3,bullets:{cc:0}}}]) {
     const f=fixture();Object.assign(f.observation.data.booking,patch);
     assert.equal(run(f).status,'unknown',JSON.stringify(patch));

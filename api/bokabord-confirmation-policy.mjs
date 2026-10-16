@@ -63,7 +63,7 @@ export function verifyZinkBookingConfirmation(attempt, approval, observation) {
     || !absentOrFalse(b.meal?.bullets?.cc)
     || !Array.isArray(b.products) || b.products.length || !absentOrFalse(b.is_temp_booking)
     || !absentOrFalse(b.giftcard) || !emptyLinks(b.linked_meals)
-    || !absentOrFalse(b.group_booking) || !absent(b.parent_order)) {
+    || !absentOrFalse(b.group_booking) || !absentOrFalse(b.parent_order)) {
     return unknown('unsupported_booking_requirements');
   }
   if (b.date !== approval.date || b.time !== approval.time || b.amount !== approval.party
