@@ -22,10 +22,17 @@ export const NOEMA_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: '41276418cbba56f9c561ec99032fe9fc', mealid: 35204, mealType: 2,
 });
 
+// Provider's exact visible name uses an ASCII apostrophe. Bar/type0 is excluded.
+export const CICCIOS_DINING_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-ciccios', name: "Ciccio's",
+  hash: '6efc74a27b57165fbfb16acbebf7d248', mealid: 2379, mealType: 3, maxParty: 7,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
-  const policy = Object.freeze({ ...configuration });
+  const policy = Object.freeze({ maxParty: 8, ...configuration });
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
-    || !Number.isSafeInteger(policy.mealid) || policy.mealid <= 0 || ![2, 3].includes(policy.mealType)) {
+    || !Number.isSafeInteger(policy.mealid) || policy.mealid <= 0 || ![2, 3].includes(policy.mealType)
+    || !Number.isSafeInteger(policy.maxParty) || policy.maxParty < 1 || policy.maxParty > 8) {
     throw new TypeError('reviewed_ordinary_meal_policy_required');
   }
   const verifyBound = createBookingResultVerifier({ provider: 'BokaBord',
@@ -36,7 +43,7 @@ export function createBokabordReceiptVerifier(configuration) {
   function approvalDigest(approval) {
     if (!approval || approval.hash !== policy.hash || approval.mealid !== policy.mealid || approval.terms !== true
       || !/^\d{4}-\d{2}-\d{2}$/.test(approval.date || '') || !/^([01]\d|2[0-3]):[0-5]\d$/.test(approval.time || '')
-      || !Number.isSafeInteger(approval.party) || approval.party < 1 || approval.party > 8
+      || !Number.isSafeInteger(approval.party) || approval.party < 1 || approval.party > policy.maxParty
       || !['firstname', 'lastname', 'email', 'phone'].every(key => present(approval[key]))
       || !/^\d{7,15}$/.test(phone(approval.phone))
       || (approval.comment !== undefined && typeof approval.comment !== 'string')) return null;

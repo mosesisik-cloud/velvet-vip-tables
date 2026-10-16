@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-198-noema-receipt";
+const VERSION = "v4-real-199-ciccios-receipt";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
