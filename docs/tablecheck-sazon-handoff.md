@@ -225,6 +225,14 @@ regression assertion for plus-sign phone and email at-sign.
   restoration at 103212 replace the stored token with the returned value. A
   future patch can accept a verified own-response rotation, establish a new
   private binding and require fresh review; this version fails closed on it.
+- `exactOrders` requires raw quantity one both for cart and saved reservation.
+  Only the **outgoing request** quantity one is proven by Experience Book now.
+  Native saved mapping at client 341800–344300 / pages 99974 computes
+  `quantity = isGroupOrder ? 1 : qty`; it does not establish the raw saved group
+  quantity. Requiring saved qty one is an unverified adapter hypothesis in the
+  offline model, not a provider response guarantee. Future live verification
+  needs evidence for the actual raw representation; do not guess another value
+  or normalize away extra orders/quantities to obtain a positive result.
 - Current optional guest questions are narrowly pinned. Other answers,
   required questions, experiences, prices, payment, amendments, login,
   vouchers and status polling are not supported.
