@@ -82,3 +82,14 @@ review/final consent, accepted durable-before-dispatch and replay contract. Revi
 the factory opt-in narrowly, then run the existing full-app harness before
 activation. No shared server/UI/runtime changes, new engine or broad type0
 permission. This is the only new complete handoff in this task.
+
+## Integrated validation
+
+Runtimec68ddbb adds only the independent receipt flag around the reviewed exact
+factory exception.21 focused tests and narrow independent factory/flag review
+pass. Actualapp/API/Chromium/SQLite harness65e9c02 on that runtime passedDagmar
+120API/6restarts/5mockPOST; sameheadNoema type2regression84API/4restarts/3mockPOST.
+Wrongmeal63589 and require_noshow=true stayunknown despite matching document.
+Guest/nativeNextphone/freshconsent/actualSQLitebeforeNETWORK, doubleclick, missing/
+wrongreceipt, exactreceiptconfirmed and owner/restart/replay all pass. No pre-DOM-
+click guarantee claimed. Zero real supplier reservations, holds, codes or payments.
