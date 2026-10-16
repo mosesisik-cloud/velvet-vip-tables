@@ -92,3 +92,21 @@ now bound up to64k (oversize fails closed), with at most100 visible links. All
 link destinations participate in binding; only HTTP(S) links render clickable.
 The Swedish review UI and actual newlines were visually checked in the local
 supplier-fixture screenshot. No provider booking was created by this work.
+
+### Phone projection before the final provider action
+
+The real Riche guest form stores typed phone input separately from Booking.phone;
+Next validates and copies the canonical number and country code. The earlier
+fixture incorrectly copied phone on input; activation was held when a read-only
+real-contact check exposed this difference.
+
+For this scoped path only, `readRicheContactPhone` reads the unique visible phone
+component and its selected country metadata. It uses the provider's read-only
+phoneValid/intlTelInputUtils validation and formatting, including the exact NANP
+prefix rule from libPhoneUtils.js?t=12 (SHA256
+`d860a6780f1016797e35e5490b25aecdec6b49a600e1fb76d23dca59bb3adfd7`). It does not
+instantiate the plugin, click Next, initialize a second widget or change Booking.
+Canonical/raw number, ISO country and dial code join the frozen review binding.
+Final intercepted request must match the canonical phone and both country_code
+and dial_code. Missing or ambiguous metadata/invalid phone fails closed. Other
+restaurants retain their existing model-read behavior.
