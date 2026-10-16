@@ -61,3 +61,14 @@ policy is added. Noema retains its previous party ceiling of8.
 Candidate8fe55e111eb71008c855eae22a2ba5b64be0b686 passed13 focused receipt and
 journal tests. Independent narrow review found no identity, default-off or
 Noema-preservation issues. Whole-chain validation is required before activation.
+
+Whole-chain validation passed on runtime8fe55e111eb71008c855eae22a2ba5b64be0b686
+with the committed existing harness (`--ciccios`, test source05b5644):84 actual
+local API calls,4 backend restarts,3 simulated supplier POSTs,0 real supplier
+requests. It traverses the explicit guest choice, requires fresh review consent,
+permits one double-click attempt, rejects wrong-restaurant receipts, preserves
+owner isolation and restart replay guards, and keeps a successful POST unknown
+until the original main-frame completion document arrives. Missing receipts
+cause no constructed GET or retry. The static exact-name receipt confirms and
+survives restart. Ciccios was enabled independently with Noema disabled.
+No real reservation, hold, email code or payment was created.
