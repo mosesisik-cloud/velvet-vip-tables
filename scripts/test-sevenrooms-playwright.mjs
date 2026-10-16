@@ -178,9 +178,9 @@ let grant=true, failHold=false, failRecord=false, proofMode='unverified';
 const events=[],writeFetches=[];
 let flowPage;
 const flow=new SevenRoomsPlaywright({prepare:true,writeEnabled:true,now:()=>clock,
- reserveAttempt:async intent=>{events.push('reserve:'+intent.phase);return {sendAllowed:grant,attempt:{id:'local-'+intent.phase}};},
+ reserveAttempt:async intent=>{events.push('reserve:'+intent.phase);return {sendAllowed:grant,attempt:{id:'local-'+intent.phase,idempotencyKey:'local-key-'+intent.phase}};},
  recordAttempt:async ({intent,result})=>{events.push('record:'+intent.phase+':'+result.status);if(failRecord)throw Error('simulated journal write failure');},
- submissionPolicy:{matchesRequest:async ({request})=>request.postData()==='LOCAL-SYNTHETIC-PAYLOAD',verifyConfirmation:async ({intent})=>proofMode==='bound' ? {confirmed:true,reference:'LOCAL-ONLY',reviewFingerprint:intent.reviewFingerprint,restaurantId:intent.restaurantId,sessionId:intent.sessionId}: {confirmed:true,reference:'UNBOUND'}},
+ submissionPolicy:{matchesRequest:async ({request})=>request.postData()==='LOCAL-SYNTHETIC-PAYLOAD',verifyConfirmation:async ({intent,attempt})=>proofMode==='bound' ? {confirmed:true,reference:'LOCAL-ONLY',reviewFingerprint:intent.reviewFingerprint,restaurantId:intent.restaurantId,sessionId:intent.sessionId,verification:{verified:true,policySource:'LOCAL SYNTHETIC FIXTURE ONLY',source:'provider',provider:'SevenRooms',restaurantId:intent.restaurantId,sessionId:intent.sessionId,attemptId:attempt.id,idempotencyKey:attempt.idempotencyKey,reviewFingerprint:intent.reviewFingerprint}}: {confirmed:true,reference:'UNBOUND'}},
  browserFactory:async()=>{const b=await chromium.launch();const nc=b.newContext.bind(b);b.newContext=async options=>{
   const c=await nc(options), route=c.route.bind(c); c.route=(pattern,handler)=>route(pattern,actual=>handler(new Proxy(actual,{get(target,key){
    if(key==='continue'||key==='fallback')return ()=>{throw Error('network escape');};
