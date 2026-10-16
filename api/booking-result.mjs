@@ -11,6 +11,26 @@ const ref = value => text(value) ? value
 const unknown = reason => ({ status: 'unknown', reason });
 
 /**
+ * Conservative Bokabord saveBooking contract, inspected 2026-10-16:
+ * https://app.bokabord.se/production/app-widget.js?v=6.0.3
+ * SHA256 ac75bf9af7515871475d57d09b4ba962fa854613fe01d8d635c751e1b5ffead5.
+ * Exact numeric 0 routes to payment. Numeric 2 is cancelled for ordinary meals.
+ * There is no independently verified positive confirmation enum in that source.
+ * Do NOT restore "nonzero => confirmed" or guess status 1. Confirmation stays
+ * unknown until the owner supplies reviewed supplier acceptance/readback evidence.
+ */
+export function classifyBokabordResult(data) {
+  if (data?.success === false) return { status: 'rejected', reason: 'supplier_rejected' };
+  const id = data?.booking?.id;
+  const numericId = typeof id === 'number' ? id : typeof id === 'string' && /^[1-9]\d*$/.test(id) ? Number(id) : NaN;
+  if (data?.success !== true || !Number.isSafeInteger(numericId) || numericId <= 0) return unknown('supplier_response_not_verified');
+  if (data.booking.status === 0) return {
+    status: 'payment_required', reason: 'supplier_payment_required', reference: ref(data.booking.id),
+  };
+  return unknown('supplier_confirmation_not_verified');
+}
+
+/**
  * Explicit, type-sensitive mappings only. No default success/nonzero fallback.
  * policySource identifies reviewed supplier evidence, not a booking confirmation.
  * Empty rules intentionally cannot produce confirmed (useful before supplier review).
