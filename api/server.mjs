@@ -11,7 +11,7 @@ import { RequestBudget } from "./request-budget.mjs";
 import { PlaywrightRuntime } from './playwright-runtime.mjs';
 import { PlaywrightAttemptLedger } from './playwright-attempt-ledger.mjs';
 import { createBookingJournalHooks } from './playwright-booking-journal.mjs';
-import { NOEMA_LUNCH_RECEIPT_POLICY, CICCIOS_DINING_RECEIPT_POLICY, RICHE_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
+import { NOEMA_LUNCH_RECEIPT_POLICY, CICCIOS_DINING_RECEIPT_POLICY, RICHE_LUNCH_RECEIPT_POLICY, STUREHOF_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
 import { createProviderJournal } from './provider-booking-journal.mjs';
 import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
@@ -73,7 +73,10 @@ const mirrorLedger = new BookingLedger(path.join(__dir, 'mirror-attempts'));
 const playwrightAttempts = new PlaywrightAttemptLedger(process.env.VELVET_PLAYWRIGHT_DB || path.join(__dir, 'playwright-attempts.sqlite'));
 let bookingJournal;
 const bokabordMirror = new BokabordMirror({
-  contactFinalPolicies:process.env.VELVET_RICHE_RECEIPT === 'enabled' ? [RICHE_LUNCH_RECEIPT_POLICY] : [],
+  contactFinalPolicies:[
+    ...(process.env.VELVET_RICHE_RECEIPT === 'enabled' ? [RICHE_LUNCH_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_STUREHOF_RECEIPT === 'enabled' ? [STUREHOF_LUNCH_RECEIPT_POLICY] : []),
+  ],
   prepare: mirrorMode === 'live', live: mirrorMode === 'live',
   reserveSubmission: (approval, session) => bookingJournal.reserveSubmission(approval, session),
   recordResult: session => bookingJournal.recordResult(session),
@@ -266,6 +269,7 @@ bookingJournal = createBookingJournalHooks({ ledger: playwrightAttempts, legacyL
     ...(process.env.VELVET_NOEMA_RECEIPT === 'enabled' ? [NOEMA_LUNCH_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_CICCIOS_RECEIPT === 'enabled' ? [CICCIOS_DINING_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_RICHE_RECEIPT === 'enabled' ? [RICHE_LUNCH_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_STUREHOF_RECEIPT === 'enabled' ? [STUREHOF_LUNCH_RECEIPT_POLICY] : []),
   ],
 });
 sevenRoomsJournal = createProviderJournal({ledger:playwrightAttempts,register:bookingRegister,provider:'SevenRooms',
