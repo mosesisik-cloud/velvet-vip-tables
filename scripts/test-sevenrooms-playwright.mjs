@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import { chromium } from 'playwright';
-import { SevenRoomsPlaywright, SEVENROOMS_PILOT, sevenRoomsReadAllowed } from '../api/providers/sevenrooms-playwright.mjs';
+import { SevenRoomsPlaywright, SEVENROOMS_PILOT, sevenRoomsReadAllowed, sevenRoomsSearchSelection } from '../api/providers/sevenrooms-playwright.mjs';
 
 const origin = 'https://www.sevenrooms.com';
 const range = origin + '/api-yoa/availability/ng/widget/range?venue=strandvagen1&party_size=2&start_date=2026-12-20&num_days=1';
@@ -11,6 +11,15 @@ assert.equal(sevenRoomsReadAllowed('GET', range.replace('&start_date=2026-12-20'
 assert.equal(sevenRoomsReadAllowed('GET', range + '&actual_id=existing-booking', 'fetch'), false);
 assert.equal(sevenRoomsReadAllowed('GET', origin + '/static2/reservations/sv-SE-fixture.json', 'fetch'), true);
 assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/languagestrings/strandvagen1/all?widget_type=res_widget', 'fetch'), true);
+assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/upgrades/widget?venue_id=' + SEVENROOMS_PILOT.internalVenueId, 'fetch'), true);
+assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/upgrades/widget?venue_id=other', 'fetch'), false);
+assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/upgrades/widget/status?venue_id=' + SEVENROOMS_PILOT.internalVenueId, 'fetch'), false);
+assert.equal(sevenRoomsReadAllowed('POST', origin + '/api-yoa/upgrades/widget?venue_id=' + SEVENROOMS_PILOT.internalVenueId, 'fetch'), false);
+assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/tags/translated/' + SEVENROOMS_PILOT.internalVenueId + '/sv/', 'fetch'), true);
+assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/tags/translated/other/sv/', 'fetch'), false);
+assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/availability/dates?venue=strandvagen1&start_date=2026-10-19&num_days=225', 'fetch'), true);
+assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/availability/dates?venue=other&start_date=2026-10-19&num_days=225', 'fetch'), false);
+assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/availability/dates?venue=strandvagen1&start_date=2026-10-19&num_days=999', 'fetch'), false);
 assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/languagestrings/other/all?widget_type=reservations', 'fetch'), false);
 assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/dining/widget_info?venue_url_key=strandvagen1', 'xhr'), true);
 assert.equal(sevenRoomsReadAllowed('GET', origin + '/static2/reservations/index-fixture.js', 'script'), true);
@@ -26,6 +35,9 @@ for (const url of [
 for (const method of ['POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']) assert.equal(sevenRoomsReadAllowed(method, range, 'fetch'), false);
 assert.equal(sevenRoomsReadAllowed('GET', SEVENROOMS_PILOT.url.replace('strandvagen1', 'other')), false);
 assert.equal(sevenRoomsReadAllowed('GET', SEVENROOMS_PILOT.url + '?lang=sv'), true);
+assert.equal(sevenRoomsReadAllowed('GET', SEVENROOMS_PILOT.url + '?date=2026-12-21&party_size=2&start_time=19%3A00'), true);
+assert.equal(sevenRoomsReadAllowed('GET', SEVENROOMS_PILOT.url + '?date=2026-02-31'), false);
+for (const selection of [{date:'2026-02-31',party:2},{date:'2026-12-21',party:'2'},{date:'2026-12-21',party:0},{date:'2026-12-21',party:2,time:'24:00'}]) assert.throws(()=>sevenRoomsSearchSelection(selection),/invalid_search/);
 assert.equal(sevenRoomsReadAllowed('GET', SEVENROOMS_PILOT.url + '?lang=sv&lang=en'), false);
 assert.equal(sevenRoomsReadAllowed('GET', origin + '/static2/not-a-script', 'script'), false);
 
@@ -35,8 +47,11 @@ const html = `<!doctype html><html><body><h1>LOCAL FIXTURE — Strandvägen 1</h
 <button id="search">Search fixture</button><button id="hold" hidden>Choose fixture slot</button>
 <p id="state">Not real availability</p><script>
 fetch('https://analytics.invalid/collect',{method:'POST',body:'fixture'}).catch(()=>{});
-search.onclick=async()=>{const r=await fetch(${JSON.stringify(range)});const j=await r.json();state.textContent=j.label;hold.hidden=false;};
+const desired=new URLSearchParams(location.search),fixtureRange=new URL(${JSON.stringify(range)});
+if(desired.has('date')){fixtureRange.searchParams.set('start_date',desired.get('date'));fixtureRange.searchParams.set('party_size',desired.get('party_size'));}
+search.onclick=async()=>{const r=await fetch(fixtureRange);const j=await r.json();state.textContent=j.label;hold.hidden=false;};
 hold.onclick=async()=>{try{await fetch('/api-yoa/dining/hold/add',{method:'POST',body:'fixture-only'});state.textContent='UNSAFE';}catch{state.textContent='Hold blocked';}};
+if(desired.has('date'))search.click();
 </script></body></html>`;
 const forwarded = [], blocked = [], contexts = [];
 let clock = Date.now(), documentMode = 'fixture';
@@ -56,10 +71,11 @@ const mirror = new SevenRoomsPlaywright({ now: () => clock, browserFactory: asyn
           const request = actual.request();
           forwarded.push({ method: request.method(), url: request.url() });
           const isDocument = request.resourceType() === 'document';
+          const day = new URL(request.url()).searchParams.get('start_date') || '2026-12-20';
           return {
             status: () => documentMode === 'redirect' && isDocument ? 302 : 200,
             headers: () => ({ 'content-type': isDocument ? 'text/html' : 'application/json', ...(documentMode === 'redirect' ? { location: origin + '/api-yoa/dining/hold/add' } : {}) }),
-            body: async () => Buffer.from(isDocument ? documentMode === 'captcha' ? '<h1>Verify you are human</h1>' : html : JSON.stringify({ label: 'Fixture slots only' })),
+            body: async () => Buffer.from(isDocument ? documentMode === 'captcha' ? '<h1>Verify you are human</h1>' : html : JSON.stringify({ label: 'Fixture slots only', status:200, data:{availability:{[day]:[{times:[{type:'book',time_iso:day+'T19:00:00',require_credit_card:true},{type:'request',time:'20:00'},{type:'book',time_iso:'1999-01-01T21:00:00'},{type:'book',time:'25:00'}]}]}} })),
           };
         };
         if (property === 'continue' || property === 'fallback') return () => { throw new Error('External network escape'); };
@@ -91,6 +107,14 @@ try {
   await assert.rejects(mirror.action(shot.id, 'alice', { type: 'refresh', revision: 0 }), /stale_view/);
   await assert.rejects(mirror.action(shot.id, 'alice', { type: 'click', revision: shot.revision, x: NaN, y: 0 }), /coordinates/);
   await assert.rejects(mirror.action(shot.id, 'alice', { type: 'scroll', revision: shot.revision, delta: 9999 }), /scroll/);
+  shot = await mirror.action(shot.id, 'alice', {type:'search',revision:shot.revision,date:'2026-12-21',party:2,time:'19:00'});
+  assert.deepEqual(shot.selection,{date:'2026-12-21',party:2,time:'19:00'});
+  assert.equal(shot.readiness,'availability_observed');
+  assert.deepEqual(shot.availability.slots,[{time:'19:00',paymentRequirement:'card'}]);
+  assert.equal(shot.canSubmit,false); assert.equal(shot.result,null);
+  shot.availability.slots[0].time='FAKE';
+  shot=await mirror.current(shot.id,'alice'); assert.equal(shot.availability.slots[0].time,'19:00');
+  clock+=60_001; shot=await mirror.current(shot.id,'alice'); assert.equal(shot.readiness,'unverified');
   const page = contexts[0].pages()[0];
   const click = async selector => {
     const box = await page.locator(selector).boundingBox();

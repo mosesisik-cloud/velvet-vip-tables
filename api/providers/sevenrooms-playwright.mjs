@@ -7,12 +7,21 @@ import crypto from 'node:crypto';
 export const SEVENROOMS_PILOT = Object.freeze({
   restaurantId: 'curated-STO-strandvagen-1', name: 'Strandvägen 1',
   venueId: 'strandvagen1', source: 'https://strandvagen1.se/',
+  // Confirmed by the venue's public widget_info response, 2026-10-16.
+  internalVenueId: 'ahNzfnNldmVucm9vbXMtc2VjdXJlchwLEg9uaWdodGxvb3BfVmVudWUYgIDZkpLMxQkM',
   url: 'https://www.sevenrooms.com/explore/strandvagen1/reservations/create/search/',
 });
 const ORIGIN = 'https://www.sevenrooms.com';
 const TTL = 10 * 60_000;
 const RANGE_KEYS = new Set(['venue', 'party_size', 'halo_size_interval', 'start_date', 'num_days', 'channel', 'exclude_pdr', 'intent', 'time_slot', 'selected_lang_code', 'actual_id', 'analytics_session_id']);
 const MUTATION = /hold|\/book(?:\/|$)|cancel|payment|checkout|login|register|otp|verify|confirm|actuals|waitlist/i;
+const validDate = value => /^\d{4}-\d{2}-\d{2}$/.test(value || '') && Number.isFinite(Date.parse(value + 'T12:00:00Z')) && new Date(value + 'T12:00:00Z').toISOString().slice(0, 10) === value;
+const validTime = value => /^([01]\d|2[0-3]):[0-5]\d$/.test(value || '');
+
+export function sevenRoomsSearchSelection(input) {
+  if (!input || !validDate(input.date) || !Number.isInteger(input.party) || input.party < 1 || input.party > 20 || (input.time !== undefined && !validTime(input.time))) throw new SevenRoomsMirrorError('invalid_search');
+  return { date: input.date, party: input.party, ...(input.time === undefined ? {} : { time: input.time }) };
+}
 
 // Explicit endpoint/type allowlist: GET alone is not a read-only guarantee.
 export function sevenRoomsReadAllowed(method, address, resourceType = 'document') {
@@ -24,7 +33,11 @@ export function sevenRoomsReadAllowed(method, address, resourceType = 'document'
     if (new Set(keys).size !== keys.length) return false;
     if (resourceType === 'document') {
       return ['/reservations/strandvagen1', '/reservations/strandvagen1/', '/explore/strandvagen1/reservations/create/search', '/explore/strandvagen1/reservations/create/search/'].includes(u.pathname)
-        && keys.every(key => key === 'lang') && (!u.search || /^(sv|en|es|fr)$/.test(u.searchParams.get('lang')));
+        && keys.every(key => ['lang', 'date', 'party_size', 'start_time'].includes(key))
+        && (!u.searchParams.has('lang') || /^(sv|en|es|fr)$/.test(u.searchParams.get('lang')))
+        && (!u.searchParams.has('date') || validDate(u.searchParams.get('date')))
+        && (!u.searchParams.has('party_size') || /^(?:[1-9]|1\d|20)$/.test(u.searchParams.get('party_size')))
+        && (!u.searchParams.has('start_time') || validTime(u.searchParams.get('start_time')));
     }
     if (['script', 'stylesheet', 'font', 'image'].includes(resourceType)) {
       return /^\/static2\/[a-zA-Z0-9_./-]+\.(?:js|css|woff2?|ttf|png|jpe?g|svg|webp|ico)$/.test(u.pathname) && !u.search;
@@ -33,6 +46,11 @@ export function sevenRoomsReadAllowed(method, address, resourceType = 'document'
     // Read-only locale resources observed on the approved pilot, 2026-10-16.
     if (/^\/static2\/reservations\/(?:sv-SE|en-US|es-ES|fr-FR)-[a-zA-Z0-9_-]+\.json$/.test(u.pathname)) return !u.search;
     if (u.pathname === '/api-yoa/languagestrings/strandvagen1/all') return keys.length === 1 && u.searchParams.get('widget_type') === 'res_widget';
+    if (u.pathname === '/api-yoa/upgrades/widget') return keys.length === 1 && u.searchParams.get('venue_id') === SEVENROOMS_PILOT.internalVenueId;
+    if (['sv','en','es','fr'].some(lang => u.pathname === `/api-yoa/tags/translated/${SEVENROOMS_PILOT.internalVenueId}/${lang}/`)) return !u.search;
+    if (u.pathname === '/api-yoa/availability/dates') return keys.length === 3 && keys.every(key => ['venue','start_date','num_days'].includes(key))
+      && u.searchParams.get('venue') === SEVENROOMS_PILOT.venueId && validDate(u.searchParams.get('start_date'))
+      && /^[1-9]\d{0,2}$/.test(u.searchParams.get('num_days')) && Number(u.searchParams.get('num_days')) <= 366;
     if (u.pathname === '/api-yoa/dining/widget_info') {
       return keys.length === 1 && u.searchParams.get('venue_url_key') === SEVENROOMS_PILOT.venueId;
     }
@@ -94,13 +112,35 @@ export class SevenRoomsPlaywright {
         }
         // Do not follow redirects inside fetch: a permitted read must not turn
         // into an unreviewed destination/GET mutation through a 30x response.
+        const searchEpoch = s.searchEpoch;
         try {
           const response = await route.fetch({ maxRedirects: 0, timeout: 10_000 });
           if (response.status() >= 300 && response.status() < 400) {
             s.blockedRequests++; s.state = 'unsupported_navigation';
             return route.abort();
           }
-          return route.fulfill({ status: response.status(), headers: response.headers(), body: await response.body() });
+          const body = await response.body();
+          const requestUrl = new URL(request.url());
+          if (response.status() === 200 && searchEpoch === s.searchEpoch && requestUrl.pathname === '/api-yoa/availability/ng/widget/range' && s.selection
+            && requestUrl.searchParams.get('start_date') === s.selection.date && Number(requestUrl.searchParams.get('party_size')) === s.selection.party) {
+            let data;
+            try { data = JSON.parse(body.toString()); } catch {}
+            const shifts = data?.data?.availability?.[s.selection.date];
+            if (data?.status === 200 && Array.isArray(shifts)) {
+              const slots = [];
+              for (const shift of shifts) for (const slot of Array.isArray(shift.times) ? shift.times : []) {
+                const iso = String(slot.time_iso || '');
+                const time = iso ? iso.slice(11, 16) : slot.time;
+                if (slot.type !== 'book' || !validTime(time) || (iso && (!/^\d{4}-\d{2}-\d{2}[T ]/.test(iso) || iso.slice(0, 10) !== s.selection.date))) continue;
+                // Expose only observed public time/requirements, never provider IDs,
+                // tokens or a promise that this read can be submitted as a booking.
+                slots.push({ time, paymentRequirement: slot.cc_payment_rule === 'advanced_payment' ? 'prepayment' : slot.require_credit_card === true ? 'card' : 'not_specified' });
+              }
+              s.availability = { source: 'provider', observedAt: new Date(this.now()).toISOString(), date: s.selection.date, party: s.selection.party, slots };
+              s.resolveRange?.();
+            }
+          }
+          return route.fulfill({ status: response.status(), headers: response.headers(), body });
         } catch { s.blockedRequests++; return route.abort(); }
       });
       await context.routeWebSocket('**/*', socket => { s.blockedRequests++; socket.close(); });
@@ -143,7 +183,10 @@ export class SevenRoomsPlaywright {
       image: `data:image/png;base64,${shot.toString('base64')}`, imageHash: crypto.createHash('sha256').update(shot).digest('hex'),
       capturedAt: new Date(s.touched).toISOString(), text, mode: 'inspect', state: s.state,
       canSubmit: false, result: null, fields: [], blocked: s.state !== 'read_only', blockedRequests: s.blockedRequests,
-      blockedRoutes: s.blockedRoutes.map(route => ({ ...route })), readiness: 'unverified',
+      blockedRoutes: s.blockedRoutes.map(route => ({ ...route })),
+      readiness: s.availability && this.now() - Date.parse(s.availability.observedAt) < 60_000 ? 'availability_observed' : 'unverified',
+      selection: s.selection ? { ...s.selection } : null,
+      availability: s.availability ? { ...s.availability, slots: s.availability.slots.map(slot => ({ ...slot })) } : null,
       expiresIn: TTL / 1000, limitation: 'Checkout/hold contract unverified; no submission or confirmation supported.',
     };
   }
@@ -160,12 +203,25 @@ export class SevenRoomsPlaywright {
     if (this.#sessions.get(id) !== s) throw new SevenRoomsMirrorError('session_expired', 404);
     if (s.busy) throw new SevenRoomsMirrorError('busy', 409);
     if (!action || action.revision !== s.revision) throw new SevenRoomsMirrorError('stale_view', 409);
-    if (!['click', 'scroll', 'refresh'].includes(action.type)) throw new SevenRoomsMirrorError('inspect_only');
+    if (!['click', 'scroll', 'refresh', 'search'].includes(action.type)) throw new SevenRoomsMirrorError('inspect_only');
     if (s.state !== 'read_only' && action.type !== 'refresh') throw new SevenRoomsMirrorError(s.state, 409);
     if (action.type === 'click' && (![action.x, action.y].every(Number.isFinite) || action.x < 0 || action.x >= s.width || action.y < 0 || action.y >= s.height)) throw new SevenRoomsMirrorError('coordinates');
     if (action.type === 'scroll' && (!Number.isFinite(action.delta) || Math.abs(action.delta) > 760)) throw new SevenRoomsMirrorError('scroll');
+    const selection = action.type === 'search' ? sevenRoomsSearchSelection(action) : null;
     s.busy = true;
     try {
+      if (selection) {
+        s.searchEpoch = (s.searchEpoch || 0) + 1;
+        s.selection = selection; s.availability = null;
+        const url = new URL(SEVENROOMS_PILOT.url);
+        url.searchParams.set('date', selection.date);
+        url.searchParams.set('party_size', String(selection.party));
+        if (selection.time) url.searchParams.set('start_time', selection.time);
+        let timer;
+        const ready = new Promise(resolve => { s.resolveRange = resolve; timer = setTimeout(resolve, 10_000); });
+        try { await s.page.goto(url.href, { waitUntil: 'domcontentloaded', timeout: 30_000 }); await ready; }
+        finally { clearTimeout(timer); s.resolveRange = null; }
+      }
       if (action.type === 'click') await s.page.mouse.click(action.x, action.y);
       if (action.type === 'scroll') await s.page.mouse.wheel(0, action.delta);
       await this.#settle(s);
