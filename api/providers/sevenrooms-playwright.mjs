@@ -1,0 +1,187 @@
+import crypto from 'node:crypto';
+
+// Issue129: master-approved pilot, independently bound to reviewed registry/source.
+// Backend browser mirror, NOT the iframe or legacy HTTP srBookSlot implementation.
+// Checkout selectors, authorized sandbox and hold/submit contracts are unverified.
+// Consequently this draft has NO live-write switch and NEVER reports confirmation.
+export const SEVENROOMS_PILOT = Object.freeze({
+  restaurantId: 'curated-STO-strandvagen-1', name: 'Strandvägen 1',
+  venueId: 'strandvagen1', source: 'https://strandvagen1.se/',
+  url: 'https://www.sevenrooms.com/explore/strandvagen1/reservations/create/search/',
+});
+const ORIGIN = 'https://www.sevenrooms.com';
+const TTL = 10 * 60_000;
+const RANGE_KEYS = new Set(['venue', 'party_size', 'halo_size_interval', 'start_date', 'num_days', 'channel', 'exclude_pdr', 'intent', 'time_slot', 'selected_lang_code']);
+const MUTATION = /hold|\/book(?:\/|$)|cancel|payment|checkout|login|register|otp|verify|confirm|actuals|waitlist/i;
+
+// Explicit endpoint/type allowlist: GET alone is not a read-only guarantee.
+export function sevenRoomsReadAllowed(method, address, resourceType = 'document') {
+  try {
+    const u = new URL(address);
+    if (!['GET', 'HEAD'].includes(method) || u.origin !== ORIGIN || u.username || u.password || u.hash || u.port) return false;
+    if (MUTATION.test(u.pathname) || /%|\\/.test(u.pathname)) return false;
+    const keys = [...u.searchParams.keys()];
+    if (new Set(keys).size !== keys.length) return false;
+    if (resourceType === 'document') {
+      return ['/reservations/strandvagen1', '/reservations/strandvagen1/', '/explore/strandvagen1/reservations/create/search', '/explore/strandvagen1/reservations/create/search/'].includes(u.pathname)
+        && keys.every(key => key === 'lang') && (!u.search || /^(sv|en|es|fr)$/.test(u.searchParams.get('lang')));
+    }
+    if (['script', 'stylesheet', 'font', 'image'].includes(resourceType)) {
+      return /^\/static2\/[a-zA-Z0-9_./-]+\.(?:js|css|woff2?|ttf|png|jpe?g|svg|webp|ico)$/.test(u.pathname) && !u.search;
+    }
+    if (!['fetch', 'xhr'].includes(resourceType)) return false;
+    if (u.pathname === '/api-yoa/dining/widget_info') {
+      return keys.length === 1 && u.searchParams.get('venue_url_key') === SEVENROOMS_PILOT.venueId;
+    }
+    if (!['/api-yoa/availability/widget/range', '/api-yoa/availability/ng/widget/range'].includes(u.pathname)) return false;
+    return keys.every(key => RANGE_KEYS.has(key)) && u.searchParams.get('venue') === SEVENROOMS_PILOT.venueId
+      && /^\d{4}-\d{2}-\d{2}$/.test(u.searchParams.get('start_date') || '')
+      && /^(?:[1-9]|1\d|20)$/.test(u.searchParams.get('party_size') || '')
+      && u.searchParams.get('num_days') === '1';
+  } catch { return false; }
+}
+
+export class SevenRoomsMirrorError extends Error {
+  constructor(code, status = 400) { super(code); this.code = code; this.status = status; }
+}
+
+// Same ownership/revision/PNG hash pattern as BokabordMirror. Provider-specific
+// Angular selectors, write gates and anti-bot workarounds are deliberately absent.
+export class SevenRoomsPlaywright {
+  #sessions = new Map();
+  #pendingOwners = new Set();
+  #browserPromise;
+  #closed = false;
+  constructor({ browserFactory, now = () => Date.now() } = {}) {
+    this.browserFactory = browserFactory || (() => import('playwright').then(({ chromium }) => chromium.launch({ headless: true })));
+    this.now = now;
+  }
+  async #browser() {
+    this.#browserPromise ??= Promise.resolve().then(this.browserFactory).catch(error => { this.#browserPromise = null; throw error; });
+    return this.#browserPromise;
+  }
+  async create(owner, restaurantId, width = 420) {
+    if (this.#closed) throw new SevenRoomsMirrorError('closed', 503);
+    if (typeof owner !== 'string' || !owner.trim() || owner.length > 256) throw new SevenRoomsMirrorError('auth', 401);
+    if (restaurantId !== SEVENROOMS_PILOT.restaurantId) throw new SevenRoomsMirrorError('pilot_only');
+    await this.expire();
+    if (this.#pendingOwners.has(owner) || [...this.#sessions.values()].some(s => s.owner === owner)) throw new SevenRoomsMirrorError('session_exists', 409);
+    if (this.#sessions.size + this.#pendingOwners.size >= 4) throw new SevenRoomsMirrorError('capacity', 429);
+    this.#pendingOwners.add(owner);
+    let context;
+    try {
+      width = Math.max(320, Math.min(760, Math.round(Number(width) || 420)));
+      const browser = await this.#browser();
+      if (this.#closed) throw new SevenRoomsMirrorError('closed', 503);
+      context = await browser.newContext({ viewport: { width, height: 760 }, locale: 'sv-SE', timezoneId: 'Europe/Stockholm', serviceWorkers: 'block', acceptDownloads: false });
+      const s = { id: crypto.randomUUID(), owner, restaurantId, context, width, height: 760, revision: 0, touched: this.now(), busy: true, state: 'read_only', blockedRequests: 0 };
+      await context.route('**/*', async route => {
+        const request = route.request();
+        if (!sevenRoomsReadAllowed(request.method(), request.url(), request.resourceType())) {
+          s.blockedRequests++;
+          let pathname = '';
+          try { pathname = new URL(request.url()).pathname; } catch {}
+          if (MUTATION.test(pathname) || !['GET', 'HEAD'].includes(request.method())) s.state = 'provider_write_required';
+          else if (request.isNavigationRequest() && request.frame() === s.page?.mainFrame()) s.state = 'unsupported_navigation';
+          return route.abort();
+        }
+        // Do not follow redirects inside fetch: a permitted read must not turn
+        // into an unreviewed destination/GET mutation through a 30x response.
+        try {
+          const response = await route.fetch({ maxRedirects: 0, timeout: 10_000 });
+          if (response.status() >= 300 && response.status() < 400) {
+            s.blockedRequests++; s.state = 'unsupported_navigation';
+            return route.abort();
+          }
+          return route.fulfill({ status: response.status(), headers: response.headers(), body: await response.body() });
+        } catch { s.blockedRequests++; return route.abort(); }
+      });
+      await context.routeWebSocket('**/*', socket => { s.blockedRequests++; socket.close(); });
+      s.page = await context.newPage();
+      s.page.setDefaultTimeout(10_000);
+      context.on('page', page => { if (page !== s.page) page.close().catch(() => {}); });
+      s.page.on('download', download => download.cancel().catch(() => {}));
+      s.page.on('dialog', dialog => dialog.dismiss().catch(() => {}));
+      const response = await s.page.goto(SEVENROOMS_PILOT.url, { waitUntil: 'domcontentloaded', timeout: 30_000 });
+      if (response && [401, 403, 429].includes(response.status())) s.state = 'access_blocked';
+      await this.#settle(s);
+      if (this.#closed) throw new SevenRoomsMirrorError('closed', 503);
+      this.#sessions.set(s.id, s);
+      const snapshot = await this.#snapshot(s);
+      s.busy = false;
+      return snapshot;
+    } catch (error) { if (context) { for (const [id, s] of this.#sessions) if (s.context === context) this.#sessions.delete(id); await context.close(); } throw error; }
+    finally { this.#pendingOwners.delete(owner); }
+  }
+  async #owned(id, owner) {
+    const s = this.#sessions.get(id);
+    if (!owner || !s || s.owner !== owner) throw new SevenRoomsMirrorError('session_expired', 404);
+    if (this.now() - s.touched >= TTL && !s.busy) { await this.remove(id, owner); throw new SevenRoomsMirrorError('session_expired', 404); }
+    if (s.busy) throw new SevenRoomsMirrorError('busy', 409);
+    return s;
+  }
+  async #settle(s) {
+    // Render synchronization only; not proof that provider inventory is ready.
+    await s.page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+  }
+  async #snapshot(s) {
+    const text = (await s.page.locator('body').innerText()).slice(0, 12_000);
+    if (/captcha|verify you are human|access denied|unusual traffic/i.test(text)) s.state = 'access_blocked';
+    const shot = await s.page.screenshot({ type: 'png' });
+    s.touched = this.now();
+    s.revision++;
+    return {
+      id: s.id, provider: 'SevenRooms', restaurantId: s.restaurantId, restaurant: SEVENROOMS_PILOT.name,
+      revision: s.revision, width: s.width, height: s.height,
+      image: `data:image/png;base64,${shot.toString('base64')}`, imageHash: crypto.createHash('sha256').update(shot).digest('hex'),
+      capturedAt: new Date(s.touched).toISOString(), text, mode: 'inspect', state: s.state,
+      canSubmit: false, result: null, fields: [], blocked: s.state !== 'read_only', blockedRequests: s.blockedRequests,
+      expiresIn: TTL / 1000, limitation: 'Checkout/hold contract unverified; no submission or confirmation supported.',
+    };
+  }
+  async current(id, owner) {
+    const s = await this.#owned(id, owner);
+    if (this.#sessions.get(id) !== s) throw new SevenRoomsMirrorError('session_expired', 404);
+    // Acquire synchronously after lookup; action/current recheck after await below.
+    if (s.busy) throw new SevenRoomsMirrorError('busy', 409);
+    s.busy = true;
+    try { return await this.#snapshot(s); } finally { s.busy = false; }
+  }
+  async action(id, owner, action) {
+    const s = await this.#owned(id, owner);
+    if (this.#sessions.get(id) !== s) throw new SevenRoomsMirrorError('session_expired', 404);
+    if (s.busy) throw new SevenRoomsMirrorError('busy', 409);
+    if (!action || action.revision !== s.revision) throw new SevenRoomsMirrorError('stale_view', 409);
+    if (!['click', 'scroll', 'refresh'].includes(action.type)) throw new SevenRoomsMirrorError('inspect_only');
+    if (s.state !== 'read_only' && action.type !== 'refresh') throw new SevenRoomsMirrorError(s.state, 409);
+    if (action.type === 'click' && (![action.x, action.y].every(Number.isFinite) || action.x < 0 || action.x >= s.width || action.y < 0 || action.y >= s.height)) throw new SevenRoomsMirrorError('coordinates');
+    if (action.type === 'scroll' && (!Number.isFinite(action.delta) || Math.abs(action.delta) > 760)) throw new SevenRoomsMirrorError('scroll');
+    s.busy = true;
+    try {
+      if (action.type === 'click') await s.page.mouse.click(action.x, action.y);
+      if (action.type === 'scroll') await s.page.mouse.wheel(0, action.delta);
+      await this.#settle(s);
+      return await this.#snapshot(s);
+    } catch (error) {
+      // A failed interaction invalidates the old revision; never replay blindly.
+      s.revision++;
+      throw error;
+    } finally { s.busy = false; }
+  }
+  async remove(id, owner) {
+    const s = this.#sessions.get(id);
+    if (!owner || !s || s.owner !== owner) throw new SevenRoomsMirrorError('session_expired', 404);
+    if (s.busy) throw new SevenRoomsMirrorError('busy', 409);
+    this.#sessions.delete(id);
+    await s.context.close();
+  }
+  async expire() {
+    await Promise.all([...this.#sessions.values()].filter(s => !s.busy && this.now() - s.touched >= TTL).map(s => this.remove(s.id, s.owner)));
+  }
+  async close() {
+    this.#closed = true;
+    await Promise.all([...this.#sessions.values()].map(s => s.context.close().catch(() => {})));
+    this.#sessions.clear();
+    if (this.#browserPromise) await (await this.#browserPromise.catch(() => null))?.close();
+  }
+}
