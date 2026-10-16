@@ -22,19 +22,21 @@ const ciccios = process.argv.includes('--ciccios') || process.env.VELVET_TEST_PR
 const riche = process.argv.includes('--riche') || process.env.VELVET_TEST_PROVIDER === 'Riche';
 const sturehof = process.argv.includes('--sturehof') || process.env.VELVET_TEST_PROVIDER === 'Sturehof';
 const beirut = process.argv.includes('--beirut') || process.env.VELVET_TEST_PROVIDER === 'Beirut';
-const guestChoice = ciccios || beirut;
+const balzac = process.argv.includes('--balzac') || process.env.VELVET_TEST_PROVIDER === 'Balzac';
+const guestLunch = beirut || balzac;
+const guestChoice = ciccios || guestLunch;
 const contactFinal = riche || sturehof;
-assert.ok([fishcorner,pesquiere,noema,ciccios,riche,sturehof,beirut].filter(Boolean).length <= 1, 'Choose one named provider scenario');
+assert.ok([fishcorner,pesquiere,noema,ciccios,riche,sturehof,beirut,balzac].filter(Boolean).length <= 1, 'Choose one named provider scenario');
 const receiptMode = noema || guestChoice || contactFinal;
-const receiptName = beirut ? 'Beirut Café' : sturehof ? 'Sturehof' : riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
-const receiptCode = beirut ? 'synthetic-beirut-only' : sturehof ? 'synthetic-sturehof-only' : riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
-const mealId = beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
-const mealType = noema || beirut || contactFinal ? 2 : 3;
-const restaurantId = beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const receiptName = balzac ? 'Brasserie Balzac' : beirut ? 'Beirut Café' : sturehof ? 'Sturehof' : riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
+const receiptCode = balzac ? 'synthetic-balzac-only' : beirut ? 'synthetic-beirut-only' : sturehof ? 'synthetic-sturehof-only' : riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
+const mealId = balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
+const mealType = noema || guestLunch || contactFinal ? 2 : 3;
+const restaurantId = balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
 const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[receiptMode ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 const date = '2030-01-15';
-const bookingTime = noema || beirut || contactFinal ? '12:00' : '19:00';
+const bookingTime = noema || guestLunch || contactFinal ? '12:00' : '19:00';
 const childMode = process.env.VELVET_INTEGRATED_SUPPLIER_FIXTURE === 'child';
 
 // Sanitized native DOM/SSR contract from the canonical provider tests. No supplier JS.
@@ -71,7 +73,7 @@ function supplierHtml() {
 const q={hash:${JSON.stringify(venue.hash)},mealid:${mealId},date:'',time:'',amount:0,firstname:'',lastname:'',email:'',phone:'',comment:'',products:[],waitlist:false,giftcard:null,linked_meals:[],bookingid:null,terms:{general:true,restaurant:false,bokabord:false}};
 const model={meal:{bullets:{},mandatory_products:false},getQuery:()=>q};
 window.angular={element:()=>({injector:()=>({get:key=>key==='Booking'?model:key==='$http'?{pendingRequests:[]}:{$$phase:false}}),scope:()=>({isAjaxRequest:()=>false,phoneValid:()=>!!document.querySelector('[name=phone]')?.value.match(/^\\+46700000000$/)})})};
-if(${contactFinal || beirut}){
+if(${contactFinal || guestLunch}){
  window.$={fn:{intlTelInput:{getCountryData:()=>[{iso2:'se',dialCode:'46',name:'Sweden'}]}}};
  window.intlTelInputUtils={isValidNumber:(value,iso)=>iso==='se'&&value==='+46700000000',formatNumber:(value,iso)=>iso==='se'?value:''};
 }
@@ -81,12 +83,12 @@ document.querySelector('#party').onclick=()=>{q.amount=2;document.querySelector(
 document.querySelector('#date').onclick=async()=>{q.date='2030-01-15';const r=await fetch('/reservation/api/booking/getTimes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date:q.date,amount:q.amount,hash:q.hash})});const data=await r.json();document.querySelector('#slot').hidden=!data.times.includes('${bookingTime}');};
 document.querySelector('#slot').onclick=()=>{q.time='${bookingTime}';contact();};
 function contact(){screen.innerHTML='<h2>Kontaktuppgifter</h2><p>FIXTURE supplier form</p>'+['firstname','lastname','email','phone'].map(n=>'<label>'+n+'<input name="'+n+'" value=""></label>').join('')+'<textarea ng-model="booking.comment"></textarea>${contactFinal ? '<a id="terms-link" href="https://www.waiteraid.com/terms/fixture-a">Fixture terms</a>' : ''}<button id="next">Nästa</button>';
- if(${contactFinal || beirut}){const phone=document.querySelector('[name=phone]');phone.className='phoneField';const wrapper=document.createElement('div');wrapper.className='intl-tel-input';phone.before(wrapper);wrapper.innerHTML='<div class="selected-flag" title="Sweden: +46"><span class="iti-flag se"></span></div>';wrapper.append(phone);}
+ if(${contactFinal || guestLunch}){const phone=document.querySelector('[name=phone]');phone.className='phoneField';const wrapper=document.createElement('div');wrapper.className='intl-tel-input';phone.before(wrapper);wrapper.innerHTML='<div class="selected-flag" title="Sweden: +46"><span class="iti-flag se"></span></div>';wrapper.append(phone);}
  // The native contact-final form copies its phone widget into Booking only on Next.
- for(const input of document.querySelectorAll('input,textarea'))input.oninput=()=>{if(!(${contactFinal || beirut}&&input.name==='phone'))q[input.name||'comment']=input.value;};
+ for(const input of document.querySelectorAll('input,textarea'))input.oninput=()=>{if(!(${contactFinal || guestLunch}&&input.name==='phone'))q[input.name||'comment']=input.value;};
  const dispatch=async()=>{if(${contactFinal})console.log('fixture-contact-final-click');try{const response=await fetch(${JSON.stringify(saveUrl)},{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});const data=await response.json();if(${receiptMode}){if(${JSON.stringify(process.env.VELVET_TEST_OUTCOME)}!=='missing-receipt')location.assign('/reservation/booking/?code='+encodeURIComponent(data.booking.short_code)+'&new=1');else screen.innerHTML='<h2>FIXTURE response only</h2>';}else{history.replaceState({},'', '/reservation/booking/fixture');screen.innerHTML='<h2>FIXTURE response received</h2>';}}catch{screen.innerHTML='<h2>FIXTURE network interrupted</h2>';}};
  const review=()=>{screen.innerHTML='<h2>Kontrollera din bokning</h2><p>FIXTURE '+q.date+' '+q.time+' '+q.amount+' guests${guestChoice ? ' — guest choice completed' : ''}</p><button id="final">Slutför bokningen</button>';document.querySelector('#final').onclick=dispatch;};
- document.querySelector('#next').onclick=()=>{if(${contactFinal}){q.phone=document.querySelector('[name="phone"]').value;q.country_code='46';q.dial_code='46';dispatch();}else if(${guestChoice}){if(${beirut}){q.phone=document.querySelector('[name=phone]').value;q.country_code='46';q.dial_code='46';}screen.innerHTML='<h2>Fortsätt som gäst</h2><button id="guest">Fortsätt utan konto</button>';document.querySelector('#guest').onclick=review;}else review();};}
+ document.querySelector('#next').onclick=()=>{if(${contactFinal}){q.phone=document.querySelector('[name="phone"]').value;q.country_code='46';q.dial_code='46';dispatch();}else if(${guestChoice}){if(${guestLunch}){q.phone=document.querySelector('[name=phone]').value;q.country_code='46';q.dial_code='46';}screen.innerHTML='<h2>Fortsätt som gäst</h2><button id="guest">Fortsätt utan konto</button>';document.querySelector('#guest').onclick=review;}else review();};}
 </script></body></html>`;
 }
 
@@ -182,7 +184,7 @@ if (childMode) {
           if (key === 'continue' || key === 'fallback') return boundary;
           if (key === 'fetch') return async options => {
             if (receiptMode && target.request().method()==='POST' && target.request().url()===saveUrl) {
-              if(beirut){
+              if(guestLunch){
                 const {DatabaseSync}=await import('node:sqlite');
                 const db=new DatabaseSync(process.env.VELVET_PLAYWRIGHT_DB,{readOnly:true});
                 try{
@@ -310,12 +312,13 @@ async function main() {
     backend = `http://127.0.0.1:${port}`;
     child = spawn(process.execPath, ['--import', import.meta.url, 'api/server.mjs'], { cwd: root, env: {
       ...process.env, VELVET_INTEGRATED_SUPPLIER_FIXTURE: 'child', VELVET_TEST_DIRECTORY: directory,
-      VELVET_TEST_PROVIDER: beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
+      VELVET_TEST_PROVIDER: balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
       VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_CICCIOS_RECEIPT: ciccios ? 'enabled' : 'disabled',
       VELVET_RICHE_RECEIPT: riche ? 'enabled' : 'disabled',
       VELVET_STUREHOF_RECEIPT: sturehof ? 'enabled' : 'disabled',
       VELVET_BEIRUT_RECEIPT: beirut ? 'enabled' : 'disabled',
+      VELVET_BALZAC_RECEIPT: balzac ? 'enabled' : 'disabled',
       VELVET_ZENCHEF_FISHCORNER: zenchef ? 'live' : 'disabled',
       VELVET_ZENCHEF_PESQUIERE: pesquiere ? 'live' : 'disabled',
       VELVET_TEST_OUTCOME: outcome, PORT: String(port), PUBLIC_URL: base,
@@ -623,7 +626,7 @@ async function main() {
     await first.page.waitForFunction(() => document.querySelector('#bokabord-mirror [data-status]')?.dataset.bookingStatus === 'unknown', null, { timeout: 40_000 });
     await settled(first.page);
     assert.equal(submits(), 1, 'Exactly one supplier boundary attempt');
-    if(beirut)assert.equal(messages.filter(m=>m.kind==='durable-before-provider-dispatch').length,1);
+    if(guestLunch)assert.equal(messages.filter(m=>m.kind==='durable-before-provider-dispatch').length,1);
     let recovered = await api(first.page, '/restaurant-bookings/playwright/attempts');
     assert.equal(recovered.status, 200); assert.equal(recovered.body.attempts.length, 1);
     assert.equal(recovered.body.attempts[0].status, 'unknown');
