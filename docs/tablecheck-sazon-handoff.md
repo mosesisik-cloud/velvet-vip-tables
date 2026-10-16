@@ -132,7 +132,7 @@ broad: ordinary logging/cache/session correlation is not a restaurant hold.
 
 ## Validation limits
 
-Run `node --test scripts/test-tablecheck-sazon.mjs` (14 tests). Replays cover
+Run `node --test scripts/test-tablecheck-sazon.mjs` (15 tests). Replays cover
 actual policy/query/negative grid, scope-changing and capability requests,
 malformed slot rows, owner/revision/expiry guards, denied mutations without
 transport, and mounting in the existing runtime without live capability.

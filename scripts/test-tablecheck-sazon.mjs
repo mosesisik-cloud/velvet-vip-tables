@@ -137,7 +137,7 @@ test('session expiry and close prevent stale use', async () => {
 
 // Explicitly SYNTHETIC source-contract cases. These are not observed provider
 // successes or availability evidence. Every transport is an in-memory function.
-function syntheticLifecycle({ denyPhase, failPhase, changeReceipt, changeCart, refuseRecord = false } = {}) {
+function syntheticLifecycle({ denyPhase, failPhase, changeReceipt, changeCart, refuseRecord = false, syncRecord = false } = {}) {
   let sequence = 0;
   const calls = [], grants = [], records = [];
   const now = Date.parse('2026-10-16T12:00:00Z');
@@ -158,9 +158,10 @@ function syntheticLifecycle({ denyPhase, failPhase, changeReceipt, changeCart, r
       return { sendAllowed: intent.phase !== denyPhase, attempt: { ...intent, ...intent.details,
         attemptId: `synthetic-attempt-${++sequence}`, idempotencyKey: `synthetic-key-${sequence}` } };
     },
-    recordResult: async session => {
+    recordResult: session => {
       records.push(clone(session));
-      return { status: refuseRecord ? 'unknown' : session.result.status };
+      const saved = { status: refuseRecord ? 'unknown' : session.result.status };
+      return syncRecord ? saved : Promise.resolve(saved);
     },
     mutationTransport: async request => {
       calls.push(clone(request));
@@ -311,4 +312,16 @@ test('synthetic conservative scope: partial write response or rotated token cann
     assert.deepEqual(h.calls.map(c => c.phase), ['cart_init', 'cart', 'cart_update']);
     await h.adapter.close();
   }
+});
+
+test('synthetic ambiguous checkout supports synchronous journal recording without retry', async () => {
+  const h = syntheticLifecycle({ failPhase: 'booking', syncRecord: true });
+  const view = await h.readyForSubmit();
+  const result = await h.adapter.action(view.id, 'owner', h.approve(view, 'submit'));
+  assert.equal(result.result.status, 'unknown');
+  assert.deepEqual(h.calls.map(c => c.phase), ['cart_init', 'cart', 'cart_update', 'booking']);
+  assert.equal(h.records.at(-1).result.status, 'unknown');
+  assert.equal(h.records.at(-1).attempt.phase, 'booking');
+  await assert.rejects(h.adapter.action(view.id, 'owner', h.approve(result, 'submit')), /already_attempted/);
+  await h.adapter.close();
 });
