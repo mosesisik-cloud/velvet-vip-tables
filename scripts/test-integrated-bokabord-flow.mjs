@@ -65,7 +65,7 @@ screen.innerHTML=${JSON.stringify(`<h1>${receiptMode ? receiptName : 'Zink'} FIX
 document.querySelector('#party').onclick=()=>{q.amount=2;document.querySelector('#party').textContent='2 gäster valda';};
 document.querySelector('#date').onclick=async()=>{q.date='2030-01-15';const r=await fetch('/reservation/api/booking/getTimes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date:q.date,amount:q.amount,hash:q.hash})});const data=await r.json();document.querySelector('#slot').hidden=!data.times.includes('${bookingTime}');};
 document.querySelector('#slot').onclick=()=>{q.time='${bookingTime}';contact();};
-function contact(){screen.innerHTML='<h2>Kontaktuppgifter</h2><p>FIXTURE supplier form</p>'+['firstname','lastname','email','phone'].map(n=>'<label>'+n+'<input name="'+n+'" value=""></label>').join('')+'<textarea ng-model="booking.comment"></textarea><button id="next">Nästa</button>';
+function contact(){screen.innerHTML='<h2>Kontaktuppgifter</h2><p>FIXTURE supplier form</p>'+['firstname','lastname','email','phone'].map(n=>'<label>'+n+'<input name="'+n+'" value=""></label>').join('')+'<textarea ng-model="booking.comment"></textarea>${riche ? '<a id="terms-link" href="https://www.waiteraid.com/terms/fixture-a">Fixture terms</a>' : ''}<button id="next">Nästa</button>';
  for(const input of document.querySelectorAll('input,textarea'))input.oninput=()=>{q[input.name||'comment']=input.value;};
  const dispatch=async()=>{if(${riche})console.log('fixture-contact-final-click');try{const response=await fetch(${JSON.stringify(saveUrl)},{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});const data=await response.json();if(${receiptMode}){if(${JSON.stringify(process.env.VELVET_TEST_OUTCOME)}!=='missing-receipt')location.assign('/reservation/booking/?code='+encodeURIComponent(data.booking.short_code)+'&new=1');else screen.innerHTML='<h2>FIXTURE response only</h2>';}else{history.replaceState({},'', '/reservation/booking/fixture');screen.innerHTML='<h2>FIXTURE response received</h2>';}}catch{screen.innerHTML='<h2>FIXTURE network interrupted</h2>';}};
  const review=()=>{screen.innerHTML='<h2>Kontrollera din bokning</h2><p>FIXTURE '+q.date+' '+q.time+' '+q.amount+' guests${ciccios ? ' — guest choice completed' : ''}</p><button id="final">Slutför bokningen</button>';document.querySelector('#final').onclick=dispatch;};
@@ -103,9 +103,12 @@ if (childMode) {
           text:document.body?.innerText.slice(0,160),
         })).then(state=>process.send?.({kind:'supplier-fixture-dom',...state})).catch(()=>{}));
       });
-      if (riche) context.on('page', page => page.on('console', message => {
+      if (riche) context.on('page', page => {process.on('message',message=>{
+        if(message.kind==='fixture-change-terms')page.evaluate(()=>document.querySelector('#terms-link').href='https://www.waiteraid.com/terms/fixture-b')
+          .then(()=>process.send?.({kind:'fixture-terms-changed'}));
+      });page.on('console', message => {
         if (message.text()==='fixture-contact-final-click') process.send?.({kind:'provider-final-click'});
-      }));
+      });});
       const route = context.route.bind(context);
       await context.routeWebSocket('**/*', socket => socket.close());
       // A final guard also catches requests not registered by the production adapter.
@@ -358,7 +361,9 @@ async function main() {
       let frozen = await current(); assert.ok(frozen.nativeReview?.token); assert.equal(frozen.fields.length,0);
       assert.equal(await panel(page).locator('[data-provider-view]').isHidden(),true);
       if (!richeGuardsChecked) {
-        const refresh = async () => {await panel(page).locator('[data-refresh]').click();await settled(page);};
+        // Raw adversarial API actions bypass the UI closure. Refresh the actual
+        // adapter snapshot, then let the normal UI recover that fresh snapshot.
+        const refresh = async () => {await rawAction(await current(),{type:'refresh'});await panel(page).locator('[data-refresh]').click();await settled(page);};
         const review = async () => {
           await panel(page).locator('[data-terms]').check();await panel(page).locator('[data-submit]').click();await settled(page);
           await panel(page).locator('[data-native-review]').waitFor(); return current();
@@ -377,6 +382,14 @@ async function main() {
         await panel(page).locator('[data-edit-review]').click();await settled(page);
         const editState=await current();assert.equal(editState.nativeReview,null);
         assert.equal((await rawAction(editState,{type:'submit',confirm:true,terms:true,reviewToken:editedToken})).status,409);
+        await refresh();frozen=await review();
+        const changed=new Promise((resolve,reject)=>{
+          const timer=setTimeout(()=>reject(new Error('fixture_terms_change_timeout')),5000);
+          const receive=message=>{if(message.kind==='fixture-terms-changed'){clearTimeout(timer);child.off('message',receive);resolve();}};
+          child.on('message',receive);
+        });
+        child.send({kind:'fixture-change-terms'});await changed;
+        assert.equal((await rawAction(frozen,{type:'submit',confirm:true,terms:true,reviewToken:frozen.nativeReview.token})).status,409,'Changed visible terms URL invalidates approval');
         await refresh();frozen=await review();
         assert.equal(submits(),before);assert.equal(finalClicks(),clicksBefore);
         assert.equal((await api(page,'/restaurant-bookings/playwright/attempts')).body.attempts.length,0,'Review and rejected tokens must not reserve');
