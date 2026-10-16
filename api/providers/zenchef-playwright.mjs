@@ -11,8 +11,14 @@ export const ZENCHEF_ARPEGE = Object.freeze({
 export const ZENCHEF_FISHCORNER = Object.freeze({ restaurantId: 'osm-SBH-fishcorner', venueId: '388090', name: 'Fish Corner',
   url: 'https://bookings.zenchef.com/results?rid=388090&lang=fr', timezone: 'America/Guadeloupe', minParty: 2, maxParty: 2,
   shiftId: 545372, source: 'https://www.fishcornerstbarth.com/en/book-online' });
+// Official Gigi Tavola Port de Nice iframe; lunch guest/review verified read-only.
+// This venue sends a reservation REQUEST (manual confirmation), not an instant booking.
+export const ZENCHEF_GIGI_TAVOLA = Object.freeze({ restaurantId: 'osm-MCO-gigi-tavola', venueId: '353615', name: 'Gigi Tavola',
+  url: 'https://bookings.zenchef.com/results?rid=353615&lang=fr', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
+  shiftId: 30585, source: 'https://www.gigitavola.com/', preparationOnly: true,
+  submissionBlocker: 'manual_confirmation_submission_unverified' });
 export const ZENCHEF_POLICY_SOURCE = 'https://bookings.zenchef.com/gtc?rid=388090&lang=fr';
-const VENUES = Object.freeze({ [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER });
+const VENUES = Object.freeze({ [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_GIGI_TAVOLA.restaurantId]: ZENCHEF_GIGI_TAVOLA });
 const FIXTURE_URL = 'https://zenchef-fixture.invalid/';
 const TTL = 10 * 60_000;
 const FIELDS = ['firstname', 'lastname', 'email', 'phone'];
@@ -136,7 +142,8 @@ export function zenchefAvailabilityEvidence(data, query, observedAt = Date.now()
     for (const slot of shift.shift_slots) {
       if (slot.closed !== false || slot.marked_as_full !== false || !inWindow(slot)
         || !/^([01]\d|2[0-3]):[0-5]\d$/.test(slot.name) || !slot.possible_guests?.includes(query.party)
-        || !Array.isArray(slot.available_rooms?.[query.party]) || !slot.available_rooms[query.party].length) continue;
+        || (!(venue === ZENCHEF_GIGI_TAVOLA && state.isRoomMandatory === false && slot.available_rooms === undefined)
+          && (!Array.isArray(slot.available_rooms?.[query.party]) || !slot.available_rooms[query.party].length))) continue;
       candidates.push({ time: slot.name, shiftId: shift.id });
     }
   }
@@ -193,7 +200,7 @@ export class ZenchefPlaywright {
       context = await browser.newContext({ viewport: { width: 420, height: 760 },
         locale: 'fr-FR', timezoneId: venue.timezone, serviceWorkers: 'block', acceptDownloads: false });
       const s = { id: crypto.randomUUID(), owner, restaurantId, restaurant: venue.name, venue,
-        provider: 'Zenchef', destination: venue === ZENCHEF_ARPEGE ? 'Paris' : 'St. Barts', context, revision: 0, touched: this.now(),
+        provider: 'Zenchef', destination: venue === ZENCHEF_ARPEGE ? 'Paris' : venue === ZENCHEF_GIGI_TAVOLA ? 'Nice' : 'St. Barts', context, revision: 0, touched: this.now(),
         busy: false, attempted: false, state: 'inspect_only', result: null, blockedRequests: 0 };
       await context.route('**/*', async route => {
         const r = route.request();
@@ -268,7 +275,11 @@ export class ZenchefPlaywright {
     const codes = ((await flag.getAttribute('class')) || '').split(/\s+/).filter(c => /^iti__[a-z]{2}$/.test(c));
     if (codes.length !== 1) return '';
     const code = codes[0].slice(5);
-    return await phoneWidget.locator(`[data-country-code="${code}"]`).count() === 1 ? code : '';
+    // At the mobile viewport the country list is not mounted until opened.
+    // Read the selected visible control, not a possibly absent dropdown option.
+    const selected = phoneWidget.locator('.iti__selected-country');
+    return await selected.count() === 1 && await selected.getAttribute('title')
+      && await selected.getAttribute('aria-label') ? code : '';
   }
   async snapshot(s) {
     let fields = null;
@@ -295,7 +306,7 @@ export class ZenchefPlaywright {
       phase: 'booking', reviewFingerprint: s.review?.digest || null,
       reviewToken: s.review?.revision === s.revision ? s.review.token : null,
       terms: s.terms ? { ...s.terms } : null,
-      checkoutBlocker: s.formSelection && !s.noCardAllowed ? 'card_and_supplier_submission_unverified'
+      checkoutBlocker: s.formSelection && s.venue.preparationOnly ? s.venue.submissionBlocker : s.formSelection && !s.noCardAllowed ? 'card_and_supplier_submission_unverified'
         : s.formSelection && !this.enableSubmission ? 'submission_disabled' : null,
       blockedRequests: s.blockedRequests,
       blocker: this.mode === 'fixture' ? 'local_fixture_only' : this.mode === 'inspect' ? 'inspection_only' : null };
@@ -342,6 +353,10 @@ export class ZenchefPlaywright {
             throw new ZenchefError('provider_fields_unverified', 409);
           }
           const shift = form.dailyAvailabilities?.[s.searchQuery.date]?.shifts?.find(row => row.id === s.venue.shiftId);
+          if (s.venue === ZENCHEF_GIGI_TAVOLA && (shift?.charge_param?.is_web_booking_askable !== true
+            || shift.charge_param.min_guests !== 8 || shift.prepayment_param !== null || shift.confirmation?.is_auto !== false
+            || shift.is_offer_required !== false || form.isRoomMandatory !== false || form.wish.room_id !== null
+            || !Array.isArray(form.wish.offers) || form.wish.offers.length)) throw new ZenchefError('provider_form_mismatch', 502);
           s.noCardAllowed = s.venue === ZENCHEF_FISHCORNER && shift?.id === 545372 && shift.charge_param === null
             && shift.shift_slots?.some(slot => slot.name === action.time && slot.closed === false && slot.marked_as_full === false && slot.possible_guests?.includes(s.searchQuery.party))
             && shift.closed === false && shift.marked_as_full === false && shift.prepayment_param === null && shift.is_offer_required === false && shift.confirmation?.is_auto === true
@@ -349,7 +364,9 @@ export class ZenchefPlaywright {
           const termsLabel = s.page.locator('[data-testid="eula-checkbox"]');
           const text = await termsLabel.count() === 1 ? await termsLabel.innerText() : '';
           s.terms = { text, version: digest([text, form.restaurantComment || null, shift || null]),
-            url: `https://bookings.zenchef.com/gtc?rid=${s.venue.venueId}&lang=fr` };
+            url: `https://bookings.zenchef.com/gtc?rid=${s.venue.venueId}&lang=fr`,
+            ...(s.venue === ZENCHEF_GIGI_TAVOLA ? { venueNotice: typeof shift?.comment?.fr === 'string' ? shift.comment.fr : '',
+              confirmationMode: 'request', providerConfirmationVerified: false } : {}) };
           if (!text.trim()) s.noCardAllowed = false;
           s.state = 'contact'; s.review = null;
           return await this.snapshot(s);
@@ -395,6 +412,7 @@ export class ZenchefPlaywright {
           if (digest([s.owner, s.id, s.restaurantId, actual, s.terms?.version]) !== s.review.digest) throw new ZenchefError('stale_review', 409);
           // Arpège's actual form requires a card imprint; no card/booking request
           // has been verified or authorized. Do not click its validate button.
+          if (s.venue.preparationOnly) throw new ZenchefError(s.venue.submissionBlocker, 409);
           if (!s.noCardAllowed) throw new ZenchefError('card_and_supplier_submission_unverified', 409);
           if (!this.enableSubmission || !s.lastSnapshot.canSubmit) throw new ZenchefError('submission_disabled', 409);
           if (action.termsVersion !== s.terms.version || !/^[a-zA-Z0-9_-]{16,100}$/.test(action.idempotencyKey || '')) throw new ZenchefError('confirmation_required', 409);
