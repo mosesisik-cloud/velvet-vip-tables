@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-213-dekas-offer";
+const VERSION = "v4-real-214-italiano-dining";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
