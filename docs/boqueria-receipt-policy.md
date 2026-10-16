@@ -61,3 +61,13 @@ type0 meal contract before enabling, not a payment blocker for Lunch63588. No
 broad factory relaxation or Dagmar contact probe. Initial HTML SHA256:
 `59eaa2bc0f131dfaa5069fcd2689cef7f0fb79b17c148a29e633a0a2f73e6031`.
 Boqueria was the only fallback; Paraden/OLLI not reprobed, no broad inventory.
+
+## Integrated verification
+
+Runtime556b0b0 adds only the independent receipt-policy flag.18focused tests and
+narrow independent review pass. Actualapp/API/Chromium/SQLite harness8c4171d
+passed84API/4restarts/3mockPOST on that exactruntime. ExactBoqueria/LUNCH receipt,
+guest/noaccountcode,Next-onlyphone,freshconsent,SQLitebeforeNETWORK,doubleclick,
+wrong/missingreceiptunknown,matchingoriginalreceiptconfirmed and owner/restart/
+replay pass. Dinner/payment/events exclusion covered by focused policy tests.
+No pre-DOM-click claim; zero actualsupplier reservations/holds/codes/payments.
