@@ -99,6 +99,9 @@ export class BokabordMirror {
           try { query = r.postDataJSON(); } catch {}
           if (!matchesApprovedBooking(query, s.approval)) { s.blocked = true; s.result = { status: 'payload_mismatch' }; return route.abort(); }
           try { await this.reserveSubmission(s.approval, s); } catch { s.result = { status: 'already_attempted' }; return route.abort(); }
+          if (s.receiptVerificationEnabled) s.dispatchObservation = {dispatchedAt:Date.now(),request:{
+            method:r.method(),url:r.url(),payload:structuredClone(query),
+          }};
           s.submitted = true; s.result = { status: 'unknown' };
           return route.continue();
         }
@@ -112,9 +115,24 @@ export class BokabordMirror {
       s.page = await context.newPage();
       s.page.on('response', response => {
         this.assets.capture(response).catch(() => {});
-        if (!s.submitted || response.url() !== 'https://app.bokabord.se/reservation/api/booking/saveBooking') return;
+        if (!s.submitted) return;
+        if (response.url() !== 'https://app.bokabord.se/reservation/api/booking/saveBooking') {
+          if (s.receiptVerificationEnabled) {
+            try {
+              const request = response.request?.();
+              const address = new URL(response.url());
+              if (request?.isNavigationRequest() && request.method() === 'GET' && request.frame() === s.page.mainFrame()
+                && address.origin === 'https://app.bokabord.se' && address.pathname === '/reservation/booking/') {
+                s.receiptPromise = this.captureReceipt(s,response,Date.now()).catch(() => {});
+              }
+            } catch { /* A detached frame is not confirmation evidence. */ }
+          }
+          return;
+        }
+        const respondedAt=Date.now();
         s.resultPromise = (async () => {
         const data = await response.json().catch(() => null);
+        if (s.receiptVerificationEnabled) s.responseObservation = {data,httpOk:response.ok?.() === true,respondedAt};
         s.result = response.ok?.() === true ? (this.verifyResult ? await this.verifyResult(data, s) : classifyBokabordResult(data)) : { status: 'unknown', reason: 'supplier_http_error' };
         if (s.result) await this.recordResult?.(s);
       })().catch(() => { s.result = { status: 'unknown' }; }); });
@@ -140,6 +158,34 @@ export class BokabordMirror {
     await s.page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
     // A date click can start the provider AJAX queue during the render frames.
     await s.page.waitForFunction(providerReady, null, { timeout: 8000 });
+  }
+
+  async captureReceipt(s, response, navigatedAt) {
+    // Observe the provider's own navigation; never construct or fetch a receipt URL.
+    // The private request/response/document stay only in this owned browser session.
+    await s.resultPromise;
+    if (!s.dispatchObservation || !s.responseObservation?.httpOk || s.result?.status !== 'unknown'
+      || response.ok?.() !== true || !this.verifyResult || typeof this.recordResult !== 'function') return;
+    let timer;
+    try {
+      await Promise.race([response.finished(),new Promise((_,reject)=>{
+        timer=setTimeout(()=>reject(new Error('receipt_deadline')),5000);
+      })]);
+    } finally {clearTimeout(timer);}
+    await s.page.waitForLoadState('domcontentloaded',{timeout:5000});
+    const address=response.url();
+    if (s.page.url() !== address) return;
+    const text=await s.page.locator('body').innerText({timeout:5000});
+    if (text.length > 64000 || s.page.url() !== address || this.sessions.get(s.id) !== s) return;
+    const result=await this.verifyResult(s.responseObservation.data,s,{
+      httpOk:s.responseObservation.httpOk,respondedAt:s.responseObservation.respondedAt,
+      request:s.dispatchObservation.request,
+      receipt:{mainFrame:true,method:'GET',httpOk:true,url:address,navigatedAt,capturedAt:Date.now(),text},
+    });
+    if (result?.status !== 'confirmed') return;
+    s.result=result;
+    try { await this.recordResult?.(s); }
+    catch { s.result={status:'unknown',reason:'result_persistence_failed'}; }
   }
 
   async snapshot(s) {
@@ -204,7 +250,7 @@ export class BokabordMirror {
         if (this.live && JSON.stringify(approval) !== JSON.stringify(await this.bookingDetails(s))) throw new MirrorError('stale_view', 409);
         const review = await s.page.getByRole('heading', { name: 'Kontrollera din bokning', exact: true }).isVisible();
         if (!review && !await s.page.getByRole('heading', { name: 'Kontaktuppgifter', exact: true }).isVisible()) throw new MirrorError('contact_required');
-        s.approval = approval; s.armed = true;
+        s.approval = approval; s.armed = review;
         const response = s.page.waitForResponse(r => r.url() === 'https://app.bokabord.se/reservation/api/booking/saveBooking', { timeout: 20_000 }).catch(() => null);
         await s.page.getByRole('button', { name: review ? /Slutför bokningen/i : 'Nästa', exact: !review }).click();
         if (!review) {
@@ -215,6 +261,7 @@ export class BokabordMirror {
         if (s.submitted || review) await response;
         await s.resultPromise;
         if (s.submitted) await s.page.waitForURL(/\/reservation\/booking\//, { timeout: 5000 }).catch(() => {});
+        await s.receiptPromise;
         s.armed = false;
       } else if (action.type === 'fill') {
         if (!await s.page.getByRole('heading', { name: 'Kontaktuppgifter', exact: true }).isVisible()) throw new MirrorError('contact_required');

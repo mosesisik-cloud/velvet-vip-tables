@@ -3,10 +3,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { bokabordApprovalDigest, verifyZinkBookingConfirmation } from './bokabord-confirmation-policy.mjs';
 import { classifyBokabordResult } from './booking-result.mjs';
+import { createBokabordReceiptVerifier } from './bokabord-receipt-confirmation.mjs';
 
 // Bridge the native Bokabord hook to the shared ledger. The old JSON journal is
 // a read-only duplicate guard; all new attempts have exactly one write authority.
-export function createBookingJournalHooks({ ledger, legacyLedger, register, restaurants }) {
+export function createBookingJournalHooks({ ledger, legacyLedger, register, restaurants, receiptPolicies = [] }) {
+  const receiptVerifiers = new Map(receiptPolicies.map(policy => [policy.restaurantId,createBokabordReceiptVerifier(policy)]));
   const row = (attempt, owner, restaurant) => ({
     id: `PB-${attempt.attemptId}`, userId: owner, restaurantId: attempt.restaurantId,
     restaurant, destination: 'Stockholm', provider: attempt.provider,
@@ -20,10 +22,11 @@ export function createBookingJournalHooks({ ledger, legacyLedger, register, rest
       const oldKey = legacyLedger.key(approval, session);
       // Existence, including an unreadable/partial old journal, must fail closed.
       if (fs.existsSync(path.join(legacyLedger.directory, `${oldKey}.json`))) throw new Error('already_attempted');
+      const receiptDigest = receiptVerifiers.get(session.restaurantId)?.approvalDigest(approval);
       const input = {
         owner: session.owner, provider: 'BokaBord', restaurantId: session.restaurantId,
         sessionId: session.id, mode: 'live', idempotencyKey: session.id,
-        reviewFingerprint: bokabordApprovalDigest(approval) || crypto.createHash('sha256').update(JSON.stringify({
+        reviewFingerprint: receiptDigest || bokabordApprovalDigest(approval) || crypto.createHash('sha256').update(JSON.stringify({
           restaurantId: session.restaurantId, revision: session.revision, approval,
         })).digest('hex'),
         date: approval.date, time: approval.time, party: approval.party,
@@ -32,14 +35,22 @@ export function createBookingJournalHooks({ ledger, legacyLedger, register, rest
       // Native adapters do not inspect hook return values. Throw BEFORE any send.
       if (!gate.sendAllowed) throw new Error('already_attempted');
       session.playwrightAttempt = gate.attempt;
+      session.receiptVerificationEnabled = !!receiptDigest;
       register.upsert(row(gate.attempt, session.owner, session.restaurant));
     },
-    verifyResult(data, session) {
+    verifyResult(data, session, receiptObservation = null) {
       const reserved = session.playwrightAttempt;
       if (reserved && session.submitted === true) {
         // One canonical approved-details digest across policy and durable store.
         // The observation originates only in this session's intercepted response.
         const attempt = { ...reserved, detailsDigest: reserved.reviewFingerprint, dispatched: true };
+        const receiptVerifier = receiptVerifiers.get(session.restaurantId);
+        if (receiptVerifier && session.receiptVerificationEnabled && receiptObservation) {
+          const verified = receiptVerifier.verify({...attempt,dispatchedAt:session.dispatchObservation?.dispatchedAt},session.approval,{
+            ...attempt,source:'provider',data,...receiptObservation,
+          });
+          if (verified.status === 'confirmed') return verified;
+        }
         const verified = verifyZinkBookingConfirmation(attempt, session.approval, {
           ...attempt, httpOk: true, source: 'provider', data,
         });
