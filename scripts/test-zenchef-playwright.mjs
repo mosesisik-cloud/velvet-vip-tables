@@ -4,7 +4,7 @@ import { test, before, after, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import { chromium } from 'playwright';
-import { ZenchefPlaywright, ZENCHEF_ARPEGE, allowedZenchefInspectionRequest,
+import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, approvedZenchefPayload, zenchefBookingResult, allowedZenchefInspectionRequest,
   zenchefSearchUrl, zenchefAvailabilityEvidence, zenchefFormUrl, allowedZenchefPreparationRequest } from '../api/providers/zenchef-playwright.mjs';
 
 const fixture = (status = 'confirmed', reference = 'LOCAL-TEST-ONLY') => `<!doctype html><html><body>
@@ -251,4 +251,69 @@ test('actual provider field contract replay reaches review but never sends booki
   s = a.current('owner'); s = await act(a, s, { type: 'review' });
   await assert.rejects(act(a, s, { type: 'submit', reviewToken: s.reviewToken, confirm: true, terms: true }), /card_and_supplier_submission_unverified/);
   assert.equal(reserveCalls, 0);
+});
+
+
+// Entire transport intercepted locally, including synthetic supplier receipts.
+test('Fish Corner native contract binds approval, reserves once and records provider-shaped result', async () => {
+  for (const scenario of ['confirmed', 'denied', 'persistence', 'payment', 'country']) {
+    const date = '2030-11-16'; let sends = 0, reserves = 0, recorded;
+    const fields = { firstname: 'Fixture', lastname: 'Guest', email: 'fixture@example.invalid', phone: '+33612345678', civility: 'mr', country: scenario === 'country' ? 'se' : 'fr' };
+    const payload = { day: date, nb_guests: 2, time: '12:30', lang: 'fr', firstname: fields.firstname, lastname: fields.lastname,
+      civility: 'mr', country: 'fr', phone_number: fields.phone, email: fields.email, comment: '', custom_field: {}, custom_field_v2: [],
+      customersheet: { firstname: fields.firstname, lastname: fields.lastname, civility: 'mr', phone: fields.phone,
+        email: fields.email, optins: [{ type: 'review_mail', value: true }, { type: 'review_sms', value: true }], country: 'fr', lang: 'fr' },
+      offers: [], partner_id: '1001', type: 'web' };
+    const document = url => {
+      const u = new URL(url), isForm = u.pathname === '/form';
+      const slot = { name: '12:30', closed: false, marked_as_full: false, bookable_from: null, bookable_to: null, possible_guests: [2], available_rooms: { 2: [1] } };
+      const shift = { id: 545372, closed: false, marked_as_full: false, bookable_from: null, bookable_to: null, shift_slots: [slot],
+        charge_param: null, prepayment_param: null, is_offer_required: false, confirmation: { is_auto: true } };
+      const state = { restaurantId: '388090', initializedSSR: true, restaurantTimezone: 'America/Guadeloupe', isDisabled: 0,
+        wish: { day: date, pax: 2, waiting_list: false, offers: [], room_id: null, ...(isForm ? { slot: '12:30' } : {}) },
+        mandatoryFields: { firstname: 'required' }, isRoomMandatory: false, dailyAvailabilities: { [date]: { date, shifts: [shift, { ...shift, id: 545347 }] } } };
+      const data = { page: isForm ? '/form' : '/results', query: Object.fromEntries(u.searchParams), props: { initialState: { appStoreState: state } } };
+      return `<html><body><h1>LOCAL NATIVE CONTRACT REPLAY</h1><script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
+        ${isForm ? ['firstname','lastname','email','phone'].map(k=>`<input data-testid="${k}-input">`).join('') +
+        `<label>Mr<input type="radio" name="civility" value="mr" style="display:none"></label><label data-testid="eula-checkbox"><input type="checkbox">Test terms</label>
+        <button data-testid="validate-btn" onclick='fetch("https://bookings-middleware.zenchef.com/booking?restaurantId=388090",{method:"POST",body:JSON.stringify(${JSON.stringify(payload)})}).catch(()=>{})'>Reserve</button>` : ''}</body></html>`;
+    };
+    const a = new ZenchefPlaywright({ mode: 'prepare', enableSubmission: true, now: () => Date.parse('2030-11-15T12:00:00Z'),
+      reserveSubmission: async intent => { reserves++; assert.equal(intent.mode, 'live'); assert.equal(intent.phase, 'booking');
+        assert.match(intent.reviewFingerprint, /^[a-f0-9]{64}$/); return { sendAllowed: scenario !== 'denied', attempt: { attemptId: 'synthetic-attempt', idempotencyKey: 'journal-owned-key' } }; },
+      recordResult: async session => { recorded = structuredClone(session.result); if (scenario === 'persistence') throw Error('disk'); },
+      browserFactory: async () => ({ close: async () => {}, newContext: async opts => {
+        const context = await browser.newContext(opts); const route = context.route.bind(context);
+        context.route = (pattern, handler) => route(pattern, original => handler({ request: () => original.request(), abort: () => original.abort(),
+          fetch: async options => {
+            assert.equal(options.maxRedirects, 0);
+            if (original.request().method() === 'POST') { sends++; assert.equal(options.maxRetries, 0);
+              assert.deepEqual(JSON.parse(options.postData).customersheet.optins, []); }
+            return { status: () => 200, json: async () => ({ id: 12345, uuid: 'synthetic-only', status: 'confirmed', ...(scenario === 'payment' ? { requires_action: true } : {}) }) };
+          },
+          fulfill: () => original.fulfill({ status: 200, contentType: original.request().method() === 'POST' ? 'application/json' : 'text/html',
+            body: original.request().method() === 'POST' ? '{}' : document(original.request().url()) }) })); return context;
+      } }) });
+    adapters.push(a);
+    let s = await a.create('owner', ZENCHEF_FISHCORNER.restaurantId);
+    s = await act(a,s,{type:'search',date,party:2}); assert.deepEqual(s.availabilityEvidence.candidates,[{time:'12:30',shiftId:545372}]);
+    s = await act(a,s,{type:'select',time:'12:30',shiftId:545372}); assert.equal(s.fields.length,6);
+    s = await act(a,s,{type:'fill',fields}); s = await act(a,s,{type:'review'}); assert.equal(s.canSubmit,true);
+    const command = {type:'submit',reviewToken:s.reviewToken,termsVersion:s.terms.version,terms:true,confirm:true,idempotencyKey:'local-synthetic-key-1234'};
+    const r = await act(a,s,command);
+    assert.equal(r.result.status, scenario === 'confirmed' ? 'confirmed' : scenario === 'payment' ? 'payment_required' : 'unknown');
+    assert.equal(sends, ['denied','country'].includes(scenario) ? 0 : 1); assert.equal(reserves, scenario === 'country' ? 0 : 1);
+    assert.equal(r.canSubmit,false); assert.equal(a.current('owner').canSubmit,false);
+    if (scenario === 'confirmed') { assert.equal(recorded.verification.attemptId,'synthetic-attempt'); assert.equal(recorded.verification.mode,'live'); assert.equal(recorded.verification.idempotencyKey,'journal-owned-key');
+      r.result.verification.verified=false; assert.equal(a.current('owner').result.verification.verified,true); }
+    await assert.rejects(act(a,r,command), /already_attempted/);
+    await a.close();
+  }
+});
+
+test('supplier receipt never promotes missing reference, payment or unknown status to confirmed', () => {
+  for (const data of [{status:'confirmed'}, {id:1,uuid:'x',status:'pending'}, {id:1,uuid:'x',status:'confirmed',charge:{}}])
+    assert.notEqual(zenchefBookingResult(200,data).status,'confirmed');
+  assert.equal(zenchefBookingResult(500,{id:1,uuid:'x',status:'confirmed'}).status,'unknown');
+  assert.equal(approvedZenchefPayload({unexpected:true},{}),null);
 });
