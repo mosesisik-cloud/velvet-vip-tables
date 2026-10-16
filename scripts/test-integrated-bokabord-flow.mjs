@@ -34,16 +34,17 @@ const kommendoren = process.argv.includes('--kommendoren') || process.env.VELVET
 const astrid = process.argv.includes('--astrid') || process.env.VELVET_TEST_PROVIDER === 'Astrid';
 const vau = process.argv.includes('--vau') || process.env.VELVET_TEST_PROVIDER === 'Vau';
 const boqueria = process.argv.includes('--boqueria') || process.env.VELVET_TEST_PROVIDER === 'Boqueria';
-const guestLunch = beirut || balzac || kommendoren || astrid || vau || boqueria;
+const dagmar = process.argv.includes('--dagmar') || process.env.VELVET_TEST_PROVIDER === 'Dagmar';
+const guestLunch = beirut || balzac || kommendoren || astrid || vau || boqueria || dagmar;
 const guestChoice = ciccios || guestLunch;
 const contactFinal = riche || sturehof;
-assert.ok([fishcorner,pesquiere,pirouette,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria].filter(Boolean).length <= 1, 'Choose one named provider scenario');
+assert.ok([fishcorner,pesquiere,pirouette,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar].filter(Boolean).length <= 1, 'Choose one named provider scenario');
 const receiptMode = noema || guestChoice || contactFinal;
-const receiptName = boqueria ? 'Boqueria' : vau ? 'Vau De Ville' : astrid ? 'Brasserie Astrid' : kommendoren ? 'Kommendören' : balzac ? 'Brasserie Balzac' : beirut ? 'Beirut Café' : sturehof ? 'Sturehof' : riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
-const receiptCode = boqueria ? 'synthetic-boqueria-only' : vau ? 'synthetic-vau-only' : astrid ? 'synthetic-astrid-only' : kommendoren ? 'synthetic-kommendoren-only' : balzac ? 'synthetic-balzac-only' : beirut ? 'synthetic-beirut-only' : sturehof ? 'synthetic-sturehof-only' : riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
-const mealId = boqueria ? 22 : vau ? 22476 : astrid ? 55508 : kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
-const mealType = noema || guestLunch || contactFinal ? 2 : 3;
-const restaurantId = boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const receiptName = dagmar ? 'Villa Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau De Ville' : astrid ? 'Brasserie Astrid' : kommendoren ? 'Kommendören' : balzac ? 'Brasserie Balzac' : beirut ? 'Beirut Café' : sturehof ? 'Sturehof' : riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
+const receiptCode = dagmar ? 'synthetic-dagmar-only' : boqueria ? 'synthetic-boqueria-only' : vau ? 'synthetic-vau-only' : astrid ? 'synthetic-astrid-only' : kommendoren ? 'synthetic-kommendoren-only' : balzac ? 'synthetic-balzac-only' : beirut ? 'synthetic-beirut-only' : sturehof ? 'synthetic-sturehof-only' : riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
+const mealId = dagmar ? 63588 : boqueria ? 22 : vau ? 22476 : astrid ? 55508 : kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
+const mealType = dagmar ? 0 : noema || guestLunch || contactFinal ? 2 : 3;
+const restaurantId = dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
 const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[receiptMode ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 const date = '2030-01-15';
@@ -220,6 +221,8 @@ if (childMode) {
               const approved=target.request().postDataJSON();
               const data={success:true,booking:{...approved,id:999999999,status:1,meal:{type:mealType,bullets:{}},waitlist:0,require_noshow:false,
                 short_code:receiptCode,phone:Number(String(approved.phone).replace(/\D/g,''))}};
+              if(dagmar&&process.env.VELVET_TEST_OUTCOME==='wrong-meal')data.booking.mealid=63589;
+              if(dagmar&&process.env.VELVET_TEST_OUTCOME==='requirement')data.booking.require_noshow=true;
               const body=JSON.stringify(data);
               return {status:()=>200,ok:()=>true,json:async()=>data,body:async()=>Buffer.from(body),
                 headers:()=>({'content-type':'application/json'}),url:()=>saveUrl,
@@ -335,7 +338,7 @@ async function main() {
     backend = `http://127.0.0.1:${port}`;
     child = spawn(process.execPath, ['--import', import.meta.url, 'api/server.mjs'], { cwd: root, env: {
       ...process.env, VELVET_INTEGRATED_SUPPLIER_FIXTURE: 'child', VELVET_TEST_DIRECTORY: directory,
-      VELVET_TEST_PROVIDER: boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
+      VELVET_TEST_PROVIDER: dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
       VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_CICCIOS_RECEIPT: ciccios ? 'enabled' : 'disabled',
       VELVET_RICHE_RECEIPT: riche ? 'enabled' : 'disabled',
@@ -346,6 +349,7 @@ async function main() {
       VELVET_ASTRID_RECEIPT: astrid ? 'enabled' : 'disabled',
       VELVET_VAU_RECEIPT: vau ? 'enabled' : 'disabled',
       VELVET_BOQUERIA_RECEIPT: boqueria ? 'enabled' : 'disabled',
+      VELVET_DAGMAR_RECEIPT: dagmar ? 'enabled' : 'disabled',
       VELVET_ZENCHEF_FISHCORNER: zenchef ? 'live' : 'disabled',
       VELVET_ZENCHEF_PESQUIERE: roomVenue ? 'live' : 'disabled',
       VELVET_ZENCHEF_PIROUETTE: pirouette ? 'live' : 'disabled',
@@ -756,12 +760,26 @@ async function main() {
       assert.equal(persisted.body.attempts[0].status,'confirmed'); assert.equal(persisted.body.attempts[0].reference,'999999999');
     }
     console.log(receiptMode ? 'PASS receipt policy: POST remains unknown until provider main-frame receipt; static completion document confirms matching reference and survives restart' : 'PASS scoped positive Zink receipt through actual app/API/adapter/journal, owner recovery and reference; supplier remains simulated');
+    if(dagmar){
+      for(const outcome of ['wrong-meal','requirement']){
+        await stop();await start(outcome);const view=await makeView();
+        try{
+          await toReview(view.page);await panel(view.page).locator('[data-terms]').check();
+          const before=submits();await panel(view.page).locator('[data-submit]').click();
+          await view.page.waitForFunction(()=>document.querySelector('#bokabord-mirror [data-status]')?.dataset.bookingStatus==='unknown',null,{timeout:40000});
+          await settled(view.page);assert.equal(submits(),before+1);
+          const result=await api(view.page,'/restaurant-bookings/playwright/attempts');
+          assert.equal(result.body.attempts[0].status,'unknown',outcome+' cannot use the type-0 exception');
+        }finally{await view.context.close();}
+      }
+      console.log('PASS Dagmar type-0 wrong meal and no-show requirement remain unknown');
+    }
     assert.equal(messages.filter(m => m.kind === 'unexpected-supplier-request').length, 0);
     assert.equal(messages.filter(m => m.kind === 'blocked-node-network').length, 0);
     console.log(JSON.stringify({ status: 'PASS', evidence: 'real_local_app_api_adapter_journal_with_supplier_fixture',
       integrationCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
       supplierBoundaryAttempts: submits(), actualSupplierRequests: 0, liveConfirmationVerified: false,
-      restaurantId,backendRestarts: receiptMode ? 4 : 3, APIRequests: apiCalls.length, deployed: false }));
+      restaurantId,backendRestarts: dagmar ? 6 : receiptMode ? 4 : 3, APIRequests: apiCalls.length, deployed: false }));
     console.log('Mirror startup timings:', JSON.stringify(apiCalls.filter(call => call.method === 'POST'
       && call.path === '/restaurant-bookings/mirror').map(({ status, responseMs }) => ({ status, responseMs }))));
     console.log('Browser startup events:', JSON.stringify(messages.filter(event => event.kind.startsWith('browser-'))));
