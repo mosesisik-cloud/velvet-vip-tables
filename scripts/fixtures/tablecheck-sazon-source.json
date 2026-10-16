@@ -1,0 +1,777 @@
+{
+  "source": {
+    "observedOn": "2026-10-16",
+    "htmlSha256": "dfe634447cde9610a1b5730aa07edda0a4b6603ddb4f38d043095cb9d93a557e",
+    "gridSha256": "484b23cbfe4fef2aa31eb7b89c82b1b32f90c51bbd1d2e2919059e8e68ba6fa0",
+    "note": "Public SSR subset; image URLs and tracking config removed. Raw grid is the single actual negative response; no successful booking fixture."
+  },
+  "context": {
+    "/booking/booking_pages": {
+      "get": {
+        "shop": {
+          "slug": "regent-bali-canggu-sazon",
+          "name_translations": [
+            {
+              "translation": "Sazón",
+              "locale": "en"
+            }
+          ],
+          "alt_name": null,
+          "location_name_translations": [
+            {
+              "translation": " Regent Bali Canggu",
+              "locale": "en"
+            }
+          ],
+          "alt_location_name": "",
+          "address_translations": [
+            {
+              "translation": "Jl. Pantai Batu Bolong No. 93 xx\nCanggu, Kuta Utara\nBadung, Bali",
+              "locale": "id"
+            }
+          ],
+          "latitude": -8.656865999999999,
+          "longitude": 115.131162,
+          "map_link_url": "https://www.google.com/maps/search/?api=1&query=none&query_place_id=ChIJyQinFABH0i0RfxRmcjAtIJ8",
+          "google_place_ref": "ChIJyQinFABH0i0RfxRmcjAtIJ8",
+          "default_locale": "id",
+          "country": "ID",
+          "currency": "IDR",
+          "time_zone": "Asia/Makassar",
+          "tz_utc_offset": 28800,
+          "phone": "+6281138312785",
+          "phone_natl": "0811-3831-2785",
+          "homepage_url": "https://www.ihg.com/regent/hotels/us/en/bali/dpscr/hoteldetail/dining",
+          "inquiry_url": null,
+          "tags": [],
+          "cuisines": [],
+          "budget_lunch": null,
+          "budget_dinner": null,
+          "content_title_translations": [],
+          "content_body_translations": [],
+          "enable_ims": false,
+          "enable_ims_intl": false,
+          "enable_sms": false,
+          "enable_sms_intl": false,
+          "selectable_locales": null,
+          "booking_page_mode": "v2",
+          "enable_payments": false,
+          "smartpay_mode": "none",
+          "use_payments_v2": false,
+          "payment_gateways": [],
+          "payment_postpay_advance_days": null,
+          "apply_tax_to_service_fee": true,
+          "payment_cancel_protection_mode": "auth",
+          "tablecheck_branding": "minimal",
+          "whitelabel_domain": null,
+          "web_tracker_events": [
+            "header",
+            "reserve_form",
+            "reserve_review",
+            "reserve_success"
+          ],
+          "id": "679ad6c65cfb12f1c5492a58",
+          "chain_shops": [],
+          "social_links": [],
+          "service_categories": [
+            {
+              "id": "67ede6491665688e049db792",
+              "name_translations": [
+                {
+                  "translation": "Chef&#39;s Counter",
+                  "locale": "en"
+                }
+              ],
+              "description_translations": [],
+              "image_url": null,
+              "position": 0
+            },
+            {
+              "id": "67ede62878c6d46c6b5635d9",
+              "name_translations": [
+                {
+                  "translation": "Bar Counter",
+                  "locale": "en"
+                }
+              ],
+              "description_translations": [],
+              "image_url": null,
+              "position": 1
+            },
+            {
+              "id": "67ede6556ef19efd750e6436",
+              "name_translations": [
+                {
+                  "translation": "Dining Area",
+                  "locale": "en"
+                }
+              ],
+              "description_translations": [],
+              "image_url": null,
+              "position": 2
+            },
+            {
+              "id": "694240f2ba31f5c7efe037a1",
+              "name_translations": [
+                {
+                  "translation": "Outdoor",
+                  "locale": "en"
+                }
+              ],
+              "description_translations": [],
+              "image_url": null,
+              "position": 3
+            }
+          ],
+          "membership_providers": [],
+          "menu_categories": [
+            {
+              "id": "69dba908384c982e1c10835f",
+              "name_translations": [
+                {
+                  "translation": "Fiesta Sazon",
+                  "locale": "en"
+                }
+              ],
+              "position": 0
+            },
+            {
+              "id": "679ad6c75cfb12f1c5492a87",
+              "name_translations": [
+                {
+                  "translation": "Course",
+                  "locale": "en"
+                },
+                {
+                  "translation": "コース",
+                  "locale": "ja"
+                },
+                {
+                  "translation": "코스",
+                  "locale": "ko"
+                },
+                {
+                  "translation": "菜品",
+                  "locale": "zh-CN"
+                },
+                {
+                  "translation": "菜品",
+                  "locale": "zh-TW"
+                },
+                {
+                  "translation": "Kurs",
+                  "locale": "de"
+                },
+                {
+                  "translation": "Corso",
+                  "locale": "es"
+                },
+                {
+                  "translation": "Cours",
+                  "locale": "fr"
+                },
+                {
+                  "translation": "Portata",
+                  "locale": "it"
+                },
+                {
+                  "translation": "Curso",
+                  "locale": "pt"
+                },
+                {
+                  "translation": "Курс",
+                  "locale": "ru"
+                },
+                {
+                  "translation": "Hidangan",
+                  "locale": "id"
+                },
+                {
+                  "translation": "Makanan",
+                  "locale": "ms"
+                },
+                {
+                  "translation": "Course",
+                  "locale": "tl"
+                },
+                {
+                  "translation": "คอร์สการเสิร์ฟอาหาร",
+                  "locale": "th"
+                },
+                {
+                  "translation": "ຫຼັກສູດການເສີບອາຫານ",
+                  "locale": "lo"
+                },
+                {
+                  "translation": "Món",
+                  "locale": "vi"
+                },
+                {
+                  "translation": "وجبة",
+                  "locale": "ar"
+                }
+              ],
+              "position": 1
+            }
+          ],
+          "pax_categories": []
+        },
+        "booking_page": {
+          "shop_slug": "regent-bali-canggu-sazon",
+          "franchise_id": "6743dbcfb3454469396822df",
+          "page_slug": null,
+          "is_active": true,
+          "is_robots_noindex": false,
+          "tablecheck_login": "hide",
+          "request_tablecheck_login": "required",
+          "show_social_login": true,
+          "show_shop_select": true,
+          "show_special_request": true,
+          "seat_types": [
+            "open",
+            "counter",
+            "outside"
+          ],
+          "show_menu_rules": [
+            "valid_dates",
+            "days",
+            "meals",
+            "valid_times",
+            "order_limit",
+            "service_categories",
+            "qty_remaining"
+          ],
+          "show_smoking": false,
+          "show_phone_flag": true,
+          "sms_default_opted_in": false,
+          "input_marketing": "show_opted_out",
+          "reservation_auto_accept": true,
+          "require_email_confirmation": false,
+          "require_waitlist_email_confirmation": false,
+          "legacy_theme": "",
+          "legacy_logo_image_url": null,
+          "legacy_header_image_url": null,
+          "offers_checkbox_use_location_name": false,
+          "merchant_message_placement": "start",
+          "light_booking_theme_id": null,
+          "dark_booking_theme_id": "679ae014de876b2477216495-dark",
+          "booking_services": [
+            {
+              "id": "679ad6c65cfb12f1c5492a58",
+              "service_mode": "dining",
+              "show_promo_code": false,
+              "merchant_message_translations": [
+                {
+                  "translation": "<b>WHAT&#39;S ON\r\nMediterranean Made in Bali</b>: 23 October\r\n<b><a href=\"https://www.tablecheck.com/regent-bali-canggu-sazon/reserve/experience/sazonfiesta\">Sazón Fiesta</a>:</b> Thursdays (8 PM until late)\r\n<b><a href=\"https://www.tablecheck.com/regent-bali-canggu-sazon/reserve/experience/paella-class\">Paella Masterclass</a>:</b> With prior booking (6 PM)\r\n\r\nWelcome to Sazón, your neighborhood Mediterranean hideaway on Batu Bolong, where vibrant atmosphere meets authentic flavours. Led by award-winning Chef Andrew Walsh, our open-fire restaurant and bar celebrate the soul of the Mediterranean.\r\n\r\nFor bookings larger than ten people, please reach us on whatsapp.\r\n\r\nFollow us on <a href=\"https://www.instagram.com/sazon.bali/\">Instagram</a> or connect through <a href=\"http://wa.me/6281138316575\">WhatsApp</a> for the latest updates.",
+                  "locale": "en"
+                }
+              ],
+              "booking_policy_translations": [
+                {
+                  "translation": "<b>WHAT&#39;S ON\r\nMediterranean Made in Bali</b>: 23 October\r\n<b><a href=\"https://www.tablecheck.com/regent-bali-canggu-sazon/reserve/experience/sazonfiesta\">Sazón Fiesta</a>:</b> Thursdays (8 PM until late)\r\n<b><a href=\"https://www.tablecheck.com/regent-bali-canggu-sazon/reserve/experience/paella-class\">Paella Masterclass</a>:</b> With prior booking (6 PM)\r\n\r\nWelcome to Sazón, your neighborhood Mediterranean hideaway on Batu Bolong, where vibrant atmosphere meets authentic flavours. Led by award-winning Chef Andrew Walsh, our open-fire restaurant and bar celebrate the soul of the Mediterranean.\r\n\r\nFor bookings larger than ten people, please reach us on whatsapp.\r\n\r\nFollow us on <a href=\"https://www.instagram.com/sazon.bali/\">Instagram</a> or connect through <a href=\"http://wa.me/6281138316575\">WhatsApp</a> for the latest updates.",
+                  "locale": "en"
+                }
+              ],
+              "booking_policy_placement": "popup",
+              "booking_policy_require_confirm": false,
+              "cancel_policy_translations": [
+                {
+                  "translation": "<b>RESERVATION INFORMATION</b>\r\n• Table will be held for 15 minutes from the confirmed reservation time.\r\n• Kindly inform us of the purpose of your visit (birthday, anniversary, business meeting, etc.) so we may prepare accordingly.\r\n• Should you have any dietary restrictions or allergies, please notify us at the time of booking.\r\n• In the event of bad weather, reservations in the outdoor area will be accommodated without guarantee and subject to availability. \r\n\r\n<b>DINING DURATION</b>\r\n• 120 minutes for parties of 2–7 guests\r\n• 150 minutes for parties of 8 guests and above\r\n\r\n<b>LARGE GROUPS</b>\r\n- For groups of more than ten guests, we kindly ask that reservations be made directly with us via <a href=\"http://wa.me/6281138316575\">WhatsApp</a> or <a href=\"tel:+623612019999\">call</a>.\r\n\r\n<b>DRESS CODE</b>\r\nSmart casual attire is required.\r\n<i>Sportswear, sandals, and sleeveless shirts are not permitted.</i>\r\n",
+                  "locale": "en"
+                }
+              ],
+              "prompt_cancel_reason": false,
+              "request_policy_translations": [],
+              "request_policy_placement": "popup",
+              "request_policy_require_confirm": true,
+              "waitlist_policy_translations": [],
+              "waitlist_policy_placement": "popup",
+              "waitlist_policy_require_confirm": true,
+              "voucher_cancel_policy_translations": [
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "en"
+                },
+                {
+                  "translation": "バウチャーを利用して予約し、キャンセル料が発生する場合、バウチャーより優先的に相殺します。キャンセル発生時点で本バウチャーは利用済み扱いとなり、残額の返金は行いません。あらかじめご了承ください。",
+                  "locale": "ja"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "ko"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "zh-CN"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "zh-TW"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "de"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "es"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "fr"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "nl"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "it"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "pt"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "tr"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "ru"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "id"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "ms"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "tl"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "th"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "lo"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "km"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "vi"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "ar"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "he"
+                },
+                {
+                  "translation": "If the voucher is used for the reservation and a cancellation fee is applied, cancellation fee will be offset in priority to vouchers. The voucher status will be used at the time of cancellation and no refunds will be made for the remaining amount.",
+                  "locale": "hi"
+                }
+              ],
+              "landing_page_experience_mode": "link",
+              "questions": [
+                {
+                  "id": "679ad6c65cfb12f1c5492a55",
+                  "is_required": false,
+                  "question_translations": [
+                    {
+                      "translation": "Please inform us of any dietary restrictions or allergies to help us prepare for your arrival.",
+                      "locale": "en"
+                    }
+                  ],
+                  "ui_type": "textarea",
+                  "is_option_other": false,
+                  "question_options": []
+                },
+                {
+                  "id": "679ad6c65cfb12f1c5492a56",
+                  "is_required": false,
+                  "question_translations": [
+                    {
+                      "translation": "Are you a Regent Bali Canggu In-House Guest?",
+                      "locale": "en"
+                    }
+                  ],
+                  "ui_type": "checkboxes",
+                  "is_option_other": false,
+                  "question_options": [
+                    {
+                      "id": "69d20c8849daaebd85312f0d",
+                      "label_translations": [
+                        {
+                          "translation": "Yes",
+                          "locale": "en"
+                        }
+                      ]
+                    },
+                    {
+                      "id": "69d20c8849daaebd85312f0e",
+                      "label_translations": [
+                        {
+                          "translation": "No",
+                          "locale": "en"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "cancel_fee_rules": []
+            }
+          ],
+          "use_menu_show_locales": false,
+          "return_url_translations": [],
+          "offers_checkbox_text_translations": [],
+          "booking_fee_policy_html": null,
+          "payment_maintenance_alert_html": null,
+          "enable_texts_tc_otp": false,
+          "enable_request_any_datetime": false,
+          "request_reservation_enabled": false,
+          "purpose_options": [
+            "birthday",
+            "group",
+            "business",
+            "family",
+            "date",
+            "event"
+          ],
+          "calendar_availability_mode": "disabled",
+          "enable_optional_prepay": true,
+          "show_debit_card_warning": false,
+          "input_customer_phone": "required",
+          "input_customer_email": "required",
+          "require_email_unless_sms": true,
+          "input_customer_birthday": "hide",
+          "input_customer_birthday_year": "optional",
+          "input_customer_birthday_min_age": null,
+          "show_availability": true,
+          "show_timetable": false,
+          "show_experience_availability": false,
+          "availability_suggestion_priority": "other_shops",
+          "min_num_people": 1,
+          "max_num_people": 10,
+          "min_manual_duration": null,
+          "max_manual_duration": null,
+          "max_orders": null,
+          "input_duration": "hide",
+          "input_service_category": "optional",
+          "input_customer_gender": "hide",
+          "input_purpose": "optional",
+          "input_purpose_mode": "short",
+          "input_room_name": "optional",
+          "show_visit_history": false,
+          "show_menu_categories": false,
+          "show_menu_item_sold_out": false,
+          "show_baby": true,
+          "show_child": true,
+          "show_senior": false,
+          "age_baby": 3,
+          "age_child": 10,
+          "age_senior": 60,
+          "reservation_timeout": 300,
+          "include_in_sitemap": true,
+          "iframe_domains": [],
+          "time_interval": 900,
+          "timetable_interval": 900,
+          "waitlist_cta_button_text": null,
+          "waitlist_cta_link_url": null,
+          "input_waitlist_customer_email": "optional",
+          "input_waitlist_customer_phone": "required",
+          "input_waitlist_customer_gender": "hide",
+          "input_waitlist_customer_birthday": "hide",
+          "input_waitlist_customer_birthday_year": "optional",
+          "input_waitlist_customer_birthday_min_age": null,
+          "require_waitlist_email_unless_sms": false,
+          "waitlist_status_modes": [
+            "position"
+          ],
+          "show_request_text_preference": false,
+          "show_menu_on_landing_page": false,
+          "enable_waitlist_location_restriction": false,
+          "waitlist_location_restriction_radius_m": 500,
+          "footer_translations": [],
+          "terms_url_translations": [],
+          "privacy_url_translations": [],
+          "waitlist_cta_button_text_translations": [],
+          "waitlist_cta_link_url_translations": [],
+          "booking_affirmations": []
+        },
+        "booking_theme": {
+          "id": "679ae014de876b2477216495",
+          "custom_css": null,
+          "show_shop_name": false,
+          "theme_modes": [
+            "dark"
+          ],
+          "show_full_banner": false,
+          "show_dark_full_banner": true,
+          "use_banner_shade": true,
+          "use_dark_banner_shade": false,
+          "favicon_image_url": "https://4.image.cdn.tablecheck.com/unsafe/fit-in/1920x1080/filters:format(webp)/https://cdn2.tablecheck.com/booking_themes/679ae014de876b2477216495/favicon_images/original/125d8e3b.jpg?1738203460",
+          "preview_image_url": null,
+          "logo_image_url": null,
+          "canvas_image_url": null,
+          "banner_image_url": null,
+          "nav_title_image_url": null,
+          "dark_logo_image_url": "https://3.image.cdn.tablecheck.com/unsafe/fit-in/1920x1080/filters:format(webp)/https://cdn3.tablecheck.com/booking_themes/679ae014de876b2477216495/dark_logo_images/xl/def4803b.png?1738203460",
+          "dark_canvas_image_url": "https://image.cdn.tablecheck.com/unsafe/fit-in/1920x1080/filters:format(webp)/https://cdn2.tablecheck.com/booking_themes/679ae014de876b2477216495/dark_canvas_images/xl/3ba3651c.jpg?1738203460",
+          "dark_banner_image_url": "https://2.image.cdn.tablecheck.com/unsafe/fit-in/1920x1080/filters:format(webp)/https://cdn2.tablecheck.com/booking_themes/679ae014de876b2477216495/dark_banner_images/xl/40462859.png?1773374402",
+          "light_color_primary_fill": null,
+          "light_color_primary_stroke": null,
+          "light_color_surface": null,
+          "light_color_header_background": null,
+          "light_color_canvas": null,
+          "light_color_text": null,
+          "light_color_text_subtle": null,
+          "light_color_text_element": null,
+          "dark_color_primary_fill": "#92140c",
+          "dark_color_primary_stroke": "#eae6ce",
+          "dark_color_surface": "#373a36",
+          "dark_color_header_background": "#373a36",
+          "dark_color_canvas": "#eae6ce",
+          "dark_color_text": "#eae6ce",
+          "dark_color_text_subtle": "#8f8f8f",
+          "dark_color_text_element": "#eae6ce"
+        },
+        "booking_themes": [
+          {
+            "id": "679ae014de876b2477216495-dark",
+            "is_dark": true,
+            "custom_css": null,
+            "favicon_image_url": "https://4.image.cdn.tablecheck.com/unsafe/fit-in/1920x1080/filters:format(webp)/https://cdn2.tablecheck.com/booking_themes/679ae014de876b2477216495/favicon_images/original/125d8e3b.jpg?1738203460",
+            "preview_image_url": null,
+            "logo_image_url": "https://3.image.cdn.tablecheck.com/unsafe/fit-in/1920x1080/filters:format(webp)/https://cdn3.tablecheck.com/booking_themes/679ae014de876b2477216495/dark_logo_images/xl/def4803b.png?1738203460",
+            "canvas_image_url": "https://image.cdn.tablecheck.com/unsafe/fit-in/1920x1080/filters:format(webp)/https://cdn2.tablecheck.com/booking_themes/679ae014de876b2477216495/dark_canvas_images/xl/3ba3651c.jpg?1738203460",
+            "banner_image_url": "https://2.image.cdn.tablecheck.com/unsafe/fit-in/1920x1080/filters:format(webp)/https://cdn2.tablecheck.com/booking_themes/679ae014de876b2477216495/dark_banner_images/xl/40462859.png?1773374402",
+            "nav_title_image_url": null,
+            "show_shop_name": false,
+            "show_full_banner": true,
+            "use_banner_shade": false,
+            "color_primary_fill": "#92140c",
+            "color_primary_stroke": "#eae6ce",
+            "color_surface": "#373a36",
+            "color_header_background": "#373a36",
+            "color_canvas": "#eae6ce",
+            "color_text": "#eae6ce",
+            "color_text_subtle": "#8f8f8f",
+            "color_text_element": "#eae6ce"
+          }
+        ]
+      }
+    },
+    "menu": {
+      "items": {
+        "684f99577a39bdf73ccda4ab": {
+          "id": "684f99577a39bdf73ccda4ab",
+          "slug": "a-la-carte",
+          "position": 4,
+          "nameTranslations": [
+            {
+              "translation": "Dinner ",
+              "locale": "en"
+            }
+          ],
+          "taglineTranslations": [
+            {
+              "translation": "Open daily from 6pm",
+              "locale": "en"
+            }
+          ],
+          "descriptionTranslations": [
+            {
+              "translation": "Rooted in Mediterranean culinary tradition and reimagined in Bali, Sazón brings together timeless recipes, fire-kissed ingredients, and soulful cocktails. Inspired by the warmth of a Mediterranean table, it’s your sunset-to-supper destination. From the classic paella, fresh pasta, to house-infused sangria, every dish tells a story of tradition, fire, and flavour.\r\n",
+              "locale": "en"
+            }
+          ],
+          "finePrintTranslations": [],
+          "howToRedeemTranslations": [],
+          "menuType": "main",
+          "isGroupOrder": false,
+          "isCoupon": false,
+          "price": null,
+          "prevPrice": null,
+          "priceMode": "fixed",
+          "serviceFeeType": "percent",
+          "taxType": "excluded",
+          "calculatedTaxRate": "0.1",
+          "minOrderQty": null,
+          "maxOrderQty": null,
+          "availabilityStatus": "available",
+          "qtyRemaining": null,
+          "days": [
+            "m",
+            "tu",
+            "w",
+            "th",
+            "f",
+            "sa",
+            "su"
+          ],
+          "isActive": true,
+          "isHidden": false,
+          "isHoliday": false,
+          "isBeforeHoliday": false,
+          "meals": [
+            "dinner"
+          ],
+          "duration": null,
+          "tcMinManualDuration": null,
+          "tcMaxManualDuration": null,
+          "availableTimes": [
+            [
+              "2026-10-16T10:00:00Z",
+              64800
+            ],
+            [
+              "2026-10-16T10:15:00Z",
+              65700
+            ],
+            [
+              "2026-10-16T10:30:00Z",
+              66600
+            ],
+            [
+              "2026-10-16T10:45:00Z",
+              67500
+            ],
+            [
+              "2026-10-16T11:00:00Z",
+              68400
+            ],
+            [
+              "2026-10-16T11:15:00Z",
+              69300
+            ],
+            [
+              "2026-10-16T11:30:00Z",
+              70200
+            ],
+            [
+              "2026-10-16T11:45:00Z",
+              71100
+            ],
+            [
+              "2026-10-16T12:00:00Z",
+              72000
+            ],
+            [
+              "2026-10-16T12:15:00Z",
+              72900
+            ],
+            [
+              "2026-10-16T12:30:00Z",
+              73800
+            ],
+            [
+              "2026-10-16T12:45:00Z",
+              74700
+            ],
+            [
+              "2026-10-16T13:00:00Z",
+              75600
+            ],
+            [
+              "2026-10-16T13:15:00Z",
+              76500
+            ],
+            [
+              "2026-10-16T13:30:00Z",
+              77400
+            ],
+            [
+              "2026-10-16T13:45:00Z",
+              78300
+            ],
+            [
+              "2026-10-16T14:00:00Z",
+              79200
+            ]
+          ],
+          "validTimeRanges": [
+            {
+              "startTime": 64800,
+              "endTime": 79200
+            }
+          ],
+          "validStartTime": 64800,
+          "validEndTime": null,
+          "minTimeCutoffAt": null,
+          "maxTimeCutoffAt": null,
+          "paymentType": "none",
+          "paymentInternalRequireIntl": "default",
+          "paymentRequireIntl": false,
+          "paymentRequireGroupSize": null,
+          "showLocales": [],
+          "onlineMenuCategoryId": "679ad6c75cfb12f1c5492a87",
+          "paymentPartialOrderUnitAmt": null,
+          "paymentPartialOrderPct": null,
+          "paymentPartialGroupFee": null,
+          "paymentPartialPersonFee": null,
+          "useExperiencePage": true,
+          "tablecheckPromo": null,
+          "binPromotionId": null,
+          "tcPointsRate": null,
+          "tcPointsEarnable": null,
+          "isVariableRate": false,
+          "maxPointAmount": null,
+          "maxPointAmountPerPax": null,
+          "serviceCategoryIds": [
+            "67ede6491665688e049db792",
+            "67ede62878c6d46c6b5635d9",
+            "67ede6556ef19efd750e6436"
+          ],
+          "validDateRanges": [],
+          "questions": [],
+          "cancelFeeRules": [],
+          "paxPrices": []
+        }
+      }
+    }
+  },
+  "grid": {
+    "availability_grid": {
+      "code": "failure",
+      "type": "failure",
+      "message": null,
+      "data": {
+        "menu_item_ids": [
+          "684f99577a39bdf73ccda4ab"
+        ]
+      }
+    }
+  },
+  "query": {
+    "shop_id": "regent-bali-canggu-sazon",
+    "start_at": "2026-10-19T00:00:00.000+08:00",
+    "pax_adult": 2,
+    "pax_senior": 0,
+    "pax_child": 0,
+    "pax_baby": 0,
+    "service_category_ids": [],
+    "manual_duration": null,
+    "voucher_ids": [],
+    "smoking": "none",
+    "orders": [
+      {
+        "is_group_order": false,
+        "qty": 2,
+        "menu_item_id": "684f99577a39bdf73ccda4ab"
+      }
+    ],
+    "use_experience_page": true,
+    "locale": "en"
+  }
+}
