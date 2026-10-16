@@ -24,7 +24,9 @@ function validate(input) {
   const clean = {};
   for (const key of ['owner', 'provider', 'restaurantId', 'sessionId']) clean[key] = token(input[key], `invalid_${key}`);
   if (!['live', 'fixture'].includes(input.mode)) fail('invalid_mode');
-  if (!['hold', 'booking'].includes(phaseOf(input))) fail('invalid_phase');
+  const cartPhase=['cart','cart_update'].includes(phaseOf(input));
+  if (!['hold', 'booking'].includes(phaseOf(input)) && !(cartPhase && input.provider==='TableCheck'
+    && input.restaurantId==='osm-BAL-sazon' && input.party===2)) fail('invalid_phase');
   if (typeof input.idempotencyKey !== 'string' || !/^[a-zA-Z0-9_-]{16,128}$/.test(input.idempotencyKey)) fail('invalid_idempotency_key');
   if (typeof input.reviewFingerprint !== 'string' || !/^[a-f0-9]{64}$/.test(input.reviewFingerprint)) fail('invalid_review_fingerprint');
   if (typeof input.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(input.date)) fail('invalid_date');
@@ -95,10 +97,10 @@ export class PlaywrightAttemptLedger {
   reserve(input) {
     const bound = validate(input);
     // Reusing a browser key across sessions/providers is a conflict, not a new send.
-    const idem = hash(bound.phase === 'booking' ? bound.idempotencyKey : ['hold', bound.idempotencyKey]);
+    const idem = hash(bound.phase === 'booking' ? bound.idempotencyKey : [bound.phase, bound.idempotencyKey]);
     // Changing the client key/review does not re-arm the same owner's same table request.
     const selection = [bound.owner, bound.mode, bound.provider, bound.restaurantId, bound.date, bound.time, bound.party];
-    const scope = hash(bound.phase === 'booking' ? selection : ['hold', ...selection]);
+    const scope = hash(bound.phase === 'booking' ? selection : [bound.phase, ...selection]);
     return this.transaction(() => {
       const replay = this.db.prepare('SELECT payload FROM playwright_attempts_v1 WHERE owner=? AND idem=?').get(bound.owner, idem);
       if (replay) {
@@ -107,7 +109,7 @@ export class PlaywrightAttemptLedger {
         return { sendAllowed: false, reason: 'already_attempted', attempt };
       }
       const duplicate = this.db.prepare('SELECT payload FROM playwright_attempts_v1 WHERE scope=?').get(scope);
-      if (duplicate) return { sendAllowed: false, reason: bound.phase === 'hold' ? 'hold_already_attempted' : 'booking_already_attempted', attempt: decode(duplicate.payload) };
+      if (duplicate) return { sendAllowed: false, reason: `${bound.phase}_already_attempted`, attempt: decode(duplicate.payload) };
       const { owner, ...metadata } = bound;
       const timestamp = new Date(this.now()).toISOString();
       const attempt = { attemptId: crypto.randomUUID(), ...metadata, status: 'unknown',
@@ -137,6 +139,10 @@ export class PlaywrightAttemptLedger {
       if (attempt.phase === 'hold' && !holdStates.has(evidence.status)) throw new AttemptLedgerError('invalid_hold_status');
       if (attempt.phase === 'hold' && evidence.reference !== undefined && evidence.reference !== null)
         throw new AttemptLedgerError('hold_reference_private');
+      if (['cart','cart_update'].includes(attempt.phase)) {
+        if (!holdStates.has(evidence.status)) throw new AttemptLedgerError('invalid_cart_status');
+        if (evidence.reference != null) throw new AttemptLedgerError('cart_reference_private');
+      }
       const expectedSource = attempt.mode === 'live' ? 'provider' : 'fixture';
       if (evidence.source !== expectedSource) throw new AttemptLedgerError('evidence_source_mismatch');
       if (evidence.status !== 'unknown' && evidence.verified !== true) throw new AttemptLedgerError('unverified_result');

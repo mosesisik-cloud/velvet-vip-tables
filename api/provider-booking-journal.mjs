@@ -18,8 +18,10 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     createdAt:attempt.createdAt,updatedAt:attempt.updatedAt,
   });
   function scope(intent) {
+    const cartPhase=['cart','cart_update'].includes(intent?.phase) && provider==='TableCheck'
+      && intent.restaurantId==='osm-BAL-sazon' && venue(intent.restaurantId)?.cartPreparation===true;
     if (!intent || intent.provider !== provider || !venue(intent.restaurantId)
-      || !['hold','booking'].includes(intent.phase) || !intent.owner || !intent.sessionId
+      || (!['hold','booking'].includes(intent.phase) && !cartPhase) || !intent.owner || !intent.sessionId
       || !/^[a-f0-9]{64}$/.test(intent.reviewFingerprint || '')) fail('intent_binding');
     const configured=venue(intent.restaurantId).offer;
     if (configured) {

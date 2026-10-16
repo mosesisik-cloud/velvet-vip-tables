@@ -108,3 +108,26 @@ test('multiple venues of one provider keep capability, resume and action binding
   await assert.rejects(runtime.run(s.id,'other',false,'current'),/session_expired/);
   await runtime.close();assert.equal(closed,1);
 });
+
+test('operator preparation has a fixed non-mutative action ceiling and never grants booking',async()=>{
+  const calls=[];
+  const snapshot={id:'prep-session',provider:'TableCheck',restaurantId:'osm-BAL-sazon',mode:'prepare',image:null,
+    canHold:true,canSubmit:true,result:{status:'confirmed',reference:'must-not-escape'}};
+  const adapter={create:async()=>snapshot,action:async(_id,owner,body)=>{calls.push({owner,body});return snapshot;},remove:async()=>{},close:async()=>{}};
+  const entry={provider:'TableCheck',restaurantId:snapshot.restaurantId,mode:'prepare',enabled:true,
+    actions:['search','select','review','refresh','hold','submit','cart','cart_update'],adapter,current:async()=>snapshot};
+  const runtime=new PlaywrightRuntime({providers:{TableCheck:entry}});
+  assert.equal(runtime.guestProvider('TableCheck',snapshot.restaurantId),false);
+  assert.equal(runtime.capabilities()[0].liveBooking,false);assert.equal(runtime.capabilities()[0].operatorOnly,true);
+  await assert.rejects(runtime.create('guest',false,{provider:'TableCheck',restaurantId:snapshot.restaurantId}),/operator/);
+  const session=await runtime.create('operator',true,{provider:'TableCheck',restaurantId:snapshot.restaurantId});
+  assert.equal(session.canHold,false);assert.equal(session.canSubmit,false);assert.equal(session.result,null);
+  for(const type of ['cart','cart_update','hold','fill','submit','checkout','checkout_status'])
+    await assert.rejects(runtime.run(session.id,'operator',true,'action',{type,confirm:true,terms:true,reviewFingerprint:'a'.repeat(64)}),/inspect_only/);
+  await assert.rejects(runtime.run(session.id,'operator',false,'action',{type:'search'}),/operator/);
+  await assert.rejects(runtime.run(session.id,'other',true,'current'),/session_expired/);
+  await runtime.run(session.id,'operator',true,'action',{type:'search',date:'2030-01-15',party:2,owner:'fake',url:'https://invalid',accessToken:'secret'});
+  assert.deepEqual(calls,[{owner:'operator',body:{type:'search',date:'2030-01-15',party:2}}]);
+  snapshot.restaurantId='wrong';await assert.rejects(runtime.run(session.id,'operator',true,'current'),/provider_binding/);
+  await runtime.close();
+});
