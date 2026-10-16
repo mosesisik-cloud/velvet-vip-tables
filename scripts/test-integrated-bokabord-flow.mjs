@@ -13,10 +13,17 @@ import { chromium } from 'playwright';
 const root = fileURLToPath(new URL('../', import.meta.url));
 const fishcorner = process.argv.includes('--fishcorner') || process.env.VELVET_TEST_PROVIDER === 'FishCorner';
 const pesquiere = process.argv.includes('--pesquiere') || process.env.VELVET_TEST_PROVIDER === 'Pesquiere';
-const zenchef = fishcorner || pesquiere;
-const zenchefRid = pesquiere ? '362908' : '388090';
-const zenchefName = pesquiere ? 'Pesquiere' : 'FishCorner';
-const rooms = [{id:51183,name:'La Pesquiere'},{id:52372,name:'Mazagran salle'},{id:52373,name:'Mazagran terrasse'}];
+const pirouette = process.argv.includes('--pirouette') || process.env.VELVET_TEST_PROVIDER === 'Pirouette';
+const roomVenue = pesquiere || pirouette;
+const zenchef = fishcorner || roomVenue;
+const chosenRoom = pirouette ? 52521 : 52372;
+const otherRoom = pirouette ? 65674 : 51183;
+const alternateRoom = pirouette ? 65674 : 52373;
+const chosenRoomName = pirouette ? 'Salle principale' : 'Mazagran salle';
+const zenchefShift = pirouette ? 189024 : pesquiere ? 136503 : 545372;
+const zenchefRid = pirouette ? '363313' : pesquiere ? '362908' : '388090';
+const zenchefName = pirouette ? 'Pirouette' : pesquiere ? 'Pesquiere' : 'FishCorner';
+const rooms = pirouette ? [{id:52521,name:'Salle principale'},{id:65674,name:'Terasse'}] : [{id:51183,name:'La Pesquiere'},{id:52372,name:'Mazagran salle'},{id:52373,name:'Mazagran terrasse'}];
 const noema = process.argv.includes('--noema') || process.env.VELVET_TEST_PROVIDER === 'Noema';
 const ciccios = process.argv.includes('--ciccios') || process.env.VELVET_TEST_PROVIDER === 'Ciccios';
 const riche = process.argv.includes('--riche') || process.env.VELVET_TEST_PROVIDER === 'Riche';
@@ -27,13 +34,13 @@ const kommendoren = process.argv.includes('--kommendoren') || process.env.VELVET
 const guestLunch = beirut || balzac || kommendoren;
 const guestChoice = ciccios || guestLunch;
 const contactFinal = riche || sturehof;
-assert.ok([fishcorner,pesquiere,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren].filter(Boolean).length <= 1, 'Choose one named provider scenario');
+assert.ok([fishcorner,pesquiere,pirouette,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren].filter(Boolean).length <= 1, 'Choose one named provider scenario');
 const receiptMode = noema || guestChoice || contactFinal;
 const receiptName = kommendoren ? 'Kommendören' : balzac ? 'Brasserie Balzac' : beirut ? 'Beirut Café' : sturehof ? 'Sturehof' : riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
 const receiptCode = kommendoren ? 'synthetic-kommendoren-only' : balzac ? 'synthetic-balzac-only' : beirut ? 'synthetic-beirut-only' : sturehof ? 'synthetic-sturehof-only' : riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
 const mealId = kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
 const mealType = noema || guestLunch || contactFinal ? 2 : 3;
-const restaurantId = kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const restaurantId = pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
 const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[receiptMode ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 const date = '2030-01-15';
@@ -43,14 +50,14 @@ const childMode = process.env.VELVET_INTEGRATED_SUPPLIER_FIXTURE === 'child';
 // Sanitized native DOM/SSR contract from the canonical provider tests. No supplier JS.
 function zenchefDocument(address) {
   const url = new URL(address), form = url.pathname === '/form';
-  const slot = { name:'12:30',closed:false,marked_as_full:false,bookable_from:null,bookable_to:null,possible_guests:[2],available_rooms:{2:pesquiere?rooms.map(room=>room.id):[1]} };
-  const shift = { id:pesquiere?136503:545372,closed:false,marked_as_full:false,bookable_from:null,bookable_to:null,shift_slots:[slot],
-    charge_param:pesquiere?{is_web_booking_askable:false,min_guests:1,charge_per_guests:10}:null,prepayment_param:null,is_offer_required:false,confirmation:{is_auto:true} };
-  const state = { restaurantId:zenchefRid,initializedSSR:true,restaurantTimezone:pesquiere?'Europe/Paris':'America/Guadeloupe',isDisabled:0,
-    wish:{day:date,pax:2,waiting_list:false,offers:[],room_id:pesquiere&&form?Number(url.searchParams.get('room_id')):null,...(form?{slot:'12:30'}:{})},
-    rooms:pesquiere?rooms:undefined,mandatoryFields:{firstname:'required'},isRoomMandatory:pesquiere,dailyAvailabilities:{[date]:{date,shifts:[shift]}} };
+  const slot = { name:'12:30',closed:false,marked_as_full:false,bookable_from:null,bookable_to:null,possible_guests:[2],available_rooms:{2:roomVenue?rooms.map(room=>room.id):[1]} };
+  const shift = { id:zenchefShift,closed:false,marked_as_full:false,bookable_from:null,bookable_to:null,shift_slots:[slot],
+    charge_param:pirouette?{is_web_booking_askable:true,min_guests:3,charge_per_guests:50}:roomVenue?{is_web_booking_askable:false,min_guests:1,charge_per_guests:10}:null,prepayment_param:null,is_offer_required:false,confirmation:{is_auto:true,is_auto_until:null} };
+  const state = { restaurantId:zenchefRid,initializedSSR:true,restaurantTimezone:roomVenue?'Europe/Paris':'America/Guadeloupe',isDisabled:0,
+    wish:{day:date,pax:2,waiting_list:false,offers:[],room_id:roomVenue&&form?Number(url.searchParams.get('room_id')):null,...(form?{slot:'12:30'}:{})},
+    rooms:roomVenue?rooms:undefined,mandatoryFields:{firstname:'required'},isRoomMandatory:roomVenue,dailyAvailabilities:{[date]:{date,shifts:[shift]}} };
   const data = {page:form?'/form':'/results',query:Object.fromEntries(url.searchParams),props:{initialState:{appStoreState:state}}};
-  return `<html><meta charset="utf-8"><body><h1>${zenchefName} LOCAL TEST — no real booking</h1>${pesquiere&&form?`<div>${rooms.find(room=>room.id===Number(url.searchParams.get('room_id')))?.name}</div>`:''}<script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
+  return `<html><meta charset="utf-8"><body><h1>${zenchefName} LOCAL TEST — no real booking</h1>${roomVenue&&form?`<div>${rooms.find(room=>room.id===Number(url.searchParams.get('room_id')))?.name}</div>`:''}${pirouette&&form?`<div id="seating">Jusqu&#39;à 21:00</div>`:''}<script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
   ${form ? ['firstname','lastname','email'].map(k=>`<input data-testid="${k}-input">`).join('') +
     `<div class="iti"><button type="button" class="iti__selected-country" title="France (+33)" aria-label="Selected country France"><span class="iti__flag iti__fr"></span></button><input data-testid="phone-input"></div>` +
     `<label>Mr<input type="radio" name="civility" value="mr" style="display:none"></label><label data-testid="eula-checkbox"><input type="checkbox">Synthetic test terms</label>
@@ -60,9 +67,10 @@ function zenchefDocument(address) {
       const firstname=value('firstname'),lastname=value('lastname'),email=value('email'),phone=value('phone');
       const payload={day:${JSON.stringify(date)},nb_guests:2,time:'12:30',lang:'fr',firstname,lastname,civility:'mr',country:'fr',phone_number:phone,email,
         comment:'',custom_field:{},custom_field_v2:[],customersheet:{firstname,lastname,civility:'mr',phone,email,
-        optins:[{type:'review_mail',value:true},{type:'review_sms',value:true}],country:'fr',lang:'fr'},offers:[],partner_id:'1001',type:'web'${pesquiere?",wish:{booking_room_id:"+Number(url.searchParams.get('room_id'))+"}":''}};
-      ${pesquiere && process.env.VELVET_TEST_OUTCOME === 'missing-request-room' ? 'delete payload.wish;' : ''}
-      ${pesquiere && process.env.VELVET_TEST_OUTCOME === 'mismatch-request-room' ? 'payload.wish.booking_room_id=51183;' : ''}
+        optins:[{type:'review_mail',value:true},{type:'review_sms',value:true}],country:'fr',lang:'fr'},offers:[],partner_id:'1001',type:'web'${roomVenue?",wish:{booking_room_id:"+Number(url.searchParams.get('room_id'))+"}":''}};
+      ${roomVenue && process.env.VELVET_TEST_OUTCOME === 'missing-request-room' ? 'delete payload.wish;' : ''}
+      ${roomVenue && process.env.VELVET_TEST_OUTCOME === 'mismatch-request-room' ? 'payload.wish.booking_room_id='+otherRoom+';' : ''}
+      ${pirouette && process.env.VELVET_TEST_OUTCOME === 'code-request' ? "payload.custom_field={code:'fixture-code'};" : ''}
       fetch('https://bookings-middleware.zenchef.com/booking?restaurantId=${zenchefRid}',{method:'POST',body:JSON.stringify(payload)}).catch(()=>{});
     };</script>` : ''}</body></html>`;
 }
@@ -117,6 +125,10 @@ if (childMode) {
       const context = await newContext({ ...options, serviceWorkers: 'block' });
       process.send?.({ kind: 'browser-context-ready', at: Date.now() });
       if (zenchef) context.on('page', page => {
+        if(pirouette)process.on('message',message=>{
+          if(message.kind==='fixture-change-seating')page.evaluate(()=>document.querySelector('#seating').textContent="Jusqu'à 20:30")
+            .then(()=>process.send?.({kind:'fixture-seating-changed'}));
+        });
         page.on('pageerror', error => process.send?.({kind:'supplier-fixture-script-error',message:error.message}));
         page.on('domcontentloaded', () => page.evaluate(() => ({
           path:location.pathname,fields:[...document.querySelectorAll('[data-testid]')].map(el=>el.getAttribute('data-testid')),
@@ -219,10 +231,10 @@ if (childMode) {
               if (process.env.VELVET_TEST_OUTCOME === 'timeout') throw new Error('synthetic_lost_supplier_reply');
               createdBooking={id:999999998,uuid:'synthetic-zenchef-only',payload:JSON.parse(options.postData)};
               // The creation response deliberately contains no room evidence.
-              body = JSON.stringify({id:createdBooking.id,uuid:createdBooking.uuid,status:'confirmed',...(process.env.VELVET_TEST_OUTCOME.startsWith('post-echo-')?{wish:{booking_room_id:process.env.VELVET_TEST_OUTCOME==='post-echo-mismatch'?51183:createdBooking.payload.wish.booking_room_id}}:{})}); contentType = 'application/json';
-            } else if(pesquiere && request.method()==='GET' && url.origin==='https://bookings-middleware.zenchef.com' && url.pathname.startsWith('/bookings/')) {
+              body = JSON.stringify({id:createdBooking.id,uuid:createdBooking.uuid,status:'confirmed',...(process.env.VELVET_TEST_OUTCOME.startsWith('post-echo-')?{wish:{booking_room_id:process.env.VELVET_TEST_OUTCOME==='post-echo-mismatch'?otherRoom:createdBooking.payload.wish.booking_room_id}}:{})}); contentType = 'application/json';
+            } else if(roomVenue && request.method()==='GET' && url.origin==='https://bookings-middleware.zenchef.com' && url.pathname.startsWith('/bookings/')) {
               assert.ok(createdBooking,'Readback must follow this context\'s own POST');
-              assert.equal(request.url(),`https://bookings-middleware.zenchef.com/bookings/${createdBooking.uuid}?restaurantId=362908`);
+              assert.equal(request.url(),`https://bookings-middleware.zenchef.com/bookings/${createdBooking.uuid}?restaurantId=${zenchefRid}`);
               assert.equal(options.maxRetries,0);assert.equal(options.timeout,8000);
               const outcome=process.env.VELVET_TEST_OUTCOME;
               process.send?.({kind:'supplier-own-readback',outcome});
@@ -235,7 +247,7 @@ if (childMode) {
               const payload=createdBooking.payload;
               const data={id:createdBooking.id,uuid:createdBooking.uuid,status:'confirmed',day:payload.day,shift_date:payload.day,time:payload.time,nb_guests:payload.nb_guests,wish:{booking_room_id:payload.wish.booking_room_id}};
               if(outcome==='missing-receipt-room')delete data.wish;
-              if(outcome==='mismatch-receipt-room'||outcome==='post-echo-bad-readback')data.wish.booking_room_id=51183;
+              if(outcome==='mismatch-receipt-room'||outcome==='post-echo-bad-readback')data.wish.booking_room_id=otherRoom;
               if(outcome==='mismatch-readback-id')data.id=999999997;
               if(outcome==='mismatch-readback-uuid')data.uuid='different-synthetic-booking';
               if(outcome==='mismatch-readback-date')data.day='2030-01-16';
@@ -313,7 +325,7 @@ async function main() {
     backend = `http://127.0.0.1:${port}`;
     child = spawn(process.execPath, ['--import', import.meta.url, 'api/server.mjs'], { cwd: root, env: {
       ...process.env, VELVET_INTEGRATED_SUPPLIER_FIXTURE: 'child', VELVET_TEST_DIRECTORY: directory,
-      VELVET_TEST_PROVIDER: kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
+      VELVET_TEST_PROVIDER: pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
       VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_CICCIOS_RECEIPT: ciccios ? 'enabled' : 'disabled',
       VELVET_RICHE_RECEIPT: riche ? 'enabled' : 'disabled',
@@ -322,7 +334,8 @@ async function main() {
       VELVET_BALZAC_RECEIPT: balzac ? 'enabled' : 'disabled',
       VELVET_KOMMENDOREN_RECEIPT: kommendoren ? 'enabled' : 'disabled',
       VELVET_ZENCHEF_FISHCORNER: zenchef ? 'live' : 'disabled',
-      VELVET_ZENCHEF_PESQUIERE: pesquiere ? 'live' : 'disabled',
+      VELVET_ZENCHEF_PESQUIERE: roomVenue ? 'live' : 'disabled',
+      VELVET_ZENCHEF_PIROUETTE: pirouette ? 'live' : 'disabled',
       VELVET_TEST_OUTCOME: outcome, PORT: String(port), PUBLIC_URL: base,
       VELVET_CRAWL: '0', VELVET_BOKABORD_MIRROR: 'live', VELVET_PLAYWRIGHT_INSPECTION: 'disabled',
       VELVET_DATA: path.join(directory, 'store.json'), VELVET_PAY: path.join(directory, 'pay.json'),
@@ -481,7 +494,7 @@ async function main() {
     if (zenchef) {
       let recoveredRoom;
       await start('confirmed'); browser = await chromium.launch();
-      const flow = async (view, expectedDispatches = 1, roomId = 52372) => {
+      const flow = async (view, expectedDispatches = 1, roomId = chosenRoom, scenario = '') => {
         const page = view.page;
         const action = async click => {
           const pending = page.waitForResponse(r => r.request().method() === 'POST'
@@ -495,14 +508,14 @@ async function main() {
         await action(() => panel(page).locator('[data-start]').click());
         await panel(page).locator('[name=date]').fill(date);
         const searched = await action(() => panel(page).locator('[data-search] button').click());
-        if(pesquiere){
+        if(roomVenue){
           assert.equal(await panel(page).locator('[data-room="12:30"]').inputValue(),'');
           assert.equal(await panel(page).locator('[data-slot="12:30"]').isDisabled(),true);
           const before=submits();
           for(const room of [undefined,999]){
             const current=await api(page,`/restaurant-bookings/playwright/${searched.body.id}/current`,{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
             const rejected=await api(page,`/restaurant-bookings/playwright/${searched.body.id}/action`,{
-              method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'select',time:'12:30',shiftId:136503,revision:current.body.revision,...(room===undefined?{}:{roomId:room})})});
+              method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'select',time:'12:30',shiftId:zenchefShift,revision:current.body.revision,...(room===undefined?{}:{roomId:room})})});
             assert.equal(rejected.status,409,'Missing or unverified room must be rejected');
             assert.equal(rejected.body.error,'room_required_or_unverified');
           }
@@ -520,12 +533,25 @@ async function main() {
         await panel(page).locator('[data-field="civility"]').selectOption('mr');
         await action(() => panel(page).locator('[data-save]').click());
         await action(() => panel(page).locator('[data-review]').click());
-        if(pesquiere)assert.ok((await panel(page).locator('[data-final-details]').innerText()).includes(rooms.find(room=>room.id===roomId).name));
+        if(pirouette){
+          assert.equal(await panel(page).locator('[data-seating-notice]').innerText(),"Sittning: Jusqu'à 21:00");
+          if(scenario==='seating-changed'){
+            const changed=new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error('fixture_seating_timeout')),5000);const receive=m=>{if(m.kind==='fixture-seating-changed'){clearTimeout(timer);child.off('message',receive);resolve();}};child.on('message',receive);});
+            child.send({kind:'fixture-change-seating'});await changed;
+            await panel(page).locator('[data-terms]').check();
+            const before=submits();
+            const rejected=page.waitForResponse(r=>r.request().method()==='POST'&&r.request().postDataJSON()?.type==='submit');
+            await panel(page).locator('[data-submit]').click();const response=await rejected;
+            assert.equal(response.status(),409);assert.equal((await response.json()).error,'stale_review');assert.equal(submits(),before);
+            return;
+          }
+        }
+        if(roomVenue)assert.ok((await panel(page).locator('[data-final-details]').innerText()).includes(rooms.find(room=>room.id===roomId).name));
         assert.equal(await panel(page).locator('[data-submit]').isDisabled(), true, 'Explicit consent required');
         const before = submits(); await panel(page).locator('[data-terms]').check();
         const readbacksBefore=messages.filter(m=>m.kind==='supplier-own-readback').length;
         const pending=action(() => panel(page).locator('[data-submit]').dblclick());
-        if(pesquiere && before===0){
+        if(roomVenue && before===0){
           const deadline=Date.now()+5000;
           while(!messages.some(m=>m.kind==='supplier-own-readback')&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,20));
           assert.ok(messages.some(m=>m.kind==='supplier-own-readback'));
@@ -535,18 +561,18 @@ async function main() {
         }
         const result = await pending;
         assert.equal(submits(), before + expectedDispatches, 'Supplier boundary dispatch count');
-        if(pesquiere)assert.ok(messages.filter(m=>m.kind==='supplier-own-readback').length-readbacksBefore<=1,'At most one readback, never retry');
+        if(roomVenue)assert.ok(messages.filter(m=>m.kind==='supplier-own-readback').length-readbacksBefore<=1,'At most one readback, never retry');
         return result;
       };
       first = await makeView();
       const success = await flow(first);
       assert.equal(success.body.result.status,'confirmed');
       assert.equal(success.body.result.reference,'999999998');
-      if(pesquiere){assert.equal(success.body.result.verification.roomId,52372);assert.equal(success.body.result.verification.roomName,'Mazagran salle');assert.equal(messages.filter(m=>m.kind==='supplier-own-readback').length,1);assert.equal(success.body.result.verification.roomEvidence,'own_booking_readback');}
+      if(roomVenue){assert.equal(success.body.result.verification.roomId,chosenRoom);assert.equal(success.body.result.verification.roomName,chosenRoomName);assert.equal(messages.filter(m=>m.kind==='supplier-own-readback').length,1);assert.equal(success.body.result.verification.roomEvidence,'own_booking_readback');}
       assert.notEqual(success.request.idempotencyKey,success.body.result.verification.idempotencyKey,'Server owns the durable key');
       assert.equal(await panel(first.page).locator('[data-status]').getAttribute('data-booking-status'),'confirmed');
       assert.match(await panel(first.page).locator('[data-status]').innerText(),/999999998/);
-      if(pesquiere){
+      if(roomVenue){
         const other=await api(first.page,'/restaurant-bookings/playwright',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({provider:'Zenchef',restaurantId:'osm-SBH-fishcorner',resume:true})});
         assert.equal(other.status,409);assert.equal(other.body.error,'other_restaurant');
         assert.equal(submits(),1,'Same-provider different venue cannot resume this booking');
@@ -559,7 +585,7 @@ async function main() {
       assert.equal(recovered.status,200); assert.equal(recovered.body.attempts.length,1);
       assert.equal(recovered.body.attempts[0].status,'confirmed');
       assert.equal(recovered.body.attempts[0].reference,'999999998');
-      if(pesquiere){
+      if(roomVenue){
         const history=await api(first.page,'/restaurant-bookings');assert.equal(history.status,200);
         const booking=history.body.bookings.find(row=>row.restaurantId===restaurantId);
         recoveredRoom={roomId:booking.roomId,roomName:booking.roomName};
@@ -583,17 +609,18 @@ async function main() {
       assert.ok([404,409].includes(replay.status)); assert.equal(submits(),2);
       // The same owner in a fresh UI session must not bypass the durable guard.
       third = await makeView(390, await second.context.storageState());
-      const repeated = await flow(third, 0, pesquiere?52373:52372);
+      const repeated = await flow(third, 0, alternateRoom);
       assert.equal(repeated.body.result.status,'unknown'); assert.equal(submits(),2);
       assert.equal(messages.filter(m=>['unexpected-supplier-request','blocked-node-network'].includes(m.kind)).length,0);
       console.log('PASS '+zenchefName+' lost supplier reply: durable unknown, owner isolation, refresh/restart without replay');
-      if(pesquiere){
-        for(const outcome of ['missing-request-room','mismatch-request-room','missing-receipt-room','mismatch-receipt-room','readback-error','readback-http-error','mismatch-readback-id','mismatch-readback-uuid','mismatch-readback-date','post-echo-bad-readback','post-echo-mismatch','post-echo-good-readback']){
-          console.log('CHECK Pesquiere '+outcome);await stop();await start(outcome);
+      if(roomVenue){
+        for(const outcome of [...(pirouette?['seating-changed','code-request']:[]),'missing-request-room','mismatch-request-room','missing-receipt-room','mismatch-receipt-room','readback-error','readback-http-error','mismatch-readback-id','mismatch-readback-uuid','mismatch-readback-date','post-echo-bad-readback','post-echo-mismatch','post-echo-good-readback']){
+          console.log('CHECK '+zenchefName+' '+outcome);await stop();await start(outcome);
           const view=await makeView();
           try{
             const readsBefore=messages.filter(m=>m.kind==='supplier-own-readback').length;
-            const result=await flow(view,outcome.includes('request')?0:1);
+            const result=await flow(view,outcome.includes('request')?0:1,chosenRoom,outcome);
+            if(outcome==='seating-changed')continue;
             assert.equal(result.body.result.status,outcome==='post-echo-good-readback'?'confirmed':'unknown',outcome);
             assert.equal(messages.filter(m=>m.kind==='supplier-own-readback').length-readsBefore,outcome.includes('request')||outcome==='post-echo-mismatch'?0:1,outcome+' readback count');
             if(outcome==='readback-error'){
@@ -602,19 +629,19 @@ async function main() {
               assert.equal(attempts.body.attempts[0].status,'unknown');
               const fresh=await makeView(390,await view.context.storageState());
               const reads=messages.filter(m=>m.kind==='supplier-own-readback').length;
-              try{assert.equal((await flow(fresh,0,52373)).body.result.status,'unknown');}
+              try{assert.equal((await flow(fresh,0,alternateRoom)).body.result.status,'unknown');}
               finally{await fresh.context.close();}
               assert.equal(messages.filter(m=>m.kind==='supplier-own-readback').length,reads,'Restart must not replay failed readback or POST');
             }
           }
           finally{await view.context.close();}
         }
-        console.log('PASS Pesquiere missing/mismatched request room blocks dispatch; missing/mismatched receipt room stays unknown');
-        assert.deepEqual(recoveredRoom,{roomId:52372,roomName:'Mazagran salle'},'Public booking history preserves chosen room after restart');
+        console.log('PASS '+zenchefName+' missing/mismatched request room blocks dispatch; missing/mismatched receipt room stays unknown');
+        assert.deepEqual(recoveredRoom,{roomId:chosenRoom,roomName:chosenRoomName},'Public booking history preserves chosen room after restart');
       }
       console.log(JSON.stringify({status:'PASS',restaurantId,evidence:'real_local_app_api_native_zenchef_journal_with_supplier_fixture',
         integrationCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),supplierBoundaryAttempts:submits(),
-        actualSupplierRequests:0,liveConfirmationVerified:false,backendRestarts:pesquiere?15:2,APIRequests:apiCalls.length,deployed:false}));
+        actualSupplierRequests:0,liveConfirmationVerified:false,backendRestarts:pirouette?17:roomVenue?15:2,APIRequests:apiCalls.length,deployed:false}));
       return;
     }
     await start('unverified-success');
