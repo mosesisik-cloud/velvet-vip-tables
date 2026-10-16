@@ -11,6 +11,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     id:`PB-${attempt.attemptId}`,userId:owner,provider,restaurantId:attempt.restaurantId,
     restaurant:venue(attempt.restaurantId)?.name || attempt.restaurantId,
     destination:venue(attempt.restaurantId)?.city || '',date:attempt.date,time:attempt.time,
+    ...(Number.isSafeInteger(attempt.roomId) && attempt.roomName ? {roomId:attempt.roomId,roomName:attempt.roomName} : {}),
     party:attempt.party,status:attempt.status,providerReference:attempt.reference || '',
     createdAt:attempt.createdAt,updatedAt:attempt.updatedAt,
   });
