@@ -70,10 +70,9 @@ export function zenchefBookingResult(status, data, approval = null) {
   if (status < 200 || status >= 300 || !data || typeof data !== 'object') return { status: 'unknown' };
   if (data.requires_action === true || data.charge) return { status: 'payment_required' };
   if (data.error || !/^[1-9]\d*$/.test(String(data.id)) || typeof data.uuid !== 'string' || !data.uuid) return { status: 'unknown' };
-  // Public createBookingData writes wish.booking_room_id; the booking loader reads
-  // that path from booking data. No live create response was observed. Requiring
-  // this echo is a conservative acceptance rule, NOT a verified response schema.
-  if (approval?.restaurantId === ZENCHEF_PESQUIERE.restaurantId && data.wish?.booking_room_id !== approval.roomId) return { status: 'unknown' };
+  // Pesquiere confirmation always requires independent same-attempt readback.
+  // Even a complete matching POST echo is not saved-booking evidence.
+  if (approval?.restaurantId === ZENCHEF_PESQUIERE.restaurantId && data.status === 'confirmed') return { status: 'unknown' };
   if (data.status === 'confirmed') return { status: 'confirmed', reference: String(data.id) };
   if (data.status === 'waiting') return { status: 'pending' };
   return { status: 'unknown' };
@@ -82,10 +81,14 @@ export function zenchefBookingResult(status, data, approval = null) {
 // Source: booking.getByUuid -> bookings/{uuid}; loadBookingWithUuid reads
 // id/status/day/shift_date/time/nb_guests/wish.booking_room_id. UUID is obtained
 // only from this attempt's native POST, never from client action parameters.
-function ownReadbackUrl(created) {
+function ownReadbackUrl(created, approval) {
   if (!created || created.status !== 'confirmed' || created.error || created.charge || created.requires_action
     || !/^[1-9]\d*$/.test(String(created.id)) || typeof created.uuid !== 'string'
     || !/^[A-Za-z0-9_-]{8,128}$/.test(created.uuid)) return null;
+  if (!approval || approval.restaurantId !== ZENCHEF_PESQUIERE.restaurantId
+    || (created.wish?.booking_room_id !== undefined && created.wish.booking_room_id !== approval.roomId)
+    || [['day', 'date'], ['shift_date', 'date'], ['time', 'time'], ['nb_guests', 'party']]
+      .some(([field, key]) => created[field] !== undefined && created[field] !== approval[key])) return null;
   return `https://bookings-middleware.zenchef.com/bookings/${created.uuid}?restaurantId=362908`;
 }
 function savedRoomResult(status, data, binding) {
@@ -275,7 +278,7 @@ export class ZenchefPlaywright {
             const data = await response.json().catch(() => null);
             s.result = zenchefBookingResult(response.status(), data, s.approval);
             if (venue === ZENCHEF_PESQUIERE && response.status() >= 200 && response.status() < 300
-              && data?.wish?.booking_room_id === undefined && ownReadbackUrl(data)) {
+              && ownReadbackUrl(data, s.approval)) {
               s.result = await this.readOwnBooking(s, data);
             }
             s.result.verification = { verified: ['confirmed', 'pending', 'payment_required'].includes(s.result.status), source: 'provider', provider: 'Zenchef', mode: 'live', phase: 'booking', restaurantId,
@@ -339,7 +342,7 @@ export class ZenchefPlaywright {
       && attemptMatchesApproval(s.attempt, binding.approval);
   }
   async readOwnBooking(s, created) {
-    const url = ownReadbackUrl(created);
+    const url = ownReadbackUrl(created, s.approval);
     if (!url || !attemptMatchesApproval(s.attempt, s.approval)) return { status: 'unknown' };
     // Immutable identity/approval; only transport completion flags are mutable.
     const binding = { url, owner: s.owner, sessionId: s.id, attemptId: s.attempt.attemptId,
