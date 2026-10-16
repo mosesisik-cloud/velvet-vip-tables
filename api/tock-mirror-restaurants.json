@@ -1,0 +1,51 @@
+{
+  "osm-MIA-sushi-by-scratch-restaurant": {
+    "name": "Sushi by Scratch Restaurant",
+    "url": "https://www.exploretock.com/sushi-by-scratch-restaurants-miami/",
+    "source": "https://www.exploretock.com/sushi-by-scratch-restaurants-miami/",
+    "verifiedAt": "2026-10-15",
+    "slug": "sushi-by-scratch-restaurants-miami"
+  },
+  "curated-RIO-oteque": {
+    "name": "Oteque",
+    "url": "https://www.exploretock.com/oteque",
+    "source": "https://www.oteque.com/",
+    "verifiedAt": "2026-10-15",
+    "slug": "oteque"
+  },
+  "curated-RIO-lasai": {
+    "name": "Lasai",
+    "url": "https://www.exploretock.com/lasai",
+    "source": "https://lasai.com.br/",
+    "verifiedAt": "2026-10-15",
+    "slug": "lasai"
+  },
+  "curated-CDM-quintonil": {
+    "name": "Quintonil",
+    "url": "https://www.exploretock.com/quintonil",
+    "source": "https://quintonil.com/",
+    "verifiedAt": "2026-10-15",
+    "slug": "quintonil"
+  },
+  "curated-LAX-n-naka": {
+    "name": "n/naka",
+    "url": "https://www.exploretock.com/n-naka/",
+    "source": "https://n-naka.com/",
+    "verifiedAt": "2026-10-15",
+    "slug": "n-naka"
+  },
+  "curated-NYC-atomix": {
+    "name": "Atomix",
+    "url": "https://www.exploretock.com/atomixnyc",
+    "source": "https://www.atomixnyc.com/about",
+    "verifiedAt": "2026-10-15",
+    "slug": "atomixnyc"
+  },
+  "curated-CDM-rosetta": {
+    "name": "Rosetta",
+    "url": "https://www.exploretock.com/rosetta/",
+    "source": "https://rosetta.com.mx/reservaciones",
+    "verifiedAt": "2026-10-15",
+    "slug": "rosetta"
+  }
+}

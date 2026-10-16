@@ -1,0 +1,93 @@
+{
+  "osm-STT-salama": {
+    "name": "Salama",
+    "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=352861&lang=fr&showCollapsed=1",
+    "source": "https://www.salama-saint-tropez.com/",
+    "verifiedAt": "2026-10-15",
+    "rid": "352861"
+  },
+  "osm-PAR-le-cafe-de-la-paix": {
+    "name": "Le Café de la Paix",
+    "url": "https://bookings.zenchef.com/results?rid=352690&fullscreen=1&lang=fr",
+    "source": "https://www.cafedelapaix.fr/fr/",
+    "verifiedAt": "2026-10-15",
+    "rid": "352690"
+  },
+  "osm-STT-au-caprice-des-deux": {
+    "name": "Au Caprice des Deux",
+    "url": "https://bookings.zenchef.com/results?rid=361007&fullscreen=1",
+    "source": "https://www.aucapricedesdeux.com/",
+    "verifiedAt": "2026-10-15",
+    "rid": "361007"
+  },
+  "curated-AMS-de-kas": {
+    "name": "De Kas",
+    "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=386643&lang=en&showCollapsed=1",
+    "source": "https://restaurantdekas.com/eng/garden",
+    "verifiedAt": "2026-10-15",
+    "rid": "386643"
+  },
+  "curated-PAR-septime": {
+    "name": "Septime",
+    "url": "https://bookings.zenchef.com/results?rid=356354&pid=1001&lang=fr",
+    "source": "https://www.septime-charonne.fr/",
+    "verifiedAt": "2026-10-15",
+    "rid": "356354"
+  },
+  "curated-CNS-la-mome-plage": {
+    "name": "La Môme Plage",
+    "url": "https://bookings.zenchef.com/results?rid=355085&pid=1001",
+    "source": "https://www.lamomeplage.com/",
+    "verifiedAt": "2026-10-15",
+    "rid": "355085"
+  },
+  "osm-STT-la-pesquiere-le-mazagran-et-lou-revelen": {
+    "name": "La PeSQuière, Le Mazagran et Lou Revelen",
+    "url": "https://bookings.zenchef.com/results?rid=362908&fullscreen=1",
+    "source": "https://www.lapesquiere.fr/contact-restaurant-a-saint-tropez-dans-le-var-83/",
+    "verifiedAt": "2026-10-15",
+    "rid": "362908"
+  },
+  "osm-MCO-pirouette": {
+    "name": "Pirouette",
+    "url": "https://bookings.zenchef.com/results?rid=363313&pid=1001",
+    "source": "https://lesagitateurs.com/pirouette",
+    "verifiedAt": "2026-10-15",
+    "rid": "363313"
+  },
+  "osm-MCO-gigi-tavola": {
+    "name": "Gigi Tavola",
+    "url": "https://bookings.zenchef.com/results?rid=353615&pid=1001",
+    "source": "https://www.gigitavola.com/",
+    "verifiedAt": "2026-10-15",
+    "rid": "353615"
+  },
+  "osm-CRV-le-monchu-meribel": {
+    "name": "Le Monchu Méribel",
+    "url": "https://bookings.zenchef.com/results?rid=352039",
+    "source": "https://www.lemonchu-meribel.com/",
+    "verifiedAt": "2026-10-15",
+    "rid": "352039"
+  },
+  "osm-STT-gaio": {
+    "name": "GAÏO",
+    "url": "https://bookings.zenchef.com/results?rid=352811",
+    "source": "https://www.gaio.club/",
+    "verifiedAt": "2026-10-15",
+    "rid": "352811"
+  },
+  "osm-SBH-fishcorner": {
+    "name": "FishCorner",
+    "url": "https://bookings.zenchef.com/results?pid=1001&rid=388090",
+    "source": "https://www.fishcornerstbarth.com/en/book-online",
+    "verifiedAt": "2026-10-16",
+    "rid": "388090"
+  },
+  "curated-PAR-arpege": {
+    "name": "Arpège",
+    "url": "https://bookings.zenchef.com/results?rid=354036&lang=fr",
+    "source": "https://www.alain-passard.com/",
+    "verifiedAt": "2026-10-16",
+    "rid": "354036"
+  }
+}
