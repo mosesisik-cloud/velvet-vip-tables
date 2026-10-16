@@ -169,7 +169,7 @@ for(const delta of [{venue_id:'other'},{reservation_hold_id:'OTHER'},{date:'12-2
 for(const delta of [{venue:'other'},{date:'2026-12-22'},{party_size:3},{extra:'unknown'},{time:'20:00:00'}]) assert.equal(sevenRoomsHoldMatches({...holdPayload,...delta},{date:'2026-12-21',party:2,time:'19:00'}),false);
 const checkoutHtml=`<!doctype html><body><h1>LOCAL CHECKOUT FIXTURE ONLY</h1><button id="slot">19:00 Middag</button><div id="guest" hidden>
 <input name="firstName"><input name="lastName"><input name="emailAddress" type="email"><input name="phoneNumber" type="tel">
-<input type="checkbox" name="agreedToVenueSmsMarketingOptIn" checked><p>Fixture terms only</p><button data-test="checkout-button-complete">Skicka in</button></div><script>
+<input type="checkbox" name="agreedToVenueSmsMarketingOptIn" checked><p id="terms">Fixture cancellation before 19:00, fee 100 SEK</p><a id="terms-link" href="/terms">Terms</a><div id="checkout-breadcrumbs">Arrival 19:00 <span id="timer" role="timer" aria-label="4 minutes 54 seconds">4:54</span></div><button data-test="checkout-button-complete">Skicka in</button></div><script>
 if(location.search)fetch(${JSON.stringify(range.replace('2026-12-20','2026-12-21'))});
 slot.onclick=async()=>{try{const r=await fetch('/api-yoa/dining/hold/add',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(${JSON.stringify(holdPayload)})});const j=await r.json();if(j.data.reservation_hold_id){guest.hidden=false;slot.hidden=true;}}catch{}};
 document.querySelector('[data-test="checkout-button-complete"]').onclick=async()=>{try{await fetch('/booking/dining/widget/strandvagen1/book',{method:'POST',body:'LOCAL-SYNTHETIC-PAYLOAD'});}catch{}};
@@ -231,6 +231,19 @@ try{
   assert.equal(await flowPage.locator('input[type="checkbox"]').isChecked(),false);
   s=await flow.action(s.id,mode,{type:'review',revision:s.revision});assert.equal(s.phase,'booking_review');
   assert.equal(s.canSubmit,true);const fp=s.reviewFingerprint;
+  const beforeReviewChanges=writeFetches.length;
+  await flowPage.locator('#timer').evaluate(el=>{el.textContent='4:53';el.setAttribute('aria-label','4 minutes 53 seconds');});
+  // A real term/time/price or link-target change still requires a fresh review.
+  for(const change of ['terms','link']){
+   await flowPage.evaluate(change=>{if(change==='terms')document.querySelector('#terms').textContent='Fixture cancellation before 18:00, fee 200 SEK';else document.querySelector('#terms-link').href='/changed-terms';},change);
+   await assert.rejects(flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:true,reviewFingerprint:fp}),error=>{
+    assert.equal(error.code,'stale_review');assert.equal(error.submissionState,'not_dispatched');return true;
+   });
+   assert.equal(writeFetches.length,beforeReviewChanges);
+   await flowPage.evaluate(()=>{document.querySelector('#terms').textContent='Fixture cancellation before 19:00, fee 100 SEK';document.querySelector('#terms-link').href='/terms';});
+   s=await flow.current(s.id,mode);
+  }
+  // Keep 4:53: the originally approved review must survive this countdown tick.
   if(mode==='unverified'){
    await flowPage.evaluate(()=>{const b=document.querySelector('[data-test="checkout-button-complete"]');b.disabled=true;b.__reactFiber$fixture={memoizedProps:{isSubmitBlocked:true,recaptchaWidgets:{props:{children:[{props:{mode:'visible'}}]}}}};});
    s=await flow.current(s.id,mode);
@@ -242,12 +255,16 @@ try{
    await flowPage.evaluate(()=>{const b=document.querySelector('[data-test="checkout-button-complete"]');delete b.__reactFiber$fixture;b.disabled=false;});
    s=await flow.current(s.id,mode);
   }
-  await assert.rejects(flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:false,reviewFingerprint:fp}),/confirmation_required/);
+  await assert.rejects(flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:false,reviewFingerprint:fp}),error=>{
+   assert.equal(error.code,'confirmation_required');assert.equal(error.submissionState,undefined);return true;
+  });
   s=await flow.current(s.id,mode);
   s=await flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:true,reviewFingerprint:fp});
   assert.equal(s.result.status,mode==='bound'?'confirmed':'unknown');
   assert.equal(s.phase,'result');assert.equal(s.canSubmit,false);
-  await assert.rejects(flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:true,reviewFingerprint:fp}),/already_attempted/);
+  await assert.rejects(flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:true,reviewFingerprint:fp}),error=>{
+   assert.equal(error.code,'already_attempted');assert.equal(error.submissionState,undefined);return true;
+  });
   assert.ok(!JSON.stringify(s).includes('LOCAL-HOLD'),'private hold token never exposed');
   await flow.remove(s.id,mode);
  }

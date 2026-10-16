@@ -324,6 +324,32 @@ export class SevenRoomsPlaywright {
     }
     return fields;
   }
+  async #reviewText(s) {
+    // Original widget IW/Tg renders its hold countdown as role=timer inside
+    // checkout-breadcrumbs. Exclude only that numeric countdown, never arbitrary
+    // clock-like text (arrival/cancellation times may be contractual).
+    return s.page.evaluate(()=>{
+      const visible=el=>el.getClientRects().length && getComputedStyle(el).visibility!=='hidden';
+      const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+      const parts=[];let node;
+      while((node=walker.nextNode())){
+        const parent=node.parentElement;
+        if(!parent || parent.closest('script,style,noscript') || !visible(parent))continue;
+        const timer=parent.closest('#checkout-breadcrumbs [role="timer"]');
+        if(timer && /^\s*\d{1,3}:[0-5]\d\s*$/.test(timer.textContent || '')){
+          if(node===timer.firstChild)parts.push('[hold countdown]');
+          continue;
+        }
+        const text=node.textContent.replace(/\s+/g,' ').trim();
+        if(text)parts.push(text);
+      }
+      // Changing a terms link without changing its label also invalidates review.
+      for(const link of document.querySelectorAll('a[href]'))if(visible(link))parts.push(`Link: ${link.textContent.trim()} ${link.href}`);
+      const text=parts.join('\n');
+      if(text.length>50_000)throw Error('review_too_large');
+      return text;
+    });
+  }
   async #challengeRequired(s) {
     // Read-only feature detection from the observed original frontend. No keys,
     // tokens or React state are returned or changed; never execute a challenge.
@@ -425,7 +451,7 @@ export class SevenRoomsPlaywright {
         const fields=await this.#guest(s);
         const button=s.page.locator('[data-test="checkout-button-complete"]:visible');
         if (fields.length!==4 || fields.some(field=>!field.value.trim()) || await button.count()!==1 || !await button.isEnabled()) throw new SevenRoomsMirrorError('provider_validation_required',409);
-        const termsText=(await s.page.locator('body').innerText()).slice(0,12000);
+        const termsText=await this.#reviewText(s);
         const details={...s.hold.details,guest:Object.fromEntries(fields.map(field=>[field.name,field.value])),termsText};
         s.bookingReview={details,reviewFingerprint:fingerprint({sessionId:s.id,holdId:s.hold.id,details})};
       }
@@ -435,7 +461,13 @@ export class SevenRoomsPlaywright {
         if (!this.writeEnabled || !this.submissionPolicy?.matchesRequest || !this.submissionPolicy?.verifyConfirmation) throw new SevenRoomsMirrorError('submission_contract_unverified',409);
         const fields=await this.#guest(s);
         if (JSON.stringify(Object.fromEntries(fields.map(field=>[field.name,field.value])))!==JSON.stringify(review.details.guest)
-          || (await s.page.locator('body').innerText()).slice(0,12000)!==review.details.termsText) throw new SevenRoomsMirrorError('stale_review',409);
+          || await this.#reviewText(s)!==review.details.termsText) {
+          const error=new SevenRoomsMirrorError('stale_review',409);
+          // Only this proven pre-dispatch branch may authorize UI recovery.
+          // Never infer safety from HTTP409, or from an ambiguous earlier attempt.
+          if(!s.submitAttempted && !s.submitClicked && !s.submitApproval && !s.submitWork && s.result?.phase!=='booking') error.submissionState='not_dispatched';
+          throw error;
+        }
         s.submitApproval=review;
         s.submitClicked=true;
         let timer;

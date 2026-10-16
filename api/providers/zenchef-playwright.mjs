@@ -261,6 +261,15 @@ export class ZenchefPlaywright {
     this.owned(s.id, owner);
     return structuredClone({ ...s.lastSnapshot, ...(s.submissionStarted ? { state: s.state, canSubmit: false, result: s.result } : {}) });
   }
+  async nativeCountry(s) {
+    const phoneWidget = s.page.locator(PROVIDER_FIELDS.phone).locator('xpath=ancestor::div[contains(concat(" ",normalize-space(@class)," ")," iti ")][1]');
+    const flag = phoneWidget.locator('.iti__selected-country .iti__flag');
+    if (await flag.count() !== 1) return '';
+    const codes = ((await flag.getAttribute('class')) || '').split(/\s+/).filter(c => /^iti__[a-z]{2}$/.test(c));
+    if (codes.length !== 1) return '';
+    const code = codes[0].slice(5);
+    return await phoneWidget.locator(`[data-country-code="${code}"]`).count() === 1 ? code : '';
+  }
   async snapshot(s) {
     let fields = null;
     if (this.mode === 'prepare' && ['contact', 'review'].includes(s.state)) {
@@ -268,7 +277,7 @@ export class ZenchefPlaywright {
       for (const name of FIELDS) fields.push({ name, value: await s.page.locator(PROVIDER_FIELDS[name]).inputValue() });
       const selected = s.page.locator('input[name="civility"]:checked');
       fields.push({ name: 'civility', value: await selected.count() === 1 ? await selected.inputValue() : '', options: ['mr', 'mrs', 'mx'] });
-      fields.push({ name: 'country', value: s.expectedCountry || '', pattern: '^[a-z]{2}$', approvalBinding: true });
+      fields.push({ name: 'country', value: await this.nativeCountry(s), readOnly: true, source: 'provider_phone_country', label: 'Telephone country (selected by provider from phone number)' });
     }
     const shot = await s.page.screenshot({ type: 'png', animations: 'disabled' });
       const snapshot = { id: s.id, restaurantId: s.restaurantId, restaurant: s.restaurant,
@@ -351,7 +360,7 @@ export class ZenchefPlaywright {
             || (fields.country !== undefined && !/^[a-z]{2}$/.test(fields.country)) || FIELDS.some(k => typeof fields[k] !== 'string'
             || !fields[k].trim() || fields[k].length > 200) || !['mr', 'mrs', 'mx'].includes(fields.civility)
             || !/^\+\d{7,15}$/.test(fields.phone) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) throw new ZenchefError('contact_fields');
-          s.review = null; s.state = 'contact'; s.expectedCountry = fields.country;
+          s.review = null; s.state = 'contact';
           for (const k of FIELDS) {
             await s.page.locator(PROVIDER_FIELDS[k]).fill(fields[k]);
             await s.page.locator(PROVIDER_FIELDS[k]).blur();
@@ -370,7 +379,7 @@ export class ZenchefPlaywright {
         if (action.type === 'review' && ['contact', 'review'].includes(s.state)) {
           const details = { ...s.formSelection, civility: await s.page.locator('input[name="civility"]:checked').inputValue() };
           for (const k of FIELDS) details[k] = await s.page.locator(PROVIDER_FIELDS[k]).inputValue();
-          if (s.expectedCountry) details.country = s.expectedCountry;
+          details.country = await this.nativeCountry(s);
           if (FIELDS.some(k => !details[k]?.trim())) throw new ZenchefError('contact_required');
           s.details = details; s.state = 'review';
           s.review = { token: crypto.randomUUID(), revision: s.revision + 1,
@@ -382,7 +391,7 @@ export class ZenchefPlaywright {
             || !s.review || s.review.revision !== s.revision || action.reviewToken !== s.review.token) throw new ZenchefError('confirmation_required', 409);
           const actual = { ...s.formSelection, civility: await s.page.locator('input[name="civility"]:checked').inputValue() };
           for (const k of FIELDS) actual[k] = await s.page.locator(PROVIDER_FIELDS[k]).inputValue();
-          if (s.expectedCountry) actual.country = s.expectedCountry;
+          actual.country = await this.nativeCountry(s);
           if (digest([s.owner, s.id, s.restaurantId, actual, s.terms?.version]) !== s.review.digest) throw new ZenchefError('stale_review', 409);
           // Arpège's actual form requires a card imprint; no card/booking request
           // has been verified or authorized. Do not click its validate button.

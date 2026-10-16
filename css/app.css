@@ -3150,6 +3150,8 @@ body.light-shell .dest-card::after {
 
 /* A tall provider checkout must scroll with the page, including policy dialogs. */
 body.light-shell .restaurant-detail .restaurant-book-panel:has(.booking-provider-frame) { position: static; top: auto; min-width: 0; }
+/* Native forms stay in their grid row; the card style otherwise retains top:92px. */
+body.light-shell .restaurant-detail .restaurant-book-panel:has(#provider-playwright-booking) { position: static; top: auto; min-width: 0; }
 .restaurant-detail-main { min-width: 0; }
 .restaurant-facts dd { min-width: 0; overflow-wrap: anywhere; }
 @media (max-width: 760px) { .restaurant-detail-grid { grid-template-columns: minmax(0, 1fr); } }
