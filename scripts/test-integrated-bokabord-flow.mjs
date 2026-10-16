@@ -28,8 +28,9 @@ function fishDocument(address) {
     wish:{day:date,pax:2,waiting_list:false,offers:[],room_id:null,...(form?{slot:'12:30'}:{})},
     mandatoryFields:{firstname:'required'},isRoomMandatory:false,dailyAvailabilities:{[date]:{date,shifts:[shift]}} };
   const data = {page:form?'/form':'/results',query:Object.fromEntries(url.searchParams),props:{initialState:{appStoreState:state}}};
-  return `<html><body><h1>FishCorner LOCAL TEST — no real booking</h1><script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
-  ${form ? ['firstname','lastname','email','phone'].map(k=>`<input data-testid="${k}-input">`).join('') +
+  return `<html><meta charset="utf-8"><body><h1>FishCorner LOCAL TEST — no real booking</h1><script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
+  ${form ? ['firstname','lastname','email'].map(k=>`<input data-testid="${k}-input">`).join('') +
+    `<div class="iti"><button type="button" class="iti__selected-country"><span class="iti__flag iti__fr"></span></button><li data-country-code="fr"></li><input data-testid="phone-input"></div>` +
     `<label>Mr<input type="radio" name="civility" value="mr" style="display:none"></label><label data-testid="eula-checkbox"><input type="checkbox">Synthetic test terms</label>
     <button data-testid="validate-btn">Reserve fixture</button><script>
     document.querySelector('[data-testid="validate-btn"]').onclick=()=>{
@@ -323,7 +324,8 @@ async function main() {
         await panel(page).locator('[name=date]').fill(date);
         await action(() => panel(page).locator('[data-search] button').click());
         await action(() => panel(page).locator('[data-slot="12:30"]').click());
-        for (const [name,value] of Object.entries({firstname:'Integration',lastname:'Fixture',email:'fixture@example.invalid',phone:'+33612345678',country:'fr'})) {
+        assert.equal(await panel(page).locator('[data-field="country"]').inputValue(),'fr','Country read back from native phone widget');
+        for (const [name,value] of Object.entries({firstname:'Integration',lastname:'Fixture',email:'fixture@example.invalid',phone:'+33612345678'})) {
           await panel(page).locator(`[data-field="${name}"]`).fill(value);
         }
         await panel(page).locator('[data-field="civility"]').selectOption('mr');
