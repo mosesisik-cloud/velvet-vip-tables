@@ -67,3 +67,14 @@ Need: separately reviewed payment/special-meal handling, outside current scope.
 OLLI initial HTML SHA256:
 `91aca43058012dffffc1056ad8e76d881be2d2d1a17a9dfb2beb248e1450a60d`.
 Kommendören was the sole alternative; Paraden not reprobed, no broad inventory.
+
+## Integrated validation
+
+Runtime03e75b1 adds the independent receipt-policy flag only.15 focused tests
+and narrow independent review passed. Actual app/API/Chromium/SQLite harness
+5ff049e passed84API/4restarts/3mockPOST on that exact runtime. Guest continuation
+sends no code; native Next copies phone; final consent is fresh; SQLite unknown
+attempt exists before supplier transport. Wrong/missing receipt stays unknown,
+matching original document confirms, and double-click/owner/restart/replay locks
+hold. This is before network dispatch, not before local DOM click. Zero actual
+supplier reservations, holds, codes or payments were created for testing.
