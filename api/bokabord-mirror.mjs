@@ -284,6 +284,7 @@ export class BokabordMirror {
     const s = this.owned(id, owner);
     if (s.busy) throw new MirrorError('busy', 409);
     if (action.revision !== s.revision) throw new MirrorError('stale_view', 409);
+    if (s.submitted && !['refresh','scroll'].includes(action.type)) throw new MirrorError('already_attempted',409);
     if (!['click', 'scroll', 'refresh', ...(this.prepare ? ['fill'] : []), ...((this.live || this.authorizeSubmission) && this.reserveSubmission ? ['submit'] : [])].includes(action.type)) throw new MirrorError('inspect_only');
     s.busy = true; s.touched = Date.now();
     try {

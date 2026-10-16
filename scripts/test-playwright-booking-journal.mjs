@@ -62,6 +62,7 @@ test('Noema receipt capture requires the matching successful main-frame document
       await f.session.receiptPromise;
       assert.equal(ledger.list('owner')[0].status,scenario==='complete'?'confirmed':'unknown',scenario);
       assert.equal(f.counts().sent,1,'receipt observation never sends another request');
+      await assert.rejects(f.mirror.action(f.session.id,'owner',{type:'click',revision:f.session.revision,x:1,y:1}),/already_attempted/);
       assert(!JSON.stringify(ledger.list('owner')).includes('PRIVATE-TEST-CODE'));
       assert(!JSON.stringify(ledger.list('owner')).includes(approval.email));
       assert.equal(ledger.list('other').length,0);
