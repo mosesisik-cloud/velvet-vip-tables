@@ -11,7 +11,7 @@ import { NOEMA_LUNCH_RECEIPT_POLICY } from '../api/bokabord-receipt-confirmation
 const restaurantId = 'curated-STO-zink-italian-cuisine';
 const approval = {date:'2030-01-15',time:'19:00',party:2,firstname:'Test',lastname:'Person',email:'test@example.com',phone:'0700000000',comment:'',mealid:9778,hash:RESTAURANT_DETAILS[restaurantId].hash,terms:true};
 async function nativeFixture(hooks, {venueId=restaurantId,approved=approval}={}) {
-  let routeHandler, sent=0, aborted=0;
+  let routeHandler, sent=0, aborted=0,reply=null,transportFailure=false;
   const events=new Map();
   const frame={};let documentUrl='',documentText='',onCapture=null;
   const page={on:(name,listener)=>events.set(name,listener),setDefaultTimeout(){},goto:async()=>{},
@@ -25,12 +25,14 @@ async function nativeFixture(hooks, {venueId=restaurantId,approved=approval}={})
   await mirror.create('owner',venueId);
   const session=[...mirror.sessions.values()][0];
   session.armed=true;session.approval=approved;
-  const transmit=()=>routeHandler({request:()=>({method:()=> 'POST',url:()=> 'https://app.bokabord.se/reservation/api/booking/saveBooking',postDataJSON:()=>({...approved,amount:approved.party,terms:{general:true,restaurant:false,bokabord:false},products:[],waitlist:false,giftcard:null,linked_meals:[],bookingid:null})}),continue:async()=>{sent++;},abort:async()=>{aborted++;}});
-  return {mirror,session,transmit,events,frame,setCaptureHook:fn=>{onCapture=fn;},setDocument:(url,text)=>{documentUrl=url;documentText=text;},counts:()=>({sent,aborted})};
+  const transmit=()=>routeHandler({request:()=>({method:()=> 'POST',url:()=> 'https://app.bokabord.se/reservation/api/booking/saveBooking',postDataJSON:()=>({...approved,amount:approved.party,terms:{general:true,restaurant:false,bokabord:false},products:[],waitlist:false,giftcard:null,linked_meals:[],bookingid:null})}),
+    fetch:async options=>{assert.equal(options.maxRetries,0);assert.equal(options.maxRedirects,0);sent++;if(transportFailure)throw new Error('lost_reply');return {json:async()=>reply,ok:()=>true};},
+    fulfill:async()=>{},continue:async()=>{sent++;},abort:async()=>{aborted++;}});
+  return {mirror,session,transmit,events,frame,setResponse:(data,fail=false)=>{reply=data;transportFailure=fail;},setCaptureHook:fn=>{onCapture=fn;},setDocument:(url,text)=>{documentUrl=url;documentText=text;},counts:()=>({sent,aborted})};
 }
 
 test('Noema receipt capture requires the matching successful main-frame document before durable confirmation',async()=>{
-  for(const scenario of ['complete','wrong-code','wrong-reference','iframe','failed-document','unfinished-document','navigation-during-capture','missing-prefix','disabled']) {
+  for(const scenario of ['complete','wrong-code','wrong-reference','iframe','failed-document','unfinished-document','navigation-during-capture','missing-prefix','transport-failure','disabled']) {
     const directory=fs.mkdtempSync(path.join(os.tmpdir(),'velvet-noema-'));
     const ledger=new PlaywrightAttemptLedger(':memory:');let f;
     const policy=NOEMA_LUNCH_RECEIPT_POLICY;
@@ -38,10 +40,11 @@ test('Noema receipt capture requires the matching successful main-frame document
     const hooks=createBookingJournalHooks({ledger,legacyLedger:new BookingLedger(path.join(directory,'legacy')),
       register:{upsert(){}},restaurants:RESTAURANT_DETAILS,receiptPolicies:scenario==='disabled'?[]:[policy]});
     try {
-      f=await nativeFixture(hooks,{venueId:policy.restaurantId,approved});await f.transmit();
+      f=await nativeFixture(hooks,{venueId:policy.restaurantId,approved});
       const data={success:true,booking:{...approved,id:4242,status:1,meal:{type:'2'},amount:2,
         short_code:'PRIVATE-TEST-CODE',waitlist:0,products:[],require_noshow:false}};
-      f.events.get('response')({url:()=> 'https://app.bokabord.se/reservation/api/booking/saveBooking',json:async()=>data,ok:()=>true});
+      f.setResponse(data,scenario==='transport-failure');await f.transmit();
+      f.events.get('response')({url:()=> 'https://app.bokabord.se/reservation/api/booking/saveBooking',json:async()=>{if(scenario!=='disabled')throw new Error('body_evicted_after_navigation');return data;},ok:()=>true});
       await f.session.resultPromise;
       assert.equal(ledger.list('owner')[0].status,'unknown',scenario+': response alone is not confirmation');
       const url='https://app.bokabord.se/reservation/booking/?code='+(scenario==='wrong-code'?'OTHER':'PRIVATE-TEST-CODE')+'&new=1';

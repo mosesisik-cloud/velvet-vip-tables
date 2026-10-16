@@ -103,6 +103,24 @@ export class BokabordMirror {
             method:r.method(),url:r.url(),payload:structuredClone(query),
           }};
           s.submitted = true; s.result = { status: 'unknown' };
+          if (s.receiptVerificationEnabled) {
+            // Preserve the original response before its browser-side navigation
+            // can evict the body from Chromium's response cache. This is the one
+            // authorized transmission, not a replay or a second readback call.
+            s.responseCapturedByRoute=true;
+            try {
+              const response=await route.fetch({maxRedirects:0,maxRetries:0,timeout:20000});
+              const respondedAt=Date.now();
+              const data=await response.json().catch(()=>null);
+              s.resultPromise=this.recordResponse(s,data,response.ok(),respondedAt)
+                .catch(()=>{s.result={status:'unknown',reason:'result_persistence_failed'};});
+              await s.resultPromise;
+              return await route.fulfill({response});
+            } catch {
+              s.result={status:'unknown'};
+              return route.abort().catch(()=>{});
+            }
+          }
           return route.continue();
         }
         if (!allowedRequest(r.method(), r.url())) {
@@ -144,12 +162,11 @@ export class BokabordMirror {
           }
           return;
         }
+        if (s.responseCapturedByRoute) return;
         const respondedAt=Date.now();
         s.resultPromise = (async () => {
         const data = await response.json().catch(() => null);
-        if (s.receiptVerificationEnabled) s.responseObservation = {data,httpOk:response.ok?.() === true,respondedAt};
-        s.result = response.ok?.() === true ? (this.verifyResult ? await this.verifyResult(data, s) : classifyBokabordResult(data)) : { status: 'unknown', reason: 'supplier_http_error' };
-        if (s.result) await this.recordResult?.(s);
+        await this.recordResponse(s,data,response.ok?.() === true,respondedAt);
       })().catch(() => { s.result = { status: 'unknown' }; }); });
       s.page.setDefaultTimeout(12_000);
       context.on('page', page => { if (page !== s.page) page.close().catch(() => {}); });
@@ -173,6 +190,13 @@ export class BokabordMirror {
     await s.page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
     // A date click can start the provider AJAX queue during the render frames.
     await s.page.waitForFunction(providerReady, null, { timeout: 8000 });
+  }
+
+  async recordResponse(s,data,httpOk,respondedAt) {
+    if (s.receiptVerificationEnabled) s.responseObservation={data,httpOk,respondedAt};
+    s.result=httpOk ? (this.verifyResult ? await this.verifyResult(data,s) : classifyBokabordResult(data))
+      : {status:'unknown',reason:'supplier_http_error'};
+    if (s.result) await this.recordResult?.(s);
   }
 
   async captureReceipt(s, response, navigatedAt, navigationId) {
