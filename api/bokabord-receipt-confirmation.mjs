@@ -64,6 +64,12 @@ export const ASTRID_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: 'e3a1940c68c7fcb34cb950162eeaaaef', mealid: 55508, mealType: 2, maxParty: 2,
 });
 
+// Exact ordinary LUNCH only; dinner/payment and event meals stay excluded.
+export const BOQUERIA_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-boqueria', name: 'Boqueria',
+  hash: '0195100c20f372753761a0bbb861f027', mealid: 22, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
