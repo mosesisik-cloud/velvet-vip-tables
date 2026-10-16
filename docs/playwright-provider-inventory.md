@@ -79,4 +79,3 @@ No live availability, supplier confirmation, payment, hold, cancellation, deploy
 5. Track implemented, mock/sandbox tested, readonly live checked, supplier-confirmed and deployed as separate fields per adapter and supported flow. Card/3DS, deposits and request-only paths need their own truthful outcomes.
 
 This documentation-only handoff changes no routing, app, registry or production settings. It does not fulfill the whole full-booking objective by itself; the named implementation owners and integrator must deliver and verify the runtime paths.
-
