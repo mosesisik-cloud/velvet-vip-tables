@@ -31,16 +31,17 @@ const sturehof = process.argv.includes('--sturehof') || process.env.VELVET_TEST_
 const beirut = process.argv.includes('--beirut') || process.env.VELVET_TEST_PROVIDER === 'Beirut';
 const balzac = process.argv.includes('--balzac') || process.env.VELVET_TEST_PROVIDER === 'Balzac';
 const kommendoren = process.argv.includes('--kommendoren') || process.env.VELVET_TEST_PROVIDER === 'Kommendoren';
-const guestLunch = beirut || balzac || kommendoren;
+const astrid = process.argv.includes('--astrid') || process.env.VELVET_TEST_PROVIDER === 'Astrid';
+const guestLunch = beirut || balzac || kommendoren || astrid;
 const guestChoice = ciccios || guestLunch;
 const contactFinal = riche || sturehof;
-assert.ok([fishcorner,pesquiere,pirouette,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren].filter(Boolean).length <= 1, 'Choose one named provider scenario');
+assert.ok([fishcorner,pesquiere,pirouette,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid].filter(Boolean).length <= 1, 'Choose one named provider scenario');
 const receiptMode = noema || guestChoice || contactFinal;
-const receiptName = kommendoren ? 'Kommendören' : balzac ? 'Brasserie Balzac' : beirut ? 'Beirut Café' : sturehof ? 'Sturehof' : riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
-const receiptCode = kommendoren ? 'synthetic-kommendoren-only' : balzac ? 'synthetic-balzac-only' : beirut ? 'synthetic-beirut-only' : sturehof ? 'synthetic-sturehof-only' : riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
-const mealId = kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
+const receiptName = astrid ? 'Brasserie Astrid' : kommendoren ? 'Kommendören' : balzac ? 'Brasserie Balzac' : beirut ? 'Beirut Café' : sturehof ? 'Sturehof' : riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
+const receiptCode = astrid ? 'synthetic-astrid-only' : kommendoren ? 'synthetic-kommendoren-only' : balzac ? 'synthetic-balzac-only' : beirut ? 'synthetic-beirut-only' : sturehof ? 'synthetic-sturehof-only' : riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
+const mealId = astrid ? 55508 : kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
 const mealType = noema || guestLunch || contactFinal ? 2 : 3;
-const restaurantId = pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const restaurantId = astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
 const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[receiptMode ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 const date = '2030-01-15';
@@ -80,7 +81,7 @@ function supplierHtml() {
 <style>body{font:16px Arial;margin:20px}button,input,textarea{box-sizing:border-box;min-height:40px;width:260px;display:block;margin:8px 0}button{background:#eee}h1,h2{font-size:22px}#party{position:absolute;top:90px}#date{position:absolute;top:150px}#slot{position:absolute;top:210px}</style>
 <main id="screen"></main><script>
 const q={hash:${JSON.stringify(venue.hash)},mealid:${mealId},date:'',time:'',amount:0,firstname:'',lastname:'',email:'',phone:'',comment:'',products:[],waitlist:false,giftcard:null,linked_meals:[],bookingid:null,terms:{general:true,restaurant:false,bokabord:false}};
-const model={meal:{bullets:{},mandatory_products:false},getQuery:()=>q};
+const model={custom_request:false,settings:{custom_request:${astrid}},meal:{bullets:{},mandatory_products:false},getQuery:()=>q};
 window.angular={element:()=>({injector:()=>({get:key=>key==='Booking'?model:key==='$http'?{pendingRequests:[]}:{$$phase:false}}),scope:()=>({isAjaxRequest:()=>false,phoneValid:()=>!!document.querySelector('[name=phone]')?.value.match(/^\\+46700000000$/)})})};
 if(${contactFinal || guestLunch}){
  window.$={fn:{intlTelInput:{getCountryData:()=>[{iso2:'se',dialCode:'46',name:'Sweden'}]}}};
@@ -146,6 +147,12 @@ if (childMode) {
         if (message.text()==='fixture-contact-final-click') process.send?.({kind:'provider-final-click'});
       });});
       const route = context.route.bind(context);
+      if(astrid)context.on('page',page=>process.on('message',message=>{
+        if(message.kind==='fixture-custom-request')page.evaluate(async()=>{
+          try{await fetch('/reservation/api/booking/sendCustomRequest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({custom_request:true})});return false;}
+          catch{return true;}
+        }).then(blocked=>process.send?.({kind:'fixture-custom-request-result',blocked}));
+      }));
       let createdBooking;
       await context.routeWebSocket('**/*', socket => socket.close());
       // A final guard also catches requests not registered by the production adapter.
@@ -264,6 +271,7 @@ if (childMode) {
             return target.fulfill(options.response.fixture);
           };
           if (key === 'abort') return async (...args) => {
+            if(astrid && new URL(target.request().url()).pathname.endsWith('/sendCustomRequest'))process.send?.({kind:'adapter-blocked-custom-request'});
             if (target.request().url() === saveUrl) process.send?.({ kind: 'adapter-blocked-submit' });
             return target.abort(...args);
           };
@@ -325,7 +333,7 @@ async function main() {
     backend = `http://127.0.0.1:${port}`;
     child = spawn(process.execPath, ['--import', import.meta.url, 'api/server.mjs'], { cwd: root, env: {
       ...process.env, VELVET_INTEGRATED_SUPPLIER_FIXTURE: 'child', VELVET_TEST_DIRECTORY: directory,
-      VELVET_TEST_PROVIDER: pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
+      VELVET_TEST_PROVIDER: astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
       VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_CICCIOS_RECEIPT: ciccios ? 'enabled' : 'disabled',
       VELVET_RICHE_RECEIPT: riche ? 'enabled' : 'disabled',
@@ -333,6 +341,7 @@ async function main() {
       VELVET_BEIRUT_RECEIPT: beirut ? 'enabled' : 'disabled',
       VELVET_BALZAC_RECEIPT: balzac ? 'enabled' : 'disabled',
       VELVET_KOMMENDOREN_RECEIPT: kommendoren ? 'enabled' : 'disabled',
+      VELVET_ASTRID_RECEIPT: astrid ? 'enabled' : 'disabled',
       VELVET_ZENCHEF_FISHCORNER: zenchef ? 'live' : 'disabled',
       VELVET_ZENCHEF_PESQUIERE: roomVenue ? 'live' : 'disabled',
       VELVET_ZENCHEF_PIROUETTE: pirouette ? 'live' : 'disabled',
@@ -649,6 +658,19 @@ async function main() {
     first = await makeView();
     await toReview(first.page);
     assert.equal(submits(), 0);
+    if(astrid){
+      const attempted=new Promise((resolve,reject)=>{
+        const timer=setTimeout(()=>reject(Error('fixture_custom_request_timeout')),5000);
+        const receive=message=>{if(message.kind==='fixture-custom-request-result'){clearTimeout(timer);child.off('message',receive);resolve(message.blocked);}};
+        child.on('message',receive);
+      });
+      child.send({kind:'fixture-custom-request'});
+      assert.equal(await attempted,true,'Custom request must fail at the native adapter boundary');
+      assert.equal(messages.filter(m=>m.kind==='adapter-blocked-custom-request').length,1);
+      assert.equal(submits(),0);
+      assert.equal((await api(first.page,'/restaurant-bookings/playwright/attempts')).body.attempts.length,0);
+      assert.notEqual(await panel(first.page).locator('[data-status]').getAttribute('data-booking-status'),'confirmed');
+    }
     await panel(first.page).locator('[data-terms]').check();
     if (contactFinal) await panel(first.page).locator('[data-submit]').dblclick();
     else await panel(first.page).locator('[data-submit]').evaluate(button => { button.click(); button.click(); });
