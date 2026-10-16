@@ -137,7 +137,7 @@ test('session expiry and close prevent stale use', async () => {
 
 // Explicitly SYNTHETIC source-contract cases. These are not observed provider
 // successes or availability evidence. Every transport is an in-memory function.
-function syntheticLifecycle({ denyPhase, failPhase, changeReceipt, refuseRecord = false } = {}) {
+function syntheticLifecycle({ denyPhase, failPhase, changeReceipt, changeCart, refuseRecord = false, syncRecord = false } = {}) {
   let sequence = 0;
   const calls = [], grants = [], records = [];
   const now = Date.parse('2026-10-16T12:00:00Z');
@@ -158,15 +158,19 @@ function syntheticLifecycle({ denyPhase, failPhase, changeReceipt, refuseRecord 
       return { sendAllowed: intent.phase !== denyPhase, attempt: { ...intent, ...intent.details,
         attemptId: `synthetic-attempt-${++sequence}`, idempotencyKey: `synthetic-key-${sequence}` } };
     },
-    recordResult: async session => {
+    recordResult: session => {
       records.push(clone(session));
-      return { status: refuseRecord ? 'unknown' : session.result.status };
+      const saved = { status: refuseRecord ? 'unknown' : session.result.status };
+      return syncRecord ? saved : Promise.resolve(saved);
     },
     mutationTransport: async request => {
       calls.push(clone(request));
       if (request.phase === failPhase) throw Error('synthetic ambiguous transport failure');
-      if (request.phase === 'cart' || request.phase === 'cart_update') return { status: 200,
-        data: { availability: { type: 'success' }, is_request_enabled: false, cart: clone(cart) } };
+      if (request.phase === 'cart_init') return { status: 200, data: {} };
+      if (request.phase === 'cart' || request.phase === 'cart_update') {
+        const returnedCart = clone(cart); changeCart?.(returnedCart, request.phase);
+        return { status: 200, data: { availability: { type: 'success' }, is_request_enabled: false, cart: returnedCart } };
+      }
       if (request.phase === 'booking') return { status: 200, data: { reservation: clone(reservation) } };
       if (request.phase === 'readback') {
         const saved = clone(reservation); changeReceipt?.(saved);
@@ -200,16 +204,19 @@ test('synthetic contract: separate grants and own raw readback are required', as
   assert.equal(result.mode, 'fixture');
   assert.equal(result.result.status, 'confirmed');
   assert.equal(result.result.verification.source, 'fixture');
-  assert.deepEqual(h.grants.map(g => g.phase), ['cart', 'cart_update', 'booking']);
-  assert.deepEqual(h.calls.map(c => c.phase), ['cart', 'cart_update', 'booking', 'readback']);
-  assert.deepEqual(h.calls[0].body.orders, [{ is_group_order: true, qty: 1, menu_item_id: SAZON.menuId }]);
-  assert.equal(h.calls[0].body.customer.email, '');
-  assert.equal(h.calls[1].body.customer.email, 'guest@example.invalid');
-  assert.equal(h.calls[2].body.allow_provider_marketing, false);
-  assert.match(h.calls[3].url, /reservations\/synthetic-own-code\?/);
-  assert.equal(h.calls[3].url, 'https://production-booking.tablecheck.com/v2/reservations/synthetic-own-code?email=guest%40example.invalid&phone=%2B46700000000');
-  assert.equal(new URL(h.calls[3].url).searchParams.get('email'), 'guest@example.invalid');
-  assert.equal(new URL(h.calls[3].url).searchParams.get('phone'), '+46700000000');
+  assert.deepEqual(h.grants.map(g => g.phase), ['cart_init', 'cart', 'cart_update', 'booking']);
+  assert.deepEqual(h.calls.map(c => c.phase), ['cart_init', 'cart', 'cart_update', 'booking', 'readback']);
+  assert.equal(h.calls[0].url, 'https://production-booking.tablecheck.com/v2/booking/cart/init');
+  assert.equal(h.calls[0].body.shop_id, SAZON.shopId);
+  assert.deepEqual(Object.keys(h.calls[0].body).sort(), ['locale', 'session_ref', 'shop_id']);
+  assert.deepEqual(h.calls[1].body.orders, [{ is_group_order: true, qty: 1, menu_item_id: SAZON.menuId }]);
+  assert.equal(h.calls[1].body.customer.email, '');
+  assert.equal(h.calls[2].body.customer.email, 'guest@example.invalid');
+  assert.equal(h.calls[3].body.allow_provider_marketing, false);
+  assert.match(h.calls[4].url, /reservations\/synthetic-own-code\?/);
+  assert.equal(h.calls[4].url, 'https://production-booking.tablecheck.com/v2/reservations/synthetic-own-code?email=guest%40example.invalid&phone=%2B46700000000');
+  assert.equal(new URL(h.calls[4].url).searchParams.get('email'), 'guest@example.invalid');
+  assert.equal(new URL(h.calls[4].url).searchParams.get('phone'), '+46700000000');
   const publicText = JSON.stringify(result);
   assert.ok(!publicText.includes('synthetic-capability') && !publicText.includes('synthetic-cart'));
   const storedText = JSON.stringify(h.grants);
@@ -221,13 +228,13 @@ test('synthetic contract: denied update grant cannot reach checkout or readback'
   const h = syntheticLifecycle({ denyPhase: 'cart_update' });
   const view = await h.readyForSubmit();
   await assert.rejects(h.adapter.action(view.id, 'owner', h.approve(view, 'submit')), /attempt_binding/);
-  assert.deepEqual(h.calls.map(c => c.phase), ['cart']);
+  assert.deepEqual(h.calls.map(c => c.phase), ['cart_init', 'cart']);
   await assert.rejects(h.adapter.action(view.id, 'owner', h.approve(view, 'submit')), /already_attempted/);
   await h.adapter.close();
   const finalDenied = syntheticLifecycle({ denyPhase: 'booking' });
   const finalView = await finalDenied.readyForSubmit();
   await assert.rejects(finalDenied.adapter.action(finalView.id, 'owner', finalDenied.approve(finalView, 'submit')), /attempt_binding/);
-  assert.deepEqual(finalDenied.calls.map(c => c.phase), ['cart', 'cart_update']);
+  assert.deepEqual(finalDenied.calls.map(c => c.phase), ['cart_init', 'cart', 'cart_update']);
   await finalDenied.adapter.close();
   const noConsent = syntheticLifecycle();
   const cartView = await noConsent.readyForCart();
@@ -242,7 +249,7 @@ test('synthetic contract: ambiguous checkout is consumed without receipt read or
   const view = await h.readyForSubmit();
   const result = await h.adapter.action(view.id, 'owner', h.approve(view, 'submit'));
   assert.equal(result.result.status, 'unknown');
-  assert.deepEqual(h.calls.map(c => c.phase), ['cart', 'cart_update', 'booking']);
+  assert.deepEqual(h.calls.map(c => c.phase), ['cart_init', 'cart', 'cart_update', 'booking']);
   await assert.rejects(h.adapter.action(view.id, 'owner', h.approve(result, 'submit')), /already_attempted/);
   await h.adapter.close();
 });
@@ -273,4 +280,48 @@ test('synthetic contract: pending and IOU remain distinct from confirmation', as
     assert.equal(result.result.status, expected);
     await h.adapter.close();
   }
+});
+
+test('synthetic init: refused or ambiguous init cannot create cart and cannot retry', async () => {
+  for (const deny of [true, false]) {
+    const h = syntheticLifecycle(deny ? { denyPhase: 'cart_init' } : { failPhase: 'cart_init' });
+    const view = await h.readyForCart();
+    if (deny) await assert.rejects(h.adapter.action(view.id, 'owner', h.approve(view, 'cart')), /attempt_binding/);
+    else {
+      const result = await h.adapter.action(view.id, 'owner', h.approve(view, 'cart'));
+      assert.equal(result.result.status, 'unknown');
+      assert.equal(result.canCart, false);
+    }
+    assert.deepEqual(h.calls.map(c => c.phase), deny ? [] : ['cart_init']);
+    const current = await h.adapter.current(view.id, 'owner');
+    await assert.rejects(h.adapter.action(view.id, 'owner', h.approve(current, 'cart')), /already_attempted/);
+    await h.adapter.close();
+  }
+});
+
+test('synthetic conservative scope: partial write response or rotated token cannot silently reach checkout', async () => {
+  for (const changeCart of [
+    (cart, phase) => { if (phase === 'cart_update') delete cart.orders; },
+    (cart, phase) => { if (phase === 'cart_update') cart.access_token = 'synthetic-rotated-token'; },
+    (cart, phase) => { if (phase === 'cart_update') delete cart.payment_transaction_type; },
+  ]) {
+    const h = syntheticLifecycle({ changeCart });
+    const view = await h.readyForSubmit();
+    const result = await h.adapter.action(view.id, 'owner', h.approve(view, 'submit'));
+    assert.equal(result.result.status, 'unknown');
+    assert.deepEqual(h.calls.map(c => c.phase), ['cart_init', 'cart', 'cart_update']);
+    await h.adapter.close();
+  }
+});
+
+test('synthetic ambiguous checkout supports synchronous journal recording without retry', async () => {
+  const h = syntheticLifecycle({ failPhase: 'booking', syncRecord: true });
+  const view = await h.readyForSubmit();
+  const result = await h.adapter.action(view.id, 'owner', h.approve(view, 'submit'));
+  assert.equal(result.result.status, 'unknown');
+  assert.deepEqual(h.calls.map(c => c.phase), ['cart_init', 'cart', 'cart_update', 'booking']);
+  assert.equal(h.records.at(-1).result.status, 'unknown');
+  assert.equal(h.records.at(-1).attempt.phase, 'booking');
+  await assert.rejects(h.adapter.action(view.id, 'owner', h.approve(result, 'submit')), /already_attempted/);
+  await h.adapter.close();
 });

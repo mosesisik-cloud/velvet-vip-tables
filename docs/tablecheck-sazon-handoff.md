@@ -61,7 +61,7 @@ does not establish whether another date or quantity would work.
 Experience mount at pages 873700 also invokes `POST /v2/booking/cart/init`
 before Book now. Client 195539 sends shop_id with optional amendment ID and
 URL-query/locale/session transforms. The caller does not inspect its response.
-This is blocked along with cart creation; it is not evidence of inventory hold.
+This is blocked in production along with cart creation; it is not evidence of inventory hold.
 Whether init is a required server prerequisite remains unresolved from this
 client alone. No native scripts are executed by the preparation adapter.
 
@@ -132,7 +132,7 @@ broad: ordinary logging/cache/session correlation is not a restaurant hold.
 
 ## Validation limits
 
-Run `node --test scripts/test-tablecheck-sazon.mjs` (12 tests). Replays cover
+Run `node --test scripts/test-tablecheck-sazon.mjs` (15 tests). Replays cover
 actual policy/query/negative grid, scope-changing and capability requests,
 malformed slot rows, owner/revision/expiry guards, denied mutations without
 transport, and mounting in the existing runtime without live capability.
@@ -154,7 +154,14 @@ using a separate journal or parallel checkout engine.
 
 1. Source-supported slot is selected locally and reviewed. Explicit cart
    approval requires current revision, token, fingerprint and policy version.
-   `phase: cart` reserves a durable grant before the exact POST. No retries.
+   The snapshot discloses `cartOperations: [cart_init, cart]`. Offline init
+   reserves a separate `cart_init` grant and sends only native shop_id, locale
+   and correlation session_ref to `/v2/booking/cart/init`. No arbitrary query,
+   amendment, contact or capability fields are forwarded. HTTP 200 without a
+   reported error is only transport acknowledgment, not a server-semantic
+   guarantee. Ambiguity/refusal consumes init and stops the sequence. A private
+   init-attempt/request binding is required before the separate `cart` grant.
+   The cart fingerprint includes that parent attempt. No retries for either.
 2. This adapter conservatively requires availability.type success, a cart ID/token/expiry,
    exact raw order and start time, no payment form/transaction/booking fee,
    and no request-only fallback. Only then does private cart state exist.
@@ -184,7 +191,9 @@ using a separate journal or parallel checkout engine.
    result that fails to persist the same status downgrades to unknown.
 
 Intent interface agreed with 32d5: provider TableCheck, restaurant
-osm-BAL-sazon, phases cart/cart_update/booking, details date/time/party2.
+osm-BAL-sazon, phases cart_init/cart/cart_update/booking, details date/time/party2.
+32d5 confirmed matching scoped shared journal support for cart_init;
+the provider does not invent a second ledger or reuse another phase's grant.
 All additional raw metadata is fingerprint-bound, not persisted as payload.
 The fixture intents use mode fixture; future production would require live,
 but that path does not exist in this patch. Private parent validation belongs
@@ -209,8 +218,13 @@ regression assertion for plus-sign phone and email at-sign.
 
 - Native Experience mount invokes cart/init, but does not inspect or await its
   response. Its server effects and whether create/update depend on that call
-  are not established. No init request or grant is added or silently skipped
-  in a purported live implementation. This is the hard production barrier.
+  are not established. The known request now has a separately gated **offline**
+  phase. Awaiting a successful transport acknowledgment before create is our
+  conservative ordering, not a claim that native code awaits or validates it.
+  Native mount can precede search; our fixture places it after local search
+  and explicit consent. This safe local ordering is not native end-to-end proof.
+  Production remains disabled; adding request code does not establish server
+  effects, inventory hold or API compatibility.
 - No correct native grid response, native cart response or persisted booking
   has been observed. Distinguish response families: orders/start_at/pax/category
   are consumed in **GET-cart restoration** at client 106400–108500. That does not
