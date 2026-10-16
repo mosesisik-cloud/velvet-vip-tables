@@ -7,7 +7,7 @@ export function mountProviderPlaywrightBooking(container, api, {
   const isZenchef = provider.toLowerCase() === 'zenchef';
   const key = `velvet:provider:${encodeURIComponent(provider)}:${encodeURIComponent(restaurantId)}`;
   const aliases = { firstname:'Förnamn', firstName:'Förnamn', lastname:'Efternamn', lastName:'Efternamn', email:'E-post', emailAddress:'E-post', phone:'Telefon', phoneNumber:'Telefon', comment:'Önskemål' };
-  if (isZenchef) { aliases.civility = 'Tilltal'; aliases.country = 'Land (landskod)'; }
+  if (isZenchef) { aliases.civility = 'Tilltal'; aliases.country = 'Telefonens land'; }
   let state = null, busy = false, disposed = false, uncertain = false, marker = null, storageOK = true;
   try {
     const value = storage.getItem(key);
@@ -128,8 +128,10 @@ export function mountProviderPlaywrightBooking(container, api, {
         for (const [value,text] of [['','Välj tilltal'],['mr','Mr'],['mrs','Mrs'],['mx','Mx']]) { const option = document.createElement('option'); option.value = value; option.textContent = text; input.append(option); }
       } else if (field.name !== 'comment') input.type = /^email/.test(field.name) ? 'email' : /phone/i.test(field.name) ? 'tel' : 'text';
       input.value = drafts.get(field.name) ?? (typeof field.value === 'string' ? field.value : '');
+      input.readOnly = field.readOnly === true;
+      if (input.readOnly) input.title = 'Hämtas från telefonnumret i restaurangens formulär.';
       input.maxLength = field.name === 'comment' ? 2000 : 200;
-      input.oninput = () => { drafts.set(field.name,input.value); changed(); };
+      input.oninput = () => { if (!input.readOnly) { drafts.set(field.name,input.value); changed(); } };
       label.append(input); el('fields').append(label);
     }
     el('save').hidden = !seen.size; el('review').hidden = next.phase !== 'guest';

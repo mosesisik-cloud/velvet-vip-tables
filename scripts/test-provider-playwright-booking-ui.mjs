@@ -36,7 +36,7 @@ async function setup(page, scenario = 'journey') {
       if(scenario==='stale-current' && path.endsWith('/current')) return {error:'stale_review',submissionState:'not_dispatched',sessionId:'session-1',reviewFingerprint:srFingerprint};
       if(zen) {
         if(body.type==='search') snapshot={...snapshot,state:'availability_observed',availabilityEvidence:{candidates:[{time:'12:30',shiftId:545372}]}};
-        if(body.type==='select') snapshot={...snapshot,state:'contact',fields:['firstname','lastname','email','phone','civility','country'].map(name=>({name,value:''}))};
+        if(body.type==='select') snapshot={...snapshot,state:'contact',fields:['firstname','lastname','email','phone','civility','country'].map(name=>({name,value:name==='country'?'fr':'',readOnly:name==='country'}))};
         if(body.type==='fill') snapshot={...snapshot,fields:Object.entries(body.fields).map(([name,value])=>({name,value}))};
         if(body.type==='review') snapshot={...snapshot,state:'review',details:{date:'2026-12-20',party:2,time:'12:30',...Object.fromEntries(snapshot.fields.map(f=>[f.name,f.value]))},reviewToken:'opaque-review',reviewFingerprint:zenFingerprint,terms:{text:'Zenchef provider terms',version:'v1'},canSubmit:true};
         if(body.type==='submit') {
@@ -149,7 +149,9 @@ try {
     await page.locator('[name="date"]').fill('2026-12-20');await page.locator('[data-search] button').click();await idle(page);
     await page.locator('[data-slot="12:30"]').click();await idle(page);
     assert(!/Tillfälligt reserverat/.test(await page.locator('[data-status]').innerText()));
-    for(const [name,value] of Object.entries({firstname:'Test',lastname:'Guest',email:'test@example.invalid',phone:'+33612345678',country:'fr'})) await page.locator(`[data-field="${name}"]`).fill(value);
+    for(const [name,value] of Object.entries({firstname:'Test',lastname:'Guest',email:'test@example.invalid',phone:'+33612345678'})) await page.locator(`[data-field="${name}"]`).fill(value);
+    assert.equal(await page.locator('[data-field="country"]').evaluate(input=>input.readOnly),true);
+    assert.equal(await page.locator('[data-field="country"]').inputValue(),'fr');
     await page.locator('[data-field="civility"]').selectOption('mx');
     await page.locator('[data-save]').click();await idle(page);
     await page.locator('[data-review]').click();await idle(page);
