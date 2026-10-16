@@ -69,3 +69,26 @@ Ce5c should reuse the actual app/API/adapter/journal harness with a contact-fina
 supplier fixture: review causes0save requests, final consent causes1, changed
 details/replay are blocked, and recovery uses the durable journal. Publication is
 owned by32d5 after integration validation. No real Riche booking is claimed.
+
+## Native Velvet review implementation
+
+`VELVET_RICHE_RECEIPT=enabled` independently enables the receipt policy and
+contact-final review contract. `review` freezes server-read policy-approved
+booking details and a bounded atomic view (full visible text, page URL, visible
+anchor destinations/labels and checkbox states). It performs no provider click,
+no journal reservation and no arming. The UI displays the frozen details and
+web links, then resets consent. The server-issued review token is session-bound.
+
+A separate final action checks current revision, fresh consent, token, unchanged
+provider details and view, and a five-minute review lifetime. It reserves SQLite
+before clicking the source-backed Next button. The route still checks the exact
+approved request before one transmission. A denied durable reservation returns
+a locked unknown snapshot without a provider click; uncertain click/transport
+outcomes remain consumed. Editing invalidates review. Existing provider-side
+review flows remain unchanged; payment-required meals hand off.
+
+Narrow review found and fixed truncation and href-binding issues; full text is
+now bound up to64k (oversize fails closed), with at most100 visible links. All
+link destinations participate in binding; only HTTP(S) links render clickable.
+The Swedish review UI and actual newlines were visually checked in the local
+supplier-fixture screenshot. No provider booking was created by this work.
