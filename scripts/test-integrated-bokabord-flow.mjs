@@ -487,7 +487,8 @@ async function main() {
     await toReview(first.page);
     assert.equal(submits(), 0);
     await panel(first.page).locator('[data-terms]').check();
-    await panel(first.page).locator('[data-submit]').evaluate(button => { button.click(); button.click(); });
+    if (riche) await panel(first.page).locator('[data-submit]').dblclick();
+    else await panel(first.page).locator('[data-submit]').evaluate(button => { button.click(); button.click(); });
     await first.page.waitForFunction(() => document.querySelector('#bokabord-mirror [data-status]')?.dataset.bookingStatus === 'unknown', null, { timeout: 40_000 });
     await settled(first.page);
     assert.equal(submits(), 1, 'Exactly one supplier boundary attempt');
@@ -509,7 +510,11 @@ async function main() {
     // to unknown; assert the supplier boundary block, not an internal status.
     await first.page.waitForFunction(() => document.querySelector('#bokabord-mirror [data-status]')?.dataset.bookingStatus === 'unknown', null, { timeout: 40_000 });
     assert.equal(submits(), 1, 'Restart + new session cannot repeat supplier transmission');
-    assert.equal(messages.filter(m => m.kind === 'adapter-blocked-submit').length, 1);
+    assert.equal(messages.filter(m => m.kind === 'adapter-blocked-submit').length, riche ? 0 : 1);
+    if (riche) {
+      assert.equal(messages.filter(m=>m.kind==='provider-final-click').length,1,'Replay must stop before supplier Next');
+      assert.equal(await panel(first.page).locator('[data-submit]').isHidden(),true);
+    }
     console.log('PASS actual restart/replay: persisted attempt recovered by same owner; other browser isolated; new session/key blocked');
     await stop(); await start(receiptMode ? 'missing-receipt' : 'timeout');
     await second.visit(); await toReview(second.page);
