@@ -80,6 +80,12 @@ export const DAGMAR_LUNCH_RECEIPT_POLICY = Object.freeze({
   type0Contract: 'villa-dagmar-lunch:63588:v1',
 });
 
+// Ordinary Dining Room only, provider review; Saturday lunch and Bar excluded.
+export const ITALIANO_DINING_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-italiano', name: 'Italiano',
+  hash: 'db5f54c8e9643fd5e54cd57016fb2544', mealid: 22890, mealType: 3, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   const reviewedType0 = Object.entries(DAGMAR_LUNCH_RECEIPT_POLICY)
