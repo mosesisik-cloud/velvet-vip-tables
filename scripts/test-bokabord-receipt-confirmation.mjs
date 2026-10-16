@@ -1,7 +1,63 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createBokabordReceiptVerifier, NOEMA_LUNCH_RECEIPT_POLICY as policy, CICCIOS_DINING_RECEIPT_POLICY as ciccios, RICHE_LUNCH_RECEIPT_POLICY as riche, STUREHOF_LUNCH_RECEIPT_POLICY as sturehof, BEIRUT_LUNCH_RECEIPT_POLICY as beirut, BALZAC_LUNCH_RECEIPT_POLICY as balzac, KOMMENDOREN_LUNCH_RECEIPT_POLICY as kommendoren, ASTRID_LUNCH_RECEIPT_POLICY as astrid, VAU_LUNCH_RECEIPT_POLICY as vau } from '../api/bokabord-receipt-confirmation.mjs';
+import { DAGMAR_LUNCH_RECEIPT_POLICY as dagmar } from '../api/bokabord-receipt-confirmation.mjs';
 const verifier = createBokabordReceiptVerifier(policy);
+function dagmarFixture() {
+  const v=createBokabordReceiptVerifier(dagmar),f=fixture();
+  Object.assign(f.approval,{hash:dagmar.hash,mealid:dagmar.mealid});
+  Object.assign(f.attempt,{restaurantId:dagmar.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:dagmar.hash,mealid:dagmar.mealid});
+  Object.assign(f.observation.data.booking,{mealid:dagmar.mealid,
+    meal:{type:0,group_booking:[],must_pay_directly:false,mandatory_products:false,bullets:{}}});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',dagmar.name);
+  return {v,f,check:()=>v.verify(f.attempt,f.approval,f.observation)};
+}
+test('type0 requires the explicit exact Dagmar tuple, never a reusable broad switch',()=>{
+  assert.doesNotThrow(()=>createBokabordReceiptVerifier({...dagmar}));
+  for(const patch of [{type0Contract:undefined},{type0Contract:true},{type0Contract:'other'},
+    {restaurantId:policy.restaurantId},{name:'Other'},{hash:policy.hash},{mealid:34285},
+    {mealid:63586},{mealid:16915},{mealType:'0'},{mealType:2},{maxParty:3},{maxParty:8}]){
+    assert.throws(()=>createBokabordReceiptVerifier({...dagmar,...patch}),/reviewed_ordinary_meal_policy_required/);
+  }
+  for(const p of [policy,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau]){
+    assert.doesNotThrow(()=>createBokabordReceiptVerifier(p));
+    assert.throws(()=>createBokabordReceiptVerifier({...p,mealType:0}));
+    assert.throws(()=>createBokabordReceiptVerifier({...p,mealType:0,type0Contract:dagmar.type0Contract}));
+  }
+});
+test('Dagmar exact Lunch type0 still needs bound transaction and receipt',()=>{
+  const {f,v,check}=dagmarFixture();
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  f.observation.data.booking.meal.type='0';assert.equal(check().status,'confirmed');
+  for(const mealType of [1,2,3,4]){f.observation.data.booking.meal.type=mealType;assert.equal(check().status,'unknown');}
+  f.observation.data.booking.meal.type=0;
+  assert.equal(v.approvalDigest({...f.approval,party:3}),null);
+  for(const mealid of [34285,63586,16915]){
+    assert.equal(v.approvalDigest({...f.approval,mealid}),null);
+    f.observation.data.booking.mealid=mealid;assert.equal(check().status,'unknown');
+  }
+  f.observation.data.booking.mealid=dagmar.mealid;
+  delete f.observation.receipt;assert.equal(check().status,'unknown');
+});
+test('Dagmar type0 opt-in preserves requirements, consent, request and attempt guards',()=>{
+  for(const change of [f=>f.observation.data.booking.meal.must_pay_directly=true,
+    f=>f.observation.data.booking.meal.mandatory_products=true,
+    f=>f.observation.data.booking.meal.bullets={cc:{sw:'Kort'}},
+    f=>f.observation.data.booking.require_noshow=true,
+    f=>f.observation.data.booking.group_booking=true,f=>f.observation.data.booking.parent_order=123,
+    f=>f.observation.data.booking.waitlist=1,f=>f.observation.data.booking.products=[{}],
+    f=>f.observation.data.booking.status=0,
+    f=>f.observation.request.url='https://app.bokabord.se/booking-widget/api/sendCustomRequest',
+    f=>f.observation.request.payload.terms.general=false,
+    f=>f.observation.request.payload.is_temp_booking=true,
+    f=>f.observation.request.payload.phone='+46711111111',
+    f=>f.observation.attemptId='replayed',f=>f.attempt.dispatched=false,
+    f=>f.observation.receipt.documentNavigationId=999]){
+    const {f,check}=dagmarFixture();change(f);assert.equal(check().status,'unknown');
+  }
+});
 test('Beirut Lunch binds exact accented identity and excludes card dinner and special meals',()=>{
   const v=createBokabordReceiptVerifier(beirut),f=fixture();
   Object.assign(f.approval,{hash:beirut.hash,mealid:beirut.mealid});
