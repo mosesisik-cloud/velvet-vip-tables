@@ -1910,6 +1910,7 @@ const server = http.createServer(async (req, res) => {
       const user = sessionPublicUser(req, load());
       let owner = user?.id || bookingGuest(req, res);
       const operator = !!user && isOperator(user);
+      let submittedAction = null, submittedSession = null;
       try {
         if (req.method === 'POST' && url.pathname === '/restaurant-bookings/playwright') {
           const body = await readBody(req, 4096);
@@ -1921,9 +1922,18 @@ const server = http.createServer(async (req, res) => {
         const operation = req.method === 'DELETE' && !match[2] ? 'remove' : req.method === 'POST' ? match[3] : null;
         if (!operation) return send(res, 405, { error: 'method' });
         const action = operation === 'action' ? await readBody(req, 4096) : null;
+        submittedAction = action;
+        submittedSession = match[1];
         return send(res, 200, await playwrightRuntime.run(match[1], owner, operator, operation, action), { 'Cache-Control': 'no-store' });
       } catch (error) {
-        return send(res, error.status || 502, { error: error.status ? error.message : 'provider_unavailable' }, { 'Cache-Control': 'no-store' });
+        // Only the adapter's explicit pre-dispatch validation can unlock review.
+        // A missing response or ordinary 409 never proves that nothing was sent.
+        const safeReview = error.status === 409 && error.message === 'stale_review'
+          && error.submissionState === 'not_dispatched' && submittedAction?.type === 'submit'
+          && /^[a-f0-9]{64}$/.test(submittedAction.reviewFingerprint || '');
+        return send(res, error.status || 502, { error: error.status ? error.message : 'provider_unavailable',
+          ...(safeReview ? {submissionState:'not_dispatched',sessionId:submittedSession,reviewFingerprint:submittedAction.reviewFingerprint} : {})
+        }, { 'Cache-Control': 'no-store' });
       }
     }
     if (req.method === 'GET' && url.pathname === "/restaurant-bookings/mirror/config") {
