@@ -29,6 +29,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     return typeof policy === 'string' && policy.length > 0
       && (!rooms || (rooms.some(room=>room.id === attempt.roomId && room.name === attempt.roomName)
         && proof?.roomId === attempt.roomId && proof?.roomName === attempt.roomName))
+      && (!venue(attempt.restaurantId)?.roomEvidence || proof?.roomEvidence === venue(attempt.restaurantId).roomEvidence)
       && proof?.verified === true && proof.policySource === policy
       && proof.source === (mode === 'live' ? 'provider' : 'fixture')
       && (proof.reviewFingerprint ?? proof.detailsDigest) === attempt.reviewFingerprint

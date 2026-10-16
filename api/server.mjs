@@ -282,7 +282,7 @@ zenchefJournal = createProviderJournal({ledger:playwrightAttempts,register:booki
   confirmationPolicySource:ZENCHEF_POLICY_SOURCE,
   restaurants:{[ZENCHEF_FISHCORNER.restaurantId]:{name:'FishCorner',city:'St. Barts'},
     ...(pesquiereLive ? {[ZENCHEF_PESQUIERE.restaurantId]:{name:ZENCHEF_PESQUIERE.name,city:'Saint-Tropez',
-      rooms:ZENCHEF_PESQUIERE.rooms,confirmationPolicySource:ZENCHEF_PESQUIERE.policySource}} : {})}});
+      rooms:ZENCHEF_PESQUIERE.rooms,roomEvidence:'own_booking_readback',confirmationPolicySource:ZENCHEF_PESQUIERE.policySource}} : {})}});
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);
