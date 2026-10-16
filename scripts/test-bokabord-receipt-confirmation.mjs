@@ -1,8 +1,32 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createBokabordReceiptVerifier, NOEMA_LUNCH_RECEIPT_POLICY as policy, CICCIOS_DINING_RECEIPT_POLICY as ciccios, RICHE_LUNCH_RECEIPT_POLICY as riche, STUREHOF_LUNCH_RECEIPT_POLICY as sturehof, BEIRUT_LUNCH_RECEIPT_POLICY as beirut, BALZAC_LUNCH_RECEIPT_POLICY as balzac, KOMMENDOREN_LUNCH_RECEIPT_POLICY as kommendoren, ASTRID_LUNCH_RECEIPT_POLICY as astrid, VAU_LUNCH_RECEIPT_POLICY as vau, BOQUERIA_LUNCH_RECEIPT_POLICY as boqueria } from '../api/bokabord-receipt-confirmation.mjs';
-import { DAGMAR_LUNCH_RECEIPT_POLICY as dagmar } from '../api/bokabord-receipt-confirmation.mjs';
+import { DAGMAR_LUNCH_RECEIPT_POLICY as dagmar, ITALIANO_DINING_RECEIPT_POLICY as italiano } from '../api/bokabord-receipt-confirmation.mjs';
 const verifier = createBokabordReceiptVerifier(policy);
+test('Italiano Dining Room binds dinner type and excludes Saturday lunch and Bar',()=>{
+  const v=createBokabordReceiptVerifier(italiano),f=fixture();
+  Object.assign(f.approval,{hash:italiano.hash,mealid:italiano.mealid,time:'19:00'});
+  Object.assign(f.attempt,{restaurantId:italiano.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:italiano.hash,mealid:italiano.mealid,time:'19:00'});
+  Object.assign(f.observation.data.booking,{mealid:italiano.mealid,time:'19:00',
+    meal:{type:3,group_booking:true,must_pay_directly:false,mandatory_products:false,bullets:{}}});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',italiano.name)
+    .replace('(Lunch)','(Dining Room)').replace('12:00 - 13:30','19:00 - 20:30');
+  const check=()=>v.verify(f.attempt,f.approval,f.observation);
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  assert.equal(v.approvalDigest({...f.approval,party:3}),null);
+  for(const mealid of [13836,56070]){
+    assert.equal(v.approvalDigest({...f.approval,mealid}),null);
+    f.observation.data.booking.mealid=mealid;assert.equal(check().status,'unknown');
+  }
+  f.observation.data.booking.mealid=italiano.mealid;
+  f.observation.data.booking.meal.type=2;assert.equal(check().status,'unknown');
+  f.observation.data.booking.meal.type=3;
+  f.observation.data.booking.require_noshow=true;assert.equal(check().status,'unknown');
+  f.observation.data.booking.require_noshow=false;
+  delete f.observation.receipt;assert.equal(check().status,'unknown');
+});
 function dagmarFixture() {
   const v=createBokabordReceiptVerifier(dagmar),f=fixture();
   Object.assign(f.approval,{hash:dagmar.hash,mealid:dagmar.mealid});
