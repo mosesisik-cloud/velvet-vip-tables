@@ -13,7 +13,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     const value = storage.getItem(key);
     if (value) {
       marker = JSON.parse(value);
-      if (!marker || typeof marker.id !== 'string' || !['open','hold_pending','hold_done','submit_pending'].includes(marker.phase)) throw new Error('saved_state');
+      if (!marker || typeof marker.id !== 'string' || !['open','hold_pending','hold_done','submit_pending','review_required'].includes(marker.phase)) throw new Error('saved_state');
       uncertain = marker.phase === 'hold_pending' || marker.phase === 'submit_pending';
     }
   } catch { storageOK = false; uncertain = true; }
@@ -41,6 +41,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     storage.setItem(key, JSON.stringify(value)); marker = value;
   };
   const isSubmit = () => marker?.phase === 'submit_pending';
+  const needsReview = () => marker?.phase === 'review_required';
   const held = snapshot => snapshot?.result?.status === 'held' && snapshot.result.phase === 'hold'
     && ['guest','booking_review'].includes(snapshot.phase);
   const terminal = () => !!state?.result && !held(state);
@@ -59,15 +60,17 @@ export function mountProviderPlaywrightBooking(container, api, {
     && fingerprint(finalFingerprint()) && (!state.reviewFingerprint || state.reviewFingerprint === finalFingerprint())
     && (!isZenchef || (fingerprint(state.reviewToken) && fingerprint(state.terms?.version)))
     && (finalReview().expiresAt === undefined || !expired(finalReview())) && typeof finalReview().details.termsText === 'string' && !!finalReview().details.termsText.trim();
-  const canSubmit = () => state?.canSubmit === true && hasReview();
+  const canSubmit = () => !needsReview() && state?.canSubmit === true && hasReview();
   function controls() {
-    const locked = busy || uncertain || isSubmit() || !storageOK || terminal() || !!state?.blocked;
+    const locked = busy || uncertain || isSubmit() || needsReview() || !storageOK || terminal() || !!state?.blocked;
     container.querySelectorAll('button,input,textarea,select').forEach(node => { node.disabled = locked; });
     el('dismiss').disabled = false;
     el('refresh').disabled = busy || !storageOK;
     el('end').disabled = busy || uncertain || isSubmit() || !marker?.id;
     el('save').disabled = locked || !drafts.size;
-    el('review').disabled = locked || drafts.size > 0;
+    el('review').hidden = state?.phase !== 'guest' && !needsReview();
+    el('review').textContent = needsReview() ? 'Granska uppgifterna igen' : 'Kontrollera bokningen';
+    el('review').disabled = (needsReview() ? busy || uncertain || !storageOK || !state || terminal() || !!state.blocked : locked) || drafts.size > 0;
     el('hold-button').disabled = locked || !canHold() || !el('hold-consent').checked || drafts.size > 0;
     el('submit').disabled = locked || !canSubmit() || !el('terms').checked || drafts.size > 0;
     el('image').style.cursor = locked || state?.phase !== 'selection' ? 'default' : 'pointer';
@@ -149,7 +152,7 @@ export function mountProviderPlaywrightBooking(container, api, {
       el('final-details').textContent = `Slutför bokning: ${restaurantName}, ${review.date} kl. ${review.time}, ${review.party} gäster. ${guest}`;
       el('terms-text').textContent = review.termsText;
     }
-    el('status').textContent = terminal() ? outcome(next.result,next) : uncertain ? 'Resultatet måste kontrolleras. Skicka inte på nytt.' : hasReview() && !canSubmit() ? 'Uppgifterna visas för kontroll. Leverantörens slutliga bokningssteg är ännu inte tillgängligt.' : next.phase === 'guest' ? `${held(next) ? 'Tillfälligt reserverat. ' : ''}Fyll i och spara dina kontaktuppgifter. Bokningen är inte slutförd.` : next.blocked ? 'Leverantörens formulär är spärrat.' : 'Välj och kontrollera uppgifterna i leverantörens formulär.';
+    el('status').textContent = terminal() ? outcome(next.result,next) : uncertain ? 'Resultatet måste kontrolleras. Skicka inte på nytt.' : needsReview() ? 'Servern har bekräftat att bokningen inte skickades. Granska uppgifterna igen innan du godkänner.' : hasReview() && !canSubmit() ? 'Uppgifterna visas för kontroll. Leverantörens slutliga bokningssteg är ännu inte tillgängligt.' : next.phase === 'guest' ? `${held(next) ? 'Tillfälligt reserverat. ' : ''}Fyll i och spara dina kontaktuppgifter. Bokningen är inte slutförd.` : next.blocked ? 'Leverantörens formulär är spärrat.' : 'Välj och kontrollera uppgifterna i leverantörens formulär.';
     el('status').dataset.bookingStatus = next.result?.status === 'confirmed' && !el('status').textContent.startsWith('Bokningen är bekräftad.') ? 'unknown' : next.result?.status || '';
     changed();
   }
@@ -160,25 +163,43 @@ export function mountProviderPlaywrightBooking(container, api, {
   }
   const post = (path, body) => request(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   async function run(action = null) {
-    if (disposed || busy || (action && (uncertain || isSubmit() || drafts.size && action.type !== 'fill' || !state || terminal() || state.blocked))) return;
+    if (disposed || busy || (action && (uncertain || isSubmit() || needsReview() && action.type !== 'review' || drafts.size && action.type !== 'fill' || !state || terminal() || state.blocked))) return;
     if (action?.type === 'hold' && (!canHold() || !el('hold-consent').checked)) return;
     if (action?.type === 'submit' && (!canSubmit() || !el('terms').checked)) return;
     busy = true; controls(); el('status').textContent = 'Kontrollerar…';
     try {
       if (!storageOK) throw new Error('storage');
-      if (action?.type === 'hold' || action?.type === 'submit') { write(state.id,`${action.type}_pending`,action.idempotencyKey,isZenchef && action.type === 'submit' ? finalFingerprint() : undefined); uncertain = true; }
+      if (action?.type === 'hold' || action?.type === 'submit') { write(state.id,`${action.type}_pending`,action.idempotencyKey,action.type === 'submit' ? finalFingerprint() : undefined); uncertain = true; }
       const next = action ? await post(`${endpoint}/${encodeURIComponent(state.id)}/action`,{...action,revision:state.revision})
         : marker ? await post(`${endpoint}/${encodeURIComponent(marker.id)}/current`,{})
         : await post(endpoint,{provider,restaurantId,width:Math.max(320,Math.min(560,Math.round(container.clientWidth))),resume:true});
       if (disposed) return;
+      if (next?.error) throw Object.assign(new Error(String(next.error)),next);
       if (action?.type === 'fill' && Object.keys(action.fields).some(name => !next.fields?.some(field => field.name === name && typeof field.value === 'string'))) throw new Error('field_readback');
       await accept(next);
+      if (action?.type === 'review' && needsReview() && hasReview() && !terminal() && !state.blocked) {
+        write(state.id,isZenchef ? 'open' : 'hold_done');
+        uncertain = false; changed();
+        el('status').textContent = 'Kontrollera den nya granskningen och godkänn villkoren innan du slutför bokningen.';
+      }
       if (action?.type === 'fill') {
         drafts.clear();
         for (const input of el('fields').querySelectorAll('[data-field]')) input.value = next.fields.find(field => field.name === input.dataset.field).value;
       }
-    } catch {
-      if (!disposed) { uncertain = true; changed(); el('status').textContent = 'Kontakten avbröts eller svaret kunde inte verifieras. Kontrollera status. Skicka inte på nytt.'; }
+    } catch (error) {
+      if (!disposed) {
+        let notDispatched = false;
+        // Only the direct response to this submit may release its pending guard.
+        // A generic 409, current() response or late timeout reply is not evidence.
+        if (action?.type === 'submit' && isSubmit() && error?.error === 'stale_review'
+          && error.submissionState === 'not_dispatched' && error.sessionId === marker.id && marker.id === state?.id
+          && fingerprint(marker.reviewFingerprint) && error.reviewFingerprint === marker.reviewFingerprint
+          && action.reviewFingerprint === marker.reviewFingerprint) {
+          try { write(marker.id,'review_required',marker.idempotencyKey,marker.reviewFingerprint); notDispatched = true; } catch { /* Keep the pending guard if durable storage fails. */ }
+        }
+        uncertain = !notDispatched; changed();
+        el('status').textContent = notDispatched ? 'Servern har bekräftat att bokningen inte skickades. Granska uppgifterna igen innan du godkänner.' : 'Kontakten avbröts eller svaret kunde inte verifieras. Kontrollera status. Skicka inte på nytt.';
+      }
     } finally { busy = false; if (!disposed) controls(); }
   }
   el('start').onclick = () => run(); el('refresh').onclick = () => run();
@@ -191,7 +212,10 @@ export function mountProviderPlaywrightBooking(container, api, {
   };
   el('search').onsubmit = event => { event.preventDefault(); const data = new FormData(el('search')); run({type:'search',date:data.get('date'),party:Number(data.get('party'))}); };
   el('save').onclick = () => run({type:'fill',fields:Object.fromEntries([...el('fields').querySelectorAll('[data-field]')].map(node => [node.dataset.field,node.value]))});
-  el('review').onclick = () => run({type:'review'});
+  el('review').onclick = async () => {
+    if (needsReview()) { await run(); if (disposed || busy || uncertain || !needsReview()) return; }
+    await run({type:'review'});
+  };
   el('hold-consent').onchange = controls; el('terms').onchange = controls;
   el('hold-button').onclick = () => run({type:'hold',confirm:true,reviewFingerprint:state?.holdReview?.fingerprint});
   el('submit').onclick = () => run(isZenchef
