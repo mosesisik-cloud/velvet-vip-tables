@@ -12,7 +12,7 @@ const token = (value, name) => {
   return value;
 };
 const hash = value => crypto.createHash('sha256').update(JSON.stringify(value)).digest('hex');
-const bindKeys = ['provider', 'restaurantId', 'sessionId', 'mode', 'idempotencyKey', 'reviewFingerprint'];
+const bindKeys = ['provider', 'restaurantId', 'sessionId', 'mode', 'idempotencyKey', 'reviewFingerprint', 'roomId', 'roomName'];
 const states = new Set(['unknown', 'pending', 'confirmed', 'rejected', 'payment_required']);
 const holdStates = new Set(['unknown', 'pending', 'rejected']);
 const phaseOf = value => value.phase === undefined ? 'booking' : value.phase;
@@ -31,6 +31,10 @@ function validate(input) {
   if (!Number.isFinite(+date) || date.toISOString().slice(0, 10) !== input.date) fail('invalid_date');
   if (typeof input.time !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(input.time)) fail('invalid_time');
   if (!Number.isInteger(input.party) || input.party < 1 || input.party > 100) fail('invalid_party');
+  if (input.roomId !== undefined || input.roomName !== undefined) {
+    if (!Number.isSafeInteger(input.roomId) || input.roomId <= 0) fail('invalid_room');
+    clean.roomId = input.roomId; clean.roomName = token(input.roomName,'invalid_room');
+  }
   return { ...clean, mode: input.mode, phase: phaseOf(input), idempotencyKey: input.idempotencyKey,
     reviewFingerprint: input.reviewFingerprint, date: input.date, time: input.time, party: input.party };
 }

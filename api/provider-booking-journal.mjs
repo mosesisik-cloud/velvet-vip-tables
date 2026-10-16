@@ -11,6 +11,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     id:`PB-${attempt.attemptId}`,userId:owner,provider,restaurantId:attempt.restaurantId,
     restaurant:venue(attempt.restaurantId)?.name || attempt.restaurantId,
     destination:venue(attempt.restaurantId)?.city || '',date:attempt.date,time:attempt.time,
+    ...(Number.isSafeInteger(attempt.roomId) && attempt.roomName ? {roomId:attempt.roomId,roomName:attempt.roomName} : {}),
     party:attempt.party,status:attempt.status,providerReference:attempt.reference || '',
     createdAt:attempt.createdAt,updatedAt:attempt.updatedAt,
   });
@@ -18,11 +19,18 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     if (!intent || intent.provider !== provider || !venue(intent.restaurantId)
       || !['hold','booking'].includes(intent.phase) || !intent.owner || !intent.sessionId
       || !/^[a-f0-9]{64}$/.test(intent.reviewFingerprint || '')) fail('intent_binding');
+    const rooms = venue(intent.restaurantId).rooms;
+    if (rooms && !rooms.some(room=>room.id === intent.details?.roomId && room.name === intent.details?.roomName)) fail('room_binding');
   }
   function proofMatches(result, attempt) {
     const proof=result?.verification;
-    return typeof confirmationPolicySource === 'string' && confirmationPolicySource.length > 0
-      && proof?.verified === true && proof.policySource === confirmationPolicySource
+    const policy = venue(attempt.restaurantId)?.confirmationPolicySource ?? confirmationPolicySource;
+    const rooms = venue(attempt.restaurantId)?.rooms;
+    return typeof policy === 'string' && policy.length > 0
+      && (!rooms || (rooms.some(room=>room.id === attempt.roomId && room.name === attempt.roomName)
+        && proof?.roomId === attempt.roomId && proof?.roomName === attempt.roomName))
+      && (!venue(attempt.restaurantId)?.roomEvidence || proof?.roomEvidence === venue(attempt.restaurantId).roomEvidence)
+      && proof?.verified === true && proof.policySource === policy
       && proof.source === (mode === 'live' ? 'provider' : 'fixture')
       && (proof.reviewFingerprint ?? proof.detailsDigest) === attempt.reviewFingerprint
       && ['provider','restaurantId','sessionId','attemptId','idempotencyKey'].every(key=>proof[key]===attempt[key]);
@@ -34,7 +42,8 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
       const gate=ledger.reserve({owner:intent.owner,provider,restaurantId:intent.restaurantId,
         sessionId:intent.sessionId,phase:intent.phase,mode,idempotencyKey,
         reviewFingerprint:intent.reviewFingerprint,date:intent.details?.date,
-        time:intent.details?.time,party:intent.details?.party});
+        time:intent.details?.time,party:intent.details?.party,
+        ...(venue(intent.restaurantId).rooms ? {roomId:intent.details.roomId,roomName:intent.details.roomName} : {})});
       if (!gate.sendAllowed) fail('already_attempted');
       if (intent.phase === 'booking') register.upsert(row(gate.attempt,intent.owner));
       return gate;
@@ -43,7 +52,8 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
       scope(intent);
       const attempt=ledger.get(intent.owner,claimed?.attemptId);
       if (!attempt || attempt.provider !== provider || attempt.mode !== mode
-        || ['restaurantId','sessionId','phase','reviewFingerprint'].some(key=>attempt[key]!==intent[key])) fail('attempt_binding');
+        || ['restaurantId','sessionId','phase','reviewFingerprint'].some(key=>attempt[key]!==intent[key])
+        || (venue(intent.restaurantId).rooms && (attempt.roomId !== intent.details.roomId || attempt.roomName !== intent.details.roomName))) fail('attempt_binding');
       // A hold is never a confirmed booking and its capability never leaves the
       // adapter's memory. Unknown dispatch remains consumed across restarts.
       const verified=intent.phase === 'booking' && proofMatches(result,attempt);
@@ -66,6 +76,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
       if (!attempt || attempt.provider !== provider || attempt.mode !== mode || !venue(attempt.restaurantId)
         || attempt.phase !== 'booking' || attempt.status !== 'confirmed'
         || attempt.restaurantId !== snapshot.restaurantId || attempt.sessionId !== snapshot.id
+        || (venue(attempt.restaurantId).rooms && (snapshot.details?.roomId !== attempt.roomId || snapshot.details?.roomName !== attempt.roomName))
         || attempt.reference !== snapshot.result.reference || !proofMatches(snapshot.result,attempt)) return null;
       return publicBookingResult({...snapshot.result,verification:{...proof,detailsDigest:attempt.reviewFingerprint}});
     },

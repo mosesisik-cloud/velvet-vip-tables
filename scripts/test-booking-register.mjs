@@ -30,8 +30,11 @@ try {
  const original=db.list(['guest:alice'])[0];
  db.upsert({...original,userId:'guest:bob',status:'provider_confirmed',providerReference:'OVERWRITE'});
  assert.deepEqual(db.list(['guest:alice'])[0],original,'upsert cannot move or overwrite another owner ID');
- const confirmed={...original,id:'RB-internal',status:'provider_confirmed',providerReference:'REAL-PROVIDER-REF',providerConfirmedAt:'2026-10-19T12:00:00Z',...sensitive};
+ const confirmed={...original,id:'RB-internal',roomId:52372,roomName:'Mazagran salle',status:'provider_confirmed',providerReference:'REAL-PROVIDER-REF',providerConfirmedAt:'2026-10-19T12:00:00Z',...sensitive};
  const stored=db.upsert(confirmed);
+ assert.equal(stored.roomId,52372);assert.equal(stored.roomName,'Mazagran salle');
+ assert.equal(db.upsert({...confirmed,id:'bad-room',roomId:-1}).roomName,undefined);
+ assert.equal(db.upsert({...confirmed,id:'bad-room-name',roomName:'x'.repeat(257)}).roomId,undefined);
  for(const field of Object.keys(sensitive))assert.equal(Object.hasOwn(stored,field),false,field);
  assert.equal(stored.status,'provider_confirmed','trusted internal records preserve provider status');
  for (const invalid of [{date:'2026-02-30'},{date:'not-a-date'},{time:'24:00'},{time:'17:61'},{party:0},{party:101},{party:1.5},{reference:'x'},{reference:'<script>x</script>'},{reference:'a'.repeat(101)}]) assert.throws(()=>db.report('guest:alice','venue-one',restaurant,{...report,...invalid}),/invalid_report/);

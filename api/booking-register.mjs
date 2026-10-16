@@ -13,6 +13,10 @@ export class BookingRegister {
     // Persist only booking metadata. Never arbitrary provider payloads or card fields.
     const clean = {};
     for (const key of ['id','userId','restaurantId','restaurant','destination','date','time','party','provider','providerReference','status','createdAt','updatedAt','providerConfirmedAt','requestMode']) if (row[key] !== undefined) clean[key] = row[key];
+    if (Number.isSafeInteger(row.roomId) && row.roomId > 0 && typeof row.roomName === 'string'
+      && row.roomName.trim() && row.roomName.length <= 256 && !/[\x00-\x1f\x7f]/.test(row.roomName)) {
+      clean.roomId=row.roomId; clean.roomName=row.roomName;
+    }
     if (!clean.id || !clean.userId || !clean.status) return;
     this.db.prepare('INSERT INTO bookings VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET status=excluded.status,updated=excluded.updated,payload=excluded.payload WHERE bookings.owner=excluded.owner').run(clean.id,clean.userId,clean.status,clean.updatedAt || clean.createdAt,JSON.stringify(clean));
     return clean;
