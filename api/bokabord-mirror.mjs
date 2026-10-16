@@ -1,5 +1,6 @@
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import { readRicheContactPhone } from './bokabord-contact-phone.mjs';
 import { createBokabordReceiptVerifier } from './bokabord-receipt-confirmation.mjs';
 import { BookingAssetCache } from './booking-asset-cache.mjs';
 import { classifyBokabordResult, bookingAttemptSnapshot, publicBookingResult } from './booking-result.mjs';
@@ -38,6 +39,7 @@ export function matchesApprovedBooking(query, approved) {
     && Array.isArray(query.products) && query.products.length === 0
     && (!approved.hash || query.hash === approved.hash)
     && (!approved.mealid || Number(query.mealid) === approved.mealid)
+    && (!approved.contactPhone || (String(query.country_code) === approved.contactPhone.dialCode && String(query.dial_code) === approved.contactPhone.dialCode))
     && (approved.comment === undefined || String(query.comment || '') === approved.comment)
     && !query.is_temp_booking && !query.giftcard && !(query.linked_meals?.length) && !query.bookingid;
 }
@@ -246,7 +248,7 @@ export class BokabordMirror {
         checks:[...document.querySelectorAll('input[type=checkbox]')].filter(visible).map(el=>({name:el.name,value:el.value,checked:el.checked}))};
     });
     if (view.text.length > 64_000 || view.links.length > 100) return null;
-    return { fingerprint: crypto.createHash('sha256').update(JSON.stringify([digest,view])).digest('hex'), text:view.text, links:view.links };
+    return { fingerprint: crypto.createHash('sha256').update(JSON.stringify([digest,details.contactPhone,view])).digest('hex'), text:view.text, links:view.links };
   }
 
   async snapshot(s) {
@@ -288,11 +290,15 @@ export class BokabordMirror {
       const booking = window.angular?.element(root).injector()?.get('Booking');
       return { query: booking.getQuery(), card: !!booking.meal?.bullets?.cc || booking.require_noshow === true || !!booking.meal?.must_pay_directly, products: !!booking.meal?.mandatory_products };
     }).catch(() => null);
-    const q = model?.query;
+    const contactFinal = this.contactFinalVerifiers.has(s.restaurantId);
+    const contactPhone = contactFinal ? await s.page.evaluate(readRicheContactPhone).catch(()=>null) : null;
+    if (contactFinal && !contactPhone) return null;
+    // Projection only: Next owns the eventual provider-model phone/country copy.
+    const q = contactPhone ? {...model?.query,phone:contactPhone.canonical} : model?.query;
     s.handoffReason = s.providerReservationRequired ? 'provider_reservation_required' : model?.card ? 'card_required' : model?.products || q?.products?.length ? 'products_required' : q?.waitlist ? 'waitlist' : null;
     if (s.handoffReason) return null;
     if (!q || q.hash !== RESTAURANT_DETAILS[s.restaurantId].hash || !/^\d{4}-\d{2}-\d{2}$/.test(q.date) || !/^\d{2}:\d{2}$/.test(q.time) || !Array.isArray(q.products) || q.products.length || q.waitlist || q.giftcard || q.linked_meals?.length || q.bookingid) return null;
-    return { date: q.date, time: q.time, party: Number(q.amount), firstname: q.firstname || '', lastname: q.lastname || '', email: q.email || '', phone: q.phone || '', comment: q.comment || '', mealid: Number(q.mealid), hash: q.hash, terms: true };
+    return { date: q.date, time: q.time, party: Number(q.amount), firstname: q.firstname || '', lastname: q.lastname || '', email: q.email || '', phone: q.phone || '', comment: q.comment || '', mealid: Number(q.mealid), hash: q.hash, terms: true, ...(contactPhone ? {contactPhone} : {}) };
   }
   current(owner) {
     const s = [...this.sessions.values()].find(row => row.owner === owner);
