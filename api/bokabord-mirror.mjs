@@ -239,7 +239,8 @@ export class BokabordMirror {
   async nativeReviewBinding(s, details) {
     const digest = this.contactFinalVerifiers.get(s.restaurantId)?.approvalDigest(details);
     if (!digest) return null;
-    const text = (await s.page.locator('body').innerText()).slice(0, 16_000);
+    const text = await s.page.locator('body').innerText();
+    if (text.length > 64_000) return null;
     return { fingerprint: crypto.createHash('sha256').update(JSON.stringify([digest,s.page.url(),text])).digest('hex'), text };
   }
 
@@ -379,7 +380,7 @@ export class BokabordMirror {
     } catch (error) {
       if (s.finalActionConsumed && !s.submitted) {
         s.submitted=true; s.result={status:'unknown'};
-        await this.recordResult?.(s).catch(()=>{});
+        try { await this.recordResult?.(s); } catch { /* Unknown remains consumed. */ }
       }
       throw error;
     } finally { s.armed = false; s.busy = false; }
