@@ -51,7 +51,9 @@ export class PlaywrightRuntime {
     if (!s || s.owner !== owner) throw new PlaywrightRuntimeError('session_expired', 404);
     if (s.busy) throw new PlaywrightRuntimeError('busy', 409);
     if (this.now() - s.touched >= 600_000) {
-      await s.entry.adapter.remove(id, owner); this.sessions.delete(id);
+      try { await s.entry.adapter.remove(id, owner); }
+      catch (error) { if (error.message !== 'session_expired' || error.status !== 404) throw error; }
+      this.sessions.delete(id);
       throw new PlaywrightRuntimeError('session_expired', 404);
     }
     if (operation === 'action' && action?.type !== 'refresh') throw new PlaywrightRuntimeError('inspect_only', 409);
@@ -66,11 +68,19 @@ export class PlaywrightRuntime {
       if (snapshot?.id !== id) throw new PlaywrightRuntimeError('session_expired', 404);
       s.touched = this.now();
       return this.project(snapshot);
+    } catch (error) {
+      if (error.message === 'session_expired' && error.status === 404) {
+        this.sessions.delete(id);
+        if (operation === 'remove') return { ok: true };
+      }
+      throw error;
     } finally { s.busy = false; }
   }
   async expire() {
     for (const [id, s] of this.sessions) if (!s.busy && this.now() - s.touched >= 600_000) {
-      await s.entry.adapter.remove(id, s.owner); this.sessions.delete(id);
+      try { await s.entry.adapter.remove(id, s.owner); }
+      catch (error) { if (error.message !== 'session_expired' || error.status !== 404) throw error; }
+      this.sessions.delete(id);
     }
   }
   async close() {

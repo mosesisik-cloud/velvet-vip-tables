@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { PlaywrightRuntime } from '../api/playwright-runtime.mjs';
+import { PlaywrightRuntime, PlaywrightRuntimeError } from '../api/playwright-runtime.mjs';
 function fixture(enabled = true) {
   let count = 0, time = 0, closed = 0;
   const adapter = { create: async () => ({id:`session-${++count}`,revision:1}),
@@ -36,5 +36,18 @@ test('pending create consumes capacity and expiry releases the shared slot', asy
   await assert.rejects(runtime.create('other',true,{provider:'SevenRooms',restaurantId:'SevenRooms'}), /capacity/);
   finish({id:'pending',revision:1}); await pending;
   tick(); await runtime.expire(); assert.equal(runtime.sessions.size,0);
+  await runtime.close();
+});
+test('native expiry before wrapper expiry cannot permanently consume capacity', async () => {
+  const {runtime,adapter,tick}=fixture();
+  const expired=()=>{throw new PlaywrightRuntimeError('session_expired',404);};
+  const first=await runtime.create('owner',true,{provider:'Zenchef',restaurantId:'Zenchef'});
+  runtime.providers.Zenchef.current=async()=>expired();
+  adapter.remove=async()=>expired();
+  await assert.rejects(runtime.run(first.id,'owner',true,'current'),/session_expired/);
+  assert.equal(runtime.sessions.size,0);
+  await runtime.create('owner',true,{provider:'Zenchef',restaurantId:'Zenchef'});
+  tick();await runtime.expire();assert.equal(runtime.sessions.size,0);
+  await runtime.create('other',true,{provider:'SevenRooms',restaurantId:'SevenRooms'});
   await runtime.close();
 });
