@@ -31,7 +31,7 @@ export function createBookingResultVerifier({ provider, policySource, statusRule
   return function verifyBookingResult(attempt, observation) {
     if (!attempt || !observation || attempt.dispatched !== true) return unknown('dispatch_not_verified');
     if (attempt.provider !== provider || observation.provider !== provider) return unknown('provider_mismatch');
-    for (const key of ['restaurantId', 'sessionId', 'attemptId', 'detailsDigest']) {
+    for (const key of ['restaurantId', 'sessionId', 'attemptId', 'idempotencyKey', 'detailsDigest']) {
       if (!text(attempt[key]) || attempt[key] !== observation[key]) return unknown('attempt_binding_mismatch');
     }
     if (!['live', 'fixture'].includes(attempt.mode)) return unknown('mode_not_verified');
@@ -50,7 +50,7 @@ export function createBookingResultVerifier({ provider, policySource, statusRule
       status: 'confirmed', reference,
       verification: {
         verified: true, source, provider, restaurantId: attempt.restaurantId,
-        sessionId: attempt.sessionId, attemptId: attempt.attemptId,
+        sessionId: attempt.sessionId, attemptId: attempt.attemptId, idempotencyKey: attempt.idempotencyKey,
         detailsDigest: attempt.detailsDigest, policySource,
       },
     };
@@ -66,8 +66,27 @@ export function createBookingResultVerifier({ provider, policySource, statusRule
 export function bookingAttemptSnapshot(session) {
   if (!session?.lastSnapshot) return null;
   const snapshot = { ...session.lastSnapshot };
-  if (session.result) snapshot.result = structuredClone(session.result);
+  if (session.result) snapshot.result = publicBookingResult(session.result);
   else if (session.submitted) snapshot.result = unknown('awaiting_supplier_result');
   if (session.submitted || session.armed || session.result) snapshot.canSubmit = false;
   return snapshot;
+}
+
+// A supplier response may contain guest information or private confirmation URLs.
+// Never copy the raw booking object into a browser-facing recovery snapshot.
+export function publicBookingResult(result) {
+  if (!result || ![...OUTCOMES, 'unknown', 'error'].includes(result.status)) return unknown('unrecognized_result');
+  const clean = { status: result.status };
+  if (text(result.reason)) clean.reason = result.reason;
+  if (ref(result.reference)) clean.reference = ref(result.reference);
+  const proof = result.verification;
+  if (result.status === 'confirmed') {
+    if (!clean.reference || proof?.verified !== true || !['provider', 'fixture'].includes(proof.source)
+      || !['provider', 'restaurantId', 'sessionId', 'attemptId', 'idempotencyKey', 'detailsDigest', 'policySource'].every(k => text(proof[k]))) {
+      return unknown('confirmation_not_verified');
+    }
+    clean.verification = { verified: true, source: proof.source };
+    for (const k of ['provider', 'restaurantId', 'sessionId', 'attemptId', 'idempotencyKey', 'detailsDigest', 'policySource']) clean.verification[k] = proof[k];
+  }
+  return clean;
 }

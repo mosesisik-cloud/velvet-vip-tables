@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createBookingResultVerifier, bookingAttemptSnapshot } from '../api/booking-result.mjs';
+import { createBookingResultVerifier, bookingAttemptSnapshot, publicBookingResult } from '../api/booking-result.mjs';
 
 // Invented statuses for a local test provider, NOT Bokabord/Zenchef supplier mappings.
 const policy = { provider: 'LOCAL-TEST', policySource: 'fixture:result-policy-v1', statusRules: [
@@ -9,7 +9,7 @@ const policy = { provider: 'LOCAL-TEST', policySource: 'fixture:result-policy-v1
 ] };
 const verify = createBookingResultVerifier(policy);
 const attempt = () => ({ provider: 'LOCAL-TEST', restaurantId: 'test-venue', sessionId: 'test-session',
-  attemptId: 'test-attempt', detailsDigest: 'test-details-and-terms-digest', mode: 'fixture', dispatched: true });
+  attemptId: 'test-attempt', idempotencyKey: 'client-key', detailsDigest: 'test-details-and-terms-digest', mode: 'fixture', dispatched: true });
 const response = () => ({ ...attempt(), source: 'fixture', success: true, supplierStatus: 'ACCEPTED', reference: 'TEST-ONLY' });
 
 test('explicit accepted outcome produces UI proof bound to this fixture attempt', () => {
@@ -17,7 +17,7 @@ test('explicit accepted outcome produces UI proof bound to this fixture attempt'
   assert.equal(result.status, 'confirmed');
   assert.equal(result.reference, 'TEST-ONLY');
   assert.deepEqual(result.verification, { verified: true, source: 'fixture', provider: 'LOCAL-TEST',
-    restaurantId: 'test-venue', sessionId: 'test-session', attemptId: 'test-attempt',
+    restaurantId: 'test-venue', sessionId: 'test-session', attemptId: 'test-attempt', idempotencyKey: 'client-key',
     detailsDigest: 'test-details-and-terms-digest', policySource: 'fixture:result-policy-v1' });
 });
 test('success and reference cannot turn missing, malformed or unknown status into confirmation', () => {
@@ -43,7 +43,7 @@ test('transport failure is unresolved; only an explicit mapped supplier rejectio
   assert.equal(verify(attempt(), { ...response(), supplierStatus: 'DECLINED', reference: undefined }).status, 'rejected');
 });
 test('other attempt, venue, session, details or provider cannot confirm', () => {
-  for (const key of ['provider', 'restaurantId', 'sessionId', 'attemptId', 'detailsDigest']) {
+  for (const key of ['provider', 'restaurantId', 'sessionId', 'attemptId', 'idempotencyKey', 'detailsDigest']) {
     assert.equal(verify(attempt(), { ...response(), [key]: 'other' }).status, 'unknown', key);
     assert.equal(verify({ ...attempt(), [key]: '' }, { ...response(), [key]: '' }).status, 'unknown', key);
   }
@@ -89,4 +89,13 @@ test('armed and settled attempts stay locked; overlay is isolated from result mu
   assert.equal(snapshot.canSubmit, false);
   assert.equal(bookingAttemptSnapshot({ lastSnapshot }).canSubmit, true);
   assert.equal(bookingAttemptSnapshot({}), null);
+});
+test('browser-facing recovery never exposes raw supplier booking or private evidence', () => {
+  const verified = verify(attempt(), response());
+  const raw = { ...verified, booking: { email: 'private@example.test', short_code: 'PRIVATE' }, token: 'PRIVATE',
+    verification: { ...verified.verification, rawResponse: { secret: 'PRIVATE' } } };
+  assert.deepEqual(publicBookingResult(raw), verified);
+  assert.equal(JSON.stringify(bookingAttemptSnapshot({ lastSnapshot: {}, result: raw })).includes('PRIVATE'), false);
+  assert.equal(publicBookingResult({ status: 'confirmed', reference: 'ONLY-ID' }).status, 'unknown');
+  assert.equal(publicBookingResult({ status: 'already_attempted' }).status, 'unknown');
 });
