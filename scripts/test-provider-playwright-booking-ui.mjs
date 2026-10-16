@@ -30,9 +30,10 @@ async function setup(page, scenario = 'journey') {
     if(scenario==='hash') snapshot.imageHash='bad';
     if(scenario==='venue') snapshot.restaurantId='other';
     if(scenario==='fixture') snapshot.mode='fixture';
-    if(['timeout','proof','expired','pending'].includes(scenario)) snapshot={...snapshot,phase:'booking_review',canSubmit:true,bookingReview:{...bookingReview,...(scenario==='expired'?{expiresAt:1}:{})},reviewFingerprint:srFingerprint};
+    if(['timeout','proof','expired','pending'].includes(scenario) || scenario.startsWith('stale-')) snapshot={...snapshot,phase:'booking_review',canSubmit:true,bookingReview:{...bookingReview,...(scenario==='expired'?{expiresAt:1}:{})},reviewFingerprint:srFingerprint};
     window.transport=async(path,options)=>{
       const body=JSON.parse(options.body||'{}');window.calls.push({path,method:options.method,body});
+      if(scenario==='stale-current' && path.endsWith('/current')) return {error:'stale_review',submissionState:'not_dispatched',sessionId:'session-1',reviewFingerprint:srFingerprint};
       if(zen) {
         if(body.type==='search') snapshot={...snapshot,state:'availability_observed',availabilityEvidence:{candidates:[{time:'12:30',shiftId:545372}]}};
         if(body.type==='select') snapshot={...snapshot,state:'contact',fields:['firstname','lastname','email','phone','civility','country'].map(name=>({name,value:''}))};
@@ -52,6 +53,16 @@ async function setup(page, scenario = 'journey') {
       if(body.type==='fill') snapshot={...snapshot,fields:Object.entries(body.fields).map(([name,value])=>({name,value}))};
       if(body.type==='review') snapshot={...snapshot,phase:'booking_review',canSubmit:true,bookingReview,reviewFingerprint:srFingerprint};
       if(body.type==='submit') {
+        if(scenario.startsWith('stale-') && window.calls.filter(c=>c.body.type==='submit').length===1) {
+          const failure={error:'stale_review',submissionState:'not_dispatched',sessionId:'session-1',reviewFingerprint:srFingerprint};
+          if(scenario==='stale-session')failure.sessionId='other-session';
+          if(scenario==='stale-fingerprint')failure.reviewFingerprint='c'.repeat(64);
+          if(['stale-missing','stale-current'].includes(scenario))delete failure.submissionState;
+          if(scenario==='stale-dispatched')failure.submissionState='dispatched';
+          if(scenario==='stale-generic')return Promise.reject(Object.assign(new Error('stale_review'),{status:409}));
+          if(scenario==='stale-resolved')return failure;
+          throw Object.assign(new Error(failure.error),failure);
+        }
         if(scenario==='timeout') throw new Error('lost_reply');
         if(scenario==='pending') return new Promise(()=>{});
         snapshot={...snapshot,phase:'result',canSubmit:false,result:{status:'confirmed',reference:'REF-1',verification:{verified:true,source:scenario==='proof'?'fixture':'provider',restaurantId:'venue-1',sessionId:'session-1',attemptId:'attempt-1'}}};
@@ -92,7 +103,7 @@ try {
     assert.equal(calls.find(c=>c.body.type==='hold').body.reviewFingerprint,'b'.repeat(64));
     assert.equal(calls.find(c=>c.body.type==='submit').body.terms,true);
     assert.equal(calls.find(c=>c.body.type==='scroll').body.delta,500);
-    const saved=await page.evaluate(()=>JSON.stringify({...sessionStorage}));assert(!saved.includes('example.invalid'));assert(!saved.includes('b'.repeat(64)));
+    const saved=await page.evaluate(()=>JSON.stringify({...sessionStorage}));assert(!saved.includes('example.invalid'));assert(!saved.includes('Leverantörsvillkor'));
     const panel=await page.locator('#booking').boundingBox();assert(panel.width<=560);
     const footer=await page.locator('footer').boundingBox();assert(footer.y+footer.height<=844);
     await page.close();console.log(`PASS native journey ${width}: hold, guest save, review, verified proof, compact layout`);
@@ -157,6 +168,29 @@ try {
     } else assert.equal(await page.locator('[data-status]').getAttribute('data-booking-status'),scenario==='zen-journey'?'confirmed':'unknown');
     const saved=await page.evaluate(()=>JSON.stringify({...sessionStorage}));assert(saved.includes(submit.idempotencyKey));assert(!saved.includes('example.invalid'));
     await page.close();console.log(`PASS ${scenario}: native select/fill/review/token/version/key contract`);
+  }
+  for(const scenario of ['stale-bound','stale-resolved','stale-session','stale-fingerprint','stale-missing','stale-dispatched','stale-generic','stale-current']) {
+    const page=await context.newPage();await setup(page,scenario);await page.locator('[data-start]').click();await idle(page);
+    await page.locator('[data-terms]').check();await page.locator('[data-submit]').click();await idle(page);
+    assert.equal(await page.locator('[data-submit]').isDisabled(),true);
+    assert.equal((await page.evaluate(()=>window.calls)).filter(c=>c.body.type==='review').length,0);
+    const recoverable=['stale-bound','stale-resolved'].includes(scenario);
+    assert.equal(await page.locator('[data-review]').isVisible(),recoverable);
+    await page.evaluate(async()=>{window.ui.destroy();window.ui=window.mount();await window.ui.ready;});await idle(page);
+    assert.equal(await page.locator('[data-submit]').isDisabled(),true);
+    if(recoverable) {
+      await page.locator('[data-review]').click();await idle(page);
+      assert.equal(await page.locator('[data-terms]').isChecked(),false);
+      assert.equal(await page.locator('[data-submit]').isDisabled(),true);
+      let calls=await page.evaluate(()=>window.calls);
+      assert.equal(calls.filter(c=>c.body.type==='review').length,1);assert.equal(calls.filter(c=>c.body.type==='submit').length,1);
+      await page.locator('[data-terms]').check();await page.locator('[data-submit]').click();await idle(page);
+      calls=await page.evaluate(()=>window.calls);assert.equal(calls.filter(c=>c.body.type==='submit').length,2);
+    } else {
+      assert.equal(await page.locator('[data-review]').isVisible(),false);
+      assert.equal((await page.evaluate(()=>window.calls)).filter(c=>c.body.type==='submit').length,1);
+    }
+    await page.close();console.log(`PASS ${scenario}: only bound not-dispatched permits explicit re-review`);
   }
   await context.close();
 } finally {await browser?.close();await new Promise(resolve=>server.close(resolve));}
