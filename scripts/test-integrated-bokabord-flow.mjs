@@ -21,7 +21,7 @@ function supplierHtml() {
   return `<!doctype html><html><meta charset="utf-8"><body ng-app="fixture">
 <style>body{font:16px Arial;margin:20px}button,input,textarea{box-sizing:border-box;min-height:40px;width:260px;display:block;margin:8px 0}button{background:#eee}h1,h2{font-size:22px}#party{position:absolute;top:90px}#date{position:absolute;top:150px}#slot{position:absolute;top:210px}</style>
 <main id="screen"></main><script>
-const q={hash:${JSON.stringify(venue.hash)},mealid:1,date:'',time:'',amount:0,firstname:'',lastname:'',email:'',phone:'',comment:'',products:[],waitlist:false,giftcard:null,linked_meals:[],bookingid:null,terms:{general:true,restaurant:false,bokabord:false}};
+const q={hash:${JSON.stringify(venue.hash)},mealid:9778,date:'',time:'',amount:0,firstname:'',lastname:'',email:'',phone:'',comment:'',products:[],waitlist:false,giftcard:null,linked_meals:[],bookingid:null,terms:{general:true,restaurant:false,bokabord:false}};
 const model={meal:{bullets:{},mandatory_products:false},getQuery:()=>q};
 window.angular={element:()=>({injector:()=>({get:key=>key==='Booking'?model:key==='$http'?{pendingRequests:[]}:{$$phase:false}}),scope:()=>({isAjaxRequest:()=>false})})};
 const screen=document.querySelector('#screen');
@@ -75,7 +75,15 @@ if (childMode) {
             // and the REAL journal reserved it. It is fulfilled/aborted, never sent.
             process.send?.({ kind: 'supplier-submit', outcome: process.env.VELVET_TEST_OUTCOME });
             if (process.env.VELVET_TEST_OUTCOME === 'timeout') return intercepted.abort('connectionreset');
-            return intercepted.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, booking: { id: 999999999, status: 1 } }) });
+            const approved = request.postDataJSON();
+            // Synthetic receipt shape from the reviewed policy, no historical
+            // guest data, reference, shortcode or capability URL is copied.
+            const booking = { ...approved, id: 999999999, status: 1,
+              restid: process.env.VELVET_TEST_OUTCOME === 'confirmed' ? 1359 : 9999,
+              meal: { type: 3, bullets: {} }, waitlist: 0, require_noshow: false,
+              phone: Number(String(approved.phone).replace(/\D/g, '')),
+            };
+            return intercepted.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, booking }) });
           }
           process.send?.({ kind: 'unexpected-supplier-request', method: request.method(), path: url.pathname });
           return intercepted.abort();
@@ -216,7 +224,7 @@ async function main() {
       return { status: response.status, body: await response.json() };
     }, { route, options });
   }
-  let first, second;
+  let first, second, third;
   try {
     await start('unverified-success');
     browser = await chromium.launch();
@@ -232,7 +240,7 @@ async function main() {
     assert.equal(recovered.status, 200); assert.equal(recovered.body.attempts.length, 1);
     assert.equal(recovered.body.attempts[0].status, 'unknown');
     assert.ok(!JSON.stringify(recovered.body).includes('fixture@example.invalid'));
-    console.log('PASS actual app/API/Chromium/journal: explicit consent, two-step review, one double-click attempt, unknown supplier status');
+    console.log('PASS actual app/API/Chromium/journal: explicit consent, two-step review, one double-click attempt, wrong-restaurant receipt remains unknown');
     second = await makeView(1365);
     assert.equal((await api(second.page, '/restaurant-bookings/playwright/attempts')).status, 401);
     await stop(); await start('unverified-success');
@@ -259,19 +267,37 @@ async function main() {
     recovered = await api(second.page, '/restaurant-bookings/playwright/attempts');
     assert.equal(recovered.body.attempts.length, 1); assert.equal(recovered.body.attempts[0].status, 'unknown');
     console.log('PASS actual supplier-boundary timeout: unknown journal/current UI, no retry after refresh');
+    await stop(); await start('confirmed');
+    third = await makeView(1365);
+    await toReview(third.page);
+    await panel(third.page).locator('[data-terms]').check();
+    await panel(third.page).locator('[data-submit]').click();
+    await third.page.waitForFunction(() => document.querySelector('#bokabord-mirror [data-status]')?.dataset.bookingStatus === 'confirmed', null, { timeout: 40_000 });
+    await settled(third.page);
+    assert.equal(submits(), 3);
+    assert.match(await panel(third.page).locator('[data-status]').innerText(), /999999999/);
+    recovered = await api(third.page, '/restaurant-bookings/playwright/attempts');
+    assert.equal(recovered.body.attempts.length, 1);
+    assert.equal(recovered.body.attempts[0].status, 'confirmed');
+    assert.equal(recovered.body.attempts[0].reference, '999999999');
+    assert.ok(!JSON.stringify(recovered.body).includes('fixture@example.invalid'));
+    await panel(third.page).locator('[data-refresh]').click(); await settled(third.page);
+    assert.equal(submits(), 3);
+    assert.equal(await panel(third.page).locator('[data-status]').getAttribute('data-booking-status'), 'confirmed');
+    console.log('PASS scoped positive Zink receipt through actual app/API/adapter/journal, owner recovery and reference; supplier remains simulated');
     assert.equal(messages.filter(m => m.kind === 'unexpected-supplier-request').length, 0);
     assert.equal(messages.filter(m => m.kind === 'blocked-node-network').length, 0);
     console.log(JSON.stringify({ status: 'PASS', evidence: 'real_local_app_api_adapter_journal_with_supplier_fixture',
       integrationCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
       supplierBoundaryAttempts: submits(), actualSupplierRequests: 0, liveConfirmationVerified: false,
-      backendRestarts: 2, APIRequests: apiCalls.length, deployed: false }));
+      backendRestarts: 3, APIRequests: apiCalls.length, deployed: false }));
   } catch (error) {
     console.error('Integrated fixture failure:', error.message);
     console.error('Recent local API calls:', JSON.stringify(apiCalls.slice(-12)));
     console.error('Supplier boundary events:', JSON.stringify(messages));
     throw error;
   } finally {
-    await first?.context.close(); await second?.context.close();
+    await first?.context.close(); await second?.context.close(); await third?.context.close();
     await browser?.close(); await stop();
     staticServer.closeAllConnections(); await new Promise(resolve => staticServer.close(resolve));
     // Only this test's mkdtemp directory is removed, never repository/user data.
