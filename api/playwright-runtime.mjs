@@ -102,7 +102,7 @@ export class PlaywrightRuntime {
       throw new PlaywrightRuntimeError('confirmation_required', 409);
     }
     const payload = operation === 'action' ? Object.fromEntries(
-      ['type','revision','confirm','terms','reviewFingerprint','reviewToken','termsVersion','fields','x','y','delta','dy','date','party','time','slotId','shiftId','roomId','idempotencyKey']
+      ['type','revision','confirm','terms','reviewFingerprint','reviewToken','termsVersion','fields','x','y','delta','dy','date','party','time','slotId','shiftId','roomId','offerId','count','offerVersion','idempotencyKey']
         .filter(key => Object.hasOwn(action, key)).map(key => [key, action[key]])) : null;
     s.busy = true;
     try {

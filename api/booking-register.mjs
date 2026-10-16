@@ -1,3 +1,4 @@
+import { cleanBookingOffer } from './booking-offer.mjs';
 import { DatabaseSync } from 'node:sqlite';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -17,6 +18,7 @@ export class BookingRegister {
       && row.roomName.trim() && row.roomName.length <= 256 && !/[\x00-\x1f\x7f]/.test(row.roomName)) {
       clean.roomId=row.roomId; clean.roomName=row.roomName;
     }
+    const offer=cleanBookingOffer(row.offer); if (offer) clean.offer=offer;
     if (!clean.id || !clean.userId || !clean.status) return;
     this.db.prepare('INSERT INTO bookings VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET status=excluded.status,updated=excluded.updated,payload=excluded.payload WHERE bookings.owner=excluded.owner').run(clean.id,clean.userId,clean.status,clean.updatedAt || clean.createdAt,JSON.stringify(clean));
     return clean;
