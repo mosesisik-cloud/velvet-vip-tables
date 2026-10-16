@@ -1,6 +1,7 @@
 // Offline transport double for the REAL BokaBord adapter. No browser is launched
 // and no provider document, script, availability or confirmation is fetched.
 import { BokabordMirror, RESTAURANTS } from '../../api/bokabord-mirror.mjs';
+import assert from 'node:assert/strict';
 
 export const fixturePng = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aD1sAAAAASUVORK5CYII=', 'base64');
 export function deferred() {
@@ -92,6 +93,46 @@ export async function createZenchefContractFixture({ ZenchefPlaywright, ZENCHEF_
   return {
     name: 'Zenchef', adapter, contexts, restaurantId: ZENCHEF_ARPEGE.restaurantId,
     current: owner => adapter.current(owner), removeWrongOwnerRejects: true,
+    assertInspection(view) { assert.equal(view.evidenceMode, 'readonly_shell'); },
+    revisionAction: revision => ({ type: 'refresh', revision }),
+    expireSession() { now += 600001; },
+    holdNextAction() {
+      gate = deferred(); signal = deferred();
+      return { entered: signal.promise, release() { const previous = gate; gate = null; previous.resolve(); } };
+    },
+    failNextAction() { failure = new Error('fixture_transport_interrupted'); },
+  };
+}
+
+export async function createSevenRoomsContractFixture({ SevenRoomsPlaywright, SEVENROOMS_PILOT }) {
+  const contexts = [];
+  let now = Date.UTC(2030, 0, 1), gate, signal, failure;
+  const adapter = new SevenRoomsPlaywright({ now: () => now, browserFactory: async () => ({
+    async close() {},
+    async newContext(options) {
+      const context = { options, closed: false,
+        async route() {}, async routeWebSocket() {}, on() {},
+        async close() { this.closed = true; },
+        async newPage() { return {
+          on() {}, setDefaultTimeout() {}, async goto() { return { status: () => 200 }; },
+          async evaluate() {
+            if (gate) { signal.resolve(); await gate.promise; }
+            if (failure) { const error = failure; failure = null; throw error; }
+          },
+          locator() { return { async innerText() { return 'OFFLINE CONTRACT FIXTURE'; } }; },
+          async screenshot() { return fixturePng; },
+        }; },
+      };
+      contexts.push(context); return context;
+    },
+  }) });
+  return {
+    name: 'SevenRooms', adapter, contexts, restaurantId: SEVENROOMS_PILOT.restaurantId,
+    current: (owner, id) => adapter.current(id, owner), removeWrongOwnerRejects: true,
+    // Native PR144 current() renders a new snapshot and renews TTL. This is an
+    // explicit integration difference from BokaBord/Zenchef, not normalized v1.
+    currentAdvancesRevision: true,
+    assertInspection(view) { assert.equal(view.mode, 'inspect'); assert.equal(view.readiness, 'unverified'); },
     revisionAction: revision => ({ type: 'refresh', revision }),
     expireSession() { now += 600001; },
     holdNextAction() {

@@ -3,7 +3,7 @@ import crypto from 'node:crypto';
 import test from 'node:test';
 import { pathToFileURL } from 'node:url';
 import path from 'node:path';
-import { createBokabordContractFixture, createZenchefContractFixture } from './fixtures/playwright-provider-contract.mjs';
+import { createBokabordContractFixture, createZenchefContractFixture, createSevenRoomsContractFixture } from './fixtures/playwright-provider-contract.mjs';
 
 // Provider-neutral assertions against real adapters. Profiles describe native
 // differences rather than pretending the pixel mirror is normalized UI v1.
@@ -15,6 +15,10 @@ if (process.env.ZENCHEF_CONTRACT_MODULE) {
   const module = await import(pathToFileURL(path.resolve(process.env.ZENCHEF_CONTRACT_MODULE)).href);
   profiles.push(async function ZenchefContractFixture() { return createZenchefContractFixture(module); });
 } else console.log('Coverage: BokaBord only. Set ZENCHEF_CONTRACT_MODULE to a local reviewed adapter module for Zenchef.');
+if (process.env.SEVENROOMS_CONTRACT_MODULE) {
+  const module = await import(pathToFileURL(path.resolve(process.env.SEVENROOMS_CONTRACT_MODULE)).href);
+  profiles.push(async function SevenRoomsContractFixture() { return createSevenRoomsContractFixture(module); });
+} else console.log('SevenRooms not covered: set SEVENROOMS_CONTRACT_MODULE to a reviewed local module.');
 
 function snapshotContract(snapshot, restaurantId) {
   assert.ok(snapshot && typeof snapshot === 'object');
@@ -44,8 +48,9 @@ for (const factory of profiles) {
       snapshotContract(first, restaurantId);
       assert.equal(first.canSubmit, false, 'inspection is not submission permission');
       assert.equal(first.result, null);
-      assert.equal((await f.current('fixture-owner', first.id)).revision, first.revision);
-      const next = await adapter.action(first.id, 'fixture-owner', f.revisionAction(first.revision));
+      const current = await f.current('fixture-owner', first.id);
+      assert.equal(current.revision, first.revision + (f.currentAdvancesRevision ? 1 : 0));
+      const next = await adapter.action(first.id, 'fixture-owner', f.revisionAction(current.revision));
       snapshotContract(next, restaurantId);
       assert.ok(next.revision > first.revision);
       assert.equal(next.id, first.id);
@@ -59,9 +64,10 @@ for (const factory of profiles) {
       await assert.rejects(f.adapter.action(first.id, 'bob', f.revisionAction(first.revision)), /session_expired/);
       if (f.removeWrongOwnerRejects) await assert.rejects(f.adapter.remove(first.id, 'bob'), /session_expired/);
       else await f.adapter.remove(first.id, 'bob');
-      assert.equal((await f.current('alice', first.id)).id, first.id);
+      const current = await f.current('alice', first.id);
+      assert.equal(current.id, first.id);
       await assert.rejects(f.adapter.action(first.id, 'alice', f.revisionAction(first.revision - 1)), /stale_view/);
-      assert.equal((await f.current('alice', first.id)).revision, first.revision);
+      assert.equal((await f.current('alice', first.id)).revision, current.revision + (f.currentAdvancesRevision ? 1 : 0));
       const other = await f.adapter.create('bob', f.restaurantId);
       assert.notEqual(other.id, first.id);
       assert.equal((await f.current('bob', other.id)).id, other.id);
@@ -102,7 +108,7 @@ for (const factory of profiles) {
       if (!f.resultStatuses) {
         view = await f.adapter.action(view.id, 'alice', f.revisionAction(view.revision));
         assert.equal(view.result, null, 'inspection cannot manufacture a supplier outcome');
-        assert.equal(view.evidenceMode, 'readonly_shell');
+        f.assertInspection(view);
         assert.equal(view.canSubmit, false);
       }
       for (const status of f.resultStatuses || []) {
