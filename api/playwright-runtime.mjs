@@ -15,26 +15,30 @@ export class PlaywrightRuntime {
     this.closed = false;
     this.resultVerifier = resultVerifier;
   }
+  entries(provider) {
+    const entry = Object.hasOwn(this.providers,provider) && this.providers[provider];
+    return Array.isArray(entry) ? entry : entry ? [entry] : [];
+  }
   mode(entry) { return entry?.mode === 'live' ? 'live' : 'inspect'; }
   active(entry) { return entry?.enabled ?? this.enabled; }
   guestProvider(provider, restaurantId) {
-    const entry = Object.hasOwn(this.providers, provider) && this.providers[provider];
+    const entry = this.entries(provider).find(entry=>entry.restaurantId === restaurantId);
     return !!entry && entry.restaurantId === restaurantId && this.mode(entry) === 'live' && this.active(entry) && !this.closed;
   }
   capabilities() {
-    return Object.entries(this.providers).map(([provider, entry]) => ({
+    return Object.keys(this.providers).flatMap(provider => this.entries(provider).map(entry => ({
       provider, restaurantId: entry.restaurantId, mode: this.mode(entry),
       enabled: this.active(entry), operatorOnly: this.mode(entry) !== 'live', liveBooking: this.mode(entry) === 'live' && this.active(entry),
       semanticContract: false, availabilityVerified: false,
       reason: this.mode(entry) === 'live' && this.active(entry) ? null : 'supplier_checkout_unverified',
-    }));
+    })));
   }
   authorize(owner, operator, entry) {
     if (!owner || this.mode(entry) !== 'live' && !operator) throw new PlaywrightRuntimeError('operator', 403);
     if (!(entry ? this.active(entry) : this.enabled) || this.closed) throw new PlaywrightRuntimeError('playwright_disabled', 503);
   }
   async create(owner, operator, { provider, restaurantId, width, resume = false } = {}) {
-    const entry = Object.hasOwn(this.providers, provider) && this.providers[provider];
+    const entry = this.entries(provider).find(entry=>entry.restaurantId === restaurantId);
     this.authorize(owner, operator, entry);
     if (!entry || restaurantId !== entry.restaurantId) throw new PlaywrightRuntimeError('unsupported_restaurant');
     await this.expire();
@@ -98,7 +102,7 @@ export class PlaywrightRuntime {
       throw new PlaywrightRuntimeError('confirmation_required', 409);
     }
     const payload = operation === 'action' ? Object.fromEntries(
-      ['type','revision','confirm','terms','reviewFingerprint','reviewToken','termsVersion','fields','x','y','delta','dy','date','party','time','slotId','shiftId','idempotencyKey']
+      ['type','revision','confirm','terms','reviewFingerprint','reviewToken','termsVersion','fields','x','y','delta','dy','date','party','time','slotId','shiftId','roomId','idempotencyKey']
         .filter(key => Object.hasOwn(action, key)).map(key => [key, action[key]])) : null;
     s.busy = true;
     try {
@@ -128,7 +132,7 @@ export class PlaywrightRuntime {
   }
   async close() {
     this.closed = true;
-    await Promise.allSettled(Object.values(this.providers).map(entry => entry.adapter.close()));
+    await Promise.allSettled([...new Set(Object.keys(this.providers).flatMap(provider=>this.entries(provider).map(entry=>entry.adapter)))].map(adapter=>adapter.close()));
     this.sessions.clear();
   }
 }

@@ -53,3 +53,28 @@ test('a provider without an approved confirmation policy stays unknown even with
     assert.throws(()=>journal.reserveAttempt({...request,sessionId:'rotated-session'}),/already_attempted/);
   }finally{ledger.close();}
 });
+
+test('room selection and venue-specific confirmation policy remain bound across journal recovery',()=>{
+  const ledger=new PlaywrightAttemptLedger(':memory:');
+  const rooms=[{id:11,name:'Dining'},{id:12,name:'Terrace'}];
+  const journal=createProviderJournal({ledger,provider:'Zenchef',mode:'fixture',confirmationPolicySource:'FISH',
+    restaurants:{roomVenue:{name:'Room venue',rooms,confirmationPolicySource:'ROOM'}},register:{upsert:()=>{}}});
+  const request={...intent('booking'),provider:'Zenchef',restaurantId:'roomVenue',details:{date:'2030-01-15',time:'19:00',party:2,roomId:11,roomName:'Dining'}};
+  try {
+    assert.throws(()=>journal.reserveAttempt({...request,details:{...request.details,roomId:12}}),/room_binding/);
+    const {attempt}=journal.reserveAttempt(request);
+    assert.equal(attempt.roomId,11);assert.equal(ledger.get('guest',attempt.attemptId).roomName,'Dining');
+    const proof={verified:true,source:'fixture',policySource:'ROOM',provider:'Zenchef',restaurantId:'roomVenue',sessionId:attempt.sessionId,
+      attemptId:attempt.attemptId,idempotencyKey:attempt.idempotencyKey,detailsDigest:attempt.reviewFingerprint,roomId:11,roomName:'Dining'};
+    for (const override of [{roomId:12},{roomName:'Terrace'},{policySource:'FISH'}]) {
+      journal.recordAttempt({intent:request,attempt,result:{status:'confirmed',reference:'LOCAL',verification:{...proof,...override}}});
+      assert.equal(ledger.get('guest',attempt.attemptId).status,'unknown');
+    }
+    assert.throws(()=>journal.reserveAttempt({...request,sessionId:'new-session',details:{...request.details,roomId:12,roomName:'Terrace'}}),/already_attempted/);
+    const result={status:'confirmed',reference:'LOCAL',verification:proof};journal.recordAttempt({intent:request,attempt,result});
+    const snapshot={id:request.sessionId,restaurantId:'roomVenue',details:request.details,result};
+    assert.equal(journal.verifySnapshot(snapshot,'guest').verification.roomId,11);
+    assert.equal(journal.verifySnapshot({...snapshot,details:{...request.details,roomId:12}},'guest'),null);
+    assert.equal(journal.verifySnapshot(snapshot,'other'),null);
+  } finally {ledger.close();}
+});

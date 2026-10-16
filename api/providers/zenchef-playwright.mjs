@@ -11,8 +11,15 @@ export const ZENCHEF_ARPEGE = Object.freeze({
 export const ZENCHEF_FISHCORNER = Object.freeze({ restaurantId: 'osm-SBH-fishcorner', venueId: '388090', name: 'Fish Corner',
   url: 'https://bookings.zenchef.com/results?rid=388090&lang=fr', timezone: 'America/Guadeloupe', minParty: 2, maxParty: 2,
   shiftId: 545372, source: 'https://www.fishcornerstbarth.com/en/book-online' });
+export const ZENCHEF_PESQUIERE = Object.freeze({ restaurantId: 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen',
+  venueId: '362908', name: 'La PeSQui\u00e8re, Le Mazagran et Lou Revelen',
+  url: 'https://bookings.zenchef.com/results?rid=362908&lang=fr', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
+  shiftId: 136503, source: 'https://www.lapesquiere.fr/contact-restaurant-a-saint-tropez-dans-le-var-83/',
+  policySource: 'https://bookings.zenchef.com/gtc?rid=362908&lang=fr',
+  rooms: Object.freeze([Object.freeze({ id: 51183, name: 'La Pesquiere' }),
+    Object.freeze({ id: 52372, name: 'Mazagran salle' }), Object.freeze({ id: 52373, name: 'Mazagran terrasse' })]) });
 export const ZENCHEF_POLICY_SOURCE = 'https://bookings.zenchef.com/gtc?rid=388090&lang=fr';
-const VENUES = Object.freeze({ [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER });
+const VENUES = Object.freeze({ [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE });
 const FIXTURE_URL = 'https://zenchef-fixture.invalid/';
 const TTL = 10 * 60_000;
 const FIELDS = ['firstname', 'lastname', 'email', 'phone'];
@@ -34,11 +41,15 @@ const bounded = async (operation, ms) => {
 // controls. Remove those optional invitations; never add consent on the guest's behalf.
 export function approvedZenchefPayload(body, approval) {
   const keys = 'day nb_guests time lang firstname lastname civility country phone_number email comment custom_field custom_field_v2 customersheet offers partner_id type'.split(' ');
+  const roomRequired = approval?.restaurantId === ZENCHEF_PESQUIERE.restaurantId;
+  if (roomRequired) keys.push('wish');
   const sheetKeys = 'firstname lastname civility phone email optins country lang'.split(' ');
   const exactKeys = (o, list) => o && typeof o === 'object' && !Array.isArray(o)
     && Object.keys(o).length === list.length && list.every(k => Object.hasOwn(o, k));
   const emptyArray = a => Array.isArray(a) && a.length === 0;
   if (!approval || !exactKeys(body, keys) || !exactKeys(body.customersheet, sheetKeys)) return null;
+  if (roomRequired && (!ZENCHEF_PESQUIERE.rooms.some(room => room.id === approval.roomId && room.name === approval.roomName)
+    || !exactKeys(body.wish, ['booking_room_id']) || body.wish.booking_room_id !== approval.roomId)) return null;
   const sheet = body.customersheet, phone = String(approval.phone).replace(/\s/g, '');
   if (body.day !== approval.date || body.time !== approval.time || body.nb_guests !== approval.party
     || body.lang !== 'fr' || body.partner_id !== '1001' || body.type !== 'web' || body.comment !== ''
@@ -55,10 +66,14 @@ export function approvedZenchefPayload(body, approval) {
 // Public form/thank_you bundles bind createdCustomerSheet.relatedBookingStatus
 // to response.status and render confirmed ONLY for the literal "confirmed".
 // This is a source-backed mapping; no successful live booking is claimed here.
-export function zenchefBookingResult(status, data) {
+export function zenchefBookingResult(status, data, approval = null) {
   if (status < 200 || status >= 300 || !data || typeof data !== 'object') return { status: 'unknown' };
   if (data.requires_action === true || data.charge) return { status: 'payment_required' };
   if (data.error || !/^[1-9]\d*$/.test(String(data.id)) || typeof data.uuid !== 'string' || !data.uuid) return { status: 'unknown' };
+  // Public createBookingData writes wish.booking_room_id; the booking loader reads
+  // that path from booking data. No live create response was observed. Requiring
+  // this echo is a conservative acceptance rule, NOT a verified response schema.
+  if (approval?.restaurantId === ZENCHEF_PESQUIERE.restaurantId && data.wish?.booking_room_id !== approval.roomId) return { status: 'unknown' };
   if (data.status === 'confirmed') return { status: 'confirmed', reference: String(data.id) };
   if (data.status === 'waiting') return { status: 'pending' };
   return { status: 'unknown' };
@@ -78,7 +93,9 @@ export function zenchefSearchUrl(query, venue = ZENCHEF_ARPEGE) {
 export function zenchefFormUrl(selection, venue = ZENCHEF_ARPEGE) {
   const search = zenchefSearchUrl(selection, venue);
   if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(selection.time)) throw new ZenchefError('time');
-  return search.replace('/results?', '/form?') + '&slot=' + encodeURIComponent(selection.time);
+  if (venue.rooms ? !venue.rooms.some(room => room.id === selection.roomId) : selection.roomId !== undefined) throw new ZenchefError('room_required_or_unverified');
+  return search.replace('/results?', '/form?') + '&slot=' + encodeURIComponent(selection.time)
+    + (venue.rooms ? '&room_id=' + selection.roomId : '');
 }
 
 // Public bundle and rendered form observed 2026-10-16. API reads remain pinned
@@ -137,7 +154,12 @@ export function zenchefAvailabilityEvidence(data, query, observedAt = Date.now()
       if (slot.closed !== false || slot.marked_as_full !== false || !inWindow(slot)
         || !/^([01]\d|2[0-3]):[0-5]\d$/.test(slot.name) || !slot.possible_guests?.includes(query.party)
         || !Array.isArray(slot.available_rooms?.[query.party]) || !slot.available_rooms[query.party].length) continue;
-      candidates.push({ time: slot.name, shiftId: shift.id });
+      if (venue.rooms) {
+        const rooms = venue.rooms.filter(room => slot.available_rooms[query.party].includes(room.id)
+          && state.rooms?.some(native => native.id === room.id && native.name === room.name));
+        if (state.isRoomMandatory !== true || !rooms.length) continue;
+        candidates.push({ time: slot.name, shiftId: shift.id, rooms });
+      } else candidates.push({ time: slot.name, shiftId: shift.id });
     }
   }
   return { source: 'provider_server_rendered', restaurantId: venue.restaurantId,
@@ -193,12 +215,13 @@ export class ZenchefPlaywright {
       context = await browser.newContext({ viewport: { width: 420, height: 760 },
         locale: 'fr-FR', timezoneId: venue.timezone, serviceWorkers: 'block', acceptDownloads: false });
       const s = { id: crypto.randomUUID(), owner, restaurantId, restaurant: venue.name, venue,
-        provider: 'Zenchef', destination: venue === ZENCHEF_ARPEGE ? 'Paris' : 'St. Barts', context, revision: 0, touched: this.now(),
+        provider: 'Zenchef', destination: venue === ZENCHEF_ARPEGE ? 'Paris' : venue === ZENCHEF_PESQUIERE ? 'Saint-Tropez' : 'St. Barts', context, revision: 0, touched: this.now(),
         busy: false, attempted: false, state: 'inspect_only', result: null, blockedRequests: 0 };
       await context.route('**/*', async route => {
         const r = route.request();
-        const bookingUrl = 'https://bookings-middleware.zenchef.com/booking?restaurantId=388090';
-        if (this.mode === 'prepare' && r.method() === 'POST' && r.url() === bookingUrl && s.armed && !s.attempted) {
+        const bookingUrl = `https://bookings-middleware.zenchef.com/booking?restaurantId=${venue.venueId}`;
+        if (this.mode === 'prepare' && r.method() === 'POST' && r.url() === bookingUrl && s.armed && !s.attempted && s.noCardAllowed
+          && [ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE].includes(venue)) {
           s.attempted = true;
           try {
             const payload = approvedZenchefPayload(r.postDataJSON(), s.approval);
@@ -209,11 +232,12 @@ export class ZenchefPlaywright {
             // Exactly one transmission, no redirects/retries. Unknown stays locked.
             const response = await route.fetch({ maxRedirects: 0, maxRetries: 0, timeout: 20000, postData: JSON.stringify(payload) });
             const data = await response.json().catch(() => null);
-            s.result = zenchefBookingResult(response.status(), data);
+            s.result = zenchefBookingResult(response.status(), data, s.approval);
             s.result.verification = { verified: ['confirmed', 'pending', 'payment_required'].includes(s.result.status), source: 'provider', provider: 'Zenchef', mode: 'live', phase: 'booking', restaurantId,
-              policySource: ZENCHEF_POLICY_SOURCE, reviewFingerprint: s.review.digest,
+              policySource: venue.policySource || ZENCHEF_POLICY_SOURCE, reviewFingerprint: s.review.digest,
               sessionId: s.id, attemptId: reserved.attempt.attemptId, idempotencyKey: reserved.attempt.idempotencyKey,
-              detailsDigest: s.review.digest };
+              detailsDigest: s.review.digest,
+              ...(venue.rooms ? { roomId: s.approval.roomId, roomName: s.approval.roomName } : {}) };
             try { await bounded(() => this.recordResult(s), 5000); }
             catch { s.result = { status: 'unknown', reason: 'result_persistence_failed' }; }
             await route.fulfill({ response });
@@ -261,6 +285,13 @@ export class ZenchefPlaywright {
     this.owned(s.id, owner);
     return structuredClone({ ...s.lastSnapshot, ...(s.submissionStarted ? { state: s.state, canSubmit: false, result: s.result } : {}) });
   }
+  async verifyNativeRoom(s) {
+    if (!s.venue.rooms) return;
+    const { roomId, roomName } = s.formSelection;
+    const form = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent())?.props?.initialState?.appStoreState;
+    if (s.page.url() !== zenchefFormUrl(s.formSelection, s.venue) || form?.wish?.room_id !== roomId
+      || !await s.page.getByText(roomName, { exact: true }).isVisible()) throw new ZenchefError('provider_room_mismatch', 409);
+  }
   async nativeCountry(s) {
     const phoneWidget = s.page.locator(PROVIDER_FIELDS.phone).locator('xpath=ancestor::div[contains(concat(" ",normalize-space(@class)," ")," iti ")][1]');
     const flag = phoneWidget.locator('.iti__selected-country .iti__flag');
@@ -268,7 +299,11 @@ export class ZenchefPlaywright {
     const codes = ((await flag.getAttribute('class')) || '').split(/\s+/).filter(c => /^iti__[a-z]{2}$/.test(c));
     if (codes.length !== 1) return '';
     const code = codes[0].slice(5);
-    return await phoneWidget.locator(`[data-country-code="${code}"]`).count() === 1 ? code : '';
+    // At the mobile viewport the country list is not mounted until opened.
+    // Read the selected visible control, not a possibly absent dropdown option.
+    const selected = phoneWidget.locator('.iti__selected-country');
+    return await selected.count() === 1 && await selected.getAttribute('title')
+      && await selected.getAttribute('aria-label') ? code : '';
   }
   async snapshot(s) {
     let fields = null;
@@ -328,7 +363,9 @@ export class ZenchefPlaywright {
           const matches = evidence?.candidates.filter(row => row.time === action.time);
           if (!matches || matches.length !== 1 || matches[0].shiftId !== action.shiftId
             || this.now() - Date.parse(evidence.observedAt) > 120000) throw new ZenchefError('slot_stale_or_unverified', 409);
-          s.formSelection = { ...s.searchQuery, time: action.time };
+          const room = s.venue.rooms ? matches[0].rooms?.find(room => room.id === action.roomId) : null;
+          if (s.venue.rooms ? !room : action.roomId !== undefined) throw new ZenchefError('room_required_or_unverified', 409);
+          s.formSelection = { ...s.searchQuery, time: action.time, ...(room ? { roomId: room.id, roomName: room.name } : {}) };
           const url = zenchefFormUrl(s.formSelection, s.venue);
           await s.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
           await s.page.locator(PROVIDER_FIELDS.firstname).waitFor({ state: 'visible', timeout: 20000 });
@@ -337,6 +374,9 @@ export class ZenchefPlaywright {
           if (s.page.url() !== url || data.page !== '/form' || form?.restaurantId !== s.venue.venueId
             || form.wish?.day !== s.searchQuery.date || form.wish?.pax !== s.searchQuery.party
             || form.wish?.slot !== action.time || form.wish?.waiting_list !== false) throw new ZenchefError('provider_form_mismatch', 502);
+          if (room && (form.wish.room_id !== room.id || form.isRoomMandatory !== true
+            || !form.rooms?.some(native => native.id === room.id && native.name === room.name)
+            || !await s.page.getByText(room.name, { exact: true }).isVisible())) throw new ZenchefError('provider_room_mismatch', 502);
           const supported = ['firstname', 'lastname', 'email', 'phone_number', 'country', 'civility'];
           if (!form.mandatoryFields || Object.entries(form.mandatoryFields).some(([key, value]) => value === 'required' && !supported.includes(key))) {
             throw new ZenchefError('provider_fields_unverified', 409);
@@ -346,6 +386,13 @@ export class ZenchefPlaywright {
             && shift.shift_slots?.some(slot => slot.name === action.time && slot.closed === false && slot.marked_as_full === false && slot.possible_guests?.includes(s.searchQuery.party))
             && shift.closed === false && shift.marked_as_full === false && shift.prepayment_param === null && shift.is_offer_required === false && shift.confirmation?.is_auto === true
             && form.isRoomMandatory === false && Array.isArray(form.wish.offers) && !form.wish.offers.length && form.wish.room_id === null;
+          if (s.venue === ZENCHEF_PESQUIERE) s.noCardAllowed = shift?.id === 136503
+            && shift.charge_param?.is_web_booking_askable === false && shift.prepayment_param === null
+            && shift.is_offer_required === false && shift.confirmation?.is_auto === true
+            && shift.closed === false && shift.marked_as_full === false
+            && shift.shift_slots?.some(slot => slot.name === action.time && slot.closed === false && slot.marked_as_full === false
+              && slot.possible_guests?.includes(s.searchQuery.party) && slot.available_rooms?.[s.searchQuery.party]?.includes(room.id))
+            && Array.isArray(form.wish.offers) && !form.wish.offers.length;
           const termsLabel = s.page.locator('[data-testid="eula-checkbox"]');
           const text = await termsLabel.count() === 1 ? await termsLabel.innerText() : '';
           s.terms = { text, version: digest([text, form.restaurantComment || null, shift || null]),
@@ -377,6 +424,7 @@ export class ZenchefPlaywright {
           return await this.snapshot(s);
         }
         if (action.type === 'review' && ['contact', 'review'].includes(s.state)) {
+          await this.verifyNativeRoom(s);
           const details = { ...s.formSelection, civility: await s.page.locator('input[name="civility"]:checked').inputValue() };
           for (const k of FIELDS) details[k] = await s.page.locator(PROVIDER_FIELDS[k]).inputValue();
           details.country = await this.nativeCountry(s);
@@ -389,6 +437,7 @@ export class ZenchefPlaywright {
         if (action.type === 'submit') {
           if (s.state !== 'review' || action.confirm !== true || action.terms !== true
             || !s.review || s.review.revision !== s.revision || action.reviewToken !== s.review.token) throw new ZenchefError('confirmation_required', 409);
+          await this.verifyNativeRoom(s);
           const actual = { ...s.formSelection, civility: await s.page.locator('input[name="civility"]:checked').inputValue() };
           for (const k of FIELDS) actual[k] = await s.page.locator(PROVIDER_FIELDS[k]).inputValue();
           actual.country = await this.nativeCountry(s);
@@ -402,7 +451,8 @@ export class ZenchefPlaywright {
           s.approval = { ...actual, terms: true, termsVersion: s.terms.version, reviewToken: s.review.token,
             revision: s.revision, idempotencyKey: action.idempotencyKey, reviewFingerprint: s.review.digest,
             provider: 'Zenchef', restaurantId: s.restaurantId, phase: 'booking', mode: 'live', sessionId: s.id, owner: s.owner,
-            details: { date: actual.date, time: actual.time, party: actual.party } };
+            details: { date: actual.date, time: actual.time, party: actual.party,
+              ...(s.venue.rooms ? { roomId: actual.roomId, roomName: actual.roomName } : {}) } };
           s.submissionStarted = true; s.result = { status: 'unknown' }; s.state = 'result';
           try {
             // Never preserve invisible/default marketing or storage opt-ins.

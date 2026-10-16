@@ -92,3 +92,43 @@ now bound up to64k (oversize fails closed), with at most100 visible links. All
 link destinations participate in binding; only HTTP(S) links render clickable.
 The Swedish review UI and actual newlines were visually checked in the local
 supplier-fixture screenshot. No provider booking was created by this work.
+
+### Phone projection before the final provider action
+
+The real Riche guest form stores typed phone input separately from Booking.phone;
+Next validates and copies the canonical number and country code. The earlier
+fixture incorrectly copied phone on input; activation was held when a read-only
+real-contact check exposed this difference.
+
+For this scoped path only, `readRicheContactPhone` reads the unique visible phone
+component and its selected country metadata. It uses the provider's read-only
+phoneValid/intlTelInputUtils validation and formatting, including the exact NANP
+prefix rule from libPhoneUtils.js?t=12 (SHA256
+`d860a6780f1016797e35e5490b25aecdec6b49a600e1fb76d23dca59bb3adfd7`). It does not
+instantiate the plugin, click Next, initialize a second widget or change Booking.
+Canonical/raw number, ISO country and dial code join the frozen review binding.
+Final intercepted request must match the canonical phone and both country_code
+and dial_code. Missing or ambiguous metadata/invalid phone fails closed. Other
+restaurants retain their existing model-read behavior.
+
+### Final validation
+
+Exact runtime phone helper and mirror passed guarded real-contact reads at
+2026-10-16T03:09:17Z (source d9d24e5): bookingDetails returned the canonical
+synthetic phone, three binding reads stayed identical across snapshot/settle,
+and seeded review survived snapshot while Booking.phone stayed empty/unchanged.
+Unique input/title/E164 checks passed. This was read-only, with no final click.
+See PR172 comment6207166504. It proves actual read/retention, not dispatch.
+
+Existing actual app/API/adapter/SQLite harness --riche passed on runtime2cc956b
+(test source9811f44):120 API calls,4 restarts,3 simulated supplier POSTs,0 real
+supplier requests. The source-faithful fixture keeps phone/country/dial absent
+from Booking until Next. Review leaves them absent while displaying the canonical
+phone. Direct submit, edited details, stale token and changed terms link all stop
+before reserve/click; fresh consent gives one double-click transmission. Missing
+and wrong receipts stay unknown; original completion navigation confirms and
+survives restart. Denied replay returns locked unknown before Next. Prior failing
+phone fixture reproduced the bug on8e61730. Noema and Ciccios regression runs
+passed84 API/4 restarts/3 simulated POSTs each before the Riche-only phone delta.
+14 focused receipt/journal tests also pass. Narrow reviews accepted the final
+consent/dispatch/phone wiring. No real reservation, hold, code or payment made.
