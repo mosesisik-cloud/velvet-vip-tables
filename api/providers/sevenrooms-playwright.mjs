@@ -282,9 +282,15 @@ export class SevenRoomsPlaywright {
       if (phase === 'booking' && this.submissionPolicy?.verifyConfirmation) {
         // The policy is a server-owned, venue-specific evidence contract, never
         // request input. No generic HTTP success / id heuristic is accepted.
-        const proof = await this.submissionPolicy.verifyConfirmation({status:response.status(),data,intent,holdId:s.hold?.id});
+        const proof = await this.submissionPolicy.verifyConfirmation({status:response.status(),data,intent,holdId:s.hold?.id,attempt:structuredClone(reservation.attempt)});
+        const verification=proof?.verification;
         if (proof?.confirmed === true && typeof proof.reference === 'string' && proof.reference && proof.reviewFingerprint === reviewFingerprint
-          && proof.restaurantId === s.restaurantId && proof.sessionId === s.id) outcome={status:'confirmed',phase,reference:proof.reference};
+          && proof.restaurantId === s.restaurantId && proof.sessionId === s.id
+          && verification?.verified===true && verification.source==='provider' && typeof verification.policySource==='string' && verification.policySource
+          && verification.provider==='SevenRooms' && verification.restaurantId===s.restaurantId && verification.sessionId===s.id
+          && verification.reviewFingerprint===reviewFingerprint
+          && typeof verification.attemptId==='string' && verification.attemptId===(reservation.attempt.attemptId || reservation.attempt.id)
+          && typeof verification.idempotencyKey==='string' && verification.idempotencyKey===reservation.attempt.idempotencyKey) outcome={status:'confirmed',phase,reference:proof.reference,verification:structuredClone(verification)};
       }
       // A hold is not a confirmed booking. Keep its durable attempt non-retriable;
       // provider hold identifiers and expiry remain private to this session.
@@ -361,7 +367,7 @@ export class SevenRoomsPlaywright {
       challengeRequired:s.challengeRequired,
       holdReview, bookingReview:s.bookingReview ? structuredClone(s.bookingReview) : null,
       reviewFingerprint:s.bookingReview?.reviewFingerprint || null,
-      result:s.result ? {...s.result} : null, fields, blocked: ['challenge_required','access_blocked','unsupported_navigation','provider_write_required'].includes(s.state), blockedRequests: s.blockedRequests,
+      result:s.result ? structuredClone(s.result) : null, fields, blocked: ['challenge_required','access_blocked','unsupported_navigation','provider_write_required'].includes(s.state), blockedRequests: s.blockedRequests,
       blockedRoutes: s.blockedRoutes.map(route => ({ ...route })),
       readiness: s.availability && this.now() - Date.parse(s.availability.observedAt) < 60_000 ? 'availability_observed' : 'unverified',
       selection: s.selection ? { ...s.selection } : null,

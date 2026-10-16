@@ -63,7 +63,8 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     verifySnapshot(snapshot,owner) {
       const proof=snapshot.result?.verification;
       const attempt=proof?.attemptId && ledger.get(owner,proof.attemptId);
-      if (!attempt || attempt.phase !== 'booking' || attempt.status !== 'confirmed'
+      if (!attempt || attempt.provider !== provider || attempt.mode !== mode || !venue(attempt.restaurantId)
+        || attempt.phase !== 'booking' || attempt.status !== 'confirmed'
         || attempt.restaurantId !== snapshot.restaurantId || attempt.sessionId !== snapshot.id
         || attempt.reference !== snapshot.result.reference || !proofMatches(snapshot.result,attempt)) return null;
       return publicBookingResult({...snapshot.result,verification:{...proof,detailsDigest:attempt.reviewFingerprint}});

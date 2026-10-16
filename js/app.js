@@ -2609,7 +2609,10 @@ async function renderRestaurantDetail(placeId) {
   const mirrorContainer = document.getElementById("bokabord-mirror");
   if (mirrorContainer) mountBokabordMirror(mirrorContainer, apiJSON, { restaurantId: restaurant.placeId, restaurantName: restaurant.name });
   const nativeProviderContainer = document.getElementById('provider-playwright-booking');
-  if (nativeProviderContainer) mountProviderPlaywrightBooking(nativeProviderContainer, apiJSON, {provider:nativeProvider.provider,restaurantId:restaurant.placeId,restaurantName:restaurant.name,endpoint:'/restaurant-bookings/playwright'});
+  if (nativeProviderContainer) {
+    const bookingView = mountProviderPlaywrightBooking(nativeProviderContainer, apiJSON, {provider:nativeProvider.provider,restaurantId:restaurant.placeId,restaurantName:restaurant.name,endpoint:'/restaurant-bookings/playwright'});
+    window.addEventListener('hashchange', () => bookingView.destroy(), {once:true});
+  }
   const webbridgeForm = document.getElementById("restaurant-webbridge-search");
   const webbridgeResult = document.getElementById("restaurant-webbridge-result");
   if (webbridgeForm && webbridgeResult) {
