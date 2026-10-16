@@ -236,7 +236,9 @@ try{
   // A real term/time/price or link-target change still requires a fresh review.
   for(const change of ['terms','link']){
    await flowPage.evaluate(change=>{if(change==='terms')document.querySelector('#terms').textContent='Fixture cancellation before 18:00, fee 200 SEK';else document.querySelector('#terms-link').href='/changed-terms';},change);
-   await assert.rejects(flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:true,reviewFingerprint:fp}),/stale_review/);
+   await assert.rejects(flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:true,reviewFingerprint:fp}),error=>{
+    assert.equal(error.code,'stale_review');assert.equal(error.submissionState,'not_dispatched');return true;
+   });
    assert.equal(writeFetches.length,beforeReviewChanges);
    await flowPage.evaluate(()=>{document.querySelector('#terms').textContent='Fixture cancellation before 19:00, fee 100 SEK';document.querySelector('#terms-link').href='/terms';});
    s=await flow.current(s.id,mode);
@@ -253,12 +255,16 @@ try{
    await flowPage.evaluate(()=>{const b=document.querySelector('[data-test="checkout-button-complete"]');delete b.__reactFiber$fixture;b.disabled=false;});
    s=await flow.current(s.id,mode);
   }
-  await assert.rejects(flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:false,reviewFingerprint:fp}),/confirmation_required/);
+  await assert.rejects(flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:false,reviewFingerprint:fp}),error=>{
+   assert.equal(error.code,'confirmation_required');assert.equal(error.submissionState,undefined);return true;
+  });
   s=await flow.current(s.id,mode);
   s=await flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:true,reviewFingerprint:fp});
   assert.equal(s.result.status,mode==='bound'?'confirmed':'unknown');
   assert.equal(s.phase,'result');assert.equal(s.canSubmit,false);
-  await assert.rejects(flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:true,reviewFingerprint:fp}),/already_attempted/);
+  await assert.rejects(flow.action(s.id,mode,{type:'submit',revision:s.revision,confirm:true,terms:true,reviewFingerprint:fp}),error=>{
+   assert.equal(error.code,'already_attempted');assert.equal(error.submissionState,undefined);return true;
+  });
   assert.ok(!JSON.stringify(s).includes('LOCAL-HOLD'),'private hold token never exposed');
   await flow.remove(s.id,mode);
  }

@@ -461,7 +461,13 @@ export class SevenRoomsPlaywright {
         if (!this.writeEnabled || !this.submissionPolicy?.matchesRequest || !this.submissionPolicy?.verifyConfirmation) throw new SevenRoomsMirrorError('submission_contract_unverified',409);
         const fields=await this.#guest(s);
         if (JSON.stringify(Object.fromEntries(fields.map(field=>[field.name,field.value])))!==JSON.stringify(review.details.guest)
-          || await this.#reviewText(s)!==review.details.termsText) throw new SevenRoomsMirrorError('stale_review',409);
+          || await this.#reviewText(s)!==review.details.termsText) {
+          const error=new SevenRoomsMirrorError('stale_review',409);
+          // Only this proven pre-dispatch branch may authorize UI recovery.
+          // Never infer safety from HTTP409, or from an ambiguous earlier attempt.
+          if(!s.submitAttempted && !s.submitClicked && !s.submitApproval && !s.submitWork && s.result?.phase!=='booking') error.submissionState='not_dispatched';
+          throw error;
+        }
         s.submitApproval=review;
         s.submitClicked=true;
         let timer;
