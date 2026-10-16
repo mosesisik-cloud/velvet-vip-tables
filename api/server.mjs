@@ -138,6 +138,23 @@ const BOKABORD_ORIGIN = "https://app.bokabord.se";
 const ZINK_WIDGET_HASH = "e9d3e6917bc7f05c0df1ae157d9aed5b";
 const ZINK_WIDGET_URL = `${BOKABORD_ORIGIN}/reservation/?app_type=bokabord&hash=${ZINK_WIDGET_HASH}`;
 let zinkWidgetCache = null;
+// Local direct booking for Playwright. Never set this in production: it confirms
+// inside Velvet and must not call BokaBord or SevenRooms.
+const WEBBRIDGE_LOCAL = process.env.VELVET_WEBBRIDGE_LOCAL === "1";
+if (WEBBRIDGE_LOCAL) {
+  const realFetch = globalThis.fetch.bind(globalThis);
+  const outboundLog = process.env.VELVET_OUTBOUND_LOG || "";
+  globalThis.fetch = async (input, init) => {
+    const target = typeof input === "string" ? input : input instanceof URL ? input.href : String(input?.url || "");
+    let host = "";
+    try { host = new URL(target).host; } catch { host = ""; }
+    if (host !== "127.0.0.1" && host !== "localhost" && host !== "[::1]") {
+      if (outboundLog) fs.appendFileSync(outboundLog, `${init?.method || "GET"} ${target}\n`);
+      throw new Error("velvet_local_blocks_outbound");
+    }
+    return realFetch(input, init);
+  };
+}
 
 function assignedJson(html, variable) {
   const match = String(html || "").match(new RegExp(`var\\s+${variable}\\s*=\\s*(\\{[^\\n]+\\});`));
@@ -193,6 +210,16 @@ function normalizeBokabordTimes(value) {
 }
 
 async function zinkAvailability({ date, party, mealId = "", email = "", lang = "sv" }) {
+  if (WEBBRIDGE_LOCAL) {
+    return {
+      meal: { id: "velvet-local-dinner", name: "Middag", startsAt: "17:00", endsAt: "22:00" },
+      times: ["18:00", "18:30", "19:00", "19:30", "20:00"],
+      full: [],
+      reason: null,
+      local: true,
+      context: { settings: {} },
+    };
+  }
   const context = await zinkWidgetContext();
   const meal = zinkMealFor(context, date, mealId);
   if (!meal) return { meal: null, times: [], reason: "closed" };
@@ -237,6 +264,14 @@ function phoneForBokabord(value) {
 }
 
 async function zinkBook({ date, time, party, meal, guest, note, lang, context }) {
+  if (WEBBRIDGE_LOCAL) {
+    return {
+      accepted: true,
+      local: true,
+      providerReference: `LOCAL-${crypto.randomBytes(3).toString("hex").toUpperCase()}`,
+      response: { success: true },
+    };
+  }
   const phone = phoneForBokabord(guest.phone);
   const response = await bokabordJson("/reservation/api/booking/saveBooking", {
     mealid: String(meal.id),
@@ -2628,7 +2663,8 @@ const server = http.createServer(async (req, res) => {
           meal: availability.meal,
           times: availability.times,
           error: availability.times.length ? null : (availability.reason || "no_availability"),
-          source: "Zink · BokaBord live",
+          source: availability.local ? "velvet-local" : "Zink · BokaBord live",
+          local: availability.local === true,
         }, { "Cache-Control": "no-store" });
       } catch (error) {
         console.error("VELVET WebBridge availability", error);
@@ -2694,8 +2730,10 @@ const server = http.createServer(async (req, res) => {
           return send(res, 409, { error: "provider_rejected" }, { "Cache-Control": "no-store" });
         }
         booking.status = "confirmed";
+        booking.provider = result.local ? "velvet-local" : "BokaBord";
         booking.providerReference = result.providerReference;
-        booking.providerConfirmedAt = booking.updatedAt;
+        if (result.local) booking.localConfirmedAt = booking.updatedAt;
+        else booking.providerConfirmedAt = booking.updatedAt;
         save(db);
         return send(res, 201, { ok: true, booking: publicRestaurantBooking(booking) }, { "Cache-Control": "no-store" });
       } catch (error) {

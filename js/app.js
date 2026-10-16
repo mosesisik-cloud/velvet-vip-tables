@@ -2610,8 +2610,8 @@ async function renderRestaurantDetail(placeId) {
       event.preventDefault();
       const values = Object.fromEntries(new FormData(webbridgeForm));
       const submit = webbridgeForm.querySelector('button[type="submit"]');
-      if (submit) { submit.disabled = true; submit.textContent = "Hämtar live-tider…"; }
-      webbridgeResult.innerHTML = `<p class="webbridge-loading"><span class="spinner spinner-sm"></span> Kopplar säkert till Zink…</p>`;
+      if (submit) { submit.disabled = true; submit.textContent = "Hämtar tider…"; }
+      webbridgeResult.innerHTML = `<p class="webbridge-loading"><span class="spinner spinner-sm"></span> Hämtar tider i Velvet…</p>`;
       const availability = await apiJSON("/restaurant-bookings/webbridge/availability", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -2715,15 +2715,24 @@ async function renderRestaurantDetail(placeId) {
       const fullName = String(user.legalName || user.name || "").trim().split(/\s+/);
       const firstName = fullName.shift() || "";
       const lastName = fullName.join(" ");
+      const localDirect = availability.local === true;
+      const timeSource = localDirect ? "Tider i Velvet. Zink är inte kontaktad." : "Live från Zinks bokningssystem";
+      const termsText = localDirect
+        ? "Jag bokar bordet direkt i Velvet. Uppgifterna stannar här och skickas inte till Zink."
+        : "Jag godkänner att uppgifterna skickas till Zink för att genomföra denna bokning.";
+      const bookButton = localDirect ? "Boka direkt i Velvet" : "Bekräfta riktig bokning";
+      const bookNote = localDirect
+        ? "När du trycker bokas bordet direkt i Velvet. Ingen reservation skapas hos Zink."
+        : "När du trycker skapas reservationen hos Zink. VELVET visar bara bekräftad när bokningssystemet har godkänt den.";
       webbridgeResult.innerHTML = `<div class="webbridge-availability">
-        <div class="webbridge-summary"><span>${esc(availability.meal?.name || "Bord")}</span><strong>${esc(values.date)} · ${esc(String(values.party))} gäster</strong><small>Live från Zinks bokningssystem</small></div>
+        <div class="webbridge-summary"><span>${esc(availability.meal?.name || "Bord")}</span><strong>${esc(values.date)} · ${esc(String(values.party))} gäster</strong><small>${esc(timeSource)}</small></div>
         <form id="restaurant-webbridge-book" class="webbridge-book-form">
           <fieldset><legend>Välj tid</legend><div class="webbridge-times">${times.map((time, index) => `<label><input type="radio" name="time" value="${esc(time)}" ${index === 0 ? "checked" : ""} required><span>${esc(time)}</span></label>`).join("")}</div></fieldset>
           <div class="webbridge-contact"><label>Förnamn<input name="firstName" value="${esc(firstName)}" autocomplete="given-name" required></label><label>Efternamn<input name="lastName" value="${esc(lastName)}" autocomplete="family-name" required></label><label>E-post<input name="email" type="email" value="${esc(user.email || "")}" autocomplete="email" required></label><label>Mobilnummer<input name="phone" type="tel" value="${esc(user.phone || "")}" autocomplete="tel" placeholder="+46 70 123 45 67" required></label></div>
           <label>Önskemål<textarea name="note" rows="3" maxlength="300" placeholder="Allergier, barnstol eller annat"></textarea></label>
-          <label class="webbridge-terms"><input name="terms" type="checkbox" required><span>Jag godkänner att uppgifterna skickas till Zink för att genomföra denna bokning.</span></label>
-          <button class="btn btn-gold btn-block" type="submit">Bekräfta riktig bokning</button>
-          <p class="webbridge-final-note">När du trycker skapas reservationen hos Zink. VELVET visar bara bekräftad när bokningssystemet har godkänt den.</p>
+          <label class="webbridge-terms"><input name="terms" type="checkbox" required><span>${esc(termsText)}</span></label>
+          <button class="btn btn-gold btn-block" type="submit">${esc(bookButton)}</button>
+          <p class="webbridge-final-note">${esc(bookNote)}</p>
         </form>
       </div>`;
       document.getElementById("restaurant-webbridge-book")?.addEventListener("submit", async (bookEvent) => {
@@ -2780,7 +2789,10 @@ async function renderRestaurantDetail(placeId) {
         upsertLocalRestaurantBooking({ ...response.booking, serverSynced: true });
         clearPendingRestaurantBooking();
         webbridgeForm.hidden = true;
-        webbridgeResult.innerHTML = `<div class="restaurant-book-success webbridge-confirmed"><div class="big">✓</div><h3>Bordet är bekräftat</h3><p>${esc(String(response.booking.party))} gäster · ${esc(response.booking.date)} kl. ${esc(response.booking.time)}</p><small>Zinks bokningsreferens: ${esc(response.booking.providerReference || response.booking.id)}</small><p><a class="btn btn-ghost btn-sm" href="#/bookings" data-nav>Visa mina bokningar</a></p></div>`;
+        const bookedLocally = response.booking.provider === "velvet-local";
+        webbridgeResult.innerHTML = bookedLocally
+          ? `<div class="restaurant-book-success webbridge-direct"><div class="big">✓</div><h3>Bordet är bokat direkt i Velvet</h3><p>${esc(String(response.booking.party))} gäster · ${esc(response.booking.date)} kl. ${esc(response.booking.time)}</p><small>Velvet-referens: ${esc(response.booking.providerReference || response.booking.id)}. Ingen reservation har skickats till Zink.</small><p><a class="btn btn-ghost btn-sm" href="#/bookings" data-nav>Visa mina bokningar</a></p></div>`
+          : `<div class="restaurant-book-success webbridge-confirmed"><div class="big">✓</div><h3>Bordet är bekräftat</h3><p>${esc(String(response.booking.party))} gäster · ${esc(response.booking.date)} kl. ${esc(response.booking.time)}</p><small>Zinks bokningsreferens: ${esc(response.booking.providerReference || response.booking.id)}</small><p><a class="btn btn-ghost btn-sm" href="#/bookings" data-nav>Visa mina bokningar</a></p></div>`;
       });
       const restored = loadPendingRestaurantBooking(restaurant.placeId);
       if (restored && restored.mode === "live") {
@@ -4408,15 +4420,16 @@ async function renderBookings() {
         </div>
       </div>`).join("")}
     ${restaurantBookings.length ? `<div class="restaurant-booking-history"><span class="eyebrow">RESTAURANGBOKNINGAR</span><h2>Dina restaurangbokningar</h2>${restaurantBookings.map((booking) => {
-      const confirmed = booking.status === "confirmed" || booking.status === "provider_confirmed";
+      const localDirect = booking.provider === "velvet-local";
+      const confirmed = !localDirect && (booking.status === "confirmed" || booking.status === "provider_confirmed");
       const declined = booking.status === "declined" || booking.status === "provider_error" || booking.status === "provider_rejected";
       const statusKey = restaurantStatusKey(booking.status);
-      const status = uxT(statusKey);
-      const delivery = uxT(statusKey + "Hint");
-      const operatorControls = restaurantOperator && booking.status !== 'local-pending' && booking.status !== 'guest_reported' && !confirmed && !declined && booking.status !== 'unknown' && booking.status !== 'payment_required'
+      const status = localDirect ? uxT("velvetDirect") : uxT(statusKey);
+      const delivery = localDirect ? uxT("velvetDirectHint") : uxT(statusKey + "Hint");
+      const operatorControls = restaurantOperator && !localDirect && booking.status !== 'local-pending' && booking.status !== 'guest_reported' && !confirmed && !declined && booking.status !== 'unknown' && booking.status !== 'payment_required'
         ? `<div class="restaurant-operator-status"><select data-restaurant-status="${esc(booking.id)}"><option value="received">Mottagen av Zink</option><option value="confirmed">Bekräftad av Zink</option><option value="declined">Avböjd</option></select><input data-restaurant-reference="${esc(booking.id)}" placeholder="Zinks bokningsreferens"><button class="btn btn-gold btn-sm" type="button" data-restaurant-status-submit="${esc(booking.id)}">Uppdatera status</button></div>`
         : "";
-      return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${esc(delivery)}</div>${restaurantOperator && booking.name ? `<div class="booking-delivery">${esc(booking.name)} · ${esc(booking.email || "")} · ${esc(booking.phone || "")}</div>` : ""}${operatorControls}</div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${esc(uxT("viewRestaurant"))}</a></div>`;
+      return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed || localDirect ? "is-confirmed" : ""}">${confirmed || localDirect ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${esc(delivery)}</div>${restaurantOperator && booking.name ? `<div class="booking-delivery">${esc(booking.name)} · ${esc(booking.email || "")} · ${esc(booking.phone || "")}</div>` : ""}${operatorControls}</div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${esc(uxT("viewRestaurant"))}</a></div>`;
     }).join("")}</div>` : ""}
   </section>`;
 
