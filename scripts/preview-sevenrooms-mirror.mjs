@@ -3,7 +3,15 @@ import http from 'node:http';
 import fs from 'node:fs/promises';
 import crypto from 'node:crypto';
 import { SevenroomsMirror } from '../api/sevenrooms-mirror.mjs';
-const mirror = new SevenroomsMirror();
+// Same approval pattern as the Bokabord pilot: prepare/live only with an explicit
+// approval file holding contact details + terms:true. Never commit that file.
+const approvalFile = process.env.MIRROR_APPROVAL_FILE;
+const mirror = new SevenroomsMirror({
+  prepare: process.env.MIRROR_MODE === 'prepare',
+  live: process.env.MIRROR_MODE === 'live',
+  authorizeSubmission: approvalFile ? async () => {try {return JSON.parse(await fs.readFile(approvalFile,'utf8'));} catch {return null;}} : null,
+  reserveSubmission: approvalFile ? async approval => {await fs.writeFile(approvalFile+'.attempt', JSON.stringify({at:new Date().toISOString(),digest:crypto.createHash('sha256').update(JSON.stringify(approval)).digest('hex')}),{flag:'wx'});} : null,
+});
 const port = Number(process.env.SEVENROOMS_PREVIEW_PORT || 4175);
 const host = `127.0.0.1:${port}`;
 const token = crypto.randomBytes(24).toString('hex');

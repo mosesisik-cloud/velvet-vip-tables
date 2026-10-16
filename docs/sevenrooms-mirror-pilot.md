@@ -31,6 +31,12 @@ node scripts/preview-sevenrooms-mirror.mjs
 
 Båda registrerade formulären renderade i spegeln med korrekt restaurangidentitet. La Spondas widget visade observerbara lediga tider för 2026-10-30 via leverantörens skrivfria GET-endpoints (`/api-yoa/availability/*`). Plénitudes sida visar en landningsvariant med identitet, adress, telefon och öppettider (tis–lör från 19:30). Ingen interaktion bortom initial sidladdning i live-kontrollen.
 
+## Live-läge (skarp inlämning genom Velvet)
+
+Adaptern har ett live-läge efter samma mönster som Bokabord-piloten: godkännandet binds till den visade revisionen, kontaktuppgifter och villkor måste godkännas precis före steget, och leverantörens bokningsanrop (`POST /booking/dining/widget/{venue}/book`) får bara lämna webbläsaren om det fält för fält motsvarar det godkända — annars avbryts det. Försöket reserveras atomiskt (`reserveSubmission`) så att det aldrig kan upprepas, även efter omstart. Tillfälliga holds (`/api-yoa/dining/hold/add`) är blockerade i alla lägen utom inom ett armerat godkänt steg. Kortgaranti upptäcks och lämnas alltid över till leverantörens eget säkra formulär (`card_required`-handoff) — Velvet skickar aldrig kortuppgifter.
+
+Kontraktet (endpointar och fältnamn) är läst ur leverantörens egen publicerade widget-kod, inte genom testbokningar. Live-steget är **inte** genomgånget mot den riktiga leverantören — det skulle skapa en verklig reservation. Enhetstesterna (9) täcker nätverksvakter, exakt payload-matchning, revisions- och samtyckeskrav, engångsinlämning, kort-handoff och sessionsisolering. Första skarpa körningen kräver uttryckligt godkännande av uppgifter och villkor per bokning, som i Bokabord-piloten.
+
 ## Vidare arbete (separat samordningsbehov)
 
-Skarp inlämning (live-läge) kräver samma godkännande- och försöksjournalmönster som Bokabord-piloten och är en leverantörsbred förbättring som måste tilldelas separat — denna pilot ändrar inga delade filer och aktiverar inget i produktion.
+Produktionsaktivering kräver samma godkännande- och försöksjournalmönster som Bokabord-piloten och är en leverantörsbred förbättring som måste tilldelas separat — denna pilot ändrar inga delade filer och aktiverar inget i produktion. Serverns produktionswiring (ledger, gäst-cookie, historik) återanvänder befintliga komponenter men tillhör integratören.
