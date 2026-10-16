@@ -13,7 +13,7 @@ import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturn
 import { mountAvailabilitySearch } from './availability-search.js?v=188';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js?v=189';
 import { mountBokabordMirror } from "./bokabord-mirror.js?v=200";
-import { mountProviderPlaywrightBooking } from "./provider-playwright-booking.js?v=196";
+import { mountProviderPlaywrightBooking } from "./provider-playwright-booking.js?v=202";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
 import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=177";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=159";
@@ -4426,7 +4426,7 @@ async function renderBookings() {
       const operatorControls = restaurantOperator && booking.status !== 'local-pending' && booking.status !== 'guest_reported' && !confirmed && !declined && booking.status !== 'unknown' && booking.status !== 'payment_required'
         ? `<div class="restaurant-operator-status"><select data-restaurant-status="${esc(booking.id)}"><option value="received">Mottagen av Zink</option><option value="confirmed">Bekräftad av Zink</option><option value="declined">Avböjd</option></select><input data-restaurant-reference="${esc(booking.id)}" placeholder="Zinks bokningsreferens"><button class="btn btn-gold btn-sm" type="button" data-restaurant-status-submit="${esc(booking.id)}">Uppdatera status</button></div>`
         : "";
-      return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${esc(delivery)}</div>${restaurantOperator && booking.name ? `<div class="booking-delivery">${esc(booking.name)} · ${esc(booking.email || "")} · ${esc(booking.phone || "")}</div>` : ""}${operatorControls}</div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${esc(uxT("viewRestaurant"))}</a></div>`;
+      return `<div class="booking-card restaurant-history-card"><div class="booking-info"><h3>${esc(booking.restaurant)}</h3><div class="booking-meta">${esc(booking.destination || "Stockholm")} · ${esc(booking.date)}${booking.time ? ` kl. ${esc(booking.time)}` : ""} · ${esc(String(booking.party))} gäster${Number.isSafeInteger(booking.roomId) && booking.roomName ? ` · Rum: ${esc(booking.roomName)}` : ""} · ${esc(booking.providerReference || booking.id)}</div><div class="booking-status ${confirmed ? "is-confirmed" : ""}">${confirmed ? "✓ " : ""}${esc(status)}</div><div class="booking-delivery">${esc(delivery)}</div>${restaurantOperator && booking.name ? `<div class="booking-delivery">${esc(booking.name)} · ${esc(booking.email || "")} · ${esc(booking.phone || "")}</div>` : ""}${operatorControls}</div><a class="btn btn-ghost btn-sm" href="#/restaurant/${encodeURIComponent(booking.restaurantId)}" data-nav>${esc(uxT("viewRestaurant"))}</a></div>`;
     }).join("")}</div>` : ""}
   </section>`;
 

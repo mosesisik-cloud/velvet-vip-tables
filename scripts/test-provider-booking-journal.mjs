@@ -56,14 +56,15 @@ test('a provider without an approved confirmation policy stays unknown even with
 
 test('room selection and venue-specific confirmation policy remain bound across journal recovery',()=>{
   const ledger=new PlaywrightAttemptLedger(':memory:');
-  const rooms=[{id:11,name:'Dining'},{id:12,name:'Terrace'}];
+  const rooms=[{id:11,name:'Dining'},{id:12,name:'Terrace'}],rows=[];
   const journal=createProviderJournal({ledger,provider:'Zenchef',mode:'fixture',confirmationPolicySource:'FISH',
-    restaurants:{roomVenue:{name:'Room venue',rooms,confirmationPolicySource:'ROOM'}},register:{upsert:()=>{}}});
+    restaurants:{roomVenue:{name:'Room venue',rooms,confirmationPolicySource:'ROOM'}},register:{upsert:row=>rows.push(row)}});
   const request={...intent('booking'),provider:'Zenchef',restaurantId:'roomVenue',details:{date:'2030-01-15',time:'19:00',party:2,roomId:11,roomName:'Dining'}};
   try {
     assert.throws(()=>journal.reserveAttempt({...request,details:{...request.details,roomId:12}}),/room_binding/);
     const {attempt}=journal.reserveAttempt(request);
     assert.equal(attempt.roomId,11);assert.equal(ledger.get('guest',attempt.attemptId).roomName,'Dining');
+    journal.recover('guest');assert(rows.every(row=>row.roomId===11 && row.roomName==='Dining'));
     const proof={verified:true,source:'fixture',policySource:'ROOM',provider:'Zenchef',restaurantId:'roomVenue',sessionId:attempt.sessionId,
       attemptId:attempt.attemptId,idempotencyKey:attempt.idempotencyKey,detailsDigest:attempt.reviewFingerprint,roomId:11,roomName:'Dining'};
     for (const override of [{roomId:12},{roomName:'Terrace'},{policySource:'FISH'}]) {
