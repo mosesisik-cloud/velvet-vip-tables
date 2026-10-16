@@ -59,17 +59,23 @@ function supplierHtml() {
 <main id="screen"></main><script>
 const q={hash:${JSON.stringify(venue.hash)},mealid:${mealId},date:'',time:'',amount:0,firstname:'',lastname:'',email:'',phone:'',comment:'',products:[],waitlist:false,giftcard:null,linked_meals:[],bookingid:null,terms:{general:true,restaurant:false,bokabord:false}};
 const model={meal:{bullets:{},mandatory_products:false},getQuery:()=>q};
-window.angular={element:()=>({injector:()=>({get:key=>key==='Booking'?model:key==='$http'?{pendingRequests:[]}:{$$phase:false}}),scope:()=>({isAjaxRequest:()=>false})})};
+window.angular={element:()=>({injector:()=>({get:key=>key==='Booking'?model:key==='$http'?{pendingRequests:[]}:{$$phase:false}}),scope:()=>({isAjaxRequest:()=>false,phoneValid:()=>!!document.querySelector('[name=phone]')?.value.match(/^\\+46700000000$/)})})};
+if(${riche}){
+ window.$={fn:{intlTelInput:{getCountryData:()=>[{iso2:'se',dialCode:'46',name:'Sweden'}]}}};
+ window.intlTelInputUtils={isValidNumber:(value,iso)=>iso==='se'&&value==='+46700000000',formatNumber:(value,iso)=>iso==='se'?value:''};
+}
 const screen=document.querySelector('#screen');
 screen.innerHTML=${JSON.stringify(`<h1>${receiptMode ? receiptName : 'Zink'} FIXTURE — no real booking</h1><button id="party">2 gäster</button><button id="date">2030-01-15</button><button id="slot" hidden>${bookingTime} TESTDATA</button>`)};
 document.querySelector('#party').onclick=()=>{q.amount=2;document.querySelector('#party').textContent='2 gäster valda';};
 document.querySelector('#date').onclick=async()=>{q.date='2030-01-15';const r=await fetch('/reservation/api/booking/getTimes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date:q.date,amount:q.amount,hash:q.hash})});const data=await r.json();document.querySelector('#slot').hidden=!data.times.includes('${bookingTime}');};
 document.querySelector('#slot').onclick=()=>{q.time='${bookingTime}';contact();};
 function contact(){screen.innerHTML='<h2>Kontaktuppgifter</h2><p>FIXTURE supplier form</p>'+['firstname','lastname','email','phone'].map(n=>'<label>'+n+'<input name="'+n+'" value=""></label>').join('')+'<textarea ng-model="booking.comment"></textarea>${riche ? '<a id="terms-link" href="https://www.waiteraid.com/terms/fixture-a">Fixture terms</a>' : ''}<button id="next">Nästa</button>';
- for(const input of document.querySelectorAll('input,textarea'))input.oninput=()=>{q[input.name||'comment']=input.value;};
+ if(${riche}){const phone=document.querySelector('[name=phone]');phone.className='phoneField';const wrapper=document.createElement('div');wrapper.className='intl-tel-input';phone.before(wrapper);wrapper.innerHTML='<div class="selected-flag" title="Sweden: +46"><span class="iti-flag se"></span></div>';wrapper.append(phone);}
+ // Riche's native contact form copies its phone widget into Booking only on Next.
+ for(const input of document.querySelectorAll('input,textarea'))input.oninput=()=>{if(!(${riche}&&input.name==='phone'))q[input.name||'comment']=input.value;};
  const dispatch=async()=>{if(${riche})console.log('fixture-contact-final-click');try{const response=await fetch(${JSON.stringify(saveUrl)},{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});const data=await response.json();if(${receiptMode}){if(${JSON.stringify(process.env.VELVET_TEST_OUTCOME)}!=='missing-receipt')location.assign('/reservation/booking/?code='+encodeURIComponent(data.booking.short_code)+'&new=1');else screen.innerHTML='<h2>FIXTURE response only</h2>';}else{history.replaceState({},'', '/reservation/booking/fixture');screen.innerHTML='<h2>FIXTURE response received</h2>';}}catch{screen.innerHTML='<h2>FIXTURE network interrupted</h2>';}};
  const review=()=>{screen.innerHTML='<h2>Kontrollera din bokning</h2><p>FIXTURE '+q.date+' '+q.time+' '+q.amount+' guests${ciccios ? ' — guest choice completed' : ''}</p><button id="final">Slutför bokningen</button>';document.querySelector('#final').onclick=dispatch;};
- document.querySelector('#next').onclick=()=>{if(${riche}){dispatch();}else if(${ciccios}){screen.innerHTML='<h2>Fortsätt som gäst</h2><button id="guest">Fortsätt utan konto</button>';document.querySelector('#guest').onclick=review;}else review();};}
+ document.querySelector('#next').onclick=()=>{if(${riche}){q.phone=document.querySelector('[name="phone"]').value;q.country_code='46';q.dial_code='46';dispatch();}else if(${ciccios}){screen.innerHTML='<h2>Fortsätt som gäst</h2><button id="guest">Fortsätt utan konto</button>';document.querySelector('#guest').onclick=review;}else review();};}
 </script></body></html>`;
 }
 
@@ -104,6 +110,10 @@ if (childMode) {
         })).then(state=>process.send?.({kind:'supplier-fixture-dom',...state})).catch(()=>{}));
       });
       if (riche) context.on('page', page => {process.on('message',message=>{
+        if(message.kind==='fixture-check-phone-model')page.evaluate(()=>{
+          const query=window.angular.element(document.body).injector().get('Booking').getQuery();
+          return {phone:query.phone,countryCode:query.country_code??null,dialCode:query.dial_code??null};
+        }).then(model=>process.send?.({kind:'fixture-phone-model',model}));
         if(message.kind==='fixture-change-terms')page.evaluate(()=>document.querySelector('#terms-link').href='https://www.waiteraid.com/terms/fixture-b')
           .then(()=>process.send?.({kind:'fixture-terms-changed'}));
       });page.on('console', message => {
@@ -361,6 +371,14 @@ async function main() {
       let frozen = await current(); assert.ok(frozen.nativeReview?.token); assert.equal(frozen.fields.length,0);
       assert.equal(await panel(page).locator('[data-provider-view]').isHidden(),true);
       if (!richeGuardsChecked) {
+        const phoneModel=new Promise((resolve,reject)=>{
+          const timer=setTimeout(()=>reject(new Error('fixture_phone_model_timeout')),5000);
+          const receive=message=>{if(message.kind==='fixture-phone-model'){clearTimeout(timer);child.off('message',receive);resolve(message.model);}};
+          child.on('message',receive);
+        });
+        child.send({kind:'fixture-check-phone-model'});
+        assert.deepEqual(await phoneModel,{phone:'',countryCode:null,dialCode:null},'Review must not copy phone into the provider model before Next');
+        assert.equal(frozen.nativeReview.details.phone,'+46700000000','Review projects the validated native phone');
         // Raw adversarial API actions bypass the UI closure. Refresh the actual
         // adapter snapshot, then let the normal UI recover that fresh snapshot.
         const refresh = async () => {await rawAction(await current(),{type:'refresh'});await panel(page).locator('[data-refresh]').click();await settled(page);};
