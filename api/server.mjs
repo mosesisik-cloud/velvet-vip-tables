@@ -13,7 +13,7 @@ import { PlaywrightAttemptLedger } from './playwright-attempt-ledger.mjs';
 import { createBookingJournalHooks } from './playwright-booking-journal.mjs';
 import { NOEMA_LUNCH_RECEIPT_POLICY, CICCIOS_DINING_RECEIPT_POLICY, RICHE_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
 import { createProviderJournal } from './provider-booking-journal.mjs';
-import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
+import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
 import fs from "node:fs";
 import path from "node:path";
@@ -39,9 +39,10 @@ const mirrorMode = process.env.VELVET_BOKABORD_MIRROR || 'disabled';
 // These adapters have no verified checkout. Never accept mode/URLs from clients.
 // An explicit operator inspection switch is separate from guest booking.
 const fishCornerLive = process.env.VELVET_ZENCHEF_FISHCORNER === 'live';
+const pesquiereLive = process.env.VELVET_ZENCHEF_PESQUIERE === 'live';
 let zenchefJournal;
 const zenchefInspection = new ZenchefPlaywright({
-  mode: fishCornerLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive,
+  mode: fishCornerLive || pesquiereLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive,
   reserveSubmission: intent => zenchefJournal.reserveAttempt(intent),
   recordResult: session => {
     const saved = zenchefJournal.recordAttempt({intent:session.approval,attempt:session.attempt,result:session.result});
@@ -60,10 +61,13 @@ const playwrightRuntime = new PlaywrightRuntime({
   resultVerifier: (snapshot, owner) => snapshot.provider === 'SevenRooms' ? sevenRoomsJournal.verifySnapshot(snapshot, owner)
     : snapshot.provider === 'Zenchef' ? zenchefJournal.verifySnapshot(snapshot, owner) : null,
   providers: {
-    Zenchef: { restaurantId: fishCornerLive ? ZENCHEF_FISHCORNER.restaurantId : ZENCHEF_ARPEGE.restaurantId,
+    Zenchef: [{ restaurantId: fishCornerLive ? ZENCHEF_FISHCORNER.restaurantId : ZENCHEF_ARPEGE.restaurantId,
       ...(fishCornerLive ? {enabled:true,mode:'live'} : {}),
       actions:['search','select','fill','review','submit','refresh'],
       adapter: zenchefInspection, current: (_id, owner) => zenchefInspection.current(owner) },
+      ...(pesquiereLive ? [{restaurantId:ZENCHEF_PESQUIERE.restaurantId,enabled:true,mode:'live',
+        actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
+        current:(_id,owner)=>zenchefInspection.current(owner)}] : [])],
     SevenRooms: { restaurantId: SEVENROOMS_PILOT.restaurantId, adapter: sevenRoomsInspection, current: (id, owner) => sevenRoomsInspection.current(id, owner) },
   },
 });
@@ -272,7 +276,9 @@ sevenRoomsJournal = createProviderJournal({ledger:playwrightAttempts,register:bo
   restaurants:{[SEVENROOMS_PILOT.restaurantId]:{name:'Strandvägen 1',city:'Stockholm'}}});
 zenchefJournal = createProviderJournal({ledger:playwrightAttempts,register:bookingRegister,provider:'Zenchef',
   confirmationPolicySource:ZENCHEF_POLICY_SOURCE,
-  restaurants:{[ZENCHEF_FISHCORNER.restaurantId]:{name:'FishCorner',city:'St. Barts'}}});
+  restaurants:{[ZENCHEF_FISHCORNER.restaurantId]:{name:'FishCorner',city:'St. Barts'},
+    ...(pesquiereLive ? {[ZENCHEF_PESQUIERE.restaurantId]:{name:ZENCHEF_PESQUIERE.name,city:'Saint-Tropez',
+      rooms:ZENCHEF_PESQUIERE.rooms,confirmationPolicySource:ZENCHEF_PESQUIERE.policySource}} : {})}});
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);
