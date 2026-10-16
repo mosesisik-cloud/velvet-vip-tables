@@ -54,6 +54,11 @@ export const BALZAC_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: 'a0dd019e24669fadaaa6486567307f61', mealid: 354, mealType: 2, maxParty: 2,
 });
 
+export const KOMMENDOREN_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-kommendoren', name: 'Kommendören',
+  hash: '4dcf4bbddfb1d7c4f3f0d2d5186d4f00', mealid: 3501, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
