@@ -11,11 +11,36 @@ import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const restaurantId = 'curated-STO-zink-italian-cuisine';
-const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[restaurantId];
+const fishcorner = process.argv.includes('--fishcorner') || process.env.VELVET_TEST_PROVIDER === 'FishCorner';
+const restaurantId = fishcorner ? 'osm-SBH-fishcorner' : 'curated-STO-zink-italian-cuisine';
+const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))['curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 const date = '2030-01-15';
 const childMode = process.env.VELVET_INTEGRATED_SUPPLIER_FIXTURE === 'child';
+
+// Sanitized native DOM/SSR contract from the canonical provider tests. No supplier JS.
+function fishDocument(address) {
+  const url = new URL(address), form = url.pathname === '/form';
+  const slot = { name:'12:30',closed:false,marked_as_full:false,bookable_from:null,bookable_to:null,possible_guests:[2],available_rooms:{2:[1]} };
+  const shift = { id:545372,closed:false,marked_as_full:false,bookable_from:null,bookable_to:null,shift_slots:[slot],
+    charge_param:null,prepayment_param:null,is_offer_required:false,confirmation:{is_auto:true} };
+  const state = { restaurantId:'388090',initializedSSR:true,restaurantTimezone:'America/Guadeloupe',isDisabled:0,
+    wish:{day:date,pax:2,waiting_list:false,offers:[],room_id:null,...(form?{slot:'12:30'}:{})},
+    mandatoryFields:{firstname:'required'},isRoomMandatory:false,dailyAvailabilities:{[date]:{date,shifts:[shift]}} };
+  const data = {page:form?'/form':'/results',query:Object.fromEntries(url.searchParams),props:{initialState:{appStoreState:state}}};
+  return `<html><body><h1>FishCorner LOCAL TEST — no real booking</h1><script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
+  ${form ? ['firstname','lastname','email','phone'].map(k=>`<input data-testid="${k}-input">`).join('') +
+    `<label>Mr<input type="radio" name="civility" value="mr" style="display:none"></label><label data-testid="eula-checkbox"><input type="checkbox">Synthetic test terms</label>
+    <button data-testid="validate-btn">Reserve fixture</button><script>
+    document.querySelector('[data-testid="validate-btn"]').onclick=()=>{
+      const value=k=>document.querySelector('[data-testid="'+k+'-input"]').value;
+      const firstname=value('firstname'),lastname=value('lastname'),email=value('email'),phone=value('phone');
+      const payload={day:${JSON.stringify(date)},nb_guests:2,time:'12:30',lang:'fr',firstname,lastname,civility:'mr',country:'fr',phone_number:phone,email,
+        comment:'',custom_field:{},custom_field_v2:[],customersheet:{firstname,lastname,civility:'mr',phone,email,
+        optins:[{type:'review_mail',value:true},{type:'review_sms',value:true}],country:'fr',lang:'fr'},offers:[],partner_id:'1001',type:'web'};
+      fetch('https://bookings-middleware.zenchef.com/booking?restaurantId=388090',{method:'POST',body:JSON.stringify(payload)}).catch(()=>{});
+    };</script>` : ''}</body></html>`;
+}
 
 function supplierHtml() {
   return `<!doctype html><html><meta charset="utf-8"><body ng-app="fixture">
@@ -94,7 +119,31 @@ if (childMode) {
         };
         const proxy = new Proxy(intercepted, { get(target, key) {
           if (key === 'continue' || key === 'fallback') return boundary;
-          if (key === 'fetch') return () => { throw new Error('fixture_forbids_route_fetch'); };
+          if (key === 'fetch') return async options => {
+            if (!fishcorner) throw new Error('fixture_forbids_route_fetch');
+            const request = target.request(), url = new URL(request.url());
+            assert.equal(options.maxRedirects, 0);
+            let body, contentType;
+            if (request.method() === 'GET' && url.origin === 'https://bookings.zenchef.com'
+              && ['/results','/form'].includes(url.pathname) && url.searchParams.get('rid') === '388090') {
+              process.send?.({kind:'supplier-document',page:url.pathname});
+              body = fishDocument(request.url()); contentType = 'text/html';
+            } else if (request.method() === 'POST' && request.url() === 'https://bookings-middleware.zenchef.com/booking?restaurantId=388090') {
+              assert.equal(options.maxRetries, 0);
+              assert.deepEqual(JSON.parse(options.postData).customersheet.optins, []);
+              process.send?.({kind:'supplier-submit',outcome:process.env.VELVET_TEST_OUTCOME});
+              if (process.env.VELVET_TEST_OUTCOME === 'timeout') throw new Error('synthetic_lost_supplier_reply');
+              body = JSON.stringify({id:999999998,uuid:'synthetic-fish-only',status:'confirmed'}); contentType = 'application/json';
+            } else {
+              process.send?.({kind:'unexpected-supplier-request',method:request.method(),path:url.pathname});
+              throw new Error('fixture_network_denied');
+            }
+            return {status:()=>200,json:async()=>JSON.parse(body),fixture:{status:200,contentType,body}};
+          };
+          if (key === 'fulfill' && fishcorner) return options => {
+            assert.ok(options.response?.fixture, 'Only locally constructed responses may be fulfilled');
+            return target.fulfill(options.response.fixture);
+          };
           if (key === 'abort') return async (...args) => {
             if (target.request().url() === saveUrl) process.send?.({ kind: 'adapter-blocked-submit' });
             return target.abort(...args);
@@ -157,6 +206,8 @@ async function main() {
     backend = `http://127.0.0.1:${port}`;
     child = spawn(process.execPath, ['--import', import.meta.url, 'api/server.mjs'], { cwd: root, env: {
       ...process.env, VELVET_INTEGRATED_SUPPLIER_FIXTURE: 'child', VELVET_TEST_DIRECTORY: directory,
+      VELVET_TEST_PROVIDER: fishcorner ? 'FishCorner' : 'BokaBord',
+      VELVET_ZENCHEF_FISHCORNER: fishcorner ? 'live' : 'disabled',
       VELVET_TEST_OUTCOME: outcome, PORT: String(port), PUBLIC_URL: base,
       VELVET_CRAWL: '0', VELVET_BOKABORD_MIRROR: 'live', VELVET_PLAYWRIGHT_INSPECTION: 'disabled',
       VELVET_DATA: path.join(directory, 'store.json'), VELVET_PAY: path.join(directory, 'pay.json'),
@@ -190,14 +241,14 @@ async function main() {
       // A changed document query forces a real reload, not same-document hash
       // navigation that would leave the old mirror closure mounted after restart.
       await page.goto(base + '/?api=' + encodeURIComponent(base) + '&fixtureVisit=' + ++visitNumber + '#/restaurant/' + restaurantId);
-      await page.locator('#bokabord-mirror [data-start]').waitFor();
+      await page.locator(fishcorner ? '#provider-playwright-booking [data-start]' : '#bokabord-mirror [data-start]').waitFor();
       assert.equal(await page.locator('#restaurant-provider-booking').count(), 0, 'Native route wins over registry embed');
     };
     await visit();
     return { context, page, visit };
   }
   const submits = () => messages.filter(m => m.kind === 'supplier-submit').length;
-  const panel = page => page.locator('#bokabord-mirror');
+  const panel = page => page.locator(fishcorner ? '#provider-playwright-booking' : '#bokabord-mirror');
   async function settled(page) {
     await page.waitForFunction(() => document.querySelector('#bokabord-mirror')?.getAttribute('aria-busy') === 'false');
   }
@@ -245,6 +296,74 @@ async function main() {
   }
   let first, second, third;
   try {
+    if (fishcorner) {
+      await start('confirmed'); browser = await chromium.launch();
+      const flow = async view => {
+        const page = view.page;
+        const action = async click => {
+          const pending = page.waitForResponse(r => r.request().method() === 'POST'
+            && /^\/restaurant-bookings\/playwright(?:\/[a-f0-9-]+\/action)?$/.test(new URL(r.url()).pathname), {timeout:65_000});
+          await click(); const response = await pending;
+          const body = await response.json();
+          assert.ok(response.ok(), 'Real provider API: ' + JSON.stringify({status:response.status(),error:body.error}));
+          await page.waitForFunction(() => !document.querySelector('#provider-playwright-booking [data-refresh]')?.disabled);
+          return {body,request:response.request().postDataJSON()};
+        };
+        await action(() => panel(page).locator('[data-start]').click());
+        await panel(page).locator('[name=date]').fill(date);
+        await action(() => panel(page).locator('[data-search] button').click());
+        await action(() => panel(page).locator('[data-slot="12:30"]').click());
+        for (const [name,value] of Object.entries({firstname:'Integration',lastname:'Fixture',email:'fixture@example.invalid',phone:'+33612345678',country:'fr'})) {
+          await panel(page).locator(`[data-field="${name}"]`).fill(value);
+        }
+        await panel(page).locator('[data-field="civility"]').selectOption('mr');
+        await action(() => panel(page).locator('[data-save]').click());
+        await action(() => panel(page).locator('[data-review]').click());
+        assert.equal(await panel(page).locator('[data-submit]').isDisabled(), true, 'Explicit consent required');
+        const before = submits(); await panel(page).locator('[data-terms]').check();
+        const result = await action(() => panel(page).locator('[data-submit]').evaluate(button => {button.click();button.click();}));
+        assert.equal(submits(), before + 1, 'Only one supplier boundary dispatch');
+        return result;
+      };
+      first = await makeView();
+      const success = await flow(first);
+      assert.equal(success.body.result.status,'confirmed');
+      assert.equal(success.body.result.reference,'999999998');
+      assert.notEqual(success.request.idempotencyKey,success.body.result.verification.idempotencyKey,'Server owns the durable key');
+      assert.equal(await panel(first.page).locator('[data-status]').getAttribute('data-booking-status'),'confirmed');
+      assert.match(await panel(first.page).locator('[data-status]').innerText(),/999999998/);
+      await panel(first.page).locator('[data-refresh]').click();
+      await first.page.waitForFunction(() => !document.querySelector('#provider-playwright-booking [data-refresh]').disabled);
+      assert.equal(submits(),1);
+      await stop(); await start('timeout');
+      const recovered = await api(first.page,'/restaurant-bookings/playwright/attempts');
+      assert.equal(recovered.status,200); assert.equal(recovered.body.attempts.length,1);
+      assert.equal(recovered.body.attempts[0].status,'confirmed');
+      assert.equal(recovered.body.attempts[0].reference,'999999998');
+      console.log('PASS FishCorner actual UI/API/native Zenchef/SQLite: consent, double click, server-owned key, confirmation/reference and restart recovery');
+      second = await makeView(1365);
+      assert.equal((await api(second.page,'/restaurant-bookings/playwright/attempts')).status,401);
+      const lost = await flow(second);
+      assert.equal(lost.body.result.status,'unknown');
+      assert.equal(await panel(second.page).locator('[data-status]').getAttribute('data-booking-status'),'unknown');
+      assert.equal(await panel(second.page).locator('[data-submit]').isDisabled(),true);
+      await panel(second.page).locator('[data-refresh]').click();
+      await second.page.waitForFunction(() => !document.querySelector('#provider-playwright-booking [data-refresh]').disabled);
+      assert.equal(submits(),2);
+      await stop(); await start('confirmed');
+      const unknown = await api(second.page,'/restaurant-bookings/playwright/attempts');
+      assert.equal(unknown.status,200); assert.equal(unknown.body.attempts.length,1);
+      assert.equal(unknown.body.attempts[0].status,'unknown');
+      const replay = await api(second.page,`/restaurant-bookings/playwright/${lost.body.id}/action`,{
+        method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(lost.request)});
+      assert.ok([404,409].includes(replay.status)); assert.equal(submits(),2);
+      assert.equal(messages.filter(m=>['unexpected-supplier-request','blocked-node-network'].includes(m.kind)).length,0);
+      console.log('PASS FishCorner lost supplier reply: durable unknown, owner isolation, refresh/restart without replay');
+      console.log(JSON.stringify({status:'PASS',restaurantId,evidence:'real_local_app_api_native_zenchef_journal_with_supplier_fixture',
+        integrationCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),supplierBoundaryAttempts:submits(),
+        actualSupplierRequests:0,liveConfirmationVerified:false,backendRestarts:2,APIRequests:apiCalls.length,deployed:false}));
+      return;
+    }
     await start('unverified-success');
     browser = await chromium.launch();
     first = await makeView();
