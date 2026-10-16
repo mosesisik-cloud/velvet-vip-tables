@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { test, before, after } from 'node:test';
 import fs from 'node:fs/promises';
 import { chromium } from 'playwright';
-import { TheForkPlaywright, THEFORK_RESTAURANT as restaurantId } from '../api/providers/thefork-playwright.mjs';
+import { TheForkPlaywright, createTheForkFixtureTransport, THEFORK_RESTAURANT as restaurantId } from '../api/providers/thefork-playwright.mjs';
 
 let browser;
 before(async () => { browser = await chromium.launch({ headless: true }); });
@@ -154,3 +154,80 @@ test('missing durable hooks prevent dispatch and result persistence failure is u
     assert.equal(result.result.status, 'unknown'); assert.equal(result.canSubmit, false);
   } finally { await failed.close(); }
 });
+
+test('ledger sendAllowed=false never dispatches a reservation', async () => {
+  let writes = 0;
+  const adapter = new TheForkPlaywright({ mode: 'fixture', fixtureDriverFactory: async () => {
+    const d = await factory(); d.submit = async () => { writes++; }; return d;
+  }, reserveSubmission: async () => ({ sendAllowed: false, reason: 'duplicate' }), recordResult: async () => {} });
+  try {
+    const s = await review(adapter);
+    await assert.rejects(adapter.action(s.id, 'owner', submit(s)), /already_attempted/);
+    assert.equal(writes, 0); assert.equal(adapter.current(s.id, 'owner').canSubmit, false);
+    assert.throws(() => createTheForkFixtureTransport(new TheForkPlaywright(), 'owner'), /fixture_transport_only/);
+  } finally { await adapter.close(); }
+});
+
+// Use the real assigned UI module, supplied by the integrator or a pinned checkout.
+// No replacement/fake UI is generated if that dependency is not available.
+test('real Velvet UI -> fixture transport -> backend Playwright -> bound test result',
+  { skip: !process.env.VELVET_THEFORK_UI_MODULE }, async () => {
+    const uiSource = await fs.readFile(process.env.VELVET_THEFORK_UI_MODULE, 'utf8');
+    let sends = 0, recorded;
+    const adapter = new TheForkPlaywright({ mode: 'fixture', fixtureDriverFactory: factory,
+      reserveSubmission: async () => { sends++; return { sendAllowed: true, attempt: { attemptId: 'server-fixture-attempt' } }; },
+      recordResult: async (_, result) => { recorded = result; } });
+    const transport = createTheForkFixtureTransport(adapter, 'server-bound-owner');
+    const context = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block', acceptDownloads: false });
+    try {
+      await context.route('**/*', route => {
+        if (route.request().url() === 'https://velvet-fixture.invalid/') return route.fulfill({ contentType: 'text/html', body: '<main id="booking"></main>' });
+        if (route.request().url() === 'https://velvet-fixture.invalid/ui.js') return route.fulfill({ contentType: 'text/javascript', body: uiSource });
+        return route.abort();
+      });
+      await context.routeWebSocket('**/*', ws => ws.close());
+      const page = await context.newPage();
+      await page.exposeBinding('testBookingTransport', async (_, operation, payload) => {
+        if (!['create', 'current', 'action', 'remove'].includes(operation)) throw new Error('invalid_operation');
+        return transport[operation](payload);
+      });
+      await page.goto('https://velvet-fixture.invalid/');
+      await page.evaluate(async restaurantId => {
+        const { mountVelvetPlaywrightBooking } = await import('/ui.js');
+        const transport = Object.fromEntries(['create', 'current', 'action', 'remove'].map(operation =>
+          [operation, payload => window.testBookingTransport(operation, payload)]));
+        window.bookingView = mountVelvetPlaywrightBooking(document.querySelector('#booking'), {
+          restaurantId, restaurantName: 'Slalom — TEST ONLY', mode: 'fixture', transport
+        });
+        await window.bookingView.ready;
+      }, restaurantId);
+      await page.getByRole('button', { name: 'Starta bokning', exact: true }).click();
+      await page.getByLabel('Datum', { exact: true }).fill('2026-12-20');
+      await page.getByLabel('Antal gäster').fill('2');
+      await page.getByRole('button', { name: 'Visa tider' }).click();
+      await page.locator('[data-slot-id]').click();
+      for (const [label, key] of Object.entries({ Förnamn: 'firstname', Efternamn: 'lastname', 'E-post': 'email', Telefon: 'phone' }))
+        await page.getByLabel(label, { exact: true }).fill(guest[key]);
+      await page.getByRole('button', { name: 'Granska bokningen' }).click();
+      await page.locator('[data-review-summary]').waitFor();
+      assert.equal(await page.getByRole('button', { name: 'Bekräfta och boka' }).isDisabled(), true);
+      await page.getByLabel('Godkänn villkoren').check();
+      await page.getByRole('button', { name: 'Bekräfta och boka' }).click();
+      await page.locator('[data-booking-status="confirmed"]').waitFor();
+      assert.match(await page.locator('[data-fixture-banner]').textContent(), /TESTDATA/);
+      assert.match(await page.locator('[data-booking-status]').textContent(), /TESTRESULTAT/);
+      assert.equal(sends, 1); assert.equal(recorded.supplierVerified, false);
+      assert.equal(recorded.verification.source, 'fixture');
+      assert.equal(recorded.verification.attemptId, 'server-fixture-attempt');
+      await page.getByRole('button', { name: 'Kontrollera status' }).click();
+      await page.locator('[data-booking-status="confirmed"]').waitFor();
+      assert.equal(sends, 1);
+      const snapshot = await transport.current({ restaurantId });
+      const validLive = await page.evaluate(async snapshot => {
+        const { validateBookingSnapshot } = await import('/ui.js');
+        try { validateBookingSnapshot(snapshot, { restaurantId: snapshot.restaurantId, mode: 'live' }); return true; }
+        catch { return false; }
+      }, snapshot);
+      assert.equal(validLive, false);
+    } finally { await context.close(); await adapter.close(); }
+  });

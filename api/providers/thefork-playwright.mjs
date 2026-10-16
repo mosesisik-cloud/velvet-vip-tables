@@ -102,11 +102,14 @@ export class TheForkPlaywright {
         // Seal before awaiting persistence: ambiguous persistence must not permit a retry.
         s.attempted = true; s.stage = 'result'; s.reviewToken = null;
         s.result = { status: 'unknown', source: 'fixture', reason: 'attempt_reserved_or_uncertain' };
-        await this.reserveSubmission(attempt);
+        const reservation = await this.reserveSubmission(attempt);
+        if (reservation?.sendAllowed === false) fail('already_attempted');
         try {
           const result = await s.driver.submit();
           s.result = result?.status === 'fixture_confirmed' && result.reference
-            ? { status: 'sandbox_confirmed', reference: result.reference, source: 'fixture', supplierVerified: false }
+            ? { status: 'sandbox_confirmed', reference: result.reference, source: 'fixture', supplierVerified: false,
+              verification: { verified: true, source: 'fixture', restaurantId: s.restaurantId, sessionId: s.id,
+                attemptId: reservation?.attempt?.attemptId || randomUUID(), idempotencyKey: attempt.idempotencyKey } }
             : { status: 'unknown', source: 'fixture', reason: 'unrecognized_fixture_response' };
           await this.recordResult(attempt, clone(s.result));
         } catch {
@@ -128,4 +131,35 @@ export class TheForkPlaywright {
     for (const s of this.#sessions.values()) if (!s.busy && this.clock() - s.touched >= this.ttl) await this.remove(s.id, s.owner);
   }
   async close() { for (const s of [...this.#sessions.values()]) await this.remove(s.id, s.owner); }
+}
+
+// Development transport only: adapt the isolated lifecycle to the existing UI.
+// The UI must also be mounted with mode:'fixture'; a live UI rejects these snapshots.
+export function createTheForkFixtureTransport(adapter, owner) {
+  if (adapter.mode !== 'fixture' || !owner) fail('fixture_transport_only');
+  let sessionId = null;
+  const check = request => {
+    if (request.restaurantId !== THEFORK_RESTAURANT || request.id && request.id !== sessionId) fail('session_expired');
+  };
+  const normalized = snapshot => {
+    if (snapshot.mode !== 'fixture') fail('fixture_transport_only');
+    if (snapshot.result?.status === 'sandbox_confirmed') {
+      const proof = snapshot.result.verification;
+      if (!proof?.verified || proof.source !== 'fixture' || proof.sessionId !== snapshot.id ||
+        proof.restaurantId !== snapshot.restaurantId || !proof.attemptId || !proof.idempotencyKey) fail('invalid_fixture_proof');
+      return { ...snapshot, result: { ...snapshot.result, status: 'confirmed' } };
+    }
+    return snapshot;
+  };
+  return {
+    async create(request) {
+      check(request);
+      if (sessionId) return normalized(adapter.current(sessionId, owner));
+      const result = await adapter.create(owner, request.restaurantId); sessionId = result.id;
+      return normalized(result);
+    },
+    async current(request) { check(request); return sessionId ? normalized(adapter.current(sessionId, owner)) : null; },
+    async action(request) { check(request); return normalized(await adapter.action(request.id, owner, request)); },
+    async remove(request) { check(request); await adapter.remove(request.id, owner); sessionId = null; }
+  };
 }
