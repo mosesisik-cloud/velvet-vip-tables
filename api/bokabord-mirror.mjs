@@ -283,7 +283,10 @@ export class BokabordMirror {
         await s.page.mouse.move(s.width / 2, s.height / 2);
         await s.page.mouse.wheel(0, dy);
       }
-      await this.settle(s);
+      if (s.submitted && s.receiptVerificationEnabled) {
+        // A completion document need not contain the booking widget's Angular app.
+        await s.page.waitForLoadState('domcontentloaded',{timeout:5000}).catch(()=>{});
+      } else await this.settle(s);
       return await this.snapshot(s);
     } finally { s.armed = false; s.busy = false; }
   }

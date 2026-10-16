@@ -29,7 +29,7 @@ async function nativeFixture(hooks, {venueId=restaurantId,approved=approval}={})
 }
 
 test('Noema receipt capture requires the matching successful main-frame document before durable confirmation',async()=>{
-  for(const scenario of ['complete','wrong-code','wrong-reference','iframe','failed-document','missing-prefix','disabled']) {
+  for(const scenario of ['complete','wrong-code','wrong-reference','iframe','failed-document','unfinished-document','missing-prefix','disabled']) {
     const directory=fs.mkdtempSync(path.join(os.tmpdir(),'velvet-noema-'));
     const ledger=new PlaywrightAttemptLedger(':memory:');let f;
     const policy=NOEMA_LUNCH_RECEIPT_POLICY;
@@ -48,7 +48,7 @@ test('Noema receipt capture requires the matching successful main-frame document
         'Du är nu klar och bekräftelse har skickats via epost.','Noema','2 pers. (Lunch)',
         'Bokningsreferens',scenario==='wrong-reference'?'# 9999':'# 4242','Gästinformation'].join('\n');
       f.setDocument(url,text);
-      f.events.get('response')({url:()=>url,ok:()=>scenario!=='failed-document',finished:async()=>{},
+      f.events.get('response')({url:()=>url,ok:()=>scenario!=='failed-document',finished:()=>scenario==='unfinished-document'?new Promise(()=>{}):Promise.resolve(),
         request:()=>({method:()=> 'GET',isNavigationRequest:()=>true,frame:()=>scenario==='iframe'?{}:f.frame})});
       await f.session.receiptPromise;
       assert.equal(ledger.list('owner')[0].status,scenario==='complete'?'confirmed':'unknown',scenario);
