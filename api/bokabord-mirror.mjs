@@ -245,7 +245,7 @@ export class BokabordMirror {
         links:[...document.querySelectorAll('a[href]')].filter(visible).map(el=>({text:el.innerText,href:el.href})),
         checks:[...document.querySelectorAll('input[type=checkbox]')].filter(visible).map(el=>({name:el.name,value:el.value,checked:el.checked}))};
     });
-    if (view.text.length > 64_000 || view.links.length > 100 || view.links.some(link=>!/^https?:/.test(link.href))) return null;
+    if (view.text.length > 64_000 || view.links.length > 100) return null;
     return { fingerprint: crypto.createHash('sha256').update(JSON.stringify([digest,view])).digest('hex'), text:view.text, links:view.links };
   }
 
