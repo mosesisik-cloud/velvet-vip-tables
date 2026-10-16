@@ -26,10 +26,10 @@ export function mountProviderPlaywrightBooking(container, api, {
       <div data-screen hidden><div style="max-height:55dvh;overflow:auto"><img data-image alt="Restaurangens aktuella bokningsformulär" style="display:block;width:100%"></div>
         <div data-navigation><button type="button" data-up>↑ Upp</button><button type="button" data-down>↓ Ned</button></div>
         <form data-search hidden><label>Datum <input type="date" name="date" required></label><label>Antal gäster <input type="number" name="party" min="1" max="20" value="2" required></label><button>Sök tider</button></form>
-        <div data-slots></div>
+        <div data-slots></div><div data-offers hidden></div>
         <div data-fields></div><button type="button" data-save hidden>Spara kontaktuppgifter</button><button type="button" data-review hidden>Kontrollera bokningen</button>
         <div data-hold hidden><p data-hold-details></p><label><input type="checkbox" data-hold-consent> Jag godkänner denna tillfälliga reservation.</label><button type="button" data-hold-button>Reservera tillfälligt</button></div>
-        <div data-final hidden><p data-final-details></p><p data-seating-notice hidden></p><p data-terms-text></p><label><input type="checkbox" data-terms> Jag har kontrollerat uppgifterna och godkänner bokningsvillkoren ovan.</label><button type="button" data-submit>Slutför bokningen</button></div>
+        <div data-final hidden><p data-final-details></p><div data-final-offer hidden></div><p data-seating-notice hidden></p><p data-terms-text></p><label><input type="checkbox" data-terms> Jag har kontrollerat uppgifterna och godkänner bokningsvillkoren ovan.</label><button type="button" data-submit>Slutför bokningen</button></div>
         <details><summary>Visa leverantörens formulär som text</summary><pre data-text style="white-space:pre-wrap;font:inherit"></pre></details>
       </div>
     </div><footer style="flex:none"><button type="button" data-refresh>Kontrollera status</button><button type="button" data-end>Avsluta formuläret</button><small>Att stänga vyn avbokar inte en reservation.</small></footer>
@@ -52,11 +52,28 @@ export function mountProviderPlaywrightBooking(container, api, {
     && /^\d{4}-\d{2}-\d{2}$/.test(review.date) && /^\d{2}:\d{2}/.test(review.time)
     && Number.isInteger(review.party) && review.party > 0;
   const fingerprint = value => typeof value === 'string' && value.length > 0;
+  const validOffer = offer => offer?.offerId === 118785 && offer.count === 2 && offer.name === 'Lunch'
+    && typeof offer.description === 'string' && !!offer.description.trim() && offer.currency === 'EUR'
+    && offer.mealPrice === null && offer.priceStatus === 'not_provided_by_booking_form'
+    && offer.menuSource === 'https://restaurantdekas.com/eng/menu' && offer.depositApplies === false
+    && offer.depositMinGuests === 7 && offer.selectionSource === 'native_offer'
+    && offer.submissionSupported === true && /^[a-f0-9]{64}$/.test(offer.version || '');
+  function renderOffer(target, offer) {
+    target.replaceChildren(); target.hidden = !validOffer(offer);
+    if (target.hidden) return;
+    for (const text of [`Meny: ${offer.name} · ${offer.count} gäster`, offer.description,
+      'Pris anges inte i bokningsformuläret.', 'Ingen deposition krävs för detta sällskap om två gäster.']) {
+      const paragraph = document.createElement('p'); paragraph.textContent = text; target.append(paragraph);
+    }
+    const link = document.createElement('a'); link.href = offer.menuSource; link.target = '_blank'; link.rel = 'noopener noreferrer';
+    link.textContent = 'Se restaurangens meny'; target.append(link);
+  }
   const finalReview = () => state?.bookingReview;
   const finalFingerprint = () => finalReview()?.reviewFingerprint;
   const canHold = () => state?.phase === 'hold_review' && state.canHold === true && details(state.holdReview)
     && fingerprint(state.holdReview.fingerprint) && !expired(state.holdReview) && marker?.phase === 'open';
   const hasReview = () => state?.phase === 'booking_review' && details(finalReview()?.details)
+    && (finalReview()?.details.offer === undefined || validOffer(finalReview().details.offer))
     && fingerprint(finalFingerprint()) && (!state.reviewFingerprint || state.reviewFingerprint === finalFingerprint())
     && (!isZenchef || (fingerprint(state.reviewToken) && fingerprint(state.terms?.version)))
     && (finalReview().expiresAt === undefined || !expired(finalReview())) && typeof finalReview().details.termsText === 'string' && !!finalReview().details.termsText.trim();
@@ -86,6 +103,8 @@ export function mountProviderPlaywrightBooking(container, api, {
           && fingerprint(isSubmit() ? marker.reviewFingerprint : snapshot.reviewFingerprint)
           && proof.detailsDigest === (isSubmit() ? marker.reviewFingerprint : snapshot.reviewFingerprint)))
         && (snapshot.details?.roomId === undefined || (proof.roomId === snapshot.details.roomId && proof.roomName === snapshot.details.roomName))
+        && (snapshot.details?.offer === undefined || (validOffer(snapshot.details.offer) && proof.offerEvidence === 'own_booking_readback'
+          && proof.offerId === snapshot.details.offer.offerId && proof.offerCount === snapshot.details.offer.count && proof.offerVersion === snapshot.details.offer.version))
         && typeof result.reference === 'string' && result.reference.trim()) return `Bokningen är bekräftad. Referens: ${result.reference}`;
       return 'Bokningen är inte verifierad. Skicka inte en ny bokning. Kontrollera resultatet med restaurangen.';
     }
@@ -105,7 +124,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     if (disposed) return;
     if (isZenchef) {
       // Project the actual Zenchef transport, without changing its wire fields.
-      const phase = next.result ? 'result' : ({availability_observed:'slots',contact:'guest',review:'booking_review'})[next.state] || 'selection';
+      const phase = next.result ? 'result' : ({availability_observed:'slots',offers:'offers',contact:'guest',review:'booking_review'})[next.state] || 'selection';
       next = {...next,phase,bookingReview:next.state === 'review' ? {
         details:{...next.details,restaurantId:next.restaurantId,guest:Object.fromEntries(Object.entries(next.details || {}).filter(([name]) => Object.hasOwn(aliases,name))),termsText:next.terms?.text,seatingNotice:next.terms?.seatingNotice},
         reviewFingerprint:next.reviewFingerprint,
@@ -164,10 +183,20 @@ export function mountProviderPlaywrightBooking(container, api, {
         row.append(button); el('slots').append(row);
       }
     }
+    el('offers').replaceChildren(); el('offers').hidden = next.phase !== 'offers';
+    if (next.phase === 'offers') for (const offer of next.offerChoices || []) {
+      if (!validOffer(offer)) continue;
+      const row = document.createElement('div'); renderOffer(row,offer);
+      const button = document.createElement('button'); button.type = 'button'; button.dataset.offer = String(offer.offerId);
+      button.textContent = `Välj ${offer.name} för ${offer.count} gäster`;
+      button.onclick = () => run({type:'select_offer',offerId:offer.offerId,count:offer.count,offerVersion:offer.version});
+      row.append(button); el('offers').append(row);
+    }
     el('hold').hidden = !canHold(); el('final').hidden = !hasReview();
     if (canHold()) el('hold-details').textContent = `Tillfällig reservation: ${restaurantName}, ${next.holdReview.date} kl. ${next.holdReview.time}, ${next.holdReview.party} gäster. Giltig till ${new Date(expiry(next.holdReview.expiresAt)).toLocaleString('sv-SE')}. Detta är inte en slutlig bokning.`;
     if (hasReview()) {
       const review = finalReview().details;
+      renderOffer(el('final-offer'),review.offer);
       const guest = Object.entries(review.guest || {}).filter(([name,value]) => Object.hasOwn(aliases,name) && typeof value === 'string').map(([name,value]) => `${aliases[name]}: ${value}`).join(', ');
       el('final-details').textContent = `Slutför bokning: ${restaurantName}, ${review.date} kl. ${review.time}, ${review.party} gäster. ${review.roomName ? `Rum: ${review.roomName}. ` : ''}${guest}`;
       el('seating-notice').textContent = review.seatingNotice ? `Sittning: ${review.seatingNotice}` : '';

@@ -1,3 +1,4 @@
+import { cleanBookingOffer, sameBookingOffer } from './booking-offer.mjs';
 import { DatabaseSync } from 'node:sqlite';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -34,6 +35,12 @@ function validate(input) {
   if (input.roomId !== undefined || input.roomName !== undefined) {
     if (!Number.isSafeInteger(input.roomId) || input.roomId <= 0) fail('invalid_room');
     clean.roomId = input.roomId; clean.roomName = token(input.roomName,'invalid_room');
+  }
+  if (input.details !== undefined) {
+    const offer=cleanBookingOffer(input.details?.offer);
+    if (input.provider !== 'Zenchef' || input.restaurantId !== 'curated-AMS-de-kas'
+      || !offer || Object.keys(input.details).length !== 1 || input.party !== offer.count) fail('invalid_offer');
+    clean.details={offer};
   }
   return { ...clean, mode: input.mode, phase: phaseOf(input), idempotencyKey: input.idempotencyKey,
     reviewFingerprint: input.reviewFingerprint, date: input.date, time: input.time, party: input.party };
@@ -96,7 +103,7 @@ export class PlaywrightAttemptLedger {
       const replay = this.db.prepare('SELECT payload FROM playwright_attempts_v1 WHERE owner=? AND idem=?').get(bound.owner, idem);
       if (replay) {
         const attempt = decode(replay.payload);
-        if ([...bindKeys, 'phase', 'date', 'time', 'party'].some(key => attempt[key] !== bound[key])) throw new AttemptLedgerError('idempotency_conflict');
+        if ([...bindKeys, 'phase', 'date', 'time', 'party'].some(key => attempt[key] !== bound[key]) || !sameBookingOffer(attempt.details?.offer,bound.details?.offer)) throw new AttemptLedgerError('idempotency_conflict');
         return { sendAllowed: false, reason: 'already_attempted', attempt };
       }
       const duplicate = this.db.prepare('SELECT payload FROM playwright_attempts_v1 WHERE scope=?').get(scope);
@@ -124,7 +131,7 @@ export class PlaywrightAttemptLedger {
     return this.transaction(() => {
       const attempt = this.get(owner, attemptId);
       if (!attempt) throw new AttemptLedgerError('attempt_not_found', 404);
-      if (!evidence || phaseOf(evidence) !== attempt.phase || bindKeys.some(key => evidence[key] !== attempt[key]) || evidence.attemptId !== attemptId)
+      if (!evidence || phaseOf(evidence) !== attempt.phase || bindKeys.some(key => evidence[key] !== attempt[key]) || evidence.attemptId !== attemptId || !sameBookingOffer(evidence.details?.offer,attempt.details?.offer))
         throw new AttemptLedgerError('evidence_mismatch');
       if (!states.has(evidence.status)) throw new AttemptLedgerError('unknown_result_status');
       if (attempt.phase === 'hold' && !holdStates.has(evidence.status)) throw new AttemptLedgerError('invalid_hold_status');
