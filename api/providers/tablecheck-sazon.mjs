@@ -166,6 +166,12 @@ export function sazonCheckoutPayload(sessionRef) {
   sazonSearchPayload({ date: '2026-10-19', party: 2 }, sessionRef);
   return { allow_provider_marketing: false, locale: 'en', session_ref: sessionRef };
 }
+// Native Experience mount -> initCart: client 195539, pages 873700.
+// Clean entry has no URL query or amendment; never forward arbitrary URL fields.
+export function sazonInitPayload(sessionRef) {
+  sazonSearchPayload({ date: '2026-10-19', party: 2 }, sessionRef);
+  return { shop_id: SAZON.shopId, locale: 'en', session_ref: sessionRef };
+}
 function exactOrders(rows) {
   // qty=1 is source-backed on the outgoing Experience request. Requiring it
   // on saved raw rows is an unverified conservative adapter hypothesis: native
@@ -259,7 +265,8 @@ export class TablecheckSazon {
       provider: 'TableCheck', mode: this.mode, evidenceMode: this.mode === 'fixture' ? 'local_contract_fixture' : 'provider_search_local_preparation',
       revision: ++s.revision, state: s.state, capturedAt: new Date(this.now()).toISOString(),
       expiresIn: TTL / 1000, canHold: false,
-      canCart: this.mode === 'fixture' && s.review?.phase === 'cart' && !s.consumed.has('cart'),
+      canCart: this.mode === 'fixture' && s.review?.phase === 'cart' && !s.consumed.has('cart_init') && !s.consumed.has('cart'),
+      cartOperations: ['cart_init', 'cart'],
       canSubmit: this.mode === 'fixture' && s.review?.phase === 'booking' && !s.consumed.has('booking'),
       liveAvailabilitySupported: this.mode !== 'fixture',
       availabilityEvidence: s.evidence, details: s.details, terms: s.policy,
@@ -342,6 +349,13 @@ export class TablecheckSazon {
           && action.termsVersion === s.policy.version, 'confirmation_required');
         requireValue(this.now() - s.evidence.observedAt < FRESH, 'availability_stale');
         if (phase === 'cart') {
+          // Consent covers both disclosed operations; each gets its own grant.
+          // Native mount ignores init's response. A 200 here is ONLY transport
+          // acknowledgment, not proof of availability, inventory hold or state.
+          const initialized = await this.dispatch(s, 'cart_init', `${API}/booking/cart/init`, 'POST', sazonInitPayload(s.sessionRef));
+          if (!initialized || initialized.response?.status !== 200 || initialized.response.data?.error
+            || initialized.response.data?.errors?.length) return this.snapshot(s);
+          s.init = { attemptId: initialized.attempt.attemptId, requestDigest: hash(sazonInitPayload(s.sessionRef)) };
           const result = await this.dispatch(s, 'cart', `${API}/booking/cart`, 'POST', sazonCartPayload(s.details, s.sessionRef));
           if (result) {
             try { s.cart = { ...cartFromOwnResponse(result.response, s.details, this.now()), attemptId: result.attempt.attemptId };
@@ -401,7 +415,9 @@ export class TablecheckSazon {
   }
   async dispatch(s, phase, url, method, body) {
     this.assertActive(s);
-    if (phase !== 'cart') requireValue(s.cart && s.cart.attemptId && s.consumed.has('cart')
+    if (phase === 'cart') requireValue(s.init?.attemptId && s.consumed.has('cart_init')
+      && s.init.requestDigest === hash(sazonInitPayload(s.sessionRef)), 'cart_init_binding');
+    if (['cart_update', 'booking'].includes(phase)) requireValue(s.cart && s.cart.attemptId && s.consumed.has('cart')
       && this.now() < s.cart.expiresAt, 'cart_expired');
     if (phase === 'booking') requireValue(s.updatedCart?.attemptId && s.consumed.has('cart_update')
       && s.updatedCart.cartDigest === hash([s.cart.id, s.cart.token, s.cart.attemptId])
@@ -411,7 +427,8 @@ export class TablecheckSazon {
     const intent = { owner: s.owner, provider: 'TableCheck', restaurantId: SAZON.restaurantId,
       sessionId: s.id, mode: 'fixture', phase,
       reviewFingerprint: hash({ phase, body, approval: s.review.fingerprint,
-        cartDigest: s.review.cartDigest, parentAttemptId: phase === 'booking' ? s.updatedCart.attemptId : s.cart?.attemptId || null }),
+        cartDigest: s.review.cartDigest, parentAttemptId: phase === 'booking' ? s.updatedCart.attemptId
+          : phase === 'cart' ? s.init.attemptId : s.cart?.attemptId || null }),
       details: { date: s.details.date, time: s.details.time, party: 2 } };
     s.consumed.add(phase);
     const gate = await this.reserveSubmission(copy(intent));
