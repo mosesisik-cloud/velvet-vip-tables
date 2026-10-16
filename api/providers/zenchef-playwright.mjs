@@ -14,11 +14,61 @@ export class ZenchefError extends Error {
   constructor(code, status = 400) { super(code); this.status = status; }
 }
 
+export function zenchefSearchUrl(query) {
+  const { date, party } = query || {};
+  const parsed = new Date(String(date) + 'T12:00:00Z');
+  if (typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(+parsed)
+    || parsed.toISOString().slice(0, 10) !== date || !Number.isInteger(party) || party < 1 || party > 6) {
+    throw new ZenchefError('search_fields');
+  }
+  // day/pax are the provider's own public results-page parameters (2026-10-16).
+  return ZENCHEF_ARPEGE.url + `&day=${date}&pax=${party}`;
+}
+
+// Read only the server-rendered provider state, never execute or mutate its store.
+// Candidate slots are not held, selected, confirmed or guaranteed bookable later.
+export function zenchefAvailabilityEvidence(data, query, observedAt = Date.now()) {
+  zenchefSearchUrl(query);
+  const state = data?.props?.initialState?.appStoreState;
+  const day = state?.dailyAvailabilities?.[query.date];
+  if (data?.page !== '/results' || data.query?.rid !== '354036' || data.query?.day !== query.date
+    || String(data.query?.pax) !== String(query.party) || state?.restaurantId !== '354036'
+    || state.initializedSSR !== true || state.wish?.day !== query.date || state.wish?.pax !== query.party
+    || state.wish.waiting_list !== false || state.restaurantTimezone !== 'Europe/Paris'
+    || ![false, 0].includes(state.isDisabled) || day?.date !== query.date || !Array.isArray(day.shifts)) {
+    throw new ZenchefError('provider_state_unverified', 502);
+  }
+  const localNow = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Paris', year: 'numeric', month: '2-digit',
+    day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23' }).format(observedAt);
+  const inWindow = row => {
+    const valid = v => v === null || (typeof v === 'string' && /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(v));
+    return valid(row.bookable_from) && valid(row.bookable_to)
+      && (row.bookable_from === null || row.bookable_from <= localNow)
+      && (row.bookable_to === null || row.bookable_to > localNow);
+  };
+  const candidates = [];
+  for (const shift of day.shifts) {
+    if (shift.closed !== false || shift.marked_as_full !== false || !inWindow(shift) || !Array.isArray(shift.shift_slots)) continue;
+    for (const slot of shift.shift_slots) {
+      if (slot.closed !== false || slot.marked_as_full !== false || !inWindow(slot)
+        || !/^([01]\d|2[0-3]):[0-5]\d$/.test(slot.name) || !slot.possible_guests?.includes(query.party)
+        || !Array.isArray(slot.available_rooms?.[query.party]) || !slot.available_rooms[query.party].length) continue;
+      candidates.push({ time: slot.name, shiftId: shift.id });
+    }
+  }
+  return { source: 'provider_server_rendered', restaurantId: ZENCHEF_ARPEGE.restaurantId,
+    date: query.date, party: query.party, observedAt: new Date(observedAt).toISOString(),
+    candidates, selectable: false, confirmationVerified: false,
+    limitation: 'offer_room_card_and_submission_not_verified' };
+}
+
 // Deliberately NOT a generic GET allowlist. Even GET can create supplier state.
 // No live scripts, inventory API, redirects, form posts or arbitrary clicks yet.
-export function allowedZenchefInspectionRequest(request) {
+export function allowedZenchefInspectionRequest(request, query = null) {
+  let expected;
+  try { expected = query ? zenchefSearchUrl(query) : ZENCHEF_ARPEGE.url; } catch { return false; }
   return request.method() === 'GET' && request.resourceType() === 'document'
-    && !request.redirectedFrom() && request.url() === ZENCHEF_ARPEGE.url;
+    && !request.redirectedFrom() && request.url() === expected;
 }
 
 /** Bokabord-shaped lifecycle; shared routing, auth and journal remain integrator-owned.
@@ -65,7 +115,7 @@ export class ZenchefPlaywright {
           if (r.url() === FIXTURE_URL && r.method() === 'GET' && r.resourceType() === 'document' && !r.redirectedFrom()) {
             return route.fulfill({ status: 200, contentType: 'text/html', body: this.fixtureHtml });
           }
-        } else if (allowedZenchefInspectionRequest(r)) {
+        } else if (allowedZenchefInspectionRequest(r, s.searchQuery)) {
           // fetch with redirects disabled, then fulfill: route.continue can follow an
           // unreviewed redirect without running this route guard a second time.
           try {
@@ -111,6 +161,7 @@ export class ZenchefPlaywright {
       liveAvailabilitySupported: false, canSubmit: this.mode === 'fixture' && s.state === 'review'
         && !s.attempted && typeof this.reserveSubmission === 'function' && typeof this.recordResult === 'function',
       details: s.details ? structuredClone(s.details) : null, result: s.result ? { ...s.result } : null,
+      availabilityEvidence: s.availabilityEvidence ? structuredClone(s.availabilityEvidence) : null,
       blockedRequests: s.blockedRequests,
       blocker: this.mode === 'inspect' ? 'supplier_dom_endpoints_and_sandbox_unverified' : 'local_fixture_only' };
     s.lastSnapshot = snapshot;
@@ -120,10 +171,20 @@ export class ZenchefPlaywright {
     const s = this.owned(id, owner);
     if (s.busy) throw new ZenchefError('busy', 409);
     if (!action || action.revision !== s.revision) throw new ZenchefError('stale_view', 409);
-    if (this.mode !== 'fixture' && action.type !== 'refresh') throw new ZenchefError('inspect_only', 409);
+    if (this.mode !== 'fixture' && !['refresh', 'search'].includes(action.type)) throw new ZenchefError('inspect_only', 409);
     s.busy = true; s.touched = this.now();
     try {
       if (action.type === 'refresh') return await this.snapshot(s);
+      if (this.mode === 'inspect' && action.type === 'search') {
+        const query = { date: action.date, party: action.party };
+        const url = zenchefSearchUrl(query);
+        s.searchQuery = query; s.availabilityEvidence = null; s.state = 'inspect_only';
+        await s.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 12000 });
+        const data = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent());
+        s.availabilityEvidence = zenchefAvailabilityEvidence(data, query, this.now());
+        s.state = 'availability_observed';
+        return await this.snapshot(s);
+      }
       if (s.attempted) throw new ZenchefError('already_attempted', 409);
       const click = name => s.page.locator(`[data-zenchef-test="${name}"]`).click();
       if (action.type === 'search' && s.state === 'search') {
@@ -154,7 +215,13 @@ export class ZenchefPlaywright {
         // Attempt stays consumed if the durable hook fails or a response is lost.
         s.attempted = true; s.state = 'unknown'; s.result = { status: 'sandbox_unknown' };
         try {
-          await this.reserveSubmission({ ...s.details, terms: true }, s);
+          const reservation = await this.reserveSubmission({ ...s.details, terms: true }, s);
+          // The provider-neutral journal (PR146) returns an explicit decision.
+          // Keep legacy throwing hooks compatible, but never ignore a denial.
+          if (reservation !== undefined && reservation?.sendAllowed !== true) {
+            throw new ZenchefError('attempt_not_authorized', 409);
+          }
+          if (this.#closed) throw new ZenchefError('closed', 503);
           await click('submit');
           const result = s.page.locator('[data-zenchef-test="result"]');
           await result.waitFor({ state: 'visible' });
