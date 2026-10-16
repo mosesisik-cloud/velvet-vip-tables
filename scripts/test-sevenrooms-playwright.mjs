@@ -7,6 +7,11 @@ const origin = 'https://www.sevenrooms.com';
 const range = origin + '/api-yoa/availability/ng/widget/range?venue=strandvagen1&party_size=2&start_date=2026-12-20&num_days=1';
 assert.equal(sevenRoomsReadAllowed('GET', SEVENROOMS_PILOT.url), true);
 assert.equal(sevenRoomsReadAllowed('GET', range, 'fetch'), true);
+assert.equal(sevenRoomsReadAllowed('GET', range.replace('&start_date=2026-12-20', '') + '&actual_id=&analytics_session_id=fixture', 'fetch'), true);
+assert.equal(sevenRoomsReadAllowed('GET', range + '&actual_id=existing-booking', 'fetch'), false);
+assert.equal(sevenRoomsReadAllowed('GET', origin + '/static2/reservations/sv-SE-fixture.json', 'fetch'), true);
+assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/languagestrings/strandvagen1/all?widget_type=res_widget', 'fetch'), true);
+assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/languagestrings/other/all?widget_type=reservations', 'fetch'), false);
 assert.equal(sevenRoomsReadAllowed('GET', origin + '/api-yoa/dining/widget_info?venue_url_key=strandvagen1', 'xhr'), true);
 assert.equal(sevenRoomsReadAllowed('GET', origin + '/static2/reservations/index-fixture.js', 'script'), true);
 for (const url of [
@@ -29,6 +34,7 @@ assert.equal(sevenRoomsReadAllowed('GET', origin + '/static2/not-a-script', 'scr
 const html = `<!doctype html><html><body><h1>LOCAL FIXTURE — Strandvägen 1</h1>
 <button id="search">Search fixture</button><button id="hold" hidden>Choose fixture slot</button>
 <p id="state">Not real availability</p><script>
+fetch('https://analytics.invalid/collect',{method:'POST',body:'fixture'}).catch(()=>{});
 search.onclick=async()=>{const r=await fetch(${JSON.stringify(range)});const j=await r.json();state.textContent=j.label;hold.hidden=false;};
 hold.onclick=async()=>{try{await fetch('/api-yoa/dining/hold/add',{method:'POST',body:'fixture-only'});state.textContent='UNSAFE';}catch{state.textContent='Hold blocked';}};
 </script></body></html>`;
@@ -73,6 +79,8 @@ try {
   let shot = await mirror.create('alice', SEVENROOMS_PILOT.restaurantId, 390);
   assert.equal(shot.provider, 'SevenRooms'); assert.equal(shot.state, 'read_only');
   assert.equal(shot.mode, 'inspect'); assert.equal(shot.canSubmit, false); assert.equal(shot.result, null);
+  assert.equal(shot.readiness, 'unverified');
+  assert.ok(shot.blockedRoutes.every(route => !('url' in route) && !('body' in route)));
   assert.match(shot.text, /LOCAL FIXTURE/);
   assert.equal(shot.imageHash, crypto.createHash('sha256').update(Buffer.from(shot.image.split(',')[1], 'base64')).digest('hex'));
   await assert.rejects(mirror.create('alice', SEVENROOMS_PILOT.restaurantId), /session_exists/);

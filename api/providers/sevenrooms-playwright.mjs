@@ -11,7 +11,7 @@ export const SEVENROOMS_PILOT = Object.freeze({
 });
 const ORIGIN = 'https://www.sevenrooms.com';
 const TTL = 10 * 60_000;
-const RANGE_KEYS = new Set(['venue', 'party_size', 'halo_size_interval', 'start_date', 'num_days', 'channel', 'exclude_pdr', 'intent', 'time_slot', 'selected_lang_code']);
+const RANGE_KEYS = new Set(['venue', 'party_size', 'halo_size_interval', 'start_date', 'num_days', 'channel', 'exclude_pdr', 'intent', 'time_slot', 'selected_lang_code', 'actual_id', 'analytics_session_id']);
 const MUTATION = /hold|\/book(?:\/|$)|cancel|payment|checkout|login|register|otp|verify|confirm|actuals|waitlist/i;
 
 // Explicit endpoint/type allowlist: GET alone is not a read-only guarantee.
@@ -30,14 +30,18 @@ export function sevenRoomsReadAllowed(method, address, resourceType = 'document'
       return /^\/static2\/[a-zA-Z0-9_./-]+\.(?:js|css|woff2?|ttf|png|jpe?g|svg|webp|ico)$/.test(u.pathname) && !u.search;
     }
     if (!['fetch', 'xhr'].includes(resourceType)) return false;
+    // Read-only locale resources observed on the approved pilot, 2026-10-16.
+    if (/^\/static2\/reservations\/(?:sv-SE|en-US|es-ES|fr-FR)-[a-zA-Z0-9_-]+\.json$/.test(u.pathname)) return !u.search;
+    if (u.pathname === '/api-yoa/languagestrings/strandvagen1/all') return keys.length === 1 && u.searchParams.get('widget_type') === 'res_widget';
     if (u.pathname === '/api-yoa/dining/widget_info') {
       return keys.length === 1 && u.searchParams.get('venue_url_key') === SEVENROOMS_PILOT.venueId;
     }
     if (!['/api-yoa/availability/widget/range', '/api-yoa/availability/ng/widget/range'].includes(u.pathname)) return false;
     return keys.every(key => RANGE_KEYS.has(key)) && u.searchParams.get('venue') === SEVENROOMS_PILOT.venueId
-      && /^\d{4}-\d{2}-\d{2}$/.test(u.searchParams.get('start_date') || '')
+      && (!u.searchParams.has('start_date') || /^\d{4}-\d{2}-\d{2}$/.test(u.searchParams.get('start_date')))
       && /^(?:[1-9]|1\d|20)$/.test(u.searchParams.get('party_size') || '')
-      && u.searchParams.get('num_days') === '1';
+      && u.searchParams.get('num_days') === '1'
+      && (!u.searchParams.has('actual_id') || u.searchParams.get('actual_id') === '');
   } catch { return false; }
 }
 
@@ -74,14 +78,17 @@ export class SevenRoomsPlaywright {
       const browser = await this.#browser();
       if (this.#closed) throw new SevenRoomsMirrorError('closed', 503);
       context = await browser.newContext({ viewport: { width, height: 760 }, locale: 'sv-SE', timezoneId: 'Europe/Stockholm', serviceWorkers: 'block', acceptDownloads: false });
-      const s = { id: crypto.randomUUID(), owner, restaurantId, context, width, height: 760, revision: 0, touched: this.now(), busy: true, state: 'read_only', blockedRequests: 0 };
+      const s = { id: crypto.randomUUID(), owner, restaurantId, context, width, height: 760, revision: 0, touched: this.now(), busy: true, state: 'read_only', blockedRequests: 0, blockedRoutes: [] };
       await context.route('**/*', async route => {
         const request = route.request();
         if (!sevenRoomsReadAllowed(request.method(), request.url(), request.resourceType())) {
           s.blockedRequests++;
-          let pathname = '';
-          try { pathname = new URL(request.url()).pathname; } catch {}
-          if (MUTATION.test(pathname) || !['GET', 'HEAD'].includes(request.method())) s.state = 'provider_write_required';
+          let u;
+          try { u = new URL(request.url()); } catch {}
+          // Diagnostics omit query strings, payloads and tokens. Analytics being
+          // blocked is not evidence that the provider tried to create a hold.
+          if (s.blockedRoutes.length < 30) s.blockedRoutes.push({ method: request.method(), origin: u?.origin || 'invalid', type: request.resourceType(), kind: u?.origin === ORIGIN ? MUTATION.test(u.pathname) ? 'write_boundary' : 'unreviewed_provider_request' : 'external_resource' });
+          if (u?.origin === ORIGIN && MUTATION.test(u.pathname)) s.state = 'provider_write_required';
           else if (request.isNavigationRequest() && request.frame() === s.page?.mainFrame()) s.state = 'unsupported_navigation';
           return route.abort();
         }
@@ -136,6 +143,7 @@ export class SevenRoomsPlaywright {
       image: `data:image/png;base64,${shot.toString('base64')}`, imageHash: crypto.createHash('sha256').update(shot).digest('hex'),
       capturedAt: new Date(s.touched).toISOString(), text, mode: 'inspect', state: s.state,
       canSubmit: false, result: null, fields: [], blocked: s.state !== 'read_only', blockedRequests: s.blockedRequests,
+      blockedRoutes: s.blockedRoutes.map(route => ({ ...route })), readiness: 'unverified',
       expiresIn: TTL / 1000, limitation: 'Checkout/hold contract unverified; no submission or confirmation supported.',
     };
   }
