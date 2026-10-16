@@ -73,3 +73,15 @@ HTML SHA256 `8985003275a4911f7dd374173f7afeb2f7de633b616b8213b490b171a86416de`.
 It needs separately reviewed payment/special-meal handling, outside this task.
 No Paraden contact action or repeated blocker probe. Beirut is the only alternative
 inspected; no broader candidate sweep or second engine.
+
+## Integrated runtime boundary
+
+Candidate d3b927e adds only the separate VELVET_BEIRUT_RECEIPT flag to
+receiptPolicies. contactFinalPolicies remains Riche/Sturehof only. The existing
+provider-review path reserves the SQLite attempt inside the intercepted save
+request, before route.fetch sends any provider write. This is AFTER the native
+Slutför button click; it is not a claim of pre-click reservation. The contact-final
+path has a different pre-click boundary. Both prevent unreserved provider writes.
+Focused receipt tests13 and narrow independent policy/flag review pass. Existing
+Noema actual app/API/Chromium/SQLite regression passed84API/4restarts/3mockPOST
+on d3b927e, with zero real supplier requests.
