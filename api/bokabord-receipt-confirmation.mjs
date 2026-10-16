@@ -64,6 +64,11 @@ export const ASTRID_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: 'e3a1940c68c7fcb34cb950162eeaaaef', mealid: 55508, mealType: 2, maxParty: 2,
 });
 
+export const VAU_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-vau-de-ville', name: 'Vau De Ville',
+  hash: '1994e39a706405442f6b37293d883d0b', mealid: 22476, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
