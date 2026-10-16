@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'self'; form-action 'none'; base-uri 'none'">
+<meta name="robots" content="noindex,nofollow">
+<title>Velvet — test av bokningsflödet</title>
+<style>
+:root{color-scheme:dark;font:16px/1.6 system-ui;background:#121312;color:#f5f0e6}body{margin:0}main{max-width:700px;margin:auto;padding:24px}header{border:2px solid #d1ad71;padding:20px;border-radius:16px}h1{font-size:1.7rem;margin:0}a{color:#e2c99e}label{display:block;margin:12px 0}input,select,textarea,button{box-sizing:border-box;font:inherit;padding:10px;max-width:100%;border:1px solid #777;border-radius:8px}input,textarea{display:block;width:100%}input[type=checkbox]{display:inline;width:auto;margin-right:8px}button{cursor:pointer;margin:8px 8px 8px 0;background:#dfbd83;color:#191713}button:disabled{opacity:.45;cursor:default}#booking{margin-top:24px}small{display:block}.fixture-warning{font-weight:bold;color:#f4c974}
+@media(min-width:1000px){main{max-width:980px;display:grid;grid-template-columns:340px minmax(0,560px);gap:24px;align-items:start}header{font-size:14px;max-height:calc(100dvh - 48px);overflow:auto;box-sizing:border-box}#booking{margin:0;max-height:calc(100dvh - 48px);overflow:auto;padding:0 12px}h1{font-size:1.4rem}}
+</style>
+</head>
+<body><main>
+<header><h1>Testa Velvets bokningsflöde</h1>
+<p><strong>Simulering — ingen riktig reservation skapas.</strong> Tider, restaurang och resultat är testdata. Uppgifterna stannar i den här fliken och försvinner när sidan laddas om.</p>
+<p>Använd datum <strong>15 januari 2030</strong> och påhittade kontaktuppgifter, till exempel Test Person, test@example.com och 0700000000.</p>
+<label>Simulerat svar från leverantören <select id="outcome"><option value="confirmed">Bekräftat testresultat</option><option value="timeout">Avbrutet svar / okänd status</option><option value="payment_required">Betalning krävs</option><option value="rejected">Avvisad bokning</option><option value="pending">Inväntar besked</option></select></label>
+<button id="restart" type="button">Starta om testet</button>
+<small>Detta testar gränssnittet. Det verifierar inte en riktig restaurangs tillgänglighet eller bokningssystem.</small>
+<a href="./">Till Velvet</a></header>
+<section id="booking" aria-label="Simulerad bokning"></section>
+</main><script type="module" src="js/booking-preview.js"></script></body></html>
