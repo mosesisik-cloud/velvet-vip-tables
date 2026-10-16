@@ -71,6 +71,21 @@
     "providerTitle": "Reservation at Dalmatino Hvar",
     "integrationMode": "native_embed"
   },
+  "curated-HVA-dalmatino-hvar": {
+    "provider": "SevenRooms",
+    "name": "Dalmatino Hvar",
+    "city": "Hvar",
+    "venueId": "dalmatinohvar",
+    "url": "https://www.sevenrooms.com/reservations/dalmatinohvar",
+    "source": "https://dalmatino-hvar.com/",
+    "checkedAt": "2026-10-15",
+    "verification": "embedded_form_loaded",
+    "providerTitle": "Reservation at Dalmatino Hvar",
+    "integrationMode": "native_embed",
+    "aliasOf": "osm-HVA-dalmatino",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
+  },
   "curated-LIS-belcanto": {
     "provider": "SevenRooms",
     "name": "Belcanto",

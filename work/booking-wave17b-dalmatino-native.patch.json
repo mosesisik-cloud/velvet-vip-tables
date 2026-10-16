@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "status": "implemented_in_isolated_branch_pending_integrator_review",
+  "issue": 93,
+  "owner": "gabbe-wave17-01a02152",
+  "baseline": "7c0e45dc34dc997ffcdc6a73f05294ecec264972",
+  "targetFile": "data/booking-providers.json",
+  "restaurantId": "curated-HVA-dalmatino-hvar",
+  "reuseRestaurantId": "osm-HVA-dalmatino",
+  "preconditions": {
+    "targetAbsent": true,
+    "sourceSha256": "3c97906a0c688a6f66d2d5a7596dcad9069e0d808425de515e09ac6a8719b753",
+    "serialRegistryHandoffRequired": true,
+    "integratorReviewRequired": true
+  },
+  "identity": {
+    "decision": "reviewable_alias_not_a_new_restaurant",
+    "name": "Restaurant Dalmatino Hvar",
+    "address": "Sveti Marak 1, 21450 Hvar, Croatia",
+    "officialSource": "https://dalmatino-hvar.com/",
+    "evidence": "https://github.com/mosesisik-cloud/velvet-vip-tables/blob/44febf4633a7391ec89ddfcc7fc65db8aed1d96e/work/booking-wave17b-hvar-evidence.json",
+    "evidenceDate": "2026-10-16",
+    "basis": "The OSM catalogue links the official Hvar website. Historical issue93 evidence records that site's named restaurant and street address, its exact SevenRooms link, and the standalone provider's matching Dalmatino Hvar name and Sveti Marak Hvar1 address. This is not identity inferred from a provider slug alone.",
+    "catalogueLimitations": "Both catalogue addresses only say Hvar, Croatia; the curated website field is blank. No claim that two independent street-address catalogue fields match. Stable IDs and catalogue records remain unchanged."
+  },
+  "reusedEmbeddingEvidence": {
+    "restaurantId": "osm-HVA-dalmatino",
+    "checkedAt": "2026-10-15",
+    "verification": "embedded_form_loaded",
+    "source": "data/booking-providers.json",
+    "description": "Historical main-branch native embedding evidence for this exact official URL. Preserved date, not a new live inspection or a newly completed reservation.",
+    "newLiveInspection": false,
+    "backgroundSideEffects": "unknown",
+    "historicalSafetyProvenance": "No contemporaneous network audit, service-worker blocking or request-interception log in issue93 evidence; no new safety certification."
+  },
+  "patch": [
+    {
+      "op": "add",
+      "path": "/curated-HVA-dalmatino-hvar",
+      "value": {
+        "provider": "SevenRooms",
+        "name": "Dalmatino Hvar",
+        "city": "Hvar",
+        "venueId": "dalmatinohvar",
+        "url": "https://www.sevenrooms.com/reservations/dalmatinohvar",
+        "source": "https://dalmatino-hvar.com/",
+        "checkedAt": "2026-10-15",
+        "verification": "embedded_form_loaded",
+        "providerTitle": "Reservation at Dalmatino Hvar",
+        "integrationMode": "native_embed",
+        "aliasOf": "osm-HVA-dalmatino",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      }
+    }
+  ],
+  "behavior": {
+    "renderer": "Existing mountEmbeddedBooking; original SevenRooms form inside Velvet, not the legacy server-submit helper and not a new Playwright mirror.",
+    "confirmation": "SevenRooms owns confirmation and its email channel. This patch does not observe email delivery or create a Velvet confirmed booking from iframe load/postMessage/guest report.",
+    "availability": "No background Velvet availability fetch is enabled by this alias. User interaction with the original embedded provider form remains provider-owned.",
+    "conditions": "Provider card guarantees, cancellation terms, consent and payment remain in the original form; not retested or bypassed."
+  },
+  "integrationChecks": [
+    "Recheck current main, issue93 ownership and serial registry handoff before applying; do not overwrite any existing target row.",
+    "Revalidate source binding and identity if either catalogue identity or source row changed.",
+    "Apply this one additive row without changing the source row, catalogue, canonical worklist, app, API or deployment files.",
+    "Update the integrator-owned exact-count assertions in scripts/test-booking-providers.mjs: on the stated baseline only, SevenRooms50 to51 and native_embed64 to65. Recount from latest main; do not overwrite Black Pepper or other additions.",
+    "Run provider/language/availability/UI regression suites and send reviewed patch to the existing release owner."
+  ],
+  "coordination": "Local serial registry handoff granted by master task01a141d9-7490-7f02-9968-d9aa3f71e6d6 after PR148 edits completed. Existing external integrator still owns merge/integration; no external-owner acceptance or publication claimed. Preserve PR148 Black Pepper addition and recount on integration.",
+  "publication": "implemented_in_branch_not_published"
+}
