@@ -338,7 +338,12 @@ export class BokabordMirror {
           }
           s.approval = frozen.details;
           // Consume durable permission before the final provider button is clicked.
-          await this.reserveSubmission(s.approval,s);
+          try { await this.reserveSubmission(s.approval,s); }
+          catch {
+            s.finalActionConsumed = true; s.nativeReview = null;
+            s.result = {status:'unknown',reason:'attempt_not_authorized'};
+            return await this.snapshot(s);
+          }
           s.submissionReserved = true; s.finalActionConsumed = true;
         } else s.approval = approval;
         s.armed = review || contactFinal;
