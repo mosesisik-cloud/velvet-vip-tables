@@ -55,6 +55,7 @@ const bokabordMirror = new BokabordMirror({
   prepare: mirrorMode === 'live', live: mirrorMode === 'live',
   reserveSubmission: (approval, session) => bookingJournal.reserveSubmission(approval, session),
   recordResult: session => bookingJournal.recordResult(session),
+  verifyResult: (data, session) => bookingJournal.verifyResult(data, session),
 });
 
 // ---------- SevenRooms live-inventarie (offentligt widget-API, ingen nyckel) ----------

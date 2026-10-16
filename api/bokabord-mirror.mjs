@@ -59,12 +59,13 @@ export class BokabordMirror {
   browserPromise = null;
   pending = 0;
   pendingOwners = new Set();
-  constructor({ prepare = false, live = false, authorizeSubmission = null, reserveSubmission = null, recordResult = null } = {}) {
+  constructor({ prepare = false, live = false, authorizeSubmission = null, reserveSubmission = null, recordResult = null, verifyResult = null } = {}) {
     this.prepare = prepare;
     this.authorizeSubmission = authorizeSubmission;
     this.reserveSubmission = reserveSubmission;
     this.live = live;
     this.recordResult = recordResult;
+    this.verifyResult = verifyResult;
     this.timer = setInterval(() => this.expire(), 30_000);
     this.timer.unref();
   }
@@ -114,7 +115,7 @@ export class BokabordMirror {
         if (!s.submitted || response.url() !== 'https://app.bokabord.se/reservation/api/booking/saveBooking') return;
         s.resultPromise = (async () => {
         const data = await response.json().catch(() => null);
-        s.result = response.ok?.() === true ? classifyBokabordResult(data) : { status: 'unknown', reason: 'supplier_http_error' };
+        s.result = response.ok?.() === true ? (this.verifyResult ? await this.verifyResult(data, s) : classifyBokabordResult(data)) : { status: 'unknown', reason: 'supplier_http_error' };
         if (s.result) await this.recordResult?.(s);
       })().catch(() => { s.result = { status: 'unknown' }; }); });
       s.page.setDefaultTimeout(12_000);

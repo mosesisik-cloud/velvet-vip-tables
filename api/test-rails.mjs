@@ -690,34 +690,18 @@ async function runApi() {
       fail("avail-no-sr", JSON.stringify(availNone.json).slice(0, 220));
     } else ok("avail-no-sr", availNone.json.reason || "no live inventory");
 
-    const srNoUid = await req(base, "POST", "/availability/BCN-005/book", {
-      date: "2026-08-29", time: "21:00", party: 2,
-      guest: { firstName: "Ada", lastName: "Lovelace", email: "ada@example.com" },
-    });
-    if (srNoUid.status !== 401) fail("sr-book-auth", "expected 401 got " + srNoUid.status);
-    else ok("sr-book-auth", "user required");
-
-    const srNoSlot = await req(base, "POST", "/availability/BCN-005/book", {
-      user: host, date: "", time: "", party: 2,
-      guest: { firstName: "Ada", lastName: "Lovelace", email: "ada@example.com" },
-    });
-    if (srNoSlot.status !== 400 || srNoSlot.json.error !== "slot") {
-      fail("sr-book-slot", JSON.stringify(srNoSlot.json).slice(0, 220));
-    } else ok("sr-book-slot", "date/time/party required");
-
-    const srNoGuest = await req(base, "POST", "/availability/BCN-005/book", {
-      user: host, date: "2026-08-29", time: "21:00", party: 2, guest: { firstName: "Ada" },
-    });
-    if (srNoGuest.status !== 400 || srNoGuest.json.error !== "guest") {
-      fail("sr-book-guest", JSON.stringify(srNoGuest.json).slice(0, 220));
-    } else ok("sr-book-guest", "name + email required");
-
-    const srMissing = await req(base, "POST", "/availability/ZZZ-999/book", {
-      user: host, date: "2026-08-29", time: "21:00", party: 2,
-      guest: { firstName: "Ada", lastName: "Lovelace", email: "ada@example.com" },
-    });
-    if (srMissing.status !== 404) fail("sr-book-missing", "expected 404 got " + srMissing.status);
-    else ok("sr-book-missing", "unknown venue");
+    // This retired direct HTTP write must never reach hold/book, regardless of
+    // claimed user ID, partial contact details, or a complete-looking payload.
+    for (const [name, venue, body] of [
+      ['anonymous', 'BCN-005', {}],
+      ['claimed-user', 'BCN-005', { user: { id: 'untrusted-body-owner' } }],
+      ['complete-looking', 'BCN-005', { user: { id: 'untrusted-body-owner' }, date: '2030-01-15', time: '19:00', party: 2, guest: { firstName: 'Test', lastName: 'Person', email: 'test@example.com' } }],
+      ['unknown-venue', 'ZZZ-999', {}],
+    ]) {
+      const response = await req(base, 'POST', `/availability/${venue}/book`, body);
+      if (response.status !== 409 || response.json.error !== 'provider_checkout_unverified') fail('sr-retired-' + name, 'legacy provider write must stay disabled');
+      else ok('sr-retired-' + name, 'no provider transmission');
+    }
 
     const brNone = await req(base, "GET", "/book/bridge/NOPE-000");
     if (brNone.status !== 404) fail("bridge-missing", "expected 404 got " + brNone.status);

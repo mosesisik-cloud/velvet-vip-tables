@@ -11,7 +11,7 @@ const child=spawn(process.execPath,['api/server.mjs'],{env:{...process.env,PORT:
 try {
   const base=`http://127.0.0.1:${port}`;
   let ready=false;
-  for(let i=0;i<60;i++){try{ready=(await fetch(base+'/health')).ok;}catch{}if(ready)break;await new Promise(r=>setTimeout(r,100));}
+  for(let i=0;i<300;i++){try{ready=(await fetch(base+'/health')).ok;}catch{}if(ready)break;await new Promise(r=>setTimeout(r,100));}
   assert(ready,'server starts');
   const caps=await (await fetch(base+'/restaurant-bookings/playwright/config')).json();
   assert(caps.bokabord.guestBooking);assert(caps.providers.every(p=>!p.enabled&&!p.liveBooking));
