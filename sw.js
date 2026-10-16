@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-206-balzac-lunch";
+const VERSION = "v4-real-207-kommendoren-lunch";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
