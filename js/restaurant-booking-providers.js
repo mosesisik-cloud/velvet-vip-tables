@@ -28,6 +28,7 @@ const IDENTITY_PARAMS = new Set(['rid', 'restref', 'restaurantid', 'restaurant_i
 // Evidence is specific to these complete official links, including query order
 // and values. Do not generalize this into provider-wide query acceptance.
 const EXACT_EXTERNAL_LINKS = Object.freeze({
+  'curated-HVA-black-pepper-hvar': {"provider":"i-host","venueId":"1767","url":"https://www.i-host.gr/Reservations/New?restaurant=1767&channel=website&lang=eng","source":"https://blackpepperhvar.com/","venueKey":"www.i-host.gr/Reservations/New?restaurant=1767"},
   'curated-LIS-cura': {provider:'Restaurant website',url:'https://www.fourseasons.com/lisbon/dining/restaurants/cura/',source:'https://www.fourseasons.com/lisbon/dining/restaurants/cura/',venueKey:'www.fourseasons.com/lisbon/dining/restaurants/cura/'},
   'curated-TUL-hartwood': {provider:'Typeform',venueId:'f6JtAUPI',url:'https://www.hartwoodtulum.com/reservation',source:'https://www.hartwoodtulum.com/',venueKey:'www.hartwoodtulum.com/reservation',bookingMode:'request_only',cancellationPolicyStatus:'unknown'},
   'curated-CAP-da-paolino': {provider:'SevenRooms',venueId:'PaolinoLemontrees',url:'https://www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/',source:'https://paolinocapri.com/en/prenota-un-tavolo/',venueKey:'www.sevenrooms.com/explore/PaolinoLemontrees/reservations/create/search/'},
@@ -51,7 +52,7 @@ export function resolveEmbeddedBooking(registry, restaurantId) {
     const source = new URL(row.source);
     if (url.protocol !== 'https:' || url.username || url.password || url.port || url.hash
       || source.protocol !== 'https:' || source.username || source.password) return null;
-    if (Object.hasOwn(EXACT_EXTERNAL_LINKS,restaurantId) || row.provider === 'JoinOko' || row.provider === 'Typeform' || row.venueId === 'pavyllonyannickalleno' || String(row.venueId).toLowerCase() === 'paolinolemontrees') {
+    if (Object.hasOwn(EXACT_EXTERNAL_LINKS,restaurantId) || row.provider === 'i-host' || row.provider === 'JoinOko' || row.provider === 'Typeform' || row.venueId === 'pavyllonyannickalleno' || String(row.venueId).toLowerCase() === 'paolinolemontrees') {
       const exact=Object.hasOwn(EXACT_EXTERNAL_LINKS,restaurantId) ? EXACT_EXTERNAL_LINKS[restaurantId] : null;
       if (!exact || Object.entries(exact).some(([key,value])=>row[key]!==value)
         || row.integrationMode!=='external_link' || row.verification!=='official_link_only'
