@@ -36,8 +36,8 @@ export function mountProviderPlaywrightBooking(container, api, {
   </section>`;
   const el = name => container.querySelector(`[data-${name}]`);
   el('title').textContent = `${restaurantName || restaurantId} · ${provider}`;
-  const write = (id, phase, idempotencyKey) => {
-    const value = { id, phase, ...(idempotencyKey ? { idempotencyKey } : {}) };
+  const write = (id, phase, idempotencyKey, reviewFingerprint) => {
+    const value = { id, phase, ...(idempotencyKey ? { idempotencyKey } : {}), ...(reviewFingerprint ? { reviewFingerprint } : {}) };
     storage.setItem(key, JSON.stringify(value)); marker = value;
   };
   const isSubmit = () => marker?.phase === 'submit_pending';
@@ -77,7 +77,10 @@ export function mountProviderPlaywrightBooking(container, api, {
     if (result?.status === 'confirmed') {
       if (proof?.verified === true && proof.source === 'provider' && proof.restaurantId === restaurantId
         && proof.sessionId === snapshot.id && typeof proof.attemptId === 'string' && proof.attemptId
-        && (!isZenchef || !isSubmit() || (marker.idempotencyKey && proof.idempotencyKey === marker.idempotencyKey))
+        // The durable journal key is server-owned; the UI UUID is only correlation.
+        && (!isZenchef || (fingerprint(proof.idempotencyKey)
+          && fingerprint(isSubmit() ? marker.reviewFingerprint : snapshot.reviewFingerprint)
+          && proof.detailsDigest === (isSubmit() ? marker.reviewFingerprint : snapshot.reviewFingerprint)))
         && typeof result.reference === 'string' && result.reference.trim()) return `Bokningen är bekräftad. Referens: ${result.reference}`;
       return 'Bokningen är inte verifierad. Skicka inte en ny bokning. Kontrollera resultatet med restaurangen.';
     }
@@ -163,7 +166,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     busy = true; controls(); el('status').textContent = 'Kontrollerar…';
     try {
       if (!storageOK) throw new Error('storage');
-      if (action?.type === 'hold' || action?.type === 'submit') { write(state.id,`${action.type}_pending`,action.idempotencyKey); uncertain = true; }
+      if (action?.type === 'hold' || action?.type === 'submit') { write(state.id,`${action.type}_pending`,action.idempotencyKey,isZenchef && action.type === 'submit' ? finalFingerprint() : undefined); uncertain = true; }
       const next = action ? await post(`${endpoint}/${encodeURIComponent(state.id)}/action`,{...action,revision:state.revision})
         : marker ? await post(`${endpoint}/${encodeURIComponent(marker.id)}/current`,{})
         : await post(endpoint,{provider,restaurantId,width:Math.max(320,Math.min(560,Math.round(container.clientWidth))),resume:true});
@@ -192,7 +195,7 @@ export function mountProviderPlaywrightBooking(container, api, {
   el('hold-consent').onchange = controls; el('terms').onchange = controls;
   el('hold-button').onclick = () => run({type:'hold',confirm:true,reviewFingerprint:state?.holdReview?.fingerprint});
   el('submit').onclick = () => run(isZenchef
-    ? {type:'submit',confirm:true,terms:true,reviewToken:state?.reviewToken,termsVersion:state?.terms?.version,idempotencyKey:crypto.randomUUID()}
+    ? {type:'submit',confirm:true,terms:true,reviewToken:state?.reviewToken,reviewFingerprint:state?.reviewFingerprint,termsVersion:state?.terms?.version,idempotencyKey:crypto.randomUUID()}
     : {type:'submit',confirm:true,terms:true,reviewFingerprint:finalFingerprint()});
   el('dismiss').onclick = () => { destroy(); container.hidden = true; onDismiss?.(); };
   el('end').onclick = async () => {
