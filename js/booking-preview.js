@@ -1,5 +1,5 @@
 import { mountVelvetPlaywrightBooking } from './velvet-playwright-booking.js';
-import { createJourneyFixture, FIXTURE_RESTAURANT } from '../scripts/fixtures/velvet-playwright-journey.mjs';
+import { createJourneyFixture, FIXTURE_RESTAURANT } from './booking-preview-fixture.js';
 
 // Pure browser-memory transport: no fetch, API, supplier, personal-data storage
 // or server fixture endpoint. Deliberately isolated from Velvet guest sessions.

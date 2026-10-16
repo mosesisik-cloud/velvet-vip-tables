@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import http from 'node:http';
 import fs from 'node:fs/promises';
 import { chromium } from 'playwright';
-const files = ['booking-preview.html', 'js/booking-preview.js', 'js/velvet-playwright-booking.js', 'scripts/fixtures/velvet-playwright-journey.mjs'];
+const files = ['booking-preview.html', 'js/booking-preview.js', 'js/velvet-playwright-booking.js', 'js/booking-preview-fixture.js'];
 const server = http.createServer(async (req, res) => {
   const file = req.url.slice(1);
   if (!files.includes(file)) { res.writeHead(404); return res.end(); }
