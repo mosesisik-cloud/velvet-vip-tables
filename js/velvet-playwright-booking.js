@@ -53,10 +53,11 @@ export function validateBookingSnapshot(value, { restaurantId, mode }) {
  */
 export function mountVelvetPlaywrightBooking(container, {
   restaurantId, restaurantName = 'Restaurangen', transport, mode = 'live',
-  storage = undefined, requestTimeoutMs = 30_000,
+  storage = undefined, requestTimeoutMs = 30_000, onDismiss = null,
 } = {}) {
   if (!container?.ownerDocument || !string(restaurantId) || !['live', 'fixture'].includes(mode)
     || !Number.isFinite(requestTimeoutMs) || requestTimeoutMs < 1
+    || onDismiss !== null && typeof onDismiss !== 'function'
     || !['create', 'current', 'action', 'remove'].every(key => typeof transport?.[key] === 'function')) {
     throw new TypeError('Booking requires a container, restaurantId and normalized transport');
   }
@@ -100,7 +101,7 @@ export function mountVelvetPlaywrightBooking(container, {
   const lockControls = () => {
     root.setAttribute('aria-busy', String(busy));
     root.querySelectorAll('button,input,textarea,select').forEach(node => {
-      node.disabled = busy || node.dataset.locked === 'true';
+      node.disabled = (busy && node.dataset.action !== 'dismiss') || node.dataset.locked === 'true';
     });
   };
   function input(form, name, label, type, value = '', required = true) {
@@ -133,7 +134,30 @@ export function mountVelvetPlaywrightBooking(container, {
     if (disposed) return;
     root.replaceChildren();
     const style = element('style');
-    style.textContent = '.velvet-playwright-booking{max-width:42rem;margin:auto;padding:1rem;border:1px solid #80735f;border-radius:12px;overflow-wrap:anywhere}.velvet-playwright-booking form,.velvet-playwright-booking label{display:grid;gap:.6rem}.velvet-playwright-booking form{gap:1rem}.velvet-playwright-booking input:not([type=checkbox]),.velvet-playwright-booking textarea{box-sizing:border-box;width:100%;min-height:44px;padding:.6rem;font:inherit}.velvet-playwright-booking button{min-height:44px;margin:.4rem .4rem .4rem 0}.velvet-playwright-booking button:focus-visible,.velvet-playwright-booking input:focus-visible,.velvet-playwright-booking a:focus-visible{outline:3px solid #a77726;outline-offset:3px}.velvet-playwright-booking dl{display:grid;grid-template-columns:minmax(5rem,1fr) minmax(0,2fr);gap:.5rem}.velvet-playwright-booking dd{margin:0}.velvet-playwright-booking [data-fixture-banner]{padding:.7rem;background:#fff0bd;color:#3d2d00;font-weight:bold}';
+    style.textContent = `
+      .velvet-playwright-booking{box-sizing:border-box;width:100%;max-width:36rem;min-width:0;
+        max-height:min(720px,calc(100vh - 6rem),var(--velvet-booking-panel-max-height,720px));
+        max-height:min(720px,calc(100dvh - 6rem),var(--velvet-booking-panel-max-height,720px));
+        display:flex;flex-direction:column;margin-inline:auto;border:1px solid #80735f;
+        border-radius:12px;overflow:hidden;overflow-wrap:anywhere;background:Canvas;color:CanvasText}
+      .velvet-playwright-booking [data-panel-header],.velvet-playwright-booking [data-panel-footer]{flex:none;padding:.75rem 1rem}
+      .velvet-playwright-booking [data-panel-header]{border-bottom:1px solid #b9b2a7}
+      .velvet-playwright-booking h2{font-size:1.2rem;line-height:1.4;margin:0;max-height:5rem;overflow:auto}
+      .velvet-playwright-booking [data-panel-body]{min-height:0;overflow:auto;overscroll-behavior:contain;padding:.75rem 1rem;scroll-padding:1rem}
+      .velvet-playwright-booking [data-panel-footer]{display:flex;flex-wrap:wrap;gap:.4rem;border-top:1px solid #b9b2a7}
+      .velvet-playwright-booking form,.velvet-playwright-booking label{display:grid;gap:.5rem}
+      .velvet-playwright-booking form{gap:.75rem}
+      .velvet-playwright-booking input:not([type=checkbox]),.velvet-playwright-booking textarea{box-sizing:border-box;width:100%;min-width:0;min-height:44px;padding:.6rem;font:inherit}
+      .velvet-playwright-booking textarea{max-height:10rem;resize:vertical}
+      .velvet-playwright-booking button{min-height:44px;margin:.4rem .4rem .4rem 0}
+      .velvet-playwright-booking [data-panel-footer] button{margin:0;flex:1 1 auto}
+      .velvet-playwright-booking :is(button,input,a,textarea,[data-panel-body]):focus-visible{outline:3px solid #a77726;outline-offset:2px}
+      .velvet-playwright-booking dl{display:grid;grid-template-columns:minmax(5rem,1fr) minmax(0,2fr);gap:.5rem}
+      .velvet-playwright-booking dd{margin:0}
+      .velvet-playwright-booking [data-fixture-banner]{padding:.5rem;margin:.5rem 0 0;background:#fff0bd;color:#3d2d00;font-weight:bold}
+      .velvet-playwright-booking :is(img,video,canvas,svg){max-width:100%;max-height:100%;object-fit:contain}
+      @media(max-width:600px){.velvet-playwright-booking{max-height:calc(100vh - 24px);max-height:min(calc(100dvh - 24px),var(--velvet-booking-panel-max-height,100dvh))}}
+    `;
     root.append(style);
     const stage = uncertain ? 'result' : state?.stage || 'start';
     root.dataset.stage = stage;
@@ -211,7 +235,18 @@ export function mountVelvetPlaywrightBooking(container, {
     }
     root.append(button('Kontrollera status', 'refresh', () => run('current')));
     if (state && !uncertain && (!attempted && state.stage !== 'result'
-      || ['confirmed', 'rejected'].includes(state.result?.status))) root.append(button('Stäng bokningen', 'close', () => run('remove')));
+      || ['confirmed', 'rejected'].includes(state.result?.status))) root.append(button('Avsluta formuläret', 'close', () => run('remove')));
+    // Keep navigation out of the scrolling content. Dismiss is view-only: it
+    // does not remove a server session, cancel a booking, or clear attempt locks.
+    const header = element('header', undefined, {'data-panel-header': ''});
+    const body = element('div', undefined, {'data-panel-body': '', tabindex: '0', role: 'region', 'aria-label': 'Bokningsuppgifter'});
+    const footer = element('nav', undefined, {'data-panel-footer': '', 'aria-label': 'Bokningsnavigering'});
+    header.append(root.querySelector('h2'));
+    const banner = root.querySelector('[data-fixture-banner]'); if (banner) header.append(banner);
+    for (const node of root.querySelectorAll('[data-action=back],[data-action=refresh],[data-action=close]')) footer.append(node);
+    footer.append(button('Stäng vyn', 'dismiss', () => { dispose(); onDismiss?.(); }));
+    for (const node of [...root.children]) if (node !== style) body.append(node);
+    root.append(header, body, footer);
     lockControls();
     // Move focus to context, never to the irreversible confirmation control.
     const heading = root.querySelector('h2'); heading.tabIndex = -1;
@@ -295,9 +330,10 @@ export function mountVelvetPlaywrightBooking(container, {
   }
   render();
   const ready = run('current');
+  function dispose() { disposed = true; epoch++; root.replaceChildren(); root.remove(); state = null; guestDraft = null; selectionDraft = null; }
   return {
     ready,
     refresh: () => run('current'),
-    destroy() { disposed = true; epoch++; root.replaceChildren(); root.remove(); state = null; guestDraft = null; selectionDraft = null; },
+    destroy: dispose,
   };
 }
