@@ -268,7 +268,11 @@ export class ZenchefPlaywright {
     const codes = ((await flag.getAttribute('class')) || '').split(/\s+/).filter(c => /^iti__[a-z]{2}$/.test(c));
     if (codes.length !== 1) return '';
     const code = codes[0].slice(5);
-    return await phoneWidget.locator(`[data-country-code="${code}"]`).count() === 1 ? code : '';
+    // At the mobile viewport the country list is not mounted until opened.
+    // Read the selected visible control, not a possibly absent dropdown option.
+    const selected = phoneWidget.locator('.iti__selected-country');
+    return await selected.count() === 1 && await selected.getAttribute('title')
+      && await selected.getAttribute('aria-label') ? code : '';
   }
   async snapshot(s) {
     let fields = null;
