@@ -14,6 +14,8 @@ function fixture() {
     request:{method:'POST',url:'https://app.bokabord.se/reservation/api/booking/saveBooking',payload:{...approval,
       amount:approval.party,terms:{general:true,restaurant:false,bokabord:false},waitlist:false,products:[],linked_meals:[]}},
     receipt:{mainFrame:true,method:'GET',httpOk:true,navigatedAt:1200,capturedAt:1300,
+      navigationId:1,documentNavigationId:1,
+      documentUrl:'https://app.bokabord.se/reservation/booking/?code=synthetic-capability&new=1',
       url:'https://app.bokabord.se/reservation/booking/?code=synthetic-capability&new=1',
       text:'Tack för din bokning.\n\nDu är nu klar och bekräftelse har skickats via epost.\n\nNoema\n2 pers. (Lunch)\ntisdag 15 jan\n12:00 - 13:30\nBokningsreferens\n# 123\nGästinformation\nFixture Guest'}};
   return {approval,attempt,observation};
@@ -56,9 +58,16 @@ test('request and reply must match exact approved venue, selection, guest and co
   }
   const f=fixture();f.observation.request.payload.terms.general=false;assert.equal(run(f).status,'unknown');
 });
+test('HTTP document and atomic DOM capture must belong to the same navigation',()=>{
+  for(const patch of [{documentUrl:'https://app.bokabord.se/reservation/'},{documentNavigationId:2},
+    {navigationId:0},{navigationId:undefined},{documentNavigationId:undefined},{documentUrl:undefined}]){
+    const f=fixture();Object.assign(f.observation.receipt,patch);assert.equal(run(f).status,'unknown');
+  }
+});
 test('unsupported requirements and malformed shapes never confirm',()=>{
   for(const patch of [{waitlist:1},{require_noshow:true},{products:[{}]},{linked_meals:{}},{giftcard:0},
-    {is_temp_booking:0},{parent_order:0},{group_booking:true},{meal:{type:2,bullets:[]}},{meal:{type:2,bullets:{cc:true}}}]){
+    {is_temp_booking:0},{parent_order:0},{group_booking:true},{meal:{type:2,bullets:[]}},{meal:{type:2,bullets:{cc:true}}},
+    {meal:{type:2,must_pay_directly:true}},{meal:{type:2,mandatory_products:true}}]){
     const f=fixture();Object.assign(f.observation.data.booking,patch);assert.equal(run(f).status,'unknown');
   }
 });

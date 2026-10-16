@@ -13,9 +13,10 @@ const approval = {date:'2030-01-15',time:'19:00',party:2,firstname:'Test',lastna
 async function nativeFixture(hooks, {venueId=restaurantId,approved=approval}={}) {
   let routeHandler, sent=0, aborted=0;
   const events=new Map();
-  const frame={};let documentUrl='',documentText='';
+  const frame={};let documentUrl='',documentText='',onCapture=null;
   const page={on:(name,listener)=>events.set(name,listener),setDefaultTimeout(){},goto:async()=>{},
     mainFrame:()=>frame,url:()=>documentUrl,waitForLoadState:async()=>{},
+    evaluate:async()=>{onCapture?.();return {url:documentUrl,text:documentText};},
     locator:()=>({first:()=>({waitFor:async()=>{}}),innerText:async()=>documentText})};
   const context={route:async(_pattern,handler)=>{routeHandler=handler;},newPage:async()=>page,on(){},close:async()=>{}};
   const mirror=new BokabordMirror({prepare:true,live:true,...hooks});
@@ -25,11 +26,11 @@ async function nativeFixture(hooks, {venueId=restaurantId,approved=approval}={})
   const session=[...mirror.sessions.values()][0];
   session.armed=true;session.approval=approved;
   const transmit=()=>routeHandler({request:()=>({method:()=> 'POST',url:()=> 'https://app.bokabord.se/reservation/api/booking/saveBooking',postDataJSON:()=>({...approved,amount:approved.party,terms:{general:true,restaurant:false,bokabord:false},products:[],waitlist:false,giftcard:null,linked_meals:[],bookingid:null})}),continue:async()=>{sent++;},abort:async()=>{aborted++;}});
-  return {mirror,session,transmit,events,frame,setDocument:(url,text)=>{documentUrl=url;documentText=text;},counts:()=>({sent,aborted})};
+  return {mirror,session,transmit,events,frame,setCaptureHook:fn=>{onCapture=fn;},setDocument:(url,text)=>{documentUrl=url;documentText=text;},counts:()=>({sent,aborted})};
 }
 
 test('Noema receipt capture requires the matching successful main-frame document before durable confirmation',async()=>{
-  for(const scenario of ['complete','wrong-code','wrong-reference','iframe','failed-document','unfinished-document','missing-prefix','disabled']) {
+  for(const scenario of ['complete','wrong-code','wrong-reference','iframe','failed-document','unfinished-document','navigation-during-capture','missing-prefix','disabled']) {
     const directory=fs.mkdtempSync(path.join(os.tmpdir(),'velvet-noema-'));
     const ledger=new PlaywrightAttemptLedger(':memory:');let f;
     const policy=NOEMA_LUNCH_RECEIPT_POLICY;
@@ -48,8 +49,13 @@ test('Noema receipt capture requires the matching successful main-frame document
         'Du är nu klar och bekräftelse har skickats via epost.','Noema','2 pers. (Lunch)',
         'Bokningsreferens',scenario==='wrong-reference'?'# 9999':'# 4242','Gästinformation'].join('\n');
       f.setDocument(url,text);
+      const request={method:()=> 'GET',isNavigationRequest:()=>true,frame:()=>scenario==='iframe'?{}:f.frame};
+      f.events.get('request')(request);f.events.get('framenavigated')(request.frame());
+      if(scenario==='navigation-during-capture')f.setCaptureHook(()=>{
+        f.events.get('request')({...request});f.events.get('framenavigated')(f.frame);
+      });
       f.events.get('response')({url:()=>url,ok:()=>scenario!=='failed-document',finished:()=>scenario==='unfinished-document'?new Promise(()=>{}):Promise.resolve(),
-        request:()=>({method:()=> 'GET',isNavigationRequest:()=>true,frame:()=>scenario==='iframe'?{}:f.frame})});
+        request:()=>request});
       await f.session.receiptPromise;
       assert.equal(ledger.list('owner')[0].status,scenario==='complete'?'confirmed':'unknown',scenario);
       assert.equal(f.counts().sent,1,'receipt observation never sends another request');

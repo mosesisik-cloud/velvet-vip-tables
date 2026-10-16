@@ -42,6 +42,16 @@ the module never constructs/fetches a confirmation URL and rejects action params
 Capture must occur after response/navigation and within 90 seconds of dispatch.
 Use actual server timestamps, not values from the receipt or guest.
 
+Record `respondedAt` at the intercepted save response event, before awaiting its
+JSON body. Increment a server-owned navigation generation on every main-frame
+navigation and attach `navigationId` to the successful document response. Capture
+`documentUrl=location.href` and visible body text in ONE `page.evaluate`. Require
+the same generation before and after that awaited evaluation and record it as
+`documentNavigationId`. The verifier requires both positive generation IDs and
+both URLs to match. If navigation occurs during capture, discard the observation;
+never pair an old successful document response with a newer page's text. Clear
+private observations on a new attempt and do not reuse an old generation.
+
 The document must START with the observed complete prefix and configured venue,
 then correct party. It must have exactly one matching reference section. Searching
 for success words anywhere in comments, using hidden HTML, or trusting a
@@ -50,6 +60,8 @@ approved selection/contact fields and have no unsupported requirements. Status 1
 is only a conservative candidate gate; it never confirms without the independent
 document. Other statuses, changed templates, languages or unsupported meals
 remain unknown. Email delivery to the recipient's inbox is not claimed.
+An observed `must_pay_directly` or `mandatory_products` requirement also remains
+unknown even if the response has an empty product list and no card flag.
 
 Map the resulting standard bound proof through the existing durable journal.
 Do not overwrite an earlier unknown with confirmation until **both** observations

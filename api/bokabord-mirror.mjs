@@ -113,6 +113,20 @@ export class BokabordMirror {
         return this.assets.handle(route);
       });
       s.page = await context.newPage();
+      s.navigationGeneration=0;s.documentGeneration=0;s.navigationRequests=new WeakMap();
+      s.page.on('request',request=>{
+        try {
+          if (request.isNavigationRequest() && request.frame() === s.page.mainFrame()) {
+            s.navigationRequests.set(request,++s.navigationGeneration);
+          }
+        } catch { /* Detached-frame requests cannot supply receipt evidence. */ }
+      });
+      s.page.on('framenavigated',frame=>{
+        if (frame === s.page.mainFrame()) {
+          if (s.documentGeneration === s.navigationGeneration) s.navigationGeneration++;
+          s.documentGeneration=s.navigationGeneration;
+        }
+      });
       s.page.on('response', response => {
         this.assets.capture(response).catch(() => {});
         if (!s.submitted) return;
@@ -123,7 +137,8 @@ export class BokabordMirror {
               const address = new URL(response.url());
               if (request?.isNavigationRequest() && request.method() === 'GET' && request.frame() === s.page.mainFrame()
                 && address.origin === 'https://app.bokabord.se' && address.pathname === '/reservation/booking/') {
-                s.receiptPromise = this.captureReceipt(s,response,Date.now()).catch(() => {});
+                const navigationId=s.navigationRequests.get(request);
+                s.receiptPromise = this.captureReceipt(s,response,Date.now(),navigationId).catch(() => {});
               }
             } catch { /* A detached frame is not confirmation evidence. */ }
           }
@@ -160,11 +175,12 @@ export class BokabordMirror {
     await s.page.waitForFunction(providerReady, null, { timeout: 8000 });
   }
 
-  async captureReceipt(s, response, navigatedAt) {
+  async captureReceipt(s, response, navigatedAt, navigationId) {
     // Observe the provider's own navigation; never construct or fetch a receipt URL.
     // The private request/response/document stay only in this owned browser session.
     await s.resultPromise;
-    if (!s.dispatchObservation || !s.responseObservation?.httpOk || s.result?.status !== 'unknown'
+    if (!Number.isSafeInteger(navigationId) || navigationId<1
+      || !s.dispatchObservation || !s.responseObservation?.httpOk || s.result?.status !== 'unknown'
       || response.ok?.() !== true || !this.verifyResult || typeof this.recordResult !== 'function') return;
     let timer;
     try {
@@ -174,13 +190,19 @@ export class BokabordMirror {
     } finally {clearTimeout(timer);}
     await s.page.waitForLoadState('domcontentloaded',{timeout:5000});
     const address=response.url();
-    if (s.page.url() !== address) return;
-    const text=await s.page.locator('body').innerText({timeout:5000});
-    if (text.length > 64000 || s.page.url() !== address || this.sessions.get(s.id) !== s) return;
+    if (s.navigationGeneration !== navigationId || s.documentGeneration !== navigationId || s.page.url() !== address) return;
+    let capturedDocument;
+    try {
+      capturedDocument=await Promise.race([s.page.evaluate(()=>({url:location.href,text:document.body.innerText})),
+        new Promise((_,reject)=>{timer=setTimeout(()=>reject(new Error('receipt_capture_deadline')),5000);})]);
+    } finally {clearTimeout(timer);}
+    if (capturedDocument.text.length > 64000 || capturedDocument.url !== address || s.page.url() !== address
+      || s.navigationGeneration !== navigationId || s.documentGeneration !== navigationId || this.sessions.get(s.id) !== s) return;
     const result=await this.verifyResult(s.responseObservation.data,s,{
       httpOk:s.responseObservation.httpOk,respondedAt:s.responseObservation.respondedAt,
       request:s.dispatchObservation.request,
-      receipt:{mainFrame:true,method:'GET',httpOk:true,url:address,navigatedAt,capturedAt:Date.now(),text},
+      receipt:{mainFrame:true,method:'GET',httpOk:true,url:address,navigatedAt,capturedAt:Date.now(),
+        navigationId,documentNavigationId:s.documentGeneration,documentUrl:capturedDocument.url,text:capturedDocument.text},
     });
     if (result?.status !== 'confirmed') return;
     s.result=result;
