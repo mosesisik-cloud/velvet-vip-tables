@@ -25,3 +25,16 @@ own_booking_readback. Unknown remains consumed with no booking replay.
 
 No actual supplier reservation, hold, payment, code or UUID GET was created for
 testing. Provider transport tests use local fixtures; real completion unobserved.
+
+## Integrated verification
+
+Runtime88ad95f (package568d5f0 changes docs only) passed28 focused adapter/runtime/
+journal tests and independent narrow review. Actualapp/API/Chromium/SQLite
+harness171597c passedPirouette316API/17restarts/12mockPOST, Pesquiere282API/
+15restarts/12mockPOST andFishCorner42API/2restarts/2mockPOST on that same runtime.
+Visible seatingNotice and room selection are asserted; changed native seating
+returns409stale_review with0POST; custom code payload returnsunknown with0POST.
+Canonical POST-no-room requires exactsameUUID/RID readback; missing/mismatched
+saved evidence staysunknown; POSTecho cannotbypassGET. Owner/venue isolation,
+roomhistory, restart and rotatedroom no-replay pass. All supplier transport is
+simulated locally: zero actual supplier writes or UUID reads.
