@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import http from 'node:http';
 import fs from 'node:fs/promises';
+import path from 'node:path';
 import {chromium} from 'playwright';
 import {validateBookingSnapshot} from '../js/velvet-playwright-booking.js';
 
@@ -85,7 +86,10 @@ async function toReview() {
 }
 async function submit() { await page.locator('[name=terms]').check(); await click('submit'); }
 async function result(status) { await page.waitForSelector(`[data-booking-status="${status}"]`); }
-async function test(name, run) { await run(); passed++; console.log('PASS:', name); }
+async function test(name, run) {
+  if (process.argv.includes('--layout-only') && !name.startsWith('Layout:')) return;
+  await run(); passed++; console.log('PASS:', name);
+}
 try {
   await test('Fixture journey stays in Velvet; consent and attempt-bound provider proof required', async () => {
     await boot(); await toReview();
@@ -225,6 +229,59 @@ try {
     await page.evaluate(() => {window.ui.destroy(); window.releaseAction();});
     await page.waitForTimeout(50); assert.equal(await page.locator('[data-vpb]').count(), 0);
   });
+  await test('Dismiss during submission closes only the view and retains attempt recovery', async () => {
+    await boot({holdSubmit:true}); await toReview();
+    await page.evaluate(() => window.mount({onDismiss:() => {window.dismissed=true;}}));
+    await submit(); await click('dismiss');
+    assert.equal(await page.locator('[data-vpb]').count(),0);
+    assert.equal(await page.evaluate(() => window.dismissed),true);
+    assert.equal(await page.evaluate(() => calls.filter(a => a.type === 'remove').length),0);
+    assert.equal(await page.evaluate(() => sessionStorage.length),1);
+    await page.evaluate(() => window.release()); await page.waitForFunction(() => snapshot.stage === 'result');
+    await page.evaluate(() => window.mount()); await result('confirmed');
+    assert.equal(await page.evaluate(() => calls.filter(a => a.type === 'submit').length),1);
+  });
+  for (const viewport of [{width:1366,height:768},{width:1440,height:900},{width:390,height:844}]) {
+    await test(`Layout: bounded panel with long terms at ${viewport.width}x${viewport.height}`, async () => {
+      await page.setViewportSize(viewport); await boot(); await toReview();
+      await page.evaluate(async () => {
+        snapshot.terms.text = 'Lokala testvillkor. Inga verkliga bokningar eller betalningar. '.repeat(100);
+        snapshot.guest.comment = 'Ett långt önskemål i en lokal fixture. '.repeat(20);
+        snapshot.revision++;
+        await window.mount({restaurantName:'Velvet · lokal bokningsdemo'});
+      });
+      const dimensions = await page.locator('[data-vpb]').evaluate(node => {
+        const r = node.getBoundingClientRect(), body = node.querySelector('[data-panel-body]');
+        const footer = node.querySelector('[data-panel-footer]')?.getBoundingClientRect();
+        return {width:r.width,height:r.height,left:r.left,top:r.top,bottom:r.bottom,viewportWidth:innerWidth,viewportHeight:innerHeight,
+          pageWidth:document.body.scrollWidth,pageHeight:document.documentElement.scrollHeight,
+          scrollHeight:body?.scrollHeight,clientHeight:body?.clientHeight,footerBottom:footer?.bottom};
+      });
+      console.log('LAYOUT:', JSON.stringify(dimensions));
+      if (process.env.VPB_LAYOUT_ARTIFACTS) {
+        await fs.mkdir(process.env.VPB_LAYOUT_ARTIFACTS, {recursive:true});
+        const name = `booking-${viewport.width}x${viewport.height}`;
+        await page.screenshot({path:path.join(process.env.VPB_LAYOUT_ARTIFACTS, name+'.png'),fullPage:true});
+        await fs.writeFile(path.join(process.env.VPB_LAYOUT_ARTIFACTS, name+'.json'), JSON.stringify(dimensions,null,2));
+      }
+      assert(dimensions.width <= 578, 'Desktop panel must not exceed 36rem plus rounding');
+      const maxHeight = viewport.width > 600 ? Math.min(720,viewport.height-96) : viewport.height-24;
+      assert(dimensions.height <= maxHeight + 1, 'Panel must have viewport-bounded height');
+      assert(dimensions.bottom <= viewport.height, 'Panel must fit visible viewport');
+      assert(dimensions.pageWidth <= viewport.width, 'No horizontal page overflow');
+      assert(dimensions.scrollHeight > dimensions.clientHeight, 'Long content uses internal scroll');
+      assert(dimensions.footerBottom <= viewport.height, 'Navigation stays visible');
+      for (const action of ['back','dismiss']) {
+        const rect = await page.locator(`[data-action=${action}]`).boundingBox();
+        assert(rect.y >= 0 && rect.y + rect.height <= viewport.height, `${action} visible without page scroll`);
+      }
+      await page.locator('[data-panel-body]').focus(); await page.keyboard.press('PageDown');
+      await page.waitForFunction(() => document.querySelector('[data-panel-body]').scrollTop > 0);
+      await page.locator('[name=terms]').focus(); await page.keyboard.press('Space'); await page.keyboard.press('Tab');
+      assert.equal(await page.evaluate(() => document.activeElement.dataset.action),'submit');
+      await page.keyboard.press('Enter'); await result('confirmed');
+    });
+  }
   const base = {contractVersion:1,id:'unit',restaurantId:'unit',revision:1,mode:'live',stage:'slots',selection:{date:'2026-12-20',party:2},availability:{source:'fixture',observedAt:new Date().toISOString(),slots:[{id:'1',time:'19:00'}]}};
   assert.throws(() => validateBookingSnapshot(base, {restaurantId:'unit',mode:'live'}), /invalid_availability/);
   assert.deepEqual(unexpected, []); assert.deepEqual(errors, []);

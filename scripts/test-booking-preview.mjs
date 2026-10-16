@@ -20,7 +20,7 @@ try {
     page.on('pageerror', e => errors.push(e.message));
     page.on('request', r => requests.push({url:r.url(),method:r.method()}));
     await page.goto(base + 'booking-preview.html');
-    assert.match(await page.locator('header').innerText(), /ingen riktig reservation/i);
+    assert.match(await page.locator('main > header').innerText(), /ingen riktig reservation/i);
     for (const outcome of ['confirmed','timeout','payment_required','rejected','pending']) {
       await page.locator('#outcome').selectOption(outcome);
       await page.locator('#restart').click();
@@ -40,6 +40,10 @@ try {
       const visible = await page.locator('#booking').innerText();
       if (outcome === 'confirmed') assert.match(visible, /FIXTURE-NOT-A-RESERVATION/);
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+      if (width > 1000) {
+        const footer = await page.locator('[data-panel-footer]').boundingBox();
+        assert(footer.y >= 0 && footer.y + footer.height <= 768, 'desktop footer remains visible');
+      }
     }
     assert.deepEqual(errors, []);
     assert(requests.every(r => r.method === 'GET' && r.url.startsWith(base) && files.some(f => r.url === base + f)), JSON.stringify(requests));
