@@ -23,16 +23,17 @@ const riche = process.argv.includes('--riche') || process.env.VELVET_TEST_PROVID
 const sturehof = process.argv.includes('--sturehof') || process.env.VELVET_TEST_PROVIDER === 'Sturehof';
 const beirut = process.argv.includes('--beirut') || process.env.VELVET_TEST_PROVIDER === 'Beirut';
 const balzac = process.argv.includes('--balzac') || process.env.VELVET_TEST_PROVIDER === 'Balzac';
-const guestLunch = beirut || balzac;
+const kommendoren = process.argv.includes('--kommendoren') || process.env.VELVET_TEST_PROVIDER === 'Kommendoren';
+const guestLunch = beirut || balzac || kommendoren;
 const guestChoice = ciccios || guestLunch;
 const contactFinal = riche || sturehof;
-assert.ok([fishcorner,pesquiere,noema,ciccios,riche,sturehof,beirut,balzac].filter(Boolean).length <= 1, 'Choose one named provider scenario');
+assert.ok([fishcorner,pesquiere,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren].filter(Boolean).length <= 1, 'Choose one named provider scenario');
 const receiptMode = noema || guestChoice || contactFinal;
-const receiptName = balzac ? 'Brasserie Balzac' : beirut ? 'Beirut Café' : sturehof ? 'Sturehof' : riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
-const receiptCode = balzac ? 'synthetic-balzac-only' : beirut ? 'synthetic-beirut-only' : sturehof ? 'synthetic-sturehof-only' : riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
-const mealId = balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
+const receiptName = kommendoren ? 'Kommendören' : balzac ? 'Brasserie Balzac' : beirut ? 'Beirut Café' : sturehof ? 'Sturehof' : riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
+const receiptCode = kommendoren ? 'synthetic-kommendoren-only' : balzac ? 'synthetic-balzac-only' : beirut ? 'synthetic-beirut-only' : sturehof ? 'synthetic-sturehof-only' : riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
+const mealId = kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
 const mealType = noema || guestLunch || contactFinal ? 2 : 3;
-const restaurantId = balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const restaurantId = kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
 const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[receiptMode ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 const date = '2030-01-15';
@@ -312,13 +313,14 @@ async function main() {
     backend = `http://127.0.0.1:${port}`;
     child = spawn(process.execPath, ['--import', import.meta.url, 'api/server.mjs'], { cwd: root, env: {
       ...process.env, VELVET_INTEGRATED_SUPPLIER_FIXTURE: 'child', VELVET_TEST_DIRECTORY: directory,
-      VELVET_TEST_PROVIDER: balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
+      VELVET_TEST_PROVIDER: kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
       VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_CICCIOS_RECEIPT: ciccios ? 'enabled' : 'disabled',
       VELVET_RICHE_RECEIPT: riche ? 'enabled' : 'disabled',
       VELVET_STUREHOF_RECEIPT: sturehof ? 'enabled' : 'disabled',
       VELVET_BEIRUT_RECEIPT: beirut ? 'enabled' : 'disabled',
       VELVET_BALZAC_RECEIPT: balzac ? 'enabled' : 'disabled',
+      VELVET_KOMMENDOREN_RECEIPT: kommendoren ? 'enabled' : 'disabled',
       VELVET_ZENCHEF_FISHCORNER: zenchef ? 'live' : 'disabled',
       VELVET_ZENCHEF_PESQUIERE: pesquiere ? 'live' : 'disabled',
       VELVET_TEST_OUTCOME: outcome, PORT: String(port), PUBLIC_URL: base,
