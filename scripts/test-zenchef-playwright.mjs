@@ -256,7 +256,7 @@ test('actual provider field contract replay reaches review but never sends booki
 
 // Entire transport intercepted locally, including synthetic supplier receipts.
 test('native booking and own-booking readback bind approval without duplicate POSTs', async () => {
-  for (const scenario of ['confirmed', 'denied', 'persistence', 'payment', 'country', 'swedish', 'pesquiere', 'pesquiere-receipt',
+  for (const scenario of ['confirmed', 'denied', 'persistence', 'payment', 'country', 'swedish', 'pesquiere', 'pesquiere-receipt', 'pesquiere-echo-bad-uuid', 'pesquiere-echo-date', 'pesquiere-echo-time', 'pesquiere-echo-party',
     'pesquiere-readback', 'pesquiere-readback-native-metadata', 'pesquiere-readback-room', 'pesquiere-readback-missing', 'pesquiere-readback-error',
     'pesquiere-readback-challenge', 'pesquiere-readback-redirect', 'pesquiere-readback-id', 'pesquiere-readback-date',
     'pesquiere-readback-time', 'pesquiere-readback-party', 'pesquiere-readback-pending', 'pesquiere-readback-uuid',
@@ -307,9 +307,12 @@ test('native booking and own-booking readback bind approval without duplicate PO
               assert.equal(options.maxRedirects, 0);
               if (isPost) { sends++; assert.equal(options.maxRetries, 0);
                 assert.deepEqual(JSON.parse(options.postData).customersheet.optins, []);
-                responseData={ id:12345,uuid:scenario === 'pesquiere-readback-bad-uuid' ? '../other' : 'synthetic-own-booking',status:'confirmed',
+                responseData={ id:12345,uuid:['pesquiere-readback-bad-uuid','pesquiere-echo-bad-uuid'].includes(scenario) ? '../other' : 'synthetic-own-booking',status:'confirmed',
                   ...(scenario === 'payment' ? {requires_action:true} : {}),
                   ...(venue.rooms && !readCase ? {wish:{booking_room_id:scenario === 'pesquiere-receipt' ? 51183 : 52372}} : {}) };
+                if (scenario === 'pesquiere-echo-date') responseData.day='2030-11-17';
+                if (scenario === 'pesquiere-echo-time') responseData.time='13:00';
+                if (scenario === 'pesquiere-echo-party') responseData.nb_guests=3;
                 if (scenario === 'pesquiere-readback-cross-after') liveSession.review.digest='f'.repeat(64);
               } else if (isRead && request.method() === 'OPTIONS') {
                 assert.equal(options.maxRetries,0); responseStatus=204;
@@ -355,10 +358,10 @@ test('native booking and own-booking readback bind approval without duplicate PO
     const r = await act(a,s,command);
     assert.equal(r.result.status, ['confirmed','swedish','pesquiere','pesquiere-readback','pesquiere-readback-native-metadata'].includes(scenario) ? 'confirmed' : scenario === 'payment' ? 'payment_required' : 'unknown');
     assert.equal(sends, ['denied','country','pesquiere-readback-cross-before'].includes(scenario) ? 0 : 1); assert.equal(reserves, scenario === 'country' ? 0 : 1);
-    assert.equal(reads,readCase && !['pesquiere-readback-bad-uuid','pesquiere-readback-metadata','pesquiere-readback-cross-before','pesquiere-readback-cross-after'].includes(scenario) ? 1 : 0,scenario);
+    assert.equal(reads,scenario === 'pesquiere' || readCase && !['pesquiere-readback-bad-uuid','pesquiere-readback-metadata','pesquiere-readback-cross-before','pesquiere-readback-cross-after'].includes(scenario) ? 1 : 0,scenario);
     if(scenario === 'pesquiere-readback') { assert.equal(r.result.verification.roomEvidence,'own_booking_readback'); assert.equal(r.result.reference,'12345'); }
     assert.equal(r.canSubmit,false); assert.equal(a.current('owner').canSubmit,false);
-    if (scenario === 'pesquiere') { assert.equal(r.details.roomName,'Mazagran salle'); assert.equal(recorded.verification.roomId,52372); assert.equal(recorded.verification.policySource,ZENCHEF_PESQUIERE.policySource); }
+    if (scenario === 'pesquiere') { assert.equal(recorded.verification.roomEvidence,'own_booking_readback'); assert.equal(r.details.roomName,'Mazagran salle'); assert.equal(recorded.verification.roomId,52372); assert.equal(recorded.verification.policySource,ZENCHEF_PESQUIERE.policySource); }
     if (scenario === 'confirmed') { assert.equal(recorded.verification.attemptId,'synthetic-attempt'); assert.equal(recorded.verification.mode,'live'); assert.equal(recorded.verification.idempotencyKey,'journal-owned-key');
       r.result.verification.verified=false; assert.equal(a.current('owner').result.verification.verified,true); }
     await assert.rejects(act(a,r,command), /already_attempted/);
@@ -387,5 +390,5 @@ test('Pesquiere binds room in exact document URL, payload and supplier receipt',
   const approval={restaurantId:venue.restaurantId,roomId:52372,roomName:'Mazagran salle'};
   for(const data of [{id:1,uuid:'x',status:'confirmed'}, {id:1,uuid:'x',status:'confirmed',wish:{booking_room_id:51183}}])
     assert.equal(zenchefBookingResult(200,data,approval).status,'unknown');
-  assert.equal(zenchefBookingResult(200,{id:1,uuid:'x',status:'confirmed',wish:{booking_room_id:52372}},approval).status,'confirmed');
+  assert.equal(zenchefBookingResult(200,{id:1,uuid:'synthetic-own-booking',status:'confirmed',wish:{booking_room_id:52372},day:selection.date,time:selection.time,nb_guests:2},approval).status,'unknown');
 });
