@@ -147,13 +147,17 @@ export class TockPlaywright {
           if (s.stage !== 'review') throw new TockError('wrong_stage', 409);
           if (action.confirm !== true || action.terms !== true || action.termsVersion !== s.terms.version ||
             action.reviewToken !== s.reviewToken) throw new TockError('confirmation_required', 409);
-          if (typeof action.idempotencyKey !== 'string' || !/^[a-zA-Z0-9_-]{8,100}$/.test(action.idempotencyKey)) throw new TockError('invalid_idempotency_key');
+          if (typeof action.idempotencyKey !== 'string' || !/^[a-zA-Z0-9_-]{16,128}$/.test(action.idempotencyKey)) throw new TockError('invalid_idempotency_key');
           if (typeof this.reserveSubmission !== 'function' || typeof this.recordResult !== 'function') throw new TockError('journal_required', 503);
           const currentTerms = await s.page.locator('#terms').evaluate(n => ({ version: n.dataset.version, text: n.textContent }));
           if (JSON.stringify(currentTerms) !== JSON.stringify(s.terms)) throw new TockError('stale_terms', 409);
           const attempt = { mode: 'fixture', provider: 'Tock', owner, sessionId: id, restaurantId: s.restaurantId,
             selection: clone(s.selection), guest: clone(s.guest), terms: clone(s.terms), revision: s.revision,
-            reviewToken: s.reviewToken, idempotencyKey: action.idempotencyKey };
+            reviewToken: s.reviewToken, idempotencyKey: action.idempotencyKey,
+            date: s.selection.date, time: s.selection.time, party: s.selection.party,
+            reviewFingerprint: crypto.createHash('sha256').update(JSON.stringify([
+              s.restaurantId, s.selection, s.guest, s.terms, s.revision,
+            ])).digest('hex') };
           // Terminal intent is visible in current() immediately, even if a hook
           // times out. No resume/snapshot can resurrect the submit button.
           s.attempted = true; s.reviewToken = null; s.stage = 'result';
@@ -164,16 +168,23 @@ export class TockPlaywright {
               .finally(() => clearTimeout(timer));
           };
           try {
-            await bounded(Promise.resolve().then(() => this.reserveSubmission(clone(attempt))));
+            const gate = await bounded(Promise.resolve().then(() => this.reserveSubmission(clone(attempt))));
+            // A fulfilled hook is not permission: the shared journal returns
+            // sendAllowed=false for replays. Require exact server-side binding.
+            if (gate?.sendAllowed !== true || typeof gate.attempt?.attemptId !== 'string' || !gate.attempt.attemptId ||
+              ['provider', 'restaurantId', 'sessionId', 'mode', 'idempotencyKey', 'reviewFingerprint', 'date', 'time', 'party']
+                .some(key => gate.attempt[key] !== attempt[key])) throw new TockError('journal_not_authorized', 409);
+            attempt.attemptId = gate.attempt.attemptId;
             await s.page.locator('#submit').click();
             await s.page.locator('#result[data-status]').waitFor({ state: 'attached' });
             const r = await s.page.locator('#result').evaluate(n => ({ status: n.dataset.status, reference: n.dataset.reference }));
             const status = ['confirmed', 'rejected', 'payment_required'].includes(r.status) &&
               (r.status !== 'confirmed' || /^FIXTURE-/.test(r.reference ?? '')) ? r.status : 'unknown';
             const result = { status, source: 'fixture', supplierConfirmed: false,
-              ...(status === 'confirmed' ? { reference: r.reference,
-                verification: { verified: true, source: 'fixture', restaurantId: s.restaurantId,
-                  sessionId: s.id, attemptId: attempt.idempotencyKey } } : {}) };
+              ...(status === 'confirmed' ? { reference: r.reference } : {}),
+              ...(status !== 'unknown' ? { verification: { verified: true, source: 'fixture', provider: 'Tock',
+                restaurantId: s.restaurantId, sessionId: s.id, attemptId: attempt.attemptId,
+                idempotencyKey: attempt.idempotencyKey, reviewFingerprint: attempt.reviewFingerprint } } : {}) };
             await bounded(Promise.resolve().then(() => this.recordResult(clone(attempt), clone(result))));
             s.result = result;
           } catch { s.result = { status: 'unknown', source: 'fixture', supplierConfirmed: false }; }

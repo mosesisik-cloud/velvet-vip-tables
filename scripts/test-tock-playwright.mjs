@@ -2,11 +2,13 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import http from 'node:http';
+import crypto from 'node:crypto';
 import { chromium } from 'playwright';
 import { TockPlaywright, TOCK_DELTA_ID } from '../api/providers/tock-playwright.mjs';
 
 const fixtureHtml = fs.readFileSync(new URL('./fixtures/tock-playwright.html', import.meta.url), 'utf8');
 const guest = { firstname: 'Local', lastname: 'Fixture', email: 'fixture@example.invalid', phone: '+46700000000' };
+const grant = attempt => ({ sendAllowed: true, attempt: { ...attempt, attemptId: crypto.randomUUID() } });
 const confirmation = s => ({ type: 'submit', revision: s.revision, confirm: true, terms: true,
   termsVersion: s.terms.version, reviewToken: s.reviewToken, idempotencyKey: 'fixture-attempt-01' });
 
@@ -28,7 +30,7 @@ test('real Chromium fixture journey and negative boundaries (zero supplier traff
   const browser = await chromium.launch({ headless: true,
     ...(process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH } : {}) });
   let now = Date.now(), reserves = 0, records = 0;
-  let reserveHook = async () => { reserves++; };
+  let reserveHook = async attempt => { reserves++; return grant(attempt); };
   let recordHook = async () => { records++; };
   const adapter = new TockPlaywright({ mode: 'fixture', fixtureHtml, browserFactory: async () => browser,
     now: () => now, timeoutMs: 10000, maxSessions: 4,
@@ -52,8 +54,11 @@ test('real Chromium fixture journey and negative boundaries (zero supplier traff
       assert.equal(s.stage, 'result'); assert.equal(s.result.status, 'confirmed');
       assert.equal(s.result.source, 'fixture'); assert.equal(s.result.supplierConfirmed, false);
       assert.match(s.result.reference, /^FIXTURE-/); assert.equal(s.canSubmit, false);
-      assert.deepEqual(s.result.verification, { verified: true, source: 'fixture', restaurantId: TOCK_DELTA_ID,
-        sessionId: s.id, attemptId: 'fixture-attempt-01' });
+      assert.equal(s.result.verification.source, 'fixture');
+      assert.equal(s.result.verification.sessionId, s.id);
+      assert.equal(s.result.verification.idempotencyKey, 'fixture-attempt-01');
+      assert.notEqual(s.result.verification.attemptId, 'fixture-attempt-01');
+      assert.match(s.result.verification.reviewFingerprint, /^[a-f0-9]{64}$/);
       assert.equal(reserves, 1); assert.equal(records, 1);
       assert.equal(await adapter.sessions.get(s.id).page.evaluate(() => window.fixtureSubmissions), 1);
       await assert.rejects(act('journey', { type: 'submit' }), /already_attempted/);
@@ -111,7 +116,20 @@ test('real Chromium fixture journey and negative boundaries (zero supplier traff
       release(); await new Promise(resolve => setTimeout(resolve, 20));
       assert.equal(await adapter.sessions.get(s.id).page.evaluate(() => window.fixtureSubmissions || 0), 0);
       await assert.rejects(act('timeout', { type: 'submit' }), /already_attempted/);
-      await remove('timeout'); reserveHook = async () => { reserves++; }; adapter.timeoutMs = 10000;
+      await remove('timeout'); reserveHook = async attempt => { reserves++; return grant(attempt); }; adapter.timeoutMs = 10000;
+    });
+    await t.test('journal denial, missing grant or mismatched binding never dispatches', async () => {
+      const gates = [async () => ({ sendAllowed: false }), async () => undefined,
+        async a => ({ ...grant(a), attempt: { ...grant(a).attempt, restaurantId: 'wrong' } })];
+      for (let i = 0; i < gates.length; i++) {
+        reserveHook = gates[i];
+        const owner = `denied-${i}`; let s = await review(owner);
+        s = await act(owner, confirmation(s));
+        assert.equal(s.result.status, 'unknown'); assert.equal(s.canSubmit, false);
+        assert.equal(await adapter.sessions.get(s.id).page.evaluate(() => window.fixtureSubmissions || 0), 0);
+        await remove(owner);
+      }
+      reserveHook = async attempt => { reserves++; return grant(attempt); };
     });
     await t.test('lost persistence after simulated dispatch does not expose a confirmed or retryable view', async () => {
       recordHook = async () => { throw Error('disk unavailable'); };
