@@ -256,13 +256,13 @@ test('actual provider field contract replay reaches review but never sends booki
 
 // Entire transport intercepted locally, including synthetic supplier receipts.
 test('Fish Corner native contract binds approval, reserves once and records provider-shaped result', async () => {
-  for (const scenario of ['confirmed', 'denied', 'persistence', 'payment', 'country']) {
+  for (const scenario of ['confirmed', 'denied', 'persistence', 'payment', 'country', 'swedish']) {
     const date = '2030-11-16'; let sends = 0, reserves = 0, recorded;
-    const fields = { firstname: 'Fixture', lastname: 'Guest', email: 'fixture@example.invalid', phone: '+33612345678', civility: 'mr', country: scenario === 'country' ? 'se' : 'fr' };
+    const fields = { firstname: 'Fixture', lastname: 'Guest', email: 'fixture@example.invalid', phone: scenario === 'swedish' ? '+46701234567' : '+33612345678', civility: 'mr', country: 'fr' };
     const payload = { day: date, nb_guests: 2, time: '12:30', lang: 'fr', firstname: fields.firstname, lastname: fields.lastname,
-      civility: 'mr', country: 'fr', phone_number: fields.phone, email: fields.email, comment: '', custom_field: {}, custom_field_v2: [],
+      civility: 'mr', country: scenario === 'swedish' ? 'se' : 'fr', phone_number: fields.phone, email: fields.email, comment: '', custom_field: {}, custom_field_v2: [],
       customersheet: { firstname: fields.firstname, lastname: fields.lastname, civility: 'mr', phone: fields.phone,
-        email: fields.email, optins: [{ type: 'review_mail', value: true }, { type: 'review_sms', value: true }], country: 'fr', lang: 'fr' },
+        email: fields.email, optins: [{ type: 'review_mail', value: true }, { type: 'review_sms', value: true }], country: scenario === 'swedish' ? 'se' : 'fr', lang: 'fr' },
       offers: [], partner_id: '1001', type: 'web' };
     const document = url => {
       const u = new URL(url), isForm = u.pathname === '/form';
@@ -274,7 +274,7 @@ test('Fish Corner native contract binds approval, reserves once and records prov
         mandatoryFields: { firstname: 'required' }, isRoomMandatory: false, dailyAvailabilities: { [date]: { date, shifts: [shift, { ...shift, id: 545347 }] } } };
       const data = { page: isForm ? '/form' : '/results', query: Object.fromEntries(u.searchParams), props: { initialState: { appStoreState: state } } };
       return `<html><body><h1>LOCAL NATIVE CONTRACT REPLAY</h1><script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
-        ${isForm ? ['firstname','lastname','email','phone'].map(k=>`<input data-testid="${k}-input">`).join('') +
+        ${isForm ? ['firstname','lastname','email'].map(k=>`<input data-testid="${k}-input">`).join('') + `<div class="iti"><button type="button" class="iti__selected-country"><span class="iti__flag iti__${['swedish','country'].includes(scenario) ? 'se' : 'fr'}"></span></button><li data-country-code="${['swedish','country'].includes(scenario) ? 'se' : 'fr'}"></li><input data-testid="phone-input"></div>` +
         `<label>Mr<input type="radio" name="civility" value="mr" style="display:none"></label><label data-testid="eula-checkbox"><input type="checkbox">Test terms</label>
         <button data-testid="validate-btn" onclick='fetch("https://bookings-middleware.zenchef.com/booking?restaurantId=388090",{method:"POST",body:JSON.stringify(${JSON.stringify(payload)})}).catch(()=>{})'>Reserve</button>` : ''}</body></html>`;
     };
@@ -298,10 +298,10 @@ test('Fish Corner native contract binds approval, reserves once and records prov
     let s = await a.create('owner', ZENCHEF_FISHCORNER.restaurantId);
     s = await act(a,s,{type:'search',date,party:2}); assert.deepEqual(s.availabilityEvidence.candidates,[{time:'12:30',shiftId:545372}]);
     s = await act(a,s,{type:'select',time:'12:30',shiftId:545372}); assert.equal(s.fields.length,6);
-    s = await act(a,s,{type:'fill',fields}); s = await act(a,s,{type:'review'}); assert.equal(s.canSubmit,true);
+    s = await act(a,s,{type:'fill',fields}); s = await act(a,s,{type:'review'}); assert.equal(s.canSubmit,true); assert.equal(s.details.country,['swedish','country'].includes(scenario) ? 'se' : 'fr');
     const command = {type:'submit',reviewToken:s.reviewToken,termsVersion:s.terms.version,terms:true,confirm:true,idempotencyKey:'local-synthetic-key-1234'};
     const r = await act(a,s,command);
-    assert.equal(r.result.status, scenario === 'confirmed' ? 'confirmed' : scenario === 'payment' ? 'payment_required' : 'unknown');
+    assert.equal(r.result.status, ['confirmed','swedish'].includes(scenario) ? 'confirmed' : scenario === 'payment' ? 'payment_required' : 'unknown');
     assert.equal(sends, ['denied','country'].includes(scenario) ? 0 : 1); assert.equal(reserves, scenario === 'country' ? 0 : 1);
     assert.equal(r.canSubmit,false); assert.equal(a.current('owner').canSubmit,false);
     if (scenario === 'confirmed') { assert.equal(recorded.verification.attemptId,'synthetic-attempt'); assert.equal(recorded.verification.mode,'live'); assert.equal(recorded.verification.idempotencyKey,'journal-owned-key');
