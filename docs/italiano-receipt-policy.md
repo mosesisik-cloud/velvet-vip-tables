@@ -50,3 +50,30 @@ receipt is synthetic; actual authorized transaction/receipt remains unobserved.
 32d5 runs existing full-app provider-review harness before scoped release. No
 new engine/shared edits or historical receipt prerequisite. Sole completed new
 handoff this turn; no queue-order change and no extra master acknowledgement.
+
+## Integration and UI scope
+
+The shared candidate `56ba906049fe4919c8881cb6c7f3e3a128a077b0` adds only the
+independent `VELVET_ITALIANO_RECEIPT=enabled` registration and shell cache version
+on top of De Kas release213. The existing journal, menu selection and receipt
+engine are unchanged. All22 focused tests pass and scoped review found no
+concrete blockers. Full-app validation is recorded below when complete.
+
+A separate narrow De Kas UI inspection clarified the previous screenshot
+observation: the screenshot scroll position placed the panel title/status
+under the sticky site header. Final offer, price, deposit, menu link, seating,
+consent and submit were visible. At390/1366, scrolling each relevant element
+into view made its full rectangle visible and pointer-accessible. No inaccessible
+booking information or control was reproduced; no shared UI modification was
+needed. This interactive local probe made zero supplier writes and is distinct
+from production GET-only start-page layout checks.
+
+Exact-runtime integrated validation: Italiano175 API calls / nine restarts /
+eight mocked POSTs; Ciccio's84/four/three regression. Both pass, with zero real
+supplier writes or real receipts. Test handoff #213, commit
+9f6fd68c1b614f99d56c332c6b0bc9ac46089309. Actual response negatives for meals
+13836/56070, type2, amount3 and require_noshow stay unknown even with matching
+receipt text. Guest continuation, native phone, fresh consent, SQLite before
+network, original receipt navigation, owner isolation, replay, restart and public
+confirmed history all pass. Actual successful supplier transaction remains
+unobserved; the positive receipts are simulated.
