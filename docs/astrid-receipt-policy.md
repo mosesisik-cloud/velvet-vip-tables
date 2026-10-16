@@ -61,3 +61,15 @@ endpoint. Existing full-app harness must retain those boundaries before release.
 Actual authorized transaction/receipt remains unobserved. No external blocker
 found; public activation remains32d5's work. This is the only new completed
 policy delivered to the integration queue in this turn.
+
+## Integrated verification
+
+Runtimea6a5890 independently enables the receipt policy only;16focused tests and
+narrow independent review pass. Actualapp/API/Chromium/SQLite harnessfb74fce
+passed85API/4restarts/3mockPOST on that exact runtime. The actual adapter aborts
+native sendCustomRequest before transport: zero attempts/POST and no confirmation.
+The ordinary custom_request=false flow then passes guest/noaccountcode, native
+Next-onlyphonecopy, fresh approval, actualSQLitebeforeNETWORK, double-click,
+missing/wrongreceiptunknown, originalmatchingreceiptconfirmed and owner/restart/
+replay checks. No pre-DOM-click claim. Zero actual supplier reservations, holds,
+codes or payments; completed real supplier booking remains unobserved.
