@@ -93,3 +93,18 @@ test('public runtime rejects fixture sessions and unpersisted confirmation claim
   assert.equal(snapshot.result.status,'unknown');assert.equal(snapshot.canSubmit,false);
   await runtime.close();
 });
+
+test('multiple venues of one provider keep capability, resume and action binding separate',async()=>{
+  let closed=0, seen;
+  const adapter={create:async(_owner,restaurantId)=>({id:'session',restaurantId,mode:'prepare'}),
+    action:async(_id,_owner,action)=>{seen=action;return {id:'session',restaurantId:'room-venue',mode:'prepare'};},remove:async()=>{},close:async()=>{closed++;}};
+  const entry=restaurantId=>({restaurantId,mode:'live',enabled:true,actions:['select'],adapter,current:async()=>({id:'session',restaurantId,mode:'prepare'})});
+  const runtime=new PlaywrightRuntime({providers:{Zenchef:[entry('fish'),entry('room-venue')]}});
+  assert.equal(runtime.capabilities().length,2);assert(runtime.guestProvider('Zenchef','fish'));assert(runtime.guestProvider('Zenchef','room-venue'));assert(!runtime.guestProvider('Zenchef','other'));
+  const s=await runtime.create('guest',false,{provider:'Zenchef',restaurantId:'room-venue'});
+  await assert.rejects(runtime.create('guest',false,{provider:'Zenchef',restaurantId:'fish',resume:true}),/other_restaurant/);
+  await runtime.run(s.id,'guest',false,'action',{type:'select',roomId:52372,restaurantId:'fish',provider:'Other'});
+  assert.equal(seen.roomId,52372);assert.equal(seen.restaurantId,undefined);assert.equal(seen.provider,undefined);
+  await assert.rejects(runtime.run(s.id,'other',false,'current'),/session_expired/);
+  await runtime.close();assert.equal(closed,1);
+});

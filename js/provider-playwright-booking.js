@@ -67,6 +67,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     el('dismiss').disabled = false;
     el('refresh').disabled = busy || !storageOK;
     el('end').disabled = busy || uncertain || isSubmit() || !marker?.id;
+    for (const button of container.querySelectorAll('[data-requires-room]')) button.disabled = locked || !button.parentElement.querySelector('select')?.value;
     el('save').disabled = locked || !drafts.size;
     el('review').hidden = state?.phase !== 'guest' && !needsReview();
     el('review').textContent = needsReview() ? 'Granska uppgifterna igen' : 'Kontrollera bokningen';
@@ -84,6 +85,7 @@ export function mountProviderPlaywrightBooking(container, api, {
         && (!isZenchef || (fingerprint(proof.idempotencyKey)
           && fingerprint(isSubmit() ? marker.reviewFingerprint : snapshot.reviewFingerprint)
           && proof.detailsDigest === (isSubmit() ? marker.reviewFingerprint : snapshot.reviewFingerprint)))
+        && (snapshot.details?.roomId === undefined || (proof.roomId === snapshot.details.roomId && proof.roomName === snapshot.details.roomName))
         && typeof result.reference === 'string' && result.reference.trim()) return `Bokningen är bekräftad. Referens: ${result.reference}`;
       return 'Bokningen är inte verifierad. Skicka inte en ny bokning. Kontrollera resultatet med restaurangen.';
     }
@@ -142,8 +144,24 @@ export function mountProviderPlaywrightBooking(container, api, {
       for (const slot of next.availabilityEvidence?.candidates || []) {
         if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(slot.time) || !(typeof slot.shiftId === 'string' || Number.isInteger(slot.shiftId))) continue;
         const button = document.createElement('button'); button.type = 'button'; button.textContent = `${slot.time} · Välj tid`;
-        button.dataset.slot = slot.time; button.onclick = () => run({type:'select',time:slot.time,shiftId:slot.shiftId});
-        el('slots').append(button);
+        button.dataset.slot = slot.time;
+        const row = document.createElement('div');
+        let roomSelect = null;
+        if (Array.isArray(slot.rooms)) {
+          const label = document.createElement('label'); label.textContent = 'Välj rum för ' + slot.time;
+          roomSelect = document.createElement('select'); roomSelect.dataset.room = slot.time; roomSelect.setAttribute('aria-label',label.textContent);
+          const empty = document.createElement('option'); empty.value=''; empty.textContent='Välj rum'; roomSelect.append(empty);
+          for (const room of slot.rooms) {
+            if (!Number.isSafeInteger(room.id) || room.id <= 0 || typeof room.name !== 'string' || !room.name.trim()) continue;
+            const option=document.createElement('option'); option.value=String(room.id); option.textContent=room.name; roomSelect.append(option);
+          }
+          button.dataset.requiresRoom='true'; roomSelect.onchange=changed; label.append(roomSelect); row.append(label);
+        }
+        button.onclick = () => {
+          if (roomSelect && !roomSelect.value) return;
+          run({type:'select',time:slot.time,shiftId:slot.shiftId,...(roomSelect ? {roomId:Number(roomSelect.value)} : {})});
+        };
+        row.append(button); el('slots').append(row);
       }
     }
     el('hold').hidden = !canHold(); el('final').hidden = !hasReview();
@@ -151,7 +169,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     if (hasReview()) {
       const review = finalReview().details;
       const guest = Object.entries(review.guest || {}).filter(([name,value]) => Object.hasOwn(aliases,name) && typeof value === 'string').map(([name,value]) => `${aliases[name]}: ${value}`).join(', ');
-      el('final-details').textContent = `Slutför bokning: ${restaurantName}, ${review.date} kl. ${review.time}, ${review.party} gäster. ${guest}`;
+      el('final-details').textContent = `Slutför bokning: ${restaurantName}, ${review.date} kl. ${review.time}, ${review.party} gäster. ${review.roomName ? `Rum: ${review.roomName}. ` : ''}${guest}`;
       el('terms-text').textContent = review.termsText;
     }
     el('status').textContent = terminal() ? outcome(next.result,next) : uncertain ? 'Resultatet måste kontrolleras. Skicka inte på nytt.' : needsReview() ? 'Servern har bekräftat att bokningen inte skickades. Granska uppgifterna igen innan du godkänner.' : hasReview() && !canSubmit() ? 'Uppgifterna visas för kontroll. Leverantörens slutliga bokningssteg är ännu inte tillgängligt.' : next.phase === 'guest' ? `${held(next) ? 'Tillfälligt reserverat. ' : ''}Fyll i och spara dina kontaktuppgifter. Bokningen är inte slutförd.` : next.blocked ? 'Leverantörens formulär är spärrat.' : 'Välj och kontrollera uppgifterna i leverantörens formulär.';
