@@ -29,7 +29,7 @@ export function mountProviderPlaywrightBooking(container, api, {
         <div data-slots></div>
         <div data-fields></div><button type="button" data-save hidden>Spara kontaktuppgifter</button><button type="button" data-review hidden>Kontrollera bokningen</button>
         <div data-hold hidden><p data-hold-details></p><label><input type="checkbox" data-hold-consent> Jag godkänner denna tillfälliga reservation.</label><button type="button" data-hold-button>Reservera tillfälligt</button></div>
-        <div data-final hidden><p data-final-details></p><p data-terms-text></p><label><input type="checkbox" data-terms> Jag har kontrollerat uppgifterna och godkänner bokningsvillkoren ovan.</label><button type="button" data-submit>Slutför bokningen</button></div>
+        <div data-final hidden><p data-final-details></p><p data-seating-notice hidden></p><p data-terms-text></p><label><input type="checkbox" data-terms> Jag har kontrollerat uppgifterna och godkänner bokningsvillkoren ovan.</label><button type="button" data-submit>Slutför bokningen</button></div>
         <details><summary>Visa leverantörens formulär som text</summary><pre data-text style="white-space:pre-wrap;font:inherit"></pre></details>
       </div>
     </div><footer style="flex:none"><button type="button" data-refresh>Kontrollera status</button><button type="button" data-end>Avsluta formuläret</button><small>Att stänga vyn avbokar inte en reservation.</small></footer>
@@ -107,7 +107,7 @@ export function mountProviderPlaywrightBooking(container, api, {
       // Project the actual Zenchef transport, without changing its wire fields.
       const phase = next.result ? 'result' : ({availability_observed:'slots',contact:'guest',review:'booking_review'})[next.state] || 'selection';
       next = {...next,phase,bookingReview:next.state === 'review' ? {
-        details:{...next.details,restaurantId:next.restaurantId,guest:Object.fromEntries(Object.entries(next.details || {}).filter(([name]) => Object.hasOwn(aliases,name))),termsText:next.terms?.text},
+        details:{...next.details,restaurantId:next.restaurantId,guest:Object.fromEntries(Object.entries(next.details || {}).filter(([name]) => Object.hasOwn(aliases,name))),termsText:next.terms?.text,seatingNotice:next.terms?.seatingNotice},
         reviewFingerprint:next.reviewFingerprint,
       } : null};
     }
@@ -170,6 +170,8 @@ export function mountProviderPlaywrightBooking(container, api, {
       const review = finalReview().details;
       const guest = Object.entries(review.guest || {}).filter(([name,value]) => Object.hasOwn(aliases,name) && typeof value === 'string').map(([name,value]) => `${aliases[name]}: ${value}`).join(', ');
       el('final-details').textContent = `Slutför bokning: ${restaurantName}, ${review.date} kl. ${review.time}, ${review.party} gäster. ${review.roomName ? `Rum: ${review.roomName}. ` : ''}${guest}`;
+      el('seating-notice').textContent = review.seatingNotice ? `Sittning: ${review.seatingNotice}` : '';
+      el('seating-notice').hidden = !review.seatingNotice;
       el('terms-text').textContent = review.termsText;
     }
     el('status').textContent = terminal() ? outcome(next.result,next) : uncertain ? 'Resultatet måste kontrolleras. Skicka inte på nytt.' : needsReview() ? 'Servern har bekräftat att bokningen inte skickades. Granska uppgifterna igen innan du godkänner.' : hasReview() && !canSubmit() ? 'Uppgifterna visas för kontroll. Leverantörens slutliga bokningssteg är ännu inte tillgängligt.' : next.phase === 'guest' ? `${held(next) ? 'Tillfälligt reserverat. ' : ''}Fyll i och spara dina kontaktuppgifter. Bokningen är inte slutförd.` : next.blocked ? 'Leverantörens formulär är spärrat.' : 'Välj och kontrollera uppgifterna i leverantörens formulär.';

@@ -13,7 +13,7 @@ import { PlaywrightAttemptLedger } from './playwright-attempt-ledger.mjs';
 import { createBookingJournalHooks } from './playwright-booking-journal.mjs';
 import { KOMMENDOREN_LUNCH_RECEIPT_POLICY, BALZAC_LUNCH_RECEIPT_POLICY, BEIRUT_LUNCH_RECEIPT_POLICY, NOEMA_LUNCH_RECEIPT_POLICY, CICCIOS_DINING_RECEIPT_POLICY, RICHE_LUNCH_RECEIPT_POLICY, STUREHOF_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
 import { createProviderJournal } from './provider-booking-journal.mjs';
-import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
+import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
 import fs from "node:fs";
 import path from "node:path";
@@ -40,9 +40,10 @@ const mirrorMode = process.env.VELVET_BOKABORD_MIRROR || 'disabled';
 // An explicit operator inspection switch is separate from guest booking.
 const fishCornerLive = process.env.VELVET_ZENCHEF_FISHCORNER === 'live';
 const pesquiereLive = process.env.VELVET_ZENCHEF_PESQUIERE === 'live';
+const pirouetteLive = process.env.VELVET_ZENCHEF_PIROUETTE === 'live';
 let zenchefJournal;
 const zenchefInspection = new ZenchefPlaywright({
-  mode: fishCornerLive || pesquiereLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive,
+  mode: fishCornerLive || pesquiereLive || pirouetteLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive || pirouetteLive,
   reserveSubmission: intent => zenchefJournal.reserveAttempt(intent),
   recordResult: session => {
     const saved = zenchefJournal.recordAttempt({intent:session.approval,attempt:session.attempt,result:session.result});
@@ -66,6 +67,9 @@ const playwrightRuntime = new PlaywrightRuntime({
       actions:['search','select','fill','review','submit','refresh'],
       adapter: zenchefInspection, current: (_id, owner) => zenchefInspection.current(owner) },
       ...(pesquiereLive ? [{restaurantId:ZENCHEF_PESQUIERE.restaurantId,enabled:true,mode:'live',
+        actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
+        current:(_id,owner)=>zenchefInspection.current(owner)}] : []),
+      ...(pirouetteLive ? [{restaurantId:ZENCHEF_PIROUETTE.restaurantId,enabled:true,mode:'live',
         actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
         current:(_id,owner)=>zenchefInspection.current(owner)}] : [])],
     SevenRooms: { restaurantId: SEVENROOMS_PILOT.restaurantId, adapter: sevenRoomsInspection, current: (id, owner) => sevenRoomsInspection.current(id, owner) },
@@ -285,7 +289,9 @@ zenchefJournal = createProviderJournal({ledger:playwrightAttempts,register:booki
   confirmationPolicySource:ZENCHEF_POLICY_SOURCE,
   restaurants:{[ZENCHEF_FISHCORNER.restaurantId]:{name:'FishCorner',city:'St. Barts'},
     ...(pesquiereLive ? {[ZENCHEF_PESQUIERE.restaurantId]:{name:ZENCHEF_PESQUIERE.name,city:'Saint-Tropez',
-      rooms:ZENCHEF_PESQUIERE.rooms,roomEvidence:'own_booking_readback',confirmationPolicySource:ZENCHEF_PESQUIERE.policySource}} : {})}});
+      rooms:ZENCHEF_PESQUIERE.rooms,roomEvidence:'own_booking_readback',confirmationPolicySource:ZENCHEF_PESQUIERE.policySource}} : {}),
+    ...(pirouetteLive ? {[ZENCHEF_PIROUETTE.restaurantId]:{name:ZENCHEF_PIROUETTE.name,city:'Nice',
+      rooms:ZENCHEF_PIROUETTE.rooms,roomEvidence:'own_booking_readback',confirmationPolicySource:ZENCHEF_PIROUETTE.policySource}} : {})}});
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);
