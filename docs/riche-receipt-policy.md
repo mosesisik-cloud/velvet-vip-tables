@@ -1,0 +1,71 @@
+# Riche Lunch — receipt policy and required native review
+
+Refs #129. Restaurant `curated-STO-riche`, integration/release owner32d5.
+Base main4d0fac7 (Ciccio's release199). This export is NOT activation approval
+without the contact-final review change described below.
+
+## Public identity and exact scope
+
+`https://riche.se/` identifies Restaurant Riche, Birger Jarlsgatan4, Stockholm.
+Its official booking link uses Waiteraid with hash
+`4a8d2f702a18092521b0b031fbfb4d4a`, matching the existing canonical registry.
+The canonical Bokabord URL returned HTTP200 on16 October2026. Initial HTML SHA256:
+`c91c2d41c3384dcd2a70f5369e7f5e5e4e2b5c7f853678751412d3813b8d96c0`.
+Exact provider name is `Riche`. Lunch is meal7180/type2, started=true,
+must_pay_directly=false, mandatory_products=false, bullets={}, times11:30–17:00.
+Settings max_people8/max_seating9 permit normal party1–8; custom_request=false,
+group_bookings=false, linked_meals=[]. Numeric restid is not exposed in initial
+HTML or the inspected model; it is not invented. Existing hash/request/meal/name
+and approval/receipt binding identify this venue.
+
+Excluded: Middag7181/type3 has must_pay_directly=true; Brunch7426/type4 and
+Sent bord - endast dryck65062/type0 are outside the ordinary lunch policy.
+
+## Actual guarded inspection and contact-final difference
+
+At2026-10-16T02:45:46.320Z, original-provider Chromium selected Lunch, two guests,
+22 October2026,13:30 and reached Kontaktuppgifter. Fourteen selectable times were
+observed from13:30 to16:45. Noon was not available, so an initial selector wait
+stopped before slot selection and the observed13:30 option was then used.
+Availability is transient, not guaranteed inventory.
+
+The actual page exposed canUseAuthFeature=false, visible contact Next, and no
+visible final-review heading. Unlike Noema/Ciccio's, this is not a guest-account
+continuation route. The current official app-widget6.0.3 was fetched again and
+still hashes to
+`ac75bf9af7515871475d57d09b4ba962fa854613fe01d8d635c751e1b5ffead5`.
+Its guestCtrl.next2368–2369 directly calls completeBooking when loginFeature is
+false; completeBooking calls booking.save at2540. The contact Next therefore
+counts as the final supplier action. It was NOT clicked. No account choice or
+provider review is claimed. confirm_in_widget does not control this branch.
+
+The probe reused the existing availability network guard. Unknown requests,
+contact-stat POST, tracking writes and WebSockets were blocked. No saveBooking,
+hold, email-code or payment request was sent. Synthetic contact fields were used.
+This proves the route to contact and the source-controlled final-action boundary,
+not a completed booking. There is no external access blocker requiring a venue
+switch; the missing native review is an implementation task.
+
+## Minimal handoff
+
+The new RICHE_LUNCH_RECEIPT_POLICY export reuses the unchanged common verifier,
+with exact hash/name/meal/type and maxParty8. The existing focused suite adds a
+synthetic bound receipt case and excludes dinner, brunch, late drinks, oversized
+party and newly observed payment requirements. No server/UI/journal edits or
+duplicate engine/harness are added.
+
+Before activation,32d5 must implement an explicit native Velvet review for this
+verified contact-final route: first review action freezes the approved provider
+details and returns a review view WITHOUT clicking Next or granting dispatch.
+Only a separate explicit final action with fresh revision/consent and unchanged
+provider details may reserve the durable attempt, arm exactly its approved POST,
+and click the real provider Next. Field/selection changes invalidate review.
+Do not arm all contact buttons, auto-click Next, modify provider auth flags, or
+pretend the provider supplies the missing review. Existing Noema/Ciccio's paths
+must retain their own reviewed behavior. Receipt confirmation remains conditional
+on both actual save response and bound completion document; unknown never retries.
+
+Ce5c should reuse the actual app/API/adapter/journal harness with a contact-final
+supplier fixture: review causes0save requests, final consent causes1, changed
+details/replay are blocked, and recovery uses the durable journal. Publication is
+owned by32d5 after integration validation. No real Riche booking is claimed.

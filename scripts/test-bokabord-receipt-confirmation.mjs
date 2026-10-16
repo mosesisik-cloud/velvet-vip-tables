@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createBokabordReceiptVerifier, NOEMA_LUNCH_RECEIPT_POLICY as policy, CICCIOS_DINING_RECEIPT_POLICY as ciccios } from '../api/bokabord-receipt-confirmation.mjs';
+import { createBokabordReceiptVerifier, NOEMA_LUNCH_RECEIPT_POLICY as policy, CICCIOS_DINING_RECEIPT_POLICY as ciccios, RICHE_LUNCH_RECEIPT_POLICY as riche } from '../api/bokabord-receipt-confirmation.mjs';
 const verifier = createBokabordReceiptVerifier(policy);
 function fixture() {
   const approval = {hash:policy.hash,mealid:policy.mealid,date:'2030-01-15',time:'12:00',party:2,
@@ -21,6 +21,22 @@ function fixture() {
   return {approval,attempt,observation};
 }
 const run = f => verifier.verify(f.attempt,f.approval,f.observation);
+test('Riche Lunch is receipt-bound; dinner, brunch and late drinks are excluded',()=>{
+  const v=createBokabordReceiptVerifier(riche),f=fixture();
+  Object.assign(f.approval,{hash:riche.hash,mealid:riche.mealid});
+  Object.assign(f.attempt,{restaurantId:riche.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:riche.hash,mealid:riche.mealid});
+  f.observation.data.booking.mealid=riche.mealid;
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema','Riche');
+  const check=()=>v.verify(f.attempt,f.approval,f.observation);
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  assert.ok(v.approvalDigest({...f.approval,party:8}));assert.equal(v.approvalDigest({...f.approval,party:9}),null);
+  for(const mealid of [7181,7426,65062]){assert.equal(v.approvalDigest({...f.approval,mealid}),null);
+    f.observation.data.booking.mealid=mealid;assert.equal(check().status,'unknown');}
+  f.observation.data.booking.mealid=riche.mealid;f.observation.data.booking.meal.must_pay_directly=true;
+  assert.equal(check().status,'unknown');
+});
 test('Ciccios Dining Room uses the same bound contract with exact provider identity and party limit',()=>{
   const v=createBokabordReceiptVerifier(ciccios),f=fixture();
   Object.assign(f.approval,{hash:ciccios.hash,mealid:ciccios.mealid,time:'19:00'});

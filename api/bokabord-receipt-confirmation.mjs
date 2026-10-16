@@ -28,6 +28,13 @@ export const CICCIOS_DINING_RECEIPT_POLICY = Object.freeze({
   hash: '6efc74a27b57165fbfb16acbebf7d248', mealid: 2379, mealType: 3, maxParty: 7,
 });
 
+// Activation also requires native Velvet review before provider contact Next:
+// Riche disables the account feature, so that button can submit directly.
+export const RICHE_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-riche', name: 'Riche',
+  hash: '4a8d2f702a18092521b0b031fbfb4d4a', mealid: 7180, mealType: 2, maxParty: 8,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
