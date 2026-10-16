@@ -65,7 +65,9 @@ export function createBookingJournalHooks({ ledger, legacyLedger, register, rest
     },
     recover(owner) {
       const attempts = ledger.list(owner);
-      for (const attempt of attempts) register.upsert(row(attempt, owner, restaurants[attempt.restaurantId]?.name || attempt.restaurantId));
+      for (const attempt of attempts) if (attempt.provider === 'BokaBord' && (attempt.phase ?? 'booking') === 'booking') {
+        register.upsert(row(attempt, owner, restaurants[attempt.restaurantId]?.name || attempt.restaurantId));
+      }
       return attempts;
     },
   };

@@ -13,6 +13,7 @@ import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturn
 import { mountAvailabilitySearch } from './availability-search.js?v=188';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js?v=189';
 import { mountBokabordMirror } from "./bokabord-mirror.js?v=195";
+import { mountProviderPlaywrightBooking } from "./provider-playwright-booking.js?v=196";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
 import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=177";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=159";
@@ -2513,6 +2514,8 @@ async function renderRestaurantDetail(placeId) {
   const zinkPilot = restaurant.placeId === "curated-STO-zink-italian-cuisine" && restaurant.bookingProvider === "BokaBord" && restaurant.bookingUrl;
   const pendingRestaurantBooking = loadPendingRestaurantBooking(restaurant.placeId);
   const mirrorConfig = destination.code === 'STO' ? await apiJSON("/restaurant-bookings/mirror/config") : null;
+  const playwrightConfig = await apiJSON('/restaurant-bookings/playwright/config');
+  const nativeProvider = playwrightConfig?.providers?.find(entry => entry.restaurantId === restaurant.placeId && entry.enabled === true && entry.liveBooking === true && entry.operatorOnly === false);
   if (location.hash !== restaurantRoute) return;
   const bookingCopy = getBookingCopy(currentLang());
   const scopedBookingPanel = external200BookingPanel(restaurant.placeId, embeddedBooking, currentLang());
@@ -2531,6 +2534,8 @@ async function renderRestaurantDetail(placeId) {
     ? `<div class="restaurant-closed-notice" role="status"><p>${esc(closedMessage)}</p>${closureSource ? `<a href="${esc(closureSource)}" target="_blank" rel="noopener noreferrer">${esc(closedSourceLabel)}</a>` : ''}</div>`
     : mirrorConfig?.mode === 'live' && mirrorConfig?.enabled && mirrorConfig.restaurantIds?.includes(restaurant.placeId)
     ? `<div id="bokabord-mirror"></div>`
+    : nativeProvider
+    ? `<div id="provider-playwright-booking"></div>`
     : embeddedBooking
     ? `<div id="restaurant-provider-booking"></div>`
     : scopedBookingPanel
@@ -2603,6 +2608,8 @@ async function renderRestaurantDetail(placeId) {
   }
   const mirrorContainer = document.getElementById("bokabord-mirror");
   if (mirrorContainer) mountBokabordMirror(mirrorContainer, apiJSON, { restaurantId: restaurant.placeId, restaurantName: restaurant.name });
+  const nativeProviderContainer = document.getElementById('provider-playwright-booking');
+  if (nativeProviderContainer) mountProviderPlaywrightBooking(nativeProviderContainer, apiJSON, {provider:nativeProvider.provider,restaurantId:restaurant.placeId,restaurantName:restaurant.name,endpoint:'/restaurant-bookings/playwright'});
   const webbridgeForm = document.getElementById("restaurant-webbridge-search");
   const webbridgeResult = document.getElementById("restaurant-webbridge-result");
   if (webbridgeForm && webbridgeResult) {
