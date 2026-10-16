@@ -67,6 +67,7 @@ export function createBokabordReceiptVerifier(configuration) {
       || b.waitlist !== 0 || b.require_noshow !== false || !Array.isArray(b.products) || b.products.length
       || (b.meal?.bullets != null && (typeof b.meal.bullets !== 'object' || Array.isArray(b.meal.bullets)))
       || !empty(b.meal?.bullets?.cc) || !empty(b.is_temp_booking) || !empty(b.giftcard)
+      || !empty(b.meal?.must_pay_directly) || !empty(b.meal?.mandatory_products)
       || !linksEmpty(b.linked_meals) || !empty(b.group_booking) || !empty(b.parent_order)) return unknown('unsupported_receipt_state');
     if (b.date !== approval.date || b.time !== approval.time || b.amount !== approval.party
       || !['firstname', 'lastname', 'email'].every(key => b[key] === approval[key])
@@ -78,6 +79,8 @@ export function createBokabordReceiptVerifier(configuration) {
     if (!clock.every(value => Number.isSafeInteger(value) && value > 0)
       || clock.some((value, index) => index > 0 && value < clock[index - 1]) || clock[3] - clock[0] > 90_000
       || receipt?.mainFrame !== true || receipt.method !== 'GET' || receipt.httpOk !== true) return unknown('fresh_document_not_verified');
+    if (!Number.isSafeInteger(receipt.navigationId) || receipt.navigationId < 1
+      || receipt.documentNavigationId !== receipt.navigationId || receipt.documentUrl !== receipt.url) return unknown('document_capture_mismatch');
     let url;
     try { url = new URL(receipt.url); } catch { return unknown('receipt_url_mismatch'); }
     if (url.origin !== 'https://app.bokabord.se' || url.pathname !== '/reservation/booking/'
