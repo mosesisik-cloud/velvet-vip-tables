@@ -49,6 +49,11 @@ export const BEIRUT_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: 'ca902bc03574cc4643a6f071e93e2a98', mealid: 30471, mealType: 2, maxParty: 2,
 });
 
+export const BALZAC_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-balzac', name: 'Brasserie Balzac',
+  hash: 'a0dd019e24669fadaaa6486567307f61', mealid: 354, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)

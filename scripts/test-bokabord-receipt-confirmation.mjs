@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { createBokabordReceiptVerifier, NOEMA_LUNCH_RECEIPT_POLICY as policy, CICCIOS_DINING_RECEIPT_POLICY as ciccios, RICHE_LUNCH_RECEIPT_POLICY as riche, STUREHOF_LUNCH_RECEIPT_POLICY as sturehof, BEIRUT_LUNCH_RECEIPT_POLICY as beirut } from '../api/bokabord-receipt-confirmation.mjs';
+import { createBokabordReceiptVerifier, NOEMA_LUNCH_RECEIPT_POLICY as policy, CICCIOS_DINING_RECEIPT_POLICY as ciccios, RICHE_LUNCH_RECEIPT_POLICY as riche, STUREHOF_LUNCH_RECEIPT_POLICY as sturehof, BEIRUT_LUNCH_RECEIPT_POLICY as beirut, BALZAC_LUNCH_RECEIPT_POLICY as balzac } from '../api/bokabord-receipt-confirmation.mjs';
 const verifier = createBokabordReceiptVerifier(policy);
 test('Beirut Lunch binds exact accented identity and excludes card dinner and special meals',()=>{
   const v=createBokabordReceiptVerifier(beirut),f=fixture();
@@ -20,6 +20,30 @@ test('Beirut Lunch binds exact accented identity and excludes card dinner and sp
   f.observation.receipt.text=f.observation.receipt.text.replace('Beirut Café','Beirut Cafe');
   assert.equal(check().status,'unknown');
   f.observation.receipt.text=f.observation.receipt.text.replace('Beirut Cafe',beirut.name);
+  delete f.observation.receipt;assert.equal(check().status,'unknown');
+});
+test('Balzac Lunch binds full provider name and excludes other meals despite ordinary dinner type',()=>{
+  const v=createBokabordReceiptVerifier(balzac),f=fixture();
+  Object.assign(f.approval,{hash:balzac.hash,mealid:balzac.mealid});
+  Object.assign(f.attempt,{restaurantId:balzac.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:balzac.hash,mealid:balzac.mealid});
+  Object.assign(f.observation.data.booking,{mealid:balzac.mealid,
+    meal:{type:2,group_booking:true,must_pay_directly:false,mandatory_products:false,bullets:{}}});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',balzac.name);
+  const check=()=>v.verify(f.attempt,f.approval,f.observation);
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  assert.equal(v.approvalDigest({...f.approval,party:3}),null);
+  for(const mealid of [9116,10951,62983]){
+    assert.equal(v.approvalDigest({...f.approval,mealid}),null);
+    f.observation.data.booking.mealid=mealid;assert.equal(check().status,'unknown');
+  }
+  f.observation.data.booking.mealid=balzac.mealid;
+  f.observation.receipt.text=f.observation.receipt.text.replace(balzac.name,'Balzac');
+  assert.equal(check().status,'unknown');
+  f.observation.receipt.text=f.observation.receipt.text.replace('Balzac',balzac.name);
+  f.observation.data.booking.meal.must_pay_directly=true;assert.equal(check().status,'unknown');
+  f.observation.data.booking.meal.must_pay_directly=false;
   delete f.observation.receipt;assert.equal(check().status,'unknown');
 });
 function fixture() {
