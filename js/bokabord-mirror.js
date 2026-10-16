@@ -2,7 +2,7 @@
 export function mountBokabordMirror(container, api, { restaurantId = 'curated-STO-zink-italian-cuisine', restaurantName = 'Zink', onLogin = null } = {}) {
   container.style.maxWidth = '420px';
   container.style.marginInline = 'auto';
-  container.innerHTML = `<div class="booking-source"><span>Bokning via Bokabord</span><span>Utan Velvet-konto</span></div><p class="booking-intro">Välj datum, tid och antal gäster.</p><button class="btn btn-gold" data-start>Hitta ett bord</button><p role="status" aria-live="polite" data-status></p><div data-screen hidden><div style="max-height:55dvh;overflow:auto"><div data-stage style="position:relative"><img data-image alt="Restaurangens bokningsformulär" style="display:block;width:100%;cursor:pointer"><div data-inputs></div><span class="booking-click" hidden aria-hidden="true" data-click></span></div></div><div class="booking-navigation"><button class="btn" data-up aria-label="Visa övre delen av formuläret">↑ Upp</button><button class="btn" data-down aria-label="Visa nedre delen av formuläret">↓ Ned</button><button class="btn" data-refresh>Uppdatera</button><button class="btn" data-close>Stäng</button><button class="btn" data-retry-fields hidden>Försök spara uppgifterna igen</button><button class="btn" data-restart hidden>Börja om med ett nytt formulär</button></div><label data-consent hidden><input type="checkbox" data-terms> Jag har kontrollerat uppgifterna och godkänner <a href="https://www.waiteraid.com/terms/" target="_blank" rel="noopener">Bokabords villkor</a> och har läst <a href="https://www.waiteraid.com/privacy-policy/" target="_blank" rel="noopener">personuppgiftspolicyn</a>.</label><button class="btn btn-gold" data-submit hidden>Fortsätt</button><p data-handoff hidden></p><details class="booking-accessible"><summary>Visa formuläret som text</summary><pre data-text style="white-space:pre-wrap;font:inherit"></pre></details></div>`;
+  container.innerHTML = `<div class="booking-source"><span>Bokning via Bokabord</span><span>Utan Velvet-konto</span></div><p class="booking-intro">Välj datum, tid och antal gäster.</p><button class="btn btn-gold" data-start>Hitta ett bord</button><p role="status" aria-live="polite" data-status></p><div data-screen hidden><div data-provider-view style="max-height:55dvh;overflow:auto"><div data-stage style="position:relative"><img data-image alt="Restaurangens bokningsformulär" style="display:block;width:100%;cursor:pointer"><div data-inputs></div><span class="booking-click" hidden aria-hidden="true" data-click></span></div></div><div class="booking-navigation"><button class="btn" data-up aria-label="Visa övre delen av formuläret">↑ Upp</button><button class="btn" data-down aria-label="Visa nedre delen av formuläret">↓ Ned</button><button class="btn" data-refresh>Uppdatera</button><button class="btn" data-close>Stäng</button><button class="btn" data-retry-fields hidden>Försök spara uppgifterna igen</button><button class="btn" data-restart hidden>Börja om med ett nytt formulär</button></div><section data-native-review hidden aria-label="Kontrollera bokningen"><h3>Kontrollera bokningen</h3><pre data-review-details style="white-space:pre-wrap;font:inherit"></pre><details><summary>Restaurangens information och villkor</summary><pre data-review-terms style="white-space:pre-wrap;font:inherit"></pre><ul data-review-links></ul></details><button class="btn" data-edit-review>\u00c4ndra uppgifter</button></section><label data-consent hidden><input type="checkbox" data-terms> Jag har kontrollerat uppgifterna och godkänner <a href="https://www.waiteraid.com/terms/" target="_blank" rel="noopener">Bokabords villkor</a> och har läst <a href="https://www.waiteraid.com/privacy-policy/" target="_blank" rel="noopener">personuppgiftspolicyn</a>.</label><button class="btn btn-gold" data-submit hidden>Fortsätt</button><p data-handoff hidden></p><details class="booking-accessible"><summary>Visa formuläret som text</summary><pre data-text style="white-space:pre-wrap;font:inherit"></pre></details></div>`;
   const status = container.querySelector('[data-status]');
   const start = container.querySelector('[data-start]');
   const screen = container.querySelector('[data-screen]');
@@ -94,6 +94,18 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
       }
       for (const input of overlay.children) if (!rendered.has(input.dataset.providerField)) input.remove();
       container.querySelector('[data-text]').textContent = result.text;
+      const native = result.nativeReview;
+      container.querySelector('[data-native-review]').hidden = !native;
+      container.querySelector('[data-provider-view]').hidden = !!native;
+      const d = native?.details;
+      container.querySelector('[data-review-details]').textContent = d ? `${result.restaurant}\n${d.date} kl. ${d.time} \u00b7 ${d.party} g\u00e4ster\n${d.firstname} ${d.lastname}\n${d.email}\n${d.phone}\n${d.comment || ''}` : '';
+      container.querySelector('[data-review-terms]').textContent = native?.termsText || '';
+      const links = container.querySelector('[data-review-links]'); links.replaceChildren();
+      for (const link of native?.links || []) {
+        if (!/^https?:/.test(link.href)) continue;
+        const row=document.createElement('li'), anchor=document.createElement('a');
+        anchor.href=link.href; anchor.textContent=link.text || link.href; anchor.target='_blank'; anchor.rel='noopener'; row.append(anchor); links.append(row);
+      }
       screen.hidden = false; start.hidden = true;
       const ready = (result.contact || result.review) && result.canSubmit;
       container.querySelector('[data-submit]').hidden = !ready;
@@ -106,7 +118,7 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
         handoff.append(document.createTextNode(`${explanations[result.handoff.reason] || 'Det här valet behöver slutföras hos restaurangen.'} Fortsätt via Bokabord för att slutföra. Ingen bokning har skickats från Velvet. `), link); }
       if (result.result) status.dataset.bookingStatus = result.result.status;
       if (result.mode === 'prepare') container.querySelector('.booking-intro').hidden = true;
-      status.textContent = result.contact ? (result.mode === 'prepare' ? 'Fyll i dina kontaktuppgifter. Du får kontrollera bokningen innan den skickas.' : 'Kontaktsteget är nått. Testet stoppar här — ingen bokning har skapats.') : result.handoff ? 'Fortsätt hos Bokabord för det här valet.' : result.blocked ? 'Det här steget kunde inte genomföras.' : '';
+      status.textContent = result.nativeReview ? 'Kontrollera bokningen och godk\u00e4nn villkoren p\u00e5 nytt f\u00f6r att skicka den.' : result.contact ? (result.mode === 'prepare' ? 'Fyll i dina kontaktuppgifter. Du får kontrollera bokningen innan den skickas.' : 'Kontaktsteget är nått. Testet stoppar här — ingen bokning har skapats.') : result.handoff ? 'Fortsätt hos Bokabord för det här valet.' : result.blocked ? 'Det här steget kunde inte genomföras.' : '';
       if (result.result) {
         status.textContent = result.result.status === 'confirmed' ? `${restaurantName} har bekräftat bokningen. Referens: ${result.result.reference}` : 'Bokningen är inte verifierad. Skicka inte en ny bokning; resultatet måste kontrolleras.';
         container.querySelector('.booking-intro').hidden = true;
@@ -145,7 +157,8 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
     }
   }
   start.onclick = () => perform();
-  container.querySelector('[data-submit]').onclick = () => { if (busy || pendingFields.size) return; if (!terms.checked) { status.textContent = 'Kontrollera uppgifterna och godkänn villkoren först.'; return; } perform({type:'submit',confirm:true,terms:true}); };
+  container.querySelector('[data-submit]').onclick = () => { if (busy || pendingFields.size) return; if (!terms.checked) { status.textContent = 'Kontrollera uppgifterna och godkänn villkoren först.'; return; } perform(state?.contactFinal && !state.nativeReview ? {type:'review'} : {type:'submit',confirm:true,terms:true,...(state?.nativeReview ? {reviewToken:state.nativeReview.token} : {})}); };
+  container.querySelector('[data-edit-review]').onclick = () => perform({type:'edit-review'});
   img.onclick = e => { if (busy || expired || reconcile || !state || state.contact || state.review || state.result) return; const r = img.getBoundingClientRect(); const marker=container.querySelector('[data-click]'); marker.style.left=`${100*(e.clientX-r.left)/r.width}%`; marker.style.top=`${100*(e.clientY-r.top)/r.height}%`; marker.hidden=false; perform({ type: 'click', x: (e.clientX - r.left) * state.width / r.width, y: (e.clientY - r.top) * state.height / r.height }); };
   container.querySelector('[data-up]').onclick = () => perform({ type: 'scroll', dy: -500 });
   container.querySelector('[data-down]').onclick = () => perform({ type: 'scroll', dy: 500 });
