@@ -8,6 +8,11 @@ import { BokabordMirror, RESTAURANTS, RESTAURANT_DETAILS } from "./bokabord-mirr
 import { BookingLedger } from "./bokabord-ledger.mjs";
 import { bookingGuest } from "./booking-guest.mjs";
 import { RequestBudget } from "./request-budget.mjs";
+import { PlaywrightRuntime } from './playwright-runtime.mjs';
+import { PlaywrightAttemptLedger } from './playwright-attempt-ledger.mjs';
+import { createBookingJournalHooks } from './playwright-booking-journal.mjs';
+import { ZenchefPlaywright, ZENCHEF_ARPEGE } from './providers/zenchef-playwright.mjs';
+import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
@@ -29,11 +34,27 @@ const availabilitySearch = new AvailabilitySearch({
 availabilitySearch.adapters.Delicity = createDelicityAvailability({registry:availabilitySearch.registry});
 for (const [id,row] of Object.entries(RESTAURANT_DETAILS)) availabilitySearch.registry[id] = {...row, provider:'BokaBord', city:'Stockholm'};
 const mirrorMode = process.env.VELVET_BOKABORD_MIRROR || 'disabled';
+// These adapters have no verified checkout. Never accept mode/URLs from clients.
+// An explicit operator inspection switch is separate from guest booking.
+const zenchefInspection = new ZenchefPlaywright({ mode: 'inspect' });
+const sevenRoomsInspection = new SevenRoomsPlaywright();
+const playwrightRuntime = new PlaywrightRuntime({
+  enabled: process.env.VELVET_PLAYWRIGHT_INSPECTION === 'enabled',
+  limit: 1,
+  providers: {
+    Zenchef: { restaurantId: ZENCHEF_ARPEGE.restaurantId, adapter: zenchefInspection, current: (_id, owner) => zenchefInspection.current(owner) },
+    SevenRooms: { restaurantId: SEVENROOMS_PILOT.restaurantId, adapter: sevenRoomsInspection, current: (id, owner) => sevenRoomsInspection.current(id, owner) },
+  },
+});
+const inspectionExpiry = setInterval(() => playwrightRuntime.expire().catch(() => {}), 30_000);
+inspectionExpiry.unref();
 const mirrorLedger = new BookingLedger(path.join(__dir, 'mirror-attempts'));
+const playwrightAttempts = new PlaywrightAttemptLedger(process.env.VELVET_PLAYWRIGHT_DB || path.join(__dir, 'playwright-attempts.sqlite'));
+let bookingJournal;
 const bokabordMirror = new BokabordMirror({
   prepare: mirrorMode === 'live', live: mirrorMode === 'live',
-  reserveSubmission: (approval, session) => { mirrorLedger.reserve(approval, session); for (const row of mirrorLedger.list()) bookingRegister.upsert(row); },
-  recordResult: session => { mirrorLedger.record(session); for (const row of mirrorLedger.list()) bookingRegister.upsert(row); },
+  reserveSubmission: (approval, session) => bookingJournal.reserveSubmission(approval, session),
+  recordResult: session => bookingJournal.recordResult(session),
 });
 
 // ---------- SevenRooms live-inventarie (offentligt widget-API, ingen nyckel) ----------
@@ -55,79 +76,6 @@ async function srFetchJson(p) {
 function srToday() {
   const n = new Date();
   return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, "0")}-${String(n.getDate()).padStart(2, "0")}`;
-}
-
-// Direktbokning mot SevenRooms publika widget-flöde: range → slot → hold → book.
-// X-Checkout-Hash (SHA-256 av "förnamn|efternamn" lowercase) är deras anti-bot-header —
-// utan den svarar book-endpointen bara "Booking failed." (Knäckt 2026-08-23, se docs.)
-async function srBookSlot(slug, { date, time, party, guest, note, lang }) {
-  const [y, m, d] = String(date).split("-");
-  const mdY = `${m}-${d}-${y}`;
-  const srLang = /^(sv|en|es|fr)$/.test(String(lang || "")) ? lang : "en";
-  const range = await srFetchJson(`/api-yoa/availability/widget/range?venue=${slug}&time_slot=${encodeURIComponent(time)}&party_size=${party}&halo_size_interval=64&start_date=${mdY}&num_days=1&channel=SEVENROOMS_WIDGET&selected_lang_code=${srLang}`);
-  const daySlots = (range.availability && range.availability[date]) || [];
-  let slot = null, shift = null;
-  for (const sh of daySlots) {
-    for (const t of sh.times || []) {
-      if (t.type === "book" && t.time === time) { slot = t; shift = sh; break; }
-    }
-    if (slot) break;
-  }
-  if (!slot) return { error: "slot_gone" };
-  const holdResp = await fetch("https://www.sevenrooms.com/api-yoa/dining/hold/add", {
-    method: "POST",
-    headers: { "Content-Type": "application/json", "User-Agent": "Mozilla/5.0 (compatible; VELVET-booking-bridge)" },
-    body: JSON.stringify({
-      access_persistent_id: slot.access_persistent_id, actual_id: null, party_size: party, date,
-      shift_persistent_id: shift.shift_persistent_id, channel: "SEVENROOMS_WIDGET",
-      client_id: null, experience_id: null, picked_duration: null, time,
-      tracking_slug: null, venue: slug,
-    }),
-  }).then((r) => r.json()).catch(() => null);
-  const holdId = holdResp?.data?.reservation_hold_id;
-  if (!holdId) return { error: "hold_failed", detail: holdResp?.msg || null };
-  const first = String(guest.firstName || "").trim();
-  const last = String(guest.lastName || "").trim();
-  const hash = crypto.createHash("sha256").update(`${first.toLowerCase()}|${last.toLowerCase()}`).digest("hex");
-  const rawPhone = String(guest.phone || "").trim();
-  let dial = String(guest.dialCode || "").replace(/^\+/, "");
-  let country = String(guest.countryCode || "").toUpperCase();
-  const plus = rawPhone.replace(/[^\d+]/g, "");
-  if (!dial && (plus.startsWith("+") || plus.startsWith("00"))) {
-    const rest = plus.replace(/^\+/, "").replace(/^00/, "");
-    for (const d of ["971", "358", "354", "353", "351", "61", "55", "52", "54", "81", "90", "49", "48", "47", "46", "45", "44", "43", "41", "39", "34", "33", "32", "31", "30", "27", "1"]) {
-      if (rest.startsWith(d)) { dial = d; break; }
-    }
-  }
-  if (!dial && /^0/.test(rawPhone.replace(/\s/g, ""))) dial = "46";
-  if (!country && dial === "46") country = "SE";
-  let phone = rawPhone.replace(/\D/g, "");
-  if (dial && phone.startsWith(dial)) phone = phone.slice(dial.length);
-  if (phone.startsWith("0")) phone = phone.slice(1);
-  const form = new URLSearchParams();
-  const fields = {
-    reservation_hold_id: holdId, venue: slug, first_name: first, last_name: last,
-    email: String(guest.email || ""), phone_number: phone, dial_code: dial,
-    country_code: country,
-    party_size: String(party), date: mdY, time, shift_persistent_id: shift.shift_persistent_id,
-    channel: "SEVENROOMS_WIDGET", access_persistent_id: slot.access_persistent_id,
-    notes: String(note || "").slice(0, 300),
-  };
-  for (const [k, v] of Object.entries(fields)) if (v) form.append(k, v);
-  const r = await fetch(`https://www.sevenrooms.com/booking/dining/widget/${slug}/book`, {
-    method: "POST",
-    headers: {
-      "X-Checkout-Hash": hash, "X-Widget-Origin": "old-widget",
-      "User-Agent": "Mozilla/5.0 (compatible; VELVET-booking-bridge)",
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
-    body: form,
-  });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok || !j.reservation_id) {
-    return { error: "book_failed", detail: (j.errors || [])[0] || j.message || ("http_" + r.status) };
-  }
-  return { ok: true, confirmation: String(j.message || ""), reservationId: j.reservation_id, token: String(j.token || ""), shift: shift.name, date, time, party };
 }
 
 // ---------- BokaBord WebBridge (Zink pilot) ----------
@@ -290,6 +238,7 @@ async function zinkBook({ date, time, party, meal, guest, note, lang, context })
 
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
 const bookingRegister = new BookingRegister(process.env.VELVET_BOOKINGS_DB || path.join(path.dirname(DATA), 'bookings.sqlite'));
+bookingJournal = createBookingJournalHooks({ ledger: playwrightAttempts, legacyLedger: mirrorLedger, register: bookingRegister, restaurants: RESTAURANT_DETAILS });
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);
@@ -1920,7 +1869,37 @@ const server = http.createServer(async (req, res) => {
         return send(res, error.message === 'search_busy' ? 429 : error.message === 'search_timeout' ? 503 : 400, { error: error.message === 'search_busy' ? 'search_busy' : 'invalid_search' }, { 'Cache-Control': 'no-store' });
       }
     }
-    if (url.pathname === "/restaurant-bookings/mirror/config") {
+    if (req.method === 'GET' && url.pathname === '/restaurant-bookings/playwright/config') {
+      return send(res, 200, { providers: playwrightRuntime.capabilities(),
+        bokabord: { enabled: mirrorMode === 'live', mode: mirrorMode, transport: 'native-mirror', guestBooking: mirrorMode === 'live', restaurantIds: Object.keys(RESTAURANTS) } }, { 'Cache-Control': 'no-store' });
+    }
+    if (req.method === 'GET' && url.pathname === '/restaurant-bookings/playwright/attempts') {
+      const user = sessionPublicUser(req, load());
+      const owner = user?.id || bookingGuest(req, res);
+      if (!owner) return send(res, 401, { error: 'auth' }, { 'Cache-Control': 'no-store' });
+      return send(res, 200, { attempts: bookingJournal.recover(owner) }, { 'Cache-Control': 'no-store' });
+    }
+    if (url.pathname === '/restaurant-bookings/playwright' || url.pathname.startsWith('/restaurant-bookings/playwright/')) {
+      if (req.headers.origin && !corsOriginFor(req)) return send(res, 403, { error: 'origin' });
+      const user = sessionPublicUser(req, load());
+      const owner = user?.id;
+      const operator = !!user && isOperator(user);
+      try {
+        playwrightRuntime.authorize(owner, operator);
+        if (req.method === 'POST' && url.pathname === '/restaurant-bookings/playwright') {
+          return send(res, 201, await playwrightRuntime.create(owner, operator, await readBody(req, 4096)), { 'Cache-Control': 'no-store' });
+        }
+        const match = url.pathname.match(/^\/restaurant-bookings\/playwright\/([a-f0-9-]{36})(\/(current|action))?$/);
+        if (!match) return send(res, 404, { error: 'not_found' });
+        const operation = req.method === 'DELETE' && !match[2] ? 'remove' : req.method === 'POST' ? match[3] : null;
+        if (!operation) return send(res, 405, { error: 'method' });
+        const action = operation === 'action' ? await readBody(req, 4096) : null;
+        return send(res, 200, await playwrightRuntime.run(match[1], owner, operator, operation, action), { 'Cache-Control': 'no-store' });
+      } catch (error) {
+        return send(res, error.status || 502, { error: error.status ? error.message : 'provider_unavailable' }, { 'Cache-Control': 'no-store' });
+      }
+    }
+    if (req.method === 'GET' && url.pathname === "/restaurant-bookings/mirror/config") {
       return send(res, 200, { enabled: ['inspect','live'].includes(mirrorMode), mode: mirrorMode, guestBooking: mirrorMode === 'live', restaurantIds: Object.keys(RESTAURANTS) }, { "Cache-Control": "no-store" });
     }
     if (url.pathname.startsWith("/restaurant-bookings/mirror")) {
@@ -2605,6 +2584,7 @@ const server = http.createServer(async (req, res) => {
       const guest = bookingGuest(req, res);
       if (!user && !guest) return send(res, 401, { error: "auth" });
       const operator = !!user && isOperator(user);
+      for (const owner of new Set([user?.id, guest].filter(Boolean))) bookingJournal.recover(owner);
       for (const booking of [...mirrorLedger.list(), ...(db.restaurantBookings || [])]) bookingRegister.upsert(booking);
       const bookings = bookingRegister.list([user?.id, guest], operator)
         .map(operator ? operatorRestaurantBooking : publicRestaurantBooking);
@@ -3787,42 +3767,8 @@ const server = http.createServer(async (req, res) => {
     // ---------- SevenRooms: direktbokning (range→hold→book i ett anrop) ----------
     const srBookM = url.pathname.match(/^\/availability\/([A-Z]{3}-\d{3})\/book$/);
     if (req.method === "POST" && srBookM) {
-      const vid = srBookM[1];
-      const slug = SR_VENUES[vid];
-      if (!slug) return send(res, 404, { error: "no_live_inventory" });
-      const b = await readBody(req, 2e5);
-      const uid = String(b.user?.id || "");
-      if (!uid) return send(res, 401, { error: "auth" });
-      const date = /^\d{4}-\d{2}-\d{2}$/.test(String(b.date || "")) ? String(b.date) : "";
-      const time = /^\d{1,2}:\d{2}$/.test(String(b.time || "")) ? String(b.time) : "";
-      const party = Math.min(20, Math.max(1, Number(b.party) || 0));
-      const g = b.guest || {};
-      if (!date || !time || !party) return send(res, 400, { error: "slot" });
-      if (!g.firstName || !g.lastName || !g.email) return send(res, 400, { error: "guest" });
-      const result = await srBookSlot(slug, { date, time, party, guest: g, note: b.note, lang: b.lang });
-      if (!result.ok) return send(res, result.error === "slot_gone" ? 409 : 502, result);
-      const db = load();
-      const bridge = {
-        id: "SR-" + Date.now().toString(36).toUpperCase(),
-        venueId: vid,
-        venue: String(b.venueName || vid),
-        destination: String(b.destination || ""),
-        engine: "sevenrooms",
-        officialUrl: `https://www.sevenrooms.com/reservations/${slug}`,
-        date, time, party,
-        guest: { name: `${g.firstName} ${g.lastName}`, email: g.email, phone: g.phone || "" },
-        status: "confirmed",
-        confirmation: result.confirmation,
-        reservationId: result.reservationId,
-        manageToken: result.token,
-        userId: uid,
-        note: String(b.note || "").slice(0, 300),
-        created: new Date().toISOString(),
-        history: [{ status: "confirmed", note: "Direktbokad i klubbens system (SevenRooms)", at: new Date().toISOString() }],
-      };
-      db.bridges = [bridge, ...(db.bridges || [])].slice(0, 200);
-      save(db);
-      return send(res, 200, { ok: true, booking: { id: bridge.id, confirmation: result.confirmation, date, time, party, venue: bridge.venue, token: result.token } });
+      // Legacy hold/book bypass is not an approved Playwright checkout.
+      return send(res, 409, { error: 'provider_checkout_unverified' }, { 'Cache-Control': 'no-store' });
     }
     if (req.method === "POST" && url.pathname === "/availability/cancel") {
       const b = await readBody(req, 2e5);
@@ -3886,8 +3832,9 @@ async function shutdown() {
   if (shuttingDown) return; shuttingDown = true;
   server.close();
   const forced = setTimeout(() => process.exit(1), 8000); forced.unref();
-  await Promise.allSettled([bokabordAvailability.close(), bokabordMirror.close()]);
-  bookingRegister.close(); clearTimeout(forced); process.exit(0);
+  clearInterval(inspectionExpiry);
+  await Promise.allSettled([bokabordAvailability.close(), bokabordMirror.close(), playwrightRuntime.close()]);
+  playwrightAttempts.close(); bookingRegister.close(); clearTimeout(forced); process.exit(0);
 }
 process.once('SIGTERM', shutdown);
 process.once('SIGINT', shutdown);

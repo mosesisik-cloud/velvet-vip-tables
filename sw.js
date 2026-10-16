@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-190-reviewed-routes";
+const VERSION = "v4-real-195-playwright-runtime";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
