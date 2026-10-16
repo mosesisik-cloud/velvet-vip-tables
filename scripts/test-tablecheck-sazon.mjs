@@ -134,3 +134,143 @@ test('session expiry and close prevent stale use', async () => {
   await adapter.close();
   await assert.rejects(adapter.create('owner', SAZON.restaurantId), /closed/);
 });
+
+// Explicitly SYNTHETIC source-contract cases. These are not observed provider
+// successes or availability evidence. Every transport is an in-memory function.
+function syntheticLifecycle({ denyPhase, failPhase, changeReceipt, refuseRecord = false } = {}) {
+  let sequence = 0;
+  const calls = [], grants = [], records = [];
+  const now = Date.parse('2026-10-16T12:00:00Z');
+  const startAt = '2026-10-19T10:00:00Z';
+  const orders = [{ menu_item_id: SAZON.menuId, qty: 1, is_group_order: true }];
+  const cart = { id: 'synthetic-cart', access_token: 'synthetic-capability',
+    expires_at: new Date(now + 300000).toISOString(), start_at: startAt, orders,
+    payment_transaction_type: 'none', show_payment_form: false, booking_fee_amt: null };
+  const reservation = { id: 'synthetic-booking', slug: 'synthetic-own-code',
+    shop_id: SAZON.shopId, shop_slug: SAZON.slug, start_at: startAt,
+    num_people_adult: 2, num_people_senior: 0, num_people_child: 0, num_people_baby: 0,
+    service_category_id: null, orders, customer_status: 'accepted', iou_payable: false, iou_status: null };
+  const adapter = new TablecheckSazon({ mode: 'fixture', now: () => now,
+    fetchImpl: async url => ({ status: 200, url, text: async () => url === SAZON.url ? sourceHtml
+      : JSON.stringify({ availability_grid: { data: [{ a: true, t: startAt, sc: null, exp: SAZON.menuId }] } }) }),
+    reserveSubmission: async intent => {
+      grants.push(intent);
+      return { sendAllowed: intent.phase !== denyPhase, attempt: { ...intent, ...intent.details,
+        attemptId: `synthetic-attempt-${++sequence}`, idempotencyKey: `synthetic-key-${sequence}` } };
+    },
+    recordResult: async session => {
+      records.push(clone(session));
+      return { status: refuseRecord ? 'unknown' : session.result.status };
+    },
+    mutationTransport: async request => {
+      calls.push(clone(request));
+      if (request.phase === failPhase) throw Error('synthetic ambiguous transport failure');
+      if (request.phase === 'cart' || request.phase === 'cart_update') return { status: 200,
+        data: { availability: { type: 'success' }, is_request_enabled: false, cart: clone(cart) } };
+      if (request.phase === 'booking') return { status: 200, data: { reservation: clone(reservation) } };
+      if (request.phase === 'readback') {
+        const saved = clone(reservation); changeReceipt?.(saved);
+        return { status: 200, data: { reservation: saved } };
+      }
+      throw Error('unexpected synthetic transport');
+    },
+  });
+  async function readyForCart() {
+    let view = await adapter.create('owner', SAZON.restaurantId);
+    view = await adapter.action(view.id, 'owner', { type: 'search', ...query, revision: view.revision });
+    view = await adapter.action(view.id, 'owner', { type: 'select', slotId: view.availabilityEvidence.slots[0].id, revision: view.revision });
+    return adapter.action(view.id, 'owner', { type: 'review', revision: view.revision });
+  }
+  const approve = (view, type) => ({ type, revision: view.revision, confirm: true, terms: true,
+    reviewToken: view.reviewToken, reviewFingerprint: view.reviewFingerprint, termsVersion: view.terms.version });
+  async function readyForSubmit() {
+    let view = await readyForCart();
+    view = await adapter.action(view.id, 'owner', approve(view, 'cart'));
+    view = await adapter.action(view.id, 'owner', { type: 'fill', revision: view.revision,
+      fields: { firstname: 'Synthetic', lastname: 'Guest', email: 'guest@example.invalid', phone: '+46700000000' } });
+    return adapter.action(view.id, 'owner', { type: 'review', revision: view.revision });
+  }
+  return { adapter, calls, grants, records, readyForCart, readyForSubmit, approve };
+}
+
+test('synthetic contract: separate grants and own raw readback are required', async () => {
+  const h = syntheticLifecycle();
+  const view = await h.readyForSubmit();
+  const result = await h.adapter.action(view.id, 'owner', h.approve(view, 'submit'));
+  assert.equal(result.mode, 'fixture');
+  assert.equal(result.result.status, 'confirmed');
+  assert.equal(result.result.verification.source, 'fixture');
+  assert.deepEqual(h.grants.map(g => g.phase), ['cart', 'cart_update', 'booking']);
+  assert.deepEqual(h.calls.map(c => c.phase), ['cart', 'cart_update', 'booking', 'readback']);
+  assert.deepEqual(h.calls[0].body.orders, [{ is_group_order: true, qty: 1, menu_item_id: SAZON.menuId }]);
+  assert.equal(h.calls[0].body.customer.email, '');
+  assert.equal(h.calls[1].body.customer.email, 'guest@example.invalid');
+  assert.equal(h.calls[2].body.allow_provider_marketing, false);
+  assert.match(h.calls[3].url, /reservations\/synthetic-own-code\?/);
+  assert.equal(h.calls[3].url, 'https://production-booking.tablecheck.com/v2/reservations/synthetic-own-code?email=guest%40example.invalid&phone=%2B46700000000');
+  assert.equal(new URL(h.calls[3].url).searchParams.get('email'), 'guest@example.invalid');
+  assert.equal(new URL(h.calls[3].url).searchParams.get('phone'), '+46700000000');
+  const publicText = JSON.stringify(result);
+  assert.ok(!publicText.includes('synthetic-capability') && !publicText.includes('synthetic-cart'));
+  const storedText = JSON.stringify(h.grants);
+  assert.ok(!storedText.includes('synthetic-capability') && !storedText.includes('guest@example.invalid'));
+  await h.adapter.close();
+});
+
+test('synthetic contract: denied update grant cannot reach checkout or readback', async () => {
+  const h = syntheticLifecycle({ denyPhase: 'cart_update' });
+  const view = await h.readyForSubmit();
+  await assert.rejects(h.adapter.action(view.id, 'owner', h.approve(view, 'submit')), /attempt_binding/);
+  assert.deepEqual(h.calls.map(c => c.phase), ['cart']);
+  await assert.rejects(h.adapter.action(view.id, 'owner', h.approve(view, 'submit')), /already_attempted/);
+  await h.adapter.close();
+  const finalDenied = syntheticLifecycle({ denyPhase: 'booking' });
+  const finalView = await finalDenied.readyForSubmit();
+  await assert.rejects(finalDenied.adapter.action(finalView.id, 'owner', finalDenied.approve(finalView, 'submit')), /attempt_binding/);
+  assert.deepEqual(finalDenied.calls.map(c => c.phase), ['cart', 'cart_update']);
+  await finalDenied.adapter.close();
+  const noConsent = syntheticLifecycle();
+  const cartView = await noConsent.readyForCart();
+  await assert.rejects(noConsent.adapter.action(cartView.id, 'owner', { ...noConsent.approve(cartView, 'cart'), confirm: false }), /confirmation_required/);
+  assert.equal(noConsent.grants.length, 0);
+  assert.equal(noConsent.calls.length, 0);
+  await noConsent.adapter.close();
+});
+
+test('synthetic contract: ambiguous checkout is consumed without receipt read or retry', async () => {
+  const h = syntheticLifecycle({ failPhase: 'booking' });
+  const view = await h.readyForSubmit();
+  const result = await h.adapter.action(view.id, 'owner', h.approve(view, 'submit'));
+  assert.equal(result.result.status, 'unknown');
+  assert.deepEqual(h.calls.map(c => c.phase), ['cart', 'cart_update', 'booking']);
+  await assert.rejects(h.adapter.action(view.id, 'owner', h.approve(result, 'submit')), /already_attempted/);
+  await h.adapter.close();
+});
+
+test('synthetic contract: raw extra orders, wrong category/status and journal rejection cannot confirm', async () => {
+  for (const changeReceipt of [r => r.orders.push({ menu_item_id: 'unknown', qty: 1, is_group_order: true }),
+    r => { r.orders[0].qty = 2; }, r => { r.service_category_id = 'other'; },
+    r => { r.shop_id = 'other'; }, r => { r.customer_status = 'waiting'; },
+    r => { r.num_people_baby = 1; }, r => { r.id = 'different-booking'; }]) {
+    const h = syntheticLifecycle({ changeReceipt });
+    const view = await h.readyForSubmit();
+    const result = await h.adapter.action(view.id, 'owner', h.approve(view, 'submit'));
+    assert.equal(result.result.status, 'unknown');
+    await h.adapter.close();
+  }
+  const h = syntheticLifecycle({ refuseRecord: true });
+  const view = await h.readyForSubmit();
+  const result = await h.adapter.action(view.id, 'owner', h.approve(view, 'submit'));
+  assert.equal(result.result.status, 'unknown');
+  await h.adapter.close();
+});
+
+test('synthetic contract: pending and IOU remain distinct from confirmation', async () => {
+  for (const [status, expected] of [['pending', 'pending'], ['request', 'pending'], ['iou_auth', 'payment_required']]) {
+    const h = syntheticLifecycle({ changeReceipt: r => { r.customer_status = status; } });
+    const view = await h.readyForSubmit();
+    const result = await h.adapter.action(view.id, 'owner', h.approve(view, 'submit'));
+    assert.equal(result.result.status, expected);
+    await h.adapter.close();
+  }
+});
