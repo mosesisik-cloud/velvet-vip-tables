@@ -1,3 +1,4 @@
+import { HANTVERKET_LUNCH_RECEIPT_POLICY as hantverket } from '../api/bokabord-receipt-confirmation.mjs';
 import { PELIKAN_DINNER_RECEIPT_POLICY as pelikan } from '../api/bokabord-receipt-confirmation.mjs';
 import { TENNSTOPET_LUNCH_RECEIPT_POLICY as tennstopet } from '../api/bokabord-receipt-confirmation.mjs';
 import { TEATERGRILLEN_LUNCH_RECEIPT_POLICY as teatergrillen } from '../api/bokabord-receipt-confirmation.mjs';
@@ -153,6 +154,66 @@ test('Luzette contact-final policy preserves request, native canonical phone and
     f=>f.attempt.dispatched=false,f=>f.observation.receipt.documentNavigationId=999,
     f=>{delete f.observation.receipt;},
   ]) { const {f,check}=luzetteFixture();change(f);assert.equal(check().status,'unknown'); }
+});
+
+function hantverketFixture() {
+  const v=createBokabordReceiptVerifier(hantverket),f=fixture();
+  Object.assign(f.approval,{hash:hantverket.hash,mealid:hantverket.mealid});
+  Object.assign(f.attempt,{restaurantId:hantverket.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:hantverket.hash,mealid:hantverket.mealid});
+  Object.assign(f.observation.data.booking,{mealid:hantverket.mealid,
+    meal:{type:2,must_pay_directly:false,mandatory_products:false,bullets:{}}});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',hantverket.name);
+  return {v,f,check:()=>v.verify(f.attempt,f.approval,f.observation)};
+}
+
+test('Hantverket ordinary Lunch binds full venue name and excludes dinner and larger parties',()=>{
+  const {v,f,check}=hantverketFixture();
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  for(const party of [3,6,7]) assert.equal(v.approvalDigest({...f.approval,party}),null);
+  assert.equal(v.approvalDigest({...f.approval,mealid:7098}),null);
+  assert.equal(v.approvalDigest({...f.approval,mealid:7103}),null);
+  assert.equal(v.approvalDigest({...f.approval,hash:policy.hash}),null);
+  for(const patch of [{date:'2030-01-19'},{date:'2030-01-20'},{time:'11:00'},{time:'11:29'},{time:'14:00'}])
+    assert.equal(v.approvalDigest({...f.approval,...patch}),null);
+  for(const time of ['11:30','13:59']) assert.ok(v.approvalDigest({...f.approval,time}));
+  for(const patch of [{name:'Other'},{hash:policy.hash},{mealid:7098},{maxParty:3}])
+    assert.throws(()=>createBokabordReceiptVerifier({...hantverket,...patch}),/reviewed_ordinary_meal_policy_required/);
+  f.observation.data.booking.mealid=7098;assert.equal(check().status,'unknown');
+});
+
+test('Hantverket stroller/dog comment stays part of approved submission',()=>{
+  const {v,f,check}=hantverketFixture();
+  f.approval.comment='Barnvagn och hund medföljer';
+  f.attempt.detailsDigest=v.approvalDigest(f.approval);
+  f.observation.detailsDigest=f.attempt.detailsDigest;
+  f.observation.request.payload.comment=f.approval.comment;
+  assert.equal(check().status,'confirmed');
+  f.observation.request.payload.comment='';
+  assert.equal(check().status,'unknown');
+});
+
+test('Hantverket retains submission and independent receipt binding with native-phone approval',()=>{
+  for(const change of [
+    f=>f.observation.data.booking.meal.type=3,
+    f=>f.observation.data.booking.meal.must_pay_directly=true,
+    f=>f.observation.data.booking.meal.mandatory_products=true,
+    f=>f.observation.data.booking.meal.bullets={cc:{sw:'Kort'}},
+    f=>f.observation.data.booking.require_noshow=true,
+    f=>f.observation.data.booking.group_booking=true,
+    f=>f.observation.data.booking.products=[{}],
+    f=>f.observation.data.booking.waitlist=1,
+    f=>f.observation.data.booking.status=0,
+    f=>f.observation.request.payload.terms.general=false,
+    f=>f.observation.request.payload.is_temp_booking=true,
+    f=>f.observation.request.payload.phone='+46711111111',
+    f=>{delete f.observation.request;},
+    f=>f.observation.attemptId='replayed',f=>f.attempt.dispatched=false,
+    f=>f.attempt.restaurantId='curated-STO-other',
+    f=>f.observation.receipt.documentNavigationId=999,
+    f=>{delete f.observation.receipt;},
+  ]) { const {f,check}=hantverketFixture();change(f);assert.equal(check().status,'unknown'); }
 });
 
 function bobonneFixture() {
