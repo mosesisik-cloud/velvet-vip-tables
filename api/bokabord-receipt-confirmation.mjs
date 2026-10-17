@@ -113,6 +113,12 @@ export const AGNES_DINNER_RECEIPT_POLICY = Object.freeze({
   hash: '1e49551d0d8b677c1dc6ad956301cec7', mealid: 1628, mealType: 3, maxParty: 2,
 });
 
+// Ordinary Lunch only; dinner (including same-evening phone bookings) excluded.
+export const BOBONNE_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-brasserie-bobonne', name: 'Brasserie Bobonne',
+  hash: 'b529fb237cb8d5e64c73c1faba7e9854', mealid: 31, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   const reviewedKlotet = Object.entries(KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY)

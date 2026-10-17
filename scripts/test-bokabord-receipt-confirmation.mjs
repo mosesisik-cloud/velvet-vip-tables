@@ -5,7 +5,51 @@ import { DAGMAR_LUNCH_RECEIPT_POLICY as dagmar, ITALIANO_DINING_RECEIPT_POLICY a
 import { GONDOLEN_LUNCH_RECEIPT_POLICY as gondolen } from '../api/bokabord-receipt-confirmation.mjs';
 import { KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY as klotet } from '../api/bokabord-receipt-confirmation.mjs';
 import { AGNES_DINNER_RECEIPT_POLICY as agnes } from '../api/bokabord-receipt-confirmation.mjs';
+import { BOBONNE_LUNCH_RECEIPT_POLICY as bobonne } from '../api/bokabord-receipt-confirmation.mjs';
 const verifier = createBokabordReceiptVerifier(policy);
+
+function bobonneFixture() {
+  const v=createBokabordReceiptVerifier(bobonne),f=fixture();
+  Object.assign(f.approval,{hash:bobonne.hash,mealid:bobonne.mealid});
+  Object.assign(f.attempt,{restaurantId:bobonne.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:bobonne.hash,mealid:bobonne.mealid});
+  Object.assign(f.observation.data.booking,{mealid:bobonne.mealid,
+    meal:{type:2,must_pay_directly:false,mandatory_products:false,bullets:{}}});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',bobonne.name);
+  return {v,f,check:()=>v.verify(f.attempt,f.approval,f.observation)};
+}
+
+test('Bobonne ordinary Lunch binds full venue name and excludes dinner and larger parties',()=>{
+  const {v,f,check}=bobonneFixture();
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  for(const party of [3,6,7]) assert.equal(v.approvalDigest({...f.approval,party}),null);
+  assert.equal(v.approvalDigest({...f.approval,mealid:155}),null);
+  assert.equal(v.approvalDigest({...f.approval,hash:policy.hash}),null);
+  f.observation.data.booking.mealid=155;assert.equal(check().status,'unknown');
+});
+
+test('Bobonne retains submission and independent receipt binding with native-phone approval',()=>{
+  for(const change of [
+    f=>f.observation.data.booking.meal.type=3,
+    f=>f.observation.data.booking.meal.must_pay_directly=true,
+    f=>f.observation.data.booking.meal.mandatory_products=true,
+    f=>f.observation.data.booking.meal.bullets={cc:{sw:'Kort'}},
+    f=>f.observation.data.booking.require_noshow=true,
+    f=>f.observation.data.booking.group_booking=true,
+    f=>f.observation.data.booking.products=[{}],
+    f=>f.observation.data.booking.waitlist=1,
+    f=>f.observation.data.booking.status=0,
+    f=>f.observation.request.payload.terms.general=false,
+    f=>f.observation.request.payload.is_temp_booking=true,
+    f=>f.observation.request.payload.phone='+46711111111',
+    f=>{delete f.observation.request;},
+    f=>f.observation.attemptId='replayed',f=>f.attempt.dispatched=false,
+    f=>f.attempt.restaurantId='curated-STO-other',
+    f=>f.observation.receipt.documentNavigationId=999,
+    f=>{delete f.observation.receipt;},
+  ]) { const {f,check}=bobonneFixture();change(f);assert.equal(check().status,'unknown'); }
+});
 
 function agnesFixture() {
   const v=createBokabordReceiptVerifier(agnes),f=fixture();
