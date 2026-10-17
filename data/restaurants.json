@@ -11697,7 +11697,11 @@
           "source": "VELVET curated · official website",
           "curated": true,
           "locationSource": "https://pelikan.se/boka-bord",
-          "locationVerifiedAt": "2026-10-18"
+          "locationVerifiedAt": "2026-10-18",
+          "bookingUrl": "https://app.waiteraid.com/reservation/?hash=27fdc69fb0efef5d4125e11383c08ee8",
+          "bookingProvider": "Bokabord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-18"
         }
       ]
     },
