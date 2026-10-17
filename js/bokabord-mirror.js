@@ -10,6 +10,12 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
     scope.textContent = 'Bokning i Velvet gäller Fredagslunch på Café Klotet för 1–2 gäster. Fredagar 11 september–18 december 2026, med start kl. 12.00–14.59 (Stockholmstid), i mån av lediga bord. Middag och övriga måltider ingår inte.';
     container.querySelector('.booking-source').after(scope);
   }
+  if (restaurantId === 'curated-STO-luzette') {
+    const scope = document.createElement('p');
+    scope.className = 'booking-scope';
+    scope.textContent = 'Bokning i Velvet gäller ordinarie lunch på Luzette för 1–2 gäster med start kl. 11.15–14.59, i mån av lediga bord. Frukost, middag, högtidsmenyer och gruppbokningar ingår inte.';
+    container.querySelector('.booking-source').after(scope);
+  }
   const start = container.querySelector('[data-start]');
   if (restaurantId === 'curated-STO-brasserie-bobonne') {
     const scope = document.createElement('p');
