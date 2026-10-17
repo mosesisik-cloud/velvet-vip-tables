@@ -11,6 +11,12 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
     container.querySelector('.booking-source').after(scope);
   }
   const start = container.querySelector('[data-start]');
+  if (restaurantId === 'curated-STO-agnes') {
+    const scope = document.createElement('p');
+    scope.className = 'booking-scope';
+    scope.textContent = 'Bokning i Velvet gäller ordinarie middag på Agnes för 1–2 gäster, i mån av lediga bord. Kontrollera sittningstid och placering i bokningsformuläret. Lunch, Köksbordet, Vinkällaren och väntelista ingår inte.';
+    container.querySelector('.booking-source').after(scope);
+  }
   const screen = container.querySelector('[data-screen]');
   const img = container.querySelector('[data-image]');
   let state, busy = false, disposed = false, reconcile = false, submissionStarted = false, expired = false, expiryConfirmed = false, failedFill = false;

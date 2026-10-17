@@ -13,7 +13,7 @@ import { RequestBudget } from "./request-budget.mjs";
 import { PlaywrightRuntime } from './playwright-runtime.mjs';
 import { PlaywrightAttemptLedger } from './playwright-attempt-ledger.mjs';
 import { createBookingJournalHooks } from './playwright-booking-journal.mjs';
-import { KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY, GONDOLEN_LUNCH_RECEIPT_POLICY, COPINE_LUNCH_RECEIPT_POLICY, ITALIANO_DINING_RECEIPT_POLICY, DAGMAR_LUNCH_RECEIPT_POLICY, BOQUERIA_LUNCH_RECEIPT_POLICY, VAU_LUNCH_RECEIPT_POLICY, ASTRID_LUNCH_RECEIPT_POLICY, KOMMENDOREN_LUNCH_RECEIPT_POLICY, BALZAC_LUNCH_RECEIPT_POLICY, BEIRUT_LUNCH_RECEIPT_POLICY, NOEMA_LUNCH_RECEIPT_POLICY, CICCIOS_DINING_RECEIPT_POLICY, RICHE_LUNCH_RECEIPT_POLICY, STUREHOF_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
+import { AGNES_DINNER_RECEIPT_POLICY, KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY, GONDOLEN_LUNCH_RECEIPT_POLICY, COPINE_LUNCH_RECEIPT_POLICY, ITALIANO_DINING_RECEIPT_POLICY, DAGMAR_LUNCH_RECEIPT_POLICY, BOQUERIA_LUNCH_RECEIPT_POLICY, VAU_LUNCH_RECEIPT_POLICY, ASTRID_LUNCH_RECEIPT_POLICY, KOMMENDOREN_LUNCH_RECEIPT_POLICY, BALZAC_LUNCH_RECEIPT_POLICY, BEIRUT_LUNCH_RECEIPT_POLICY, NOEMA_LUNCH_RECEIPT_POLICY, CICCIOS_DINING_RECEIPT_POLICY, RICHE_LUNCH_RECEIPT_POLICY, STUREHOF_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
 import { createProviderJournal } from './provider-booking-journal.mjs';
 import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_DEKAS, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
@@ -90,13 +90,30 @@ inspectionExpiry.unref();
 const mirrorLedger = new BookingLedger(path.join(__dir, 'mirror-attempts'));
 const playwrightAttempts = new PlaywrightAttemptLedger(process.env.VELVET_PLAYWRIGHT_DB || path.join(__dir, 'playwright-attempts.sqlite'));
 let bookingJournal;
-const bokabordMirror = new BokabordMirror({
-  contactFinalPolicies:[
+const contactFinalPolicies = [
     ...(process.env.VELVET_KLOTET_RECEIPT === 'enabled' ? [KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_GONDOLEN_RECEIPT === 'enabled' ? [GONDOLEN_LUNCH_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_RICHE_RECEIPT === 'enabled' ? [RICHE_LUNCH_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_STUREHOF_RECEIPT === 'enabled' ? [STUREHOF_LUNCH_RECEIPT_POLICY] : []),
-  ],
+];
+// The same exact policies govern allowed submissions and receipt verification.
+const providerReviewPolicies = [
+    ...(process.env.VELVET_AGNES_RECEIPT === 'enabled' ? [AGNES_DINNER_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_COPINE_RECEIPT === 'enabled' ? [COPINE_LUNCH_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_ITALIANO_RECEIPT === 'enabled' ? [ITALIANO_DINING_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_DAGMAR_RECEIPT === 'enabled' ? [DAGMAR_LUNCH_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_BOQUERIA_RECEIPT === 'enabled' ? [BOQUERIA_LUNCH_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_VAU_RECEIPT === 'enabled' ? [VAU_LUNCH_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_ASTRID_RECEIPT === 'enabled' ? [ASTRID_LUNCH_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_KOMMENDOREN_RECEIPT === 'enabled' ? [KOMMENDOREN_LUNCH_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_BALZAC_RECEIPT === 'enabled' ? [BALZAC_LUNCH_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_BEIRUT_RECEIPT === 'enabled' ? [BEIRUT_LUNCH_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_NOEMA_RECEIPT === 'enabled' ? [NOEMA_LUNCH_RECEIPT_POLICY] : []),
+    ...(process.env.VELVET_CICCIOS_RECEIPT === 'enabled' ? [CICCIOS_DINING_RECEIPT_POLICY] : []),
+];
+const bokabordMirror = new BokabordMirror({
+  submissionPolicies: providerReviewPolicies,
+  contactFinalPolicies,
   prepare: mirrorMode === 'live', live: mirrorMode === 'live',
   reserveSubmission: (approval, session) => bookingJournal.reserveSubmission(approval, session),
   recordResult: session => bookingJournal.recordResult(session),
@@ -285,23 +302,7 @@ async function zinkBook({ date, time, party, meal, guest, note, lang, context })
 const DATA = process.env.VELVET_DATA || path.join(__dir, "store.json");
 const bookingRegister = new BookingRegister(process.env.VELVET_BOOKINGS_DB || path.join(path.dirname(DATA), 'bookings.sqlite'));
 bookingJournal = createBookingJournalHooks({ ledger: playwrightAttempts, legacyLedger: mirrorLedger, register: bookingRegister, restaurants: RESTAURANT_DETAILS,
-  receiptPolicies:[
-    ...(process.env.VELVET_KLOTET_RECEIPT === 'enabled' ? [KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_GONDOLEN_RECEIPT === 'enabled' ? [GONDOLEN_LUNCH_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_COPINE_RECEIPT === 'enabled' ? [COPINE_LUNCH_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_ITALIANO_RECEIPT === 'enabled' ? [ITALIANO_DINING_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_DAGMAR_RECEIPT === 'enabled' ? [DAGMAR_LUNCH_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_BOQUERIA_RECEIPT === 'enabled' ? [BOQUERIA_LUNCH_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_VAU_RECEIPT === 'enabled' ? [VAU_LUNCH_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_ASTRID_RECEIPT === 'enabled' ? [ASTRID_LUNCH_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_KOMMENDOREN_RECEIPT === 'enabled' ? [KOMMENDOREN_LUNCH_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_BALZAC_RECEIPT === 'enabled' ? [BALZAC_LUNCH_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_BEIRUT_RECEIPT === 'enabled' ? [BEIRUT_LUNCH_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_NOEMA_RECEIPT === 'enabled' ? [NOEMA_LUNCH_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_CICCIOS_RECEIPT === 'enabled' ? [CICCIOS_DINING_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_RICHE_RECEIPT === 'enabled' ? [RICHE_LUNCH_RECEIPT_POLICY] : []),
-    ...(process.env.VELVET_STUREHOF_RECEIPT === 'enabled' ? [STUREHOF_LUNCH_RECEIPT_POLICY] : []),
-  ],
+  receiptPolicies: [...contactFinalPolicies, ...providerReviewPolicies],
 });
 sevenRoomsJournal = createProviderJournal({ledger:playwrightAttempts,register:bookingRegister,provider:'SevenRooms',
   restaurants:{[SEVENROOMS_PILOT.restaurantId]:{name:'Strandvägen 1',city:'Stockholm'}}});
