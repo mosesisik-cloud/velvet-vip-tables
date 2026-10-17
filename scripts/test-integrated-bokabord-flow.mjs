@@ -5,12 +5,14 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import { createHash } from 'node:crypto';
 import http from 'node:http';
 import { spawn, execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
+const sazon = process.argv.includes('--sazon') || process.env.VELVET_TEST_PROVIDER === 'Sazon';
 const fishcorner = process.argv.includes('--fishcorner') || process.env.VELVET_TEST_PROVIDER === 'FishCorner';
 const pesquiere = process.argv.includes('--pesquiere') || process.env.VELVET_TEST_PROVIDER === 'Pesquiere';
 const pirouette = process.argv.includes('--pirouette') || process.env.VELVET_TEST_PROVIDER === 'Pirouette';
@@ -43,13 +45,13 @@ const italiano = process.argv.includes('--italiano') || process.env.VELVET_TEST_
 const nativeGuest = guestLunch || italiano;
 const guestChoice = ciccios || nativeGuest;
 const contactFinal = riche || sturehof;
-assert.ok([fishcorner,pesquiere,pirouette,dekas,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar,italiano,copine].filter(Boolean).length <= 1, 'Choose one named provider scenario');
+assert.ok([sazon,fishcorner,pesquiere,pirouette,dekas,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar,italiano,copine].filter(Boolean).length <= 1, 'Choose one named provider scenario');
 const receiptMode = noema || guestChoice || contactFinal;
 const receiptName = copine ? 'Copine' : italiano ? 'Italiano' : dagmar ? 'Villa Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau De Ville' : astrid ? 'Brasserie Astrid' : kommendoren ? 'Kommendören' : balzac ? 'Brasserie Balzac' : beirut ? 'Beirut Café' : sturehof ? 'Sturehof' : riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
 const receiptCode = copine ? 'synthetic-copine-only' : italiano ? 'synthetic-italiano-only' : dagmar ? 'synthetic-dagmar-only' : boqueria ? 'synthetic-boqueria-only' : vau ? 'synthetic-vau-only' : astrid ? 'synthetic-astrid-only' : kommendoren ? 'synthetic-kommendoren-only' : balzac ? 'synthetic-balzac-only' : beirut ? 'synthetic-beirut-only' : sturehof ? 'synthetic-sturehof-only' : riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
 const mealId = copine ? 4790 : italiano ? 22890 : dagmar ? 63588 : boqueria ? 22 : vau ? 22476 : astrid ? 55508 : kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
 const mealType = dagmar ? 0 : noema || guestLunch || contactFinal ? 2 : 3;
-const restaurantId = copine ? 'curated-STO-copine' : italiano ? 'curated-STO-italiano' : dekas ? 'curated-AMS-de-kas' : dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const restaurantId = sazon ? 'osm-BAL-sazon' : copine ? 'curated-STO-copine' : italiano ? 'curated-STO-italiano' : dekas ? 'curated-AMS-de-kas' : dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
 const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[receiptMode ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 const date = '2030-01-15';
@@ -153,6 +155,26 @@ if (childMode) {
   const originalFetch = globalThis.fetch;
   globalThis.fetch = (address, options) => {
     const url = new URL(typeof address === 'string' || address instanceof URL ? address : address.url);
+    if (sazon && ['https://www.tablecheck.com/en/regent-bali-canggu-sazon/reserve/message','https://production-booking.tablecheck.com/v2/booking/availability_v5/grid'].includes(url.href)) {
+      const fixture=JSON.parse(fs.readFileSync(path.join(root,'scripts/fixtures/tablecheck-sazon-source.json')));
+      const grid=url.pathname.endsWith('/grid');
+      assert.equal(options?.method || 'GET',grid?'POST':'GET');
+      if(grid){
+        const query=JSON.parse(options.body);
+        assert.match(query.session_ref,/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/);
+        assert.deepEqual(query,{shop_id:'regent-bali-canggu-sazon',start_at:date+'T00:00:00.000+08:00',
+          pax_adult:2,pax_senior:0,pax_child:0,pax_baby:0,service_category_ids:[],manual_duration:null,
+          voucher_ids:[],smoking:'none',orders:[{is_group_order:true,qty:1,menu_item_id:'684f99577a39bdf73ccda4ab'}],
+          use_experience_page:true,locale:'en',session_ref:query.session_ref});
+        process.send?.({kind:'sazon-historical-rejection-replay',query});
+        return Promise.resolve(new Response(JSON.stringify(fixture.grid),{headers:{'content-type':'application/json'}}));
+      }
+      // Deliberately hostile translation tests text rendering, not supplier behavior.
+      fixture.context.menu.items['684f99577a39bdf73ccda4ab'].descriptionTranslations={en:'<img src=x onerror="window.sazonInjected=true">'};
+      const encoded=JSON.stringify(fixture.context).replaceAll('&','&amp;').replaceAll("'",'&#39;');
+      process.send?.({kind:'sazon-policy-fixture'});
+      return Promise.resolve(new Response(`<input data-preloaded="context" value='${encoded}' />`));
+    }
     if (!['localhost', '127.0.0.1', '::1'].includes(url.hostname)) {
       process.send?.({ kind: 'blocked-node-network', host: url.hostname });
       return Promise.reject(new Error('fixture_network_denied'));
@@ -418,7 +440,8 @@ async function main() {
     backend = `http://127.0.0.1:${port}`;
     child = spawn(process.execPath, ['--import', import.meta.url, 'api/server.mjs'], { cwd: root, env: {
       ...process.env, VELVET_INTEGRATED_SUPPLIER_FIXTURE: 'child', VELVET_TEST_DIRECTORY: directory,
-      VELVET_TEST_PROVIDER: copine ? 'Copine' : italiano ? 'Italiano' : dekas ? 'DeKas' : dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
+      VELVET_SAZON_PREPARATION: sazon ? 'enabled' : 'disabled',
+      VELVET_TEST_PROVIDER: sazon ? 'Sazon' : copine ? 'Copine' : italiano ? 'Italiano' : dekas ? 'DeKas' : dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
       VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_CICCIOS_RECEIPT: ciccios ? 'enabled' : 'disabled',
       VELVET_RICHE_RECEIPT: riche ? 'enabled' : 'disabled',
@@ -473,14 +496,14 @@ async function main() {
       // navigation that would leave the old mirror closure mounted after restart.
       await page.goto(base + '/?api=' + encodeURIComponent(base) + '&fixtureVisit=' + ++visitNumber + '#/restaurant/' + restaurantId,
         {waitUntil:'domcontentloaded',timeout:65_000});
-      await page.locator(zenchef ? '#provider-playwright-booking [data-start]' : '#bokabord-mirror [data-start]').waitFor();
-      assert.equal(await page.locator('#restaurant-provider-booking').count(), 0, 'Native route wins over registry embed');
+      await page.locator(sazon ? '#provider-preparation [data-prep-start]' : zenchef ? '#provider-playwright-booking [data-start]' : '#bokabord-mirror [data-start]').waitFor();
+      if (!sazon) assert.equal(await page.locator('#restaurant-provider-booking').count(), 0, 'Native route wins over registry embed');
     };
     await visit();
     return { context, page, visit };
   }
   const submits = () => messages.filter(m => m.kind === 'supplier-submit').length;
-  const panel = page => page.locator(zenchef ? '#provider-playwright-booking' : '#bokabord-mirror');
+  const panel = page => page.locator(sazon ? '#provider-preparation' : zenchef ? '#provider-playwright-booking' : '#bokabord-mirror');
   async function settled(page) {
     await page.waitForFunction(() => document.querySelector('#bokabord-mirror')?.getAttribute('aria-busy') === 'false');
   }
@@ -591,6 +614,111 @@ async function main() {
   }
   let first, second, third;
   try {
+    if (sazon) {
+      // Synthetic local sessions exercise normal server cookie/auth lookup. No real account is used.
+      const users={},sessions={};
+      for(const id of ['operator-one','operator-two','ordinary-member']){
+        users[id]={id,email:id+'@example.invalid',name:id,handle:id.startsWith('operator')?'velvet':'fixture-member',role:'user'};
+        sessions[createHash('sha256').update('local-test-'+id).digest('hex')]={userId:id,exp:Date.now()+3600000};
+      }
+      fs.writeFileSync(path.join(directory,'store.json'),JSON.stringify({users,sessions}));
+      await start('historical-rejection-only');browser=await chromium.launch();
+      const endpoint='/restaurant-bookings/playwright';
+      const cookie=id=>({name:'velvet_session',value:'local-test-'+id,url:base,httpOnly:true,sameSite:'Lax'});
+      const request=(page,route,body,method='POST')=>api(page,route,{method,headers:{'Content-Type':'application/json'},...(body===undefined?{}:{body:JSON.stringify(body)})});
+      const check=s=>{
+        assert.equal(s.mode,'prepare');assert.equal(s.preparation,true);assert.equal(s.operatorOnly,true);
+        for(const key of ['liveBooking','canHold','canSubmit'])assert.equal(s[key],false);
+        assert.equal(s.image,null);assert.equal(s.result,null);assert.equal(s.terms.menu.price,null);
+      };
+      const guest=await browser.newContext({serviceWorkers:'block'});
+      await guest.route('**/*',r=>new URL(r.request().url()).origin===base?r.continue():r.abort());
+      const guestPage=await guest.newPage();
+      await guestPage.goto(base+'/?api='+encodeURIComponent(base)+'#/restaurant/'+restaurantId);
+      await guestPage.waitForFunction(()=>document.body.textContent.includes('Sazón'));
+      const config=await api(guestPage,endpoint+'/config');
+      assert.equal(config.body.preparationOperator,false);
+      assert.equal(config.body.providers.some(p=>p.restaurantId===restaurantId),false);
+      assert.equal((await request(guestPage,endpoint,{provider:'TableCheck',restaurantId})).status,403);
+      assert.equal(await guestPage.locator('#provider-preparation').count(),0);
+      assert.ok(await guestPage.locator('a[href*="tablecheck.com"]').count(),'Guest retains external booking');
+      await guest.addCookies([cookie('ordinary-member')]);
+      assert.equal((await request(guestPage,endpoint,{provider:'TableCheck',restaurantId})).status,403);
+      let previousId;
+      if(process.argv.includes('--sazon-api-only')){
+        await guest.addCookies([cookie('operator-one')]);
+        const created=await request(guestPage,endpoint,{provider:'TableCheck',restaurantId});assert.equal(created.status,201);check(created.body);
+        let state=created.body;
+        const searched=await request(guestPage,endpoint+'/'+state.id+'/action',{type:'search',date,party:2,revision:state.revision});
+        assert.equal(searched.status,200);state=searched.body;check(state);assert.equal(state.availabilityEvidence.status,'invalid_menu_items');assert.deepEqual(state.availabilityEvidence.slots,[]);
+        const before=messages.filter(m=>m.kind.startsWith('sazon-')).length;
+        for(const type of ['hold','submit','fill','click','expireCart','cart_init','cart','cart_update','checkout']){
+          const denied=await request(guestPage,endpoint+'/'+state.id+'/action',{type,revision:state.revision,confirm:true,terms:true});assert.equal(denied.status,409);assert.equal(denied.body.error,'inspect_only');
+        }
+        for(const action of [{type:'search',date,party:2,revision:state.revision-1},{type:'select',slotId:'invented',revision:state.revision},{type:'review',revision:state.revision}])assert.equal((await request(guestPage,endpoint+'/'+state.id+'/action',action)).status,409);
+        assert.equal(messages.filter(m=>m.kind.startsWith('sazon-')).length,before);
+        await guest.addCookies([cookie('operator-two')]);assert.equal((await request(guestPage,endpoint+'/'+state.id+'/current',{})).status,404);
+        await stop();await start('historical-rejection-only');await guest.addCookies([cookie('operator-one')]);
+        assert.equal((await request(guestPage,endpoint+'/'+state.id+'/current',{})).status,404);assert.equal((await api(guestPage,endpoint+'/attempts')).body.attempts.length,0);
+        await guest.close();console.log('PASS Sazon API only; UI NOT validated',JSON.stringify({apiCalls:apiCalls.length,realProviderCalls:0,bookingWrites:submits(),historicalRejectionReplays:messages.filter(m=>m.kind==='sazon-historical-rejection-replay').length}));return;
+      }
+      for(const width of [390,1366]){
+        const view=await makeView(width,{cookies:[cookie('operator-one')],origins:[]});
+        first=view;const page=view.page,prep=page.locator('#provider-preparation');
+        await prep.locator('[data-prep-start]').evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));
+        const [opened]=await Promise.all([page.waitForResponse(r=>new URL(r.url()).pathname===endpoint&&r.request().method()==='POST'),prep.locator('[data-prep-start]').click({timeout:5000})]);
+        assert.equal(opened.status(),201);let state=await opened.json();check(state);
+        previousId=state.id;
+        await prep.locator('[data-prep-search]').waitFor();
+        assert.match(await prep.locator('[data-prep-policy]').innerText(),/Pris anges inte/);
+        assert.match(await prep.locator('[data-prep-policy]').innerText(),/<img src=x onerror=/);
+        assert.equal(await prep.locator('img,iframe,[data-submit],[data-terms]').count(),0);
+        assert.equal(await page.evaluate(()=>window.sazonInjected),undefined);
+        await prep.locator('input[name=date]').fill(date);
+        const searching=page.waitForResponse(r=>r.url().endsWith('/action')&&r.request().postDataJSON()?.type==='search');
+        await prep.locator('[data-prep-search] button').click();const searched=await searching;
+        assert.equal(searched.status(),200);state=await searched.json();check(state);
+        assert.equal(state.availabilityEvidence.status,'invalid_menu_items');assert.deepEqual(state.availabilityEvidence.slots,[]);
+        await page.waitForFunction(()=>document.querySelector('[data-prep-status]')?.textContent.includes('accepterade inte'));
+        assert.equal(await prep.locator('[data-prep-slot]').count(),0);
+        const calls=messages.filter(m=>m.kind.startsWith('sazon-')).length;
+        for(const type of ['hold','submit','fill','click','expireCart','cart_init','cart','cart_update','checkout']){
+          const denied=await request(page,endpoint+'/'+state.id+'/action',{type,revision:state.revision,confirm:true,terms:true});
+          assert.equal(denied.status,409);assert.equal(denied.body.error,'inspect_only');
+        }
+        assert.equal((await request(page,endpoint+'/'+state.id+'/action',{type:'search',date,party:2,revision:state.revision-1})).status,409);
+        assert.equal((await request(page,endpoint+'/'+state.id+'/action',{type:'select',slotId:'invented',revision:state.revision})).status,409);
+        assert.equal((await request(page,endpoint+'/'+state.id+'/action',{type:'review',revision:state.revision})).status,409);
+        assert.equal(messages.filter(m=>m.kind.startsWith('sazon-')).length,calls,'Denied actions make zero supplier calls');
+        await guest.addCookies([cookie('operator-two')]);
+        assert.equal((await request(guestPage,endpoint+'/'+state.id+'/current',{})).status,404);
+        assert.equal((await api(page,endpoint+'/attempts')).body.attempts.length,0);
+        await prep.screenshot({path:path.join(root,'..','sazon-preparation-'+width+'.png')});
+        if(width===390){
+          // Separate UI fault injection: null is not an acknowledged deletion.
+          const target=base+endpoint+'/'+state.id;
+          await page.route(target,r=>r.request().method()==='DELETE'?r.fulfill({status:200,contentType:'application/json',body:'null'}):r.continue());
+          await prep.locator('[data-prep-end]').click();
+          await page.waitForFunction(()=>document.querySelector('[data-prep-status]')?.textContent.startsWith('Kunde inte avsluta'));
+          assert.equal(await prep.locator('[data-prep-start]').isHidden(),true);
+          await page.unroute(target);await prep.locator('[data-prep-end]').click();
+          await page.waitForFunction(()=>document.querySelector('[data-prep-status]')?.textContent.endsWith('avslutad.'));
+          assert.equal((await request(page,endpoint+'/'+state.id+'/current',{})).status,404);
+        }
+        await view.context.close();first=null;
+      }
+      await stop();await start('historical-rejection-only');
+      await guest.addCookies([cookie('operator-one')]);
+      assert.equal((await request(guestPage,endpoint+'/'+previousId+'/current',{})).status,404);
+      assert.equal((await api(guestPage,endpoint+'/attempts')).body.attempts.length,0);
+      await guest.close();
+      assert.equal(submits(),0);
+      assert.equal(messages.filter(m=>m.kind==='blocked-node-network').length,0,'No unexpected provider endpoint attempted');
+      const queries=messages.filter(m=>m.kind==='sazon-historical-rejection-replay');assert.equal(queries.length,2);
+      for(const {query} of queries){assert.equal(query.start_at,date+'T00:00:00.000+08:00');assert.equal(query.shop_id,'regent-bali-canggu-sazon');assert.equal(query.use_experience_page,true);}
+      console.log(JSON.stringify({provider:'Sazon',apiCalls:apiCalls.length,policyFixtures:messages.filter(m=>m.kind==='sazon-policy-fixture').length,historicalRejectionReplays:queries.length,realProviderCalls:0,bookingWrites:0,viewports:[390,1366],availabilityEvidence:'none: historical rejection replay only'}));
+      return;
+    }
     if (zenchef) {
       let recoveredRoom;
       let offerGuardsChecked=false;

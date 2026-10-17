@@ -80,3 +80,23 @@ test('room selection and venue-specific confirmation policy remain bound across 
     assert.equal(journal.verifySnapshot(snapshot,'other'),null);
   } finally {ledger.close();}
 });
+
+test('Sazon server cart phases require explicit venue opt-in and never enter booking history',()=>{
+  const ledger=new PlaywrightAttemptLedger(':memory:'),rows=[];
+  const request={...intent('cart'),provider:'TableCheck',restaurantId:'osm-BAL-sazon'};
+  const make=cartPreparation=>createProviderJournal({ledger,provider:'TableCheck',mode:'fixture',
+    restaurants:{'osm-BAL-sazon':{name:'Sazon',cartPreparation}},register:{upsert:row=>rows.push(row)}});
+  try{
+    assert.throws(()=>make(false).reserveAttempt(request),/intent_binding/);
+    const journal=make(true);
+    for(const phase of ['cart_init','cart','cart_update']){
+      const scoped={...request,phase};const {attempt}=journal.reserveAttempt(scoped);
+      assert.equal(attempt.phase,phase);
+      const result=journal.recordAttempt({intent:scoped,attempt,result:{status:'confirmed',reference:'PRIVATE-CART',accessToken:'PRIVATE-TOKEN'}});
+      assert.equal(result.status,'unknown');assert.equal(result.reference,null);
+      assert.throws(()=>journal.reserveAttempt({...scoped,sessionId:'rotated'}),/already_attempted/);
+    }
+    journal.recover('guest');assert.deepEqual(rows,[]);
+    assert(!JSON.stringify(ledger.list('guest')).includes('PRIVATE'));
+  }finally{ledger.close();}
+});

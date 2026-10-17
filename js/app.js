@@ -1,3 +1,4 @@
+import {mountProviderPreparation} from './provider-preparation.js?v=216';
 import { restaurantContactPanel } from './restaurant-contact.js?v=190';
 import { MEMBER_ACCOUNTS_ENABLED } from "./release-features.js";
 import { external200BookingPanel } from './external200-booking.js?v=190';
@@ -2516,6 +2517,7 @@ async function renderRestaurantDetail(placeId) {
   const mirrorConfig = destination.code === 'STO' ? await apiJSON("/restaurant-bookings/mirror/config") : null;
   const playwrightConfig = await apiJSON('/restaurant-bookings/playwright/config');
   const nativeProvider = playwrightConfig?.providers?.find(entry => entry.restaurantId === restaurant.placeId && entry.enabled === true && entry.liveBooking === true && entry.operatorOnly === false);
+  const preparationProvider = playwrightConfig?.preparationOperator === true ? playwrightConfig.providers?.find(entry=>entry.restaurantId===restaurant.placeId && entry.preparation===true && entry.operatorOnly===true && entry.liveBooking===false) : null;
   if (location.hash !== restaurantRoute) return;
   const bookingCopy = getBookingCopy(currentLang());
   const scopedBookingPanel = external200BookingPanel(restaurant.placeId, embeddedBooking, currentLang());
@@ -2577,6 +2579,7 @@ async function renderRestaurantDetail(placeId) {
         </section>
 
         ${bookingPanel}
+        ${preparationProvider ? `<div id="provider-preparation"></div>` : ""}
       </aside>
       <div class="restaurant-detail-main">
         <div class="detail-panel"><h2>${esc(rt("about"))}</h2><dl class="restaurant-facts">
@@ -2608,6 +2611,11 @@ async function renderRestaurantDetail(placeId) {
   }
   const mirrorContainer = document.getElementById("bokabord-mirror");
   if (mirrorContainer) mountBokabordMirror(mirrorContainer, apiJSON, { restaurantId: restaurant.placeId, restaurantName: restaurant.name });
+  const preparationContainer = document.getElementById('provider-preparation');
+  if (preparationContainer) {
+    const preparationView=mountProviderPreparation(preparationContainer,apiJSON,{provider:preparationProvider.provider,restaurantId:restaurant.placeId});
+    window.addEventListener('hashchange',()=>preparationView.destroy(),{once:true});
+  }
   const nativeProviderContainer = document.getElementById('provider-playwright-booking');
   if (nativeProviderContainer) {
     const bookingView = mountProviderPlaywrightBooking(nativeProviderContainer, apiJSON, {provider:nativeProvider.provider,restaurantId:restaurant.placeId,restaurantName:restaurant.name,endpoint:'/restaurant-bookings/playwright'});

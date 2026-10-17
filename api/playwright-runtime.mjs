@@ -19,7 +19,7 @@ export class PlaywrightRuntime {
     const entry = Object.hasOwn(this.providers,provider) && this.providers[provider];
     return Array.isArray(entry) ? entry : entry ? [entry] : [];
   }
-  mode(entry) { return entry?.mode === 'live' ? 'live' : 'inspect'; }
+  mode(entry) { return ['live','prepare'].includes(entry?.mode) ? entry.mode : 'inspect'; }
   active(entry) { return entry?.enabled ?? this.enabled; }
   guestProvider(provider, restaurantId) {
     const entry = this.entries(provider).find(entry=>entry.restaurantId === restaurantId);
@@ -30,6 +30,7 @@ export class PlaywrightRuntime {
       provider, restaurantId: entry.restaurantId, mode: this.mode(entry),
       enabled: this.active(entry), operatorOnly: this.mode(entry) !== 'live', liveBooking: this.mode(entry) === 'live' && this.active(entry),
       semanticContract: false, availabilityVerified: false,
+      preparation: this.mode(entry) === 'prepare' && this.active(entry),
       reason: this.mode(entry) === 'live' && this.active(entry) ? null : 'supplier_checkout_unverified',
     })));
   }
@@ -66,6 +67,12 @@ export class PlaywrightRuntime {
   project(snapshot, entry, owner) {
     if (!snapshot?.id) throw new PlaywrightRuntimeError('session_expired', 404);
     if (snapshot.mode === 'fixture') throw new PlaywrightRuntimeError('fixture_forbidden', 409);
+    if (this.mode(entry) === 'prepare') {
+      if (snapshot.restaurantId !== entry.restaurantId || snapshot.mode !== 'prepare'
+        || snapshot.provider !== entry.provider || snapshot.image !== null) throw new PlaywrightRuntimeError('provider_binding',409);
+      return {...snapshot,mode:'prepare',phase:'preparation',operatorOnly:true,preparation:true,
+        canCart:false,canHold:false,canSubmit:false,result:null,liveBooking:false,semanticContract:false};
+    }
     if (this.mode(entry) === 'live') {
       if (snapshot.restaurantId !== entry.restaurantId) throw new PlaywrightRuntimeError('provider_binding', 409);
       // A successfully acquired temporary hold is not a booking outcome.
@@ -94,7 +101,8 @@ export class PlaywrightRuntime {
       throw new PlaywrightRuntimeError('session_expired', 404);
     }
     if (!['current','action','remove'].includes(operation)) throw new PlaywrightRuntimeError('method', 405);
-    const actions = this.mode(s.entry) === 'live' ? (s.entry.actions || ['refresh']) : ['refresh'];
+    const actions = this.mode(s.entry) === 'live' ? (s.entry.actions || ['refresh'])
+      : this.mode(s.entry) === 'prepare' ? ['search','select','review','refresh'].filter(action=>(s.entry.actions || []).includes(action)) : ['refresh'];
     if (operation === 'action' && !actions.includes(action?.type)) throw new PlaywrightRuntimeError('inspect_only', 409);
     if (operation === 'action' && ['hold','submit'].includes(action.type)
       && (action.confirm !== true || action.type === 'submit' && action.terms !== true

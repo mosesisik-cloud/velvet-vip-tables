@@ -1,3 +1,4 @@
+import {TablecheckSazon, SAZON} from './providers/tablecheck-sazon.mjs';
 import { cleanBookingOffer } from './booking-offer.mjs';
 import { createDelicityAvailability } from './providers/delicity-availability.mjs';
 import { verifyIdentityToken, newOAuthTransaction, validOAuthTransaction, oauthCookie, configuredOAuth } from "./oauth-security.mjs";
@@ -58,6 +59,7 @@ const sevenRoomsInspection = new SevenRoomsPlaywright({
   reserveAttempt: intent => sevenRoomsJournal.reserveAttempt(intent),
   recordAttempt: evidence => sevenRoomsJournal.recordAttempt(evidence),
 });
+const sazonPreparation = new TablecheckSazon();
 const playwrightRuntime = new PlaywrightRuntime({
   enabled: process.env.VELVET_PLAYWRIGHT_INSPECTION === 'enabled',
   limit: 1,
@@ -77,6 +79,9 @@ const playwrightRuntime = new PlaywrightRuntime({
       ...(dekasLive ? [{restaurantId:ZENCHEF_DEKAS.restaurantId,enabled:true,mode:'live',
         actions:['search','select','select_offer','fill','review','submit','refresh'],adapter:zenchefInspection,
         current:(_id,owner)=>zenchefInspection.current(owner)}] : [])],
+    TableCheck: {provider:'TableCheck',restaurantId:SAZON.restaurantId,mode:'prepare',
+      enabled:process.env.VELVET_SAZON_PREPARATION === 'enabled',actions:['search','select','review','refresh'],
+      adapter:sazonPreparation,current:(id,owner)=>sazonPreparation.current(id,owner)},
     SevenRooms: { restaurantId: SEVENROOMS_PILOT.restaurantId, adapter: sevenRoomsInspection, current: (id, owner) => sevenRoomsInspection.current(id, owner) },
   },
 });
@@ -1940,7 +1945,9 @@ const server = http.createServer(async (req, res) => {
       }
     }
     if (req.method === 'GET' && url.pathname === '/restaurant-bookings/playwright/config') {
-      return send(res, 200, { providers: playwrightRuntime.capabilities(),
+      const user = sessionPublicUser(req, load());
+      const preparationOperator = !!user && isOperator(user);
+      return send(res, 200, { preparationOperator, providers: playwrightRuntime.capabilities().filter(entry => entry.mode !== 'prepare' || preparationOperator),
         bokabord: { enabled: mirrorMode === 'live', mode: mirrorMode, transport: 'native-mirror', guestBooking: mirrorMode === 'live', restaurantIds: Object.keys(RESTAURANTS) } }, { 'Cache-Control': 'no-store' });
     }
     if (req.method === 'GET' && url.pathname === '/restaurant-bookings/playwright/attempts') {

@@ -18,8 +18,10 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     createdAt:attempt.createdAt,updatedAt:attempt.updatedAt,
   });
   function scope(intent) {
+    const cartPhase=['cart_init','cart','cart_update'].includes(intent?.phase) && provider==='TableCheck'
+      && intent.restaurantId==='osm-BAL-sazon' && venue(intent.restaurantId)?.cartPreparation===true;
     if (!intent || intent.provider !== provider || !venue(intent.restaurantId)
-      || !['hold','booking'].includes(intent.phase) || !intent.owner || !intent.sessionId
+      || (!['hold','booking'].includes(intent.phase) && !cartPhase) || !intent.owner || !intent.sessionId
       || !/^[a-f0-9]{64}$/.test(intent.reviewFingerprint || '')) fail('intent_binding');
     const configured=venue(intent.restaurantId).offer;
     if (configured) {
@@ -37,6 +39,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
       && (!rooms || (rooms.some(room=>room.id === attempt.roomId && room.name === attempt.roomName)
         && proof?.roomId === attempt.roomId && proof?.roomName === attempt.roomName))
       && (!venue(attempt.restaurantId)?.roomEvidence || proof?.roomEvidence === venue(attempt.restaurantId).roomEvidence)
+      && (!venue(attempt.restaurantId)?.orderEvidence || proof?.orderEvidence === venue(attempt.restaurantId).orderEvidence)
       && (!venue(attempt.restaurantId)?.offer || (cleanBookingOffer(attempt.details?.offer)
         && proof?.offerEvidence === 'own_booking_readback'
         && proof.offerId === attempt.details.offer.offerId && proof.offerCount === attempt.details.offer.count
