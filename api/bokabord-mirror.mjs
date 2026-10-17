@@ -300,8 +300,10 @@ export class BokabordMirror {
       return { query: booking.getQuery(), card: !!booking.meal?.bullets?.cc || booking.require_noshow === true || !!booking.meal?.must_pay_directly, products: !!booking.meal?.mandatory_products };
     }).catch(() => null);
     const contactFinal = this.contactFinalVerifiers.has(s.restaurantId);
-    const contactPhone = contactFinal ? await s.page.evaluate(readRicheContactPhone).catch(()=>null) : null;
-    if (contactFinal && !contactPhone) return null;
+    const needsContactPhone = contactFinal || (this.submissionVerifiers.has(s.restaurantId)
+      && await s.page.getByRole('heading', { name: 'Kontaktuppgifter', exact: true }).isVisible());
+    const contactPhone = needsContactPhone ? await s.page.evaluate(readRicheContactPhone).catch(()=>null) : null;
+    if (needsContactPhone && !contactPhone) return null;
     // Projection only: Next owns the eventual provider-model phone/country copy.
     const q = contactPhone ? {...model?.query,phone:contactPhone.canonical} : model?.query;
     s.handoffReason = s.providerReservationRequired ? 'provider_reservation_required' : model?.card ? 'card_required' : model?.products || q?.products?.length ? 'products_required' : q?.waitlist ? 'waitlist' : null;
