@@ -92,6 +92,13 @@ export const COPINE_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: '153ead326f6097aa89a7e5db04760c97', mealid: 4790, mealType: 2, maxParty: 2,
 });
 
+// Ordinary Lunch only. Feature-off contact Next can submit directly: the
+// existing Velvet review must precede it. Dinner and all event meals excluded.
+export const GONDOLEN_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-gondolen', name: 'Gondolen',
+  hash: '720cdcb4d664ceeebbe8548904e275e6', mealid: 33008, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   const reviewedType0 = Object.entries(DAGMAR_LUNCH_RECEIPT_POLICY)

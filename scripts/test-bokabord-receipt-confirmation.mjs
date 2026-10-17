@@ -2,7 +2,54 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createBokabordReceiptVerifier, NOEMA_LUNCH_RECEIPT_POLICY as policy, CICCIOS_DINING_RECEIPT_POLICY as ciccios, RICHE_LUNCH_RECEIPT_POLICY as riche, STUREHOF_LUNCH_RECEIPT_POLICY as sturehof, BEIRUT_LUNCH_RECEIPT_POLICY as beirut, BALZAC_LUNCH_RECEIPT_POLICY as balzac, KOMMENDOREN_LUNCH_RECEIPT_POLICY as kommendoren, ASTRID_LUNCH_RECEIPT_POLICY as astrid, VAU_LUNCH_RECEIPT_POLICY as vau, BOQUERIA_LUNCH_RECEIPT_POLICY as boqueria } from '../api/bokabord-receipt-confirmation.mjs';
 import { DAGMAR_LUNCH_RECEIPT_POLICY as dagmar, ITALIANO_DINING_RECEIPT_POLICY as italiano, COPINE_LUNCH_RECEIPT_POLICY as copine } from '../api/bokabord-receipt-confirmation.mjs';
+import { GONDOLEN_LUNCH_RECEIPT_POLICY as gondolen } from '../api/bokabord-receipt-confirmation.mjs';
 const verifier = createBokabordReceiptVerifier(policy);
+
+function gondolenFixture() {
+  const v=createBokabordReceiptVerifier(gondolen),f=fixture();
+  Object.assign(f.approval,{hash:gondolen.hash,mealid:gondolen.mealid});
+  Object.assign(f.attempt,{restaurantId:gondolen.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:gondolen.hash,mealid:gondolen.mealid});
+  Object.assign(f.observation.data.booking,{mealid:gondolen.mealid,
+    meal:{type:2,group_booking:true,must_pay_directly:false,mandatory_products:false,bullets:{}}});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',gondolen.name);
+  return {v,f,check:()=>v.verify(f.attempt,f.approval,f.observation)};
+}
+
+test('Gondolen ordinary Lunch binds exact identity and excludes dinner, private rooms and every published event',()=>{
+  const {v,f,check}=gondolenFixture();
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  assert.equal(v.approvalDigest({...f.approval,party:3}),null);
+  assert.equal(v.approvalDigest({...f.approval,hash:policy.hash}),null);
+  for(const mealid of [33009,34460,36498,39271,46058,51679,53289,53348,53350,65403]){
+    assert.equal(v.approvalDigest({...f.approval,mealid}),null);
+    f.observation.data.booking.mealid=mealid;assert.equal(check().status,'unknown');
+  }
+  f.observation.data.booking.mealid=gondolen.mealid;
+  f.observation.data.booking.meal.type=3;assert.equal(check().status,'unknown');
+});
+
+test('Gondolen card, replay, consent and independent receipt guards remain mandatory',()=>{
+  for(const change of [
+    f=>f.observation.data.booking.meal.must_pay_directly=true,
+    f=>f.observation.data.booking.meal.mandatory_products=true,
+    f=>f.observation.data.booking.meal.bullets={cc:{sw:'Kort'}},
+    f=>f.observation.data.booking.require_noshow=true,
+    f=>f.observation.data.booking.group_booking=true,
+    f=>f.observation.data.booking.products=[{}],
+    f=>f.observation.data.booking.waitlist=1,
+    f=>f.observation.data.booking.status=0,
+    f=>f.observation.request.payload.terms.general=false,
+    f=>f.observation.request.payload.is_temp_booking=true,
+    f=>f.observation.request.payload.phone='+46711111111',
+    f=>f.observation.attemptId='replayed',
+    f=>f.attempt.dispatched=false,
+    f=>f.attempt.restaurantId='curated-STO-other',
+    f=>f.observation.receipt.documentNavigationId=999,
+    f=>{delete f.observation.receipt;},
+  ]) { const {f,check}=gondolenFixture();change(f);assert.equal(check().status,'unknown'); }
+});
 test('Italiano Dining Room binds dinner type and excludes Saturday lunch and Bar',()=>{
   const v=createBokabordReceiptVerifier(italiano),f=fixture();
   Object.assign(f.approval,{hash:italiano.hash,mealid:italiano.mealid,time:'19:00'});
