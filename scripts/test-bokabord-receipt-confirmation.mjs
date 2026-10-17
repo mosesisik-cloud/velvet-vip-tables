@@ -6,7 +6,54 @@ import { GONDOLEN_LUNCH_RECEIPT_POLICY as gondolen } from '../api/bokabord-recei
 import { KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY as klotet } from '../api/bokabord-receipt-confirmation.mjs';
 import { AGNES_DINNER_RECEIPT_POLICY as agnes } from '../api/bokabord-receipt-confirmation.mjs';
 import { BOBONNE_LUNCH_RECEIPT_POLICY as bobonne } from '../api/bokabord-receipt-confirmation.mjs';
+import { LUZETTE_LUNCH_RECEIPT_POLICY as luzette } from '../api/bokabord-receipt-confirmation.mjs';
 const verifier = createBokabordReceiptVerifier(policy);
+
+function luzetteFixture() {
+  const v=createBokabordReceiptVerifier(luzette),f=fixture();
+  Object.assign(f.approval,{hash:luzette.hash,mealid:luzette.mealid});
+  Object.assign(f.attempt,{restaurantId:luzette.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:luzette.hash,mealid:luzette.mealid});
+  Object.assign(f.observation.data.booking,{mealid:luzette.mealid,
+    meal:{type:2,must_pay_directly:false,mandatory_products:false,bullets:{}}});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',luzette.name);
+  return {v,f,check:()=>v.verify(f.attempt,f.approval,f.observation)};
+}
+
+test('Luzette exact Lunch scope binds 1–2 guests, native time window and excludes every other meal',()=>{
+  const {v,f,check}=luzetteFixture();
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  for(const party of [1,2]) assert.ok(v.approvalDigest({...f.approval,party}));
+  for(const party of [0,3,8,9]) assert.equal(v.approvalDigest({...f.approval,party}),null);
+  for(const time of ['11:15','14:59']) assert.ok(v.approvalDigest({...f.approval,time}));
+  for(const time of ['11:14','15:00']) assert.equal(v.approvalDigest({...f.approval,time}),null);
+  for(const mealid of [7254,7434,44511,49633,49749,51726,52551]) {
+    assert.equal(v.approvalDigest({...f.approval,mealid}),null);
+    f.observation.data.booking.mealid=mealid;assert.equal(check().status,'unknown');
+  }
+  for(const patch of [{name:'Other'},{hash:policy.hash},{mealid:7254},{mealType:3},{maxParty:8}])
+    assert.throws(()=>createBokabordReceiptVerifier({...luzette,...patch}));
+});
+
+test('Luzette contact-final policy preserves request, native canonical phone and receipt guards',()=>{
+  for(const change of [
+    f=>f.observation.data.booking.meal.type=3,
+    f=>f.observation.data.booking.meal.must_pay_directly=true,
+    f=>f.observation.data.booking.meal.mandatory_products=true,
+    f=>f.observation.data.booking.meal.bullets={cc:{sw:'Kort'}},
+    f=>f.observation.data.booking.require_noshow=true,
+    f=>f.observation.data.booking.group_booking=true,
+    f=>f.observation.data.booking.products=[{}],f=>f.observation.data.booking.waitlist=1,
+    f=>f.observation.data.booking.status=0,
+    f=>f.observation.request.payload.terms.general=false,
+    f=>f.observation.request.payload.is_temp_booking=true,
+    f=>f.observation.request.payload.phone='+46711111111',
+    f=>{delete f.observation.request;},f=>f.observation.attemptId='replayed',
+    f=>f.attempt.dispatched=false,f=>f.observation.receipt.documentNavigationId=999,
+    f=>{delete f.observation.receipt;},
+  ]) { const {f,check}=luzetteFixture();change(f);assert.equal(check().status,'unknown'); }
+});
 
 function bobonneFixture() {
   const v=createBokabordReceiptVerifier(bobonne),f=fixture();

@@ -11630,6 +11630,24 @@
           "bookingProvider": "BokaBord",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-17"
+        },
+        {
+          "placeId": "curated-STO-luzette",
+          "name": "Luzette",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Centralplan 25, 111 20 Stockholm",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Luzette%2C%20Centralplan%2025%2C%20Stockholm",
+          "website": "https://luzette.se/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://luzette.se/boka-bord/",
+          "locationVerifiedAt": "2026-10-17",
+          "bookingUrl": "https://app.waiteraid.com/reservation/?hash=e2b9133107e1225157d4ea30e3967d5c",
+          "bookingProvider": "Bokabord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-17"
         }
       ]
     },
