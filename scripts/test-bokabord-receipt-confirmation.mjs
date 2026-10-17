@@ -4,7 +4,53 @@ import { createBokabordReceiptVerifier, NOEMA_LUNCH_RECEIPT_POLICY as policy, CI
 import { DAGMAR_LUNCH_RECEIPT_POLICY as dagmar, ITALIANO_DINING_RECEIPT_POLICY as italiano, COPINE_LUNCH_RECEIPT_POLICY as copine } from '../api/bokabord-receipt-confirmation.mjs';
 import { GONDOLEN_LUNCH_RECEIPT_POLICY as gondolen } from '../api/bokabord-receipt-confirmation.mjs';
 import { KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY as klotet } from '../api/bokabord-receipt-confirmation.mjs';
+import { AGNES_DINNER_RECEIPT_POLICY as agnes } from '../api/bokabord-receipt-confirmation.mjs';
 const verifier = createBokabordReceiptVerifier(policy);
+
+function agnesFixture() {
+  const v=createBokabordReceiptVerifier(agnes),f=fixture();
+  Object.assign(f.approval,{hash:agnes.hash,mealid:agnes.mealid,time:'19:00'});
+  Object.assign(f.attempt,{restaurantId:agnes.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:agnes.hash,mealid:agnes.mealid,time:'19:00'});
+  Object.assign(f.observation.data.booking,{mealid:agnes.mealid,time:'19:00',
+    meal:{type:3,group_booking:true,must_pay_directly:false,mandatory_products:false,bullets:{}}});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',agnes.name)
+    .replace('(Lunch)','(Middag)').replace('12:00 - 13:30','19:00 - 20:30');
+  return {v,f,check:()=>v.verify(f.attempt,f.approval,f.observation)};
+}
+
+test('Agnes ordinary dinner binds canonical identity, type and cap; lunch/private meals excluded',()=>{
+  const {v,f,check}=agnesFixture();
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  assert.equal(v.approvalDigest({...f.approval,party:3}),null);
+  assert.equal(v.approvalDigest({...f.approval,hash:policy.hash}),null);
+  for(const mealid of [1627,2775,3568]) {
+    assert.equal(v.approvalDigest({...f.approval,mealid}),null);
+    f.observation.data.booking.mealid=mealid;assert.equal(check().status,'unknown');
+  }
+});
+
+test('Agnes requires bound receipt and preserves payment, waitlist, consent and replay guards',()=>{
+  for(const change of [
+    f=>f.observation.data.booking.meal.type=2,
+    f=>f.observation.data.booking.meal.must_pay_directly=true,
+    f=>f.observation.data.booking.meal.mandatory_products=true,
+    f=>f.observation.data.booking.meal.bullets={cc:{sw:'Kort'}},
+    f=>f.observation.data.booking.require_noshow=true,
+    f=>f.observation.data.booking.group_booking=true,
+    f=>f.observation.data.booking.products=[{}],
+    f=>f.observation.data.booking.waitlist=1,
+    f=>f.observation.data.booking.status=0,
+    f=>f.observation.request.payload.terms.general=false,
+    f=>f.observation.request.payload.is_temp_booking=true,
+    f=>f.observation.request.payload.phone='+46711111111',
+    f=>f.observation.attemptId='replayed',f=>f.attempt.dispatched=false,
+    f=>f.attempt.restaurantId='curated-STO-other',
+    f=>f.observation.receipt.documentNavigationId=999,
+    f=>{delete f.observation.receipt;},
+  ]) { const {f,check}=agnesFixture();change(f);assert.equal(check().status,'unknown'); }
+});
 
 function gondolenFixture() {
   const v=createBokabordReceiptVerifier(gondolen),f=fixture();

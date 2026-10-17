@@ -107,6 +107,12 @@ export const KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY = Object.freeze({
   type0Contract: 'cafe-klotet-friday-lunch:63872:2026:v1',
 });
 
+// Ordinary dinner only, provider review for unauthenticated guest continuation.
+export const AGNES_DINNER_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-agnes', name: 'Agnes',
+  hash: '1e49551d0d8b677c1dc6ad956301cec7', mealid: 1628, mealType: 3, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
   const reviewedKlotet = Object.entries(KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY)
