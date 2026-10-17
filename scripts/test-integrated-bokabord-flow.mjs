@@ -20,18 +20,21 @@ const pirouette = process.argv.includes('--pirouette') || process.env.VELVET_TES
 const roomVenue = pesquiere || pirouette;
 const dekas = process.argv.includes('--dekas') || process.env.VELVET_TEST_PROVIDER === 'DeKas';
 const bofinger=process.argv.includes('--bofinger') || process.env.VELVET_TEST_PROVIDER==='Bofinger';
-const bofingerTail=bofinger && process.argv.includes('--bofinger-tail');
-const bofingerSource=JSON.parse(fs.readFileSync(path.join(root,'scripts/fixtures/bofinger-source.json'),'utf8'));
-const bofingerCases=['notice-changed','form-card','form-manual','form-prepayment','form-shift','missing-saved-time','wrong-saved-party','pending-saved','unexpected-offer','missing-offers','saved-room','mismatch-readback-id','mismatch-readback-uuid','mismatch-readback-date','readback-error','readback-http-error'];
-const readbackVenue = bofinger || roomVenue || dekas;
+const laCoupole=process.argv.includes('--la-coupole') || process.env.VELVET_TEST_PROVIDER==='LaCoupole';
+const namedLunch=bofinger || laCoupole;
+const lunchSlug=laCoupole?'la-coupole':'bofinger';
+const lunchTail=namedLunch && process.argv.includes('--'+lunchSlug+'-tail');
+const lunchSource=namedLunch?JSON.parse(fs.readFileSync(path.join(root,'scripts/fixtures/'+lunchSlug+'-source.json'),'utf8')):null;
+const lunchCases=['notice-changed','form-card','form-manual','form-prepayment','form-shift','form-cancellation','missing-saved-time','wrong-saved-party','pending-saved','unexpected-offer','missing-offers','saved-room','mismatch-readback-id','mismatch-readback-uuid','mismatch-readback-date','readback-error','readback-http-error'];
+const readbackVenue = namedLunch || roomVenue || dekas;
 const zenchef = fishcorner || readbackVenue;
 const chosenRoom = pirouette ? 52521 : 52372;
 const otherRoom = pirouette ? 65674 : 51183;
 const alternateRoom = pirouette ? 65674 : 52373;
 const chosenRoomName = pirouette ? 'Salle principale' : 'Mazagran salle';
-const zenchefShift = bofinger ? 19170 : dekas ? 494748 : pirouette ? 189024 : pesquiere ? 136503 : 545372;
-const zenchefRid = bofinger ? '84941' : dekas ? '386643' : pirouette ? '363313' : pesquiere ? '362908' : '388090';
-const zenchefName = bofinger ? 'Bofinger' : dekas ? 'DeKas' : pirouette ? 'Pirouette' : pesquiere ? 'Pesquiere' : 'FishCorner';
+const zenchefShift = laCoupole ? 20148 : bofinger ? 19170 : dekas ? 494748 : pirouette ? 189024 : pesquiere ? 136503 : 545372;
+const zenchefRid = laCoupole ? '83871' : bofinger ? '84941' : dekas ? '386643' : pirouette ? '363313' : pesquiere ? '362908' : '388090';
+const zenchefName = laCoupole ? 'La Coupole' : bofinger ? 'Bofinger' : dekas ? 'DeKas' : pirouette ? 'Pirouette' : pesquiere ? 'Pesquiere' : 'FishCorner';
 const rooms = pirouette ? [{id:52521,name:'Salle principale'},{id:65674,name:'Terasse'}] : [{id:51183,name:'La Pesquiere'},{id:52372,name:'Mazagran salle'},{id:52373,name:'Mazagran terrasse'}];
 const noema = process.argv.includes('--noema') || process.env.VELVET_TEST_PROVIDER === 'Noema';
 const kvarnen = process.argv.includes('--kvarnen') || process.env.VELVET_TEST_PROVIDER === 'Kvarnen';
@@ -97,7 +100,7 @@ const italiano = process.argv.includes('--italiano') || process.env.VELVET_TEST_
 const nativeGuest = pelikan || guestLunch || italiano || agnes;
 const guestChoice = ciccios || nativeGuest;
 const contactFinal = teatergrillen || luzette || riche || sturehof || gondolen || klotet;
-assert.ok([bofinger,kvarnen,hantverket,pelikan,tennstopet,teatergrillen,luzette,bobonne,agnes,klotet,gondolen,sazon,fishcorner,pesquiere,pirouette,dekas,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar,italiano,copine].filter(Boolean).length <= 1, 'Choose one named provider scenario');
+assert.ok([laCoupole,bofinger,kvarnen,hantverket,pelikan,tennstopet,teatergrillen,luzette,bobonne,agnes,klotet,gondolen,sazon,fishcorner,pesquiere,pirouette,dekas,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar,italiano,copine].filter(Boolean).length <= 1, 'Choose one named provider scenario');
 // Noema/Ciccios saved-source evidence: issue129 comment6241312516, native phoneField/Next copy.
 const nativePhone = contactFinal || nativeGuest || noema || ciccios;
 const receiptMode = noema || guestChoice || contactFinal;
@@ -106,7 +109,7 @@ const receiptCode = kvarnen ? 'synthetic-kvarnen-only' : hantverket ? 'synthetic
 const mealId = kvarnen ? 91 : hantverket ? 7097 : pelikan ? 1540 : tennstopet ? 54277 : teatergrillen ? 6491 : luzette ? 7253 : bobonne ? 31 : agnes ? 1628 : klotet ? 63872 : gondolen ? 33008 : copine ? 4790 : italiano ? 22890 : dagmar ? 63588 : boqueria ? 22 : vau ? 22476 : astrid ? 55508 : kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
 const scopeInvalid = [{mealid:999999999},{amount:noema ? 9 : ciccios ? 8 : 3}];
 const mealType = tennstopet ? 0 : klotet ? 0 : dagmar ? 0 : noema || guestLunch || contactFinal ? 2 : 3;
-const restaurantId = bofinger ? 'curated-PAR-bofinger' : kvarnen ? 'curated-STO-kvarnen' : hantverket ? 'curated-STO-hantverket' : pelikan ? 'curated-STO-pelikan' : tennstopet ? 'curated-STO-tennstopet' : teatergrillen ? 'curated-STO-teatergrillen' : luzette ? 'curated-STO-luzette' : bobonne ? 'curated-STO-brasserie-bobonne' : agnes ? 'curated-STO-agnes' : klotet ? 'curated-STO-cafe-klotet' : gondolen ? 'curated-STO-gondolen' : sazon ? 'osm-BAL-sazon' : copine ? 'curated-STO-copine' : italiano ? 'curated-STO-italiano' : dekas ? 'curated-AMS-de-kas' : dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const restaurantId = laCoupole ? 'curated-PAR-la-coupole' : bofinger ? 'curated-PAR-bofinger' : kvarnen ? 'curated-STO-kvarnen' : hantverket ? 'curated-STO-hantverket' : pelikan ? 'curated-STO-pelikan' : tennstopet ? 'curated-STO-tennstopet' : teatergrillen ? 'curated-STO-teatergrillen' : luzette ? 'curated-STO-luzette' : bobonne ? 'curated-STO-brasserie-bobonne' : agnes ? 'curated-STO-agnes' : klotet ? 'curated-STO-cafe-klotet' : gondolen ? 'curated-STO-gondolen' : sazon ? 'osm-BAL-sazon' : copine ? 'curated-STO-copine' : italiano ? 'curated-STO-italiano' : dekas ? 'curated-AMS-de-kas' : dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
 const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[receiptMode ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 const date = tennstopet ? '2026-10-23' : klotet ? '2026-10-23' : '2030-01-15';
@@ -158,15 +161,16 @@ function zenchefDocument(address) {
   const state = { restaurantId:zenchefRid,initializedSSR:true,restaurantTimezone:roomVenue?'Europe/Paris':'America/Guadeloupe',isDisabled:0,
     wish:{day:date,pax:2,waiting_list:false,offers:[],room_id:roomVenue&&form?Number(url.searchParams.get('room_id')):null,...(form?{slot:'12:30'}:{})},
     rooms:roomVenue?rooms:undefined,mandatoryFields:{firstname:'required'},isRoomMandatory:roomVenue,dailyAvailabilities:{[date]:{date,shifts:[shift]}} };
-  if(bofinger){
-    const captured=structuredClone(bofingerSource.dailyAvailabilities['2026-10-23'].shifts[0]);
+  if(namedLunch){
+    const captured=structuredClone(lunchSource.dailyAvailabilities['2026-10-23'].shifts[0]);
     Object.assign(shift,captured,{bookable_from:null,bookable_to:null,shift_slots:[slot]});delete slot.available_rooms;
-    Object.assign(state,{name:'Bofinger',currency:'EUR',language:'fr',restaurantTimezone:'Europe/Paris',hasRoomSelection:false,mandatoryFields:bofingerSource.mandatoryFields,restaurantComment:bofingerSource.restaurantComment});
+    Object.assign(state,{name:zenchefName,currency:'EUR',language:'fr',restaurantTimezone:'Europe/Paris',hasRoomSelection:false,mandatoryFields:lunchSource.mandatoryFields,restaurantComment:lunchSource.restaurantComment});
     const outcome=process.env.VELVET_TEST_OUTCOME;
-    if(form && outcome==='form-card')shift.charge_param.is_web_booking_askable=true;
+    if(form && outcome==='form-card')shift.charge_param={...shift.charge_param,is_web_booking_askable:true};
     if(form && outcome==='form-manual')shift.confirmation.is_auto_until=null;
     if(form && outcome==='form-prepayment')shift.prepayment_param={is_web_booking_askable:true};
-    if(form && outcome==='form-shift')shift.id=19173;
+    if(form && outcome==='form-shift')shift.id=laCoupole?19170:20148;
+    if(form && outcome==='form-cancellation')shift.cancelation_param.enduser_cancelable_before=1;
   }
   const data = {page:form?'/form':'/results',query:Object.fromEntries(url.searchParams),props:{initialState:{appStoreState:state}}};
   return `<html><meta charset="utf-8"><body><h1>${zenchefName} LOCAL TEST — no real booking</h1>${roomVenue&&form?`<div>${rooms.find(room=>room.id===Number(url.searchParams.get('room_id')))?.name}</div>`:''}${pirouette&&form?`<div id="seating">Jusqu&#39;à 21:00</div>`:''}<script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
@@ -265,7 +269,7 @@ if (childMode) {
             element.textContent=JSON.stringify(data);
           }).then(()=>process.send?.({kind:'fixture-offer-changed'}));
         });
-        if(bofinger)process.on('message',message=>{
+        if(namedLunch)process.on('message',message=>{
           if(message.kind==='fixture-change-notice')page.locator('script#__NEXT_DATA__').evaluate(el=>{const data=JSON.parse(el.textContent);data.props.initialState.appStoreState.restaurantComment.fr='Changed native restaurant notice';el.textContent=JSON.stringify(data);}).then(()=>process.send?.({kind:'fixture-notice-changed'}));
         });
         if(pirouette)process.on('message',message=>{
@@ -542,14 +546,14 @@ if (childMode) {
             } else if (request.method() === 'POST' && request.url() === 'https://bookings-middleware.zenchef.com/booking?restaurantId='+zenchefRid) {
               assert.equal(options.maxRetries, 0);
               assert.deepEqual(JSON.parse(options.postData).customersheet.optins, []);
-              if(bofinger){
+              if(namedLunch){
                 const {DatabaseSync}=await import('node:sqlite');const db=new DatabaseSync(process.env.VELVET_PLAYWRIGHT_DB,{readOnly:true});
                 try{const row=db.prepare('SELECT owner,payload FROM playwright_attempts_v1 ORDER BY rowid DESC LIMIT 1').get();const attempt=JSON.parse(row.payload);
-                  assert.equal(attempt.restaurantId,restaurantId);assert.equal(attempt.status,'unknown');assert.equal(attempt.party,2);assert.deepEqual(attempt.details,{shiftId:19170});
+                  assert.equal(attempt.restaurantId,restaurantId);assert.equal(attempt.status,'unknown');assert.equal(attempt.party,2);assert.deepEqual(attempt.details,{shiftId:zenchefShift});
                   assert.ok(row.owner&&attempt.sessionId);assert.match(attempt.reviewFingerprint,/^[a-f0-9]{64}$/);
                   const payload=JSON.parse(options.postData);assert.deepEqual(payload.offers,[]);assert.equal(payload.wish,undefined);assert.equal(payload.shift_id,undefined);
                   process.send?.({kind:'durable-service-before-dispatch',shiftId:attempt.details.shiftId});
-                }catch(error){process.send?.({kind:'bofinger-fixture-assertion',message:error.message});throw error;}finally{db.close();}
+                }catch(error){process.send?.({kind:'lunch-fixture-assertion',message:error.message});throw error;}finally{db.close();}
               }
               if(dekas){
                 const {DatabaseSync}=await import('node:sqlite');const db=new DatabaseSync(process.env.VELVET_PLAYWRIGHT_DB,{readOnly:true});
@@ -580,8 +584,8 @@ if (childMode) {
               });
               if(outcome==='readback-error')throw Error('synthetic_readback_transport_error');
               const payload=createdBooking.payload;
-              const data={id:createdBooking.id,uuid:createdBooking.uuid,status:'confirmed',day:payload.day,shift_date:payload.day,time:payload.time,nb_guests:payload.nb_guests,...(bofinger?{booking_offers:[]}:dekas?{booking_offers:[{offer_id:118785,count:2}]}:{wish:{booking_room_id:payload.wish.booking_room_id}})};
-              if(bofinger){
+              const data={id:createdBooking.id,uuid:createdBooking.uuid,status:'confirmed',day:payload.day,shift_date:payload.day,time:payload.time,nb_guests:payload.nb_guests,...(namedLunch?{booking_offers:[]}:dekas?{booking_offers:[{offer_id:118785,count:2}]}:{wish:{booking_room_id:payload.wish.booking_room_id}})};
+              if(namedLunch){
                 assert.equal(Object.hasOwn(data,'shift_id'),false,'No invented raw receipt service field');
                 if(outcome==='missing-saved-time')delete data.time;
                 if(outcome==='wrong-saved-party')data.nb_guests=3;
@@ -685,7 +689,7 @@ async function main() {
       VELVET_PELIKAN_RECEIPT: pelikan ? 'enabled' : 'disabled',
       VELVET_TENNSTOPET_RECEIPT: tennstopet && tennstopetEnabled ? 'enabled' : 'disabled',
       VELVET_TEATERGRILLEN_RECEIPT: teatergrillen ? 'enabled' : 'disabled',
-      VELVET_TEST_PROVIDER: bofinger ? 'Bofinger' : kvarnen ? 'Kvarnen' : hantverket ? 'Hantverket' : pelikan ? 'Pelikan' : tennstopet ? 'Tennstopet' : teatergrillen ? 'Teatergrillen' : luzette ? 'Luzette' : bobonne ? 'Bobonne' : agnes ? 'Agnes' : klotet ? 'Klotet' : gondolen ? 'Gondolen' : sazon ? 'Sazon' : copine ? 'Copine' : italiano ? 'Italiano' : dekas ? 'DeKas' : dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
+      VELVET_TEST_PROVIDER: laCoupole ? 'LaCoupole' : bofinger ? 'Bofinger' : kvarnen ? 'Kvarnen' : hantverket ? 'Hantverket' : pelikan ? 'Pelikan' : tennstopet ? 'Tennstopet' : teatergrillen ? 'Teatergrillen' : luzette ? 'Luzette' : bobonne ? 'Bobonne' : agnes ? 'Agnes' : klotet ? 'Klotet' : gondolen ? 'Gondolen' : sazon ? 'Sazon' : copine ? 'Copine' : italiano ? 'Italiano' : dekas ? 'DeKas' : dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
       VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_CICCIOS_RECEIPT: ciccios ? 'enabled' : 'disabled',
       VELVET_RICHE_RECEIPT: riche ? 'enabled' : 'disabled',
@@ -702,6 +706,7 @@ async function main() {
       VELVET_ZENCHEF_FISHCORNER: zenchef ? 'live' : 'disabled',
       VELVET_ZENCHEF_PESQUIERE: roomVenue ? 'live' : 'disabled',
       VELVET_ZENCHEF_PIROUETTE: pirouette ? 'live' : 'disabled',
+      VELVET_ZENCHEF_LACOUPOLE: laCoupole ? 'live' : 'disabled',
       VELVET_ZENCHEF_BOFINGER: bofinger ? 'live' : 'disabled',
       VELVET_ZENCHEF_DEKAS: dekas ? 'live' : 'disabled',
       VELVET_TEST_OUTCOME: outcome, PORT: String(port), PUBLIC_URL: base,
@@ -742,11 +747,11 @@ async function main() {
       await page.goto(base + '/?api=' + encodeURIComponent(base) + '&fixtureVisit=' + ++visitNumber + '#/restaurant/' + restaurantId,
         {waitUntil:'domcontentloaded',timeout:65_000});
       await page.locator(sazon ? '#provider-preparation [data-prep-start]' : zenchef ? '#provider-playwright-booking [data-start]' : '#bokabord-mirror [data-start]').waitFor();
-      if(bofinger){assert.equal((await page.locator('.restaurant-detail h1').innerText()).trim(),'Bofinger');
+      if(namedLunch){assert.equal((await page.locator('.restaurant-detail h1').innerText()).trim(),zenchefName);
         const scope=page.locator('.booking-scope');await scope.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));
-        for(const text of ['Bofinger i Paris','exakt tv\u00e5','15 minuters','Ingen viss placering'])assert.ok((await scope.innerText()).includes(text),text);
+        for(const text of [zenchefName+' i Paris','exakt tv\u00e5','15 minuters','Ingen viss placering'])assert.ok((await scope.innerText()).includes(text),text);
         assert.ok(await scope.evaluate(el=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}));
-        await scope.screenshot({path:path.join(root,'..','bofinger-scope-'+width+'.png')});}
+        await scope.screenshot({path:path.join(root,'..',lunchSlug+'-scope-'+width+'.png')});}
       if(klotet){assert.equal((await page.locator('.restaurant-detail h1').innerText()).trim(),receiptName);const scope=await page.locator('#bokabord-mirror').innerText();for(const text of ['Fredagslunch','1\u20132','11 september','18 december 2026','12.00\u201314.59','Stockholmstid'])assert.ok(scope.includes(text),'Visible scope '+text);}
       if(klotet){const scope=page.locator('.booking-scope');await scope.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));
         assert.ok(await scope.evaluate(el=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}),'Scope readable in viewport');
@@ -1138,7 +1143,7 @@ async function main() {
           await page.waitForFunction(()=>!document.querySelector('#provider-playwright-booking [data-refresh]').disabled);
           await panel(page).locator('[data-room="12:30"]').selectOption(String(roomId));
         }
-        if(bofinger){assert.equal(await panel(page).locator('[data-room]').count(),0);assert.equal(searched.body.availabilityEvidence.candidates[0].shiftId,19170);}
+        if(namedLunch){assert.equal(await panel(page).locator('[data-room]').count(),0);assert.equal(searched.body.availabilityEvidence.candidates[0].shiftId,zenchefShift);}
         const selected=await action(() => panel(page).locator('[data-slot="12:30"]').click());
         let selectedOffer;
         if(dekas){
@@ -1170,12 +1175,12 @@ async function main() {
         await panel(page).locator('[data-field="civility"]').selectOption('mr');
         await action(() => panel(page).locator('[data-save]').click());
         const reviewed=await action(() => panel(page).locator('[data-review]').click());
-        if(bofinger){
-          assert.equal(reviewed.body.details.shiftId,19170);assert.equal(reviewed.body.details.party,2);assert.equal(reviewed.body.details.offer,undefined);assert.equal(reviewed.body.details.roomId,undefined);
+        if(namedLunch){
+          assert.equal(reviewed.body.details.shiftId,zenchefShift);assert.equal(reviewed.body.details.party,2);assert.equal(reviewed.body.details.offer,undefined);assert.equal(reviewed.body.details.roomId,undefined);
           const notice=reviewed.body.terms.restaurantNotice;assert.ok(notice.includes('15 min'));const terms=await panel(page).locator('[data-terms-text]').innerText();
           assert.ok(terms.includes('15 min'));assert.ok(!terms.includes('<br>'));assert.equal(await panel(page).locator('[data-terms-text]').locator('br,img,iframe').count(),0);
           assert.equal(await panel(page).locator('[data-terms]').isChecked(),false);
-          await panel(page).screenshot({path:path.join(root,'..','bofinger-review-'+page.viewportSize().width+'.png')});
+          await panel(page).screenshot({path:path.join(root,'..',lunchSlug+'-review-'+page.viewportSize().width+'.png')});
           if(scenario.startsWith('form-')){
             assert.equal(reviewed.body.canSubmit,false);const before=submits();
             const rejected=await api(page,'/restaurant-bookings/playwright/'+reviewed.body.id+'/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'submit',revision:reviewed.body.revision,reviewToken:reviewed.body.reviewToken,termsVersion:reviewed.body.terms.version,terms:true,confirm:true,idempotencyKey:'fixture-pretransport-guard'})});
@@ -1236,12 +1241,12 @@ async function main() {
         if(readbackVenue)assert.ok(messages.filter(m=>m.kind==='supplier-own-readback').length-readbacksBefore<=1,'At most one readback, never retry');
         return result;
       };
-      if(!bofingerTail){
+      if(!lunchTail){
       first = await makeView();
       const success = await flow(first);
       assert.equal(success.body.result.status,'confirmed');
       assert.equal(success.body.result.reference,'999999998');
-      if(bofinger){assert.equal(success.body.result.verification.bookingEvidence,'own_booking_readback');assert.equal(success.body.result.verification.shiftId,19170);assert.equal(success.body.details.shiftId,19170);}
+      if(namedLunch){assert.equal(success.body.result.verification.bookingEvidence,'own_booking_readback');assert.equal(success.body.result.verification.shiftId,zenchefShift);assert.equal(success.body.details.shiftId,zenchefShift);}
       if(dekas){assert.equal(success.body.result.verification.offerEvidence,'own_booking_readback');assert.equal(success.body.result.verification.offerVersion,success.body.details.offer.version);}
       if(roomVenue){assert.equal(success.body.result.verification.roomId,chosenRoom);assert.equal(success.body.result.verification.roomName,chosenRoomName);assert.equal(messages.filter(m=>m.kind==='supplier-own-readback').length,1);assert.equal(success.body.result.verification.roomEvidence,'own_booking_readback');}
       assert.notEqual(success.request.idempotencyKey,success.body.result.verification.idempotencyKey,'Server owns the durable key');
@@ -1260,11 +1265,11 @@ async function main() {
       assert.equal(recovered.status,200); assert.equal(recovered.body.attempts.length,1);
       assert.equal(recovered.body.attempts[0].status,'confirmed');
       assert.equal(recovered.body.attempts[0].reference,'999999998');
-      if(bofinger)assert.deepEqual(recovered.body.attempts[0].details,{shiftId:19170});
+      if(namedLunch)assert.deepEqual(recovered.body.attempts[0].details,{shiftId:zenchefShift});
       if(readbackVenue){
         const history=await api(first.page,'/restaurant-bookings');assert.equal(history.status,200);
         const booking=history.body.bookings.find(row=>row.restaurantId===restaurantId);
-        if(bofinger){assert.equal(booking.status,'confirmed');assert.equal(booking.party,2);assert.equal(booking.roomId,undefined);assert.equal(booking.offer,undefined);}else if(dekas){assert.equal(booking.offer.offerId,118785);assert.equal(booking.offer.count,2);assert.equal(booking.offer.version,success.body.details.offer.version);assert.equal(booking.offer.mealPrice,null);}else recoveredRoom={roomId:booking.roomId,roomName:booking.roomName};
+        if(namedLunch){assert.equal(booking.status,'confirmed');assert.equal(booking.party,2);assert.equal(booking.roomId,undefined);assert.equal(booking.offer,undefined);}else if(dekas){assert.equal(booking.offer.offerId,118785);assert.equal(booking.offer.count,2);assert.equal(booking.offer.version,success.body.details.offer.version);assert.equal(booking.offer.mealPrice,null);}else recoveredRoom={roomId:booking.roomId,roomName:booking.roomName};
       }
       console.log('PASS '+zenchefName+' actual UI/API/native Zenchef/SQLite: consent, double click, server-owned key, confirmation/reference and restart recovery');
       second = await makeView(1366);
@@ -1291,8 +1296,8 @@ async function main() {
       assert.equal(messages.filter(m=>['unexpected-supplier-request','blocked-node-network'].includes(m.kind)).length,0);
       console.log('PASS '+zenchefName+' lost supplier reply: durable unknown, owner isolation, refresh/restart without replay');
       }
-      if(bofinger){for(const outcome of bofingerCases){
-        console.log('CHECK Bofinger '+outcome);await stop();await start(outcome);const view=await makeView();
+      if(namedLunch){for(const outcome of lunchCases){
+        console.log('CHECK '+zenchefName+' '+outcome);await stop();await start(outcome);const view=await makeView();
         try{const result=await flow(view,1,chosenRoom,outcome);if(result)assert.equal(result.body.result.status,'unknown',outcome);}
         finally{await view.context.close();}
       }}
@@ -1334,7 +1339,7 @@ async function main() {
       }
       console.log(JSON.stringify({status:'PASS',restaurantId,evidence:'real_local_app_api_native_zenchef_journal_with_supplier_fixture',
         integrationCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),supplierBoundaryAttempts:submits(),
-        actualSupplierRequests:0,liveConfirmationVerified:false,backendRestarts:bofinger?backendStarts-1:dekas?8:pirouette?17:roomVenue?15:2,APIRequests:apiCalls.length,deployed:false}));
+        actualSupplierRequests:0,liveConfirmationVerified:false,backendRestarts:namedLunch?backendStarts-1:dekas?8:pirouette?17:roomVenue?15:2,APIRequests:apiCalls.length,deployed:false}));
       return;
     }
     if(!hantTail && !kvarnenTail){
