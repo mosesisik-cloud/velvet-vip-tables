@@ -109,6 +109,10 @@ export function publicBookingResult(result) {
     for (const k of ['provider', 'restaurantId', 'sessionId', 'attemptId', 'idempotencyKey', 'detailsDigest', 'policySource']) clean.verification[k] = proof[k];
     if (proof.provider === 'TableCheck' && proof.restaurantId === 'osm-BAL-sazon'
       && proof.orderEvidence === 'own_booking_raw_readback') clean.verification.orderEvidence=proof.orderEvidence;
+    if (proof.provider === 'Zenchef' && proof.restaurantId === 'curated-PAR-bofinger'
+      && proof.shiftId === 19170 && proof.bookingEvidence === 'own_booking_readback') {
+      clean.verification.shiftId=19170; clean.verification.bookingEvidence=proof.bookingEvidence;
+    }
     if (proof.offerEvidence === 'own_booking_readback' && proof.offerId === 118785 && proof.offerCount === 2
       && typeof proof.offerVersion === 'string' && /^[a-f0-9]{64}$/.test(proof.offerVersion)) {
       Object.assign(clean.verification,{offerId:proof.offerId,offerCount:proof.offerCount,offerVersion:proof.offerVersion,offerEvidence:proof.offerEvidence});

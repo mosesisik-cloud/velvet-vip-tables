@@ -36,6 +36,11 @@ export function mountProviderPlaywrightBooking(container, api, {
   </section>`;
   const el = name => container.querySelector(`[data-${name}]`);
   el('title').textContent = `${restaurantName || restaurantId} · ${provider}`;
+  if (restaurantId === 'curated-PAR-bofinger') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller ordinarie lunch på Bofinger i Paris för exakt två gäster, i mån av lediga bord. Middag, grupper, privata rum, leverans och hämtmat ingår inte. Ingen viss placering garanteras. Vid mer än 15 minuters försening garanterar restaurangen inte längre bordet. Kontrollera restaurangens aktuella villkor före bokning.';
+    container.querySelector('header').after(scope);
+  }
   const write = (id, phase, idempotencyKey, reviewFingerprint) => {
     const value = { id, phase, ...(idempotencyKey ? { idempotencyKey } : {}), ...(reviewFingerprint ? { reviewFingerprint } : {}) };
     storage.setItem(key, JSON.stringify(value)); marker = value;
@@ -97,6 +102,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     const proof = result?.verification;
     if (result?.status === 'confirmed') {
       if (proof?.verified === true && proof.source === 'provider' && proof.restaurantId === restaurantId
+        && (restaurantId !== 'curated-PAR-bofinger' || (proof.bookingEvidence === 'own_booking_readback' && proof.shiftId === 19170 && snapshot.details?.shiftId === 19170 && snapshot.details?.party === 2))
         && proof.sessionId === snapshot.id && typeof proof.attemptId === 'string' && proof.attemptId
         // The durable journal key is server-owned; the UI UUID is only correlation.
         && (!isZenchef || (fingerprint(proof.idempotencyKey)
@@ -126,7 +132,7 @@ export function mountProviderPlaywrightBooking(container, api, {
       // Project the actual Zenchef transport, without changing its wire fields.
       const phase = next.result ? 'result' : ({availability_observed:'slots',offers:'offers',contact:'guest',review:'booking_review'})[next.state] || 'selection';
       next = {...next,phase,bookingReview:next.state === 'review' ? {
-        details:{...next.details,restaurantId:next.restaurantId,guest:Object.fromEntries(Object.entries(next.details || {}).filter(([name]) => Object.hasOwn(aliases,name))),termsText:next.terms?.text,seatingNotice:next.terms?.seatingNotice},
+        details:{...next.details,restaurantId:next.restaurantId,guest:Object.fromEntries(Object.entries(next.details || {}).filter(([name]) => Object.hasOwn(aliases,name))),termsText:[next.terms?.text,next.terms?.restaurantNotice?.replace(/<br\s*\/?\s*>/gi,'\n')].filter(Boolean).join('\n\n'),seatingNotice:next.terms?.seatingNotice},
         reviewFingerprint:next.reviewFingerprint,
       } : null};
     }
