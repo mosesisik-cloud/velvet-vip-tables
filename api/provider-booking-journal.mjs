@@ -39,6 +39,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
       && (!rooms || (rooms.some(room=>room.id === attempt.roomId && room.name === attempt.roomName)
         && proof?.roomId === attempt.roomId && proof?.roomName === attempt.roomName))
       && (!venue(attempt.restaurantId)?.roomEvidence || proof?.roomEvidence === venue(attempt.restaurantId).roomEvidence)
+      && (!venue(attempt.restaurantId)?.orderEvidence || proof?.orderEvidence === venue(attempt.restaurantId).orderEvidence)
       && (!venue(attempt.restaurantId)?.offer || (cleanBookingOffer(attempt.details?.offer)
         && proof?.offerEvidence === 'own_booking_readback'
         && proof.offerId === attempt.details.offer.offerId && proof.offerCount === attempt.details.offer.count

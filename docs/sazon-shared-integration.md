@@ -22,7 +22,7 @@ Guest external-booking presentation is unchanged; operators get an additional
 preparation panel, not a replacement claimed as full booking.
 
 The existing SQLite ledger gains exact TableCheck/Sazón/two-person phases
-`cart` and `cart_update`. Existing hold and booking keys retain their byte-level
+`cart_init`, `cart` and `cart_update`. Existing hold and booking keys retain their byte-level
 hash inputs. Each phase has its own consumed send grant; key, session and review
 rotation cannot re-arm it after restart. Cart phases never confirm a booking,
 never store a cart reference/capability and never enter booking history. The
@@ -40,10 +40,7 @@ explicit appropriate consent, without retry after uncertainty.
 
 Known unresolved source boundary: Experience mount calls cart/init before Book
 now; the caller does not await its response. Its server effect and dependency
-on later operations are not established. This branch does not invent an init
-phase, skip it as proven optional, perform hydration, or dispatch it. The provider
-owner is implementing source-supported subsequent contracts behind gates; exact
-missing fields or semantics must remain explicit. No real cart, contact,
+on later operations are not established. A separate fixture-only cart_init grant now models the known request behind explicit consent, followed by separately granted create/update/checkout and one own-code readback. This conservative consent-first sequence is not claimed to reproduce native mount ordering or prove init semantics. No live hydration or init dispatch is wired. Exact missing fields or semantics remain explicit. No real cart, contact,
 checkout/status PUT, payment or capability reads are authorized for development.
 
 Local checks cover runtime operator and action restrictions, forged capability
@@ -51,3 +48,34 @@ projection, UI rejection/text safety at390/1366, SQLite phase restart/replay and
 no cart history/capability persistence. They are internal contract tests, not
 provider confirmations. Exact integrated API/UI testing and independent shared
 review are separate gates before accepting this branch.
+
+
+## Integrated acceptance evidence
+
+PR222/223 are integrated as offline source-contract code only, including the
+single-encoding readback fix and synchronous journal-hook error fix. The latter
+was found by the real SQLite integration test, rather than provider hook stubs.
+The actual provider class now runs against the existing on-disk attempt ledger,
+provider journal and booking register in three explicitly synthetic scenarios:
+success, missing raw-readback proof and ambiguous checkout. All pass, including
+persist-before-transport, no cart history/capability leakage, restart recovery
+and consumed retry. The journal requires own_booking_raw_readback when configured;
+the public proof allowlists that marker for this exact provider/restaurant.
+These models do not establish provider response compatibility or a real booking.
+
+Whole-app test handoff #224 covers the operator preparation API/UI at runtime
+36adb466:57 API calls,390/1366, four policy fixtures, two historical rejection
+replays and zero real provider calls or booking writes. It found a genuine card
+layout overlap; CSS3a96ebe corrected inherited relative top offset and actual
+pointer clicks passed afterward. Null DELETE does not falsely end the view.
+Guest/member/owner/revision restrictions, forbidden mutations, corrected query,
+restart and empty journal passed. FishCorner smoke at3a96ebe passed42 API calls,
+two mock transports, zero real writes. Later provider changes remain fixture-only;
+final relevant preparation regression is tracked separately.
+
+Remaining activation limits: init server semantics/order dependency, actual raw
+write/receipt representation and saved group quantity are unobserved. Requiring
+complete write-response fields and unchanged update tokens is conservative
+adapter policy, not a proven native invariant. Native restoration can replace
+returned tokens; native UI normalizes group quantity. No such normalization is
+used to manufacture verification. Production215 remains unchanged.
