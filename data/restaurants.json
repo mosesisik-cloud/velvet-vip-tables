@@ -11612,6 +11612,20 @@
           "bookingProvider": "BokaBord",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-17"
+        },
+        {
+          "placeId": "curated-STO-brasserie-bobonne",
+          "name": "Brasserie Bobonne",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Storgatan 12, 114 51 Stockholm",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Brasserie%20Bobonne%2C%20Storgatan%2012%2C%20Stockholm",
+          "website": "https://bobonne.se/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://bobonne.se/",
+          "locationVerifiedAt": "2026-10-17"
         }
       ]
     },
