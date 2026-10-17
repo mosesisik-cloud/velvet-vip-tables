@@ -1,3 +1,4 @@
+import { PELIKAN_DINNER_RECEIPT_POLICY as pelikan } from '../api/bokabord-receipt-confirmation.mjs';
 import { TENNSTOPET_LUNCH_RECEIPT_POLICY as tennstopet } from '../api/bokabord-receipt-confirmation.mjs';
 import { TEATERGRILLEN_LUNCH_RECEIPT_POLICY as teatergrillen } from '../api/bokabord-receipt-confirmation.mjs';
 import { test } from 'node:test';
@@ -200,6 +201,54 @@ test('Bobonne retains submission and independent receipt binding with native-pho
     f=>f.observation.receipt.documentNavigationId=999,
     f=>{delete f.observation.receipt;},
   ]) { const {f,check}=bobonneFixture();change(f);assert.equal(check().status,'unknown'); }
+});
+
+function pelikanFixture() {
+  const v=createBokabordReceiptVerifier(pelikan),f=fixture();
+  Object.assign(f.approval,{hash:pelikan.hash,mealid:pelikan.mealid,time:'19:00'});
+  Object.assign(f.attempt,{restaurantId:pelikan.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:pelikan.hash,mealid:pelikan.mealid,time:'19:00'});
+  Object.assign(f.observation.data.booking,{mealid:pelikan.mealid,time:'19:00',
+    meal:{type:3,group_booking:true,must_pay_directly:false,mandatory_products:false,bullets:{}}});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',pelikan.name)
+    .replace('(Lunch)','(Middag)').replace('12:00 - 13:30','19:00 - 20:30');
+  return {v,f,check:()=>v.verify(f.attempt,f.approval,f.observation)};
+}
+
+test('Pelikan ordinary dinner binds canonical identity, type and cap; lunch/private meals excluded',()=>{
+  const {v,f,check}=pelikanFixture();
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  for(const party of [1,3,10]) assert.equal(v.approvalDigest({...f.approval,party}),null);
+  for(const time of ['15:59','22:30']) assert.equal(v.approvalDigest({...f.approval,time}),null);
+  for(const time of ['16:00','22:29']) assert.ok(v.approvalDigest({...f.approval,time}));
+  for(const patch of [{name:'Pelikan'},{hash:policy.hash},{mealid:293},{mealType:2},{maxParty:3}]) assert.throws(()=>createBokabordReceiptVerifier({...pelikan,...patch}));
+  assert.equal(v.approvalDigest({...f.approval,hash:policy.hash}),null);
+  for(const mealid of [293,11704,65474]) {
+    assert.equal(v.approvalDigest({...f.approval,mealid}),null);
+    f.observation.data.booking.mealid=mealid;assert.equal(check().status,'unknown');
+  }
+});
+
+test('Pelikan requires bound receipt and preserves payment, waitlist, consent and replay guards',()=>{
+  for(const change of [
+    f=>f.observation.data.booking.meal.type=2,
+    f=>f.observation.data.booking.meal.must_pay_directly=true,
+    f=>f.observation.data.booking.meal.mandatory_products=true,
+    f=>f.observation.data.booking.meal.bullets={cc:{sw:'Kort'}},
+    f=>f.observation.data.booking.require_noshow=true,
+    f=>f.observation.data.booking.group_booking=true,
+    f=>f.observation.data.booking.products=[{}],
+    f=>f.observation.data.booking.waitlist=1,
+    f=>f.observation.data.booking.status=0,
+    f=>f.observation.request.payload.terms.general=false,
+    f=>f.observation.request.payload.is_temp_booking=true,
+    f=>f.observation.request.payload.phone='+46711111111',
+    f=>f.observation.attemptId='replayed',f=>f.attempt.dispatched=false,
+    f=>f.attempt.restaurantId='curated-STO-other',
+    f=>f.observation.receipt.documentNavigationId=999,
+    f=>{delete f.observation.receipt;},
+  ]) { const {f,check}=pelikanFixture();change(f);assert.equal(check().status,'unknown'); }
 });
 
 function agnesFixture() {
