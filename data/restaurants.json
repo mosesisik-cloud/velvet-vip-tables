@@ -11720,6 +11720,20 @@
           "bookingProvider": "Bokabord",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-18"
+        },
+        {
+          "placeId": "curated-STO-kvarnen",
+          "name": "Kvarnen",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Tjärhovsgatan 4, 116 21 Stockholm",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Kvarnen%2C%20Tj%C3%A4rhovsgatan%204%2C%20Stockholm",
+          "website": "https://www.kvarnen.com/sv",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.kvarnen.com/sv",
+          "locationVerifiedAt": "2026-10-18"
         }
       ]
     },
