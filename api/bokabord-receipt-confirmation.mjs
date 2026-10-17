@@ -136,8 +136,15 @@ export const TENNSTOPET_LUNCH_RECEIPT_POLICY = Object.freeze({
   mealLabel: 'Lunch Tennbarens Matsal',
 });
 
+export const PELIKAN_DINNER_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-pelikan', name: 'Restaurang Pelikan',
+  hash: '27fdc69fb0efef5d4125e11383c08ee8', mealid: 1540, mealType: 3, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
+  const reviewedPelikan = Object.entries(PELIKAN_DINNER_RECEIPT_POLICY)
+    .every(([key, value]) => policy[key] === value);
   const reviewedTennstopet = Object.entries(TENNSTOPET_LUNCH_RECEIPT_POLICY)
     .every(([key, value]) => policy[key] === value);
   const reviewedTeatergrillen = Object.entries(TEATERGRILLEN_LUNCH_RECEIPT_POLICY)
@@ -155,6 +162,7 @@ export function createBokabordReceiptVerifier(configuration) {
     || (policy.restaurantId === LUZETTE_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedLuzette)
     || (policy.restaurantId === TEATERGRILLEN_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedTeatergrillen)
     || (policy.restaurantId === TENNSTOPET_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedTennstopet)
+    || (policy.restaurantId === PELIKAN_DINNER_RECEIPT_POLICY.restaurantId && !reviewedPelikan)
     || !Number.isSafeInteger(policy.mealid) || policy.mealid <= 0 || (![2, 3].includes(policy.mealType) && !reviewedType0)
     || (policy.type0Contract !== undefined && !reviewedType0)
     || !Number.isSafeInteger(policy.maxParty) || policy.maxParty < 1 || policy.maxParty > 8) {
@@ -174,6 +182,7 @@ export function createBokabordReceiptVerifier(configuration) {
       || (approval.comment !== undefined && typeof approval.comment !== 'string')) return null;
     const date = new Date(approval.date + 'T12:00:00Z');
     if (!Number.isFinite(+date) || date.toISOString().slice(0, 10) !== approval.date) return null;
+    if (reviewedPelikan && (approval.party !== 2 || approval.time < '16:00' || approval.time >= '22:30')) return null;
     if (reviewedTennstopet && (approval.party !== 2 || ![5,6].includes(date.getUTCDay())
       || approval.time < '12:00' || approval.time >= '15:00'
       || (approval.date >= '2026-11-25' && approval.date <= '2026-12-23'))) return null;
