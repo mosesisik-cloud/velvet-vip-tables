@@ -9,10 +9,12 @@ import { createBokabordReceiptVerifier } from './bokabord-receipt-confirmation.m
 // a read-only duplicate guard; all new attempts have exactly one write authority.
 export function createBookingJournalHooks({ ledger, legacyLedger, register, restaurants, receiptPolicies = [] }) {
   const receiptVerifiers = new Map(receiptPolicies.map(policy => [policy.restaurantId,createBokabordReceiptVerifier(policy)]));
+  const mealLabels = new Map(receiptPolicies.filter(policy => policy.mealLabel).map(policy => [policy.restaurantId,policy.mealLabel]));
   const row = (attempt, owner, restaurant) => ({
     id: `PB-${attempt.attemptId}`, userId: owner, restaurantId: attempt.restaurantId,
     restaurant, destination: 'Stockholm', provider: attempt.provider,
     date: attempt.date, time: attempt.time, party: attempt.party,
+    ...(mealLabels.has(attempt.restaurantId) ? {mealLabel:mealLabels.get(attempt.restaurantId)} : {}),
     status: attempt.status, providerReference: attempt.reference || '',
     createdAt: attempt.createdAt, updatedAt: attempt.updatedAt,
   });

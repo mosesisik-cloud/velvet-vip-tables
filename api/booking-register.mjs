@@ -19,6 +19,8 @@ export class BookingRegister {
       clean.roomId=row.roomId; clean.roomName=row.roomName;
     }
     const offer=cleanBookingOffer(row.offer); if (offer) clean.offer=offer;
+    if (typeof row.mealLabel === 'string' && row.mealLabel.trim() && row.mealLabel.length <= 256
+      && !/[\x00-\x1f\x7f]/.test(row.mealLabel)) clean.mealLabel=row.mealLabel;
     if (!clean.id || !clean.userId || !clean.status) return;
     this.db.prepare('INSERT INTO bookings VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET status=excluded.status,updated=excluded.updated,payload=excluded.payload WHERE bookings.owner=excluded.owner').run(clean.id,clean.userId,clean.status,clean.updatedAt || clean.createdAt,JSON.stringify(clean));
     return clean;

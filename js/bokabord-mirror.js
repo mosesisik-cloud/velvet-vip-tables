@@ -22,6 +22,12 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
     scope.textContent = 'Bokning i Velvet gäller ordinarie lunch på Teatergrillen för 1–2 gäster, måndag–fredag med start kl. 13.00–14.59, i mån av lediga bord. Teatergrillens bar, middag, teatersittning och särskilda menyer ingår inte.';
     container.querySelector('.booking-source').after(scope);
   }
+  if (restaurantId === 'curated-STO-tennstopet') {
+    const scope = document.createElement('p');
+    scope.className = 'booking-scope';
+    scope.textContent = 'Bokning i Velvet gäller Lunch Tennbarens Matsal på Tennstopet för exakt 2 gäster, fredag–lördag med start kl. 12.00–14.59, i mån av lediga bord. Matsalen ligger en halv trappa ned. Perioden 25 november–23 december 2026 ingår inte. Andra matsalar, middag, julbord, Tennstopet Grill och uteservering ingår inte.';
+    container.querySelector('.booking-source').after(scope);
+  }
   const start = container.querySelector('[data-start]');
   if (restaurantId === 'curated-STO-brasserie-bobonne') {
     const scope = document.createElement('p');

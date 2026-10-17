@@ -11679,7 +11679,11 @@
           "source": "VELVET curated · official website",
           "curated": true,
           "locationSource": "https://www.tennstopet.se/",
-          "locationVerifiedAt": "2026-10-18"
+          "locationVerifiedAt": "2026-10-18",
+          "bookingUrl": "https://app.bokabord.se/reservation/?hash=48b3bfcf5f5ff2974d516a5bd226850c",
+          "bookingProvider": "Bokabord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-18"
         }
       ]
     },
