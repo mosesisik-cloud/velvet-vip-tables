@@ -40,6 +40,12 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
     scope.textContent = 'Bokning i Velvet gäller ordinarie lunch på Restaurang Hantverket för 1–2 gäster, måndag–fredag med start kl. 11.30–13.59, i mån av lediga bord. Ange i kommentarsfältet om ni har barnvagn eller hund med er. Kontrollera placering och sittningstid i formuläret; ingen viss matsal eller köksbar garanteras. Middag, Spritbordet och gruppbokningar ingår inte.';
     container.querySelector('.booking-source').after(scope);
   }
+  if (restaurantId === 'curated-STO-kvarnen') {
+    const scope = document.createElement('p');
+    scope.className = 'booking-scope';
+    scope.textContent = 'Bokning i Velvet gäller ordinarie lunch på Kvarnen i Stockholm för 1–2 gäster, måndag–fredag med start kl. 12.00–14.59, i mån av lediga bord. Perioden 23 november–23 december 2026 ingår inte i det första bokningsstödet. Middag, brunch, julbord, hämtmat, grupper och uteservering ingår inte. Kontrollera sittningstid och placering i formuläret.';
+    container.querySelector('.booking-source').after(scope);
+  }
   const start = container.querySelector('[data-start]');
   if (restaurantId === 'curated-STO-brasserie-bobonne') {
     const scope = document.createElement('p');
