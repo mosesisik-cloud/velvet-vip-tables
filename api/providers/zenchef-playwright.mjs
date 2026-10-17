@@ -33,10 +33,14 @@ export const ZENCHEF_DEKAS = Object.freeze({ restaurantId: 'curated-AMS-de-kas',
 export const ZENCHEF_BOFINGER = Object.freeze({ restaurantId: 'curated-PAR-bofinger', venueId: '84941', name: 'Bofinger',
   url: 'https://bookings.zenchef.com/results?rid=84941&lang=fr', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
   shiftId: 19170, source: 'https://www.bofingerparis.com/', policySource: 'https://bookings.zenchef.com/gtc?rid=84941&lang=fr' });
+export const ZENCHEF_LACOUPOLE = Object.freeze({ restaurantId: 'curated-PAR-la-coupole', venueId: '83871', name: 'La Coupole',
+  url: 'https://bookings.zenchef.com/results?rid=83871&lang=fr', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
+  shiftId: 20148, source: 'https://www.lacoupole-paris.com/', policySource: 'https://bookings.zenchef.com/gtc?rid=83871&lang=fr' });
+const NO_ROOM_LUNCH_VENUES = Object.freeze([ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE]);
 const ROOM_VENUES = Object.freeze([ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE]);
-const READBACK_VENUES = Object.freeze([...ROOM_VENUES, ZENCHEF_DEKAS, ZENCHEF_BOFINGER]);
+const READBACK_VENUES = Object.freeze([...ROOM_VENUES, ZENCHEF_DEKAS, ...NO_ROOM_LUNCH_VENUES]);
 export const ZENCHEF_POLICY_SOURCE = 'https://bookings.zenchef.com/gtc?rid=388090&lang=fr';
-const VENUES = Object.freeze({ [ZENCHEF_BOFINGER.restaurantId]: ZENCHEF_BOFINGER, [ZENCHEF_DEKAS.restaurantId]: ZENCHEF_DEKAS, [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE, [ZENCHEF_PIROUETTE.restaurantId]: ZENCHEF_PIROUETTE });
+const VENUES = Object.freeze({ [ZENCHEF_LACOUPOLE.restaurantId]: ZENCHEF_LACOUPOLE, [ZENCHEF_BOFINGER.restaurantId]: ZENCHEF_BOFINGER, [ZENCHEF_DEKAS.restaurantId]: ZENCHEF_DEKAS, [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE, [ZENCHEF_PIROUETTE.restaurantId]: ZENCHEF_PIROUETTE });
 const FIXTURE_URL = 'https://zenchef-fixture.invalid/';
 const TTL = 10 * 60_000;
 const FIELDS = ['firstname', 'lastname', 'email', 'phone'];
@@ -128,7 +132,7 @@ function savedBookingResult(status, data, binding) {
     || (data.uuid !== undefined && data.uuid !== binding.uuid)
     || (approval.restaurantId === ZENCHEF_DEKAS.restaurantId
       ? !approvedDeKasOffers(data.booking_offers, approval, true)
-      : approval.restaurantId === ZENCHEF_BOFINGER.restaurantId
+      : NO_ROOM_LUNCH_VENUES.some(v => v.restaurantId === approval.restaurantId)
         ? (data.wish?.booking_room_id != null || !Array.isArray(data.booking_offers) || data.booking_offers.length !== 0)
         : data.wish?.booking_room_id !== approval.roomId) || data.day !== approval.date
     || (data.shift_date != null && data.shift_date !== approval.date)
@@ -138,7 +142,8 @@ function savedBookingResult(status, data, binding) {
 const attemptMatchesApproval = (attempt, approval) => !!attempt?.attemptId && !!attempt?.idempotencyKey
   && ['provider', 'restaurantId', 'sessionId', 'mode', 'phase', 'reviewFingerprint', 'date', 'time', 'party']
     .every(key => attempt[key] === approval[key])
-  && (approval.restaurantId !== ZENCHEF_BOFINGER.restaurantId || (approval.shiftId === 19170 && attempt.details?.shiftId === 19170))
+  && (!NO_ROOM_LUNCH_VENUES.some(v => v.restaurantId === approval.restaurantId)
+    || NO_ROOM_LUNCH_VENUES.some(v => v.restaurantId === approval.restaurantId && approval.shiftId === v.shiftId && attempt.details?.shiftId === v.shiftId))
   && (approval.restaurantId !== ZENCHEF_DEKAS.restaurantId || digest(attempt.details?.offer || null) === digest(approval.offer || null));
 
 export function zenchefSearchUrl(query, venue = ZENCHEF_ARPEGE) {
@@ -240,6 +245,21 @@ export function bofingerPolicy(state, shift, party) {
     && shift.cancelation_param.enduser_cancelable_reference === 'shift';
 }
 
+export function laCoupolePolicy(state, shift, party) {
+  return party === 2 && state?.restaurantId === ZENCHEF_LACOUPOLE.venueId
+    && state.currency === 'EUR' && state.language === 'fr' && state.hasRoomSelection === false
+    && state.isRoomMandatory === false && state.wish?.room_id === null
+    && Array.isArray(state.wish.offers) && state.wish.offers.length === 0
+    && shift?.id === 20148 && shift.name === 'Déjeuner'
+    && shift.confirmation?.is_auto === false && shift.confirmation.is_auto_until === 6
+    && shift.charge_param === null && shift.prepayment_param === null
+    && shift.is_offer_required === false && shift.offer_required_from_pax === null
+    && shift.cancelation_param?.enduser_cancelable_before === 10800
+    && shift.cancelation_param.enduser_cancelable_reference === 'shift';
+}
+const noRoomLunchPolicy = (venue, state, shift, party) => venue === ZENCHEF_BOFINGER
+  ? bofingerPolicy(state, shift, party) : venue === ZENCHEF_LACOUPOLE && laCoupolePolicy(state, shift, party);
+
 // Read only the server-rendered provider state, never execute or mutate its store.
 // Candidate slots are not held, selected, confirmed or guaranteed bookable later.
 export function zenchefAvailabilityEvidence(data, query, observedAt = Date.now(), venue = ZENCHEF_ARPEGE) {
@@ -264,7 +284,7 @@ export function zenchefAvailabilityEvidence(data, query, observedAt = Date.now()
   const candidates = [];
   for (const shift of day.shifts) {
     if (venue.shiftId && shift.id !== venue.shiftId) continue;
-    if (venue === ZENCHEF_BOFINGER && !bofingerPolicy(state, shift, query.party)) continue;
+    if (NO_ROOM_LUNCH_VENUES.includes(venue) && !noRoomLunchPolicy(venue, state, shift, query.party)) continue;
     if (shift.closed !== false || shift.marked_as_full !== false || !inWindow(shift) || !Array.isArray(shift.shift_slots)) continue;
     for (const slot of shift.shift_slots) {
       if (venue === ZENCHEF_DEKAS) {
@@ -276,7 +296,7 @@ export function zenchefAvailabilityEvidence(data, query, observedAt = Date.now()
       }
       if (slot.closed !== false || slot.marked_as_full !== false || !inWindow(slot)
         || !/^([01]\d|2[0-3]):[0-5]\d$/.test(slot.name) || !slot.possible_guests?.includes(query.party)
-        || (venue !== ZENCHEF_BOFINGER && (!Array.isArray(slot.available_rooms?.[query.party]) || !slot.available_rooms[query.party].length))) continue;
+        || (!NO_ROOM_LUNCH_VENUES.includes(venue) && (!Array.isArray(slot.available_rooms?.[query.party]) || !slot.available_rooms[query.party].length))) continue;
       if (venue.rooms) {
         const rooms = venue.rooms.filter(room => slot.available_rooms[query.party].includes(room.id)
           && state.rooms?.some(native => native.id === room.id && native.name === room.name));
@@ -338,7 +358,7 @@ export class ZenchefPlaywright {
       context = await browser.newContext({ viewport: { width: 420, height: 760 },
         locale: 'fr-FR', timezoneId: venue.timezone, serviceWorkers: 'block', acceptDownloads: false });
       const s = { id: crypto.randomUUID(), owner, restaurantId, restaurant: venue.name, venue,
-        provider: 'Zenchef', destination: [ZENCHEF_ARPEGE, ZENCHEF_BOFINGER].includes(venue) ? 'Paris' : venue === ZENCHEF_PESQUIERE ? 'Saint-Tropez' : venue === ZENCHEF_PIROUETTE ? 'Nice' : venue === ZENCHEF_DEKAS ? 'Amsterdam' : 'St. Barts', context, revision: 0, touched: this.now(),
+        provider: 'Zenchef', destination: [ZENCHEF_ARPEGE, ...NO_ROOM_LUNCH_VENUES].includes(venue) ? 'Paris' : venue === ZENCHEF_PESQUIERE ? 'Saint-Tropez' : venue === ZENCHEF_PIROUETTE ? 'Nice' : venue === ZENCHEF_DEKAS ? 'Amsterdam' : 'St. Barts', context, revision: 0, touched: this.now(),
         busy: false, attempted: false, state: 'inspect_only', result: null, blockedRequests: 0 };
       await context.route('**/*', async route => {
         const r = route.request();
@@ -384,7 +404,7 @@ export class ZenchefPlaywright {
               detailsDigest: s.review.digest,
               ...(venue === ZENCHEF_DEKAS ? { offerId: s.approval.offer.offerId, offerCount: s.approval.offer.count,
                 offerVersion: s.approval.offer.version, ...(s.readbackVerified ? { offerEvidence: 'own_booking_readback' } : {}) } : {}),
-              ...(venue === ZENCHEF_BOFINGER && s.readbackVerified ? { bookingEvidence: 'own_booking_readback', shiftId:19170 } : {}),
+              ...(NO_ROOM_LUNCH_VENUES.includes(venue) && s.readbackVerified ? { bookingEvidence: 'own_booking_readback', shiftId:venue.shiftId } : {}),
               ...(venue.rooms ? { roomId: s.approval.roomId, roomName: s.approval.roomName,
                 ...(s.readbackVerified ? { roomEvidence: 'own_booking_readback' } : {}) } : {}) };
             try { await bounded(() => this.recordResult(s), 5000); }
@@ -514,13 +534,13 @@ export class ZenchefPlaywright {
     }
   }
   async verifyNativeRoom(s) {
-    if (s.venue === ZENCHEF_BOFINGER) {
+    if (NO_ROOM_LUNCH_VENUES.includes(s.venue)) {
       const form = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent())?.props?.initialState?.appStoreState;
       const shift = form?.dailyAvailabilities?.[s.searchQuery.date]?.shifts?.find(row => row.id === s.venue.shiftId);
       const text = await s.page.locator('[data-testid="eula-checkbox"]').innerText();
       if (s.page.url() !== zenchefFormUrl(s.formSelection, s.venue) || form?.wish?.slot !== s.formSelection.time
         || form?.wish?.day !== s.searchQuery.date || form?.wish?.pax !== 2
-        || (s.noCardAllowed && !bofingerPolicy(form, shift, 2))
+        || (s.noCardAllowed && !noRoomLunchPolicy(s.venue, form, shift, 2))
         || digest([text, form.restaurantComment || null, shift || null]) !== s.terms?.version)
         throw new ZenchefError('stale_review', 409);
     }
@@ -635,7 +655,7 @@ export class ZenchefPlaywright {
             || this.now() - Date.parse(evidence.observedAt) > 120000) throw new ZenchefError('slot_stale_or_unverified', 409);
           const room = s.venue.rooms ? matches[0].rooms?.find(room => room.id === action.roomId) : null;
           if (s.venue.rooms ? !room : action.roomId !== undefined) throw new ZenchefError('room_required_or_unverified', 409);
-          s.formSelection = { ...s.searchQuery, time: action.time, ...(s.venue === ZENCHEF_BOFINGER ? {shiftId:19170} : {}), ...(room ? { roomId: room.id, roomName: room.name } : {}) };
+          s.formSelection = { ...s.searchQuery, time: action.time, ...(NO_ROOM_LUNCH_VENUES.includes(s.venue) ? {shiftId:s.venue.shiftId} : {}), ...(room ? { roomId: room.id, roomName: room.name } : {}) };
           const url = zenchefFormUrl(s.formSelection, s.venue);
           if (s.venue === ZENCHEF_DEKAS) {
             s.offerChoices = null; s.offerChoice = null; s.review = null; s.terms = null; s.noCardAllowed = false;
@@ -684,7 +704,7 @@ export class ZenchefPlaywright {
             && shift.shift_slots?.some(slot => slot.name === action.time && slot.closed === false && slot.marked_as_full === false
               && slot.possible_guests?.includes(s.searchQuery.party) && slot.available_rooms?.[s.searchQuery.party]?.includes(room.id))
             && Array.isArray(form.wish.offers) && !form.wish.offers.length;
-          if (s.venue === ZENCHEF_BOFINGER) s.noCardAllowed = bofingerPolicy(form, shift, s.searchQuery.party)
+          if (NO_ROOM_LUNCH_VENUES.includes(s.venue)) s.noCardAllowed = noRoomLunchPolicy(s.venue, form, shift, s.searchQuery.party)
             && shift.closed === false && shift.marked_as_full === false
             && shift.shift_slots?.some(slot => slot.name === action.time && slot.closed === false && slot.marked_as_full === false && slot.possible_guests?.includes(2));
           const termsLabel = s.page.locator('[data-testid="eula-checkbox"]');
@@ -697,7 +717,7 @@ export class ZenchefPlaywright {
             s.terms.seatingNotice = await seating.innerText();
             s.terms.version = digest([s.terms.version, s.terms.seatingNotice]);
           }
-          if (s.venue === ZENCHEF_BOFINGER) {
+          if (NO_ROOM_LUNCH_VENUES.includes(s.venue)) {
             s.terms.restaurantNotice = form.restaurantComment?.fr || '';
             if (!s.terms.restaurantNotice.trim()) s.noCardAllowed = false;
           }
@@ -756,7 +776,7 @@ export class ZenchefPlaywright {
             revision: s.revision, idempotencyKey: action.idempotencyKey, reviewFingerprint: s.review.digest,
             provider: 'Zenchef', restaurantId: s.restaurantId, phase: 'booking', mode: 'live', sessionId: s.id, owner: s.owner,
             details: { date: actual.date, time: actual.time, party: actual.party,
-              ...(s.venue === ZENCHEF_BOFINGER ? {shiftId:19170} : {}),
+              ...(NO_ROOM_LUNCH_VENUES.includes(s.venue) ? {shiftId:s.venue.shiftId} : {}),
               ...(s.venue === ZENCHEF_DEKAS ? { offer: structuredClone(actual.offer) } : {}),
               ...(s.venue.rooms ? { roomId: actual.roomId, roomName: actual.roomName } : {}) } };
           s.submissionStarted = true; s.result = { status: 'unknown' }; s.state = 'result';
