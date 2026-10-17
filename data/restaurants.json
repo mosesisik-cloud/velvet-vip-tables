@@ -11571,7 +11571,11 @@
           "source": "VELVET curated · official website",
           "curated": true,
           "locationSource": "https://gondolen.se/",
-          "locationVerifiedAt": "2026-10-17"
+          "locationVerifiedAt": "2026-10-17",
+          "bookingUrl": "https://app.bokabord.se/reservation/?hash=720cdcb4d664ceeebbe8548904e275e6",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-17"
         }
       ]
     },

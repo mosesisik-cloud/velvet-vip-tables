@@ -152,5 +152,12 @@
     "hash": "db5f54c8e9643fd5e54cd57016fb2544",
     "source": "https://italiano.se/italiano",
     "verifiedAt": "2026-10-15"
+  },
+  "curated-STO-gondolen": {
+    "name": "Gondolen",
+    "url": "https://app.bokabord.se/reservation/?hash=720cdcb4d664ceeebbe8548904e275e6",
+    "hash": "720cdcb4d664ceeebbe8548904e275e6",
+    "source": "https://gondolen.se/",
+    "verifiedAt": "2026-10-17"
   }
 }
