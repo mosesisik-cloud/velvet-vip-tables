@@ -38,8 +38,17 @@ try {
  for(const field of Object.keys(sensitive))assert.equal(Object.hasOwn(stored,field),false,field);
  assert.equal(stored.status,'provider_confirmed','trusted internal records preserve provider status');
  for (const invalid of [{date:'2026-02-30'},{date:'not-a-date'},{time:'24:00'},{time:'17:61'},{party:0},{party:101},{party:1.5},{reference:'x'},{reference:'<script>x</script>'},{reference:'a'.repeat(101)}]) assert.throws(()=>db.report('guest:alice','venue-one',restaurant,{...report,...invalid}),/invalid_report/);
+ const labelled={...stored,id:'PB-labelled',provider:'BokaBord',restaurantId:'curated-STO-tennstopet',mealLabel:'Lunch Tennbarens Matsal'};
+ db.upsert(labelled);
+ const {mealLabel,...recovered}=labelled;
+ assert.equal(db.upsert(recovered).mealLabel,mealLabel,'flag-disabled recovery preserves saved label');
+ assert.equal(db.upsert({...recovered,mealLabel:'Other room'}).mealLabel,mealLabel,'saved label cannot change for the same booking');
+ assert.equal(db.upsert({...recovered,userId:'guest:bob'}).mealLabel,undefined,'another owner cannot read saved label');
+ assert.equal(db.list(['guest:alice']).find(x=>x.id===labelled.id).mealLabel,mealLabel);
+ for(const invalidLabel of ['', 'x'.repeat(257), 'bad\nlabel'])assert.equal(db.upsert({...labelled,id:'invalid-label-'+invalidLabel.length,mealLabel:invalidLabel}).mealLabel,undefined);
  const beforeRestart=db.list([],true);db.close();db=null;
  db=new BookingRegister(file);assert.deepEqual(db.list([],true),beforeRestart,'all fields/statuses persist across close/reopen');
+ assert.equal(db.upsert(recovered).mealLabel,mealLabel,'label survives restart followed by recovery without active policy');
  assert.deepEqual(db.report('guest:alice','venue-one',restaurant,report),created,'idempotency persists across restart');
  assert.equal(db.list(['guest:bob']).length,1,'owner isolation persists across restart');
  db.close();db=null;

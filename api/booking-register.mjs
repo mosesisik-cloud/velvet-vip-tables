@@ -22,6 +22,13 @@ export class BookingRegister {
     if (typeof row.mealLabel === 'string' && row.mealLabel.trim() && row.mealLabel.length <= 256
       && !/[\x00-\x1f\x7f]/.test(row.mealLabel)) clean.mealLabel=row.mealLabel;
     if (!clean.id || !clean.userId || !clean.status) return;
+    // Recovery may run after a provider flag is disabled. Retain the saved
+    // dining-room label for this same owner/booking rather than erasing it.
+    const prior = this.db.prepare('SELECT payload FROM bookings WHERE id=? AND owner=?').get(clean.id,clean.userId);
+    const saved = prior ? JSON.parse(prior.payload) : null;
+    if (saved?.restaurantId === clean.restaurantId && saved?.provider === clean.provider
+      && typeof saved?.mealLabel === 'string' && saved.mealLabel.trim() && saved.mealLabel.length <= 256
+      && !/[\x00-\x1f\x7f]/.test(saved.mealLabel)) clean.mealLabel=saved.mealLabel;
     this.db.prepare('INSERT INTO bookings VALUES(?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET status=excluded.status,updated=excluded.updated,payload=excluded.payload WHERE bookings.owner=excluded.owner').run(clean.id,clean.userId,clean.status,clean.updatedAt || clean.createdAt,JSON.stringify(clean));
     return clean;
   }
