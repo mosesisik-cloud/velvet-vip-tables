@@ -91,6 +91,7 @@ const mirrorLedger = new BookingLedger(path.join(__dir, 'mirror-attempts'));
 const playwrightAttempts = new PlaywrightAttemptLedger(process.env.VELVET_PLAYWRIGHT_DB || path.join(__dir, 'playwright-attempts.sqlite'));
 let bookingJournal;
 const bokabordMirror = new BokabordMirror({
+  submissionPolicies: process.env.VELVET_AGNES_RECEIPT === 'enabled' ? [AGNES_DINNER_RECEIPT_POLICY] : [],
   contactFinalPolicies:[
     ...(process.env.VELVET_KLOTET_RECEIPT === 'enabled' ? [KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_GONDOLEN_RECEIPT === 'enabled' ? [GONDOLEN_LUNCH_RECEIPT_POLICY] : []),

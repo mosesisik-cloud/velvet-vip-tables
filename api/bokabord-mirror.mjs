@@ -62,8 +62,9 @@ export class BokabordMirror {
   browserPromise = null;
   pending = 0;
   pendingOwners = new Set();
-  constructor({ prepare = false, live = false, authorizeSubmission = null, reserveSubmission = null, recordResult = null, verifyResult = null, contactFinalPolicies = [] } = {}) {
+  constructor({ prepare = false, live = false, authorizeSubmission = null, reserveSubmission = null, recordResult = null, verifyResult = null, contactFinalPolicies = [], submissionPolicies = [] } = {}) {
     this.contactFinalVerifiers = new Map(contactFinalPolicies.map(policy => [policy.restaurantId, createBokabordReceiptVerifier(policy)]));
+    this.submissionVerifiers = new Map(submissionPolicies.map(policy => [policy.restaurantId, createBokabordReceiptVerifier(policy)]));
     this.prepare = prepare;
     this.authorizeSubmission = authorizeSubmission;
     this.reserveSubmission = reserveSubmission;
@@ -72,6 +73,10 @@ export class BokabordMirror {
     this.verifyResult = verifyResult;
     this.timer = setInterval(() => this.expire(), 30_000);
     this.timer.unref();
+  }
+  submissionAllowed(session, approval) {
+    const verifier = this.submissionVerifiers.get(session.restaurantId);
+    return !verifier || !!verifier.approvalDigest(approval);
   }
   async browser() {
     if (!this.browserPromise) {
@@ -102,6 +107,10 @@ export class BokabordMirror {
           let query;
           try { query = r.postDataJSON(); } catch {}
           if (!matchesApprovedBooking(query, s.approval)) { s.blocked = true; s.result = { status: 'payload_mismatch' }; return route.abort(); }
+          if (!this.submissionAllowed(s, s.approval)) {
+            s.blocked = true; s.result = { status: 'unknown', reason: 'unsupported_booking_scope' };
+            return route.abort();
+          }
           try { if (!s.submissionReserved) await this.reserveSubmission(s.approval, s); } catch { s.result = { status: 'already_attempted' }; return route.abort(); }
           if (s.receiptVerificationEnabled) s.dispatchObservation = {dispatchedAt:Date.now(),request:{
             method:r.method(),url:r.url(),payload:structuredClone(query),
@@ -277,7 +286,7 @@ export class BokabordMirror {
     const text = (await s.page.locator('body').innerText()).slice(0, 16_000);
     const shot = await s.page.screenshot({ type: 'png', animations: 'disabled' });
     s.revision++;
-    const canSubmit = !!(this.prepare && this.reserveSubmission && !s.submitted && !s.finalActionConsumed && !s.result && (!contactFinal || !!binding) && (this.live ? details : await this.authorizeSubmission?.()));
+    const canSubmit = !!(this.prepare && this.reserveSubmission && !s.submitted && !s.finalActionConsumed && !s.result && (!contactFinal || !!binding) && this.submissionAllowed(s, details) && (this.live ? details : await this.authorizeSubmission?.()));
     const snapshot = { id: s.id, restaurantId: s.restaurantId, restaurant: s.restaurant, revision: s.revision, width: s.width, height: s.height, image: `data:image/png;base64,${shot.toString('base64')}`, imageHash: crypto.createHash('sha256').update(shot).digest('hex'), capturedAt: new Date().toISOString(), fields, text, contact, review, details, contactFinal, nativeReview, blocked: s.blocked, mode: this.prepare ? 'prepare' : 'inspect', canSubmit, result: s.result ? publicBookingResult(s.result) : null, expiresIn: TTL / 1000 };
     snapshot.handoff = s.handoffReason ? { reason: s.handoffReason, url: RESTAURANTS[s.restaurantId] } : null;
     s.lastSnapshot = snapshot;
@@ -330,6 +339,7 @@ export class BokabordMirror {
         if (this.live && action.terms !== true) throw new MirrorError('confirmation_required', 409);
         const approval = this.live ? s.lastSnapshot.details : await this.authorizeSubmission();
         if (!approval) throw new MirrorError('confirmation_required', 409);
+        if (!this.submissionAllowed(s, approval)) throw new MirrorError('unsupported_booking_scope', 409);
         if (this.live && JSON.stringify(approval) !== JSON.stringify(await this.bookingDetails(s))) throw new MirrorError('stale_view', 409);
         const review = await s.page.getByRole('heading', { name: 'Kontrollera din bokning', exact: true }).isVisible();
         if (!review && !await s.page.getByRole('heading', { name: 'Kontaktuppgifter', exact: true }).isVisible()) throw new MirrorError('contact_required');
