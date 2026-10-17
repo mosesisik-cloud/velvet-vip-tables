@@ -11594,6 +11594,20 @@
           "bookingProvider": "BokaBord",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-17"
+        },
+        {
+          "placeId": "curated-STO-agnes",
+          "name": "Restaurang Agnes",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Norra Agnegatan 43, Stockholm",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Restaurang%20Agnes%2C%20Norra%20Agnegatan%2043%2C%20Stockholm",
+          "website": "https://restaurangagnes.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://restaurangagnes.com/",
+          "locationVerifiedAt": "2026-10-17"
         }
       ]
     },
