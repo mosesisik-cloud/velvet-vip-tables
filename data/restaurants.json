@@ -11684,6 +11684,20 @@
           "bookingProvider": "Bokabord",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-18"
+        },
+        {
+          "placeId": "curated-STO-pelikan",
+          "name": "Pelikan",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Blekingegatan 40, 116 62 Stockholm",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Pelikan%2C%20Blekingegatan%2040%2C%20Stockholm",
+          "website": "https://pelikan.se/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://pelikan.se/boka-bord",
+          "locationVerifiedAt": "2026-10-18"
         }
       ]
     },
