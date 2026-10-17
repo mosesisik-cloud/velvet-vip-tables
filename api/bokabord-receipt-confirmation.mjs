@@ -92,9 +92,19 @@ export const COPINE_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: '153ead326f6097aa89a7e5db04760c97', mealid: 4790, mealType: 2, maxParty: 2,
 });
 
+// Recurring Friday lunch, not a holiday menu. Identity must be reconciled by
+// the catalog owner before activation; this exact tuple is not a type0 switch.
+export const KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-cafe-klotet', name: 'Café Klotet',
+  hash: 'dc1cbc8f42a27a99c6cf4174dd8bf6fa', mealid: 63872, mealType: 0, maxParty: 2,
+  type0Contract: 'cafe-klotet-friday-lunch:63872:2026:v1',
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
-  const reviewedType0 = Object.entries(DAGMAR_LUNCH_RECEIPT_POLICY)
+  const reviewedKlotet = Object.entries(KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY)
+    .every(([key, value]) => policy[key] === value);
+  const reviewedType0 = reviewedKlotet || Object.entries(DAGMAR_LUNCH_RECEIPT_POLICY)
     .every(([key, value]) => policy[key] === value);
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
     || !Number.isSafeInteger(policy.mealid) || policy.mealid <= 0 || (![2, 3].includes(policy.mealType) && !reviewedType0)
@@ -116,6 +126,8 @@ export function createBokabordReceiptVerifier(configuration) {
       || (approval.comment !== undefined && typeof approval.comment !== 'string')) return null;
     const date = new Date(approval.date + 'T12:00:00Z');
     if (!Number.isFinite(+date) || date.toISOString().slice(0, 10) !== approval.date) return null;
+    if (reviewedKlotet && (date.getUTCDay() !== 5 || approval.date < '2026-09-11'
+      || approval.date > '2026-12-18' || approval.time < '12:00' || approval.time >= '15:00')) return null;
     return createHash('sha256').update(JSON.stringify([policy.restaurantId, approval.hash, approval.mealid,
       approval.date, approval.time, approval.party, approval.firstname, approval.lastname, approval.email,
       phone(approval.phone), approval.comment || '', approval.terms])).digest('hex');

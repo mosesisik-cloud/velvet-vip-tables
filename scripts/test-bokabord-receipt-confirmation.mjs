@@ -2,7 +2,56 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { createBokabordReceiptVerifier, NOEMA_LUNCH_RECEIPT_POLICY as policy, CICCIOS_DINING_RECEIPT_POLICY as ciccios, RICHE_LUNCH_RECEIPT_POLICY as riche, STUREHOF_LUNCH_RECEIPT_POLICY as sturehof, BEIRUT_LUNCH_RECEIPT_POLICY as beirut, BALZAC_LUNCH_RECEIPT_POLICY as balzac, KOMMENDOREN_LUNCH_RECEIPT_POLICY as kommendoren, ASTRID_LUNCH_RECEIPT_POLICY as astrid, VAU_LUNCH_RECEIPT_POLICY as vau, BOQUERIA_LUNCH_RECEIPT_POLICY as boqueria } from '../api/bokabord-receipt-confirmation.mjs';
 import { DAGMAR_LUNCH_RECEIPT_POLICY as dagmar, ITALIANO_DINING_RECEIPT_POLICY as italiano, COPINE_LUNCH_RECEIPT_POLICY as copine } from '../api/bokabord-receipt-confirmation.mjs';
+import { KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY as klotet } from '../api/bokabord-receipt-confirmation.mjs';
 const verifier = createBokabordReceiptVerifier(policy);
+
+function klotetFixture() {
+  const v=createBokabordReceiptVerifier(klotet),f=fixture();
+  Object.assign(f.approval,{hash:klotet.hash,mealid:klotet.mealid,date:'2026-10-23'});
+  Object.assign(f.attempt,{restaurantId:klotet.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:klotet.hash,mealid:klotet.mealid,date:f.approval.date});
+  Object.assign(f.observation.data.booking,{mealid:klotet.mealid,date:f.approval.date,
+    meal:{type:0,group_booking:true,must_pay_directly:false,mandatory_products:false,bullets:{}}});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',klotet.name)
+    .replace('(Lunch)','(Fredagslunch på Café Klotet)').replace('tisdag 15 jan','fredag 23 okt');
+  return {v,f,check:()=>v.verify(f.attempt,f.approval,f.observation)};
+}
+
+test('Klotet exact recurring Friday lunch requires its reviewed tuple and published date/time window',()=>{
+  const {v,f,check}=klotetFixture();
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  for(const patch of [{party:3},{date:'2026-10-24'},{date:'2026-09-04'},
+    {date:'2026-12-25'},{time:'11:59'},{time:'15:00'},
+    ...[39316,39493,43781,53207,54658,64420].map(mealid=>({mealid}))])
+    assert.equal(v.approvalDigest({...f.approval,...patch}),null);
+  for(const date of ['2026-09-11','2026-12-18']) assert.ok(v.approvalDigest({...f.approval,date}));
+  for(const patch of [{restaurantId:'other'},{name:'Other'},{hash:policy.hash},
+    {mealid:39316},{mealType:2},{maxParty:3},{type0Contract:undefined},
+    {type0Contract:dagmar.type0Contract}])
+    assert.throws(()=>createBokabordReceiptVerifier({...klotet,...patch}),/reviewed_ordinary_meal_policy_required/);
+});
+
+test('Klotet type0 exception preserves receipt, payment, contact and attempt guards',()=>{
+  for(const change of [
+    f=>f.observation.data.booking.mealid=39316,
+    f=>f.observation.data.booking.meal.type=3,
+    f=>f.observation.data.booking.meal.must_pay_directly=true,
+    f=>f.observation.data.booking.meal.mandatory_products=true,
+    f=>f.observation.data.booking.meal.bullets={cc:{sw:'Kort'}},
+    f=>f.observation.data.booking.require_noshow=true,
+    f=>f.observation.data.booking.group_booking=true,
+    f=>f.observation.data.booking.products=[{}],
+    f=>f.observation.data.booking.waitlist=1,
+    f=>f.observation.data.booking.status=0,
+    f=>f.observation.request.payload.terms.general=false,
+    f=>f.observation.request.payload.is_temp_booking=true,
+    f=>f.observation.request.payload.phone='+46711111111',
+    f=>f.observation.attemptId='replayed',f=>f.attempt.dispatched=false,
+    f=>f.observation.receipt.documentNavigationId=999,
+    f=>{delete f.observation.receipt;},
+  ]) { const {f,check}=klotetFixture();change(f);assert.equal(check().status,'unknown'); }
+});
 test('Italiano Dining Room binds dinner type and excludes Saturday lunch and Bar',()=>{
   const v=createBokabordReceiptVerifier(italiano),f=fixture();
   Object.assign(f.approval,{hash:italiano.hash,mealid:italiano.mealid,time:'19:00'});
