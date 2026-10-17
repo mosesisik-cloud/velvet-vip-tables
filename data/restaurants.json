@@ -11558,6 +11558,20 @@
           "bookingProvider": "BokaBord",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-15"
+        },
+        {
+          "placeId": "curated-STO-gondolen",
+          "name": "Gondolen",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Stadsgården 6, våning 11, 116 45 Stockholm",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Gondolen%2C%20Stadsg%C3%A5rden%206%2C%20Stockholm",
+          "website": "https://gondolen.se/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://gondolen.se/",
+          "locationVerifiedAt": "2026-10-17"
         }
       ]
     },
