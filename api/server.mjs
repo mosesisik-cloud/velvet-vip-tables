@@ -14,7 +14,7 @@ import { PlaywrightRuntime } from './playwright-runtime.mjs';
 import { PlaywrightAttemptLedger } from './playwright-attempt-ledger.mjs';
 import { createBookingJournalHooks } from './playwright-booking-journal.mjs';
 import { BOBONNE_LUNCH_RECEIPT_POLICY, AGNES_DINNER_RECEIPT_POLICY, KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY, GONDOLEN_LUNCH_RECEIPT_POLICY, COPINE_LUNCH_RECEIPT_POLICY, ITALIANO_DINING_RECEIPT_POLICY, DAGMAR_LUNCH_RECEIPT_POLICY, BOQUERIA_LUNCH_RECEIPT_POLICY, VAU_LUNCH_RECEIPT_POLICY, ASTRID_LUNCH_RECEIPT_POLICY, KOMMENDOREN_LUNCH_RECEIPT_POLICY, BALZAC_LUNCH_RECEIPT_POLICY, BEIRUT_LUNCH_RECEIPT_POLICY, NOEMA_LUNCH_RECEIPT_POLICY, CICCIOS_DINING_RECEIPT_POLICY, RICHE_LUNCH_RECEIPT_POLICY, STUREHOF_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
-import { LUZETTE_LUNCH_RECEIPT_POLICY, TEATERGRILLEN_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
+import { LUZETTE_LUNCH_RECEIPT_POLICY, TEATERGRILLEN_LUNCH_RECEIPT_POLICY, TENNSTOPET_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
 import { createProviderJournal } from './provider-booking-journal.mjs';
 import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_DEKAS, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
@@ -101,6 +101,7 @@ const contactFinalPolicies = [
 ];
 // The same exact policies govern allowed submissions and receipt verification.
 const providerReviewPolicies = [
+    ...(process.env.VELVET_TENNSTOPET_RECEIPT === 'enabled' ? [TENNSTOPET_LUNCH_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_BOBONNE_RECEIPT === 'enabled' ? [BOBONNE_LUNCH_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_AGNES_RECEIPT === 'enabled' ? [AGNES_DINNER_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_COPINE_RECEIPT === 'enabled' ? [COPINE_LUNCH_RECEIPT_POLICY] : []),
@@ -1114,6 +1115,8 @@ function publicRestaurantBooking(booking) {
     date: booking.date,
     time: booking.time || "",
     party: Number(booking.party) || 0,
+    ...(typeof booking.mealLabel === 'string' && booking.mealLabel.trim() && booking.mealLabel.length <= 256
+      && !/[\x00-\x1f\x7f]/.test(booking.mealLabel) ? {mealLabel:booking.mealLabel} : {}),
     ...(Number.isSafeInteger(booking.roomId) && booking.roomId > 0 && typeof booking.roomName === 'string'
       && booking.roomName.trim() && booking.roomName.length <= 256 && !/[\x00-\x1f\x7f]/.test(booking.roomName)
       ? {roomId:booking.roomId,roomName:booking.roomName} : {}),

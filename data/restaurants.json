@@ -11666,6 +11666,24 @@
           "bookingProvider": "Bokabord",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-17"
+        },
+        {
+          "placeId": "curated-STO-tennstopet",
+          "name": "Tennstopet",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Dalagatan 50, 113 24 Stockholm",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Tennstopet%2C%20Dalagatan%2050%2C%20Stockholm",
+          "website": "https://www.tennstopet.se/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.tennstopet.se/",
+          "locationVerifiedAt": "2026-10-18",
+          "bookingUrl": "https://app.bokabord.se/reservation/?hash=48b3bfcf5f5ff2974d516a5bd226850c",
+          "bookingProvider": "Bokabord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-18"
         }
       ]
     },
