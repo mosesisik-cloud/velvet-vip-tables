@@ -1,0 +1,19 @@
+# Kvarnen Stockholm — ordinary Lunch
+
+Reviewed2026-10-18 on main `a9d35e2d57247a8a4e61176053f6e03677c9eb81` (release224). Owner32d5 checked current catalog/aliases/hash absence and reserved `curated-STO-kvarnen`. Fresh [official HTML](https://www.kvarnen.com/sv) identifies Tjärhovsgatan4,11621 Stockholm and ordinary Boka bord targets `https://app.bokabord.se/reservation/?hash=724b0f1e583fb02d404504176bbe156b&version=new`. This is not Kvarnen Kristianstad or another namesake. Provider receipt name is exactly `Kvarnen Restaurang`; catalog display Kvarnen may differ.
+
+KVARNEN_LUNCH_RECEIPT_POLICY binds that ID/name/hash to ordinary Lunch91/type2, maxParty2. Native min/max0 are unset, global max_people10 applies; this scope permits1–2 only. Native payment/products=false,bullets={}, weekdays only,12:00–15:00, date0/dateto0. Official weekday lunch11–15 intersects conservatively to weekday starts12:00 inclusive–15:00 exclusive. These are eligibility limits, not available slots; none were requested or fabricated. Exact tuple is mandatory for this canonical ID.
+
+Exclude dinner215, brunch1278, paid/card takeaway11819 and sitting Christmas meal64214, as well as giftcard, groups, terrace or any other arrangement. Christmas64214 publishes23November–23December2026 and describes lunch sittings too. This first rollout conservatively excludes that entire interval from ordinary Lunch eligibility; this is a scope decision, NOT a sourced claim that ordinary lunch is unavailable. Reopening ordinary lunch during that interval needs separate evidence. Never substitute the Christmas meal or infer its lunch slots from marketing times.
+
+## Native boundary and retained safeguards
+
+canUseAuthFeature=true,testPhone=true,_allow_temp=false,confirm_in_widget=false,custom_request=false,group_bookings=false,linked_meals=[],comment=true,widget_end_time=true,autoplacing_labels=false,idle_reload_time0. Use the existing unauthenticated provider-review path. Common guestCtrl2360–2369 enters auth for unauthenticated Next, but authenticated Next can submit directly. Guest continuation returns triggerCompleteY and requires final confirmation before completeBooking/saveBooking. Preserve existing contact/code guards and never use Next as a live probe.
+
+Initial1022–1023 uses native phoneField/guestPhone; common2268,2306–2316,2391–2400 initialize and validate intlTelInput, copy canonical phone on Next. Keep native phone projection/re-read, exact approval/comment/consent and durable-before-dispatch journal. Keep matching submission/response plus independent fresh main-frame receipt bound to the original booking/navigation. No confirmation from2xx,status1,event or redirect alone. Card/no-show/product/group/temp/waitlist states remain unknown. No room allocation or specific placement is promised.
+
+## Evidence and handoff
+
+Initial native HTML SHA256 `2f2fab62d03d57e3cc4ba62cc7514cb40e9ae580c5e7e40c43c13d6e0783fa23`, referencing app-widget.js?v6.0.3. Prior captured common source2026-10-17 SHA256 `ac75bf9af7515871475D57D09B4BA962FA854613FE01D8D635C751E1B5FFEAD5` supplies cited flow. All44 receipt tests pass, including exact tuple/party/day/time/holiday-scope/excluded-meal and submission/phone/consent/replay/receipt negatives. Existing policies remain passing; positive receipts are synthetic fixtures. git diff --check passes.
+
+Only bounded official/native initial GETs. No real holds, bookings, contacts, codes, payments, capability reads or restaurant messages; zero new real final bookings. Actual interactive flow/availability remain unobserved. Owner32d5 owns catalog/registry/server/UI/release and must validate exact provider name, provider-review phone/consent/journal/receipt app flow and display the limited ordinary-lunch scope before activation. Sole candidate/handoff, no shared runtime edits or new engine.
