@@ -1,3 +1,4 @@
+import { TENNSTOPET_LUNCH_RECEIPT_POLICY as tennstopet } from '../api/bokabord-receipt-confirmation.mjs';
 import { TEATERGRILLEN_LUNCH_RECEIPT_POLICY as teatergrillen } from '../api/bokabord-receipt-confirmation.mjs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -9,6 +10,55 @@ import { AGNES_DINNER_RECEIPT_POLICY as agnes } from '../api/bokabord-receipt-co
 import { BOBONNE_LUNCH_RECEIPT_POLICY as bobonne } from '../api/bokabord-receipt-confirmation.mjs';
 import { LUZETTE_LUNCH_RECEIPT_POLICY as luzette } from '../api/bokabord-receipt-confirmation.mjs';
 const verifier = createBokabordReceiptVerifier(policy);
+
+function tennstopetFixture() {
+  const v=createBokabordReceiptVerifier(tennstopet),f=fixture();
+  Object.assign(f.approval,{hash:tennstopet.hash,mealid:tennstopet.mealid,time:'13:00',date:'2026-10-23'});
+  Object.assign(f.attempt,{restaurantId:tennstopet.restaurantId,detailsDigest:v.approvalDigest(f.approval)});
+  Object.assign(f.observation,{restaurantId:f.attempt.restaurantId,detailsDigest:f.attempt.detailsDigest});
+  Object.assign(f.observation.request.payload,{hash:tennstopet.hash,mealid:tennstopet.mealid,time:'13:00',date:'2026-10-23'});
+  Object.assign(f.observation.data.booking,{mealid:tennstopet.mealid,time:'13:00',date:'2026-10-23',
+    meal:{type:0,must_pay_directly:false,mandatory_products:false,bullets:{}}});
+  f.observation.receipt.text=f.observation.receipt.text.replace('Noema',tennstopet.name).replace('(Lunch)','(Lunch Tennbarens Matsal)').replace('tisdag 15 jan','fredag 23 okt').replace('12:00 - 13:30','13:00 - 14:30');
+  return {v,f,check:()=>v.verify(f.attempt,f.approval,f.observation)};
+}
+
+test('Tennstopet exact named dining-room Lunch binds two guests, Friday/Saturday and excludes Christmas',()=>{
+  const {v,f,check}=tennstopetFixture();
+  assert.equal(check().status,'confirmed');assert.equal(check().verification.source,'fixture');
+  for(const party of [2]) assert.ok(v.approvalDigest({...f.approval,party}));
+  for(const party of [0,1,3,8,9]) assert.equal(v.approvalDigest({...f.approval,party}),null);
+  assert.equal(v.approvalDigest({...f.approval,hash:'a9a751cbf9a3721964247c6b364a4fe2'}),null);
+  for(const date of ['2026-10-22','2026-10-25','2026-11-27','2026-12-18']) assert.equal(v.approvalDigest({...f.approval,date}),null);
+  for(const time of ['12:00','14:59']) assert.ok(v.approvalDigest({...f.approval,time}));
+  for(const time of ['11:59','15:00']) assert.equal(v.approvalDigest({...f.approval,time}),null);
+  for(const mealid of [54065,54213,54214,59733]) {
+    assert.equal(v.approvalDigest({...f.approval,mealid}),null);
+    f.observation.data.booking.mealid=mealid;assert.equal(check().status,'unknown');
+  }
+  for(const patch of [{name:'Other'},{hash:policy.hash},{mealid:54213},{mealType:3},{maxParty:8},{mealLabel:'Lunch'},{type0Contract:undefined}])
+    assert.throws(()=>createBokabordReceiptVerifier({...tennstopet,...patch}));
+});
+
+test('Tennstopet provider-review policy preserves room label, request, phone and receipt guards',()=>{
+  for(const change of [
+    f=>f.observation.receipt.text=f.observation.receipt.text.replace('Lunch Tennbarens Matsal','Lunch Odengatan'),
+    f=>f.observation.data.booking.meal.type=3,
+    f=>f.observation.data.booking.meal.must_pay_directly=true,
+    f=>f.observation.data.booking.meal.mandatory_products=true,
+    f=>f.observation.data.booking.meal.bullets={cc:{sw:'Kort'}},
+    f=>f.observation.data.booking.require_noshow=true,
+    f=>f.observation.data.booking.group_booking=true,
+    f=>f.observation.data.booking.products=[{}],f=>f.observation.data.booking.waitlist=1,
+    f=>f.observation.data.booking.status=0,
+    f=>f.observation.request.payload.terms.general=false,
+    f=>f.observation.request.payload.is_temp_booking=true,
+    f=>f.observation.request.payload.phone='+46711111111',
+    f=>{delete f.observation.request;},f=>f.observation.attemptId='replayed',
+    f=>f.attempt.dispatched=false,f=>f.observation.receipt.documentNavigationId=999,
+    f=>{delete f.observation.receipt;},
+  ]) { const {f,check}=tennstopetFixture();change(f);assert.equal(check().status,'unknown'); }
+});
 
 function teatergrillenFixture() {
   const v=createBokabordReceiptVerifier(teatergrillen),f=fixture();

@@ -129,8 +129,17 @@ export const TEATERGRILLEN_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: 'e11fb52c16bde7a7d8f255342f6a6eaf', mealid: 6491, mealType: 2, maxParty: 2,
 });
 
+export const TENNSTOPET_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-tennstopet', name: 'Tennstopet',
+  hash: '48b3bfcf5f5ff2974d516a5bd226850c', mealid: 54277, mealType: 0, maxParty: 2,
+  type0Contract: 'tennstopet-tennbarens-lunch:54277:v1',
+  mealLabel: 'Lunch Tennbarens Matsal',
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
+  const reviewedTennstopet = Object.entries(TENNSTOPET_LUNCH_RECEIPT_POLICY)
+    .every(([key, value]) => policy[key] === value);
   const reviewedTeatergrillen = Object.entries(TEATERGRILLEN_LUNCH_RECEIPT_POLICY)
     .every(([key, value]) => policy[key] === value);
   const reviewedLuzette = Object.entries(LUZETTE_LUNCH_RECEIPT_POLICY)
@@ -139,12 +148,13 @@ export function createBokabordReceiptVerifier(configuration) {
     .every(([key, value]) => policy[key] === value);
   const reviewedKlotet = Object.entries(KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY)
     .every(([key, value]) => policy[key] === value);
-  const reviewedType0 = reviewedKlotet || Object.entries(DAGMAR_LUNCH_RECEIPT_POLICY)
+  const reviewedType0 = reviewedTennstopet || reviewedKlotet || Object.entries(DAGMAR_LUNCH_RECEIPT_POLICY)
     .every(([key, value]) => policy[key] === value);
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
     || (policy.restaurantId === BOBONNE_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedBobonne)
     || (policy.restaurantId === LUZETTE_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedLuzette)
     || (policy.restaurantId === TEATERGRILLEN_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedTeatergrillen)
+    || (policy.restaurantId === TENNSTOPET_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedTennstopet)
     || !Number.isSafeInteger(policy.mealid) || policy.mealid <= 0 || (![2, 3].includes(policy.mealType) && !reviewedType0)
     || (policy.type0Contract !== undefined && !reviewedType0)
     || !Number.isSafeInteger(policy.maxParty) || policy.maxParty < 1 || policy.maxParty > 8) {
@@ -164,6 +174,9 @@ export function createBokabordReceiptVerifier(configuration) {
       || (approval.comment !== undefined && typeof approval.comment !== 'string')) return null;
     const date = new Date(approval.date + 'T12:00:00Z');
     if (!Number.isFinite(+date) || date.toISOString().slice(0, 10) !== approval.date) return null;
+    if (reviewedTennstopet && (approval.party !== 2 || ![5,6].includes(date.getUTCDay())
+      || approval.time < '12:00' || approval.time >= '15:00'
+      || (approval.date >= '2026-11-25' && approval.date <= '2026-12-23'))) return null;
     if (reviewedTeatergrillen && ([0,6].includes(date.getUTCDay())
       || approval.time < '13:00' || approval.time >= '15:00')) return null;
     if (reviewedLuzette && (approval.time < '11:15' || approval.time >= '15:00')) return null;
@@ -218,6 +231,8 @@ export function createBokabordReceiptVerifier(configuration) {
       || url.searchParams.getAll('code').length !== 1 || url.searchParams.get('code') !== b.short_code
       || url.searchParams.get('new') !== '1') return unknown('receipt_url_mismatch');
     const text = lines(receipt.text);
+    if (reviewedTennstopet && text[3] !== '2 pers. (Lunch Tennbarens Matsal)')
+      return unknown('dining_room_not_verified');
     // Anchored prefix, NOT a substring search through user comments or hidden DOM.
     if (text[0] !== 'Tack för din bokning.' || text[1] !== 'Du är nu klar och bekräftelse har skickats via epost.'
       || text[2] !== policy.name || !new RegExp('^' + approval.party + ' pers\\. \\(.+\\)$').test(text[3] || '')) return unknown('completion_document_not_verified');
