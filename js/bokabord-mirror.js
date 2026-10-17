@@ -28,6 +28,12 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
     scope.textContent = 'Bokning i Velvet gäller Lunch Tennbarens Matsal på Tennstopet för exakt 2 gäster, fredag–lördag med start kl. 12.00–14.59, i mån av lediga bord. Matsalen ligger en halv trappa ned. Perioden 25 november–23 december 2026 ingår inte. Andra matsalar, middag, julbord, Tennstopet Grill och uteservering ingår inte.';
     container.querySelector('.booking-source').after(scope);
   }
+  if (restaurantId === 'curated-STO-pelikan') {
+    const scope = document.createElement('p');
+    scope.className = 'booking-scope';
+    scope.textContent = 'Bokning i Velvet gäller ordinarie middag på Pelikan för exakt 2 gäster med start kl. 16.00–22.29, i mån av lediga bord. Restaurangen kan placera er i linnematsalen eller stora hallen. Normal sittningstid är 2 timmar om inget annat är överenskommet. Lunch, hämtmat, nyår och gruppbokningar ingår inte.';
+    container.querySelector('.booking-source').after(scope);
+  }
   const start = container.querySelector('[data-start]');
   if (restaurantId === 'curated-STO-brasserie-bobonne') {
     const scope = document.createElement('p');
