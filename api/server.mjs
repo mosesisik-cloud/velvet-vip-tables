@@ -13,7 +13,7 @@ import { RequestBudget } from "./request-budget.mjs";
 import { PlaywrightRuntime } from './playwright-runtime.mjs';
 import { PlaywrightAttemptLedger } from './playwright-attempt-ledger.mjs';
 import { createBookingJournalHooks } from './playwright-booking-journal.mjs';
-import { AGNES_DINNER_RECEIPT_POLICY, KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY, GONDOLEN_LUNCH_RECEIPT_POLICY, COPINE_LUNCH_RECEIPT_POLICY, ITALIANO_DINING_RECEIPT_POLICY, DAGMAR_LUNCH_RECEIPT_POLICY, BOQUERIA_LUNCH_RECEIPT_POLICY, VAU_LUNCH_RECEIPT_POLICY, ASTRID_LUNCH_RECEIPT_POLICY, KOMMENDOREN_LUNCH_RECEIPT_POLICY, BALZAC_LUNCH_RECEIPT_POLICY, BEIRUT_LUNCH_RECEIPT_POLICY, NOEMA_LUNCH_RECEIPT_POLICY, CICCIOS_DINING_RECEIPT_POLICY, RICHE_LUNCH_RECEIPT_POLICY, STUREHOF_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
+import { BOBONNE_LUNCH_RECEIPT_POLICY, AGNES_DINNER_RECEIPT_POLICY, KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY, GONDOLEN_LUNCH_RECEIPT_POLICY, COPINE_LUNCH_RECEIPT_POLICY, ITALIANO_DINING_RECEIPT_POLICY, DAGMAR_LUNCH_RECEIPT_POLICY, BOQUERIA_LUNCH_RECEIPT_POLICY, VAU_LUNCH_RECEIPT_POLICY, ASTRID_LUNCH_RECEIPT_POLICY, KOMMENDOREN_LUNCH_RECEIPT_POLICY, BALZAC_LUNCH_RECEIPT_POLICY, BEIRUT_LUNCH_RECEIPT_POLICY, NOEMA_LUNCH_RECEIPT_POLICY, CICCIOS_DINING_RECEIPT_POLICY, RICHE_LUNCH_RECEIPT_POLICY, STUREHOF_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
 import { createProviderJournal } from './provider-booking-journal.mjs';
 import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_DEKAS, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
@@ -98,6 +98,7 @@ const contactFinalPolicies = [
 ];
 // The same exact policies govern allowed submissions and receipt verification.
 const providerReviewPolicies = [
+    ...(process.env.VELVET_BOBONNE_RECEIPT === 'enabled' ? [BOBONNE_LUNCH_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_AGNES_RECEIPT === 'enabled' ? [AGNES_DINNER_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_COPINE_RECEIPT === 'enabled' ? [COPINE_LUNCH_RECEIPT_POLICY] : []),
     ...(process.env.VELVET_ITALIANO_RECEIPT === 'enabled' ? [ITALIANO_DINING_RECEIPT_POLICY] : []),

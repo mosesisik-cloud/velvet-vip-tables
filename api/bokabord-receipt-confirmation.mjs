@@ -113,13 +113,22 @@ export const AGNES_DINNER_RECEIPT_POLICY = Object.freeze({
   hash: '1e49551d0d8b677c1dc6ad956301cec7', mealid: 1628, mealType: 3, maxParty: 2,
 });
 
+// Ordinary Lunch only; dinner (including same-evening phone bookings) excluded.
+export const BOBONNE_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-brasserie-bobonne', name: 'Brasserie Bobonne',
+  hash: 'b529fb237cb8d5e64c73c1faba7e9854', mealid: 31, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
+  const reviewedBobonne = Object.entries(BOBONNE_LUNCH_RECEIPT_POLICY)
+    .every(([key, value]) => policy[key] === value);
   const reviewedKlotet = Object.entries(KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY)
     .every(([key, value]) => policy[key] === value);
   const reviewedType0 = reviewedKlotet || Object.entries(DAGMAR_LUNCH_RECEIPT_POLICY)
     .every(([key, value]) => policy[key] === value);
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
+    || (policy.restaurantId === BOBONNE_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedBobonne)
     || !Number.isSafeInteger(policy.mealid) || policy.mealid <= 0 || (![2, 3].includes(policy.mealType) && !reviewedType0)
     || (policy.type0Contract !== undefined && !reviewedType0)
     || !Number.isSafeInteger(policy.maxParty) || policy.maxParty < 1 || policy.maxParty > 8) {
@@ -139,6 +148,9 @@ export function createBokabordReceiptVerifier(configuration) {
       || (approval.comment !== undefined && typeof approval.comment !== 'string')) return null;
     const date = new Date(approval.date + 'T12:00:00Z');
     if (!Number.isFinite(+date) || date.toISOString().slice(0, 10) !== approval.date) return null;
+    // Intersect the native lunch schedule with the official opening window.
+    if (reviewedBobonne && ([0, 6].includes(date.getUTCDay())
+      || approval.time < '11:30' || approval.time >= '14:00')) return null;
     if (reviewedKlotet && (date.getUTCDay() !== 5 || approval.date < '2026-09-11'
       || approval.date > '2026-12-18' || approval.time < '12:00' || approval.time >= '15:00')) return null;
     return createHash('sha256').update(JSON.stringify([policy.restaurantId, approval.hash, approval.mealid,

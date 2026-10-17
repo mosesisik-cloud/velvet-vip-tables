@@ -11,6 +11,12 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
     container.querySelector('.booking-source').after(scope);
   }
   const start = container.querySelector('[data-start]');
+  if (restaurantId === 'curated-STO-brasserie-bobonne') {
+    const scope = document.createElement('p');
+    scope.className = 'booking-scope';
+    scope.textContent = 'Bokning i Velvet gäller ordinarie lunch på Brasserie Bobonne för 1–2 gäster, måndag–fredag med start kl. 11.30–13.59, i mån av lediga bord. Middag och privat matsal ingår inte. För samma kväll eller fler än 6 gäster hänvisar restaurangen till direktkontakt.';
+    container.querySelector('.booking-source').after(scope);
+  }
   if (restaurantId === 'curated-STO-agnes') {
     const scope = document.createElement('p');
     scope.className = 'booking-scope';
