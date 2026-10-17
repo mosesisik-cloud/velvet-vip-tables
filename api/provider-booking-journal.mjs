@@ -24,6 +24,8 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
       || (!['hold','booking'].includes(intent.phase) && !cartPhase) || !intent.owner || !intent.sessionId
       || !/^[a-f0-9]{64}$/.test(intent.reviewFingerprint || '')) fail('intent_binding');
     const configured=venue(intent.restaurantId).offer;
+    const shift=venue(intent.restaurantId).shiftId;
+    if (shift && (intent.details?.shiftId !== shift || intent.details?.party !== 2 || intent.phase !== 'booking')) fail('shift_binding');
     if (configured) {
       const offer=cleanBookingOffer(intent.details?.offer);
       if (!offer || offer.offerId !== configured.offerId || offer.count !== configured.count || offer.count !== intent.details?.party) fail('offer_binding');
@@ -40,6 +42,8 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
         && proof?.roomId === attempt.roomId && proof?.roomName === attempt.roomName))
       && (!venue(attempt.restaurantId)?.roomEvidence || proof?.roomEvidence === venue(attempt.restaurantId).roomEvidence)
       && (!venue(attempt.restaurantId)?.orderEvidence || proof?.orderEvidence === venue(attempt.restaurantId).orderEvidence)
+      && (!venue(attempt.restaurantId)?.shiftId || (attempt.details?.shiftId === venue(attempt.restaurantId).shiftId
+        && attempt.party === 2 && proof?.shiftId === attempt.details.shiftId && proof?.bookingEvidence === 'own_booking_readback'))
       && (!venue(attempt.restaurantId)?.offer || (cleanBookingOffer(attempt.details?.offer)
         && proof?.offerEvidence === 'own_booking_readback'
         && proof.offerId === attempt.details.offer.offerId && proof.offerCount === attempt.details.offer.count
@@ -58,6 +62,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
         reviewFingerprint:intent.reviewFingerprint,date:intent.details?.date,
         time:intent.details?.time,party:intent.details?.party,
         ...(venue(intent.restaurantId).offer ? {details:{offer:cleanBookingOffer(intent.details.offer)}} : {}),
+        ...(venue(intent.restaurantId).shiftId ? {details:{shiftId:intent.details.shiftId}} : {}),
         ...(venue(intent.restaurantId).rooms ? {roomId:intent.details.roomId,roomName:intent.details.roomName} : {})});
       if (!gate.sendAllowed) fail('already_attempted');
       if (intent.phase === 'booking') register.upsert(row(gate.attempt,intent.owner));
@@ -69,6 +74,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
       if (!attempt || attempt.provider !== provider || attempt.mode !== mode
         || ['restaurantId','sessionId','phase','reviewFingerprint'].some(key=>attempt[key]!==intent[key])
         || !sameBookingOffer(attempt.details?.offer,intent.details?.offer)
+        || (venue(intent.restaurantId).shiftId && attempt.details?.shiftId !== intent.details?.shiftId)
         || (venue(intent.restaurantId).rooms && (attempt.roomId !== intent.details.roomId || attempt.roomName !== intent.details.roomName))) fail('attempt_binding');
       // A hold is never a confirmed booking and its capability never leaves the
       // adapter's memory. Unknown dispatch remains consumed across restarts.
@@ -93,6 +99,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
         || attempt.phase !== 'booking' || attempt.status !== 'confirmed'
         || attempt.restaurantId !== snapshot.restaurantId || attempt.sessionId !== snapshot.id
         || !sameBookingOffer(attempt.details?.offer,snapshot.details?.offer)
+        || (venue(attempt.restaurantId).shiftId && snapshot.details?.shiftId !== attempt.details?.shiftId)
         || (venue(attempt.restaurantId).rooms && (snapshot.details?.roomId !== attempt.roomId || snapshot.details?.roomName !== attempt.roomName))
         || attempt.reference !== snapshot.result.reference || !proofMatches(snapshot.result,attempt)) return null;
       return publicBookingResult({...snapshot.result,verification:{...proof,detailsDigest:attempt.reviewFingerprint}});

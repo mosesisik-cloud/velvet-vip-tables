@@ -39,11 +39,18 @@ function validate(input) {
     clean.roomId = input.roomId; clean.roomName = token(input.roomName,'invalid_room');
   }
   if (input.details !== undefined) {
+    if (input.provider === 'Zenchef' && input.restaurantId === 'curated-PAR-bofinger') {
+      if (input.details?.shiftId !== 19170 || Object.keys(input.details).length !== 1
+        || input.party !== 2 || phaseOf(input) !== 'booking') fail('invalid_shift');
+      clean.details = {shiftId:19170};
+    } else {
     const offer=cleanBookingOffer(input.details?.offer);
     if (input.provider !== 'Zenchef' || input.restaurantId !== 'curated-AMS-de-kas'
       || !offer || Object.keys(input.details).length !== 1 || input.party !== offer.count) fail('invalid_offer');
     clean.details={offer};
+    }
   }
+  if (input.provider === 'Zenchef' && input.restaurantId === 'curated-PAR-bofinger' && !clean.details) fail('invalid_shift');
   return { ...clean, mode: input.mode, phase: phaseOf(input), idempotencyKey: input.idempotencyKey,
     reviewFingerprint: input.reviewFingerprint, date: input.date, time: input.time, party: input.party };
 }
@@ -105,7 +112,7 @@ export class PlaywrightAttemptLedger {
       const replay = this.db.prepare('SELECT payload FROM playwright_attempts_v1 WHERE owner=? AND idem=?').get(bound.owner, idem);
       if (replay) {
         const attempt = decode(replay.payload);
-        if ([...bindKeys, 'phase', 'date', 'time', 'party'].some(key => attempt[key] !== bound[key]) || !sameBookingOffer(attempt.details?.offer,bound.details?.offer)) throw new AttemptLedgerError('idempotency_conflict');
+        if ([...bindKeys, 'phase', 'date', 'time', 'party'].some(key => attempt[key] !== bound[key]) || !sameBookingOffer(attempt.details?.offer,bound.details?.offer) || attempt.details?.shiftId !== bound.details?.shiftId) throw new AttemptLedgerError('idempotency_conflict');
         return { sendAllowed: false, reason: 'already_attempted', attempt };
       }
       const duplicate = this.db.prepare('SELECT payload FROM playwright_attempts_v1 WHERE scope=?').get(scope);
@@ -133,7 +140,7 @@ export class PlaywrightAttemptLedger {
     return this.transaction(() => {
       const attempt = this.get(owner, attemptId);
       if (!attempt) throw new AttemptLedgerError('attempt_not_found', 404);
-      if (!evidence || phaseOf(evidence) !== attempt.phase || bindKeys.some(key => evidence[key] !== attempt[key]) || evidence.attemptId !== attemptId || !sameBookingOffer(evidence.details?.offer,attempt.details?.offer))
+      if (!evidence || phaseOf(evidence) !== attempt.phase || bindKeys.some(key => evidence[key] !== attempt[key]) || evidence.attemptId !== attemptId || !sameBookingOffer(evidence.details?.offer,attempt.details?.offer) || evidence.details?.shiftId !== attempt.details?.shiftId)
         throw new AttemptLedgerError('evidence_mismatch');
       if (!states.has(evidence.status)) throw new AttemptLedgerError('unknown_result_status');
       if (attempt.phase === 'hold' && !holdStates.has(evidence.status)) throw new AttemptLedgerError('invalid_hold_status');
