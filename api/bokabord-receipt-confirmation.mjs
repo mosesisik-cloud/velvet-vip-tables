@@ -146,8 +146,15 @@ export const HANTVERKET_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: 'f7f00569986df77ef5d7b4abe98b9bed', mealid: 7097, mealType: 2, maxParty: 2,
 });
 
+export const KVARNEN_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-kvarnen', name: 'Kvarnen Restaurang',
+  hash: '724b0f1e583fb02d404504176bbe156b', mealid: 91, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
+  const reviewedKvarnen = Object.entries(KVARNEN_LUNCH_RECEIPT_POLICY)
+    .every(([key, value]) => policy[key] === value);
   const reviewedHantverket = Object.entries(HANTVERKET_LUNCH_RECEIPT_POLICY)
     .every(([key, value]) => policy[key] === value);
   const reviewedPelikan = Object.entries(PELIKAN_DINNER_RECEIPT_POLICY)
@@ -171,6 +178,7 @@ export function createBokabordReceiptVerifier(configuration) {
     || (policy.restaurantId === TENNSTOPET_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedTennstopet)
     || (policy.restaurantId === PELIKAN_DINNER_RECEIPT_POLICY.restaurantId && !reviewedPelikan)
     || (policy.restaurantId === HANTVERKET_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedHantverket)
+    || (policy.restaurantId === KVARNEN_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedKvarnen)
     || !Number.isSafeInteger(policy.mealid) || policy.mealid <= 0 || (![2, 3].includes(policy.mealType) && !reviewedType0)
     || (policy.type0Contract !== undefined && !reviewedType0)
     || !Number.isSafeInteger(policy.maxParty) || policy.maxParty < 1 || policy.maxParty > 8) {
@@ -190,6 +198,9 @@ export function createBokabordReceiptVerifier(configuration) {
       || (approval.comment !== undefined && typeof approval.comment !== 'string')) return null;
     const date = new Date(approval.date + 'T12:00:00Z');
     if (!Number.isFinite(+date) || date.toISOString().slice(0, 10) !== approval.date) return null;
+    if (reviewedKvarnen && ([0,6].includes(date.getUTCDay())
+      || approval.time < '12:00' || approval.time >= '15:00'
+      || (approval.date >= '2026-11-23' && approval.date <= '2026-12-23'))) return null;
     if (reviewedHantverket && ([0,6].includes(date.getUTCDay())
       || approval.time < '11:30' || approval.time >= '14:00')) return null;
     if (reviewedPelikan && (approval.party !== 2 || approval.time < '16:00' || approval.time >= '22:30')) return null;
