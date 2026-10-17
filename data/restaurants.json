@@ -11625,7 +11625,11 @@
           "source": "VELVET curated · official website",
           "curated": true,
           "locationSource": "https://bobonne.se/",
-          "locationVerifiedAt": "2026-10-17"
+          "locationVerifiedAt": "2026-10-17",
+          "bookingUrl": "https://app.bokabord.se/reservation/?hash=b529fb237cb8d5e64c73c1faba7e9854",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-17"
         }
       ]
     },

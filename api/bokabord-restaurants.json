@@ -173,5 +173,12 @@
     "hash": "1e49551d0d8b677c1dc6ad956301cec7",
     "source": "https://restaurangagnes.com/",
     "verifiedAt": "2026-10-17"
+  },
+  "curated-STO-brasserie-bobonne": {
+    "name": "Brasserie Bobonne",
+    "url": "https://app.bokabord.se/reservation/?hash=b529fb237cb8d5e64c73c1faba7e9854",
+    "hash": "b529fb237cb8d5e64c73c1faba7e9854",
+    "source": "https://bobonne.se/",
+    "verifiedAt": "2026-10-17"
   }
 }

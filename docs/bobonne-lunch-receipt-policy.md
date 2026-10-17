@@ -8,6 +8,11 @@ Reviewed 2026-10-17 on main `7a2894e9375053bed5d48683955e87f96e9000fb` (release2
 
 Native lunch tstart11:00/tend14:00 differs from official opening text11:30–14:00. Do not promise11:00 from metadata; use actual provider offers and conservatively keep the initial integration within the published opening window. No availability has been observed. Ordinary dinner155/type3 also has false payment/product flags, but is deliberately excluded from this handoff.
 
+The shared integration enforces the conservative intersection before dispatch:
+Monday–Friday, 11:30 inclusive to 14:00 exclusive, using the requested local date
+and time. It does not invent availability or broaden the provider schedule. This
+guard is bound to the exact Bobonne tuple and also applies to receipt approval.
+
 Official restrictions: no online availability or same-evening requests go by phone; parties over6 go by phone/email; chambre séparée requires separate contact. This integration does not bypass those restrictions: it supports only ordinary Lunch for up to2 and never falls back to dinner, Salon/chambre, bar, event, takeaway or gift cards. Do not turn an unavailable result into a custom request or contact the restaurant automatically. Any future dinner scope must explicitly retain the same-evening restriction.
 
 ## Native submission boundary and release218 safeguards

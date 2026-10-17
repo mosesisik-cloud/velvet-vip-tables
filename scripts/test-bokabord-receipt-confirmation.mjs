@@ -26,6 +26,11 @@ test('Bobonne ordinary Lunch binds full venue name and excludes dinner and large
   for(const party of [3,6,7]) assert.equal(v.approvalDigest({...f.approval,party}),null);
   assert.equal(v.approvalDigest({...f.approval,mealid:155}),null);
   assert.equal(v.approvalDigest({...f.approval,hash:policy.hash}),null);
+  for(const patch of [{date:'2030-01-19'},{date:'2030-01-20'},{time:'11:00'},{time:'11:29'},{time:'14:00'}])
+    assert.equal(v.approvalDigest({...f.approval,...patch}),null);
+  for(const time of ['11:30','13:59']) assert.ok(v.approvalDigest({...f.approval,time}));
+  for(const patch of [{name:'Other'},{hash:policy.hash},{mealid:155},{maxParty:3}])
+    assert.throws(()=>createBokabordReceiptVerifier({...bobonne,...patch}),/reviewed_ordinary_meal_policy_required/);
   f.observation.data.booking.mealid=155;assert.equal(check().status,'unknown');
 });
 
