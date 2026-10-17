@@ -159,5 +159,12 @@
     "hash": "720cdcb4d664ceeebbe8548904e275e6",
     "source": "https://gondolen.se/",
     "verifiedAt": "2026-10-17"
+  },
+  "curated-STO-cafe-klotet": {
+    "name": "Café Klotet",
+    "url": "https://app.bokabord.se/reservation/?hash=dc1cbc8f42a27a99c6cf4174dd8bf6fa",
+    "hash": "dc1cbc8f42a27a99c6cf4174dd8bf6fa",
+    "source": "https://cafeklotet.se/",
+    "verifiedAt": "2026-10-17"
   }
 }

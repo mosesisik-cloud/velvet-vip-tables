@@ -4,7 +4,7 @@ import {restaurantSourceId,assertUniqueRestaurantIds} from './restaurant-identit
 const read=async path=>JSON.parse(await fs.readFile(new URL('../'+path,import.meta.url),'utf8'));
 const catalog=await read('data/restaurants.json');
 const rows=Object.values(catalog.destinations).flatMap(d=>d.restaurants);
-assert.equal(rows.length,771);const ids=assertUniqueRestaurantIds(catalog);assert.equal(ids.size,771);
+assert.equal(rows.length,772);const ids=assertUniqueRestaurantIds(catalog);assert.equal(ids.size,772);
 for(const path of ['data/booking-providers.json','api/bokabord-restaurants.json']) {
  for(const id of Object.keys(await read(path))) assert.ok(ids.has(id),`${path}: orphaned ${id}`);
 }
@@ -21,4 +21,4 @@ assert.throws(()=>assertUniqueRestaurantIds({destinations:{BKK:{restaurants:[{pl
 assert.throws(()=>assertUniqueRestaurantIds({destinations:{BKK:{restaurants:[{placeId:'osm-BKK-'}]}}}),/Invalid/);
 assert.equal(rows.find(r=>r.placeId==='osm-BKK-uca22dc274c49').name,nonLatin[0]);
 assert.equal(rows.find(r=>r.placeId==='osm-BKK-u7179573ef178').name,nonLatin[1]);
-console.log('PASS catalog:771 rows/771 unique IDs; provider/Bokabord/menu references intact; Unicode/source identity and collisions regression');
+console.log('PASS catalog:772 rows/772 unique IDs; provider/Bokabord/menu references intact; Unicode/source identity and collisions regression');

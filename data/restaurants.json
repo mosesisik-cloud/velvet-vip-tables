@@ -11576,6 +11576,24 @@
           "bookingProvider": "BokaBord",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-17"
+        },
+        {
+          "placeId": "curated-STO-cafe-klotet",
+          "name": "Café Klotet",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Urvädersgränd 15A, 116 46 Stockholm",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Caf%C3%A9%20Klotet%2C%20Urv%C3%A4dersgr%C3%A4nd%2015A%2C%20Stockholm",
+          "website": "https://cafeklotet.se/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://cafeklotet.se/",
+          "locationVerifiedAt": "2026-10-17",
+          "bookingUrl": "https://app.bokabord.se/reservation/?hash=dc1cbc8f42a27a99c6cf4174dd8bf6fa",
+          "bookingProvider": "BokaBord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-17"
         }
       ]
     },
