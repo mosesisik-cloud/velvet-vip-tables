@@ -5,6 +5,7 @@ export function mountProviderPlaywrightBooking(container, api, {
 } = {}) {
   if (!provider || !restaurantId || !endpoint.startsWith('/')) throw new Error('booking_config');
   const isZenchef = provider.toLowerCase() === 'zenchef';
+  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : null;
   const key = `velvet:provider:${encodeURIComponent(provider)}:${encodeURIComponent(restaurantId)}`;
   const aliases = { firstname:'Förnamn', firstName:'Förnamn', lastname:'Efternamn', lastName:'Efternamn', email:'E-post', emailAddress:'E-post', phone:'Telefon', phoneNumber:'Telefon', comment:'Önskemål' };
   if (isZenchef) { aliases.civility = 'Tilltal'; aliases.country = 'Telefonens land'; }
@@ -39,6 +40,11 @@ export function mountProviderPlaywrightBooking(container, api, {
   if (restaurantId === 'curated-PAR-bofinger') {
     const scope=document.createElement('p'); scope.className='booking-scope';
     scope.textContent='Bokning i Velvet gäller ordinarie lunch på Bofinger i Paris för exakt två gäster, i mån av lediga bord. Middag, grupper, privata rum, leverans och hämtmat ingår inte. Ingen viss placering garanteras. Vid mer än 15 minuters försening garanterar restaurangen inte längre bordet. Kontrollera restaurangens aktuella villkor före bokning.';
+    container.querySelector('header').after(scope);
+  }
+  if (restaurantId === 'curated-PAR-la-coupole') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller ordinarie lunch på La Coupole i Paris för exakt två gäster, i mån av lediga bord. Frukost, middag, Dancing, grupper, privata rum, leverans och hämtmat ingår inte. Ingen viss placering garanteras. Vid mer än 15 minuters försening garanterar restaurangen inte längre bordet. Kontrollera restaurangens aktuella villkor före bokning.';
     container.querySelector('header').after(scope);
   }
   const write = (id, phase, idempotencyKey, reviewFingerprint) => {
@@ -102,7 +108,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     const proof = result?.verification;
     if (result?.status === 'confirmed') {
       if (proof?.verified === true && proof.source === 'provider' && proof.restaurantId === restaurantId
-        && (restaurantId !== 'curated-PAR-bofinger' || (proof.bookingEvidence === 'own_booking_readback' && proof.shiftId === 19170 && snapshot.details?.shiftId === 19170 && snapshot.details?.party === 2))
+        && (!lunchShift || (proof.bookingEvidence === 'own_booking_readback' && proof.shiftId === lunchShift && snapshot.details?.shiftId === lunchShift && snapshot.details?.party === 2))
         && proof.sessionId === snapshot.id && typeof proof.attemptId === 'string' && proof.attemptId
         // The durable journal key is server-owned; the UI UUID is only correlation.
         && (!isZenchef || (fingerprint(proof.idempotencyKey)

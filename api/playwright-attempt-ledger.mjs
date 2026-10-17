@@ -38,11 +38,12 @@ function validate(input) {
     if (!Number.isSafeInteger(input.roomId) || input.roomId <= 0) fail('invalid_room');
     clean.roomId = input.roomId; clean.roomName = token(input.roomName,'invalid_room');
   }
+  const lunchShift = input.provider === 'Zenchef' ? (input.restaurantId === 'curated-PAR-bofinger' ? 19170 : input.restaurantId === 'curated-PAR-la-coupole' ? 20148 : null) : null;
   if (input.details !== undefined) {
-    if (input.provider === 'Zenchef' && input.restaurantId === 'curated-PAR-bofinger') {
-      if (input.details?.shiftId !== 19170 || Object.keys(input.details).length !== 1
+    if (lunchShift) {
+      if (input.details?.shiftId !== lunchShift || Object.keys(input.details).length !== 1
         || input.party !== 2 || phaseOf(input) !== 'booking') fail('invalid_shift');
-      clean.details = {shiftId:19170};
+      clean.details = {shiftId:lunchShift};
     } else {
     const offer=cleanBookingOffer(input.details?.offer);
     if (input.provider !== 'Zenchef' || input.restaurantId !== 'curated-AMS-de-kas'
@@ -50,7 +51,7 @@ function validate(input) {
     clean.details={offer};
     }
   }
-  if (input.provider === 'Zenchef' && input.restaurantId === 'curated-PAR-bofinger' && !clean.details) fail('invalid_shift');
+  if (lunchShift && !clean.details) fail('invalid_shift');
   return { ...clean, mode: input.mode, phase: phaseOf(input), idempotencyKey: input.idempotencyKey,
     reviewFingerprint: input.reviewFingerprint, date: input.date, time: input.time, party: input.party };
 }
