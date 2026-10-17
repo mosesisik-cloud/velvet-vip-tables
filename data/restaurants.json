@@ -11648,6 +11648,24 @@
           "bookingProvider": "Bokabord",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-17"
+        },
+        {
+          "placeId": "curated-STO-teatergrillen",
+          "name": "Teatergrillen",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Nybrogatan 3, 114 34 Stockholm",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Teatergrillen%2C%20Nybrogatan%203%2C%20Stockholm",
+          "website": "https://teatergrillen.se/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://teatergrillen.se/boka-bord/",
+          "locationVerifiedAt": "2026-10-17",
+          "bookingUrl": "https://app.bokabord.se/reservation/?hash=a9a751cbf9a3721964247c6b364a4fe2&version=new&mr=83",
+          "bookingProvider": "Bokabord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-17"
         }
       ]
     },

@@ -16,6 +16,12 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
     scope.textContent = 'Bokning i Velvet gäller ordinarie lunch på Luzette för 1–2 gäster med start kl. 11.15–14.59, i mån av lediga bord. Frukost, middag, högtidsmenyer och gruppbokningar ingår inte.';
     container.querySelector('.booking-source').after(scope);
   }
+  if (restaurantId === 'curated-STO-teatergrillen') {
+    const scope = document.createElement('p');
+    scope.className = 'booking-scope';
+    scope.textContent = 'Bokning i Velvet gäller ordinarie lunch på Teatergrillen för 1–2 gäster, måndag–fredag med start kl. 13.00–14.59, i mån av lediga bord. Teatergrillens bar, middag, teatersittning och särskilda menyer ingår inte.';
+    container.querySelector('.booking-source').after(scope);
+  }
   const start = container.querySelector('[data-start]');
   if (restaurantId === 'curated-STO-brasserie-bobonne') {
     const scope = document.createElement('p');
