@@ -34,6 +34,12 @@ export function mountBokabordMirror(container, api, { restaurantId = 'curated-ST
     scope.textContent = 'Bokning i Velvet gäller ordinarie middag på Pelikan för exakt 2 gäster med start kl. 16.00–22.29, i mån av lediga bord. Restaurangen kan placera er i linnematsalen eller stora hallen. Normal sittningstid är 2 timmar om inget annat är överenskommet. Lunch, hämtmat, nyår och gruppbokningar ingår inte.';
     container.querySelector('.booking-source').after(scope);
   }
+  if (restaurantId === 'curated-STO-hantverket') {
+    const scope = document.createElement('p');
+    scope.className = 'booking-scope';
+    scope.textContent = 'Bokning i Velvet gäller ordinarie lunch på Restaurang Hantverket för 1–2 gäster, måndag–fredag med start kl. 11.30–13.59, i mån av lediga bord. Ange i kommentarsfältet om ni har barnvagn eller hund med er. Kontrollera placering och sittningstid i formuläret; ingen viss matsal eller köksbar garanteras. Middag, Spritbordet och gruppbokningar ingår inte.';
+    container.querySelector('.booking-source').after(scope);
+  }
   const start = container.querySelector('[data-start]');
   if (restaurantId === 'curated-STO-brasserie-bobonne') {
     const scope = document.createElement('p');
