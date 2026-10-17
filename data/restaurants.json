@@ -11702,6 +11702,24 @@
           "bookingProvider": "Bokabord",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-18"
+        },
+        {
+          "placeId": "curated-STO-hantverket",
+          "name": "Restaurang Hantverket",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "Sturegatan 15, 114 36 Stockholm",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Restaurang%20Hantverket%2C%20Sturegatan%2015%2C%20Stockholm",
+          "website": "https://restauranghantverket.se/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://restauranghantverket.se/en/reservations",
+          "locationVerifiedAt": "2026-10-18",
+          "bookingUrl": "https://app.bokabord.se/reservation/?hash=f7f00569986df77ef5d7b4abe98b9bed&version=new&lang=en",
+          "bookingProvider": "Bokabord",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-18"
         }
       ]
     },

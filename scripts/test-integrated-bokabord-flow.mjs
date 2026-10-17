@@ -30,6 +30,13 @@ const zenchefRid = dekas ? '386643' : pirouette ? '363313' : pesquiere ? '362908
 const zenchefName = dekas ? 'DeKas' : pirouette ? 'Pirouette' : pesquiere ? 'Pesquiere' : 'FishCorner';
 const rooms = pirouette ? [{id:52521,name:'Salle principale'},{id:65674,name:'Terasse'}] : [{id:51183,name:'La Pesquiere'},{id:52372,name:'Mazagran salle'},{id:52373,name:'Mazagran terrasse'}];
 const noema = process.argv.includes('--noema') || process.env.VELVET_TEST_PROVIDER === 'Noema';
+const hantverket = process.argv.includes('--hantverket') || process.env.VELVET_TEST_PROVIDER === 'Hantverket';
+const hantTail=hantverket && process.argv.includes('--hantverket-tail');
+const hantComment='Vi har barnvagn och hund med oss. Fixture only.';
+const hantTarget='https://app.bokabord.se/reservation/?hash=f7f00569986df77ef5d7b4abe98b9bed&version=new&lang=sw';
+const hantInvalid=[...[7098,7103,999999999].map(mealid=>({mealid})),{amount:0},{amount:3},{date:'2030-01-19'},{date:'2030-01-20'},{time:'11:29'},{time:'14:00'}];
+const hantBoundaries=[{time:'11:30'},{time:'13:59'}];
+const hantOutcomes=['english-receipt','wrong-provider-name','wrong-meal','wrong-type','party-cap','waitlist','requirement','payment','mandatory-products','group','temporary'];
 const pelikan = process.argv.includes('--pelikan') || process.env.VELVET_TEST_PROVIDER === 'Pelikan';
 const pelikanComment='Fixture seating preference, no room guarantee.';
 const pelikanInvalid=[{amount:1},{amount:3},...[293,11704,65474,999999999].map(mealid=>({mealid})),{time:'15:59'},{time:'22:30'}];
@@ -74,21 +81,21 @@ const vau = process.argv.includes('--vau') || process.env.VELVET_TEST_PROVIDER =
 const boqueria = process.argv.includes('--boqueria') || process.env.VELVET_TEST_PROVIDER === 'Boqueria';
 const dagmar = process.argv.includes('--dagmar') || process.env.VELVET_TEST_PROVIDER === 'Dagmar';
 const copine = process.argv.includes('--copine') || process.env.VELVET_TEST_PROVIDER === 'Copine';
-const guestLunch = tennstopet || bobonne || beirut || balzac || kommendoren || astrid || vau || boqueria || dagmar || copine;
+const guestLunch = hantverket || tennstopet || bobonne || beirut || balzac || kommendoren || astrid || vau || boqueria || dagmar || copine;
 const italiano = process.argv.includes('--italiano') || process.env.VELVET_TEST_PROVIDER === 'Italiano';
 const nativeGuest = pelikan || guestLunch || italiano || agnes;
 const guestChoice = ciccios || nativeGuest;
 const contactFinal = teatergrillen || luzette || riche || sturehof || gondolen || klotet;
-assert.ok([pelikan,tennstopet,teatergrillen,luzette,bobonne,agnes,klotet,gondolen,sazon,fishcorner,pesquiere,pirouette,dekas,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar,italiano,copine].filter(Boolean).length <= 1, 'Choose one named provider scenario');
+assert.ok([hantverket,pelikan,tennstopet,teatergrillen,luzette,bobonne,agnes,klotet,gondolen,sazon,fishcorner,pesquiere,pirouette,dekas,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar,italiano,copine].filter(Boolean).length <= 1, 'Choose one named provider scenario');
 // Noema/Ciccios saved-source evidence: issue129 comment6241312516, native phoneField/Next copy.
 const nativePhone = contactFinal || nativeGuest || noema || ciccios;
 const receiptMode = noema || guestChoice || contactFinal;
-const receiptName = pelikan ? 'Restaurang Pelikan' : tennstopet ? 'Tennstopet' : teatergrillen ? 'Teatergrillen' : luzette ? 'Luzette' : bobonne ? 'Brasserie Bobonne' : agnes ? 'Agnes' : klotet ? 'Caf\u00e9 Klotet' : gondolen ? 'Gondolen' : copine ? 'Copine' : italiano ? 'Italiano' : dagmar ? 'Villa Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau De Ville' : astrid ? 'Brasserie Astrid' : kommendoren ? 'Kommendören' : balzac ? 'Brasserie Balzac' : beirut ? 'Beirut Café' : sturehof ? 'Sturehof' : riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
-const receiptCode = pelikan ? 'synthetic-pelikan-only' : tennstopet ? 'synthetic-tennstopet-only' : teatergrillen ? 'synthetic-teatergrillen-only' : luzette ? 'synthetic-luzette-only' : bobonne ? 'synthetic-bobonne-only' : agnes ? 'synthetic-agnes-only' : klotet ? 'synthetic-klotet-only' : gondolen ? 'synthetic-gondolen-only' : copine ? 'synthetic-copine-only' : italiano ? 'synthetic-italiano-only' : dagmar ? 'synthetic-dagmar-only' : boqueria ? 'synthetic-boqueria-only' : vau ? 'synthetic-vau-only' : astrid ? 'synthetic-astrid-only' : kommendoren ? 'synthetic-kommendoren-only' : balzac ? 'synthetic-balzac-only' : beirut ? 'synthetic-beirut-only' : sturehof ? 'synthetic-sturehof-only' : riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
-const mealId = pelikan ? 1540 : tennstopet ? 54277 : teatergrillen ? 6491 : luzette ? 7253 : bobonne ? 31 : agnes ? 1628 : klotet ? 63872 : gondolen ? 33008 : copine ? 4790 : italiano ? 22890 : dagmar ? 63588 : boqueria ? 22 : vau ? 22476 : astrid ? 55508 : kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
+const receiptName = hantverket ? 'Restaurang Hantverket' : pelikan ? 'Restaurang Pelikan' : tennstopet ? 'Tennstopet' : teatergrillen ? 'Teatergrillen' : luzette ? 'Luzette' : bobonne ? 'Brasserie Bobonne' : agnes ? 'Agnes' : klotet ? 'Caf\u00e9 Klotet' : gondolen ? 'Gondolen' : copine ? 'Copine' : italiano ? 'Italiano' : dagmar ? 'Villa Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau De Ville' : astrid ? 'Brasserie Astrid' : kommendoren ? 'Kommendören' : balzac ? 'Brasserie Balzac' : beirut ? 'Beirut Café' : sturehof ? 'Sturehof' : riche ? 'Riche' : ciccios ? "Ciccio's" : 'Noema';
+const receiptCode = hantverket ? 'synthetic-hantverket-only' : pelikan ? 'synthetic-pelikan-only' : tennstopet ? 'synthetic-tennstopet-only' : teatergrillen ? 'synthetic-teatergrillen-only' : luzette ? 'synthetic-luzette-only' : bobonne ? 'synthetic-bobonne-only' : agnes ? 'synthetic-agnes-only' : klotet ? 'synthetic-klotet-only' : gondolen ? 'synthetic-gondolen-only' : copine ? 'synthetic-copine-only' : italiano ? 'synthetic-italiano-only' : dagmar ? 'synthetic-dagmar-only' : boqueria ? 'synthetic-boqueria-only' : vau ? 'synthetic-vau-only' : astrid ? 'synthetic-astrid-only' : kommendoren ? 'synthetic-kommendoren-only' : balzac ? 'synthetic-balzac-only' : beirut ? 'synthetic-beirut-only' : sturehof ? 'synthetic-sturehof-only' : riche ? 'synthetic-riche-only' : ciccios ? 'synthetic-ciccios-only' : 'synthetic-noema-only';
+const mealId = hantverket ? 7097 : pelikan ? 1540 : tennstopet ? 54277 : teatergrillen ? 6491 : luzette ? 7253 : bobonne ? 31 : agnes ? 1628 : klotet ? 63872 : gondolen ? 33008 : copine ? 4790 : italiano ? 22890 : dagmar ? 63588 : boqueria ? 22 : vau ? 22476 : astrid ? 55508 : kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
 const scopeInvalid = [{mealid:999999999},{amount:noema ? 9 : ciccios ? 8 : 3}];
 const mealType = tennstopet ? 0 : klotet ? 0 : dagmar ? 0 : noema || guestLunch || contactFinal ? 2 : 3;
-const restaurantId = pelikan ? 'curated-STO-pelikan' : tennstopet ? 'curated-STO-tennstopet' : teatergrillen ? 'curated-STO-teatergrillen' : luzette ? 'curated-STO-luzette' : bobonne ? 'curated-STO-brasserie-bobonne' : agnes ? 'curated-STO-agnes' : klotet ? 'curated-STO-cafe-klotet' : gondolen ? 'curated-STO-gondolen' : sazon ? 'osm-BAL-sazon' : copine ? 'curated-STO-copine' : italiano ? 'curated-STO-italiano' : dekas ? 'curated-AMS-de-kas' : dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const restaurantId = hantverket ? 'curated-STO-hantverket' : pelikan ? 'curated-STO-pelikan' : tennstopet ? 'curated-STO-tennstopet' : teatergrillen ? 'curated-STO-teatergrillen' : luzette ? 'curated-STO-luzette' : bobonne ? 'curated-STO-brasserie-bobonne' : agnes ? 'curated-STO-agnes' : klotet ? 'curated-STO-cafe-klotet' : gondolen ? 'curated-STO-gondolen' : sazon ? 'osm-BAL-sazon' : copine ? 'curated-STO-copine' : italiano ? 'curated-STO-italiano' : dekas ? 'curated-AMS-de-kas' : dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
 const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[receiptMode ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 const date = tennstopet ? '2026-10-23' : klotet ? '2026-10-23' : '2030-01-15';
@@ -164,7 +171,7 @@ function supplierHtml() {
 <style>body{font:16px Arial;margin:20px}button,input,textarea{box-sizing:border-box;min-height:40px;width:260px;display:block;margin:8px 0}button{background:#eee}h1,h2{font-size:22px}#party{position:absolute;top:90px}#date{position:absolute;top:150px}#slot{position:absolute;top:210px}</style>
 <main id="screen"></main><script>
 const q={hash:${JSON.stringify(venue.hash)},mealid:${mealId},date:'',time:'',amount:0,firstname:'',lastname:'',email:'',phone:'',comment:'',products:[],waitlist:false,giftcard:null,linked_meals:[],bookingid:null,terms:{general:true,restaurant:false,bokabord:false}};
-const model={custom_request:false,settings:{custom_request:${astrid},comment:${!(tennstopet || agnes || luzette || teatergrillen)},autoplacing_labels:${agnes || tennstopet}${tennstopet || pelikan ? ',widget_end_time:false,confirm_in_widget:false' : ''}${luzette ? ',separated:true,widget_end_time:false,confirm_in_widget:false' : ''}},meal:{bullets:{},mandatory_products:false},getQuery:()=>q};
+const model={custom_request:false,settings:{custom_request:${astrid},comment:${!(tennstopet || agnes || luzette || teatergrillen)},autoplacing_labels:${hantverket || agnes || tennstopet}${tennstopet || pelikan ? ',widget_end_time:false,confirm_in_widget:false' : ''}${hantverket ? ',separated:true,widget_end_time:true,confirm_in_widget:false' : ''}${luzette ? ',separated:true,widget_end_time:false,confirm_in_widget:false' : ''}},meal:{bullets:{},mandatory_products:false},getQuery:()=>q};
 window.angular={element:()=>({injector:()=>({get:key=>key==='Booking'?model:key==='$http'?{pendingRequests:[]}:{$$phase:false}}),scope:()=>({isAjaxRequest:()=>false,phoneValid:()=>!!document.querySelector('[name=phone]')?.value.match(/^\\+46700000000$/)})})};
 if(${nativePhone}){
  window.$={fn:{intlTelInput:{getCountryData:()=>[{iso2:'se',dialCode:'46',name:'Sweden'}]}}};
@@ -174,14 +181,14 @@ const screen=document.querySelector('#screen');
 screen.innerHTML=${JSON.stringify(`<h1>${receiptMode ? receiptName : 'Zink'} FIXTURE — no real booking</h1><button id="party">2 gäster</button><button id="date">${date}</button><button id="slot" hidden>${bookingTime} TESTDATA</button>`)};
 document.querySelector('#party').onclick=()=>{q.amount=2;document.querySelector('#party').textContent='2 gäster valda';};
 document.querySelector('#date').onclick=async()=>{q.date='${date}';const r=await fetch('/reservation/api/booking/getTimes',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date:q.date,amount:q.amount,hash:q.hash})});const data=await r.json();document.querySelector('#slot').hidden=!data.times.includes('${bookingTime}');};
-document.querySelector('#slot').onclick=()=>{q.time='${bookingTime}';Object.assign(q,${JSON.stringify(pelikan && process.env.VELVET_TEST_OUTCOME?.startsWith('boundary-') ? pelikanBoundaries[Number(process.env.VELVET_TEST_OUTCOME.slice(9))] : pelikan && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? pelikanInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : tennstopet && process.env.VELVET_TEST_OUTCOME?.startsWith('boundary-') ? tennBoundaries[Number(process.env.VELVET_TEST_OUTCOME.slice(9))] : tennstopet && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? tennInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : teatergrillen && process.env.VELVET_TEST_OUTCOME?.startsWith('boundary-') ? teaterBoundaries[Number(process.env.VELVET_TEST_OUTCOME.slice(9))] : teatergrillen && !scopeGuards && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? teaterInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : luzette && process.env.VELVET_TEST_OUTCOME?.startsWith('boundary-') ? luzetteBoundaries[Number(process.env.VELVET_TEST_OUTCOME.slice(9))] : luzette && !scopeGuards && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? luzetteInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : bobonne && process.env.VELVET_TEST_OUTCOME?.startsWith('boundary-') ? bobonneBoundaries[Number(process.env.VELVET_TEST_OUTCOME.slice(9))] : bobonne && !scopeGuards && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? bobonneInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : scopeGuards && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? scopeInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : agnes && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? agnesInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : klotet && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? klotetInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : {})});contact();};
+document.querySelector('#slot').onclick=()=>{q.time='${bookingTime}';Object.assign(q,${JSON.stringify(hantverket && process.env.VELVET_TEST_OUTCOME?.startsWith('boundary-') ? hantBoundaries[Number(process.env.VELVET_TEST_OUTCOME.slice(9))] : hantverket && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? hantInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : pelikan && process.env.VELVET_TEST_OUTCOME?.startsWith('boundary-') ? pelikanBoundaries[Number(process.env.VELVET_TEST_OUTCOME.slice(9))] : pelikan && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? pelikanInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : tennstopet && process.env.VELVET_TEST_OUTCOME?.startsWith('boundary-') ? tennBoundaries[Number(process.env.VELVET_TEST_OUTCOME.slice(9))] : tennstopet && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? tennInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : teatergrillen && process.env.VELVET_TEST_OUTCOME?.startsWith('boundary-') ? teaterBoundaries[Number(process.env.VELVET_TEST_OUTCOME.slice(9))] : teatergrillen && !scopeGuards && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? teaterInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : luzette && process.env.VELVET_TEST_OUTCOME?.startsWith('boundary-') ? luzetteBoundaries[Number(process.env.VELVET_TEST_OUTCOME.slice(9))] : luzette && !scopeGuards && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? luzetteInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : bobonne && process.env.VELVET_TEST_OUTCOME?.startsWith('boundary-') ? bobonneBoundaries[Number(process.env.VELVET_TEST_OUTCOME.slice(9))] : bobonne && !scopeGuards && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? bobonneInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : scopeGuards && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? scopeInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : agnes && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? agnesInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : klotet && process.env.VELVET_TEST_OUTCOME?.startsWith('invalid-') ? klotetInvalid[Number(process.env.VELVET_TEST_OUTCOME.slice(8))] : {})});contact();};
 function contact(){screen.innerHTML='<h2>Kontaktuppgifter</h2><p>FIXTURE supplier form</p>'+['firstname','lastname','email','phone'].map(n=>'<label>'+n+'<input name="'+n+'" value=""></label>').join('')+'${tennstopet || agnes || luzette || teatergrillen ? '' : '<textarea ng-model="booking.comment"></textarea>'}${contactFinal ? '<a id="terms-link" href="https://www.waiteraid.com/terms/fixture-a">Fixture terms</a>' : ''}<button id="next">Nästa</button>';
  if(${nativePhone}){const phone=document.querySelector('[name=phone]');phone.className='phoneField';const wrapper=document.createElement('div');wrapper.className='intl-tel-input';phone.before(wrapper);wrapper.innerHTML='<div class="selected-flag" title="Sweden: +46"><span class="iti-flag se"></span></div>';wrapper.append(phone);}
  // The native phone widget copies into Booking only on Next, not on input.
  for(const input of document.querySelectorAll('input,textarea'))input.oninput=()=>{if(!(${nativePhone}&&input.name==='phone'))q[input.name||'comment']=input.value;};
- const dispatch=async()=>{if(${agnes && process.env.VELVET_TEST_OUTCOME==='phone-payload-change'})q.phone='+46711111111';if(${contactFinal})console.log('fixture-contact-final-click');try{const response=await fetch(${JSON.stringify(saveUrl)},{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});const data=await response.json();if(${receiptMode}){if(${JSON.stringify(process.env.VELVET_TEST_OUTCOME)}!=='missing-receipt')location.assign('/reservation/booking/?code='+encodeURIComponent(data.booking.short_code)+'&new=1');else screen.innerHTML='<h2>FIXTURE response only</h2>';}else{history.replaceState({},'', '/reservation/booking/fixture');screen.innerHTML='<h2>FIXTURE response received</h2>';}}catch{screen.innerHTML='<h2>FIXTURE network interrupted</h2>';}};
- const review=()=>{screen.innerHTML='<h2>Kontrollera din bokning</h2><p>FIXTURE '+q.date+' '+q.time+' '+q.amount+' guests${pelikan ? ' — Middag' : ''}${tennstopet ? ' — Lunch Tennbarens Matsal' : ''}${agnes ? ' — FIXTURE seating and placement labels retained' : ''}${guestChoice ? ' — guest choice completed' : ''}</p><button id="final">Slutför bokningen</button>';if(${pelikan}){const preference=document.createElement('p');preference.textContent=q.comment;screen.prepend(preference);}document.querySelector('#final').onclick=dispatch;};
- document.querySelector('#next').onclick=()=>{if(${nativePhone}){q.phone=document.querySelector('[name=phone]').value;q.country_code='46';q.dial_code='46';}if(${contactFinal}){q.phone=document.querySelector('[name="phone"]').value;q.country_code='46';q.dial_code='46';dispatch();}else if(${guestChoice}){if(${nativeGuest}){q.phone=document.querySelector('[name=phone]').value;q.country_code='46';q.dial_code='46';}if(${(pelikan || agnes || tennstopet) && process.env.VELVET_TEST_OUTCOME==='direct-contact'}){dispatch();return;}screen.innerHTML='<h2>Fortsätt som gäst</h2><button id="guest">Fortsätt utan konto</button>';document.querySelector('#guest').onclick=review;}else review();};}
+ const dispatch=async()=>{if(${hantverket && process.env.VELVET_TEST_OUTCOME==='comment-payload-drop'})q.comment='';if(${agnes && process.env.VELVET_TEST_OUTCOME==='phone-payload-change'})q.phone='+46711111111';if(${contactFinal})console.log('fixture-contact-final-click');try{const response=await fetch(${JSON.stringify(saveUrl)},{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(q)});const data=await response.json();if(${receiptMode}){if(${JSON.stringify(process.env.VELVET_TEST_OUTCOME)}!=='missing-receipt')location.assign('/reservation/booking/?code='+encodeURIComponent(data.booking.short_code)+'&new=1');else screen.innerHTML='<h2>FIXTURE response only</h2>';}else{history.replaceState({},'', '/reservation/booking/fixture');screen.innerHTML='<h2>FIXTURE response received</h2>';}}catch{screen.innerHTML='<h2>FIXTURE network interrupted</h2>';}};
+ const review=()=>{screen.innerHTML='<h2>Kontrollera din bokning</h2><p>FIXTURE '+q.date+' '+q.time+' '+q.amount+' guests${hantverket ? ' — Lunch; FIXTURE native seating and placement labels retained' : ''}${pelikan ? ' — Middag' : ''}${tennstopet ? ' — Lunch Tennbarens Matsal' : ''}${agnes ? ' — FIXTURE seating and placement labels retained' : ''}${guestChoice ? ' — guest choice completed' : ''}</p><button id="final">Slutför bokningen</button>';if(${pelikan || hantverket}){const preference=document.createElement('p');preference.textContent=q.comment;screen.prepend(preference);}document.querySelector('#final').onclick=dispatch;};
+ document.querySelector('#next').onclick=()=>{if(${nativePhone}){q.phone=document.querySelector('[name=phone]').value;q.country_code='46';q.dial_code='46';}if(${contactFinal}){q.phone=document.querySelector('[name="phone"]').value;q.country_code='46';q.dial_code='46';dispatch();}else if(${guestChoice}){if(${nativeGuest}){q.phone=document.querySelector('[name=phone]').value;q.country_code='46';q.dial_code='46';}if(${(hantverket || pelikan || agnes || tennstopet) && process.env.VELVET_TEST_OUTCOME==='direct-contact'}){dispatch();return;}screen.innerHTML='<h2>Fortsätt som gäst</h2><button id="guest">Fortsätt utan konto</button>';document.querySelector('#guest').onclick=review;}else review();};}
 </script></body></html>`;
 }
 
@@ -286,10 +293,11 @@ if (childMode) {
               const receive=message=>{if(message.kind==='release-provider-receipt'){clearTimeout(timer);process.off('message',receive);resolve();}};
               process.on('message',receive);
             });
-            const name = process.env.VELVET_TEST_OUTCOME === 'unverified-success' ? 'Wrong restaurant' : pelikan && process.env.VELVET_TEST_OUTCOME==='wrong-provider-name' ? 'Pelikan' : receiptName;
-            return intercepted.fulfill({status:200,contentType:'text/html',body:`<html><meta charset="utf-8"><body><div>Tack för din bokning.</div><div>Du är nu klar och bekräftelse har skickats via epost.</div><div>${name}</div><div>2 pers. (${pelikan ? 'Middag' : tennstopet ? (process.env.VELVET_TEST_OUTCOME==='wrong-room-receipt'?'Lunch Odengatan':tennLabel) : agnes ? 'Middag' : klotet ? 'Fredagslunch p\u00e5 Caf\u00e9 Klotet' : italiano ? 'Dining Room' : ciccios ? 'Matsal' : boqueria ? 'LUNCH' : 'Lunch'})</div><div>Bokningsreferens</div><div># 999999999</div><div>Gästinformation</div></body></html>`});
+            const name = process.env.VELVET_TEST_OUTCOME === 'unverified-success' ? 'Wrong restaurant' : hantverket && process.env.VELVET_TEST_OUTCOME==='wrong-provider-name' ? 'Hantverket' : pelikan && process.env.VELVET_TEST_OUTCOME==='wrong-provider-name' ? 'Pelikan' : receiptName;
+            return intercepted.fulfill({status:200,contentType:'text/html',body:`<html><meta charset="utf-8"><body><div>${hantverket && process.env.VELVET_TEST_OUTCOME==='english-receipt'?'Thank you for your booking.':'Tack för din bokning.'}</div><div>${hantverket && process.env.VELVET_TEST_OUTCOME==='english-receipt'?'Your confirmation has been sent by email.':'Du är nu klar och bekräftelse har skickats via epost.'}</div><div>${name}</div><div>2 pers. (${pelikan ? 'Middag' : tennstopet ? (process.env.VELVET_TEST_OUTCOME==='wrong-room-receipt'?'Lunch Odengatan':tennLabel) : agnes ? 'Middag' : klotet ? 'Fredagslunch p\u00e5 Caf\u00e9 Klotet' : italiano ? 'Dining Room' : ciccios ? 'Matsal' : boqueria ? 'LUNCH' : 'Lunch'})</div><div>Bokningsreferens</div><div># 999999999</div><div>Gästinformation</div></body></html>`});
           }
           if (request.method() === 'GET' && request.url() === venue.url) {
+            if(hantverket)assert.equal(request.url(),hantTarget,'Native Swedish target must retain version and hash');
             if(teatergrillen)assert.equal(request.url(),teaterTarget,'Selected restaurant target, never bar or selector');
             process.send?.({ kind: 'supplier-document', ...(teatergrillen?{url:request.url()}:{} ) });
             return intercepted.fulfill({ status: 200, contentType: 'text/html', body: supplierHtml() });
@@ -414,6 +422,22 @@ if (childMode) {
                 if(outcome==='temporary')data.booking.is_temp_booking=true;
                 assert.equal(approved.hash,'e2b9133107e1225157d4ea30e3967d5c');assert.equal(approved.mealid,7253);
                 assert.equal(approved.amount,2);assert.equal(approved.phone,'+46700000000');assert.equal(approved.country_code,'46');
+              }
+              if(hantverket){
+                const outcome=process.env.VELVET_TEST_OUTCOME;
+                if(outcome==='wrong-meal')data.booking.mealid=7098;
+                if(outcome==='wrong-type')data.booking.meal.type=3;
+                if(outcome==='party-cap')data.booking.amount=3;
+                if(outcome==='waitlist')data.booking.waitlist=1;
+                if(outcome==='requirement')data.booking.require_noshow=true;
+                if(outcome==='payment')data.booking.meal.must_pay_directly=true;
+                if(outcome==='mandatory-products')data.booking.meal.mandatory_products=true;
+                if(outcome==='group')data.booking.group_booking=true;
+                if(outcome==='temporary')data.booking.is_temp_booking=true;
+                assert.equal(approved.hash,'f7f00569986df77ef5d7b4abe98b9bed');assert.equal(approved.mealid,7097);
+                assert.equal(approved.amount,2);assert.equal(approved.phone,'+46700000000');assert.equal(approved.country_code,'46');
+                assert.equal(approved.comment,hantComment);
+                for(const field of ['dog','stroller','room','room_id','mr'])assert.equal(Object.hasOwn(approved,field),false,'No invented room or end time');
               }
               if(pelikan){
                 const outcome=process.env.VELVET_TEST_OUTCOME;
@@ -596,10 +620,11 @@ async function main() {
       VELVET_AGNES_RECEIPT: agnes ? 'enabled' : 'disabled',
       VELVET_BOBONNE_RECEIPT: bobonne ? 'enabled' : 'disabled',
       VELVET_LUZETTE_RECEIPT: luzette ? 'enabled' : 'disabled',
+      VELVET_HANTVERKET_RECEIPT: hantverket ? 'enabled' : 'disabled',
       VELVET_PELIKAN_RECEIPT: pelikan ? 'enabled' : 'disabled',
       VELVET_TENNSTOPET_RECEIPT: tennstopet && tennstopetEnabled ? 'enabled' : 'disabled',
       VELVET_TEATERGRILLEN_RECEIPT: teatergrillen ? 'enabled' : 'disabled',
-      VELVET_TEST_PROVIDER: pelikan ? 'Pelikan' : tennstopet ? 'Tennstopet' : teatergrillen ? 'Teatergrillen' : luzette ? 'Luzette' : bobonne ? 'Bobonne' : agnes ? 'Agnes' : klotet ? 'Klotet' : gondolen ? 'Gondolen' : sazon ? 'Sazon' : copine ? 'Copine' : italiano ? 'Italiano' : dekas ? 'DeKas' : dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
+      VELVET_TEST_PROVIDER: hantverket ? 'Hantverket' : pelikan ? 'Pelikan' : tennstopet ? 'Tennstopet' : teatergrillen ? 'Teatergrillen' : luzette ? 'Luzette' : bobonne ? 'Bobonne' : agnes ? 'Agnes' : klotet ? 'Klotet' : gondolen ? 'Gondolen' : sazon ? 'Sazon' : copine ? 'Copine' : italiano ? 'Italiano' : dekas ? 'DeKas' : dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
       VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_CICCIOS_RECEIPT: ciccios ? 'enabled' : 'disabled',
       VELVET_RICHE_RECEIPT: riche ? 'enabled' : 'disabled',
@@ -659,6 +684,14 @@ async function main() {
       if(klotet){const scope=page.locator('.booking-scope');await scope.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));
         assert.ok(await scope.evaluate(el=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}),'Scope readable in viewport');
         await scope.screenshot({path:path.join(root,'..','klotet-scope-'+width+'.png')});}
+      if(hantverket){assert.equal((await page.locator('.restaurant-detail h1').innerText()).trim(),'Restaurang Hantverket');assert.equal(venue.url,hantTarget);
+        const official=hantTarget.replace('lang=sw','lang=en');assert.equal(venue.officialEntryUrl,official);
+        const find=v=>v&&typeof v==='object'?(v.placeId===restaurantId?v:Object.values(v).map(find).find(Boolean)):null;
+        assert.equal(find(JSON.parse(fs.readFileSync(path.join(root,'data/restaurants.json'),'utf8'))).bookingUrl,official);
+        const scope=page.locator('.booking-scope');await scope.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));
+        for(const text of ['ordinarie lunch','1\u20132','m\u00e5ndag\u2013fredag','11.30\u201313.59','barnvagn eller hund','placering och sittningstid','ingen viss matsal','Spritbordet'])assert.ok((await scope.innerText()).includes(text),text);
+        assert.ok(await scope.evaluate(el=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}));
+        await scope.screenshot({path:path.join(root,'..','hantverket-scope-'+width+'.png')});}
       if(pelikan){assert.equal((await page.locator('.restaurant-detail h1').innerText()).trim(),'Pelikan');assert.equal(venue.name,'Restaurang Pelikan');
         assert.equal(venue.url,'https://app.bokabord.se/reservation/?hash=27fdc69fb0efef5d4125e11383c08ee8');
         const find=v=>v&&typeof v==='object'?(v.placeId===restaurantId?v:Object.values(v).map(find).find(Boolean)):null;
@@ -730,19 +763,20 @@ async function main() {
     await pixel(page, 110); // party
     await pixel(page, 170); // date -> actual adapter's allowed supplier getTimes
     await pixel(page, 230); // fixture slot -> contact
-    for (const [name, value] of Object.entries({ firstname: 'Integration', lastname: 'Fixture', email: 'fixture@example.invalid', phone: '+46700000000', ...(pelikan ? {comment:pelikanComment} : {}) })) {
+    for (const [name, value] of Object.entries({ firstname: 'Integration', lastname: 'Fixture', email: 'fixture@example.invalid', phone: '+46700000000', ...(hantverket ? {comment:hantComment} : pelikan ? {comment:pelikanComment} : {}) })) {
       const input = panel(page).locator(`[data-provider-field="${name}"]`);
       await input.fill(value); await input.blur();
       await page.waitForFunction(({ name, value }) => document.querySelector(`[data-provider-field="${name}"]`)?.dataset.verifiedValue === value, { name, value });
       await settled(page);
     }
+    if(hantverket)assert.deepEqual((await panel(page).locator('[data-provider-field]').evaluateAll(fields=>fields.map(el=>el.dataset.providerField))).sort(),['comment','email','firstname','lastname','phone']);
     const before = submits();
     const finalClicks = () => messages.filter(m=>m.kind==='provider-final-click').length;
     const clicksBefore = finalClicks();
     const current = async () => (await api(page,'/restaurant-bookings/mirror/current',{method:'POST'})).body;
     const rawAction = async (state, action) => api(page,`/restaurant-bookings/mirror/${state.id}/action`,{
       method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({revision:state.revision,...action})});
-    if(pelikan || tennstopet || (scopeGuards && (noema || ciccios))){
+    if(hantverket || pelikan || tennstopet || (scopeGuards && (noema || ciccios))){
       const phoneModel=new Promise((resolve,reject)=>{
         const timer=setTimeout(()=>reject(Error('native_phone_model_timeout')),5000);
         const receive=message=>{if(message.kind==='fixture-phone-model'){clearTimeout(timer);child.off('message',receive);resolve(message.model);}};
@@ -783,6 +817,7 @@ async function main() {
     await settled(page);
     assert.equal(submits(), before, 'Contact-to-review must not reach supplier save');
     assert.equal(await panel(page).locator('[data-terms]').isChecked(), false, 'Review requires fresh consent');
+    if(hantverket){assert.equal((await current()).details.comment,hantComment);const text=await panel(page).locator('[data-text]').textContent();for(const required of ['Kontrollera din bokning',hantComment,'FIXTURE native seating and placement labels retained'])assert.ok(text.includes(required));await panel(page).screenshot({path:path.join(root,'..','hantverket-review-'+page.viewportSize().width+'.png')});}
     if(pelikan){assert.equal((await current()).details.comment,pelikanComment);assert.ok((await panel(page).locator('[data-text]').textContent()).includes(pelikanComment));assert.match(await panel(page).locator('[data-text]').textContent(),/Middag/);await panel(page).screenshot({path:path.join(root,'..','pelikan-review-'+page.viewportSize().width+'.png')});}
     if(tennstopet){assert.equal((await current()).review,true);assert.match(await panel(page).locator('[data-text]').textContent(),/Lunch Tennbarens Matsal/);assert.equal(await panel(page).locator('[data-provider-field=comment]').count(),0);await panel(page).screenshot({path:path.join(root,'..','tennstopet-review-'+page.viewportSize().width+'.png')});}
     if(bobonne){assert.equal((await current()).review,true);await panel(page).screenshot({path:path.join(root,'..','bobonne-review-'+page.viewportSize().width+'.png')});}
@@ -852,13 +887,13 @@ async function main() {
   }
   let first, second, third;
   try {
-    if(agnes && process.argv.includes('--agnes-direct-guards')){
+    if((agnes && process.argv.includes('--agnes-direct-guards')) || (hantverket && process.argv.includes('--hantverket-comment-guard'))){
       browser=await chromium.launch();
-      for(const outcome of ['direct-contact','phone-payload-change']){
+      for(const outcome of hantverket?['comment-payload-drop']:['direct-contact','phone-payload-change']){
         await stop();await start(outcome);const view=await makeView();first=view;
         try{
           const before=submits();await toReview(view.page,false,outcome==='direct-contact');
-          if(outcome==='phone-payload-change'){
+          if(outcome==='phone-payload-change'||outcome==='comment-payload-drop'){
             const blocked=messages.filter(m=>m.kind==='adapter-blocked-submit').length;
             await panel(view.page).locator('[data-terms]').check();await panel(view.page).locator('[data-submit]').click();
             await view.page.waitForFunction(()=>document.querySelector('#bokabord-mirror [data-status]')?.dataset.bookingStatus==='unknown',null,{timeout:40000});
@@ -869,7 +904,7 @@ async function main() {
         }finally{await view.context.close();first=null;}
       }
       assert.equal(messages.filter(m=>m.kind==='unexpected-supplier-request'||m.kind==='blocked-node-network').length,0);
-      console.log(JSON.stringify({status:'PASS',scenario:'agnes-direct-guards',runtime:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),APIRequests:apiCalls.length,supplierBoundaryAttempts:submits(),actualSupplierRequests:0}));return;
+      console.log(JSON.stringify({status:'PASS',scenario:hantverket?'hantverket-comment-guard':'agnes-direct-guards',runtime:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),APIRequests:apiCalls.length,supplierBoundaryAttempts:submits(),actualSupplierRequests:0}));return;
     }
     if(scopeGuards){
       assert.ok(receiptMode && !contactFinal,'Scoped provider-review scenarios only');
@@ -1199,6 +1234,7 @@ async function main() {
         actualSupplierRequests:0,liveConfirmationVerified:false,backendRestarts:dekas?8:pirouette?17:roomVenue?15:2,APIRequests:apiCalls.length,deployed:false}));
       return;
     }
+    if(!hantTail){
     await start('unverified-success');
     browser = await chromium.launch();
     first = await makeView();
@@ -1298,7 +1334,7 @@ async function main() {
       await stop(); await start('confirmed');
       const persisted=await api(third.page,'/restaurant-bookings/playwright/attempts');
       assert.equal(persisted.body.attempts[0].status,'confirmed'); assert.equal(persisted.body.attempts[0].reference,'999999999');
-      if(pelikan||tennstopet||italiano||copine||gondolen||klotet||agnes||bobonne||luzette||teatergrillen){const history=await api(third.page,'/restaurant-bookings');assert.equal(history.status,200);const row=history.body.bookings.find(b=>b.restaurantId===restaurantId);assert.equal(row.status,'confirmed');assert.equal(String(row.providerReference||row.reference),'999999999');if(tennstopet)assert.equal(row.mealLabel,tennLabel);else assert.equal(row.mealLabel,undefined);if(pelikan){assert.equal(row.roomId,undefined);assert.equal(row.roomName,undefined);assert.equal(row.endTime,undefined);}}
+      if(hantverket||pelikan||tennstopet||italiano||copine||gondolen||klotet||agnes||bobonne||luzette||teatergrillen){const history=await api(third.page,'/restaurant-bookings');assert.equal(history.status,200);const row=history.body.bookings.find(b=>b.restaurantId===restaurantId);assert.equal(row.status,'confirmed');assert.equal(String(row.providerReference||row.reference),'999999999');if(tennstopet)assert.equal(row.mealLabel,tennLabel);else assert.equal(row.mealLabel,undefined);if(pelikan){assert.equal(row.roomId,undefined);assert.equal(row.roomName,undefined);assert.equal(row.endTime,undefined);}}
     }
     if(tennstopet){
       await stop();await start('confirmed',false);
@@ -1308,17 +1344,18 @@ async function main() {
       const stranger=await api(second.page,'/restaurant-bookings');assert.ok(!stranger.body.bookings.some(b=>b.id===offRow.id));
       console.log('PASS Tennstopet confirmed dining-room label survives policy-OFF restart, owner isolation, and API recovery');
     }
-    if(pelikan || tennstopet || gondolen){
+    if(hantverket || pelikan || tennstopet || gondolen){
       await third.page.goto(base+'/?api='+encodeURIComponent(base)+'#/bookings');
       const card=third.page.locator('.restaurant-history-card').filter({has:third.page.locator('h3',{hasText:receiptName})});
       await card.waitFor();assert.match(await card.innerText(),/999999999/);
       if(tennstopet)assert.ok((await card.innerText()).includes(tennLabel));else assert.ok(!(await card.innerText()).includes(tennLabel));
-      await card.screenshot({path:path.join(root,'..',(pelikan?'pelikan':tennstopet?'tennstopet':'gondolen')+'-history-1366.png')});
+      await card.screenshot({path:path.join(root,'..',(hantverket?'hantverket':pelikan?'pelikan':tennstopet?'tennstopet':'gondolen')+'-history-1366.png')});
       if(tennstopet){await third.page.setViewportSize({width:390,height:844});await third.page.reload();await card.waitFor();assert.ok((await card.innerText()).includes(tennLabel));await card.screenshot({path:path.join(root,'..','tennstopet-history-390.png')});}
     }
     console.log(receiptMode ? 'PASS receipt policy: POST remains unknown until provider main-frame receipt; static completion document confirms matching reference and survives restart' : 'PASS scoped positive Zink receipt through actual app/API/adapter/journal, owner recovery and reference; supplier remains simulated');
-    if(pelikan||tennstopet||dagmar||italiano||copine||gondolen||klotet||agnes||bobonne||luzette||teatergrillen){
-      for(const outcome of pelikan?pelikanOutcomes:tennstopet?tennOutcomes:teatergrillen?teaterOutcomes:luzette?luzetteOutcomes:bobonne?bobonneOutcomes:agnes?agnesOutcomes:klotet?klotetOutcomes:gondolen?gondolenOutcomes:copine?['excluded-dinner','excluded-private','excluded-private-lunch','party-cap','requirement','payment']:italiano?['excluded-lunch','excluded-bar','wrong-type','party-cap','requirement']:['wrong-meal','requirement']){
+    }else browser=await chromium.launch();
+    if(hantverket||pelikan||tennstopet||dagmar||italiano||copine||gondolen||klotet||agnes||bobonne||luzette||teatergrillen){
+      for(const outcome of hantverket?hantOutcomes:pelikan?pelikanOutcomes:tennstopet?tennOutcomes:teatergrillen?teaterOutcomes:luzette?luzetteOutcomes:bobonne?bobonneOutcomes:agnes?agnesOutcomes:klotet?klotetOutcomes:gondolen?gondolenOutcomes:copine?['excluded-dinner','excluded-private','excluded-private-lunch','party-cap','requirement','payment']:italiano?['excluded-lunch','excluded-bar','wrong-type','party-cap','requirement']:['wrong-meal','requirement']){
         await stop();await start(outcome);const view=await makeView();
         try{
           await toReview(view.page);await panel(view.page).locator('[data-terms]').check();
@@ -1345,11 +1382,11 @@ async function main() {
         finally{await view.context.close();}
       }
     }
-    if(pelikan || agnes || tennstopet){await stop();await start('direct-contact');const view=await makeView();
+    if(hantverket || pelikan || agnes || tennstopet){await stop();await start('direct-contact');const view=await makeView();
       try{await toReview(view.page,false,true);console.log('PASS '+receiptName+' simulated direct-contact branch is blocked before transport with no journal attempt');}
       finally{await view.context.close();}}
-    if(pelikan || tennstopet || bobonne || luzette || teatergrillen){
-      const invalid=pelikan?pelikanInvalid:tennstopet?tennInvalid:teatergrillen?teaterInvalid:luzette?luzetteInvalid:bobonneInvalid, boundaries=pelikan?pelikanBoundaries:tennstopet?tennBoundaries:teatergrillen?teaterBoundaries:luzette?luzetteBoundaries:bobonneBoundaries;
+    if(hantverket || pelikan || tennstopet || bobonne || luzette || teatergrillen){
+      const invalid=hantverket?hantInvalid:pelikan?pelikanInvalid:tennstopet?tennInvalid:teatergrillen?teaterInvalid:luzette?luzetteInvalid:bobonneInvalid, boundaries=hantverket?hantBoundaries:pelikan?pelikanBoundaries:tennstopet?tennBoundaries:teatergrillen?teaterBoundaries:luzette?luzetteBoundaries:bobonneBoundaries;
       for(let i=0;i<invalid.length;i++){
         await stop();await start('invalid-'+i);const view=await makeView();
         try{await toReview(view.page,true);console.log('PASS '+receiptName+' pretransport rejection',JSON.stringify(invalid[i]));}
@@ -1387,7 +1424,7 @@ async function main() {
     console.log(JSON.stringify({ status: 'PASS', evidence: 'real_local_app_api_adapter_journal_with_supplier_fixture',
       integrationCommit: execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim(),
       supplierBoundaryAttempts: submits(), actualSupplierRequests: 0, liveConfirmationVerified: false,
-      restaurantId,backendRestarts: pelikan ? 5+pelikanOutcomes.length+pelikanInvalid.length+pelikanBoundaries.length : tennstopet ? 8+tennOutcomes.length+tennInvalid.length+tennBoundaries.length : teatergrillen ? 4+teaterOutcomes.length+teaterInvalid.length+teaterBoundaries.length : luzette ? 4+luzetteOutcomes.length+luzetteInvalid.length+luzetteBoundaries.length : bobonne ? 4+bobonneOutcomes.length+bobonneInvalid.length+bobonneBoundaries.length : agnes ? 5+agnesOutcomes.length+agnesInvalid.length : klotet ? 4+klotetOutcomes.length+klotetInvalid.length : gondolen ? 4+gondolenOutcomes.length : copine ? 10 : italiano ? 9 : dagmar ? 6 : receiptMode ? 4 : 3, APIRequests: apiCalls.length, deployed: false }));
+      restaurantId,backendRestarts: hantverket ? (hantTail?0:5)+hantOutcomes.length+hantInvalid.length+hantBoundaries.length : pelikan ? 5+pelikanOutcomes.length+pelikanInvalid.length+pelikanBoundaries.length : tennstopet ? 8+tennOutcomes.length+tennInvalid.length+tennBoundaries.length : teatergrillen ? 4+teaterOutcomes.length+teaterInvalid.length+teaterBoundaries.length : luzette ? 4+luzetteOutcomes.length+luzetteInvalid.length+luzetteBoundaries.length : bobonne ? 4+bobonneOutcomes.length+bobonneInvalid.length+bobonneBoundaries.length : agnes ? 5+agnesOutcomes.length+agnesInvalid.length : klotet ? 4+klotetOutcomes.length+klotetInvalid.length : gondolen ? 4+gondolenOutcomes.length : copine ? 10 : italiano ? 9 : dagmar ? 6 : receiptMode ? 4 : 3, APIRequests: apiCalls.length, deployed: false }));
     console.log('Mirror startup timings:', JSON.stringify(apiCalls.filter(call => call.method === 'POST'
       && call.path === '/restaurant-bookings/mirror').map(({ status, responseMs }) => ({ status, responseMs }))));
     console.log('Browser startup events:', JSON.stringify(messages.filter(event => event.kind.startsWith('browser-'))));
