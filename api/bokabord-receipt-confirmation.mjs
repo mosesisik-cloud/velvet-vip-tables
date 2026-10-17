@@ -119,8 +119,15 @@ export const BOBONNE_LUNCH_RECEIPT_POLICY = Object.freeze({
   hash: 'b529fb237cb8d5e64c73c1faba7e9854', mealid: 31, mealType: 2, maxParty: 2,
 });
 
+export const LUZETTE_LUNCH_RECEIPT_POLICY = Object.freeze({
+  restaurantId: 'curated-STO-luzette', name: 'Luzette',
+  hash: 'e2b9133107e1225157d4ea30e3967d5c', mealid: 7253, mealType: 2, maxParty: 2,
+});
+
 export function createBokabordReceiptVerifier(configuration) {
   const policy = Object.freeze({ maxParty: 8, ...configuration });
+  const reviewedLuzette = Object.entries(LUZETTE_LUNCH_RECEIPT_POLICY)
+    .every(([key, value]) => policy[key] === value);
   const reviewedBobonne = Object.entries(BOBONNE_LUNCH_RECEIPT_POLICY)
     .every(([key, value]) => policy[key] === value);
   const reviewedKlotet = Object.entries(KLOTET_FRIDAY_LUNCH_RECEIPT_POLICY)
@@ -129,6 +136,7 @@ export function createBokabordReceiptVerifier(configuration) {
     .every(([key, value]) => policy[key] === value);
   if (!present(policy.restaurantId) || !present(policy.name) || !/^[a-f0-9]{20,64}$/.test(policy.hash)
     || (policy.restaurantId === BOBONNE_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedBobonne)
+    || (policy.restaurantId === LUZETTE_LUNCH_RECEIPT_POLICY.restaurantId && !reviewedLuzette)
     || !Number.isSafeInteger(policy.mealid) || policy.mealid <= 0 || (![2, 3].includes(policy.mealType) && !reviewedType0)
     || (policy.type0Contract !== undefined && !reviewedType0)
     || !Number.isSafeInteger(policy.maxParty) || policy.maxParty < 1 || policy.maxParty > 8) {
@@ -148,6 +156,7 @@ export function createBokabordReceiptVerifier(configuration) {
       || (approval.comment !== undefined && typeof approval.comment !== 'string')) return null;
     const date = new Date(approval.date + 'T12:00:00Z');
     if (!Number.isFinite(+date) || date.toISOString().slice(0, 10) !== approval.date) return null;
+    if (reviewedLuzette && (approval.time < '11:15' || approval.time >= '15:00')) return null;
     // Intersect the native lunch schedule with the official opening window.
     if (reviewedBobonne && ([0, 6].includes(date.getUTCDay())
       || approval.time < '11:30' || approval.time >= '14:00')) return null;
