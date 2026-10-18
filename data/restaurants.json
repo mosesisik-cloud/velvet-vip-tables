@@ -7439,6 +7439,20 @@
       "source": "VELVET curated + OpenStreetMap · official links where available",
       "restaurants": [
         {
+          "placeId": "curated-PAR-le-petit-pontoise",
+          "name": "Le Petit Pontoise",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "9 rue de Pontoise, 75005 Paris",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Petit%20Pontoise%2C%209%20rue%20de%20Pontoise%2C%20Paris",
+          "website": "https://www.lepetitpontoise.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.lepetitpontoise.fr/",
+          "locationVerifiedAt": "2026-10-18"
+        },
+        {
           "placeId": "curated-PAR-au-moulin-a-vent",
           "name": "Au Moulin à Vent",
           "rating": null,
