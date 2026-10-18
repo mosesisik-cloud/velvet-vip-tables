@@ -212,6 +212,11 @@ export function mountProviderPlaywrightBooking(container, api, {
     scope.textContent='Bokning i Velvet gäller lunchserveringen Déjeuner på Indiana Café Bercy Village, Chais 59-61, Cour Saint-Emilion i Paris, för exakt två gäster, i mån av lediga bord. Middag, grupper och val av särskilt rum ingår inte. Ingen viss placering garanteras. Terrassplatser kan inte reserveras. Kontrollera restaurangens aktuella villkor före bokning.';
     container.querySelector('header').after(scope);
   }
+  if (restaurantId === 'curated-PAR-indiana-cafe-les-halles') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller lunchserveringen Déjeuner på Indiana Café Les Halles, 35, Rue du Pont-Neuf i Paris, för exakt två gäster, i mån av lediga bord. Välj vad besöket gäller i det obligatoriska fältet Je viens pour :. Frukost, Service continu, middag, grupper och val av särskilt rum ingår inte. Ingen viss placering garanteras. Terrassplatser kan inte reserveras. Vid mer än 15 minuters försening kan restaurangen inte längre garantera bordet. Kontrollera restaurangens aktuella villkor före bokning.';
+    container.querySelector('header').after(scope);
+  }
   if (restaurantId === 'curated-PAR-indiana-cafe-denfert-rochereau') {
     const scope=document.createElement('p'); scope.className='booking-scope';
     scope.textContent='Bokning i Velvet gäller lunchserveringen Déjeuner på Indiana Café Denfert-Rochereau för exakt två gäster, i mån av lediga bord. Bokningen måste inkludera en måltid. Bokningssystemets adress: 1 Bis Avenue du Général Leclerc, 75014 Paris. Restaurangens officiella sida anger: 1 Avenue du Général Leclerc, 75014 Paris. Adressuppgifterna skiljer sig; samma entré är inte verifierad. Frukost, Service continu, middag, grupper och val av särskilt rum ingår inte. Ingen viss placering garanteras. Terrassplatser kan inte reserveras. Kontrollera restaurangens aktuella villkor före bokning.';
