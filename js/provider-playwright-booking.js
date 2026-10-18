@@ -10,6 +10,7 @@ export function mountProviderPlaywrightBooking(container, api, {
   const timeInScope = time => restaurantId !== 'curated-PAR-bouillon-republique' || ['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(time);
   const key = `velvet:provider:${encodeURIComponent(provider)}:${encodeURIComponent(restaurantId)}`;
   const aliases = { firstname:'Förnamn', firstName:'Förnamn', lastname:'Efternamn', lastName:'Efternamn', email:'E-post', emailAddress:'E-post', phone:'Telefon', phoneNumber:'Telefon', comment:'Önskemål' };
+  if (isZenchef && restaurantId === 'curated-PAR-indiana-cafe-montparnasse') aliases.reservationPurpose = 'Anledning till bokningen (Motif de la réservation)';
   if (isZenchef) { aliases.civility = 'Tilltal'; aliases.country = 'Telefonens land'; }
   let state = null, busy = false, disposed = false, uncertain = false, marker = null, storageOK = true;
   try {
@@ -303,7 +304,8 @@ export function mountProviderPlaywrightBooking(container, api, {
       seen.add(field.name);
       const label = document.createElement('label'); label.textContent = aliases[field.name];
       const input = document.createElement(field.name === 'civility' ? 'select' : field.name === 'comment' ? 'textarea' : 'input');
-      input.dataset.field = field.name; input.setAttribute('aria-label', aliases[field.name]);
+      input.dataset.field = field.name;
+      if (field.name === 'reservationPurpose') input.required = true; input.setAttribute('aria-label', aliases[field.name]);
       if (field.name === 'civility') {
         for (const [value,text] of [['','Välj tilltal'],['mr','Mr'],['mrs','Mrs'],['mx','Mx']]) { const option = document.createElement('option'); option.value = value; option.textContent = text; input.append(option); }
       } else if (field.name !== 'comment') input.type = /^email/.test(field.name) ? 'email' : /phone/i.test(field.name) ? 'tel' : 'text';
