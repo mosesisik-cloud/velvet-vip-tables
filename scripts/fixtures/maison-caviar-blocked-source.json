@@ -1,0 +1,67 @@
+{
+  "restaurantId": "curated-PAR-la-maison-du-caviar",
+  "venueId": "352787",
+  "nativeName": "La Maison Du Caviar",
+  "address": "21 RUE QUENTIN BAUCHART",
+  "city": "PARIS",
+  "zip": "75008",
+  "observedAt": "2026-10-18",
+  "sourceUrl": "https://bookings.zenchef.com/results?rid=352787&pid=1001&lang=fr&day=2026-10-23&pax=2",
+  "resultsSha256": "1d573642c13e866711910411e2804a766338290db07a2ae5d24cf2129b033fbe",
+  "status": "parked_manual_confirmation",
+  "query": {
+    "rid": "352787",
+    "pid": "1001",
+    "lang": "fr",
+    "day": "2026-10-23",
+    "pax": "2"
+  },
+  "partner_id": "1001",
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "lunch": {
+    "id": 510578,
+    "name": "Déjeuner",
+    "confirmation": {
+      "is_auto": false,
+      "is_auto_until": null
+    },
+    "charge_param": {
+      "is_web_booking_askable": false,
+      "min_guests": 1,
+      "charge_per_guests": 50
+    },
+    "prepayment_param": null,
+    "is_offer_required": false,
+    "offer_required_from_pax": null,
+    "cancelation_param": {
+      "enduser_cancelable_before": 86400,
+      "enduser_cancelable_reference": "shift"
+    },
+    "candidateTimes": [
+      "12:00",
+      "12:30",
+      "13:00",
+      "13:30",
+      "14:00",
+      "14:30",
+      "15:00",
+      "15:30",
+      "16:00"
+    ]
+  },
+  "limits": {
+    "resultsGets": 1,
+    "formGets": 0,
+    "assetGets": 0,
+    "realTransactions": 0,
+    "receiptReads": 0
+  }
+}
