@@ -2504,5 +2504,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-cafe-des-musees": {
+    "name": "Café des Musées",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=348911&lang=fr&showCollapsed=1",
+    "source": "https://www.lecafedesmusees.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=348911",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
