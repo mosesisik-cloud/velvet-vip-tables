@@ -1,0 +1,189 @@
+{
+  "status": "blocked_identity_address",
+  "checkedAt": "2026-10-18",
+  "restaurantId": "curated-PAR-indiana-cafe-denfert-rochereau",
+  "venueId": "375447",
+  "officialAddress": "1 Avenue du Général Leclerc",
+  "nativeAddress": "1 Bis Avenue du Général Leclerc",
+  "zip": "75014",
+  "name": "Indiana Café Denfert Rochereau",
+  "sourceUrl": "https://bookings.zenchef.com/results?rid=375447&pid=1001&lang=fr&day=2026-10-23&pax=2",
+  "rawSha256": "8c020283c77763e5a05f50c5ed7dc9b88c1526fddf8b5f40e36b4b3561117965",
+  "partner_id": "1001",
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "restaurantComment": {
+    "fr": "La plupart de nos tables sont sans réservation, donc n’hésitez pas à passer ! Nous ne prenons pas de réservation en terrasse, mais si nous avons de la place, nous vous y installons avec plaisir. Nous gardons votre table au chaud 15 min maximum, au-delà, elle sera réattribuée. Pour toute question nous sommes joignables au 01 40 47 60 41"
+  },
+  "mandatoryFields": {
+    "firstname": "required",
+    "lastname": "required",
+    "email": "required",
+    "phone_number": "required",
+    "country": "required",
+    "comment": "displayed",
+    "private_comment": "hidden",
+    "prescriber_id": "hidden",
+    "customersheet.customer_company_id": "hidden",
+    "civility": "required",
+    "url": "hidden",
+    "customersheet.vip": "hidden",
+    "waiter_id": "hidden",
+    "slots_count": "hidden",
+    "voucher_code": "displayed"
+  },
+  "customFields": [],
+  "customFieldsV2": [],
+  "shifts": [
+    {
+      "id": 278128,
+      "name": "Petit-déjeuner",
+      "comment": {
+        "fr": "Nous souhaitons vous informer que les réservations doivent inclure un repas."
+      },
+      "confirmation": {
+        "is_auto": true,
+        "is_auto_until": null
+      },
+      "charge_param": null,
+      "prepayment_param": null,
+      "is_offer_required": false,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 10800,
+        "enduser_cancelable_reference": "shift"
+      },
+      "times": [
+        "09:00",
+        "09:15",
+        "09:30",
+        "09:45",
+        "10:00",
+        "10:15",
+        "10:30",
+        "10:45",
+        "11:00"
+      ]
+    },
+    {
+      "id": 278132,
+      "name": "Déjeuner",
+      "comment": {
+        "fr": "Nous souhaitons vous informer que les réservations doivent inclure un repas."
+      },
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": 12
+      },
+      "charge_param": null,
+      "prepayment_param": null,
+      "is_offer_required": false,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 10800,
+        "enduser_cancelable_reference": "shift"
+      },
+      "times": [
+        "11:30",
+        "11:45",
+        "12:00",
+        "12:15",
+        "12:30",
+        "12:45",
+        "13:00",
+        "13:15",
+        "13:30",
+        "13:45",
+        "14:00",
+        "14:15",
+        "14:30",
+        "14:45",
+        "15:00"
+      ]
+    },
+    {
+      "id": 278136,
+      "name": "Service continu",
+      "comment": {
+        "fr": "Nous souhaitons vous informer que les réservations doivent inclure un repas."
+      },
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": 12
+      },
+      "charge_param": null,
+      "prepayment_param": null,
+      "is_offer_required": false,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 10800,
+        "enduser_cancelable_reference": "shift"
+      },
+      "times": [
+        "15:15",
+        "15:30",
+        "15:45",
+        "16:00",
+        "16:15",
+        "16:30",
+        "16:45",
+        "17:00",
+        "17:15",
+        "17:30",
+        "17:45",
+        "18:00",
+        "18:15",
+        "18:30"
+      ]
+    },
+    {
+      "id": 278144,
+      "name": "Diner",
+      "comment": null,
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": 4
+      },
+      "charge_param": null,
+      "prepayment_param": null,
+      "is_offer_required": false,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 10800,
+        "enduser_cancelable_reference": "shift"
+      },
+      "times": [
+        "19:00",
+        "19:15",
+        "19:30",
+        "19:45",
+        "20:00",
+        "20:15",
+        "20:30",
+        "20:45",
+        "21:00",
+        "21:15",
+        "21:30",
+        "21:45",
+        "22:00",
+        "22:15",
+        "22:30",
+        "22:45",
+        "23:00",
+        "23:15",
+        "23:30",
+        "23:45",
+        "00:00+1"
+      ]
+    }
+  ],
+  "formFetched": false,
+  "implementationAdded": false
+}
