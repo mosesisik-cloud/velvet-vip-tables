@@ -2127,5 +2127,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-brasserie-rosie": {
+    "name": "Brasserie Rosie",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=355132&lang=fr",
+    "source": "https://brasseriesalamode.com/brasserie-rosie",
+    "venueKey": "bookings.zenchef.com/results?rid=355132",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
