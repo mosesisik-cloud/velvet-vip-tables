@@ -42,11 +42,14 @@ export const ZENCHEF_TERMINUSNORD = Object.freeze({ restaurantId: 'curated-PAR-t
 export const ZENCHEF_PROCOPE = Object.freeze({ restaurantId: 'curated-PAR-le-procope', venueId: '250682', name: 'Le Procope',
   url: 'https://bookings.zenchef.com/results?rid=250682&lang=fr', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
   shiftId: 18190, source: 'https://www.procope.com/o/reserver/?no_redirect=true', policySource: 'https://bookings.zenchef.com/gtc?rid=250682&lang=fr' });
-const NO_ROOM_LUNCH_VENUES = Object.freeze([ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE]);
+export const ZENCHEF_LALORRAINE = Object.freeze({ restaurantId: 'curated-PAR-la-lorraine', venueId: '478', name: 'La Lorraine',
+  url: 'https://bookings.zenchef.com/results?rid=478&lang=fr', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
+  shiftId: 16674, source: 'https://www.brasserielalorraine.com/', policySource: 'https://bookings.zenchef.com/gtc?rid=478&lang=fr' });
+const NO_ROOM_LUNCH_VENUES = Object.freeze([ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE]);
 const ROOM_VENUES = Object.freeze([ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE]);
 const READBACK_VENUES = Object.freeze([...ROOM_VENUES, ZENCHEF_DEKAS, ...NO_ROOM_LUNCH_VENUES]);
 export const ZENCHEF_POLICY_SOURCE = 'https://bookings.zenchef.com/gtc?rid=388090&lang=fr';
-const VENUES = Object.freeze({ [ZENCHEF_PROCOPE.restaurantId]: ZENCHEF_PROCOPE, [ZENCHEF_TERMINUSNORD.restaurantId]: ZENCHEF_TERMINUSNORD, [ZENCHEF_LACOUPOLE.restaurantId]: ZENCHEF_LACOUPOLE, [ZENCHEF_BOFINGER.restaurantId]: ZENCHEF_BOFINGER, [ZENCHEF_DEKAS.restaurantId]: ZENCHEF_DEKAS, [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE, [ZENCHEF_PIROUETTE.restaurantId]: ZENCHEF_PIROUETTE });
+const VENUES = Object.freeze({ [ZENCHEF_LALORRAINE.restaurantId]: ZENCHEF_LALORRAINE, [ZENCHEF_PROCOPE.restaurantId]: ZENCHEF_PROCOPE, [ZENCHEF_TERMINUSNORD.restaurantId]: ZENCHEF_TERMINUSNORD, [ZENCHEF_LACOUPOLE.restaurantId]: ZENCHEF_LACOUPOLE, [ZENCHEF_BOFINGER.restaurantId]: ZENCHEF_BOFINGER, [ZENCHEF_DEKAS.restaurantId]: ZENCHEF_DEKAS, [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE, [ZENCHEF_PIROUETTE.restaurantId]: ZENCHEF_PIROUETTE });
 const FIXTURE_URL = 'https://zenchef-fixture.invalid/';
 const TTL = 10 * 60_000;
 const FIELDS = ['firstname', 'lastname', 'email', 'phone'];
@@ -288,10 +291,24 @@ export function procopePolicy(state, shift, party) {
     && shift.cancelation_param?.enduser_cancelable_before === 86400
     && shift.cancelation_param.enduser_cancelable_reference === 'shift';
 }
+export function laLorrainePolicy(state, shift, party) {
+  return party === 2 && state?.restaurantId === ZENCHEF_LALORRAINE.venueId
+    && state.currency === 'EUR' && state.language === 'fr' && state.hasRoomSelection === false
+    && state.isRoomMandatory === false && state.wish?.room_id === null
+    && Array.isArray(state.wish.offers) && state.wish.offers.length === 0
+    && shift?.id === 16674 && shift.name === 'Service Déjeuner'
+    && shift.confirmation?.is_auto === false && shift.confirmation.is_auto_until === 6
+    && shift.charge_param?.is_web_booking_askable === true && shift.charge_param.min_guests === 8
+    && shift.charge_param.charge_per_guests === 20 && shift.prepayment_param === null
+    && shift.is_offer_required === false && shift.offer_required_from_pax === null
+    && shift.cancelation_param?.enduser_cancelable_before === 172800
+    && shift.cancelation_param.enduser_cancelable_reference === 'shift';
+}
 const noRoomLunchPolicy = (venue, state, shift, party) => venue === ZENCHEF_BOFINGER
   ? bofingerPolicy(state, shift, party) : venue === ZENCHEF_LACOUPOLE ? laCoupolePolicy(state, shift, party)
     : venue === ZENCHEF_TERMINUSNORD ? terminusNordPolicy(state, shift, party)
-      : venue === ZENCHEF_PROCOPE && procopePolicy(state, shift, party);
+      : venue === ZENCHEF_PROCOPE ? procopePolicy(state, shift, party)
+        : venue === ZENCHEF_LALORRAINE && laLorrainePolicy(state, shift, party);
 
 // Read only the server-rendered provider state, never execute or mutate its store.
 // Candidate slots are not held, selected, confirmed or guaranteed bookable later.
