@@ -1,0 +1,84 @@
+{
+  "restaurantId": "357540",
+  "name": "L'HOMMAGE",
+  "address": "36 avenue de Choisy",
+  "city": "PARIS",
+  "query": {
+    "rid": "357540",
+    "fullscreen": "1",
+    "lang": "fr",
+    "day": "2026-10-23",
+    "pax": "2"
+  },
+  "restaurantTimezone": "Europe/Paris",
+  "currency": "EUR",
+  "language": "fr",
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "source": {
+    "url": "https://bookings.zenchef.com/results?rid=357540&fullscreen=1&lang=fr&day=2026-10-23&pax=2",
+    "status": 200,
+    "sha256": "2d57e43ce4389af55979b25315ae7fcbc22aca188ea8291efc0bc9d0a40eba4b"
+  },
+  "shifts": [
+    {
+      "id": 72355,
+      "name": "Dejeuner",
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": null
+      },
+      "charge_param": {
+        "is_web_booking_askable": true,
+        "min_guests": 5,
+        "charge_per_guests": 15
+      },
+      "prepayment_param": null,
+      "is_offer_required": true,
+      "offer_required_from_pax": 1,
+      "cancelation_param": {
+        "enduser_cancelable_before": 43200,
+        "enduser_cancelable_reference": "shift"
+      },
+      "timesForTwo": [
+        "12:00",
+        "12:30",
+        "13:00"
+      ]
+    },
+    {
+      "id": 72357,
+      "name": "Diner weekend",
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": null
+      },
+      "charge_param": {
+        "is_web_booking_askable": true,
+        "min_guests": 5,
+        "charge_per_guests": 15
+      },
+      "prepayment_param": null,
+      "is_offer_required": true,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 43200,
+        "enduser_cancelable_reference": "shift"
+      },
+      "timesForTwo": [
+        "19:00",
+        "19:30",
+        "20:00",
+        "20:30",
+        "21:00"
+      ]
+    }
+  ]
+}
