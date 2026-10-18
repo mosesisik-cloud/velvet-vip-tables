@@ -2231,5 +2231,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-aux-crus-de-bourgogne": {
+    "name": "Aux Crus de Bourgogne",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=352723&fullscreen=1&lang=fr",
+    "source": "https://auxcrusdebourgogne.com/",
+    "venueKey": "bookings.zenchef.com/results?rid=352723",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
