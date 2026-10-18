@@ -159,11 +159,14 @@ export const ZENCHEF_CASIMIR = Object.freeze({ restaurantId: 'curated-PAR-casimi
 export const ZENCHEF_BICHEPARIS8 = Object.freeze({ restaurantId: 'curated-PAR-biche-paris8', venueId: '363606', name: 'Biche',
   url: 'https://bookings.zenchef.com/results?rid=363606&fullscreen=1&lang=en', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
   shiftId: 149228, source: 'https://www.biche-restaurant.com/en/', policySource: 'https://bookings.zenchef.com/gtc?rid=363606&lang=en' });
-const NO_ROOM_LUNCH_VENUES = Object.freeze([ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN, ZENCHEF_BOUILLONRACINE, ZENCHEF_BOUILLONREPUBLIQUE, ZENCHEF_ROSIE, ZENCHEF_ROSIELOU, ZENCHEF_ROSIEJOLIE, ZENCHEF_PETITSOMMELIER, ZENCHEF_CHEZSAVY, ZENCHEF_CHEZRENE, ZENCHEF_BISTROTPARIS, ZENCHEF_AUXBONSCRUS, ZENCHEF_AUXCRUSBOURGOGNE, ZENCHEF_PETITRETRO, ZENCHEF_MOULINVENT, ZENCHEF_PETITPONTOISE, ZENCHEF_LEFLORENTIN, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_CAFERUC, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_OKOMUSU, ZENCHEF_ZENRESTAURANT, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_CASIMIR, ZENCHEF_BICHEPARIS8]);
+export const ZENCHEF_SAVANNAHCAFE = Object.freeze({ restaurantId: 'curated-PAR-savannah-cafe', venueId: '377106', name: 'Savannah Café',
+  url: 'https://bookings.zenchef.com/results?sdk=1&rid=377106&showCollapsed=0', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
+  shiftId: 300276, source: 'https://www.savannahcafe.fr/fr/', policySource: 'https://bookings.zenchef.com/gtc?rid=377106&lang=fr' });
+const NO_ROOM_LUNCH_VENUES = Object.freeze([ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN, ZENCHEF_BOUILLONRACINE, ZENCHEF_BOUILLONREPUBLIQUE, ZENCHEF_ROSIE, ZENCHEF_ROSIELOU, ZENCHEF_ROSIEJOLIE, ZENCHEF_PETITSOMMELIER, ZENCHEF_CHEZSAVY, ZENCHEF_CHEZRENE, ZENCHEF_BISTROTPARIS, ZENCHEF_AUXBONSCRUS, ZENCHEF_AUXCRUSBOURGOGNE, ZENCHEF_PETITRETRO, ZENCHEF_MOULINVENT, ZENCHEF_PETITPONTOISE, ZENCHEF_LEFLORENTIN, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_CAFERUC, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_OKOMUSU, ZENCHEF_ZENRESTAURANT, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_CASIMIR, ZENCHEF_BICHEPARIS8, ZENCHEF_SAVANNAHCAFE]);
 const ROOM_VENUES = Object.freeze([ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE]);
 const READBACK_VENUES = Object.freeze([...ROOM_VENUES, ZENCHEF_DEKAS, ...NO_ROOM_LUNCH_VENUES]);
 export const ZENCHEF_POLICY_SOURCE = 'https://bookings.zenchef.com/gtc?rid=388090&lang=fr';
-const VENUES = Object.freeze({ [ZENCHEF_BICHEPARIS8.restaurantId]: ZENCHEF_BICHEPARIS8, [ZENCHEF_CASIMIR.restaurantId]: ZENCHEF_CASIMIR, [ZENCHEF_CAFEDESMUSEES.restaurantId]: ZENCHEF_CAFEDESMUSEES, [ZENCHEF_LAPLAGEPARISIENNE.restaurantId]: ZENCHEF_LAPLAGEPARISIENNE, [ZENCHEF_ZENRESTAURANT.restaurantId]: ZENCHEF_ZENRESTAURANT, [ZENCHEF_OKOMUSU.restaurantId]: ZENCHEF_OKOMUSU, [ZENCHEF_INDIANATERNES.restaurantId]: ZENCHEF_INDIANATERNES, [ZENCHEF_INDIANALESHALLES.restaurantId]: ZENCHEF_INDIANALESHALLES, [ZENCHEF_INDIANADENFERTROCHEREAU.restaurantId]: ZENCHEF_INDIANADENFERTROCHEREAU, [ZENCHEF_INDIANABERCYVILLAGE.restaurantId]: ZENCHEF_INDIANABERCYVILLAGE, [ZENCHEF_INDIANAREPUBLIQUE.restaurantId]: ZENCHEF_INDIANAREPUBLIQUE, [ZENCHEF_INDIANAMONTPARNASSE.restaurantId]: ZENCHEF_INDIANAMONTPARNASSE, [ZENCHEF_INDIANATOLBIAC.restaurantId]: ZENCHEF_INDIANATOLBIAC, [ZENCHEF_INDIANABEAUGRENELLE.restaurantId]: ZENCHEF_INDIANABEAUGRENELLE, [ZENCHEF_INDIANARICHELIEU.restaurantId]: ZENCHEF_INDIANARICHELIEU, [ZENCHEF_INDIANABONNENOUVELLE.restaurantId]: ZENCHEF_INDIANABONNENOUVELLE, [ZENCHEF_CAFERUC.restaurantId]: ZENCHEF_CAFERUC, [ZENCHEF_CAFEMARLY.restaurantId]: ZENCHEF_CAFEMARLY, [ZENCHEF_MARTHA.restaurantId]: ZENCHEF_MARTHA, [ZENCHEF_LEFLORENTIN.restaurantId]: ZENCHEF_LEFLORENTIN, [ZENCHEF_PETITPONTOISE.restaurantId]: ZENCHEF_PETITPONTOISE, [ZENCHEF_MOULINVENT.restaurantId]: ZENCHEF_MOULINVENT, [ZENCHEF_PETITRETRO.restaurantId]: ZENCHEF_PETITRETRO, [ZENCHEF_AUXCRUSBOURGOGNE.restaurantId]: ZENCHEF_AUXCRUSBOURGOGNE, [ZENCHEF_AUXBONSCRUS.restaurantId]: ZENCHEF_AUXBONSCRUS, [ZENCHEF_BISTROTPARIS.restaurantId]: ZENCHEF_BISTROTPARIS, [ZENCHEF_CHEZRENE.restaurantId]: ZENCHEF_CHEZRENE, [ZENCHEF_CHEZSAVY.restaurantId]: ZENCHEF_CHEZSAVY, [ZENCHEF_PETITSOMMELIER.restaurantId]: ZENCHEF_PETITSOMMELIER, [ZENCHEF_ROSIEJOLIE.restaurantId]: ZENCHEF_ROSIEJOLIE, [ZENCHEF_ROSIELOU.restaurantId]: ZENCHEF_ROSIELOU, [ZENCHEF_ROSIE.restaurantId]: ZENCHEF_ROSIE, [ZENCHEF_BOUILLONREPUBLIQUE.restaurantId]: ZENCHEF_BOUILLONREPUBLIQUE, [ZENCHEF_BOUILLONRACINE.restaurantId]: ZENCHEF_BOUILLONRACINE, [ZENCHEF_BOUILLONJULIEN.restaurantId]: ZENCHEF_BOUILLONJULIEN, [ZENCHEF_VAGENENDE.restaurantId]: ZENCHEF_VAGENENDE, [ZENCHEF_GRANDCAFE.restaurantId]: ZENCHEF_GRANDCAFE, [ZENCHEF_PIEDDECOCHON.restaurantId]: ZENCHEF_PIEDDECOCHON, [ZENCHEF_LALORRAINE.restaurantId]: ZENCHEF_LALORRAINE, [ZENCHEF_PROCOPE.restaurantId]: ZENCHEF_PROCOPE, [ZENCHEF_TERMINUSNORD.restaurantId]: ZENCHEF_TERMINUSNORD, [ZENCHEF_LACOUPOLE.restaurantId]: ZENCHEF_LACOUPOLE, [ZENCHEF_BOFINGER.restaurantId]: ZENCHEF_BOFINGER, [ZENCHEF_DEKAS.restaurantId]: ZENCHEF_DEKAS, [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE, [ZENCHEF_PIROUETTE.restaurantId]: ZENCHEF_PIROUETTE });
+const VENUES = Object.freeze({ [ZENCHEF_SAVANNAHCAFE.restaurantId]: ZENCHEF_SAVANNAHCAFE, [ZENCHEF_BICHEPARIS8.restaurantId]: ZENCHEF_BICHEPARIS8, [ZENCHEF_CASIMIR.restaurantId]: ZENCHEF_CASIMIR, [ZENCHEF_CAFEDESMUSEES.restaurantId]: ZENCHEF_CAFEDESMUSEES, [ZENCHEF_LAPLAGEPARISIENNE.restaurantId]: ZENCHEF_LAPLAGEPARISIENNE, [ZENCHEF_ZENRESTAURANT.restaurantId]: ZENCHEF_ZENRESTAURANT, [ZENCHEF_OKOMUSU.restaurantId]: ZENCHEF_OKOMUSU, [ZENCHEF_INDIANATERNES.restaurantId]: ZENCHEF_INDIANATERNES, [ZENCHEF_INDIANALESHALLES.restaurantId]: ZENCHEF_INDIANALESHALLES, [ZENCHEF_INDIANADENFERTROCHEREAU.restaurantId]: ZENCHEF_INDIANADENFERTROCHEREAU, [ZENCHEF_INDIANABERCYVILLAGE.restaurantId]: ZENCHEF_INDIANABERCYVILLAGE, [ZENCHEF_INDIANAREPUBLIQUE.restaurantId]: ZENCHEF_INDIANAREPUBLIQUE, [ZENCHEF_INDIANAMONTPARNASSE.restaurantId]: ZENCHEF_INDIANAMONTPARNASSE, [ZENCHEF_INDIANATOLBIAC.restaurantId]: ZENCHEF_INDIANATOLBIAC, [ZENCHEF_INDIANABEAUGRENELLE.restaurantId]: ZENCHEF_INDIANABEAUGRENELLE, [ZENCHEF_INDIANARICHELIEU.restaurantId]: ZENCHEF_INDIANARICHELIEU, [ZENCHEF_INDIANABONNENOUVELLE.restaurantId]: ZENCHEF_INDIANABONNENOUVELLE, [ZENCHEF_CAFERUC.restaurantId]: ZENCHEF_CAFERUC, [ZENCHEF_CAFEMARLY.restaurantId]: ZENCHEF_CAFEMARLY, [ZENCHEF_MARTHA.restaurantId]: ZENCHEF_MARTHA, [ZENCHEF_LEFLORENTIN.restaurantId]: ZENCHEF_LEFLORENTIN, [ZENCHEF_PETITPONTOISE.restaurantId]: ZENCHEF_PETITPONTOISE, [ZENCHEF_MOULINVENT.restaurantId]: ZENCHEF_MOULINVENT, [ZENCHEF_PETITRETRO.restaurantId]: ZENCHEF_PETITRETRO, [ZENCHEF_AUXCRUSBOURGOGNE.restaurantId]: ZENCHEF_AUXCRUSBOURGOGNE, [ZENCHEF_AUXBONSCRUS.restaurantId]: ZENCHEF_AUXBONSCRUS, [ZENCHEF_BISTROTPARIS.restaurantId]: ZENCHEF_BISTROTPARIS, [ZENCHEF_CHEZRENE.restaurantId]: ZENCHEF_CHEZRENE, [ZENCHEF_CHEZSAVY.restaurantId]: ZENCHEF_CHEZSAVY, [ZENCHEF_PETITSOMMELIER.restaurantId]: ZENCHEF_PETITSOMMELIER, [ZENCHEF_ROSIEJOLIE.restaurantId]: ZENCHEF_ROSIEJOLIE, [ZENCHEF_ROSIELOU.restaurantId]: ZENCHEF_ROSIELOU, [ZENCHEF_ROSIE.restaurantId]: ZENCHEF_ROSIE, [ZENCHEF_BOUILLONREPUBLIQUE.restaurantId]: ZENCHEF_BOUILLONREPUBLIQUE, [ZENCHEF_BOUILLONRACINE.restaurantId]: ZENCHEF_BOUILLONRACINE, [ZENCHEF_BOUILLONJULIEN.restaurantId]: ZENCHEF_BOUILLONJULIEN, [ZENCHEF_VAGENENDE.restaurantId]: ZENCHEF_VAGENENDE, [ZENCHEF_GRANDCAFE.restaurantId]: ZENCHEF_GRANDCAFE, [ZENCHEF_PIEDDECOCHON.restaurantId]: ZENCHEF_PIEDDECOCHON, [ZENCHEF_LALORRAINE.restaurantId]: ZENCHEF_LALORRAINE, [ZENCHEF_PROCOPE.restaurantId]: ZENCHEF_PROCOPE, [ZENCHEF_TERMINUSNORD.restaurantId]: ZENCHEF_TERMINUSNORD, [ZENCHEF_LACOUPOLE.restaurantId]: ZENCHEF_LACOUPOLE, [ZENCHEF_BOFINGER.restaurantId]: ZENCHEF_BOFINGER, [ZENCHEF_DEKAS.restaurantId]: ZENCHEF_DEKAS, [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE, [ZENCHEF_PIROUETTE.restaurantId]: ZENCHEF_PIROUETTE });
 const FIXTURE_URL = 'https://zenchef-fixture.invalid/';
 const TTL = 10 * 60_000;
 const FIELDS = ['firstname', 'lastname', 'email', 'phone'];
@@ -254,7 +257,7 @@ export function supportedZenchefFields(state, venue) {
 }
 const nativeTermsVersion = (text, form, shift, venue) => {
   const base = digest([text, form.restaurantComment || null, shift || null]);
-  return [ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_CASIMIR, ZENCHEF_BICHEPARIS8].includes(venue) ? digest([base, purposeSchema(form)]) : base;
+  return [ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_CASIMIR, ZENCHEF_BICHEPARIS8, ZENCHEF_SAVANNAHCAFE].includes(venue) ? digest([base, purposeSchema(form)]) : base;
 };
 const purposeSchema = state => digest([state.mandatoryFields, state.customFields, state.customFieldsV2, state.isInUpdateFlow]);
 export class ZenchefError extends Error {
@@ -1038,6 +1041,27 @@ export function bicheParis8Policy(state, shift, party) {
     && shift.cancelation_param?.enduser_cancelable_before === 10800
     && shift.cancelation_param.enduser_cancelable_reference === 'shift';
 }
+export function savannahCafePolicy(state, shift, party) {
+  return party === 2 && state?.restaurantId === ZENCHEF_SAVANNAHCAFE.venueId
+    && state.isInUpdateFlow === false && STANDARD_REQUIRED_FIELDS.every(k=>state.mandatoryFields?.[k] === 'required')
+    && !Object.hasOwn(state, 'partner_id') && Array.isArray(state.customFields) && state.customFields.length === 0
+    && Array.isArray(state.customFieldsV2) && state.customFieldsV2.length === 0
+    && state.currency === 'EUR' && state.language === 'fr' && state.restaurantLanguage === 'fr'
+    && Object.keys(state.restaurantComment || {}).length === 1
+    && state.restaurantComment?.fr === "Bienvenue au Savannah Cafe <br/>\nPour toute réservation de plus de 6 personnes, merci de nous appeler au <br/>\n01 43 29 45 77 <br/>\nA très bientôt"
+    && state.hasRoomSelection === false && state.isRoomMandatory === false && state.wish?.room_id === null
+    && Array.isArray(state.wish.offers) && state.wish.offers.length === 0
+    && Array.isArray(state.offers) && state.offers.length === 0
+    && shift?.id === 300276 && shift.name === 'Service déjeuner' && shift.comment === null
+    && shift.confirmation?.is_auto === true && shift.confirmation.is_auto_until === null
+    && shift.charge_param === null && shift.prepayment_param === null
+    && shift.is_offer_required === false && shift.offer_required_from_pax === null
+    && shift.cancelation_param?.enduser_cancelable_before === 10800
+    && shift.cancelation_param.enduser_cancelable_reference === 'shift';
+}
+const savannahCafeQuery = query => query?.rid === ZENCHEF_SAVANNAHCAFE.venueId
+  && query.sdk === '1' && query.showCollapsed === '0'
+  && !Object.hasOwn(query, 'pid') && !Object.hasOwn(query, 'lang');
 const noRoomLunchPolicy = (venue, state, shift, party) => venue === ZENCHEF_BOFINGER
   ? bofingerPolicy(state, shift, party) : venue === ZENCHEF_LACOUPOLE ? laCoupolePolicy(state, shift, party)
     : venue === ZENCHEF_TERMINUSNORD ? terminusNordPolicy(state, shift, party)
@@ -1076,7 +1100,7 @@ const noRoomLunchPolicy = (venue, state, shift, party) => venue === ZENCHEF_BOFI
                                                                   : venue === ZENCHEF_INDIANALESHALLES ? indianaLesHallesPolicy(state, shift, party)
                                                                     : venue === ZENCHEF_INDIANATERNES ? indianaTernesPolicy(state, shift, party)
                                                                       : venue === ZENCHEF_OKOMUSU ? okomusuPolicy(state, shift, party)
-                                                                        : venue === ZENCHEF_ZENRESTAURANT ? zenRestaurantPolicy(state, shift, party) : venue === ZENCHEF_LAPLAGEPARISIENNE ? laPlageParisiennePolicy(state, shift, party) : venue === ZENCHEF_CAFEDESMUSEES ? cafeDesMuseesPolicy(state, shift, party) : venue === ZENCHEF_CASIMIR ? casimirPolicy(state, shift, party) : venue === ZENCHEF_BICHEPARIS8 && bicheParis8Policy(state, shift, party);
+                                                                        : venue === ZENCHEF_ZENRESTAURANT ? zenRestaurantPolicy(state, shift, party) : venue === ZENCHEF_LAPLAGEPARISIENNE ? laPlageParisiennePolicy(state, shift, party) : venue === ZENCHEF_CAFEDESMUSEES ? cafeDesMuseesPolicy(state, shift, party) : venue === ZENCHEF_CASIMIR ? casimirPolicy(state, shift, party) : venue === ZENCHEF_BICHEPARIS8 ? bicheParis8Policy(state, shift, party) : venue === ZENCHEF_SAVANNAHCAFE && savannahCafePolicy(state, shift, party);
 
 // Read only the server-rendered provider state, never execute or mutate its store.
 // Candidate slots are not held, selected, confirmed or guaranteed bookable later.
@@ -1084,7 +1108,7 @@ export function zenchefAvailabilityEvidence(data, query, observedAt = Date.now()
   zenchefSearchUrl(query, venue);
   const state = data?.props?.initialState?.appStoreState;
   const day = state?.dailyAvailabilities?.[query.date];
-  if ((venue === ZENCHEF_BICHEPARIS8 && (data?.query?.lang !== 'en' || data.query?.fullscreen !== '1')) || data?.page !== '/results' || ([ZENCHEF_OKOMUSU, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_BICHEPARIS8].includes(venue) && Object.hasOwn(data.query || {}, 'pid')) || ([ZENCHEF_PETITSOMMELIER, ZENCHEF_PETITPONTOISE, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_ZENRESTAURANT, ZENCHEF_CASIMIR].includes(venue) && data.query?.pid !== '1001') || data.query?.rid !== venue.venueId || data.query?.day !== query.date
+  if ((venue === ZENCHEF_SAVANNAHCAFE && !savannahCafeQuery(data?.query)) || (venue === ZENCHEF_BICHEPARIS8 && (data?.query?.lang !== 'en' || data.query?.fullscreen !== '1')) || data?.page !== '/results' || ([ZENCHEF_OKOMUSU, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_BICHEPARIS8].includes(venue) && Object.hasOwn(data.query || {}, 'pid')) || ([ZENCHEF_PETITSOMMELIER, ZENCHEF_PETITPONTOISE, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_ZENRESTAURANT, ZENCHEF_CASIMIR].includes(venue) && data.query?.pid !== '1001') || data.query?.rid !== venue.venueId || data.query?.day !== query.date
     || String(data.query?.pax) !== String(query.party) || state?.restaurantId !== venue.venueId
     || state.initializedSSR !== true || state.wish?.day !== query.date || state.wish?.pax !== query.party
     || state.wish.waiting_list !== false || state.restaurantTimezone !== venue.timezone
@@ -1217,7 +1241,7 @@ export class ZenchefPlaywright {
               await this.verifyNativeRoom(s);
               if (await this.readSaturdayDuration(s) !== true) throw new ZenchefError('stale_review',409);
             }
-            if ([ZENCHEF_CAFEDESMUSEES,ZENCHEF_CASIMIR,ZENCHEF_BICHEPARIS8].includes(venue)) await this.verifyNativeRoom(s);
+            if ([ZENCHEF_CAFEDESMUSEES,ZENCHEF_CASIMIR,ZENCHEF_BICHEPARIS8,ZENCHEF_SAVANNAHCAFE].includes(venue)) await this.verifyNativeRoom(s);
             const reserved = await bounded(() => this.reserveSubmission(s.approval, s), 5000);
             if (reserved?.sendAllowed !== true || !reserved.attempt?.attemptId || !reserved.attempt?.idempotencyKey || this.#closed) throw new ZenchefError('attempt_not_authorized');
             if (READBACK_VENUES.includes(venue) && !attemptMatchesApproval(reserved.attempt, s.approval)) throw new ZenchefError('attempt_binding_mismatch');
@@ -1368,6 +1392,7 @@ export class ZenchefPlaywright {
   async verifyNativeRoom(s) {
     const data = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent());
     const form = data?.props?.initialState?.appStoreState;
+    if (s.venue === ZENCHEF_SAVANNAHCAFE && !savannahCafeQuery(data?.query)) throw new ZenchefError('stale_review',409);
     if (s.venue === ZENCHEF_BICHEPARIS8 && (data?.query?.rid !== s.venue.venueId || data.query?.lang !== 'en' || data.query?.fullscreen !== '1')) throw new ZenchefError('stale_review',409);
     if ([ZENCHEF_OKOMUSU, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_BICHEPARIS8].includes(s.venue) && Object.hasOwn(data?.query || {}, 'pid')) throw new ZenchefError('stale_review',409);
     if ([ZENCHEF_PETITSOMMELIER, ZENCHEF_PETITPONTOISE, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_ZENRESTAURANT, ZENCHEF_CASIMIR].includes(s.venue) && data?.query?.pid !== '1001')
@@ -1376,7 +1401,7 @@ export class ZenchefPlaywright {
     // approval and the durable send grant, not only when opening the form.
     if (!supportedZenchefFields(form, s.venue))
       throw new ZenchefError('provider_fields_unverified', 409);
-    if ([ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_CASIMIR, ZENCHEF_BICHEPARIS8].includes(s.venue) && purposeSchema(form) !== s.purposeSchemaVersion)
+    if ([ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_CASIMIR, ZENCHEF_BICHEPARIS8, ZENCHEF_SAVANNAHCAFE].includes(s.venue) && purposeSchema(form) !== s.purposeSchemaVersion)
       throw new ZenchefError('provider_fields_unverified', 409);
     if (NO_ROOM_LUNCH_VENUES.includes(s.venue)) {
       const shift = form?.dailyAvailabilities?.[s.searchQuery.date]?.shifts?.find(row => row.id === s.venue.shiftId);
@@ -1594,7 +1619,7 @@ export class ZenchefPlaywright {
           await s.page.locator(PROVIDER_FIELDS.firstname).waitFor({ state: 'visible', timeout: 20000 });
           const data = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent());
           const form = data?.props?.initialState?.appStoreState;
-          if ((s.venue === ZENCHEF_BICHEPARIS8 && (data.query?.lang !== 'en' || data.query?.fullscreen !== '1')) || s.page.url() !== url || data.page !== '/form' || ([ZENCHEF_OKOMUSU, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_BICHEPARIS8].includes(s.venue) && Object.hasOwn(data.query || {}, 'pid')) || ([ZENCHEF_PETITSOMMELIER, ZENCHEF_PETITPONTOISE, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_ZENRESTAURANT, ZENCHEF_CASIMIR].includes(s.venue) && data.query?.pid !== '1001') || form?.restaurantId !== s.venue.venueId
+          if ((s.venue === ZENCHEF_SAVANNAHCAFE && !savannahCafeQuery(data?.query)) || (s.venue === ZENCHEF_BICHEPARIS8 && (data.query?.lang !== 'en' || data.query?.fullscreen !== '1')) || s.page.url() !== url || data.page !== '/form' || ([ZENCHEF_OKOMUSU, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_BICHEPARIS8].includes(s.venue) && Object.hasOwn(data.query || {}, 'pid')) || ([ZENCHEF_PETITSOMMELIER, ZENCHEF_PETITPONTOISE, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_ZENRESTAURANT, ZENCHEF_CASIMIR].includes(s.venue) && data.query?.pid !== '1001') || form?.restaurantId !== s.venue.venueId
             || form.wish?.day !== s.searchQuery.date || form.wish?.pax !== s.searchQuery.party
             || form.wish?.slot !== action.time || form.wish?.waiting_list !== false) throw new ZenchefError('provider_form_mismatch', 502);
           if (room && (form.wish.room_id !== room.id || form.isRoomMandatory !== true
@@ -1605,7 +1630,7 @@ export class ZenchefPlaywright {
           }
           if (s.venue === ZENCHEF_LAPLAGEPARISIENNE && await this.readSaturdayDuration(s) !== false) throw new ZenchefError('provider_fields_unverified',409);
           if (!!visitConfig(s.venue) && await this.readReservationVisitReason(s) !== '') throw new ZenchefError('provider_fields_unverified',409);
-          if ([ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_CASIMIR, ZENCHEF_BICHEPARIS8].includes(s.venue)) s.purposeSchemaVersion = purposeSchema(form);
+          if ([ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_LAPLAGEPARISIENNE, ZENCHEF_CAFEDESMUSEES, ZENCHEF_CASIMIR, ZENCHEF_BICHEPARIS8, ZENCHEF_SAVANNAHCAFE].includes(s.venue)) s.purposeSchemaVersion = purposeSchema(form);
           const shift = form.dailyAvailabilities?.[s.searchQuery.date]?.shifts?.find(row => row.id === s.venue.shiftId);
           s.noCardAllowed = s.venue === ZENCHEF_FISHCORNER && shift?.id === 545372 && shift.charge_param === null
             && shift.shift_slots?.some(slot => slot.name === action.time && slot.closed === false && slot.marked_as_full === false && slot.possible_guests?.includes(s.searchQuery.party))

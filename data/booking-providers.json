@@ -2543,5 +2543,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-savannah-cafe": {
+    "name": "Savannah Café",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?sdk=1&rid=377106&showCollapsed=0",
+    "source": "https://www.savannahcafe.fr/fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=377106",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
