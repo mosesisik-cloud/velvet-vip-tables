@@ -8,9 +8,9 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
   mode = 'live', confirmationPolicySource = null }) {
   const fail = code => { throw Object.assign(new Error(code), {status:409}); };
   const venue = id => Object.hasOwn(restaurants, id) && restaurants[id];
-  const dateInScope = (id,date) => provider !== 'Zenchef' || id !== 'curated-PAR-bouillon-julien' || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && !['12-24','12-25','12-31'].includes(date.slice(5)));
+  const dateInScope = (id,date) => provider !== 'Zenchef' || (id !== 'curated-PAR-bouillon-julien' && id !== 'curated-PAR-brasserie-rosie-jolie') || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && (id === 'curated-PAR-bouillon-julien' ? !['12-24','12-25','12-31'].includes(date.slice(5)) : !(date.slice(5) >= '08-03' && date.slice(5) <= '08-23')));
   const timeInScope = (id,time) => provider !== 'Zenchef' || id !== 'curated-PAR-bouillon-republique' || ['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(time);
-  const sameScopedDetails = (attempt,details) => !['curated-PAR-bouillon-julien','curated-PAR-bouillon-republique'].includes(attempt.restaurantId) || (dateInScope(attempt.restaurantId,attempt.date) && timeInScope(attempt.restaurantId,attempt.time) && details?.date === attempt.date && details?.time === attempt.time && details?.party === attempt.party);
+  const sameScopedDetails = (attempt,details) => !['curated-PAR-bouillon-julien','curated-PAR-bouillon-republique','curated-PAR-brasserie-rosie-jolie'].includes(attempt.restaurantId) || (dateInScope(attempt.restaurantId,attempt.date) && timeInScope(attempt.restaurantId,attempt.time) && details?.date === attempt.date && details?.time === attempt.time && details?.party === attempt.party);
   const row = (attempt, owner) => ({
     id:`PB-${attempt.attemptId}`,userId:owner,provider,restaurantId:attempt.restaurantId,
     restaurant:venue(attempt.restaurantId)?.name || attempt.restaurantId,

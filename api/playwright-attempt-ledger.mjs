@@ -33,6 +33,7 @@ function validate(input) {
   const date = new Date(input.date + 'T12:00:00Z');
   if (!Number.isFinite(+date) || date.toISOString().slice(0, 10) !== input.date) fail('invalid_date');
   if (input.provider === 'Zenchef' && input.restaurantId === 'curated-PAR-bouillon-julien' && ['12-24','12-25','12-31'].includes(input.date.slice(5))) fail('special_date_unsupported');
+  if (input.provider === 'Zenchef' && input.restaurantId === 'curated-PAR-brasserie-rosie-jolie' && input.date.slice(5) >= '08-03' && input.date.slice(5) <= '08-23') fail('special_date_unsupported');
   if (typeof input.time !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(input.time)) fail('invalid_time');
   if (input.provider === 'Zenchef' && input.restaurantId === 'curated-PAR-bouillon-republique' && !['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(input.time)) fail('lunch_time_unsupported');
   if (!Number.isInteger(input.party) || input.party < 1 || input.party > 100) fail('invalid_party');
@@ -40,7 +41,7 @@ function validate(input) {
     if (!Number.isSafeInteger(input.roomId) || input.roomId <= 0) fail('invalid_room');
     clean.roomId = input.roomId; clean.roomName = token(input.roomName,'invalid_room');
   }
-  const lunchShift = input.provider === 'Zenchef' ? (input.restaurantId === 'curated-PAR-bofinger' ? 19170 : input.restaurantId === 'curated-PAR-la-coupole' ? 20148 : input.restaurantId === 'curated-PAR-terminus-nord' ? 19380 : input.restaurantId === 'curated-PAR-le-procope' ? 18190 : input.restaurantId === 'curated-PAR-la-lorraine' ? 16674 : input.restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : input.restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : input.restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : input.restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : input.restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : input.restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : input.restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : input.restaurantId === 'curated-PAR-brasserie-rosie-lou' ? 118503 : null) : null;
+  const lunchShift = input.provider === 'Zenchef' ? (input.restaurantId === 'curated-PAR-bofinger' ? 19170 : input.restaurantId === 'curated-PAR-la-coupole' ? 20148 : input.restaurantId === 'curated-PAR-terminus-nord' ? 19380 : input.restaurantId === 'curated-PAR-le-procope' ? 18190 : input.restaurantId === 'curated-PAR-la-lorraine' ? 16674 : input.restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : input.restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : input.restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : input.restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : input.restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : input.restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : input.restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : input.restaurantId === 'curated-PAR-brasserie-rosie-lou' ? 118503 : input.restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 298043 : null) : null;
   if (input.details !== undefined) {
     if (lunchShift) {
       if (input.details?.shiftId !== lunchShift || Object.keys(input.details).length !== 1

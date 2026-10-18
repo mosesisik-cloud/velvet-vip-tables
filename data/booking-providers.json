@@ -2153,5 +2153,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-brasserie-rosie-jolie": {
+    "name": "Brasserie Rosie Jolie",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=376490&lang=fr",
+    "source": "https://brasseriesalamode.com/brasserie-rosie-jolie",
+    "venueKey": "bookings.zenchef.com/results?rid=376490",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
