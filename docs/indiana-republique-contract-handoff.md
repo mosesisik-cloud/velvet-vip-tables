@@ -1,0 +1,23 @@
+# Indiana Café République — own Service continu for two
+
+Refs #129. Worker codex-worker-cbfe5665-79ca-415d-91ac-5c184e516939/chat01a141e3-6cf0-7ef1-8908-41a5840b1b4e. Base clean main25715390cc4cde953fff2d12530b5deb55b9605af17. Canonical curated-PAR-indiana-cafe-republique/export ZENCHEF_INDIANAREPUBLIQUE/flag VELVET_ZENCHEF_INDIANAREPUBLIQUE. Distinct from Bouillon République.32d5 isolated identity1c55e2c6eaa60fa9dd919ad5bbb689ff443532db; own address1Place de la République75003Paris, restaurant375452.
+
+## Own evidence on2026-10-18
+
+Reused master saved official pages (no repeat GET): indiana-directory-official-20261018.html SHA256040d0b632bbe1882b2611b3c7d4993b94b8150305bdfc442785728951f4d29ae and indiana-republique-official-20261018.html SHA2560e0a1733f8679e5866bbdcf4fc68ba36a0910b6641c9ee433190867ddba6853c, under C:/Users/moses.isik/Documents/Codex/2026-10-16/jag/work. Own page https://www.indianacafe.fr/restaurant/republique, own directory card address and booking375452/pid1001 confirmed. Capacity and terrace prose do not prove bookability.
+
+Exactly one results GET https://bookings.zenchef.com/results?rid=375452&pid=1001&lang=fr&day=2026-10-23&pax=2 returned200. Raw bytes SHA25644d45bb930104afef08d909492544ee6e5c0b8b04e50689067d2a503ae753c6d. Native Indiana Café - République, address with leading space 1 Pl. de la République, zip75003 match. Own service274078 Service continu, auto false/until6, null charge/prepayment, offerfalse/fromnull,10800 seconds SHIFT cancellation. Eighteen two-person candidate times11:30–20:00 every30minutes. Service274079 Service du soir excluded, including midnight nextday times; no alternate service/date/pax requests. Candidate times are not holds or confirmed bookings.
+
+Conditional single form GET https://bookings.zenchef.com/form?rid=375452&pid=1001&lang=fr&day=2026-10-23&pax=2&slot=12%3A00 returned200/pageform SHA25624c36e5215491e6c185843fecf6c2efd82de9356d628916001097009611cb539. Own identity/policy/date/party/slot and explicit query.pid/partner_id string1001 match. Strict hasRoomSelection=false/isRoomMandatory=false/wish.room_id=null/offers[]. Service has bookable_rooms91420/94691 but no chosen room; these IDs do not grant seating choice. Six standard mandatory fields/customFields[]/customFieldsV2[]; optional voucher unsupported. No reservationPurpose or Montparnasse4815 exception.
+
+Full own raw bilingual restaurantComment retained exactly and equal in results/form: EN welcome to Indiana Café République; FR most tables without reservation, no terrace reservation but seating there if space,15minute retention, own phone01 48 87 82 35. No over20 instruction. Shiftcomment null. Similar chain wording independently observed here, not inherited.
+
+Raw bytes retained in worker work/indiana-republique-results.html and -form.html, parsed -state.json/-form-state.json. Form references cached _app-30bffcb9f4c3b7b2.js/form-84144e7c9a8b854d.js; existing work/aux-bons-crus-app-bundle.js SHA256f93de04840ca6c559814f814a2c2bd86886a7962dbf24bd024bb3c01360d0cdd and form bundle SHA256b5ada4d2894b110846303a2b4d33120be97c42b88e89d4b33b522001d4ec50c4. No new assets or live native browser visits; no fresh remote asset-byte claim.
+
+## Implementation and validation
+
+Named typed policy274078/exact2/Service continu/false-until6/nullcardprepay/nooffer/10800SHIFT/no-room. Tenth explicit pid venue. Existing generic internal NO_ROOM_LUNCH_VENUES machinery is reused but own service name is Service continu; UI must not rename it Déjeuner. Own notice/service digest, fresh requiredfields/pid, consent and durable one-send, independent same-attempt readback retained. POST echo never confirms.
+
+Focused5/5PASS with ZENCHEF_TEST_SCENARIO_PREFIX=indianarep and pattern native booking and own-booking|Indiana République|Fresh required|Explicit partner venues. Ten synthetic browser scenarios:positive/missing/pending/date/party/offer/card/manual/stale/durable-shift mismatch. Own18times/identity/policy/room/party/other-service/typedpid checks. Extended own two tests pass with Service continu name rejection and fresh querypid missing/null/number/wrong negatives. Existing tests used synthetic responses only; no duplicate Montparnasse/completed-main matrix rerun. Syntax/diff PASS after removing trailing blank line. No real supplier confirmation, nativeDOM input interaction, capability/receipt read, hold/reservation/payment/contact or restaurant message.
+
+Only provider/tests/ownfixture/handoff.32d5 owns shared ledger/result/journal service274078 mapping, server/catalog/UI, exact integration review, cached-native EULA/notice and actual local app QA, publication. Actual supplier confirmation remains unproven. ClubMaine remains parked.
