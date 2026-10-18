@@ -7439,6 +7439,24 @@
       "source": "VELVET curated + OpenStreetMap · official links where available",
       "restaurants": [
         {
+          "placeId": "curated-PAR-indiana-cafe-denfert-rochereau",
+          "name": "Indiana Café Denfert-Rochereau",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "1 Avenue du Général Leclerc, 75014 Paris",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Indiana%20Caf%C3%A9%20Denfert-Rochereau%2C%201%20Avenue%20du%20G%C3%A9n%C3%A9ral%20Leclerc%2C%20Paris",
+          "website": "https://www.indianacafe.fr/restaurant/denfert-rochereau",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.indianacafe.fr/restaurant/denfert-rochereau",
+          "locationVerifiedAt": "2026-10-18",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=375447&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-18"
+        },
+        {
           "placeId": "curated-PAR-indiana-cafe-bercy-village",
           "name": "Indiana Café Bercy Village",
           "rating": null,

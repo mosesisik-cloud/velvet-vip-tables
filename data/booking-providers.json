@@ -2426,5 +2426,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-indiana-cafe-denfert-rochereau": {
+    "name": "Indiana Café Denfert-Rochereau",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=375447&pid=1001",
+    "source": "https://www.indianacafe.fr/restaurant/denfert-rochereau",
+    "venueKey": "bookings.zenchef.com/results?rid=375447",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
