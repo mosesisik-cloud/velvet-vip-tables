@@ -1,0 +1,95 @@
+{
+  "restaurantId": "curated-PAR-indiana-cafe-montparnasse",
+  "venueId": "375451",
+  "nativeName": "Indiana Café - Montparnasse",
+  "address": "72 Bd du Montparnasse",
+  "city": "Paris",
+  "zip": "75014",
+  "observedAt": "2026-10-18",
+  "status": "parked_unsupported_required_custom_field",
+  "resultsUrl": "https://bookings.zenchef.com/results?rid=375451&pid=1001&lang=fr&day=2026-10-23&pax=2",
+  "resultsSha256": "f02d421a59392f39c3a4cfe3cb2bcf41d474f587519ca608d01f55d75a4bbe79",
+  "formUrl": "https://bookings.zenchef.com/form?rid=375451&pid=1001&lang=fr&day=2026-10-23&pax=2&slot=12%3A00",
+  "formSha256": "571631c0d6c3a31b10e8345806897289ddd58e256252f05ea0a33e7cb7e72e16",
+  "query": {
+    "rid": "375451",
+    "pid": "1001",
+    "lang": "fr",
+    "day": "2026-10-23",
+    "pax": "2",
+    "slot": "12:00"
+  },
+  "partner_id": "1001",
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "slot": "12:00",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "mandatoryFields": {
+    "firstname": "required",
+    "lastname": "required",
+    "email": "required",
+    "phone_number": "required",
+    "country": "required",
+    "comment": "displayed",
+    "private_comment": "hidden",
+    "prescriber_id": "hidden",
+    "customersheet.customer_company_id": "hidden",
+    "civility": "required",
+    "url": "hidden",
+    "customersheet.vip": "hidden",
+    "waiter_id": "hidden",
+    "slots_count": "hidden",
+    "voucher_code": "displayed",
+    "custom_field.motif-de-la-reservation": "required"
+  },
+  "customFields": [
+    {
+      "id": 4815,
+      "restaurant_id": 375451,
+      "title": "Motif de la réservation",
+      "step": 3,
+      "type": "auto",
+      "enabled": false,
+      "created_at": "2025-04-17T08:56:05.000000Z",
+      "updated_at": "2026-10-09T10:22:53.000000Z",
+      "slug": "motif-de-la-reservation",
+      "options": [],
+      "displayType": "text",
+      "required": true
+    }
+  ],
+  "customFieldsV2": [],
+  "restaurantComment": {
+    "fr": "<p>\n<strong><span style=\"text-decoration:underline;\">Ce restaurant est situé 72 boulevard du Montparnasse. <br></span></strong>A ne pas confondre avec notre restaurant du 74 avenue du Maine, qui a des billards. :) \n</p>\n<p>\nNous gardons votre table au chaud 15 min maximum, au-delà, elle sera réattribuée. Pour toute question nous sommes joignables au 01 43 35 36 28.\n</p>"
+  },
+  "shift": {
+    "id": 314295,
+    "name": "Déjeuner",
+    "comment": null,
+    "confirmation": {
+      "is_auto": false,
+      "is_auto_until": 30
+    },
+    "charge_param": null,
+    "prepayment_param": null,
+    "is_offer_required": false,
+    "offer_required_from_pax": null,
+    "cancelation_param": {
+      "enduser_cancelable_before": 10800,
+      "enduser_cancelable_reference": "shift"
+    }
+  },
+  "limits": {
+    "resultsGets": 1,
+    "formGets": 1,
+    "assetGets": 0,
+    "realTransactions": 0,
+    "receiptReads": 0
+  }
+}
