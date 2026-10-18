@@ -908,3 +908,36 @@ test('Bistrot fresh form requirements are rechecked after review', async () => {
   delete form.mandatoryFields;
   await assert.rejects(verify(), /provider_fields_unverified/);
 });
+
+test('Fresh required fields guard covers FishCorner and room venues without weakening seating', async () => {
+  for (const venue of [ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE]) {
+    const room = venue.rooms?.[0];
+    const selection = { date: '2026-10-23', party: 2, time: '19:00', ...(room ? { roomId: room.id, roomName: room.name } : {}) };
+    const form = { mandatoryFields: { firstname: 'required', 'custom_field.test': 'hidden' }, wish: { room_id: room?.id } };
+    let seating = "Jusqu'à 21:00";
+    const session = {
+      venue, formSelection: selection, terms: { seatingNotice: seating },
+      page: {
+        url: () => zenchefFormUrl(selection, venue),
+        locator: () => ({ textContent: async () => JSON.stringify({ props: { initialState: { appStoreState: form } } }) }),
+        getByText: () => ({ count: async () => 1, isVisible: async () => true, innerText: async () => seating })
+      }
+    };
+    const verify = () => ZenchefPlaywright.prototype.verifyNativeRoom.call({}, session);
+    await verify(); // unchanged form at review
+    form.mandatoryFields['custom_field.test'] = 'required';
+    await assert.rejects(verify(), /provider_fields_unverified/); // changed after selection
+    form.mandatoryFields['custom_field.test'] = 'hidden';
+    await verify(); // fresh review accepted
+    form.mandatoryFields['custom_field_v2.1093'] = 'required';
+    await assert.rejects(verify(), /provider_fields_unverified/); // changed after review
+    delete form.mandatoryFields['custom_field_v2.1093'];
+    await verify();
+    if (venue === ZENCHEF_PIROUETTE) {
+      seating = "Jusqu'à 22:00";
+      await assert.rejects(verify(), /stale_review/);
+    }
+    delete form.mandatoryFields;
+    await assert.rejects(verify(), /provider_fields_unverified/);
+  }
+});
