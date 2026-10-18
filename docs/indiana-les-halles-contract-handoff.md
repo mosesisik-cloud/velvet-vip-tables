@@ -1,0 +1,37 @@
+# Les Halles — exact required visit-reason selection
+
+Refs #129. Worker codex-worker-cbfe5665-79ca-415d-91ac-5c184e516939/chat01a141e3-6cf0-7ef1-8908-41a5840b1b4e. Base clean main260caf136cf6366a4a7c036806ac8c8f308f60f323e. Canonical curated-PAR-indiana-cafe-les-halles/export ZENCHEF_INDIANALESHALLES/flag VELVET_ZENCHEF_INDIANALESHALLES.32d5 isolated identity57cc6705e76e06e63e7643eb85d8b6d82ea2d71e. Shared integration owned solely by32d5.
+
+## Own evidence and updated assessment
+
+PR3892085535cd5a3b03a6b08410caed437d7a42dd65d documents own required select and cached source. Master authorized narrow provider/shared enum implementation; e98a independently verified all6cached excerpts/UTF16offsets and executed pure cached getFields/slug update/createBookingData for all3strings in isolated VM without network. No implicit Montparnasse text exception. This handoff supersedes the pending-nativeDOM/implementation status in389 after the evidence below;389 remains lineage, not a runtime dependency.
+
+Checked2026-10-18. Official https://www.indianacafe.fr/restaurant/les-halles saved under C:/Users/moses.isik/Documents/Codex/2026-10-16/jag/work/indiana-les-halles-official-20261018.html SHA256a1d7772d2c946721243d7212c99a2c0ac40da7a5480ab347c1dea4c37eb158e8; directory SHA256040d0b632bbe1882b2611b3c7d4993b94b8150305bdfc442785728951f4d29ae. Own35,Rue du Pont-Neuf75001Paris/name/phone0142339707/375449pid1001 branch binding. Native Indiana Café - Les Halles/35 Rue du Pont Neuf/75001 matches. No Denfert address issue.
+
+Existing single resultsGET https://bookings.zenchef.com/results?rid=375449&pid=1001&lang=fr&day=2026-10-23&pax=2 SHA256a9c016131bb73a572c9a8cb354280144a783caa63cd3a2e5db062674cf9c4a75. Existing single conditional formGET https://bookings.zenchef.com/form?rid=375449&pid=1001&lang=fr&day=2026-10-23&pax=2&slot=12%3A00 SHA25626402e0412a737140790ac3a0e43638d8a85bba817c63e1638e60b4be328e113. No repeat GET during implementation. Rawworker work/indiana-les-halles-{results,form}.html and parsedstates retained.
+
+Own lunch275998 Déjeuner/exact2/false-until8/nullchargeprepayment/nooffer/10800secondsSHIFT/no-room;15candidate times11:30–15:00 every15minutes. Exclude275944/276001/276003/276009. query.pid/partner_id string1001. Raw catalog offers[] and selected wish.offers[] empty; mandatoryofferfalse/fromnull. No optional offer. OwnFRnotice walkin/noTerrace/15min/0142339707, no>20rule. NONNULL lunchshift.fr: Au-delà de 15 min de retard, nous ne pourrons plus garantir votre table. This is lateness, not meal/seating duration. Terms expose it as shiftNotice.
+
+## Proven native field contract
+
+Own4811/restaurant375449/slugje-viens-pour/titleJe viens pour :/step3/typeauto/displayTypeselect/requiredtrue/enabledfalse/options3; sixstandardmandatory plus custom_field.je-viens-pour required,V2[],isInUpdateFlowfalse. Exact options IDs8000/8001/8002, text=value respectively déjeuner/ dîner; grignotter; boire un verre followed by ONE ASCII U+0020. All option.enabled0 in metadata. Exact string values, not numeric IDs/indexes, serialize as sole legacy custom_field key je-viens-pour. Native application validation is truthiness; provider independently enforces exact enum.
+
+ce5c actual cached nativeDOM390/1366 proof: page.getByText('Je viens pour :',{exact:true}).locator('xpath=../following-sibling::label//select'). Unique visible enabled SELECT, single selection; four options blank plus exactthree labels/values. All enabled despite metadataenabled0. Initial value blank/index0; each selectOption({value})/blur/readback exact, including trailingSPACE, then resetblank. No id/name/testid/required/aria association; getByLabel/namedcombobox0. HTML requiredfalse/blank valid; mandatory requirement comes from metadata. No default inferred.
+
+Artifacts sibling C:/Users/moses.isik/Documents/Codex/2026-10-16/files-pasted-by-the-user-ja-10/work/les-halles-select-evidence-390.json SHA25635a80c159267faa4365af4ad19c9b898b1fd5002dfaa68c0673fcb3e3d1986c9;1366.json SHA25647cd48a9d2ca02e3bfee3aa3b99041507d2a2ad2235342e86d11f532c0575657; script d7dbc274f9cb208018680b484e62447bce05eb4a4591414dd46d4220553b5ab3; manifest e55e497e6b36bcfe7d62e492c38b853e645c82f8421e875fd7ec75920126e951. ce5c visually checked screenshots; provider worker inspected390JSON. Existing assets only, all noncached network blocked, automatic quotation-previewPOST aborted, no externalPOST. Transient hydratedSSR replay, not connected availability or supplier confirmation. Contact/submit untouched/EULAunchecked.
+
+Matching existing _app-30bffcb9f4c3b7b2.js/form-84144e7c9a8b854d.js cache SHA256f93de04840ca6c559814f814a2c2bd86886a7962dbf24bd024bb3c01360d0cdd / b5ada4d2894b110846303a2b4d33120be97c42b88e89d4b33b522001d4ec50c4. No new assets/fresh remote-byte claim.
+
+## Provider/shared interface
+
+Final canonical field reservationVisitReason ONLY (crossed draft visitPurpose proposal discarded before implementation). fields:{name:'reservationVisitReason',value:'',required:true,type:'select',options:['déjeuner/ dîner','grignotter','boire un verre '],label:'Je viens pour :'}. Blank initial required; no automatic choice, trim, free text or numeric value. Current native title/select/options/text/value/disabled state checked each read. Explicit fill selectOption+blur/exact readback tracked; review requires matching explicit input. Subsequent edits invalidate review.
+
+Own fullmetadata/schema digest bound to terms/reviewfingerprint, checked at select/review/submit and nativePOST pregrant. Initial nonblank native default rejected. Strict payload solelegacykey exact frozen approval.details.reservationVisitReason plus top-level approval.reservationVisitReason; V2/comment/customersheet substitutions rejected. Durable attempt details must include exact {shiftId:275998,reservationVisitReason}; sameowner/date/time/party/fingerprint/revision/one-send protections retained. Shared ledger/journal must bind exact value through reserve/record/restart/replay/snapshot. It remains private, not publichistory/proof/receipt echo. No receipt reason echo invented; POSTecho neverconfirms. Other venues reject injected reason; Montparnasse reservationPurpose remains separate.
+
+## Validation and remaining gates
+
+Focused3/3PASS: ZENCHEF_TEST_SCENARIO_PREFIX=leshalles node --test --test-name-pattern='native booking and own-booking|Les Halles' scripts/test-zenchef-playwright.mjs.27synthetic browser scenarios: ten established ownbooking/readback cases plus allthree positive exactoptions, initialdefault/metadata, blankanswer, before-review/after-review/pregrant drift, metadata/options/DOMoption/duplicate/updateflow/extra-required/edit, extra payload and durable reason mismatch. Pregrant negatives have zerosends/grants/readbacks; durable mismatch onegrant/zerosends. All3exact strings preserved. Synthetic DOM uses verified structure, not a claim of real submission.
+
+Pure ownpolicy15times/other-service/typedpolicy/lateness/schema/pid/metadata/enum/payload substitution checks pass. Bounded regression2/2PASS for existing Montparnasse metadata/payload and generic fresh-required guard, without repeating completed native/app matrices. Syntax/diffPASS. Focused cases rerun only after added nativedefault/blank guards. No realtransactions/holds/payments/messages/capability/receiptreads.
+
+Onlyprovider/tests/ownfixture/handoff.32d5 owns shared integration, namedrequiredselect/blankplaceholder/finalpre-wrap, private durable binding, exactreview and actuallocalappQA/publication. No activation by this worker. Real supplier confirmation remains unproven.
