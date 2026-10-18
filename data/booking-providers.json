@@ -2478,5 +2478,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-zen-restaurant": {
+    "name": "ZEN",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=359831&pid=1001",
+    "source": "https://www.zenrestaurantparis.fr/en/reservation/",
+    "venueKey": "bookings.zenchef.com/results?rid=359831",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
