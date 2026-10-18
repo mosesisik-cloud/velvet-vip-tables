@@ -1398,7 +1398,8 @@ export class ZenchefPlaywright {
         && (this.mode === 'fixture' || (this.mode === 'prepare' && this.enableSubmission && s.noCardAllowed
           && !!s.details?.country && s.review?.revision === s.revision)),
       offerChoices: s.offerChoices ? structuredClone(s.offerChoices) : null,
-      fields, details: s.details ? structuredClone(s.details) : null, result: s.result ? structuredClone(s.result) : null,
+      fields, details: s.details ? structuredClone(s.details) : s.venue === ZENCHEF_LAPLAGEPARISIENNE && s.state === 'contact'
+        ? {reservationSaturdayDurationAcknowledged: fields?.find(f=>f.name === 'reservationSaturdayDurationAcknowledged')?.value === true} : null, result: s.result ? structuredClone(s.result) : null,
       availabilityEvidence: s.availabilityEvidence ? structuredClone(s.availabilityEvidence) : null,
       phase: 'booking', reviewFingerprint: s.review?.digest || null,
       reviewToken: s.review?.revision === s.revision ? s.review.token : null,

@@ -1613,3 +1613,8 @@ test('La Plage action requires guest boolean and retains only own explicit check
  await act({type:'submit',confirm:true,terms:true,reviewToken:session.review.token,termsVersion:'terms',idempotencyKey:'synthetic-test-key-1234'});
  assert.equal(clickedValidate,1);assert.equal(own,true);assert.equal(marketing,false);assert.equal(eula,true);assert.equal(session.approval[key],true);assert.equal(session.approval.details[key],true);
 });
+test('La Plage contact snapshot exposes current boolean without granting review', async () => {
+ let checked=false;const p=new ZenchefPlaywright({mode:'prepare'});p.readSaturdayDuration=async()=>checked;p.nativeCountry=async()=>'fr';
+ const s={venue:ZENCHEF_LAPLAGEPARISIENNE,state:'contact',revision:0,page:{locator:()=>({inputValue:async()=>'',count:async()=>0}),screenshot:async()=>Buffer.from('synthetic-image')}};
+ for(const value of [false,true,false]){checked=value;const snap=await p.snapshot(s);assert.equal(snap.details.reservationSaturdayDurationAcknowledged,value);const field=snap.fields.find(f=>f.name==='reservationSaturdayDurationAcknowledged');assert.equal(field.value,value);assert.equal(field.type,'checkbox');assert.equal(field.required,true);assert.equal(snap.canSubmit,false);assert.equal(snap.reviewToken,null);}
+});
