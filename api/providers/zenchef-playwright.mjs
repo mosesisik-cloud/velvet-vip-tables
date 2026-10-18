@@ -912,6 +912,8 @@ export function okomusuPolicy(state, shift, party) {
 }
 export function zenRestaurantPolicy(state, shift, party) {
   return party === 2 && state?.restaurantId === ZENCHEF_ZENRESTAURANT.venueId
+    && typeof state.restaurantComment?.fr === 'string' && !!state.restaurantComment.fr.trim()
+    && typeof state.restaurantComment?.en === 'string' && !!state.restaurantComment.en.trim()
     && Array.isArray(state.customFields) && state.customFields.length === 0
     && Array.isArray(state.customFieldsV2) && state.customFieldsV2.length === 0
     && state.partner_id === '1001' && state.currency === 'EUR' && state.language === 'fr' && state.hasRoomSelection === false
@@ -1477,7 +1479,9 @@ export class ZenchefPlaywright {
             s.terms.version = digest([s.terms.version, s.terms.seatingNotice]);
           }
           if (NO_ROOM_LUNCH_VENUES.includes(s.venue)) {
-            s.terms.restaurantNotice = form.restaurantComment?.fr || '';
+            s.terms.restaurantNotice = s.venue === ZENCHEF_ZENRESTAURANT
+              ? `Français:\n${form.restaurantComment?.fr || ''}\n\nEnglish:\n${form.restaurantComment?.en || ''}`
+              : form.restaurantComment?.fr || '';
             if (s.venue === ZENCHEF_MOULINVENT) s.terms.seatingNotice = shift?.comment?.fr || '';
             if (s.venue === ZENCHEF_INDIANADENFERTROCHEREAU) s.terms.mealNotice = shift.comment.fr;
             if (!!visitConfig(s.venue)) s.terms.shiftNotice = shift.comment.fr;

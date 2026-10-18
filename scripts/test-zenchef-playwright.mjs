@@ -1533,6 +1533,7 @@ test('ZEN ordinary dinner keeps optional private offer separate and binds thresh
  // Native cached app: is_offer_required && (offer_required_from_pax ?? 0) <= pax.
  const required=(s,p)=>s.is_offer_required&&(s.offer_required_from_pax??0)<=p;
  assert.equal(required(shift,2),false);assert.equal(required(shift,9),true);
+ for(const language of ['fr','en'])for(const value of [undefined,null,'','   ',42]){const x=structuredClone(source);x.restaurantComment[language]=value;assert.equal(zenRestaurantPolicy(x,shift,2),false);}
  for(const change of [s=>s.id=87617,s=>s.name='Déjeuner',s=>s.confirmation.is_auto=true,s=>s.confirmation.is_auto_until=null,s=>s.charge_param={},s=>s.prepayment_param={},s=>s.is_offer_required=false,s=>s.offer_required_from_pax=2,s=>s.offer_required_from_pax=null,s=>delete s.offer_required_from_pax,s=>s.offer_required_from_pax='9',s=>s.offers=[],s=>s.offers[0].config.min_pax_available=2,s=>s.cancelation_param.enduser_cancelable_before=3600,s=>s.cancelation_param.enduser_cancelable_reference='booking']){const x=structuredClone(shift);change(x);assert.equal(zenRestaurantPolicy(source,x,2),false);}
  for(const change of [s=>s.restaurantId='373677',s=>s.partner_id=null,s=>s.hasRoomSelection=true,s=>s.isRoomMandatory=true,s=>s.wish.room_id=99264,s=>s.wish.offers=[{offer_id:66398,count:2}],s=>s.offers=[],s=>s.offers[0].is_private=false]){const x=structuredClone(source);change(x);assert.equal(zenRestaurantPolicy(x,shift,2),false);}
  for(const party of [1,3,8,9])assert.equal(zenRestaurantPolicy(source,shift,party),false);
