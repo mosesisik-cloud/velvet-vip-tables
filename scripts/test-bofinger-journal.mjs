@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {PlaywrightAttemptLedger} from '../api/playwright-attempt-ledger.mjs';
 import {createProviderJournal} from '../api/provider-booking-journal.mjs';
-for (const [restaurantId,shiftId,name] of [['curated-PAR-bofinger',19170,'Bofinger'],['curated-PAR-la-coupole',20148,'La Coupole'],['curated-PAR-terminus-nord',19380,'Terminus Nord'],['curated-PAR-le-procope',18190,'Le Procope'],['curated-PAR-la-lorraine',16674,'La Lorraine'],['curated-PAR-au-pied-de-cochon',29,'Au Pied de Cochon'],['curated-PAR-le-grand-cafe-capucines',19590,'Le Grand Café Capucines'],['curated-PAR-brasserie-vagenende',63972,'Brasserie Vagenende'],['curated-PAR-bouillon-julien',12711,'Bouillon Julien'],['curated-PAR-bouillon-racine',93989,'Bouillon Racine']]) test(name+' durable service, owner and independent receipt survive restart',()=>{
+for (const [restaurantId,shiftId,name] of [['curated-PAR-bofinger',19170,'Bofinger'],['curated-PAR-la-coupole',20148,'La Coupole'],['curated-PAR-terminus-nord',19380,'Terminus Nord'],['curated-PAR-le-procope',18190,'Le Procope'],['curated-PAR-la-lorraine',16674,'La Lorraine'],['curated-PAR-au-pied-de-cochon',29,'Au Pied de Cochon'],['curated-PAR-le-grand-cafe-capucines',19590,'Le Grand Café Capucines'],['curated-PAR-brasserie-vagenende',63972,'Brasserie Vagenende'],['curated-PAR-bouillon-julien',12711,'Bouillon Julien'],['curated-PAR-bouillon-racine',93989,'Bouillon Racine'],['curated-PAR-bouillon-republique',528175,'Bouillon République']]) test(name+' durable service, owner and independent receipt survive restart',()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bofinger-journal-'));
  let ledger=new PlaywrightAttemptLedger(path.join(dir,'attempt.sqlite'));
  const policy='TEST-ONLY-POLICY';
@@ -24,6 +24,13 @@ for (const [restaurantId,shiftId,name] of [['curated-PAR-bofinger',19170,'Bofing
     const gate=journal.reserveAttempt({...intent,sessionId:'boundary-'+date,details:{...intent.details,date}});assert.equal(gate.sendAllowed,true);
    }
   }
+  if (restaurantId === 'curated-PAR-bouillon-republique') {
+   for (const time of ['11:29','11:45','14:31','15:00','18:00',null,1200]) {
+    assert.throws(()=>journal.reserveAttempt({...intent,details:{...intent.details,time}}),/lunch_time_unsupported/);
+    assert.throws(()=>ledger.reserve({owner:'owner',provider:'Zenchef',restaurantId,sessionId:'time-test',mode:'fixture',phase:'booking',idempotencyKey:'time-test-idempotency-key',reviewFingerprint:'c'.repeat(64),date:'2030-01-15',time,party:2,details:{shiftId}}),/lunch_time_unsupported|invalid_time/);
+   }
+   for (const time of ['11:30','12:00','12:30','13:00','13:30','14:00','14:30']) assert.equal(journal.reserveAttempt({...intent,sessionId:'time-'+time,details:{...intent.details,date:'2030-01-16',time}}).sendAllowed,true);
+  }
   const {attempt}=journal.reserveAttempt(intent);assert.deepEqual(attempt.details,{shiftId});
   ledger.close();ledger=new PlaywrightAttemptLedger(path.join(dir,'attempt.sqlite'));journal=make();
   assert.deepEqual(ledger.get('owner',attempt.attemptId).details,{shiftId});
@@ -36,9 +43,11 @@ for (const [restaurantId,shiftId,name] of [['curated-PAR-bofinger',19170,'Bofing
   if (restaurantId === 'curated-PAR-bouillon-julien') {
    for (const date of ['2030-12-24','2030-12-25','2030-12-31','2030-01-16']) assert.throws(()=>journal.recordAttempt({intent:{...intent,details:{...intent.details,date}},attempt,result}),/special_date_unsupported|attempt_binding/);
   }
+  if (restaurantId === 'curated-PAR-bouillon-republique') for (const time of ['15:00','11:45','12:30']) assert.throws(()=>journal.recordAttempt({intent:{...intent,details:{...intent.details,time}},attempt,result}),/lunch_time_unsupported|attempt_binding/);
   assert.equal(journal.recordAttempt({intent,attempt,result}).status,'confirmed');
   const snapshot={id:'session',restaurantId,details:intent.details,result};
   assert.equal(journal.verifySnapshot(snapshot,'owner').verification.shiftId,shiftId);
+  if (restaurantId === 'curated-PAR-bouillon-republique') for (const time of ['15:00','11:45','12:30']) assert.equal(journal.verifySnapshot({...snapshot,details:{...snapshot.details,time}},'owner'),null);
   if (restaurantId === 'curated-PAR-bouillon-julien') for (const date of ['2030-12-24','2030-12-25','2030-12-31','2030-01-16']) assert.equal(journal.verifySnapshot({...snapshot,details:{...snapshot.details,date}},'owner'),null);
   assert.equal(journal.verifySnapshot({...snapshot,details:{...intent.details,shiftId:shiftId+1}},'owner'),null);
   assert.equal(journal.verifySnapshot(snapshot,'other'),null);
