@@ -1,0 +1,61 @@
+{
+  "restaurantId": "curated-PAR-le-matignon",
+  "venueId": "353206",
+  "nativeName": "Restaurant Le Matignon",
+  "observedAt": "2026-10-18",
+  "sourceUrl": "https://bookings.zenchef.com/results?rid=353206&pid=1001&lang=fr&day=2026-10-23&pax=2",
+  "resultsSha256": "519fba7408ea2164852ff22e29c9a91cbd4d555713983157d6a5a058219e500f",
+  "status": "parked_manual_confirmation",
+  "query": {
+    "rid": "353206",
+    "pid": "1001",
+    "lang": "fr",
+    "day": "2026-10-23",
+    "pax": "2"
+  },
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "lunch": {
+    "id": 253138,
+    "name": "Déjeuner",
+    "confirmation": {
+      "is_auto": false,
+      "is_auto_until": null
+    },
+    "charge_param": {
+      "is_web_booking_askable": true,
+      "min_guests": 6,
+      "charge_per_guests": 50
+    },
+    "prepayment_param": null,
+    "is_offer_required": false,
+    "offer_required_from_pax": null,
+    "cancelation_param": {
+      "enduser_cancelable_before": 86400,
+      "enduser_cancelable_reference": "shift"
+    },
+    "candidateTimes": [
+      "12:00",
+      "12:30",
+      "13:00",
+      "13:30",
+      "14:00",
+      "14:30",
+      "15:00"
+    ]
+  },
+  "limits": {
+    "resultsGets": 1,
+    "formGets": 0,
+    "assetGets": 0,
+    "realTransactions": 0,
+    "receiptReads": 0
+  }
+}
