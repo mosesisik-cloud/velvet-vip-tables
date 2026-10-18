@@ -1,0 +1,357 @@
+{
+  "restaurantId": "132",
+  "name": "Bouillon Racine - Bar du Bouillon",
+  "address": "3 Rue Racine",
+  "city": "Paris",
+  "restaurantTimezone": "Europe/Paris",
+  "currency": "EUR",
+  "language": "fr",
+  "initializedSSR": true,
+  "isDisabled": 0,
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "dailyAvailabilities": {
+    "2026-10-23": {
+      "date": "2026-10-23",
+      "shifts": [
+        {
+          "id": 93989,
+          "marked_as_full": false,
+          "closed": false,
+          "is_voucher_codes_active": true,
+          "is_voucher_codes_limit_reached": false,
+          "bookable_from": null,
+          "bookable_to": "2026-10-23 11:30:00",
+          "shift_slots": [
+            {
+              "available_rooms": {
+                "1": [
+                  39950,
+                  39945
+                ],
+                "2": [
+                  39950,
+                  39945
+                ],
+                "3": [
+                  39945,
+                  39950
+                ],
+                "4": [
+                  39945,
+                  39950
+                ],
+                "5": [
+                  39945,
+                  39950
+                ],
+                "6": [
+                  39945,
+                  39950
+                ],
+                "7": [
+                  39945,
+                  39950
+                ],
+                "8": [
+                  39950,
+                  39945
+                ],
+                "9": [
+                  39950,
+                  39945
+                ],
+                "10": [
+                  39950,
+                  39945
+                ]
+              },
+              "capacity": {
+                "min": 1,
+                "max": 10,
+                "total_per_slot": 70,
+                "waitlist_min": 1,
+                "waitlist_max": 1,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 6,
+                  "4_pax_slots": 7,
+                  "6_pax_slots": 10,
+                  "8_pax_slots": 10,
+                  "10_pax_slots": 12,
+                  "12_pax_slots": 12
+                }
+              },
+              "name": "12:00",
+              "slot_name": "12:00",
+              "interval_in_minutes": 720,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 11:30:00",
+              "possible_guests": [
+                1,
+                2,
+                4,
+                5,
+                6,
+                7,
+                3,
+                8,
+                9,
+                10
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "available_rooms": {
+                "1": [
+                  39950,
+                  39945
+                ],
+                "2": [
+                  39950,
+                  39945
+                ],
+                "3": [
+                  39945,
+                  39950
+                ],
+                "4": [
+                  39945,
+                  39950
+                ],
+                "5": [
+                  39945,
+                  39950
+                ],
+                "6": [
+                  39945,
+                  39950
+                ],
+                "7": [
+                  39945,
+                  39950
+                ],
+                "8": [
+                  39950,
+                  39945
+                ],
+                "9": [
+                  39950,
+                  39945
+                ],
+                "10": [
+                  39950,
+                  39945
+                ]
+              },
+              "capacity": {
+                "min": 1,
+                "max": 10,
+                "total_per_slot": 50,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 6,
+                  "4_pax_slots": 7,
+                  "6_pax_slots": 10,
+                  "8_pax_slots": 10,
+                  "10_pax_slots": 12,
+                  "12_pax_slots": 12
+                }
+              },
+              "name": "12:15",
+              "slot_name": "12:15",
+              "interval_in_minutes": 735,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 11:30:00",
+              "possible_guests": [
+                1,
+                2,
+                4,
+                5,
+                6,
+                7,
+                3,
+                8,
+                9,
+                10
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "available_rooms": {
+                "1": [
+                  39950,
+                  39945
+                ],
+                "2": [
+                  39950,
+                  39945
+                ],
+                "3": [
+                  39945,
+                  39950
+                ],
+                "4": [
+                  39945,
+                  39950
+                ],
+                "5": [
+                  39945,
+                  39950
+                ],
+                "6": [
+                  39945,
+                  39950
+                ],
+                "7": [
+                  39945,
+                  39950
+                ],
+                "8": [
+                  39950,
+                  39945
+                ],
+                "9": [
+                  39950,
+                  39945
+                ],
+                "10": [
+                  39950,
+                  39945
+                ]
+              },
+              "capacity": {
+                "min": 1,
+                "max": 10,
+                "total_per_slot": 70,
+                "waitlist_min": 1,
+                "waitlist_max": 1,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 6,
+                  "4_pax_slots": 7,
+                  "6_pax_slots": 10,
+                  "8_pax_slots": 10,
+                  "10_pax_slots": 12,
+                  "12_pax_slots": 12
+                }
+              },
+              "name": "12:30",
+              "slot_name": "12:30",
+              "interval_in_minutes": 750,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 11:30:00",
+              "possible_guests": [
+                1,
+                2,
+                4,
+                5,
+                6,
+                7,
+                3,
+                8,
+                9,
+                10
+              ],
+              "waitlist_possible_guests": []
+            }
+          ],
+          "name": "Déjeuner 1 service",
+          "name_translations": {
+            "fr": "Déjeuner 1 service"
+          },
+          "comment": null,
+          "color": "a",
+          "is_standard": true,
+          "charge_param": null,
+          "prepayment_param": null,
+          "cancelation_param": {
+            "enduser_cancelable_before": 10800,
+            "enduser_cancelable_reference": "shift"
+          },
+          "confirmation": {
+            "is_auto": true,
+            "is_auto_until": null
+          },
+          "capacity": {
+            "min": 1,
+            "max": 10,
+            "total_per_slot": 50,
+            "waitlist_min": 0,
+            "waitlist_max": 0,
+            "waitlist_total_per_slot": 0,
+            "show_turn_times": false,
+            "buffer_slots_count": 0,
+            "turn_times": {
+              "2_pax_slots": 6,
+              "4_pax_slots": 7,
+              "6_pax_slots": 10,
+              "8_pax_slots": 10,
+              "10_pax_slots": 12,
+              "12_pax_slots": 12
+            }
+          },
+          "bookable_rooms": [
+            39945,
+            39950
+          ],
+          "open": "12:00",
+          "close": "12:30",
+          "total": 138,
+          "waitlist_total": 0,
+          "is_offer_required": false,
+          "offer_required_from_pax": null
+        }
+      ]
+    }
+  },
+  "restaurantComment": {
+    "en": "Dear clients, thanks for respecting your reservation time. </br>\n<font color=red>We will not keep your table beyond 20 minutes.</br></font>\n<b><u></br>For the bookings above 10 people, please contact us by mail at bouillonracine@orange.fr</b></u>\n</br></br>We look forward to welcoming you. The Bouillon Racine team.",
+    "fr": "Cher(e)s client(e)s, merci de respecter votre horaire de réservation. </br>\nAu delà de 15 minutes de retard, votre table ne sera malheureusement plus garantie.</br>\n<b><u></br>Pour les réservations de plus de 10 couverts, merci de nous envoyer un mail à l'adresse bouillonracine@orange.fr</b></u>\n</br></br>Au plaisir de vous recevoir. L'équipe du Bouillon Racine"
+  },
+  "mandatoryFields": {
+    "firstname": "required",
+    "lastname": "required",
+    "email": "required",
+    "phone_number": "required",
+    "country": "required",
+    "comment": "displayed",
+    "private_comment": "hidden",
+    "prescriber_id": "hidden",
+    "customersheet.customer_company_id": "hidden",
+    "civility": "required",
+    "url": "hidden",
+    "customersheet.vip": "hidden",
+    "waiter_id": "hidden",
+    "slots_count": "hidden",
+    "voucher_code": "displayed",
+    "custom_field.feuille-de-fonction": "hidden",
+    "custom_field.bon-de-commande": "hidden",
+    "custom_field.etage": "hidden",
+    "custom_field.rdc": "hidden"
+  },
+  "restaurantSpecificCommentsByDay": {
+    "2026-10-23": null
+  }
+}
