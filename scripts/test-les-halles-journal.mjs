@@ -15,7 +15,7 @@ for (const purpose of ['déjeuner/ dîner','grignotter','boire un verre ']) test
  let journal=make();
  const intent={provider:'Zenchef',restaurantId,owner:'owner',sessionId:'session',phase:'booking',reviewFingerprint:'a'.repeat(64),details:{date:'2030-01-15',time:'12:00',party:2,shiftId:275998,reservationVisitReason:purpose}};
  try {
-  for(const reservationVisitReason of [undefined,null,'','  ',42,8000,'8000','boire un verre',' déjeuner/ dîner','dîner','a\nb','a\u0000b'])assert.throws(()=>journal.reserveAttempt({...intent,details:{...intent.details,reservationVisitReason}}),/visit_reason_binding/);
+  for(const reservationVisitReason of ['Déjeuner / Diner','Grignoter','Boire une verre',undefined,null,'','  ',42,8000,'8000','boire un verre',' déjeuner/ dîner','dîner','a\nb','a\u0000b'])assert.throws(()=>journal.reserveAttempt({...intent,details:{...intent.details,reservationVisitReason}}),/visit_reason_binding/);
   assert.throws(()=>journal.reserveAttempt({...intent,restaurantId:'curated-PAR-indiana-cafe-tolbiac',details:{...intent.details,shiftId:243266}}),/visit_reason_binding/);
   const gate=journal.reserveAttempt(intent),attempt=gate.attempt;assert.equal(gate.sendAllowed,true);assert.deepEqual(attempt.details,{shiftId:275998,reservationVisitReason:purpose});
   const direct={owner:'owner',provider:'Zenchef',restaurantId,sessionId:'session',mode:'fixture',phase:'booking',idempotencyKey:attempt.idempotencyKey,reviewFingerprint:intent.reviewFingerprint,date:intent.details.date,time:'12:00',party:2,details:attempt.details};

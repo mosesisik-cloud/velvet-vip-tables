@@ -7439,6 +7439,24 @@
       "source": "VELVET curated + OpenStreetMap · official links where available",
       "restaurants": [
         {
+          "placeId": "curated-PAR-indiana-cafe-ternes",
+          "name": "Indiana Café Ternes",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "237 rue du Faubourg St-Honoré, 75008 Paris",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Indiana%20Caf%C3%A9%20Ternes%2C%20237%20rue%20du%20Faubourg%20St-Honor%C3%A9%2C%20Paris",
+          "website": "https://www.indianacafe.fr/restaurant/ternes",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.indianacafe.fr/restaurant/ternes",
+          "locationVerifiedAt": "2026-10-18",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=375456&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-18"
+        },
+        {
           "placeId": "curated-PAR-indiana-cafe-les-halles",
           "name": "Indiana Café Les Halles",
           "rating": null,
