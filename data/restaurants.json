@@ -7450,7 +7450,11 @@
           "source": "VELVET curated · official website",
           "curated": true,
           "locationSource": "https://www.au-moulinavent.com/informations-contact/",
-          "locationVerifiedAt": "2026-10-18"
+          "locationVerifiedAt": "2026-10-18",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=363128&lang=fr",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-18"
         },
         {
           "placeId": "curated-PAR-le-petit-retro",

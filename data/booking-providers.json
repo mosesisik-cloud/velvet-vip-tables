@@ -2257,5 +2257,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-au-moulin-a-vent": {
+    "name": "Au Moulin à Vent",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=363128&lang=fr",
+    "source": "https://www.au-moulinavent.com/informations-contact/",
+    "venueKey": "bookings.zenchef.com/results?rid=363128",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
