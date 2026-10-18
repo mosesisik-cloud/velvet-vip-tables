@@ -1,0 +1,208 @@
+{
+  "restaurantId": "357104",
+  "name": "LE Drugstore",
+  "address": "133 avenue des Champs-Élysées",
+  "city": "PARIS",
+  "query": {
+    "rid": "357104",
+    "lang": "fr",
+    "day": "2026-10-23",
+    "pax": "2"
+  },
+  "restaurantTimezone": "Europe/Paris",
+  "currency": "EUR",
+  "language": "fr",
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "restaurantComment": {
+    "en": "<div style=\"font-family:verdana;\">Hello,<br /><br />\nWe are delighted to welcome you to our restaurant. <hr />\nFor all reservations of more than 10 people, please contact 01 44 43 77 64<br/><br/>\nWe reserve the right to cancel the reservation in the event of an unannounced delay of more than 15 minutes.<br/> <br/> \nDress code required. Thank you <br/> <br/> \nLE Drugstore</div>",
+    "es": "<div style=\"font-family:verdana;\"> ¡Bienvenido!<br /><br />\nEstamos encantados de recibirlos en nuestro restaurante.<hr />\nPara todas las reservas de más de 10 personas, póngase en contacto con 01 44 43 77 64<br/><br/>\nNos reservamos el derecho de cancelar la reserva en caso de retraso no anunciado de más de 15 minutos. <br/> <br/>\nEl restaurante requiere un código formal de vestimenta.Gracias.",
+    "fr": "Bonjour,<br>\n<strong>Pour toute réservation de plus de 10 personnes, merci d'envoyer un mail à reception.restaurant@publicisdrugstore.com</strong><br><br>\n\n  Nous nous réservons le droit d'annuler la réservation en cas de retard non annoncé de plus de 15 minutes.<br><br>\n\n  Tenue correcte exigée. Merci.",
+    "it": "<div style=\"font-family:verdana;\"><br /><br />\nSiamo lieti di darvi il benvenuto nel nostro ristorante.<hr />\nPer tutte le prenotazioni di più di 10 persone, si prega di contattare 01 44 43 77 64<br/><br/>\nCi riserviamo il diritto di annullare la prenotazione in caso di ritardo non annunciato superiore a 15 minuti. <br/> <br/>\nÈ richiesto un abbigliamento corretto. Grazie. <br/> <br/>\nLE Drugstore"
+  },
+  "mandatoryFields": {
+    "firstname": "required",
+    "lastname": "required",
+    "email": "required",
+    "phone_number": "required",
+    "country": "required",
+    "comment": "displayed",
+    "private_comment": "hidden",
+    "prescriber_id": "hidden",
+    "customersheet.customer_company_id": "hidden",
+    "civility": "required",
+    "url": "hidden",
+    "customersheet.vip": "hidden",
+    "waiter_id": "hidden",
+    "slots_count": "hidden",
+    "voucher_code": "hidden",
+    "custom_field.je-mengage-a-ce-que-le-montant-de-lempreinte-bancaire-me-sera-preleve-au-dela-de-30-minutes-de-retard": "hidden"
+  },
+  "customFields": [
+    {
+      "id": 4202,
+      "restaurant_id": 357104,
+      "title": "Je m'engage à ce que le montant de l'empreinte bancaire me sera prélevé au delà de 30 minutes de retard",
+      "step": 3,
+      "type": "checkbox",
+      "enabled": false,
+      "created_at": "2024-11-12T15:06:08.000000Z",
+      "updated_at": "2026-02-16T15:48:58.000000Z",
+      "slug": "je-mengage-a-ce-que-le-montant-de-lempreinte-bancaire-me-sera-preleve-au-dela-de-30-minutes-de-retard",
+      "options": [],
+      "displayType": "checkbox",
+      "required": false
+    }
+  ],
+  "customFieldsV2": [],
+  "source": {
+    "url": "https://bookings.zenchef.com/results?rid=357104&lang=fr&day=2026-10-23&pax=2",
+    "status": 200,
+    "sha256": "ba0b7689df9fae30156e2c6c1fac37fc0abdf5143a46a1db20f41a5f58a4ecda"
+  },
+  "shifts": [
+    {
+      "id": 69279,
+      "name": "Petit déjeuner semaine",
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": 1
+      },
+      "charge_param": null,
+      "prepayment_param": null,
+      "is_offer_required": false,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 10800,
+        "enduser_cancelable_reference": "shift"
+      },
+      "timesForTwo": [
+        "08:00",
+        "08:15",
+        "08:30",
+        "08:45",
+        "09:00",
+        "09:15",
+        "09:30",
+        "09:45",
+        "10:00",
+        "10:15",
+        "10:30",
+        "10:45",
+        "11:00"
+      ]
+    },
+    {
+      "id": 83459,
+      "name": "Déjeuner",
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": 1
+      },
+      "charge_param": null,
+      "prepayment_param": null,
+      "is_offer_required": false,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 10800,
+        "enduser_cancelable_reference": "shift"
+      },
+      "timesForTwo": [
+        "12:00",
+        "12:15",
+        "12:30",
+        "12:45",
+        "13:00",
+        "13:15",
+        "13:30",
+        "13:45",
+        "14:00",
+        "14:15",
+        "14:30"
+      ]
+    },
+    {
+      "id": 75592,
+      "name": "Tea Time",
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": 1
+      },
+      "charge_param": null,
+      "prepayment_param": null,
+      "is_offer_required": false,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 10800,
+        "enduser_cancelable_reference": "shift"
+      },
+      "timesForTwo": [
+        "15:00",
+        "15:15",
+        "15:30",
+        "15:45",
+        "16:00",
+        "16:15",
+        "16:30",
+        "16:45",
+        "17:00",
+        "17:15",
+        "17:30",
+        "17:45",
+        "18:00",
+        "18:15",
+        "18:30"
+      ]
+    },
+    {
+      "id": 69277,
+      "name": "Diner week end",
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": 1
+      },
+      "charge_param": {
+        "is_web_booking_askable": true,
+        "min_guests": 4,
+        "charge_per_guests": 20
+      },
+      "prepayment_param": null,
+      "is_offer_required": false,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 10800,
+        "enduser_cancelable_reference": "shift"
+      },
+      "timesForTwo": [
+        "19:00",
+        "19:15",
+        "19:30",
+        "19:45",
+        "20:00",
+        "20:15",
+        "20:30",
+        "20:45",
+        "21:00",
+        "21:15",
+        "21:30",
+        "21:45",
+        "22:00",
+        "22:15",
+        "22:30",
+        "22:45",
+        "23:00",
+        "23:15",
+        "23:30",
+        "23:45",
+        "00:00+1"
+      ]
+    }
+  ]
+}
