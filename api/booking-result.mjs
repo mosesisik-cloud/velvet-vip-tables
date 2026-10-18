@@ -109,7 +109,7 @@ export function publicBookingResult(result) {
     for (const k of ['provider', 'restaurantId', 'sessionId', 'attemptId', 'idempotencyKey', 'detailsDigest', 'policySource']) clean.verification[k] = proof[k];
     if (proof.provider === 'TableCheck' && proof.restaurantId === 'osm-BAL-sazon'
       && proof.orderEvidence === 'own_booking_raw_readback') clean.verification.orderEvidence=proof.orderEvidence;
-    const lunchShift=proof.restaurantId === 'curated-PAR-bofinger' ? 19170 : proof.restaurantId === 'curated-PAR-la-coupole' ? 20148 : proof.restaurantId === 'curated-PAR-terminus-nord' ? 19380 : proof.restaurantId === 'curated-PAR-le-procope' ? 18190 : null;
+    const lunchShift=proof.restaurantId === 'curated-PAR-bofinger' ? 19170 : proof.restaurantId === 'curated-PAR-la-coupole' ? 20148 : proof.restaurantId === 'curated-PAR-terminus-nord' ? 19380 : proof.restaurantId === 'curated-PAR-le-procope' ? 18190 : proof.restaurantId === 'curated-PAR-la-lorraine' ? 16674 : null;
     if (proof.provider === 'Zenchef' && lunchShift
       && proof.shiftId === lunchShift && proof.bookingEvidence === 'own_booking_readback') {
       clean.verification.shiftId=lunchShift; clean.verification.bookingEvidence=proof.bookingEvidence;

@@ -1188,6 +1188,19 @@
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
   },
+  "curated-PAR-la-lorraine": {
+    "name": "La Lorraine",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=478&fullscreen&lang=fr&withCloseButton=1",
+    "source": "https://www.brasserielalorraine.com/",
+    "venueKey": "bookings.zenchef.com/results?rid=478",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
+  },
   "curated-PAR-le-procope": {
     "name": "Le Procope",
     "city": "Paris",
