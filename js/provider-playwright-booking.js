@@ -5,7 +5,7 @@ export function mountProviderPlaywrightBooking(container, api, {
 } = {}) {
   if (!provider || !restaurantId || !endpoint.startsWith('/')) throw new Error('booking_config');
   const isZenchef = provider.toLowerCase() === 'zenchef';
-  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : restaurantId === 'curated-PAR-brasserie-rosie-lou' ? 118503 : restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 298043 : restaurantId === 'curated-PAR-le-petit-sommelier' ? 37613 : restaurantId === 'curated-PAR-chez-savy' ? 68279 : null;
+  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : restaurantId === 'curated-PAR-brasserie-rosie-lou' ? 118503 : restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 298043 : restaurantId === 'curated-PAR-le-petit-sommelier' ? 37613 : restaurantId === 'curated-PAR-chez-savy' ? 68279 : restaurantId === 'curated-PAR-chez-rene' ? 68277 : null;
   const dateInScope = date => !['curated-PAR-bouillon-julien','curated-PAR-brasserie-rosie-jolie'].includes(restaurantId) || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && (restaurantId === 'curated-PAR-bouillon-julien' ? !['12-24','12-25','12-31'].includes(date.slice(5)) : !(date.slice(5) >= '08-03' && date.slice(5) <= '08-23')));
   const timeInScope = time => restaurantId !== 'curated-PAR-bouillon-republique' || ['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(time);
   const key = `velvet:provider:${encodeURIComponent(provider)}:${encodeURIComponent(restaurantId)}`;
@@ -117,6 +117,11 @@ export function mountProviderPlaywrightBooking(container, api, {
   if (restaurantId === 'curated-PAR-chez-savy') {
     const scope=document.createElement('p'); scope.className='booking-scope';
     scope.textContent='Bokning i Velvet gäller lunchserveringen Midi på Chez Savy, 23 rue Bayard i Paris, för exakt två gäster, i mån av lediga bord. Kvällsserveringen Soir, grupper, evenemang och den privata salongen ingår inte. Ingen viss placering garanteras. Kontrollera restaurangens aktuella villkor före bokning.';
+    container.querySelector('header').after(scope);
+  }
+  if (restaurantId === 'curated-PAR-chez-rene') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller lunchserveringen Midi på Chez René, 14 boulevard Saint-Germain i Paris, för exakt två gäster, i mån av lediga bord. Kvällsserveringen Soir, grupper, evenemang och den privata salongen ingår inte. Ingen viss placering garanteras. Kontrollera restaurangens aktuella villkor före bokning.';
     container.querySelector('header').after(scope);
   }
   const write = (id, phase, idempotencyKey, reviewFingerprint) => {
