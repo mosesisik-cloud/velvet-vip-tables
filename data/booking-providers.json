@@ -1188,6 +1188,19 @@
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
   },
+  "curated-PAR-le-procope": {
+    "name": "Le Procope",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=250682&fullscreen&lang=fr",
+    "source": "https://www.procope.com/o/reserver/?no_redirect=true",
+    "venueKey": "bookings.zenchef.com/results?rid=250682",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
+  },
   "curated-PAR-terminus-nord": {
     "name": "Terminus Nord",
     "city": "Paris",

@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-228-terminus-nord-lunch";
+const VERSION = "v4-real-229-le-procope-lunch";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
