@@ -1049,3 +1049,26 @@ test('Petit Pontoise pins partner context, own automatic threshold and zero canc
   for(const key of ['fullscreen','room_id'])assert.equal(url.searchParams.has(key),false);
   assert.throws(()=>zenchefSearchUrl({...query,party:3},ZENCHEF_PETITPONTOISE),/search_fields/);
 });
+
+test('Explicit partner venues recheck fresh query pid before review and submission', async () => {
+  for(const [venue,source] of [[ZENCHEF_PETITPONTOISE,pontoiseSource],[ZENCHEF_PETITSOMMELIER,sommelierSource]]) {
+    const form=structuredClone(source),searchQuery={date:'2026-10-23',party:2},formSelection={...searchQuery,time:'12:00'};
+    form.wish.slot='12:00';
+    const data={query:{pid:'1001'},props:{initialState:{appStoreState:form}}},text='Synthetic EULA';
+    const shift=form.dailyAvailabilities[searchQuery.date].shifts.find(s=>s.id===venue.shiftId);
+    const session={venue,searchQuery,formSelection,noCardAllowed:true,
+      terms:{version:crypto.createHash('sha256').update(JSON.stringify([text,form.restaurantComment||null,shift])).digest('hex')},
+      page:{url:()=>zenchefFormUrl(formSelection,venue),locator:selector=>selector==='script#__NEXT_DATA__'
+        ?{textContent:async()=>JSON.stringify(data)}:{innerText:async()=>text}}};
+    const verify=()=>ZenchefPlaywright.prototype.verifyNativeRoom.call({},session);
+    await verify();
+    for(const pid of [undefined,null,1001,'other']) {
+      data.query.pid=pid;
+      await assert.rejects(verify(),error=>error.message==='stale_review'&&error.status===409);
+    }
+    delete data.query;
+    await assert.rejects(verify(),/stale_review/);
+    data.query={pid:'1001'};
+    await verify();
+  }
+});

@@ -892,7 +892,10 @@ export class ZenchefPlaywright {
     }
   }
   async verifyNativeRoom(s) {
-    const form = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent())?.props?.initialState?.appStoreState;
+    const data = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent());
+    const form = data?.props?.initialState?.appStoreState;
+    if ([ZENCHEF_PETITSOMMELIER, ZENCHEF_PETITPONTOISE].includes(s.venue) && data?.query?.pid !== '1001')
+      throw new ZenchefError('stale_review', 409);
     // Form requirements can change after selection or review. Recheck before
     // approval and the durable send grant, not only when opening the form.
     const supported = ['firstname', 'lastname', 'email', 'phone_number', 'country', 'civility'];
