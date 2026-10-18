@@ -24,10 +24,11 @@ const laCoupole=process.argv.includes('--la-coupole') || process.env.VELVET_TEST
 const terminusNord=process.argv.includes('--terminus-nord') || process.env.VELVET_TEST_PROVIDER==='TerminusNord';
 const procope=process.argv.includes('--procope') || process.env.VELVET_TEST_PROVIDER==='Procope';
 const laLorraine=process.argv.includes('--la-lorraine') || process.env.VELVET_TEST_PROVIDER==='LaLorraine';
-const cardLunch=terminusNord || laLorraine;
-const cardThreshold=laLorraine?8:12;
-const namedLunch=bofinger || laCoupole || terminusNord || procope || laLorraine;
-const lunchSlug=laLorraine?'la-lorraine':procope?'procope':terminusNord?'terminus-nord':laCoupole?'la-coupole':'bofinger';
+const piedDeCochon=process.argv.includes('--pied-de-cochon') || process.env.VELVET_TEST_PROVIDER==='PiedDeCochon';
+const cardLunch=terminusNord || laLorraine || piedDeCochon;
+const cardThreshold=piedDeCochon?5:laLorraine?8:12;
+const namedLunch=bofinger || laCoupole || terminusNord || procope || laLorraine || piedDeCochon;
+const lunchSlug=piedDeCochon?'pied-de-cochon':laLorraine?'la-lorraine':procope?'procope':terminusNord?'terminus-nord':laCoupole?'la-coupole':'bofinger';
 const lunchTail=namedLunch && process.argv.includes('--'+lunchSlug+'-tail');
 const lunchSource=namedLunch?JSON.parse(fs.readFileSync(path.join(root,'scripts/fixtures/'+lunchSlug+'-source.json'),'utf8')):null;
 const lunchCases=[...(procope?['form-auto-missing','form-auto-type','form-auto-drift']:[]),...(cardLunch?['form-card-threshold-string','form-card-threshold-null','form-card-threshold-missing','form-card-threshold-drift','form-card-flag-type','form-auto-type']:[]),'notice-changed','form-card','form-manual','form-prepayment','form-shift','form-cancellation','missing-saved-time','wrong-saved-party','pending-saved','unexpected-offer','missing-offers','saved-room','mismatch-readback-id','mismatch-readback-uuid','mismatch-readback-date','readback-error','readback-http-error'];
@@ -37,9 +38,9 @@ const chosenRoom = pirouette ? 52521 : 52372;
 const otherRoom = pirouette ? 65674 : 51183;
 const alternateRoom = pirouette ? 65674 : 52373;
 const chosenRoomName = pirouette ? 'Salle principale' : 'Mazagran salle';
-const zenchefShift = laLorraine ? 16674 : procope ? 18190 : terminusNord ? 19380 : laCoupole ? 20148 : bofinger ? 19170 : dekas ? 494748 : pirouette ? 189024 : pesquiere ? 136503 : 545372;
-const zenchefRid = laLorraine ? '478' : procope ? '250682' : terminusNord ? '82241' : laCoupole ? '83871' : bofinger ? '84941' : dekas ? '386643' : pirouette ? '363313' : pesquiere ? '362908' : '388090';
-const zenchefName = laLorraine ? 'La Lorraine' : procope ? 'Le Procope' : terminusNord ? 'Terminus Nord' : laCoupole ? 'La Coupole' : bofinger ? 'Bofinger' : dekas ? 'DeKas' : pirouette ? 'Pirouette' : pesquiere ? 'Pesquiere' : 'FishCorner';
+const zenchefShift = piedDeCochon ? 29 : laLorraine ? 16674 : procope ? 18190 : terminusNord ? 19380 : laCoupole ? 20148 : bofinger ? 19170 : dekas ? 494748 : pirouette ? 189024 : pesquiere ? 136503 : 545372;
+const zenchefRid = piedDeCochon ? '247' : laLorraine ? '478' : procope ? '250682' : terminusNord ? '82241' : laCoupole ? '83871' : bofinger ? '84941' : dekas ? '386643' : pirouette ? '363313' : pesquiere ? '362908' : '388090';
+const zenchefName = piedDeCochon ? 'Au Pied de Cochon' : laLorraine ? 'La Lorraine' : procope ? 'Le Procope' : terminusNord ? 'Terminus Nord' : laCoupole ? 'La Coupole' : bofinger ? 'Bofinger' : dekas ? 'DeKas' : pirouette ? 'Pirouette' : pesquiere ? 'Pesquiere' : 'FishCorner';
 const rooms = pirouette ? [{id:52521,name:'Salle principale'},{id:65674,name:'Terasse'}] : [{id:51183,name:'La Pesquiere'},{id:52372,name:'Mazagran salle'},{id:52373,name:'Mazagran terrasse'}];
 const noema = process.argv.includes('--noema') || process.env.VELVET_TEST_PROVIDER === 'Noema';
 const kvarnen = process.argv.includes('--kvarnen') || process.env.VELVET_TEST_PROVIDER === 'Kvarnen';
@@ -105,7 +106,7 @@ const italiano = process.argv.includes('--italiano') || process.env.VELVET_TEST_
 const nativeGuest = pelikan || guestLunch || italiano || agnes;
 const guestChoice = ciccios || nativeGuest;
 const contactFinal = teatergrillen || luzette || riche || sturehof || gondolen || klotet;
-assert.ok([laLorraine,procope,terminusNord,laCoupole,bofinger,kvarnen,hantverket,pelikan,tennstopet,teatergrillen,luzette,bobonne,agnes,klotet,gondolen,sazon,fishcorner,pesquiere,pirouette,dekas,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar,italiano,copine].filter(Boolean).length <= 1, 'Choose one named provider scenario');
+assert.ok([piedDeCochon,laLorraine,procope,terminusNord,laCoupole,bofinger,kvarnen,hantverket,pelikan,tennstopet,teatergrillen,luzette,bobonne,agnes,klotet,gondolen,sazon,fishcorner,pesquiere,pirouette,dekas,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar,italiano,copine].filter(Boolean).length <= 1, 'Choose one named provider scenario');
 // Noema/Ciccios saved-source evidence: issue129 comment6241312516, native phoneField/Next copy.
 const nativePhone = contactFinal || nativeGuest || noema || ciccios;
 const receiptMode = noema || guestChoice || contactFinal;
@@ -114,7 +115,7 @@ const receiptCode = kvarnen ? 'synthetic-kvarnen-only' : hantverket ? 'synthetic
 const mealId = kvarnen ? 91 : hantverket ? 7097 : pelikan ? 1540 : tennstopet ? 54277 : teatergrillen ? 6491 : luzette ? 7253 : bobonne ? 31 : agnes ? 1628 : klotet ? 63872 : gondolen ? 33008 : copine ? 4790 : italiano ? 22890 : dagmar ? 63588 : boqueria ? 22 : vau ? 22476 : astrid ? 55508 : kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
 const scopeInvalid = [{mealid:999999999},{amount:noema ? 9 : ciccios ? 8 : 3}];
 const mealType = tennstopet ? 0 : klotet ? 0 : dagmar ? 0 : noema || guestLunch || contactFinal ? 2 : 3;
-const restaurantId = laLorraine ? 'curated-PAR-la-lorraine' : procope ? 'curated-PAR-le-procope' : terminusNord ? 'curated-PAR-terminus-nord' : laCoupole ? 'curated-PAR-la-coupole' : bofinger ? 'curated-PAR-bofinger' : kvarnen ? 'curated-STO-kvarnen' : hantverket ? 'curated-STO-hantverket' : pelikan ? 'curated-STO-pelikan' : tennstopet ? 'curated-STO-tennstopet' : teatergrillen ? 'curated-STO-teatergrillen' : luzette ? 'curated-STO-luzette' : bobonne ? 'curated-STO-brasserie-bobonne' : agnes ? 'curated-STO-agnes' : klotet ? 'curated-STO-cafe-klotet' : gondolen ? 'curated-STO-gondolen' : sazon ? 'osm-BAL-sazon' : copine ? 'curated-STO-copine' : italiano ? 'curated-STO-italiano' : dekas ? 'curated-AMS-de-kas' : dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const restaurantId = piedDeCochon ? 'curated-PAR-au-pied-de-cochon' : laLorraine ? 'curated-PAR-la-lorraine' : procope ? 'curated-PAR-le-procope' : terminusNord ? 'curated-PAR-terminus-nord' : laCoupole ? 'curated-PAR-la-coupole' : bofinger ? 'curated-PAR-bofinger' : kvarnen ? 'curated-STO-kvarnen' : hantverket ? 'curated-STO-hantverket' : pelikan ? 'curated-STO-pelikan' : tennstopet ? 'curated-STO-tennstopet' : teatergrillen ? 'curated-STO-teatergrillen' : luzette ? 'curated-STO-luzette' : bobonne ? 'curated-STO-brasserie-bobonne' : agnes ? 'curated-STO-agnes' : klotet ? 'curated-STO-cafe-klotet' : gondolen ? 'curated-STO-gondolen' : sazon ? 'osm-BAL-sazon' : copine ? 'curated-STO-copine' : italiano ? 'curated-STO-italiano' : dekas ? 'curated-AMS-de-kas' : dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
 const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[receiptMode ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 const date = tennstopet ? '2026-10-23' : klotet ? '2026-10-23' : '2030-01-15';
@@ -707,7 +708,7 @@ async function main() {
       VELVET_PELIKAN_RECEIPT: pelikan ? 'enabled' : 'disabled',
       VELVET_TENNSTOPET_RECEIPT: tennstopet && tennstopetEnabled ? 'enabled' : 'disabled',
       VELVET_TEATERGRILLEN_RECEIPT: teatergrillen ? 'enabled' : 'disabled',
-      VELVET_TEST_PROVIDER: laLorraine ? 'LaLorraine' : procope ? 'Procope' : terminusNord ? 'TerminusNord' : laCoupole ? 'LaCoupole' : bofinger ? 'Bofinger' : kvarnen ? 'Kvarnen' : hantverket ? 'Hantverket' : pelikan ? 'Pelikan' : tennstopet ? 'Tennstopet' : teatergrillen ? 'Teatergrillen' : luzette ? 'Luzette' : bobonne ? 'Bobonne' : agnes ? 'Agnes' : klotet ? 'Klotet' : gondolen ? 'Gondolen' : sazon ? 'Sazon' : copine ? 'Copine' : italiano ? 'Italiano' : dekas ? 'DeKas' : dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
+      VELVET_TEST_PROVIDER: piedDeCochon ? 'PiedDeCochon' : laLorraine ? 'LaLorraine' : procope ? 'Procope' : terminusNord ? 'TerminusNord' : laCoupole ? 'LaCoupole' : bofinger ? 'Bofinger' : kvarnen ? 'Kvarnen' : hantverket ? 'Hantverket' : pelikan ? 'Pelikan' : tennstopet ? 'Tennstopet' : teatergrillen ? 'Teatergrillen' : luzette ? 'Luzette' : bobonne ? 'Bobonne' : agnes ? 'Agnes' : klotet ? 'Klotet' : gondolen ? 'Gondolen' : sazon ? 'Sazon' : copine ? 'Copine' : italiano ? 'Italiano' : dekas ? 'DeKas' : dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
       VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_CICCIOS_RECEIPT: ciccios ? 'enabled' : 'disabled',
       VELVET_RICHE_RECEIPT: riche ? 'enabled' : 'disabled',
@@ -724,6 +725,7 @@ async function main() {
       VELVET_ZENCHEF_FISHCORNER: zenchef ? 'live' : 'disabled',
       VELVET_ZENCHEF_PESQUIERE: roomVenue ? 'live' : 'disabled',
       VELVET_ZENCHEF_PIROUETTE: pirouette ? 'live' : 'disabled',
+      VELVET_ZENCHEF_PIEDDECOCHON: piedDeCochon ? 'live' : 'disabled',
       VELVET_ZENCHEF_LALORRAINE: laLorraine ? 'live' : 'disabled',
       VELVET_ZENCHEF_PROCOPE: procope ? 'live' : 'disabled',
       VELVET_ZENCHEF_TERMINUSNORD: terminusNord ? 'live' : 'disabled',
@@ -773,6 +775,7 @@ async function main() {
         for(const text of [zenchefName+' i Paris','exakt tv\u00e5',procope?'f\u00f6rsta lunchsittningen (D\u00e9jeuner 1er service)':'15 minuters','Ingen viss placering'])assert.ok((await scope.innerText()).includes(text),text);
         assert.ok(await scope.evaluate(el=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}));
         if(procope)assert.ok(!(await scope.innerText()).includes('15 min'));
+        if(piedDeCochon)assert.ok((await scope.innerText()).includes('utan reservation'));
         await scope.screenshot({path:path.join(root,'..',lunchSlug+'-scope-'+width+'.png')});}
       if(klotet){assert.equal((await page.locator('.restaurant-detail h1').innerText()).trim(),receiptName);const scope=await page.locator('#bokabord-mirror').innerText();for(const text of ['Fredagslunch','1\u20132','11 september','18 december 2026','12.00\u201314.59','Stockholmstid'])assert.ok(scope.includes(text),'Visible scope '+text);}
       if(klotet){const scope=page.locator('.booking-scope');await scope.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));
@@ -1203,6 +1206,7 @@ async function main() {
           for(const text of procope?['15h30','17h30','sans r\u00e9servation','plus de 9 personnes']:['15 min'])assert.ok(terms.includes(text),text);
           if(procope){assert.ok(!terms.includes('15 min'));assert.ok(!notice.includes('15 min'));}
           if(laLorraine){assert.ok(terms.includes('SERVICE VOITURIER'));assert.ok(!terms.includes('15h30'));assert.ok(!terms.includes('sans r\u00e9servation'));}
+          if(piedDeCochon){assert.ok(terms.includes('SANS r\u00e9servation'));assert.ok(!terms.includes('SERVICE VOITURIER'));assert.ok(!terms.includes('15h30'));}
           assert.ok(!terms.includes('<br>'));assert.equal(await panel(page).locator('[data-terms-text]').locator('br,img,iframe').count(),0);
           assert.equal(await panel(page).locator('[data-terms]').isChecked(),false);
           await panel(page).screenshot({path:path.join(root,'..',lunchSlug+'-review-'+page.viewportSize().width+'.png')});
