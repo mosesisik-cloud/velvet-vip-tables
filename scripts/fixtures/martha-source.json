@@ -1,0 +1,227 @@
+{
+  "restaurantId": "364490",
+  "name": "Martha Pizze Amore",
+  "address": "48 Rue Richard Lenoir,",
+  "city": "Paris",
+  "query": {
+    "rid": "364490",
+    "pid": "1001",
+    "lang": "fr",
+    "day": "2026-10-23",
+    "pax": "2"
+  },
+  "partner_id": "1001",
+  "restaurantTimezone": "Europe/Paris",
+  "currency": "EUR",
+  "language": "fr",
+  "initializedSSR": true,
+  "isDisabled": false,
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "dailyAvailabilities": {
+    "2026-10-23": {
+      "date": "2026-10-23",
+      "shifts": [
+        {
+          "id": 159369,
+          "marked_as_full": false,
+          "closed": false,
+          "is_voucher_codes_active": true,
+          "is_voucher_codes_limit_reached": false,
+          "bookable_from": null,
+          "bookable_to": "2026-10-23 11:59:00",
+          "shift_slots": [
+            {
+              "available_rooms": {
+                "1": [
+                  57498
+                ],
+                "2": [
+                  57498
+                ],
+                "3": [
+                  57498
+                ],
+                "4": [
+                  57498
+                ],
+                "5": [
+                  57498
+                ],
+                "6": [
+                  57498
+                ]
+              },
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 17,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 6,
+                  "4_pax_slots": 6,
+                  "6_pax_slots": 6,
+                  "8_pax_slots": 6,
+                  "10_pax_slots": 6,
+                  "12_pax_slots": 6
+                }
+              },
+              "name": "12:00",
+              "slot_name": "12:00",
+              "interval_in_minutes": 720,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 11:59:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "available_rooms": {
+                "1": [
+                  57498
+                ],
+                "2": [
+                  57498
+                ],
+                "3": [
+                  57498
+                ],
+                "4": [
+                  57498
+                ],
+                "5": [
+                  57498
+                ],
+                "6": [
+                  57498
+                ]
+              },
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 17,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 6,
+                  "4_pax_slots": 6,
+                  "6_pax_slots": 6,
+                  "8_pax_slots": 6,
+                  "10_pax_slots": 6,
+                  "12_pax_slots": 6
+                }
+              },
+              "name": "12:30",
+              "slot_name": "12:30",
+              "interval_in_minutes": 750,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 11:59:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+              ],
+              "waitlist_possible_guests": []
+            }
+          ],
+          "name": "MIDI 1er service",
+          "name_translations": {
+            "fr": "MIDI 1er service"
+          },
+          "comment": null,
+          "color": "a",
+          "is_standard": true,
+          "charge_param": null,
+          "prepayment_param": null,
+          "cancelation_param": {
+            "enduser_cancelable_before": 10800,
+            "enduser_cancelable_reference": "shift"
+          },
+          "confirmation": {
+            "is_auto": false,
+            "is_auto_until": 6
+          },
+          "capacity": {
+            "min": 1,
+            "max": 8,
+            "total_per_slot": 17,
+            "waitlist_min": 0,
+            "waitlist_max": 0,
+            "waitlist_total_per_slot": 0,
+            "show_turn_times": false,
+            "buffer_slots_count": 0,
+            "turn_times": {
+              "2_pax_slots": 6,
+              "4_pax_slots": 6,
+              "6_pax_slots": 6,
+              "8_pax_slots": 6,
+              "10_pax_slots": 6,
+              "12_pax_slots": 6
+            }
+          },
+          "bookable_rooms": [
+            57498
+          ],
+          "open": "12:00",
+          "close": "12:30",
+          "total": 17,
+          "waitlist_total": 0,
+          "is_offer_required": false,
+          "offer_required_from_pax": null
+        }
+      ]
+    }
+  },
+  "restaurantComment": {
+    "fr": "Nous acceptons les réservations en ligne pour 8 personnes maximum. Si vous souhaitez réserver pour plus de 8 personnes, veuillez nous contacter par mail ou par téléphone afin de réserver. Nous vous remercions par avance."
+  },
+  "mandatoryFields": {
+    "firstname": "required",
+    "lastname": "required",
+    "email": "required",
+    "phone_number": "required",
+    "country": "required",
+    "comment": "displayed",
+    "private_comment": "hidden",
+    "prescriber_id": "hidden",
+    "customersheet.customer_company_id": "hidden",
+    "civility": "required",
+    "url": "hidden",
+    "customersheet.vip": "hidden",
+    "waiter_id": "hidden",
+    "slots_count": "hidden",
+    "voucher_code": "displayed"
+  },
+  "customFields": [],
+  "customFieldsV2": [],
+  "restaurantSpecificCommentsByDay": {
+    "2026-10-23": null
+  }
+}
