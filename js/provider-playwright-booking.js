@@ -365,6 +365,7 @@ export function mountProviderPlaywrightBooking(container, api, {
       const review = finalReview().details;
       renderOffer(el('final-offer'),review.offer);
       const guest = Object.entries(review.guest || {}).filter(([name,value]) => Object.hasOwn(aliases,name) && typeof value === 'string').map(([name,value]) => `${aliases[name]}: ${value}`).join(', ');
+      if (isZenchef && restaurantId === 'curated-PAR-indiana-cafe-montparnasse') el('final-details').style.whiteSpace = 'pre-wrap';
       el('final-details').textContent = `Slutför bokning: ${restaurantName}, ${review.date} kl. ${review.time}, ${review.party} gäster. ${review.roomName ? `Rum: ${review.roomName}. ` : ''}${guest}`;
       el('seating-notice').textContent = review.seatingNotice ? `Sittning: ${review.seatingNotice}` : '';
       el('seating-notice').hidden = !review.seatingNotice;
