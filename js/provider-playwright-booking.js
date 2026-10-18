@@ -5,8 +5,8 @@ export function mountProviderPlaywrightBooking(container, api, {
 } = {}) {
   if (!provider || !restaurantId || !endpoint.startsWith('/')) throw new Error('booking_config');
   const isZenchef = provider.toLowerCase() === 'zenchef';
-  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : restaurantId === 'curated-PAR-brasserie-rosie-lou' ? 118503 : null;
-  const dateInScope = date => restaurantId !== 'curated-PAR-bouillon-julien' || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && !['12-24','12-25','12-31'].includes(date.slice(5)));
+  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : restaurantId === 'curated-PAR-brasserie-rosie-lou' ? 118503 : restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 298043 : null;
+  const dateInScope = date => !['curated-PAR-bouillon-julien','curated-PAR-brasserie-rosie-jolie'].includes(restaurantId) || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && (restaurantId === 'curated-PAR-bouillon-julien' ? !['12-24','12-25','12-31'].includes(date.slice(5)) : !(date.slice(5) >= '08-03' && date.slice(5) <= '08-23')));
   const timeInScope = time => restaurantId !== 'curated-PAR-bouillon-republique' || ['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(time);
   const key = `velvet:provider:${encodeURIComponent(provider)}:${encodeURIComponent(restaurantId)}`;
   const aliases = { firstname:'Förnamn', firstName:'Förnamn', lastname:'Efternamn', lastName:'Efternamn', email:'E-post', emailAddress:'E-post', phone:'Telefon', phoneNumber:'Telefon', comment:'Önskemål' };
@@ -102,6 +102,11 @@ export function mountProviderPlaywrightBooking(container, api, {
   if (restaurantId === 'curated-PAR-brasserie-rosie-lou') {
     const scope=document.createElement('p'); scope.className='booking-scope';
     scope.textContent='Bokning i Velvet gäller lunchserveringen Service midi semaine på Brasserie Rosie Lou, 31 boulevard de Bonne Nouvelle i Paris, för exakt två gäster, i mån av lediga bord. Middag, grupper, evenemang och privata rum ingår inte. Ingen viss placering garanteras. Restaurangen håller bordet i högst 15 minuter vid försening. Om det är fullbokat kan du kontakta eller besöka restaurangen, men det garanterar inget bord. Kontrollera restaurangens aktuella villkor före bokning.';
+    container.querySelector('header').after(scope);
+  }
+  if (restaurantId === 'curated-PAR-brasserie-rosie-jolie') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller lunchserveringen DÉJEUNER på Brasserie Rosie Jolie, 38 avenue Raymond Poincaré i Paris, för exakt två gäster, i mån av lediga bord. Den 3–23 augusti ingår inte i bokning via Velvet. Detta är en avgränsning i appen eftersom restaurangens sommarstängningsnotis saknar årtal, inte en bekräftad årlig stängning. Middag, grupper, evenemang, privata rum och rooftop Bigoudi ingår inte. Ingen viss placering garanteras. Restaurangen håller bordet i högst 15 minuter vid försening. Kontrollera restaurangens aktuella villkor före bokning.';
     container.querySelector('header').after(scope);
   }
   const write = (id, phase, idempotencyKey, reviewFingerprint) => {
@@ -285,7 +290,7 @@ export function mountProviderPlaywrightBooking(container, api, {
   const post = (path, body) => request(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   async function run(action = null) {
     if (disposed || busy || (action && (uncertain || isSubmit() || needsReview() && action.type !== 'review' || drafts.size && action.type !== 'fill' || !state || terminal() || state.blocked))) return;
-    if (action?.type === 'search' && !dateInScope(action.date)) { el('status').textContent='Den 24, 25 och 31 december ingår inte i bokning via Velvet.'; return; }
+    if (action?.type === 'search' && !dateInScope(action.date)) { el('status').textContent=restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 'Den 3–23 augusti ingår inte i bokning via Velvet.' : 'Den 24, 25 och 31 december ingår inte i bokning via Velvet.'; return; }
     if (action?.type === 'select' && !timeInScope(action.time)) { el('status').textContent='Endast de angivna lunchtiderna ingår i bokning via Velvet.'; return; }
     if (action?.type === 'hold' && (!canHold() || !el('hold-consent').checked)) return;
     if (action?.type === 'submit' && (!canSubmit() || !el('terms').checked)) return;

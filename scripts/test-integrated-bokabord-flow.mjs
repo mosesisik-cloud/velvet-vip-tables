@@ -36,27 +36,31 @@ const republiqueTimes=['11:30','12:00','12:30','13:00','13:30','14:00','14:30'];
 const republiqueBlocked=['11:45','15:00','18:00'];
 const rosie=process.argv.includes('--rosie') || process.env.VELVET_TEST_PROVIDER==='Rosie';
 const rosieLou=process.argv.includes('--rosie-lou') || process.env.VELVET_TEST_PROVIDER==='RosieLou';
-const rosieFamily=rosie || rosieLou;
+const jolie=process.argv.includes('--rosie-jolie') || process.env.VELVET_TEST_PROVIDER==='RosieJolie';
+const jolieBlocked=['2026','2030'].flatMap(year=>['08-03','08-13','08-23'].map(day=>year+'-'+day));
+const jolieAdjacent=['2026-08-02','2026-08-24','2030-08-02','2030-08-24'];
+const dateGuardDates=jolie?jolieBlocked:bouillon?bouillonHolidays:[];
+const rosieFamily=rosie || rosieLou || jolie;
 const rosieTimes=['12:00','12:15','12:30','12:45','13:00','13:15','13:30','13:45','14:00','14:15'];
 const lunchCoreOnly=process.argv.includes('--lunch-core-only');
 const lunchReviewOnly=process.argv.includes('--lunch-review-only');
 const automaticLunch=grandCafe || vagenende || racine || republique || rosieFamily;
-const cardLunch=terminusNord || laLorraine || piedDeCochon || vagenende || republique || rosieFamily;
+const cardLunch=terminusNord || laLorraine || piedDeCochon || vagenende || republique || rosie || rosieLou;
 const cardThreshold=rosieFamily?5:republique?4:vagenende?5:piedDeCochon?5:laLorraine?8:12;
 const namedLunch=bofinger || laCoupole || terminusNord || procope || laLorraine || piedDeCochon || grandCafe || vagenende || bouillon || racine || republique || rosieFamily;
-const lunchSlug=rosieLou?'rosie-lou':rosie?'rosie':republique?'bouillon-republique':racine?'bouillon-racine':bouillon?'bouillon-julien':vagenende?'vagenende':grandCafe?'grand-cafe':piedDeCochon?'pied-de-cochon':laLorraine?'la-lorraine':procope?'procope':terminusNord?'terminus-nord':laCoupole?'la-coupole':'bofinger';
+const lunchSlug=jolie?'rosie-jolie':rosieLou?'rosie-lou':rosie?'rosie':republique?'bouillon-republique':racine?'bouillon-racine':bouillon?'bouillon-julien':vagenende?'vagenende':grandCafe?'grand-cafe':piedDeCochon?'pied-de-cochon':laLorraine?'la-lorraine':procope?'procope':terminusNord?'terminus-nord':laCoupole?'la-coupole':'bofinger';
 const lunchTail=namedLunch && process.argv.includes('--'+lunchSlug+'-tail');
 const lunchSource=namedLunch?JSON.parse(fs.readFileSync(path.join(root,'scripts/fixtures/'+lunchSlug+'-source.json'),'utf8')):null;
-const lunchCases=[...(rosieFamily?['form-card-price','form-card-price-type','form-cancellation-reference','form-cancellation-exact']:[]),...(republique?['form-card-price','form-card-price-type','form-cancellation-reference','form-cancellation-exact','time-changed','wrong-saved-time']:[]),...(racine?['form-cancellation-reference','form-cancellation-exact']:[]),...(bouillon?['form-auto-missing','form-auto-type','form-auto-drift','form-cancellation-exact','form-cancellation-reference','date-changed','holiday-readback']:[]),...(vagenende?['form-card-price','form-card-price-type','form-cancellation-reference']:[]),...(automaticLunch?['form-auto-flag-missing','form-auto-flag-string','form-auto-flag-number','form-auto-flag-null','form-auto-until-missing','form-auto-until-string','form-auto-until-drift']:[]),...(procope?['form-auto-missing','form-auto-type','form-auto-drift']:[]),...(cardLunch?['form-card-threshold-string','form-card-threshold-null','form-card-threshold-missing','form-card-threshold-drift','form-card-flag-type',...(!automaticLunch?['form-auto-type']:[])]:[]),'notice-changed','form-card','form-manual','form-prepayment','form-shift','form-cancellation','missing-saved-time','wrong-saved-party','pending-saved','unexpected-offer','missing-offers','saved-room','mismatch-readback-id','mismatch-readback-uuid','mismatch-readback-date','readback-error','readback-http-error'];
+const lunchCases=[...(jolie?['form-cancellation-reference','form-cancellation-exact','form-borrowed-card','date-changed','holiday-readback']:[]),...(rosie || rosieLou?['form-card-price','form-card-price-type','form-cancellation-reference','form-cancellation-exact']:[]),...(republique?['form-card-price','form-card-price-type','form-cancellation-reference','form-cancellation-exact','time-changed','wrong-saved-time']:[]),...(racine?['form-cancellation-reference','form-cancellation-exact']:[]),...(bouillon?['form-auto-missing','form-auto-type','form-auto-drift','form-cancellation-exact','form-cancellation-reference','date-changed','holiday-readback']:[]),...(vagenende?['form-card-price','form-card-price-type','form-cancellation-reference']:[]),...(automaticLunch?['form-auto-flag-missing','form-auto-flag-string','form-auto-flag-number','form-auto-flag-null','form-auto-until-missing','form-auto-until-string','form-auto-until-drift']:[]),...(procope?['form-auto-missing','form-auto-type','form-auto-drift']:[]),...(cardLunch?['form-card-threshold-string','form-card-threshold-null','form-card-threshold-missing','form-card-threshold-drift','form-card-flag-type',...(!automaticLunch?['form-auto-type']:[])]:[]),'notice-changed','form-card','form-manual','form-prepayment','form-shift','form-cancellation','missing-saved-time','wrong-saved-party','pending-saved','unexpected-offer','missing-offers','saved-room','mismatch-readback-id','mismatch-readback-uuid','mismatch-readback-date','readback-error','readback-http-error'];
 const readbackVenue = namedLunch || roomVenue || dekas;
 const zenchef = fishcorner || readbackVenue;
 const chosenRoom = pirouette ? 52521 : 52372;
 const otherRoom = pirouette ? 65674 : 51183;
 const alternateRoom = pirouette ? 65674 : 52373;
 const chosenRoomName = pirouette ? 'Salle principale' : 'Mazagran salle';
-const zenchefShift = rosieLou ? 118503 : rosie ? 43203 : republique ? 528175 : racine ? 93989 : bouillon ? 12711 : vagenende ? 63972 : grandCafe ? 19590 : piedDeCochon ? 29 : laLorraine ? 16674 : procope ? 18190 : terminusNord ? 19380 : laCoupole ? 20148 : bofinger ? 19170 : dekas ? 494748 : pirouette ? 189024 : pesquiere ? 136503 : 545372;
-const zenchefRid = rosieLou ? '361941' : rosie ? '355132' : republique ? '357115' : racine ? '132' : bouillon ? '350246' : vagenende ? '356807' : grandCafe ? '101232' : piedDeCochon ? '247' : laLorraine ? '478' : procope ? '250682' : terminusNord ? '82241' : laCoupole ? '83871' : bofinger ? '84941' : dekas ? '386643' : pirouette ? '363313' : pesquiere ? '362908' : '388090';
-const zenchefName = rosieLou ? 'Brasserie Rosie Lou' : rosie ? 'Brasserie Rosie' : republique ? 'Bouillon R\u00e9publique' : racine ? 'Bouillon Racine' : bouillon ? 'Bouillon Julien' : vagenende ? 'Brasserie Vagenende' : grandCafe ? 'Le Grand Caf\u00e9 Capucines' : piedDeCochon ? 'Au Pied de Cochon' : laLorraine ? 'La Lorraine' : procope ? 'Le Procope' : terminusNord ? 'Terminus Nord' : laCoupole ? 'La Coupole' : bofinger ? 'Bofinger' : dekas ? 'DeKas' : pirouette ? 'Pirouette' : pesquiere ? 'Pesquiere' : 'FishCorner';
+const zenchefShift = jolie ? 298043 : rosieLou ? 118503 : rosie ? 43203 : republique ? 528175 : racine ? 93989 : bouillon ? 12711 : vagenende ? 63972 : grandCafe ? 19590 : piedDeCochon ? 29 : laLorraine ? 16674 : procope ? 18190 : terminusNord ? 19380 : laCoupole ? 20148 : bofinger ? 19170 : dekas ? 494748 : pirouette ? 189024 : pesquiere ? 136503 : 545372;
+const zenchefRid = jolie ? '376490' : rosieLou ? '361941' : rosie ? '355132' : republique ? '357115' : racine ? '132' : bouillon ? '350246' : vagenende ? '356807' : grandCafe ? '101232' : piedDeCochon ? '247' : laLorraine ? '478' : procope ? '250682' : terminusNord ? '82241' : laCoupole ? '83871' : bofinger ? '84941' : dekas ? '386643' : pirouette ? '363313' : pesquiere ? '362908' : '388090';
+const zenchefName = jolie ? 'Brasserie Rosie Jolie' : rosieLou ? 'Brasserie Rosie Lou' : rosie ? 'Brasserie Rosie' : republique ? 'Bouillon R\u00e9publique' : racine ? 'Bouillon Racine' : bouillon ? 'Bouillon Julien' : vagenende ? 'Brasserie Vagenende' : grandCafe ? 'Le Grand Caf\u00e9 Capucines' : piedDeCochon ? 'Au Pied de Cochon' : laLorraine ? 'La Lorraine' : procope ? 'Le Procope' : terminusNord ? 'Terminus Nord' : laCoupole ? 'La Coupole' : bofinger ? 'Bofinger' : dekas ? 'DeKas' : pirouette ? 'Pirouette' : pesquiere ? 'Pesquiere' : 'FishCorner';
 const rooms = pirouette ? [{id:52521,name:'Salle principale'},{id:65674,name:'Terasse'}] : [{id:51183,name:'La Pesquiere'},{id:52372,name:'Mazagran salle'},{id:52373,name:'Mazagran terrasse'}];
 const noema = process.argv.includes('--noema') || process.env.VELVET_TEST_PROVIDER === 'Noema';
 const kvarnen = process.argv.includes('--kvarnen') || process.env.VELVET_TEST_PROVIDER === 'Kvarnen';
@@ -122,7 +126,7 @@ const italiano = process.argv.includes('--italiano') || process.env.VELVET_TEST_
 const nativeGuest = pelikan || guestLunch || italiano || agnes;
 const guestChoice = ciccios || nativeGuest;
 const contactFinal = teatergrillen || luzette || riche || sturehof || gondolen || klotet;
-assert.ok([rosieLou,rosie,republique,racine,bouillon,vagenende,grandCafe,piedDeCochon,laLorraine,procope,terminusNord,laCoupole,bofinger,kvarnen,hantverket,pelikan,tennstopet,teatergrillen,luzette,bobonne,agnes,klotet,gondolen,sazon,fishcorner,pesquiere,pirouette,dekas,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar,italiano,copine].filter(Boolean).length <= 1, 'Choose one named provider scenario');
+assert.ok([jolie,rosieLou,rosie,republique,racine,bouillon,vagenende,grandCafe,piedDeCochon,laLorraine,procope,terminusNord,laCoupole,bofinger,kvarnen,hantverket,pelikan,tennstopet,teatergrillen,luzette,bobonne,agnes,klotet,gondolen,sazon,fishcorner,pesquiere,pirouette,dekas,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar,italiano,copine].filter(Boolean).length <= 1, 'Choose one named provider scenario');
 // Noema/Ciccios saved-source evidence: issue129 comment6241312516, native phoneField/Next copy.
 const nativePhone = contactFinal || nativeGuest || noema || ciccios;
 const receiptMode = noema || guestChoice || contactFinal;
@@ -131,7 +135,7 @@ const receiptCode = kvarnen ? 'synthetic-kvarnen-only' : hantverket ? 'synthetic
 const mealId = kvarnen ? 91 : hantverket ? 7097 : pelikan ? 1540 : tennstopet ? 54277 : teatergrillen ? 6491 : luzette ? 7253 : bobonne ? 31 : agnes ? 1628 : klotet ? 63872 : gondolen ? 33008 : copine ? 4790 : italiano ? 22890 : dagmar ? 63588 : boqueria ? 22 : vau ? 22476 : astrid ? 55508 : kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
 const scopeInvalid = [{mealid:999999999},{amount:noema ? 9 : ciccios ? 8 : 3}];
 const mealType = tennstopet ? 0 : klotet ? 0 : dagmar ? 0 : noema || guestLunch || contactFinal ? 2 : 3;
-const restaurantId = rosieLou ? 'curated-PAR-brasserie-rosie-lou' : rosie ? 'curated-PAR-brasserie-rosie' : republique ? 'curated-PAR-bouillon-republique' : racine ? 'curated-PAR-bouillon-racine' : bouillon ? 'curated-PAR-bouillon-julien' : vagenende ? 'curated-PAR-brasserie-vagenende' : grandCafe ? 'curated-PAR-le-grand-cafe-capucines' : piedDeCochon ? 'curated-PAR-au-pied-de-cochon' : laLorraine ? 'curated-PAR-la-lorraine' : procope ? 'curated-PAR-le-procope' : terminusNord ? 'curated-PAR-terminus-nord' : laCoupole ? 'curated-PAR-la-coupole' : bofinger ? 'curated-PAR-bofinger' : kvarnen ? 'curated-STO-kvarnen' : hantverket ? 'curated-STO-hantverket' : pelikan ? 'curated-STO-pelikan' : tennstopet ? 'curated-STO-tennstopet' : teatergrillen ? 'curated-STO-teatergrillen' : luzette ? 'curated-STO-luzette' : bobonne ? 'curated-STO-brasserie-bobonne' : agnes ? 'curated-STO-agnes' : klotet ? 'curated-STO-cafe-klotet' : gondolen ? 'curated-STO-gondolen' : sazon ? 'osm-BAL-sazon' : copine ? 'curated-STO-copine' : italiano ? 'curated-STO-italiano' : dekas ? 'curated-AMS-de-kas' : dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const restaurantId = jolie ? 'curated-PAR-brasserie-rosie-jolie' : rosieLou ? 'curated-PAR-brasserie-rosie-lou' : rosie ? 'curated-PAR-brasserie-rosie' : republique ? 'curated-PAR-bouillon-republique' : racine ? 'curated-PAR-bouillon-racine' : bouillon ? 'curated-PAR-bouillon-julien' : vagenende ? 'curated-PAR-brasserie-vagenende' : grandCafe ? 'curated-PAR-le-grand-cafe-capucines' : piedDeCochon ? 'curated-PAR-au-pied-de-cochon' : laLorraine ? 'curated-PAR-la-lorraine' : procope ? 'curated-PAR-le-procope' : terminusNord ? 'curated-PAR-terminus-nord' : laCoupole ? 'curated-PAR-la-coupole' : bofinger ? 'curated-PAR-bofinger' : kvarnen ? 'curated-STO-kvarnen' : hantverket ? 'curated-STO-hantverket' : pelikan ? 'curated-STO-pelikan' : tennstopet ? 'curated-STO-tennstopet' : teatergrillen ? 'curated-STO-teatergrillen' : luzette ? 'curated-STO-luzette' : bobonne ? 'curated-STO-brasserie-bobonne' : agnes ? 'curated-STO-agnes' : klotet ? 'curated-STO-cafe-klotet' : gondolen ? 'curated-STO-gondolen' : sazon ? 'osm-BAL-sazon' : copine ? 'curated-STO-copine' : italiano ? 'curated-STO-italiano' : dekas ? 'curated-AMS-de-kas' : dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
 const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[receiptMode ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 let date = process.env.VELVET_TEST_DATE || (tennstopet || klotet ? '2026-10-23' : '2030-01-15');
@@ -213,10 +217,16 @@ function zenchefDocument(address) {
     }
     if(form && outcome==='form-manual'){if(automaticLunch)shift.confirmation.is_auto=false;else shift.confirmation.is_auto_until=null;}
     if(form && outcome==='form-prepayment')shift.prepayment_param={is_web_booking_askable:true};
-    if(form && outcome==='form-shift')shift.id=rosieLou?118508:rosie?80093:racine?371604:procope?18191:laCoupole?19170:20148;
+    if(form && outcome==='form-shift')shift.id=jolie?411615:rosieLou?118508:rosie?80093:racine?371604:procope?18191:laCoupole?19170:20148;
     if(republique){shift.shift_slots=[...republiqueTimes,...republiqueBlocked].map(name=>({...slot,name}));if(form)state.wish.slot=url.searchParams.get('slot');}
     if(rosieFamily){shift.shift_slots=rosieTimes.map(name=>({...slot,name}));if(form)state.wish.slot=url.searchParams.get('slot');}
-    if(form && rosieFamily){
+    if(form && jolie){
+      if(outcome==='form-cancellation-reference')shift.cancelation_param.enduser_cancelable_reference='shift';
+      if(outcome==='form-cancellation-exact')shift.cancelation_param.enduser_cancelable_before=43200;
+      if(outcome==='form-borrowed-card')shift.charge_param={is_web_booking_askable:true,min_guests:5,charge_per_guests:10};
+    }
+    if(form && rosieLou && outcome==='form-null-card')shift.charge_param=null;
+    if(form && (rosie || rosieLou)){
       if(outcome==='form-card-price')shift.charge_param.charge_per_guests=4;
       if(outcome==='form-card-price-type')shift.charge_param.charge_per_guests='10';
       if(outcome==='form-cancellation-reference')shift.cancelation_param.enduser_cancelable_reference='shift';
@@ -342,7 +352,7 @@ if (childMode) {
         });
         if(namedLunch)process.on('message',message=>{
           if(message.kind==='fixture-change-time')page.locator('script#__NEXT_DATA__').evaluate(el=>{const data=JSON.parse(el.textContent);data.props.initialState.appStoreState.wish.slot='15:00';el.textContent=JSON.stringify(data);}).then(()=>process.send?.({kind:'fixture-notice-changed'}));
-          if(message.kind==='fixture-change-date')page.locator('script#__NEXT_DATA__').evaluate(el=>{const data=JSON.parse(el.textContent);data.props.initialState.appStoreState.wish.day='2030-12-24';el.textContent=JSON.stringify(data);}).then(()=>process.send?.({kind:'fixture-notice-changed'}));
+          if(message.kind==='fixture-change-date')page.locator('script#__NEXT_DATA__').evaluate((el,changedDate)=>{const data=JSON.parse(el.textContent);data.props.initialState.appStoreState.wish.day=changedDate;el.textContent=JSON.stringify(data);},jolie?'2030-08-13':'2030-12-24').then(()=>process.send?.({kind:'fixture-notice-changed'}));
           if(message.kind==='fixture-change-notice')page.locator('script#__NEXT_DATA__').evaluate(el=>{const data=JSON.parse(el.textContent);data.props.initialState.appStoreState.restaurantComment.fr='Changed native restaurant notice';el.textContent=JSON.stringify(data);}).then(()=>process.send?.({kind:'fixture-notice-changed'}));
         });
         if(pirouette)process.on('message',message=>{
@@ -660,7 +670,7 @@ if (childMode) {
               const data={id:createdBooking.id,uuid:createdBooking.uuid,status:'confirmed',day:payload.day,shift_date:payload.day,time:payload.time,nb_guests:payload.nb_guests,...(namedLunch?{booking_offers:[]}:dekas?{booking_offers:[{offer_id:118785,count:2}]}:{wish:{booking_room_id:payload.wish.booking_room_id}})};
               if(namedLunch){
                 assert.equal(Object.hasOwn(data,'shift_id'),false,'No invented raw receipt service field');
-                if(outcome==='holiday-readback'){data.day='2030-12-24';data.shift_date='2030-12-24';}
+                if(outcome==='holiday-readback'){data.day=jolie?'2030-08-13':'2030-12-24';data.shift_date=data.day;}
                 if(outcome==='wrong-saved-time')data.time='15:00';
                 if(outcome==='missing-saved-time')delete data.time;
                 if(outcome==='wrong-saved-party')data.nb_guests=3;
@@ -766,7 +776,7 @@ async function main() {
       VELVET_TENNSTOPET_RECEIPT: tennstopet && tennstopetEnabled ? 'enabled' : 'disabled',
       VELVET_TEATERGRILLEN_RECEIPT: teatergrillen ? 'enabled' : 'disabled',
       VELVET_TEST_DATE: date,
-      VELVET_TEST_PROVIDER: rosieLou ? 'RosieLou' : rosie ? 'Rosie' : republique ? 'BouillonRepublique' : racine ? 'BouillonRacine' : bouillon ? 'BouillonJulien' : vagenende ? 'Vagenende' : grandCafe ? 'GrandCafe' : piedDeCochon ? 'PiedDeCochon' : laLorraine ? 'LaLorraine' : procope ? 'Procope' : terminusNord ? 'TerminusNord' : laCoupole ? 'LaCoupole' : bofinger ? 'Bofinger' : kvarnen ? 'Kvarnen' : hantverket ? 'Hantverket' : pelikan ? 'Pelikan' : tennstopet ? 'Tennstopet' : teatergrillen ? 'Teatergrillen' : luzette ? 'Luzette' : bobonne ? 'Bobonne' : agnes ? 'Agnes' : klotet ? 'Klotet' : gondolen ? 'Gondolen' : sazon ? 'Sazon' : copine ? 'Copine' : italiano ? 'Italiano' : dekas ? 'DeKas' : dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
+      VELVET_TEST_PROVIDER: jolie ? 'RosieJolie' : rosieLou ? 'RosieLou' : rosie ? 'Rosie' : republique ? 'BouillonRepublique' : racine ? 'BouillonRacine' : bouillon ? 'BouillonJulien' : vagenende ? 'Vagenende' : grandCafe ? 'GrandCafe' : piedDeCochon ? 'PiedDeCochon' : laLorraine ? 'LaLorraine' : procope ? 'Procope' : terminusNord ? 'TerminusNord' : laCoupole ? 'LaCoupole' : bofinger ? 'Bofinger' : kvarnen ? 'Kvarnen' : hantverket ? 'Hantverket' : pelikan ? 'Pelikan' : tennstopet ? 'Tennstopet' : teatergrillen ? 'Teatergrillen' : luzette ? 'Luzette' : bobonne ? 'Bobonne' : agnes ? 'Agnes' : klotet ? 'Klotet' : gondolen ? 'Gondolen' : sazon ? 'Sazon' : copine ? 'Copine' : italiano ? 'Italiano' : dekas ? 'DeKas' : dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
       VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_CICCIOS_RECEIPT: ciccios ? 'enabled' : 'disabled',
       VELVET_RICHE_RECEIPT: riche ? 'enabled' : 'disabled',
@@ -783,6 +793,7 @@ async function main() {
       VELVET_ZENCHEF_FISHCORNER: zenchef ? 'live' : 'disabled',
       VELVET_ZENCHEF_PESQUIERE: roomVenue ? 'live' : 'disabled',
       VELVET_ZENCHEF_PIROUETTE: pirouette ? 'live' : 'disabled',
+      VELVET_ZENCHEF_ROSIEJOLIE: jolie ? 'live' : 'disabled',
       VELVET_ZENCHEF_ROSIELOU: rosieLou ? 'live' : 'disabled',
       VELVET_ZENCHEF_ROSIE: rosie ? 'live' : 'disabled',
       VELVET_ZENCHEF_BOUILLONREPUBLIQUE: republique ? 'live' : 'disabled',
@@ -837,10 +848,11 @@ async function main() {
       await page.locator(sazon ? '#provider-preparation [data-prep-start]' : zenchef ? '#provider-playwright-booking [data-start]' : '#bokabord-mirror [data-start]').waitFor();
       if(namedLunch){assert.equal((await page.locator('.restaurant-detail h1').innerText()).trim(),zenchefName);
         const scope=page.locator('.booking-scope');await scope.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));
-        for(const text of [rosieLou?'31 boulevard de Bonne Nouvelle i Paris':rosie?'53 rue du Faubourg Saint-Antoine i Paris':republique?'39 boulevard du Temple i Paris':zenchefName+' i Paris','exakt tv\u00e5',rosieLou?'Service midi semaine':rosie?'Midi Semaine':republique?'11.30, 12.00, 12.30, 13.00, 13.30, 14.00 och 14.30':racine?'f\u00f6rsta lunchsittningen (D\u00e9jeuner 1 service)':bouillon || vagenende?'ordinarie lunch':procope?'f\u00f6rsta lunchsittningen (D\u00e9jeuner 1er service)':'15 minuters','Ingen viss placering'])assert.ok((await scope.innerText()).includes(text),text);
+        for(const text of [jolie?'38 avenue Raymond Poincar\u00e9 i Paris':rosieLou?'31 boulevard de Bonne Nouvelle i Paris':rosie?'53 rue du Faubourg Saint-Antoine i Paris':republique?'39 boulevard du Temple i Paris':zenchefName+' i Paris','exakt tv\u00e5',jolie?'D\u00c9JEUNER':rosieLou?'Service midi semaine':rosie?'Midi Semaine':republique?'11.30, 12.00, 12.30, 13.00, 13.30, 14.00 och 14.30':racine?'f\u00f6rsta lunchsittningen (D\u00e9jeuner 1 service)':bouillon || vagenende?'ordinarie lunch':procope?'f\u00f6rsta lunchsittningen (D\u00e9jeuner 1er service)':'15 minuters','Ingen viss placering'])assert.ok((await scope.innerText()).includes(text),text);
         assert.ok(await scope.evaluate(el=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}));
         if(procope || vagenende || bouillon || republique)assert.ok(!(await scope.innerText()).includes('15 min'));
-        if(rosieFamily){const text=await scope.innerText();for(const expected of ['15 minuter','garanterar inget bord'])assert.ok(text.includes(expected));for(const absent of ['oavsett \u00e5r','11.30','24, 25 och 31 december'])assert.ok(!text.includes(absent));}
+        if(jolie){const text=await scope.innerText();for(const expected of ['3\u201323 augusti','saknar \u00e5rtal','inte en bekr\u00e4ftad \u00e5rlig st\u00e4ngning','15 minuter'])assert.ok(text.includes(expected),expected);assert.ok(!text.includes('kontakta eller bes\u00f6ka'));}
+        if(rosie || rosieLou){const text=await scope.innerText();for(const expected of ['15 minuter','garanterar inget bord'])assert.ok(text.includes(expected));for(const absent of ['oavsett \u00e5r','11.30','24, 25 och 31 december'])assert.ok(!text.includes(absent));}
         if(racine){const text=await scope.innerText();assert.ok(text.includes('franska bokningsformul\u00e4ret'));assert.ok(!text.includes('31 december'));assert.ok(!text.includes('20 minuter'));}
         if(bouillon){const text=await scope.innerText();for(const expected of ['24, 25 och 31 december','oavsett \u00e5r','hela s\u00e4llskapet','plats utan reservation garanteras'])assert.ok(text.includes(expected),expected);}
         if(vagenende){const text=await scope.innerText();assert.ok(!text.includes('2025'));assert.ok(!text.includes('22h'));}
@@ -1218,22 +1230,22 @@ async function main() {
           return {body,request:response.request().postDataJSON()};
         };
         const opened=await action(() => panel(page).locator('[data-start]').click());
-        if(bouillon && !scenario && [0,2].includes(submits()) && holidayGuardRuns<2){
+        if((bouillon || jolie) && !scenario && [0,2].includes(submits()) && holidayGuardRuns<2){
           const before=submits(),documents=messages.filter(m=>m.kind==='supplier-document').length;
-          for(const blockedDate of bouillonHolidays){
+          for(const blockedDate of dateGuardDates){
             await panel(page).locator('[name=date]').fill(blockedDate);
             const calls=apiCalls.filter(c=>c.action==='search').length;
             await panel(page).locator('[data-search] button').click();
-            assert.match(await panel(page).locator('[data-status]').innerText(),/24, 25 och 31 december/);
+            assert.match(await panel(page).locator('[data-status]').innerText(),jolie?/3.23 augusti/:/24, 25 och 31 december/);
             assert.equal(apiCalls.filter(c=>c.action==='search').length,calls,'UI holiday guard prevents API search');
             const current=await api(page,'/restaurant-bookings/playwright/'+opened.body.id+'/current',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
             const rejected=await api(page,'/restaurant-bookings/playwright/'+opened.body.id+'/action',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'search',date:blockedDate,party:2,revision:current.body.revision})});
-            assert.equal(rejected.status,400);assert.equal(rejected.body.error,'special_date_unsupported');
+            assert.equal(rejected.status,400);assert.equal(rejected.body.error,jolie?'summer_date_unsupported':'special_date_unsupported');
           }
           assert.equal(submits(),before);assert.equal(messages.filter(m=>m.kind==='supplier-document').length,documents);
           const refresh=page.waitForResponse(r=>r.request().method()==='POST'&&new URL(r.url()).pathname.endsWith('/current'));
           await panel(page).locator('[data-refresh]').click();await refresh;await page.waitForFunction(()=>!document.querySelector('#provider-playwright-booking [data-refresh]').disabled);
-          holidayGuardRuns++;console.log('PASS Bouillon holiday UI/API guards, run '+holidayGuardRuns);
+          holidayGuardRuns++;console.log('PASS '+zenchefName+' scoped date UI/API guards, run '+holidayGuardRuns);
         }
         await panel(page).locator('[name=date]').fill(date);
         const searched = await action(() => panel(page).locator('[data-search] button').click());
@@ -1306,7 +1318,7 @@ async function main() {
           if(vagenende){assert.ok(!(await panel(page).locator('[data-final-details]').innerText()).includes('22h'));}
           assert.equal(reviewed.body.details.shiftId,zenchefShift);assert.equal(reviewed.body.details.party,2);assert.equal(reviewed.body.details.offer,undefined);assert.equal(reviewed.body.details.roomId,undefined);
           const notice=reviewed.body.terms.restaurantNotice;assert.equal(notice,lunchSource.restaurantComment.fr);const terms=await panel(page).locator('[data-terms-text]').innerText();
-          for(const text of rosieLou?['Loupiot.e.s','Atlantique','15mn, pas plus','plus de 12 personnes','Passez \u00e0 la brasserie ou appelez-nous']:rosie?['15mn, pas plus','plus de 16 personnes','Passez \u00e0 la brasserie ou appelez-nous']:republique?['plus de 20 personnes',"Venez au complet et \u00e0 l'heure",'Please come in full and on time']:bouillon?['commentaire','totalit\u00e9 des convives','r\u00e9servation est fixe','directement au restaurant']:vagenende?['plus de 8 personnes','31 d\u00e9cembre 2025','22h au plus tard']:procope?['15h30','17h30','sans r\u00e9servation','plus de 9 personnes']:['15 min'])assert.ok(terms.includes(text),text);
+          for(const text of jolie?['French Riviera','15 min','3 au 23 ao\u00fbt inclus','plus de 16 personnes','uniquement Rosie Jolie']:rosieLou?['Loupiot.e.s','Atlantique','15mn, pas plus','plus de 12 personnes','Passez \u00e0 la brasserie ou appelez-nous']:rosie?['15mn, pas plus','plus de 16 personnes','Passez \u00e0 la brasserie ou appelez-nous']:republique?['plus de 20 personnes',"Venez au complet et \u00e0 l'heure",'Please come in full and on time']:bouillon?['commentaire','totalit\u00e9 des convives','r\u00e9servation est fixe','directement au restaurant']:vagenende?['plus de 8 personnes','31 d\u00e9cembre 2025','22h au plus tard']:procope?['15h30','17h30','sans r\u00e9servation','plus de 9 personnes']:['15 min'])assert.ok(terms.includes(text),text);
           if(procope || vagenende || bouillon || republique){assert.ok(!terms.includes('15 min'));assert.ok(!notice.includes('15 min'));}
           if(laLorraine){assert.ok(terms.includes('SERVICE VOITURIER'));assert.ok(!terms.includes('15h30'));assert.ok(!terms.includes('sans r\u00e9servation'));}
           if(piedDeCochon){assert.ok(terms.includes('SANS r\u00e9servation'));assert.ok(!terms.includes('SERVICE VOITURIER'));assert.ok(!terms.includes('15h30'));}
@@ -1315,7 +1327,8 @@ async function main() {
           assert.ok(!terms.includes('<br>'));assert.equal(await panel(page).locator('[data-terms-text]').locator('br,img,iframe').count(),0);
           assert.equal(await panel(page).locator('[data-terms]').isChecked(),false);
           await panel(page).screenshot({path:path.join(root,'..',lunchSlug+'-review-'+page.viewportSize().width+'.png')});
-          if(rosieFamily){assert.ok(!notice.includes(rosieLou?'plus de 16 personnes':'plus de 12 personnes'));assert.ok(!notice.includes(rosieLou?'Rositos':'Loupiot.e.s'));}
+          if(jolie){for(const absent of ['Passez','appelez-nous','Rositos','Loupiot','2026','2030'])assert.ok(!notice.includes(absent),absent);}
+          if(rosie || rosieLou){assert.ok(!notice.includes(rosieLou?'plus de 16 personnes':'plus de 12 personnes'));assert.ok(!notice.includes(rosieLou?'Rositos':'Loupiot.e.s'));}
           if(rosieFamily && !scenario){
             assert.equal(reviewed.body.details.time,selectedTime);assert.equal(reviewed.body.canSubmit,true);
             assert.ok(!/<\/?(?:br|b|u|a)\b[^>]*>/i.test(terms));assert.equal(await panel(page).locator('[data-terms-text]').locator('a,b,u,br,img,iframe').count(),0);
@@ -1459,24 +1472,24 @@ async function main() {
       assert.equal(messages.filter(m=>['unexpected-supplier-request','blocked-node-network'].includes(m.kind)).length,0);
       console.log('PASS '+zenchefName+' lost supplier reply: durable unknown, owner isolation, refresh/restart without replay');
       }
-      if(namedLunch && (!lunchCoreOnly || rosie)){for(const outcome of lunchCoreOnly?['form-cancellation-exact','form-shift','notice-changed']:lunchCases){
+      if(namedLunch && (!lunchCoreOnly || rosie || rosieLou)){for(const outcome of lunchCoreOnly?(rosieLou?['form-cancellation-exact','form-null-card','form-shift']:['form-cancellation-exact','form-shift','notice-changed']):lunchCases){
         console.log('CHECK '+zenchefName+' '+outcome);await stop();await start(outcome);const view=await makeView();
         try{const result=await flow(view,1,chosenRoom,outcome);if(result)assert.equal(result.body.result.status,'unknown',outcome);}
         finally{await view.context.close();}
       }}
-      if(bouillon || republique){
+      if(bouillon || republique || jolie){
         // Direct server-only journal checks use the real persistent ledger and register, not adapter hooks.
         const {PlaywrightAttemptLedger}=await import('../api/playwright-attempt-ledger.mjs');
         const {BookingRegister}=await import('../api/booking-register.mjs');
         const {createProviderJournal}=await import('../api/provider-booking-journal.mjs');
-        const configs=await import('../api/providers/zenchef-playwright.mjs');const config=republique?configs.ZENCHEF_BOUILLONREPUBLIQUE:configs.ZENCHEF_BOUILLONJULIEN;
+        const configs=await import('../api/providers/zenchef-playwright.mjs');const config=jolie?configs.ZENCHEF_ROSIEJOLIE:republique?configs.ZENCHEF_BOUILLONREPUBLIQUE:configs.ZENCHEF_BOUILLONJULIEN;
         const ledgerPath=path.join(directory,'date-guard-ledger.sqlite'),registerPath=path.join(directory,'date-guard-register.sqlite');
         const request={owner:'date-guard-owner',provider:'Zenchef',restaurantId,sessionId:'date-guard-session',phase:'booking',reviewFingerprint:'a'.repeat(64),details:{date:'2030-12-23',time:'12:30',party:2,shiftId:zenchefShift}};
         let ledger,register,journal;
         const openJournal=()=>{ledger=new PlaywrightAttemptLedger(ledgerPath);register=new BookingRegister(registerPath);journal=createProviderJournal({ledger,register,provider:'Zenchef',restaurants:{[restaurantId]:{...config,confirmationPolicySource:config.policySource}}});};
         openJournal();
         try{
-          for(const blockedDate of bouillon?bouillonHolidays:[]){
+          for(const blockedDate of dateGuardDates){
             assert.throws(()=>journal.reserveAttempt({...request,details:{...request.details,date:blockedDate}}),/special_date_unsupported/);
             assert.throws(()=>ledger.reserve({...request,mode:'live',idempotencyKey:'date_guard_key_123456',date:blockedDate,time:'12:30',party:2,details:{shiftId:zenchefShift}}),/special_date_unsupported/);
           }
@@ -1487,7 +1500,7 @@ async function main() {
           }
           const {attempt}=journal.reserveAttempt(request);
           for(let restart=0;restart<2;restart++){
-            for(const changedDate of [...(bouillon?bouillonHolidays:[]),'2030-12-26'])assert.throws(()=>journal.recordAttempt({intent:{...request,details:{...request.details,date:changedDate}},attempt,result:{status:'confirmed',reference:'SYNTHETIC-ONLY'}}),/special_date_unsupported|attempt_binding/);
+            for(const changedDate of [...dateGuardDates,...(jolie?jolieAdjacent:[]),'2030-12-26'])assert.throws(()=>journal.recordAttempt({intent:{...request,details:{...request.details,date:changedDate}},attempt,result:{status:'confirmed',reference:'SYNTHETIC-ONLY'}}),/special_date_unsupported|attempt_binding/);
             for(const time of ['11:30','13:00',...republiqueBlocked])assert.throws(()=>journal.recordAttempt({intent:{...request,details:{...request.details,time}},attempt,result:{status:'confirmed',reference:'SYNTHETIC-ONLY'}}),/lunch_time_unsupported|attempt_binding/);
             assert.throws(()=>journal.recordAttempt({intent:{...request,details:{...request.details,party:3}},attempt,result:{status:'confirmed',reference:'SYNTHETIC-ONLY'}}),/shift_binding|attempt_binding/);
             assert.equal(ledger.get(request.owner,attempt.attemptId).status,'unknown');assert.equal(register.list([request.owner])[0].status,'unknown');
@@ -1497,18 +1510,19 @@ async function main() {
           const result={status:'confirmed',reference:'SYNTHETIC-ONLY',verification:{verified:true,source:'provider',policySource:config.policySource,provider:'Zenchef',restaurantId,sessionId:request.sessionId,attemptId:attempt.attemptId,idempotencyKey:attempt.idempotencyKey,reviewFingerprint:request.reviewFingerprint,shiftId:zenchefShift,bookingEvidence:'own_booking_readback'}};
           journal.recordAttempt({intent:request,attempt,result});
           const snapshot={id:request.sessionId,restaurantId,details:request.details,result};assert.equal(journal.verifySnapshot(snapshot,request.owner).status,'confirmed');
-          for(const changedDate of [...(bouillon?bouillonHolidays:[]),'2030-12-26'])assert.equal(journal.verifySnapshot({...snapshot,details:{...request.details,date:changedDate}},request.owner),null);
+          for(const changedDate of [...dateGuardDates,...(jolie?jolieAdjacent:[]),'2030-12-26'])assert.equal(journal.verifySnapshot({...snapshot,details:{...request.details,date:changedDate}},request.owner),null);
           for(const time of ['11:30','13:00',...republiqueBlocked])assert.equal(journal.verifySnapshot({...snapshot,details:{...request.details,time}},request.owner),null);
           assert.equal(journal.verifySnapshot({...snapshot,details:{...request.details,party:3}},request.owner),null);
           ledger.close();register.close();openJournal();assert.equal(journal.verifySnapshot(snapshot,request.owner).status,'confirmed');
           for(const time of ['11:30','13:00',...republiqueBlocked])assert.equal(journal.verifySnapshot({...snapshot,details:{...request.details,time}},request.owner),null);
+          for(const changedDate of [...dateGuardDates,...(jolie?jolieAdjacent:[]),'2030-12-26'])assert.equal(journal.verifySnapshot({...snapshot,details:{...request.details,date:changedDate}},request.owner),null);
           if(republique)for(const time of republiqueTimes.filter(t=>t!=='12:30')){
             const allowed={...request,sessionId:'time-guard-'+time,details:{...request.details,time}};const gate=journal.reserveAttempt(allowed);assert.equal(gate.sendAllowed,true);assert.equal(gate.attempt.time,time);
           }
-          console.log('PASS Bouillon real SQLite date/time/party reserve/record/restart/projection guards (synthetic proof)');
+          console.log('PASS '+zenchefName+' real SQLite date/time/party reserve/record/restart/projection guards (synthetic proof)');
         }finally{ledger.close();register.close();}
-        for(const allowedDate of bouillon && !lunchCoreOnly?bouillonAdjacent:[]){
-          console.log('CHECK Bouillon adjacent '+allowedDate);await stop();await start('boundary',true,allowedDate);const view=await makeView();
+        for(const allowedDate of jolie?jolieAdjacent:bouillon && !lunchCoreOnly?bouillonAdjacent:[]){
+          console.log('CHECK '+zenchefName+' adjacent '+allowedDate);await stop();await start('boundary',true,allowedDate);const view=await makeView();
           try{
             const result=await flow(view,1,chosenRoom,'boundary');assert.equal(result.body.result.status,'confirmed');assert.equal(result.body.details.date,allowedDate);
             const before=submits();await stop();await start('boundary',true,allowedDate);
@@ -1524,6 +1538,14 @@ async function main() {
           finally{await view.context.close();}
         }
         console.log('PASS Republique all seven native form/review times, zero dispatch; excluded times never navigated');
+      }
+      if(rosieLou && lunchCoreOnly){
+        // Synthetic isolation from Jolie's conservative summer guard, never a live availability claim.
+        const isolatedDate='2030-08-13';await stop();await start('boundary',true,isolatedDate);const view=await makeView();
+        try{const result=await flow(view,1,chosenRoom,'boundary');assert.equal(result.body.result.status,'confirmed');assert.equal(result.body.details.date,isolatedDate);
+          const before=submits();await stop();await start('boundary',true,isolatedDate);const recovered=await api(view.page,'/restaurant-bookings/playwright/attempts');assert.equal(recovered.body.attempts[0].status,'confirmed');assert.equal(recovered.body.attempts[0].date,isolatedDate);assert.equal(submits(),before);
+          console.log('PASS Lou synthetic summer isolation and restart, no availability claim');
+        }finally{await view.context.close();}
       }
       if(racine && !lunchCoreOnly){
         // A synthetic holiday slot proves venue-scoped guards, not actual holiday availability.
