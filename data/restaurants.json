@@ -7439,6 +7439,24 @@
       "source": "VELVET curated + OpenStreetMap · official links where available",
       "restaurants": [
         {
+          "placeId": "curated-PAR-le-grand-cafe-capucines",
+          "name": "Le Grand Café Capucines",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "4 boulevard des Capucines, 75009 Paris",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Grand%20Caf%C3%A9%20Capucines%2C%204%20boulevard%20des%20Capucines%2C%20Paris",
+          "website": "https://www.legrandcafe.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.legrandcafe.com/",
+          "locationVerifiedAt": "2026-10-18",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=101232&fullscreen&lang=fr&withCloseButton=1",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-18"
+        },
+        {
           "placeId": "curated-PAR-au-pied-de-cochon",
           "name": "Au Pied de Cochon",
           "rating": null,
