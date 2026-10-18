@@ -2335,5 +2335,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-indiana-cafe-bonne-nouvelle": {
+    "name": "Indiana Café Bonne Nouvelle",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=373444&pid=1001",
+    "source": "https://www.indianacafe.fr/restaurant/bonne-nouvelle",
+    "venueKey": "bookings.zenchef.com/results?rid=373444",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
