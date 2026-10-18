@@ -18,7 +18,7 @@ import { LUZETTE_LUNCH_RECEIPT_POLICY, TEATERGRILLEN_LUNCH_RECEIPT_POLICY, TENNS
 import { KVARNEN_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
 import { createProviderJournal } from './provider-booking-journal.mjs';
 import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_DEKAS, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
-import { ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN, ZENCHEF_BOUILLONRACINE, ZENCHEF_BOUILLONREPUBLIQUE, ZENCHEF_ROSIE, ZENCHEF_ROSIELOU, ZENCHEF_ROSIEJOLIE, ZENCHEF_PETITSOMMELIER, ZENCHEF_CHEZSAVY, ZENCHEF_CHEZRENE, ZENCHEF_BISTROTPARIS, ZENCHEF_AUXBONSCRUS, ZENCHEF_AUXCRUSBOURGOGNE, ZENCHEF_PETITRETRO, ZENCHEF_MOULINVENT, ZENCHEF_PETITPONTOISE, ZENCHEF_LEFLORENTIN } from './providers/zenchef-playwright.mjs';
+import { ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN, ZENCHEF_BOUILLONRACINE, ZENCHEF_BOUILLONREPUBLIQUE, ZENCHEF_ROSIE, ZENCHEF_ROSIELOU, ZENCHEF_ROSIEJOLIE, ZENCHEF_PETITSOMMELIER, ZENCHEF_CHEZSAVY, ZENCHEF_CHEZRENE, ZENCHEF_BISTROTPARIS, ZENCHEF_AUXBONSCRUS, ZENCHEF_AUXCRUSBOURGOGNE, ZENCHEF_PETITRETRO, ZENCHEF_MOULINVENT, ZENCHEF_PETITPONTOISE, ZENCHEF_LEFLORENTIN, ZENCHEF_MARTHA } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
 import fs from "node:fs";
 import path from "node:path";
@@ -71,9 +71,10 @@ const petitRetroLive = process.env.VELVET_ZENCHEF_PETITRETRO === 'live';
 const moulinVentLive = process.env.VELVET_ZENCHEF_MOULINVENT === 'live';
 const petitPontoiseLive = process.env.VELVET_ZENCHEF_PETITPONTOISE === 'live';
 const leFlorentinLive = process.env.VELVET_ZENCHEF_LEFLORENTIN === 'live';
+const marthaLive = process.env.VELVET_ZENCHEF_MARTHA === 'live';
 let zenchefJournal;
 const zenchefInspection = new ZenchefPlaywright({
-  mode: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive || piedDeCochonLive || grandCafeLive || vagenendeLive || bouillonJulienLive || bouillonRacineLive || bouillonRepubliqueLive || rosieLive || rosieLouLive || rosieJolieLive || petitSommelierLive || chezSavyLive || chezReneLive || bistrotParisLive || auxBonsCrusLive || auxCrusBourgogneLive || petitRetroLive || moulinVentLive || petitPontoiseLive || leFlorentinLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive || piedDeCochonLive || grandCafeLive || vagenendeLive || bouillonJulienLive || bouillonRacineLive || bouillonRepubliqueLive || rosieLive || rosieLouLive || rosieJolieLive || petitSommelierLive || chezSavyLive || chezReneLive || bistrotParisLive || auxBonsCrusLive || auxCrusBourgogneLive || petitRetroLive || moulinVentLive || petitPontoiseLive || leFlorentinLive,
+  mode: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive || piedDeCochonLive || grandCafeLive || vagenendeLive || bouillonJulienLive || bouillonRacineLive || bouillonRepubliqueLive || rosieLive || rosieLouLive || rosieJolieLive || petitSommelierLive || chezSavyLive || chezReneLive || bistrotParisLive || auxBonsCrusLive || auxCrusBourgogneLive || petitRetroLive || moulinVentLive || petitPontoiseLive || leFlorentinLive || marthaLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive || piedDeCochonLive || grandCafeLive || vagenendeLive || bouillonJulienLive || bouillonRacineLive || bouillonRepubliqueLive || rosieLive || rosieLouLive || rosieJolieLive || petitSommelierLive || chezSavyLive || chezReneLive || bistrotParisLive || auxBonsCrusLive || auxCrusBourgogneLive || petitRetroLive || moulinVentLive || petitPontoiseLive || leFlorentinLive || marthaLive,
   reserveSubmission: intent => zenchefJournal.reserveAttempt(intent),
   recordResult: session => {
     const saved = zenchefJournal.recordAttempt({intent:session.approval,attempt:session.attempt,result:session.result});
@@ -176,6 +177,9 @@ const playwrightRuntime = new PlaywrightRuntime({
         actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
         current:(_id,owner)=>zenchefInspection.current(owner)}] : []),
       ...(leFlorentinLive ? [{restaurantId:ZENCHEF_LEFLORENTIN.restaurantId,enabled:true,mode:'live',
+        actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
+        current:(_id,owner)=>zenchefInspection.current(owner)}] : []),
+      ...(marthaLive ? [{restaurantId:ZENCHEF_MARTHA.restaurantId,enabled:true,mode:'live',
         actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
         current:(_id,owner)=>zenchefInspection.current(owner)}] : [])],
     TableCheck: {provider:'TableCheck',restaurantId:SAZON.restaurantId,mode:'prepare',
@@ -468,7 +472,9 @@ zenchefJournal = createProviderJournal({ledger:playwrightAttempts,register:booki
     ...(petitPontoiseLive ? {[ZENCHEF_PETITPONTOISE.restaurantId]:{name:ZENCHEF_PETITPONTOISE.name,city:'Paris',
       shiftId:ZENCHEF_PETITPONTOISE.shiftId,confirmationPolicySource:ZENCHEF_PETITPONTOISE.policySource}} : {}),
     ...(leFlorentinLive ? {[ZENCHEF_LEFLORENTIN.restaurantId]:{name:ZENCHEF_LEFLORENTIN.name,city:'Paris',
-      shiftId:ZENCHEF_LEFLORENTIN.shiftId,confirmationPolicySource:ZENCHEF_LEFLORENTIN.policySource}} : {})}});
+      shiftId:ZENCHEF_LEFLORENTIN.shiftId,confirmationPolicySource:ZENCHEF_LEFLORENTIN.policySource}} : {}),
+    ...(marthaLive ? {[ZENCHEF_MARTHA.restaurantId]:{name:ZENCHEF_MARTHA.name,city:'Paris',
+      shiftId:ZENCHEF_MARTHA.shiftId,confirmationPolicySource:ZENCHEF_MARTHA.policySource}} : {})}});
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);

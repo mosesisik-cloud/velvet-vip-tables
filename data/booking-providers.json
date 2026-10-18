@@ -2296,5 +2296,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-martha-pizze-amore": {
+    "name": "Martha – Pizze Amore",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=364490&pid=1001",
+    "source": "https://marthapizzeamore.com/reservez-une-table/",
+    "venueKey": "bookings.zenchef.com/results?rid=364490",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }

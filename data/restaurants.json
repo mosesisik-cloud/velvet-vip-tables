@@ -7439,6 +7439,24 @@
       "source": "VELVET curated + OpenStreetMap · official links where available",
       "restaurants": [
         {
+          "placeId": "curated-PAR-martha-pizze-amore",
+          "name": "Martha – Pizze Amore",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "48 rue Richard Lenoir, 75011 Paris",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Martha%20Pizze%20Amore%2C%2048%20rue%20Richard%20Lenoir%2C%20Paris",
+          "website": "https://marthapizzeamore.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://marthapizzeamore.com/reservez-une-table/",
+          "locationVerifiedAt": "2026-10-18",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=364490&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-18"
+        },
+        {
           "placeId": "curated-PAR-le-florentin",
           "name": "Le Florentin",
           "rating": null,
