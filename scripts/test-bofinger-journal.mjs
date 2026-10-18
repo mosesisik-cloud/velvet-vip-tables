@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import {PlaywrightAttemptLedger} from '../api/playwright-attempt-ledger.mjs';
 import {createProviderJournal} from '../api/provider-booking-journal.mjs';
-for (const [restaurantId,shiftId,name] of [['curated-PAR-bofinger',19170,'Bofinger'],['curated-PAR-la-coupole',20148,'La Coupole']]) test(name+' durable service, owner and independent receipt survive restart',()=>{
+for (const [restaurantId,shiftId,name] of [['curated-PAR-bofinger',19170,'Bofinger'],['curated-PAR-la-coupole',20148,'La Coupole'],['curated-PAR-terminus-nord',19380,'Terminus Nord']]) test(name+' durable service, owner and independent receipt survive restart',()=>{
  const dir=fs.mkdtempSync(path.join(os.tmpdir(),'bofinger-journal-'));
  let ledger=new PlaywrightAttemptLedger(path.join(dir,'attempt.sqlite'));
  const policy='TEST-ONLY-POLICY';
