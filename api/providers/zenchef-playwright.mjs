@@ -147,11 +147,14 @@ export const ZENCHEF_OKOMUSU = Object.freeze({ restaurantId: 'curated-PAR-okomus
 export const ZENCHEF_ZENRESTAURANT = Object.freeze({ restaurantId: 'curated-PAR-zen-restaurant', venueId: '359831', name: 'ZEN',
   url: 'https://bookings.zenchef.com/results?rid=359831&pid=1001&lang=fr', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
   shiftId: 192088, source: 'https://www.zenrestaurantparis.fr/en/reservation/', policySource: 'https://bookings.zenchef.com/gtc?rid=359831&pid=1001&lang=fr' });
-const NO_ROOM_LUNCH_VENUES = Object.freeze([ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN, ZENCHEF_BOUILLONRACINE, ZENCHEF_BOUILLONREPUBLIQUE, ZENCHEF_ROSIE, ZENCHEF_ROSIELOU, ZENCHEF_ROSIEJOLIE, ZENCHEF_PETITSOMMELIER, ZENCHEF_CHEZSAVY, ZENCHEF_CHEZRENE, ZENCHEF_BISTROTPARIS, ZENCHEF_AUXBONSCRUS, ZENCHEF_AUXCRUSBOURGOGNE, ZENCHEF_PETITRETRO, ZENCHEF_MOULINVENT, ZENCHEF_PETITPONTOISE, ZENCHEF_LEFLORENTIN, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_CAFERUC, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_OKOMUSU, ZENCHEF_ZENRESTAURANT]);
+export const ZENCHEF_LAPLAGEPARISIENNE = Object.freeze({ restaurantId: 'curated-PAR-la-plage-parisienne', venueId: '356799', name: 'La Plage Parisienne',
+  url: 'https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=356799&lang=fr&iframePosition=right', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
+  shiftId: 535548, source: 'https://www.laplageparisienne.com/restaurant', policySource: 'https://bookings.zenchef.com/gtc?rid=356799&lang=fr' });
+const NO_ROOM_LUNCH_VENUES = Object.freeze([ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN, ZENCHEF_BOUILLONRACINE, ZENCHEF_BOUILLONREPUBLIQUE, ZENCHEF_ROSIE, ZENCHEF_ROSIELOU, ZENCHEF_ROSIEJOLIE, ZENCHEF_PETITSOMMELIER, ZENCHEF_CHEZSAVY, ZENCHEF_CHEZRENE, ZENCHEF_BISTROTPARIS, ZENCHEF_AUXBONSCRUS, ZENCHEF_AUXCRUSBOURGOGNE, ZENCHEF_PETITRETRO, ZENCHEF_MOULINVENT, ZENCHEF_PETITPONTOISE, ZENCHEF_LEFLORENTIN, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_CAFERUC, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_OKOMUSU, ZENCHEF_ZENRESTAURANT, ZENCHEF_LAPLAGEPARISIENNE]);
 const ROOM_VENUES = Object.freeze([ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE]);
 const READBACK_VENUES = Object.freeze([...ROOM_VENUES, ZENCHEF_DEKAS, ...NO_ROOM_LUNCH_VENUES]);
 export const ZENCHEF_POLICY_SOURCE = 'https://bookings.zenchef.com/gtc?rid=388090&lang=fr';
-const VENUES = Object.freeze({ [ZENCHEF_ZENRESTAURANT.restaurantId]: ZENCHEF_ZENRESTAURANT, [ZENCHEF_OKOMUSU.restaurantId]: ZENCHEF_OKOMUSU, [ZENCHEF_INDIANATERNES.restaurantId]: ZENCHEF_INDIANATERNES, [ZENCHEF_INDIANALESHALLES.restaurantId]: ZENCHEF_INDIANALESHALLES, [ZENCHEF_INDIANADENFERTROCHEREAU.restaurantId]: ZENCHEF_INDIANADENFERTROCHEREAU, [ZENCHEF_INDIANABERCYVILLAGE.restaurantId]: ZENCHEF_INDIANABERCYVILLAGE, [ZENCHEF_INDIANAREPUBLIQUE.restaurantId]: ZENCHEF_INDIANAREPUBLIQUE, [ZENCHEF_INDIANAMONTPARNASSE.restaurantId]: ZENCHEF_INDIANAMONTPARNASSE, [ZENCHEF_INDIANATOLBIAC.restaurantId]: ZENCHEF_INDIANATOLBIAC, [ZENCHEF_INDIANABEAUGRENELLE.restaurantId]: ZENCHEF_INDIANABEAUGRENELLE, [ZENCHEF_INDIANARICHELIEU.restaurantId]: ZENCHEF_INDIANARICHELIEU, [ZENCHEF_INDIANABONNENOUVELLE.restaurantId]: ZENCHEF_INDIANABONNENOUVELLE, [ZENCHEF_CAFERUC.restaurantId]: ZENCHEF_CAFERUC, [ZENCHEF_CAFEMARLY.restaurantId]: ZENCHEF_CAFEMARLY, [ZENCHEF_MARTHA.restaurantId]: ZENCHEF_MARTHA, [ZENCHEF_LEFLORENTIN.restaurantId]: ZENCHEF_LEFLORENTIN, [ZENCHEF_PETITPONTOISE.restaurantId]: ZENCHEF_PETITPONTOISE, [ZENCHEF_MOULINVENT.restaurantId]: ZENCHEF_MOULINVENT, [ZENCHEF_PETITRETRO.restaurantId]: ZENCHEF_PETITRETRO, [ZENCHEF_AUXCRUSBOURGOGNE.restaurantId]: ZENCHEF_AUXCRUSBOURGOGNE, [ZENCHEF_AUXBONSCRUS.restaurantId]: ZENCHEF_AUXBONSCRUS, [ZENCHEF_BISTROTPARIS.restaurantId]: ZENCHEF_BISTROTPARIS, [ZENCHEF_CHEZRENE.restaurantId]: ZENCHEF_CHEZRENE, [ZENCHEF_CHEZSAVY.restaurantId]: ZENCHEF_CHEZSAVY, [ZENCHEF_PETITSOMMELIER.restaurantId]: ZENCHEF_PETITSOMMELIER, [ZENCHEF_ROSIEJOLIE.restaurantId]: ZENCHEF_ROSIEJOLIE, [ZENCHEF_ROSIELOU.restaurantId]: ZENCHEF_ROSIELOU, [ZENCHEF_ROSIE.restaurantId]: ZENCHEF_ROSIE, [ZENCHEF_BOUILLONREPUBLIQUE.restaurantId]: ZENCHEF_BOUILLONREPUBLIQUE, [ZENCHEF_BOUILLONRACINE.restaurantId]: ZENCHEF_BOUILLONRACINE, [ZENCHEF_BOUILLONJULIEN.restaurantId]: ZENCHEF_BOUILLONJULIEN, [ZENCHEF_VAGENENDE.restaurantId]: ZENCHEF_VAGENENDE, [ZENCHEF_GRANDCAFE.restaurantId]: ZENCHEF_GRANDCAFE, [ZENCHEF_PIEDDECOCHON.restaurantId]: ZENCHEF_PIEDDECOCHON, [ZENCHEF_LALORRAINE.restaurantId]: ZENCHEF_LALORRAINE, [ZENCHEF_PROCOPE.restaurantId]: ZENCHEF_PROCOPE, [ZENCHEF_TERMINUSNORD.restaurantId]: ZENCHEF_TERMINUSNORD, [ZENCHEF_LACOUPOLE.restaurantId]: ZENCHEF_LACOUPOLE, [ZENCHEF_BOFINGER.restaurantId]: ZENCHEF_BOFINGER, [ZENCHEF_DEKAS.restaurantId]: ZENCHEF_DEKAS, [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE, [ZENCHEF_PIROUETTE.restaurantId]: ZENCHEF_PIROUETTE });
+const VENUES = Object.freeze({ [ZENCHEF_LAPLAGEPARISIENNE.restaurantId]: ZENCHEF_LAPLAGEPARISIENNE, [ZENCHEF_ZENRESTAURANT.restaurantId]: ZENCHEF_ZENRESTAURANT, [ZENCHEF_OKOMUSU.restaurantId]: ZENCHEF_OKOMUSU, [ZENCHEF_INDIANATERNES.restaurantId]: ZENCHEF_INDIANATERNES, [ZENCHEF_INDIANALESHALLES.restaurantId]: ZENCHEF_INDIANALESHALLES, [ZENCHEF_INDIANADENFERTROCHEREAU.restaurantId]: ZENCHEF_INDIANADENFERTROCHEREAU, [ZENCHEF_INDIANABERCYVILLAGE.restaurantId]: ZENCHEF_INDIANABERCYVILLAGE, [ZENCHEF_INDIANAREPUBLIQUE.restaurantId]: ZENCHEF_INDIANAREPUBLIQUE, [ZENCHEF_INDIANAMONTPARNASSE.restaurantId]: ZENCHEF_INDIANAMONTPARNASSE, [ZENCHEF_INDIANATOLBIAC.restaurantId]: ZENCHEF_INDIANATOLBIAC, [ZENCHEF_INDIANABEAUGRENELLE.restaurantId]: ZENCHEF_INDIANABEAUGRENELLE, [ZENCHEF_INDIANARICHELIEU.restaurantId]: ZENCHEF_INDIANARICHELIEU, [ZENCHEF_INDIANABONNENOUVELLE.restaurantId]: ZENCHEF_INDIANABONNENOUVELLE, [ZENCHEF_CAFERUC.restaurantId]: ZENCHEF_CAFERUC, [ZENCHEF_CAFEMARLY.restaurantId]: ZENCHEF_CAFEMARLY, [ZENCHEF_MARTHA.restaurantId]: ZENCHEF_MARTHA, [ZENCHEF_LEFLORENTIN.restaurantId]: ZENCHEF_LEFLORENTIN, [ZENCHEF_PETITPONTOISE.restaurantId]: ZENCHEF_PETITPONTOISE, [ZENCHEF_MOULINVENT.restaurantId]: ZENCHEF_MOULINVENT, [ZENCHEF_PETITRETRO.restaurantId]: ZENCHEF_PETITRETRO, [ZENCHEF_AUXCRUSBOURGOGNE.restaurantId]: ZENCHEF_AUXCRUSBOURGOGNE, [ZENCHEF_AUXBONSCRUS.restaurantId]: ZENCHEF_AUXBONSCRUS, [ZENCHEF_BISTROTPARIS.restaurantId]: ZENCHEF_BISTROTPARIS, [ZENCHEF_CHEZRENE.restaurantId]: ZENCHEF_CHEZRENE, [ZENCHEF_CHEZSAVY.restaurantId]: ZENCHEF_CHEZSAVY, [ZENCHEF_PETITSOMMELIER.restaurantId]: ZENCHEF_PETITSOMMELIER, [ZENCHEF_ROSIEJOLIE.restaurantId]: ZENCHEF_ROSIEJOLIE, [ZENCHEF_ROSIELOU.restaurantId]: ZENCHEF_ROSIELOU, [ZENCHEF_ROSIE.restaurantId]: ZENCHEF_ROSIE, [ZENCHEF_BOUILLONREPUBLIQUE.restaurantId]: ZENCHEF_BOUILLONREPUBLIQUE, [ZENCHEF_BOUILLONRACINE.restaurantId]: ZENCHEF_BOUILLONRACINE, [ZENCHEF_BOUILLONJULIEN.restaurantId]: ZENCHEF_BOUILLONJULIEN, [ZENCHEF_VAGENENDE.restaurantId]: ZENCHEF_VAGENENDE, [ZENCHEF_GRANDCAFE.restaurantId]: ZENCHEF_GRANDCAFE, [ZENCHEF_PIEDDECOCHON.restaurantId]: ZENCHEF_PIEDDECOCHON, [ZENCHEF_LALORRAINE.restaurantId]: ZENCHEF_LALORRAINE, [ZENCHEF_PROCOPE.restaurantId]: ZENCHEF_PROCOPE, [ZENCHEF_TERMINUSNORD.restaurantId]: ZENCHEF_TERMINUSNORD, [ZENCHEF_LACOUPOLE.restaurantId]: ZENCHEF_LACOUPOLE, [ZENCHEF_BOFINGER.restaurantId]: ZENCHEF_BOFINGER, [ZENCHEF_DEKAS.restaurantId]: ZENCHEF_DEKAS, [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE, [ZENCHEF_PIROUETTE.restaurantId]: ZENCHEF_PIROUETTE });
 const FIXTURE_URL = 'https://zenchef-fixture.invalid/';
 const TTL = 10 * 60_000;
 const FIELDS = ['firstname', 'lastname', 'email', 'phone'];
@@ -210,15 +213,28 @@ export function ternesVisitMetadata(state) {
     && state.mandatoryFields?.['custom_field.je-reserve-pour'] === 'required'
     && STANDARD_REQUIRED_FIELDS.every(key => state.mandatoryFields[key] === 'required');
 }
+export const PLAGE_DURATION_SLUG = 'le-samedi-soir-jai-bien-pris-connaissance-que-ma-table-est-reservee-pour-une-duree-de-2h';
+export const PLAGE_DURATION_LABEL = 'Le samedi soir, j’ai bien pris connaissance que ma table est réservée pour une durée de 2h';
+export function laPlageDurationMetadata(state) {
+ const f=state?.customFields?.[0];
+ return state?.restaurantId === '356799' && state.isInUpdateFlow === false
+  && Array.isArray(state.customFields) && state.customFields.length === 1
+  && f?.id === 2069 && f.restaurant_id === 356799 && f.slug === PLAGE_DURATION_SLUG
+  && f.title === PLAGE_DURATION_LABEL && f.type === 'checkbox' && f.displayType === 'checkbox' && f.step === 3
+  && f.enabled === false && f.required === true && Array.isArray(f.options) && f.options.length === 0
+  && Array.isArray(state.customFieldsV2) && state.customFieldsV2.length === 0
+  && state.mandatoryFields?.['custom_field.'+PLAGE_DURATION_SLUG] === 'required'
+  && STANDARD_REQUIRED_FIELDS.every(k=>state.mandatoryFields[k] === 'required');
+}
 export function supportedZenchefFields(state, venue) {
   const purpose = venue === ZENCHEF_INDIANAMONTPARNASSE, visit = visitConfig(venue);
-  return !!state?.mandatoryFields && (!purpose || montparnassePurposeMetadata(state)) && (!visit || (venue === ZENCHEF_INDIANATERNES ? ternesVisitMetadata(state) : lesHallesVisitMetadata(state)))
+  return (venue !== ZENCHEF_LAPLAGEPARISIENNE || laPlageDurationMetadata(state)) && !!state?.mandatoryFields && (!purpose || montparnassePurposeMetadata(state)) && (!visit || (venue === ZENCHEF_INDIANATERNES ? ternesVisitMetadata(state) : lesHallesVisitMetadata(state)))
     && !Object.entries(state.mandatoryFields).some(([key, value]) => value === 'required'
-      && !STANDARD_REQUIRED_FIELDS.includes(key) && !(purpose && key === PURPOSE_KEY) && !(visit && key === 'custom_field.' + visit.slug));
+      && !STANDARD_REQUIRED_FIELDS.includes(key) && !(purpose && key === PURPOSE_KEY) && !(visit && key === 'custom_field.' + visit.slug) && !(venue === ZENCHEF_LAPLAGEPARISIENNE && key === 'custom_field.'+PLAGE_DURATION_SLUG));
 }
 const nativeTermsVersion = (text, form, shift, venue) => {
   const base = digest([text, form.restaurantComment || null, shift || null]);
-  return [ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES].includes(venue) ? digest([base, purposeSchema(form)]) : base;
+  return [ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_LAPLAGEPARISIENNE].includes(venue) ? digest([base, purposeSchema(form)]) : base;
 };
 const purposeSchema = state => digest([state.mandatoryFields, state.customFields, state.customFieldsV2, state.isInUpdateFlow]);
 export class ZenchefError extends Error {
@@ -237,6 +253,7 @@ const bounded = async (operation, ms) => {
 // controls. Remove those optional invitations; never add consent on the guest's behalf.
 export function approvedZenchefPayload(body, approval) {
   const deKas = approval?.restaurantId === ZENCHEF_DEKAS.restaurantId;
+  const plageVenue = approval?.restaurantId === ZENCHEF_LAPLAGEPARISIENNE.restaurantId;
   const purposeVenue = approval?.restaurantId === ZENCHEF_INDIANAMONTPARNASSE.restaurantId;
   const visitVenue = visitVenueForId(approval?.restaurantId), visit = visitConfig(visitVenue);
   const keys = 'day nb_guests time lang firstname lastname civility country phone_number email comment custom_field custom_field_v2 customersheet offers partner_id type'.split(' ');
@@ -254,11 +271,14 @@ export function approvedZenchefPayload(body, approval) {
   if (purposeVenue ? (!validReservationPurpose(purpose) || approval.reservationPurpose !== purpose
     || !exactKeys(body.custom_field, [PURPOSE_SLUG]) || body.custom_field[PURPOSE_SLUG] !== purpose)
     : (Object.hasOwn(approval, 'reservationPurpose') || Object.hasOwn(approval.details || {}, 'reservationPurpose')
-      || (!visitVenue && !exactKeys(body.custom_field, [])))) return null;
+      || (!visitVenue && !plageVenue && !exactKeys(body.custom_field, [])))) return null;
   const visitReason = approval.details?.reservationVisitReason;
   if (visitVenue ? (!validReservationVisitReason(visitReason, visitVenue) || approval.reservationVisitReason !== visitReason
     || !exactKeys(body.custom_field, [visit.slug]) || body.custom_field[visit.slug] !== visitReason)
     : (Object.hasOwn(approval, 'reservationVisitReason') || Object.hasOwn(approval.details || {}, 'reservationVisitReason'))) return null;
+  if (plageVenue ? (approval.reservationSaturdayDurationAcknowledged !== true || approval.details?.reservationSaturdayDurationAcknowledged !== true
+    || !exactKeys(body.custom_field,[PLAGE_DURATION_SLUG]) || body.custom_field[PLAGE_DURATION_SLUG] !== true)
+    : (Object.hasOwn(approval,'reservationSaturdayDurationAcknowledged') || Object.hasOwn(approval.details || {},'reservationSaturdayDurationAcknowledged'))) return null;
   const sheet = body.customersheet, phone = String(approval.phone).replace(/\s/g, '');
   if (body.day !== approval.date || body.time !== approval.time || body.nb_guests !== approval.party
     || body.lang !== (deKas ? 'en' : 'fr') || body.partner_id !== '1001' || body.type !== 'web' || body.comment !== ''
@@ -334,6 +354,7 @@ const attemptMatchesApproval = (attempt, approval) => !!attempt?.attemptId && !!
   && (approval.restaurantId !== ZENCHEF_INDIANAMONTPARNASSE.restaurantId || (validReservationPurpose(approval.details?.reservationPurpose)
     && attempt.details?.reservationPurpose === approval.details.reservationPurpose
     && approval.reservationPurpose === approval.details.reservationPurpose))
+  && (approval.restaurantId !== ZENCHEF_LAPLAGEPARISIENNE.restaurantId || (approval.reservationSaturdayDurationAcknowledged === true && approval.details?.reservationSaturdayDurationAcknowledged === true && attempt.details?.reservationSaturdayDurationAcknowledged === true))
   && (!visitVenueForId(approval.restaurantId) || (validReservationVisitReason(approval.details?.reservationVisitReason, visitVenueForId(approval.restaurantId))
     && attempt.details?.reservationVisitReason === approval.details.reservationVisitReason
     && approval.reservationVisitReason === approval.details.reservationVisitReason));
@@ -931,6 +952,18 @@ export function zenRestaurantPolicy(state, shift, party) {
     && shift.cancelation_param?.enduser_cancelable_before === 86400
     && shift.cancelation_param.enduser_cancelable_reference === 'shift';
 }
+export function laPlageParisiennePolicy(state, shift, party) {
+ return party === 2 && state?.restaurantId === '356799' && !Object.hasOwn(state,'partner_id')
+  && state.currency === 'EUR' && state.language === 'fr' && laPlageDurationMetadata(state)
+  && typeof state.restaurantComment?.fr === 'string' && !!state.restaurantComment.fr.trim()
+  && typeof state.restaurantComment?.en === 'string' && !!state.restaurantComment.en.trim()
+  && state.hasRoomSelection === false && state.isRoomMandatory === false && state.wish?.room_id === null
+  && Array.isArray(state.wish.offers) && state.wish.offers.length === 0
+  && shift?.id === 535548 && shift.name === 'Déjeuner' && shift.confirmation?.is_auto === true && shift.confirmation.is_auto_until === null
+  && shift.charge_param?.is_web_booking_askable === true && shift.charge_param.min_guests === 8 && shift.charge_param.charge_per_guests === 50
+  && shift.prepayment_param === null && shift.is_offer_required === false && shift.offer_required_from_pax === null
+  && shift.cancelation_param?.enduser_cancelable_before === 10800 && shift.cancelation_param.enduser_cancelable_reference === 'shift';
+}
 const noRoomLunchPolicy = (venue, state, shift, party) => venue === ZENCHEF_BOFINGER
   ? bofingerPolicy(state, shift, party) : venue === ZENCHEF_LACOUPOLE ? laCoupolePolicy(state, shift, party)
     : venue === ZENCHEF_TERMINUSNORD ? terminusNordPolicy(state, shift, party)
@@ -969,7 +1002,7 @@ const noRoomLunchPolicy = (venue, state, shift, party) => venue === ZENCHEF_BOFI
                                                                   : venue === ZENCHEF_INDIANALESHALLES ? indianaLesHallesPolicy(state, shift, party)
                                                                     : venue === ZENCHEF_INDIANATERNES ? indianaTernesPolicy(state, shift, party)
                                                                       : venue === ZENCHEF_OKOMUSU ? okomusuPolicy(state, shift, party)
-                                                                        : venue === ZENCHEF_ZENRESTAURANT && zenRestaurantPolicy(state, shift, party);
+                                                                        : venue === ZENCHEF_ZENRESTAURANT ? zenRestaurantPolicy(state, shift, party) : venue === ZENCHEF_LAPLAGEPARISIENNE && laPlageParisiennePolicy(state, shift, party);
 
 // Read only the server-rendered provider state, never execute or mutate its store.
 // Candidate slots are not held, selected, confirmed or guaranteed bookable later.
@@ -977,7 +1010,7 @@ export function zenchefAvailabilityEvidence(data, query, observedAt = Date.now()
   zenchefSearchUrl(query, venue);
   const state = data?.props?.initialState?.appStoreState;
   const day = state?.dailyAvailabilities?.[query.date];
-  if (data?.page !== '/results' || (venue === ZENCHEF_OKOMUSU && Object.hasOwn(data.query || {}, 'pid')) || ([ZENCHEF_PETITSOMMELIER, ZENCHEF_PETITPONTOISE, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_ZENRESTAURANT].includes(venue) && data.query?.pid !== '1001') || data.query?.rid !== venue.venueId || data.query?.day !== query.date
+  if (data?.page !== '/results' || ([ZENCHEF_OKOMUSU, ZENCHEF_LAPLAGEPARISIENNE].includes(venue) && Object.hasOwn(data.query || {}, 'pid')) || ([ZENCHEF_PETITSOMMELIER, ZENCHEF_PETITPONTOISE, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_ZENRESTAURANT].includes(venue) && data.query?.pid !== '1001') || data.query?.rid !== venue.venueId || data.query?.day !== query.date
     || String(data.query?.pax) !== String(query.party) || state?.restaurantId !== venue.venueId
     || state.initializedSSR !== true || state.wish?.day !== query.date || state.wish?.pax !== query.party
     || state.wish.waiting_list !== false || state.restaurantTimezone !== venue.timezone
@@ -1105,6 +1138,10 @@ export class ZenchefPlaywright {
             if (venue === ZENCHEF_INDIANAMONTPARNASSE) {
               await this.verifyNativeRoom(s);
               if (await this.readReservationPurpose(s) !== s.approval.details.reservationPurpose) throw new ZenchefError('stale_review', 409);
+            }
+            if (venue === ZENCHEF_LAPLAGEPARISIENNE) {
+              await this.verifyNativeRoom(s);
+              if (await this.readSaturdayDuration(s) !== true) throw new ZenchefError('stale_review',409);
             }
             const reserved = await bounded(() => this.reserveSubmission(s.approval, s), 5000);
             if (reserved?.sendAllowed !== true || !reserved.attempt?.attemptId || !reserved.attempt?.idempotencyKey || this.#closed) throw new ZenchefError('attempt_not_authorized');
@@ -1256,14 +1293,14 @@ export class ZenchefPlaywright {
   async verifyNativeRoom(s) {
     const data = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent());
     const form = data?.props?.initialState?.appStoreState;
-    if (s.venue === ZENCHEF_OKOMUSU && Object.hasOwn(data?.query || {}, 'pid')) throw new ZenchefError('stale_review',409);
+    if ([ZENCHEF_OKOMUSU, ZENCHEF_LAPLAGEPARISIENNE].includes(s.venue) && Object.hasOwn(data?.query || {}, 'pid')) throw new ZenchefError('stale_review',409);
     if ([ZENCHEF_PETITSOMMELIER, ZENCHEF_PETITPONTOISE, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_ZENRESTAURANT].includes(s.venue) && data?.query?.pid !== '1001')
       throw new ZenchefError('stale_review', 409);
     // Form requirements can change after selection or review. Recheck before
     // approval and the durable send grant, not only when opening the form.
     if (!supportedZenchefFields(form, s.venue))
       throw new ZenchefError('provider_fields_unverified', 409);
-    if ([ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES].includes(s.venue) && purposeSchema(form) !== s.purposeSchemaVersion)
+    if ([ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_LAPLAGEPARISIENNE].includes(s.venue) && purposeSchema(form) !== s.purposeSchemaVersion)
       throw new ZenchefError('provider_fields_unverified', 409);
     if (NO_ROOM_LUNCH_VENUES.includes(s.venue)) {
       const shift = form?.dailyAvailabilities?.[s.searchQuery.date]?.shifts?.find(row => row.id === s.venue.shiftId);
@@ -1285,6 +1322,16 @@ export class ZenchefPlaywright {
     if (s.page.url() !== zenchefFormUrl(s.formSelection, s.venue) || form?.wish?.room_id !== roomId
       || !await s.page.getByText(roomName, { exact: true }).isVisible()) throw new ZenchefError('provider_room_mismatch', 409);
   }
+  async saturdayDurationInput(s) {
+    if (s.venue !== ZENCHEF_LAPLAGEPARISIENNE) throw new ZenchefError('provider_fields_unverified',409);
+    const input=s.page.locator('[id="custom_field__'+PLAGE_DURATION_SLUG+'"]');
+    const label=s.page.locator('label[for="custom_field__'+PLAGE_DURATION_SLUG+'"]');
+    if (await input.count() !== 1 || await label.count() !== 1 || !await label.isVisible()
+      || !await input.isEnabled() || await input.evaluate(e=>e.type) !== 'checkbox'
+      || (await label.innerText()).trim() !== PLAGE_DURATION_LABEL) throw new ZenchefError('provider_fields_unverified',409);
+    return input;
+  }
+  async readSaturdayDuration(s) { return (await this.saturdayDurationInput(s)).isChecked(); }
   async reservationPurposeInput(s) {
     if (s.venue !== ZENCHEF_INDIANAMONTPARNASSE) throw new ZenchefError('provider_fields_unverified', 409);
     const title = s.page.getByText('Motif de la réservation', { exact: true });
@@ -1333,6 +1380,7 @@ export class ZenchefPlaywright {
       fields = [];
       for (const name of FIELDS) fields.push({ name, value: await s.page.locator(PROVIDER_FIELDS[name]).inputValue() });
       if (!!visitConfig(s.venue)) fields.push({name:'reservationVisitReason',value:await this.readReservationVisitReason(s),required:true,type:'select',options:[...visitConfig(s.venue).values],label:visitConfig(s.venue).label});
+      if (s.venue === ZENCHEF_LAPLAGEPARISIENNE) fields.push({name:'reservationSaturdayDurationAcknowledged',value:await this.readSaturdayDuration(s),required:true,type:'checkbox',label:PLAGE_DURATION_LABEL});
       if (s.venue === ZENCHEF_INDIANAMONTPARNASSE) fields.push({ name: 'reservationPurpose', value: await this.readReservationPurpose(s), required: true, type: 'text', maxLength: 200, label: 'Motif de la réservation' });
       const selected = s.page.locator('input[name="civility"]:checked');
       fields.push({ name: 'civility', value: await selected.count() === 1 ? await selected.inputValue() : '', options: ['mr', 'mrs', 'mx'] });
@@ -1350,7 +1398,8 @@ export class ZenchefPlaywright {
         && (this.mode === 'fixture' || (this.mode === 'prepare' && this.enableSubmission && s.noCardAllowed
           && !!s.details?.country && s.review?.revision === s.revision)),
       offerChoices: s.offerChoices ? structuredClone(s.offerChoices) : null,
-      fields, details: s.details ? structuredClone(s.details) : null, result: s.result ? structuredClone(s.result) : null,
+      fields, details: s.details ? structuredClone(s.details) : s.venue === ZENCHEF_LAPLAGEPARISIENNE && s.state === 'contact'
+        ? {reservationSaturdayDurationAcknowledged: fields?.find(f=>f.name === 'reservationSaturdayDurationAcknowledged')?.value === true} : null, result: s.result ? structuredClone(s.result) : null,
       availabilityEvidence: s.availabilityEvidence ? structuredClone(s.availabilityEvidence) : null,
       phase: 'booking', reviewFingerprint: s.review?.digest || null,
       reviewToken: s.review?.revision === s.revision ? s.review.token : null,
@@ -1374,7 +1423,7 @@ export class ZenchefPlaywright {
       if (this.mode !== 'fixture' && action.type === 'search') {
         const query = { date: action.date, party: action.party };
         const url = zenchefSearchUrl(query, s.venue);
-        s.searchQuery = query; s.formSelection = null; s.details = null; s.enteredReservationPurpose = undefined; s.enteredReservationVisitReason = undefined; s.review = null; s.noCardAllowed = false; s.terms = null;
+        s.searchQuery = query; s.formSelection = null; s.details = null; s.enteredReservationPurpose = undefined; s.enteredReservationVisitReason = undefined; s.enteredSaturdayDuration = undefined; s.review = null; s.noCardAllowed = false; s.terms = null;
         s.availabilityEvidence = null; s.offerChoices = null; s.offerChoice = null; s.state = 'inspect_only';
         await s.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 12000 });
         const data = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent());
@@ -1438,7 +1487,7 @@ export class ZenchefPlaywright {
           await s.page.locator(PROVIDER_FIELDS.firstname).waitFor({ state: 'visible', timeout: 20000 });
           const data = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent());
           const form = data?.props?.initialState?.appStoreState;
-          if (s.page.url() !== url || data.page !== '/form' || (s.venue === ZENCHEF_OKOMUSU && Object.hasOwn(data.query || {}, 'pid')) || ([ZENCHEF_PETITSOMMELIER, ZENCHEF_PETITPONTOISE, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_ZENRESTAURANT].includes(s.venue) && data.query?.pid !== '1001') || form?.restaurantId !== s.venue.venueId
+          if (s.page.url() !== url || data.page !== '/form' || ([ZENCHEF_OKOMUSU, ZENCHEF_LAPLAGEPARISIENNE].includes(s.venue) && Object.hasOwn(data.query || {}, 'pid')) || ([ZENCHEF_PETITSOMMELIER, ZENCHEF_PETITPONTOISE, ZENCHEF_MARTHA, ZENCHEF_CAFEMARLY, ZENCHEF_INDIANABONNENOUVELLE, ZENCHEF_INDIANARICHELIEU, ZENCHEF_INDIANABEAUGRENELLE, ZENCHEF_INDIANATOLBIAC, ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANAREPUBLIQUE, ZENCHEF_INDIANABERCYVILLAGE, ZENCHEF_INDIANADENFERTROCHEREAU, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_ZENRESTAURANT].includes(s.venue) && data.query?.pid !== '1001') || form?.restaurantId !== s.venue.venueId
             || form.wish?.day !== s.searchQuery.date || form.wish?.pax !== s.searchQuery.party
             || form.wish?.slot !== action.time || form.wish?.waiting_list !== false) throw new ZenchefError('provider_form_mismatch', 502);
           if (room && (form.wish.room_id !== room.id || form.isRoomMandatory !== true
@@ -1447,8 +1496,9 @@ export class ZenchefPlaywright {
           if (!supportedZenchefFields(form, s.venue)) {
             throw new ZenchefError('provider_fields_unverified', 409);
           }
+          if (s.venue === ZENCHEF_LAPLAGEPARISIENNE && await this.readSaturdayDuration(s) !== false) throw new ZenchefError('provider_fields_unverified',409);
           if (!!visitConfig(s.venue) && await this.readReservationVisitReason(s) !== '') throw new ZenchefError('provider_fields_unverified',409);
-          if ([ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES].includes(s.venue)) s.purposeSchemaVersion = purposeSchema(form);
+          if ([ZENCHEF_INDIANAMONTPARNASSE, ZENCHEF_INDIANALESHALLES, ZENCHEF_INDIANATERNES, ZENCHEF_LAPLAGEPARISIENNE].includes(s.venue)) s.purposeSchemaVersion = purposeSchema(form);
           const shift = form.dailyAvailabilities?.[s.searchQuery.date]?.shifts?.find(row => row.id === s.venue.shiftId);
           s.noCardAllowed = s.venue === ZENCHEF_FISHCORNER && shift?.id === 545372 && shift.charge_param === null
             && shift.shift_slots?.some(slot => slot.name === action.time && slot.closed === false && slot.marked_as_full === false && slot.possible_guests?.includes(s.searchQuery.party))
@@ -1479,7 +1529,7 @@ export class ZenchefPlaywright {
             s.terms.version = digest([s.terms.version, s.terms.seatingNotice]);
           }
           if (NO_ROOM_LUNCH_VENUES.includes(s.venue)) {
-            s.terms.restaurantNotice = s.venue === ZENCHEF_ZENRESTAURANT
+            s.terms.restaurantNotice = [ZENCHEF_ZENRESTAURANT, ZENCHEF_LAPLAGEPARISIENNE].includes(s.venue)
               ? `Français:\n${form.restaurantComment?.fr || ''}\n\nEnglish:\n${form.restaurantComment?.en || ''}`
               : form.restaurantComment?.fr || '';
             if (s.venue === ZENCHEF_MOULINVENT) s.terms.seatingNotice = shift?.comment?.fr || '';
@@ -1492,15 +1542,18 @@ export class ZenchefPlaywright {
           return await this.snapshot(s);
         }
         if (action.type === 'fill' && ['contact', 'review'].includes(s.state)) {
+          const plageVenue = s.venue === ZENCHEF_LAPLAGEPARISIENNE;
           const fields = action.fields, purposeVenue = s.venue === ZENCHEF_INDIANAMONTPARNASSE, visitVenue = !!visitConfig(s.venue);
-          if (!fields || !((purposeVenue || visitVenue) ? [6, 7] : [5, 6]).includes(Object.keys(fields).length)
-            || Object.keys(fields).some(k => ![...FIELDS, 'civility', 'country', ...(purposeVenue ? ['reservationPurpose'] : []), ...(visitVenue ? ['reservationVisitReason'] : [])].includes(k))
+          if (!fields || !((purposeVenue || visitVenue || plageVenue) ? [6, 7] : [5, 6]).includes(Object.keys(fields).length)
+            || Object.keys(fields).some(k => ![...FIELDS, 'civility', 'country', ...(purposeVenue ? ['reservationPurpose'] : []), ...(visitVenue ? ['reservationVisitReason'] : []), ...(plageVenue ? ['reservationSaturdayDurationAcknowledged'] : [])].includes(k))
+            || (plageVenue && typeof fields.reservationSaturdayDurationAcknowledged !== 'boolean')
             || (purposeVenue && !validReservationPurpose(fields.reservationPurpose))
             || (visitVenue && !validReservationVisitReason(fields.reservationVisitReason, s.venue))
             || (fields.country !== undefined && !/^[a-z]{2}$/.test(fields.country)) || FIELDS.some(k => typeof fields[k] !== 'string'
             || !fields[k].trim() || fields[k].length > 200) || !['mr', 'mrs', 'mx'].includes(fields.civility)
             || !/^\+\d{7,15}$/.test(fields.phone) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(fields.email)) throw new ZenchefError('contact_fields');
           s.review = null; s.details = null; s.state = 'contact';
+          if (plageVenue) { await this.verifyNativeRoom(s); await this.saturdayDurationInput(s); }
           if (purposeVenue) {
             await this.verifyNativeRoom(s);
             const input = await this.reservationPurposeInput(s);
@@ -1528,6 +1581,13 @@ export class ZenchefPlaywright {
             await box.locator('xpath=ancestor::label[1]').click();
             if (await box.isChecked()) throw new ZenchefError('provider_consent_not_cleared', 409);
           }
+          if (plageVenue) {
+            await this.verifyNativeRoom(s);
+            const input=await this.saturdayDurationInput(s);
+            if (fields.reservationSaturdayDurationAcknowledged === true) await s.page.locator('label[for="custom_field__'+PLAGE_DURATION_SLUG+'"]' ).click();
+            if (await input.isChecked() !== fields.reservationSaturdayDurationAcknowledged) throw new ZenchefError('provider_field_not_applied',409);
+            s.enteredSaturdayDuration=fields.reservationSaturdayDurationAcknowledged;
+          }
           return await this.snapshot(s);
         }
         if (action.type === 'review' && ['contact', 'review'].includes(s.state)) {
@@ -1543,6 +1603,10 @@ export class ZenchefPlaywright {
             details.reservationVisitReason = await this.readReservationVisitReason(s);
             if (!validReservationVisitReason(details.reservationVisitReason, s.venue)) throw new ZenchefError('contact_required');
             if (details.reservationVisitReason !== s.enteredReservationVisitReason) throw new ZenchefError('provider_field_not_applied',409);
+          }
+          if (s.venue === ZENCHEF_LAPLAGEPARISIENNE) {
+            details.reservationSaturdayDurationAcknowledged=await this.readSaturdayDuration(s);
+            if (details.reservationSaturdayDurationAcknowledged !== true || s.enteredSaturdayDuration !== true) throw new ZenchefError('contact_required');
           }
           details.country = await this.nativeCountry(s);
           if (FIELDS.some(k => !details[k]?.trim())) throw new ZenchefError('contact_required');
@@ -1565,6 +1629,10 @@ export class ZenchefPlaywright {
             actual.reservationVisitReason = await this.readReservationVisitReason(s);
             if (!validReservationVisitReason(actual.reservationVisitReason, s.venue)) throw new ZenchefError('stale_review',409);
           }
+          if (s.venue === ZENCHEF_LAPLAGEPARISIENNE) {
+            actual.reservationSaturdayDurationAcknowledged=await this.readSaturdayDuration(s);
+            if (actual.reservationSaturdayDurationAcknowledged !== true || s.enteredSaturdayDuration !== true) throw new ZenchefError('stale_review',409);
+          }
           actual.country = await this.nativeCountry(s);
           if (digest([s.owner, s.id, s.restaurantId, actual, s.terms?.version]) !== s.review.digest) throw new ZenchefError('stale_review', 409);
           // Arpège's actual form requires a card imprint; no card/booking request
@@ -1579,6 +1647,7 @@ export class ZenchefPlaywright {
             details: { date: actual.date, time: actual.time, party: actual.party,
               ...(s.venue === ZENCHEF_INDIANAMONTPARNASSE ? { reservationPurpose: actual.reservationPurpose } : {}),
               ...(!!visitConfig(s.venue) ? { reservationVisitReason: actual.reservationVisitReason } : {}),
+              ...(s.venue === ZENCHEF_LAPLAGEPARISIENNE ? {reservationSaturdayDurationAcknowledged:actual.reservationSaturdayDurationAcknowledged} : {}),
               ...(NO_ROOM_LUNCH_VENUES.includes(s.venue) ? {shiftId:s.venue.shiftId} : {}),
               ...(s.venue === ZENCHEF_DEKAS ? { offer: structuredClone(actual.offer) } : {}),
               ...(s.venue.rooms ? { roomId: actual.roomId, roomName: actual.roomName } : {}) } };
@@ -1586,6 +1655,7 @@ export class ZenchefPlaywright {
           try {
             // Never preserve invisible/default marketing or storage opt-ins.
             for (const box of await s.page.locator('input[type="checkbox"]').all()) if (await box.isChecked()) {
+              if (s.venue === ZENCHEF_LAPLAGEPARISIENNE && await box.getAttribute('id') === 'custom_field__'+PLAGE_DURATION_SLUG) continue;
               await box.locator('xpath=ancestor::label[1]').click();
             }
             await s.page.locator('[data-testid="eula-checkbox"]').click();
@@ -1652,6 +1722,8 @@ export class ZenchefPlaywright {
       } else throw new ZenchefError('invalid_transition', 409);
       return await this.snapshot(s);
     } catch (error) {
+      // A failed own-checkbox action invalidates its prior review as well as the screenshot.
+      if (s.venue === ZENCHEF_LAPLAGEPARISIENNE && !s.submissionStarted) { s.review=null; s.details=null; if (s.state === 'review') s.state='contact'; }
       // Invalidate screenshots after any partially completed browser interaction.
       try { await this.snapshot(s); }
       catch { this.#sessions.delete(s.id); await s.context.close().catch(() => {}); }

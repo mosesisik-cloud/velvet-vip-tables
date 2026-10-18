@@ -5,12 +5,16 @@ export function mountProviderPlaywrightBooking(container, api, {
 } = {}) {
   if (!provider || !restaurantId || !endpoint.startsWith('/')) throw new Error('booking_config');
   const isZenchef = provider.toLowerCase() === 'zenchef';
-  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : restaurantId === 'curated-PAR-brasserie-rosie-lou' ? 118503 : restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 298043 : restaurantId === 'curated-PAR-le-petit-sommelier' ? 37613 : restaurantId === 'curated-PAR-chez-savy' ? 68279 : restaurantId === 'curated-PAR-chez-rene' ? 68277 : restaurantId === 'curated-PAR-le-bistrot-de-paris' ? 68145 : restaurantId === 'curated-PAR-aux-bons-crus' ? 20711 : restaurantId === 'curated-PAR-aux-crus-de-bourgogne' ? 22200 : restaurantId === 'curated-PAR-le-petit-retro' ? 116623 : restaurantId === 'curated-PAR-au-moulin-a-vent' ? 139531 : restaurantId === 'curated-PAR-le-petit-pontoise' ? 9493 : restaurantId === 'curated-PAR-le-florentin' ? 283681 : restaurantId === 'curated-PAR-martha-pizze-amore' ? 159369 : restaurantId === 'curated-PAR-le-cafe-marly' ? 122853 : restaurantId === 'curated-PAR-le-cafe-ruc' ? 32216 : restaurantId === 'curated-PAR-indiana-cafe-bonne-nouvelle' ? 253448 : restaurantId === 'curated-PAR-indiana-cafe-richelieu-drouot' ? 276858 : restaurantId === 'curated-PAR-indiana-cafe-beaugrenelle' ? 281252 : restaurantId === 'curated-PAR-indiana-cafe-tolbiac' ? 243266 : restaurantId === 'curated-PAR-indiana-cafe-montparnasse' ? 314295 : restaurantId === 'curated-PAR-indiana-cafe-republique' ? 274078 : restaurantId === 'curated-PAR-indiana-cafe-bercy-village' ? 245385 : restaurantId === 'curated-PAR-indiana-cafe-denfert-rochereau' ? 278132 : restaurantId === 'curated-PAR-indiana-cafe-les-halles' ? 275998 : restaurantId === 'curated-PAR-indiana-cafe-ternes' ? 276269 : restaurantId === 'curated-PAR-okomusu' ? 87616 : restaurantId === 'curated-PAR-zen-restaurant' ? 192088 : null;
+  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : restaurantId === 'curated-PAR-brasserie-rosie-lou' ? 118503 : restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 298043 : restaurantId === 'curated-PAR-le-petit-sommelier' ? 37613 : restaurantId === 'curated-PAR-chez-savy' ? 68279 : restaurantId === 'curated-PAR-chez-rene' ? 68277 : restaurantId === 'curated-PAR-le-bistrot-de-paris' ? 68145 : restaurantId === 'curated-PAR-aux-bons-crus' ? 20711 : restaurantId === 'curated-PAR-aux-crus-de-bourgogne' ? 22200 : restaurantId === 'curated-PAR-le-petit-retro' ? 116623 : restaurantId === 'curated-PAR-au-moulin-a-vent' ? 139531 : restaurantId === 'curated-PAR-le-petit-pontoise' ? 9493 : restaurantId === 'curated-PAR-le-florentin' ? 283681 : restaurantId === 'curated-PAR-martha-pizze-amore' ? 159369 : restaurantId === 'curated-PAR-le-cafe-marly' ? 122853 : restaurantId === 'curated-PAR-le-cafe-ruc' ? 32216 : restaurantId === 'curated-PAR-indiana-cafe-bonne-nouvelle' ? 253448 : restaurantId === 'curated-PAR-indiana-cafe-richelieu-drouot' ? 276858 : restaurantId === 'curated-PAR-indiana-cafe-beaugrenelle' ? 281252 : restaurantId === 'curated-PAR-indiana-cafe-tolbiac' ? 243266 : restaurantId === 'curated-PAR-indiana-cafe-montparnasse' ? 314295 : restaurantId === 'curated-PAR-indiana-cafe-republique' ? 274078 : restaurantId === 'curated-PAR-indiana-cafe-bercy-village' ? 245385 : restaurantId === 'curated-PAR-indiana-cafe-denfert-rochereau' ? 278132 : restaurantId === 'curated-PAR-indiana-cafe-les-halles' ? 275998 : restaurantId === 'curated-PAR-indiana-cafe-ternes' ? 276269 : restaurantId === 'curated-PAR-okomusu' ? 87616 : restaurantId === 'curated-PAR-la-plage-parisienne' ? 535548 : restaurantId === 'curated-PAR-zen-restaurant' ? 192088 : null;
   const dateInScope = date => !['curated-PAR-bouillon-julien','curated-PAR-brasserie-rosie-jolie'].includes(restaurantId) || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && (restaurantId === 'curated-PAR-bouillon-julien' ? !['12-24','12-25','12-31'].includes(date.slice(5)) : !(date.slice(5) >= '08-03' && date.slice(5) <= '08-23')));
   const timeInScope = time => restaurantId !== 'curated-PAR-bouillon-republique' || ['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(time);
+  const durationVenue = isZenchef && restaurantId === 'curated-PAR-la-plage-parisienne';
+  const durationField = 'reservationSaturdayDurationAcknowledged';
+  const durationLabel = 'Le samedi soir, j’ai bien pris connaissance que ma table est réservée pour une durée de 2h';
   const key = `velvet:provider:${encodeURIComponent(provider)}:${encodeURIComponent(restaurantId)}`;
   const aliases = { firstname:'Förnamn', firstName:'Förnamn', lastname:'Efternamn', lastName:'Efternamn', email:'E-post', emailAddress:'E-post', phone:'Telefon', phoneNumber:'Telefon', comment:'Önskemål' };
   if (isZenchef && restaurantId === 'curated-PAR-indiana-cafe-montparnasse') aliases.reservationPurpose = 'Anledning till bokningen (Motif de la réservation)';
+  if (durationVenue) aliases[durationField] = durationLabel;
   if (isZenchef) { aliases.civility = 'Tilltal'; aliases.country = 'Telefonens land'; }
   let state = null, busy = false, disposed = false, uncertain = false, marker = null, storageOK = true;
   try {
@@ -213,6 +217,11 @@ export function mountProviderPlaywrightBooking(container, api, {
     scope.textContent='Bokning i Velvet gäller lunchserveringen Déjeuner på Indiana Café Bercy Village, Chais 59-61, Cour Saint-Emilion i Paris, för exakt två gäster, i mån av lediga bord. Middag, grupper och val av särskilt rum ingår inte. Ingen viss placering garanteras. Terrassplatser kan inte reserveras. Kontrollera restaurangens aktuella villkor före bokning.';
     container.querySelector('header').after(scope);
   }
+  if (restaurantId === 'curated-PAR-la-plage-parisienne') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller lunchserveringen Déjeuner på La Plage Parisienne för exakt två gäster, i mån av lediga bord. Middag, grupper, erbjudanden, presentkort och val av särskilt rum ingår inte. Ingen viss placering garanteras. Restaurangens separata obligatoriska ruta om lördagskvällar visas även för andra valda dagar och måste godkännas uttryckligen. Ingen generell lunchöppning eller tvåtimmarsgräns för andra dagar utlovas. Officiell adress: Port de Javel Haut – Statue de la Liberté, 75015 Paris. Bokningssystemets adress: 8 10 quai javel haut, 75015 Paris. Kontrollera båda språkversionerna av villkoren före bokning.';
+    container.querySelector('header').after(scope);
+  }
   if (restaurantId === 'curated-PAR-zen-restaurant') {
     const scope=document.createElement('p'); scope.className='booking-scope';
     scope.textContent='Bokning i Velvet gäller den vanliga middagsserveringen Dîner på ZEN, 8 rue de L’Echelle i Paris, för exakt två gäster, i mån av lediga bord. Lunch och privat Omakase ingår inte. Grupper och val av särskilt rum ingår inte. Ingen viss placering eller våning garanteras. Restaurangens fullständiga villkor visas före godkännandet. Kontrollera dem före bokning.';
@@ -252,7 +261,8 @@ export function mountProviderPlaywrightBooking(container, api, {
   const expired = review => !Number.isFinite(expiry(review?.expiresAt)) || expiry(review.expiresAt) <= Date.now();
   const details = review => review && review.restaurantId === restaurantId
     && /^\d{4}-\d{2}-\d{2}$/.test(review.date) && /^\d{2}:\d{2}/.test(review.time)
-    && Number.isInteger(review.party) && review.party > 0;
+    && Number.isInteger(review.party) && review.party > 0
+    && (!durationVenue || (review.reservationSaturdayDurationAcknowledged === true && review.shiftId === 535548 && review.party === 2));
   const fingerprint = value => typeof value === 'string' && value.length > 0;
   const validOffer = offer => offer?.offerId === 118785 && offer.count === 2 && offer.name === 'Lunch'
     && typeof offer.description === 'string' && !!offer.description.trim() && offer.currency === 'EUR'
@@ -290,7 +300,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     el('save').disabled = locked || !drafts.size || (!!el('fields').querySelector('[data-field=reservationVisitReason]') && !visitReasonValues.includes(el('fields').querySelector('[data-field=reservationVisitReason]').value));
     el('review').hidden = state?.phase !== 'guest' && !needsReview();
     el('review').textContent = needsReview() ? 'Granska uppgifterna igen' : 'Kontrollera bokningen';
-    el('review').disabled = (needsReview() ? busy || uncertain || !storageOK || !state || terminal() || !!state.blocked : locked) || drafts.size > 0;
+    el('review').disabled = (needsReview() ? busy || uncertain || !storageOK || !state || terminal() || !!state.blocked : locked) || drafts.size > 0 || (durationVenue && state?.details?.reservationSaturdayDurationAcknowledged !== true);
     el('hold-button').disabled = locked || !canHold() || !el('hold-consent').checked || drafts.size > 0;
     el('submit').disabled = locked || !canSubmit() || !el('terms').checked || drafts.size > 0;
     el('image').style.cursor = locked || state?.phase !== 'selection' ? 'default' : 'pointer';
@@ -343,15 +353,19 @@ export function mountProviderPlaywrightBooking(container, api, {
     el('fields').replaceChildren();
     const seen = new Set();
     for (const field of next.phase === 'guest' ? next.fields || [] : []) {
+      if (field.name === durationField && !durationVenue) throw new Error('duration_acknowledgement_schema');
       if (!Object.hasOwn(aliases, field.name) || seen.has(field.name)) continue;
       seen.add(field.name);
+      const duration = durationVenue && field.name === durationField;
+      if (duration && (field.type !== 'checkbox' || field.required !== true || field.label !== durationLabel || typeof field.value !== 'boolean')) throw new Error('duration_acknowledgement_schema');
       const visitReason = field.name === 'reservationVisitReason';
       if (visitReason && (field.type !== 'select' || field.required !== true || field.label !== visitReasonLabel || JSON.stringify(field.options) !== JSON.stringify(visitReasonValues) || !['',...visitReasonValues].includes(field.value))) throw new Error('visit_reason_schema');
       const label = document.createElement('label'); label.textContent = aliases[field.name];
       const input = document.createElement(field.name === 'civility' || visitReason ? 'select' : field.name === 'comment' ? 'textarea' : 'input');
       input.dataset.field = field.name;
-      if (field.name === 'reservationPurpose' || visitReason) input.required = true; input.setAttribute('aria-label', aliases[field.name]);
-      if (visitReason) {
+      if (field.name === 'reservationPurpose' || visitReason || duration) input.required = true; input.setAttribute('aria-label', aliases[field.name]);
+      if (duration) { input.type = 'checkbox'; input.checked = drafts.has(field.name) ? drafts.get(field.name) === true : field.value; }
+      else if (visitReason) {
         for (const [value,text] of [['','Välj anledning till besöket'],...visitReasonValues.map(value => [value,value])]) { const option=document.createElement('option'); option.value=value; option.textContent=text; input.append(option); }
       } else if (field.name === 'civility') {
         for (const [value,text] of [['','Välj tilltal'],['mr','Mr'],['mrs','Mrs'],['mx','Mx']]) { const option = document.createElement('option'); option.value = value; option.textContent = text; input.append(option); }
@@ -360,8 +374,9 @@ export function mountProviderPlaywrightBooking(container, api, {
       input.readOnly = field.readOnly === true;
       if (input.readOnly) input.title = 'Hämtas från telefonnumret i restaurangens formulär.';
       input.maxLength = field.name === 'comment' ? 2000 : 200;
-      input.oninput = () => { if (!input.readOnly) { drafts.set(field.name,input.value); changed(); } };
+      input.oninput = () => { if (!input.readOnly) { drafts.set(field.name,duration ? input.checked : input.value); changed(); } };
       label.append(input); el('fields').append(label);
+      if (duration) { const note = document.createElement('p'); note.textContent = 'Restaurangens obligatoriska ruta gäller enligt texten lördagskvällar men finns även i formuläret för den valda bokningen. Markera själv om du godkänner. Detta anger inte två timmars sittning för andra dagar.'; el('fields').append(note); }
     }
     el('save').hidden = !seen.size; el('review').hidden = next.phase !== 'guest';
     el('search').hidden = !['selection','slots'].includes(next.phase);
@@ -408,7 +423,8 @@ export function mountProviderPlaywrightBooking(container, api, {
       renderOffer(el('final-offer'),review.offer);
       const guest = Object.entries(review.guest || {}).filter(([name,value]) => Object.hasOwn(aliases,name) && typeof value === 'string').map(([name,value]) => `${aliases[name]}: ${value}`).join(', ');
       if (isZenchef && ['curated-PAR-indiana-cafe-montparnasse','curated-PAR-indiana-cafe-les-halles','curated-PAR-indiana-cafe-ternes'].includes(restaurantId)) el('final-details').style.whiteSpace = 'pre-wrap';
-      el('final-details').textContent = `Slutför bokning: ${restaurantName}, ${review.date} kl. ${review.time}, ${review.party} gäster. ${review.roomName ? `Rum: ${review.roomName}. ` : ''}${guest}`;
+      if (durationVenue) el('final-details').style.whiteSpace = 'pre-wrap';
+      el('final-details').textContent = `Slutför bokning: ${restaurantName}, ${review.date} kl. ${review.time}, ${review.party} gäster. ${review.roomName ? `Rum: ${review.roomName}. ` : ''}${guest}${durationVenue ? `\nSeparat godkännande: ${durationLabel} — Ja` : ''}`;
       el('seating-notice').textContent = review.seatingNotice ? `Sittning: ${review.seatingNotice}` : '';
       el('seating-notice').hidden = !review.seatingNotice;
       el('meal-notice').textContent = review.mealNotice ? `Bokningen måste inkludera en måltid. Restaurangens villkor: ${review.mealNotice}` : '';
@@ -417,7 +433,8 @@ export function mountProviderPlaywrightBooking(container, api, {
       el('shift-notice').hidden = !review.shiftNotice;
       const denfertAddress = isZenchef && restaurantId === 'curated-PAR-indiana-cafe-denfert-rochereau';
       el('address-notice').textContent = denfertAddress ? 'Bokningssystemets adress: 1 Bis Avenue du Général Leclerc, 75014 Paris. Restaurangens officiella sida anger: 1 Avenue du Général Leclerc, 75014 Paris. Adressuppgifterna skiljer sig; samma entré är inte verifierad.' : '';
-      el('address-notice').hidden = !denfertAddress;
+      if (durationVenue) el('address-notice').textContent = 'Officiell adress: Port de Javel Haut – Statue de la Liberté, 75015 Paris. Bokningssystemets adress: 8 10 quai javel haut, 75015 Paris. Adressuppgifterna återges separat.';
+      el('address-notice').hidden = !denfertAddress && !durationVenue;
       el('terms-text').textContent = review.termsText;
     }
     el('status').textContent = terminal() ? outcome(next.result,next) : uncertain ? 'Resultatet måste kontrolleras. Skicka inte på nytt.' : needsReview() ? 'Servern har bekräftat att bokningen inte skickades. Granska uppgifterna igen innan du godkänner.' : hasReview() && !canSubmit() ? 'Uppgifterna visas för kontroll. Leverantörens slutliga bokningssteg är ännu inte tillgängligt.' : next.phase === 'guest' ? `${held(next) ? 'Tillfälligt reserverat. ' : ''}Fyll i och spara dina kontaktuppgifter. Bokningen är inte slutförd.` : next.blocked ? 'Leverantörens formulär är spärrat.' : 'Välj och kontrollera uppgifterna i leverantörens formulär.';
@@ -445,7 +462,7 @@ export function mountProviderPlaywrightBooking(container, api, {
         : await post(endpoint,{provider,restaurantId,width:Math.max(320,Math.min(560,Math.round(container.clientWidth))),resume:true});
       if (disposed) return;
       if (next?.error) throw Object.assign(new Error(String(next.error)),next);
-      if (action?.type === 'fill' && Object.keys(action.fields).some(name => !next.fields?.some(field => field.name === name && typeof field.value === 'string'))) throw new Error('field_readback');
+      if (action?.type === 'fill' && Object.keys(action.fields).some(name => !next.fields?.some(field => field.name === name && (durationVenue && name === durationField ? typeof field.value === 'boolean' && field.value === action.fields[name] : typeof field.value === 'string')))) throw new Error('field_readback');
       await accept(next);
       if (action?.type === 'review' && needsReview() && hasReview() && !terminal() && !state.blocked) {
         write(state.id,isZenchef ? 'open' : 'hold_done');
@@ -454,7 +471,7 @@ export function mountProviderPlaywrightBooking(container, api, {
       }
       if (action?.type === 'fill') {
         drafts.clear();
-        for (const input of el('fields').querySelectorAll('[data-field]')) input.value = next.fields.find(field => field.name === input.dataset.field).value;
+        for (const input of el('fields').querySelectorAll('[data-field]')) { const value = next.fields.find(field => field.name === input.dataset.field).value; if (durationVenue && input.dataset.field === durationField) input.checked = value === true; else input.value = value; }
       }
     } catch (error) {
       if (!disposed) {
@@ -481,7 +498,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     if (x>=0 && y>=0 && x<state.width && y<state.height) run({type:'click',x,y});
   };
   el('search').onsubmit = event => { event.preventDefault(); const data = new FormData(el('search')); run({type:'search',date:data.get('date'),party:Number(data.get('party'))}); };
-  el('save').onclick = () => run({type:'fill',fields:Object.fromEntries([...el('fields').querySelectorAll('[data-field]')].map(node => [node.dataset.field,node.value]))});
+  el('save').onclick = () => run({type:'fill',fields:Object.fromEntries([...el('fields').querySelectorAll('[data-field]')].map(node => [node.dataset.field,durationVenue && node.dataset.field === durationField ? node.checked : node.value]))});
   el('review').onclick = async () => {
     if (needsReview()) { await run(); if (disposed || busy || uncertain || !needsReview()) return; }
     await run({type:'review'});

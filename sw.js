@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-264-zen-restaurant-dinner";
+const VERSION = "v4-real-265-la-plage-parisienne-lunch";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
