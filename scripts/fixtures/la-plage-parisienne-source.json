@@ -1,0 +1,454 @@
+{
+  "restaurantId": "356799",
+  "name": "Javel exploitation - Plage parisienne",
+  "address": "8 10 quai javel haut",
+  "city": "PARIS",
+  "query": {
+    "sdk": "1",
+    "withCloseButton": "1",
+    "rid": "356799",
+    "lang": "fr",
+    "iframePosition": "right",
+    "day": "2026-10-23",
+    "pax": "2"
+  },
+  "restaurantTimezone": "Europe/Paris",
+  "currency": "EUR",
+  "language": "fr",
+  "initializedSSR": true,
+  "isDisabled": 0,
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "dailyAvailabilities": {
+    "2026-10-23": {
+      "date": "2026-10-23",
+      "shifts": [
+        {
+          "id": 535548,
+          "marked_as_full": false,
+          "closed": false,
+          "is_voucher_codes_active": true,
+          "is_voucher_codes_limit_reached": false,
+          "bookable_from": null,
+          "bookable_to": "2026-10-23 15:00:00",
+          "shift_slots": [
+            {
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 50,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 12,
+                  "4_pax_slots": 12,
+                  "6_pax_slots": 12,
+                  "8_pax_slots": 12,
+                  "10_pax_slots": 12,
+                  "12_pax_slots": 12
+                }
+              },
+              "name": "12:00",
+              "slot_name": "12:00",
+              "interval_in_minutes": 720,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 12:00:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 50,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 12,
+                  "4_pax_slots": 12,
+                  "6_pax_slots": 12,
+                  "8_pax_slots": 12,
+                  "10_pax_slots": 12,
+                  "12_pax_slots": 12
+                }
+              },
+              "name": "12:30",
+              "slot_name": "12:30",
+              "interval_in_minutes": 750,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 12:30:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 50,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 12,
+                  "4_pax_slots": 12,
+                  "6_pax_slots": 12,
+                  "8_pax_slots": 12,
+                  "10_pax_slots": 12,
+                  "12_pax_slots": 12
+                }
+              },
+              "name": "13:00",
+              "slot_name": "13:00",
+              "interval_in_minutes": 780,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 13:00:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 50,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 12,
+                  "4_pax_slots": 12,
+                  "6_pax_slots": 12,
+                  "8_pax_slots": 12,
+                  "10_pax_slots": 12,
+                  "12_pax_slots": 12
+                }
+              },
+              "name": "13:30",
+              "slot_name": "13:30",
+              "interval_in_minutes": 810,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 13:30:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 50,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 12,
+                  "4_pax_slots": 12,
+                  "6_pax_slots": 12,
+                  "8_pax_slots": 12,
+                  "10_pax_slots": 12,
+                  "12_pax_slots": 12
+                }
+              },
+              "name": "14:00",
+              "slot_name": "14:00",
+              "interval_in_minutes": 840,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 14:00:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 50,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 12,
+                  "4_pax_slots": 12,
+                  "6_pax_slots": 12,
+                  "8_pax_slots": 12,
+                  "10_pax_slots": 12,
+                  "12_pax_slots": 12
+                }
+              },
+              "name": "14:30",
+              "slot_name": "14:30",
+              "interval_in_minutes": 870,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 14:30:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 50,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 12,
+                  "4_pax_slots": 12,
+                  "6_pax_slots": 12,
+                  "8_pax_slots": 12,
+                  "10_pax_slots": 12,
+                  "12_pax_slots": 12
+                }
+              },
+              "name": "15:00",
+              "slot_name": "15:00",
+              "interval_in_minutes": 900,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 15:00:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "waitlist_possible_guests": []
+            }
+          ],
+          "name": "Déjeuner",
+          "name_translations": {
+            "fr": "Déjeuner"
+          },
+          "comment": null,
+          "color": "b",
+          "is_standard": false,
+          "charge_param": {
+            "is_web_booking_askable": true,
+            "min_guests": 8,
+            "charge_per_guests": 50
+          },
+          "prepayment_param": null,
+          "cancelation_param": {
+            "enduser_cancelable_before": 10800,
+            "enduser_cancelable_reference": "shift"
+          },
+          "confirmation": {
+            "is_auto": true,
+            "is_auto_until": null
+          },
+          "capacity": {
+            "min": 1,
+            "max": 8,
+            "total_per_slot": 50,
+            "waitlist_min": 0,
+            "waitlist_max": 0,
+            "waitlist_total_per_slot": 0,
+            "show_turn_times": false,
+            "buffer_slots_count": 0,
+            "turn_times": {
+              "2_pax_slots": 12,
+              "4_pax_slots": 12,
+              "6_pax_slots": 12,
+              "8_pax_slots": 12,
+              "10_pax_slots": 12,
+              "12_pax_slots": 12
+            }
+          },
+          "bookable_rooms": [
+            47323,
+            31627,
+            62530
+          ],
+          "open": "12:00",
+          "close": "15:00",
+          "total": 200,
+          "waitlist_total": 0,
+          "is_offer_required": false,
+          "offer_required_from_pax": null
+        }
+      ]
+    }
+  },
+  "restaurantComment": {
+    "da": "La Plage Parisienne byder velkommen om aftenen fra onsdag til søndag. \nFestlige aftener om fredagen og lørdagen.<br><br>For reservationer over 12 gæster beder vi dig kontakte vores salgsafdeling: commercial@beaumarly.com",
+    "de": "Die Pariser Strandbar empfängt Sie abends von Mittwoch bis Sonntag. \nFestliche Abende am Freitag und Samstag.<br><br>Für Reservierungen von mehr als 12 Gästen bitten wir Sie, unseren Vertrieb zu kontaktieren: commercial@beaumarly.com",
+    "en": "La Plage Parisienne welcomes you in the evening from Wednesday to Sunday.\nFestive evenings on Fridays and Saturdays.<br><br>\nFor any reservation of more than 12 guests, we invite you to contact our sales department: commercial@beaumarly.com<br>",
+    "es": "La Plage Parisienne te recibe por la tarde de miércoles a domingo. \nNoches festivas los viernes y sábados.<br><br>Para cualquier reserva de más de 12 comensales, te invitamos a contactar a nuestro servicio comercial: commercial@beaumarly.com",
+    "fr": "La Plage Parisienne vous accueille midi & soir du Lundi au dimanche.\nSoirées festives les vendredis et samedis.<br><br>\nPour toute réservation au-delà de 8 convives, nous vous invitons à contacter notre service commercial : lucas@laplageparisienne.com",
+    "it": "La Plage Parisienne ti accoglie la sera dal mercoledì alla domenica. \nSerate festive il venerdì e il sabato.<br><br>Per prenotazioni oltre 12 ospiti, ti invitiamo a contattare il nostro servizio commerciale: commercial@beaumarly.com",
+    "nl": "La Plage Parisienne verwelkomt u 's avonds van woensdag tot en met zondag,<br>op zondag voor een brunch.<br>Feestelijke avonden op vrijdag en zaterdag.<br><br>Voor reserveringen van meer dan 12 gasten nodigen wij u uit om contact op te nemen met onze verkoopafdeling: commercial@beaumarly.com",
+    "no": "La Plage Parisienne ønsker deg velkommen om kvelden fra onsdag til søndag,<br>søndag for brunch.<br>Festlige kvelder på fredager og lørdager.<br><br>For reservasjoner på mer enn 12 gjester, ber vi deg kontakte vår salgsavdeling: commercial@beaumarly.com",
+    "pt": "La Plage Parisienne recebe você à noite de quarta a domingo. Noites festivas às sextas e sábados.<br><br>Para reservas de mais de 12 convidados, convidamos você a entrar em contato com nosso departamento comercial: commercial@beaumarly.com",
+    "sv": "La Plage Parisienne välkomnar dig på kvällen från onsdag till söndag,<br>på söndagar för brunch.<br>Festliga kvällar på fredagar och lördagar.<br><br>För bokningar av mer än 12 gäster ber vi dig kontakta vår försäljningsavdelning: commercial@beaumarly.com"
+  },
+  "mandatoryFields": {
+    "firstname": "required",
+    "lastname": "required",
+    "email": "required",
+    "phone_number": "required",
+    "country": "required",
+    "comment": "displayed",
+    "private_comment": "hidden",
+    "prescriber_id": "hidden",
+    "customersheet.customer_company_id": "hidden",
+    "civility": "required",
+    "url": "hidden",
+    "customersheet.vip": "hidden",
+    "waiter_id": "hidden",
+    "slots_count": "hidden",
+    "voucher_code": "displayed",
+    "custom_field.le-samedi-soir-jai-bien-pris-connaissance-que-ma-table-est-reservee-pour-une-duree-de-2h": "required"
+  },
+  "customFields": [
+    {
+      "id": 2069,
+      "restaurant_id": 356799,
+      "title": "Le samedi soir, j’ai bien pris connaissance que ma table est réservée pour une durée de 2h",
+      "step": 3,
+      "type": "checkbox",
+      "enabled": false,
+      "created_at": "2022-10-24T10:29:17.000000Z",
+      "updated_at": "2026-08-03T09:57:12.000000Z",
+      "slug": "le-samedi-soir-jai-bien-pris-connaissance-que-ma-table-est-reservee-pour-une-duree-de-2h",
+      "options": [],
+      "displayType": "checkbox",
+      "required": true
+    }
+  ],
+  "customFieldsV2": [],
+  "restaurantSpecificCommentsByDay": {
+    "2026-10-23": null
+  },
+  "offers": [
+    {
+      "id": 133108,
+      "name": "Groupe",
+      "name_translations": {
+        "fr": "Groupe"
+      },
+      "description": {},
+      "date_from": "2026-09-13",
+      "date_to": null,
+      "is_active": true,
+      "is_private": false,
+      "is_highlighted": false,
+      "restricted_reservation_flow": false,
+      "is_on_first_step": false,
+      "charge_per_guests": 2000,
+      "has_prepayment": false,
+      "position": 55,
+      "type": null,
+      "created_at": "2026-09-12T22:36:17.000000Z",
+      "updated_at": "2026-09-12T22:36:17.000000Z",
+      "deleted_at": null,
+      "weekdays": {
+        "mon": true,
+        "tue": true,
+        "wed": true,
+        "thu": true,
+        "fri": true,
+        "sat": true,
+        "sun": true
+      },
+      "picture": null,
+      "has_duration": false,
+      "turn_times": null,
+      "is_squeezed": false,
+      "experience_menu_link": null,
+      "parent_id": null
+    }
+  ],
+  "zip": "75015",
+  "isInUpdateFlow": false
+}
