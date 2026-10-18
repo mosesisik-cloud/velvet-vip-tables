@@ -2530,5 +2530,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-biche-paris8": {
+    "name": "Biche",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=363606&fullscreen=1&lang=en",
+    "source": "https://www.biche-restaurant.com/en/",
+    "venueKey": "bookings.zenchef.com/results?rid=363606",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
