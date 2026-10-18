@@ -38,7 +38,7 @@ function validate(input) {
     if (!Number.isSafeInteger(input.roomId) || input.roomId <= 0) fail('invalid_room');
     clean.roomId = input.roomId; clean.roomName = token(input.roomName,'invalid_room');
   }
-  const lunchShift = input.provider === 'Zenchef' ? (input.restaurantId === 'curated-PAR-bofinger' ? 19170 : input.restaurantId === 'curated-PAR-la-coupole' ? 20148 : input.restaurantId === 'curated-PAR-terminus-nord' ? 19380 : input.restaurantId === 'curated-PAR-le-procope' ? 18190 : null) : null;
+  const lunchShift = input.provider === 'Zenchef' ? (input.restaurantId === 'curated-PAR-bofinger' ? 19170 : input.restaurantId === 'curated-PAR-la-coupole' ? 20148 : input.restaurantId === 'curated-PAR-terminus-nord' ? 19380 : input.restaurantId === 'curated-PAR-le-procope' ? 18190 : input.restaurantId === 'curated-PAR-la-lorraine' ? 16674 : null) : null;
   if (input.details !== undefined) {
     if (lunchShift) {
       if (input.details?.shiftId !== lunchShift || Object.keys(input.details).length !== 1

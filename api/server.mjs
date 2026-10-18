@@ -18,7 +18,7 @@ import { LUZETTE_LUNCH_RECEIPT_POLICY, TEATERGRILLEN_LUNCH_RECEIPT_POLICY, TENNS
 import { KVARNEN_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
 import { createProviderJournal } from './provider-booking-journal.mjs';
 import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_DEKAS, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
-import { ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE } from './providers/zenchef-playwright.mjs';
+import { ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
 import fs from "node:fs";
 import path from "node:path";
@@ -51,9 +51,10 @@ const bofingerLive = process.env.VELVET_ZENCHEF_BOFINGER === 'live';
 const laCoupoleLive = process.env.VELVET_ZENCHEF_LACOUPOLE === 'live';
 const terminusNordLive = process.env.VELVET_ZENCHEF_TERMINUSNORD === 'live';
 const procopeLive = process.env.VELVET_ZENCHEF_PROCOPE === 'live';
+const laLorraineLive = process.env.VELVET_ZENCHEF_LALORRAINE === 'live';
 let zenchefJournal;
 const zenchefInspection = new ZenchefPlaywright({
-  mode: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive,
+  mode: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive,
   reserveSubmission: intent => zenchefJournal.reserveAttempt(intent),
   recordResult: session => {
     const saved = zenchefJournal.recordAttempt({intent:session.approval,attempt:session.attempt,result:session.result});
@@ -96,6 +97,9 @@ const playwrightRuntime = new PlaywrightRuntime({
         actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
         current:(_id,owner)=>zenchefInspection.current(owner)}] : []),
       ...(procopeLive ? [{restaurantId:ZENCHEF_PROCOPE.restaurantId,enabled:true,mode:'live',
+        actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
+        current:(_id,owner)=>zenchefInspection.current(owner)}] : []),
+      ...(laLorraineLive ? [{restaurantId:ZENCHEF_LALORRAINE.restaurantId,enabled:true,mode:'live',
         actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
         current:(_id,owner)=>zenchefInspection.current(owner)}] : [])],
     TableCheck: {provider:'TableCheck',restaurantId:SAZON.restaurantId,mode:'prepare',
@@ -348,7 +352,9 @@ zenchefJournal = createProviderJournal({ledger:playwrightAttempts,register:booki
     ...(terminusNordLive ? {[ZENCHEF_TERMINUSNORD.restaurantId]:{name:ZENCHEF_TERMINUSNORD.name,city:'Paris',
       shiftId:ZENCHEF_TERMINUSNORD.shiftId,confirmationPolicySource:ZENCHEF_TERMINUSNORD.policySource}} : {}),
     ...(procopeLive ? {[ZENCHEF_PROCOPE.restaurantId]:{name:ZENCHEF_PROCOPE.name,city:'Paris',
-      shiftId:ZENCHEF_PROCOPE.shiftId,confirmationPolicySource:ZENCHEF_PROCOPE.policySource}} : {})}});
+      shiftId:ZENCHEF_PROCOPE.shiftId,confirmationPolicySource:ZENCHEF_PROCOPE.policySource}} : {}),
+    ...(laLorraineLive ? {[ZENCHEF_LALORRAINE.restaurantId]:{name:ZENCHEF_LALORRAINE.name,city:'Paris',
+      shiftId:ZENCHEF_LALORRAINE.shiftId,confirmationPolicySource:ZENCHEF_LALORRAINE.policySource}} : {})}});
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);
