@@ -1,0 +1,21 @@
+# Indiana Café Beaugrenelle — own lunch for exactly two
+
+Refs #129. Worker codex-worker-cbfe5665-79ca-415d-91ac-5c184e516939 / chat01a141e3-6cf0-7ef1-8908-41a5840b1b4e. Clean main2544631827aa35fc703dbe73a9e7ae38917366a84be. Canonical curated-PAR-indiana-cafe-beaugrenelle/export ZENCHEF_INDIANABEAUGRENELLE.32d5 isolated identity0fb887293bc74053f3982bd2b2c50cb0ab4a1a1d.12 rue Linois75015Paris,rid375446.
+
+## Own evidence,2026-10-18
+
+Read local C:/Users/moses.isik/Documents/Codex/2026-10-16/jag/work/indiana-official-20261018.html SHA2563e6d9d4f6ca036c62a64e6c33e9335de5d8e53536b67df49b8733bcf10e2c3c7 and indiana-beaugrenelle-official-20261018.html SHA25610a0bc9ada98e063700311f35a90dd99a1b7e63b61a69f793bc729a029cb14de; both matched. Root https://www.indianacafe.fr/ actual Réserver anchor in own card and https://www.indianacafe.fr/restaurant/beaugrenelle own title/address/slug-popup bind375446/pid1001. French locale, no shxpid/fullscreen or otherbranch/event guarantees. No new official GET.
+
+One results GET https://bookings.zenchef.com/results?rid=375446&pid=1001&lang=fr&day=2026-10-23&pax=2 returned200 SHA256852815adc9cc5b5b329313d31191f6539f5868841937a0b666e0e3e2d2a4b94a. Native Indiana Café Beaugrenelle/12 Rue Linois/Paris/75015 matches. Own lunch281252 Déjeuner: auto true/untilnull, charge and prepaymentnull, offerfalse/fromnull,10800 seconds SHIFT cancellation. Strict roomselectionfalse/mandatoryfalse/wishroomnull/offers[].16observed lunch candidates11:00–14:45 every15minutes; not holds or confirmations. Continu281259 and dinner281260 excluded; dinner's false-until8 not inherited. No alternative request.
+
+One form GET https://bookings.zenchef.com/form?rid=375446&pid=1001&lang=fr&day=2026-10-23&pax=2&slot=12%3A00 returned200/pageform SHA256f0b3b019f8737f8ee70584d40f0a8d295b06c5b1168b992e3ae5b23b87b60c86. Same own identity/date/party/slot/policy; query.pid and partner_id string1001. Six standard required fields, customFields/V2 empty; optional voucher unsupported. Own FR-only restaurant notice states most tables walk-in, no terrace bookings, possible terrace seating only if available,15minute retention and own contact01 42 96 86 62. Exact raw text including br/newline retained; results/form notice matches. Own shiftcommentNULL, so Richelieu's separate retention shiftcomment is NOT inherited; no BonneNouvelle group>20 text. Room list only Salle principale91412 does not create a guaranteed selection.
+
+Raw worker work/indiana-beaugrenelle-results.html and work/indiana-beaugrenelle-form.html plus parsed *-state.json retained. Own form references _app-30bffcb9f4c3b7b2.js and form-84144e7c9a8b854d.js matching local work/aux-bons-crus-app-bundle.js SHA256f93de04840ca6c559814f814a2c2bd86886a7962dbf24bd024bb3c01360d0cdd and work/aux-bons-crus-form-bundle.js SHA256b5ada4d2894b110846303a2b4d33120be97c42b88e89d4b33b522001d4ec50c4. No new assetGET or fresh remote byte claim.
+
+## Implementation and checks
+
+Own typed policy pins lunch281252/exact2/true-null/nullcardprepay/nooffer/10800SHIFT/no-room/partnerstate. Seventh explicitly bound query-pid venue in initial results/form and fresh review/submit; prior six and Ruc unchanged. Existing raw notice/EULA/full-shift digest, fresh required fields, owner/session/revision/TTL, final consent/durable one-send and independent same-attempt readback retained. POST echo cannot confirm.
+
+Focused5/5 PASS using ZENCHEF_TEST_SCENARIO_PREFIX=beaugrenelle and test-name-pattern native booking and own-booking|Indiana Beaugrenelle|Fresh required|Explicit partner venues. Ten synthetic browser scenarios (positive,missing,pending,date,party,offer,card,manual,stale,durable-shift), own16candidate source identity/type/missing/other-service/room/party/URL checks, seventh fresh query/state partner variants, own fresh notice/nullshift/card/room/required-field negatives and existing fresh-field regression. git diff --check PASS. No old full matrices or completed-main reruns.
+
+Four scoped files only.32d5 owns shared integration/exactreview/actualappQA including cached own native EULA/rawnotice/publication. No actual contact inputs, choices, holds, reservations, payments, restaurant messages, capability or receipt reads. Simulations/implementation do not prove real supplier confirmation.
