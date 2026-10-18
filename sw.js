@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-250-martha-pizze-amore-lunch";
+const VERSION = "v4-real-251-le-cafe-marly-lunch";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 

@@ -2309,5 +2309,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-le-cafe-marly": {
+    "name": "Le Café Marly",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=353937&pid=1001",
+    "source": "https://www.cafe-marly.com/restaurant",
+    "venueKey": "bookings.zenchef.com/results?rid=353937",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
