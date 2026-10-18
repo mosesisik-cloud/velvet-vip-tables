@@ -1,0 +1,700 @@
+{
+  "restaurantId": "377578",
+  "name": "Le petit bouillon pharamond",
+  "address": "24 Rue de la Grande Truanderie",
+  "city": "Paris",
+  "restaurantTimezone": "Europe/Paris",
+  "currency": "EUR",
+  "language": "fr",
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "restaurantComment": {
+    "fr": "Notre restaurant propose des réservations classiques au rez-de-chaussée et au 1er étage.\nLe midi : services à 11h45 et 12h, puis en continu.\nLe soir : double service à 18h/18h30 et à partir de 22h.\n<b>Des salons privatif (2 à 16 pers.) sont également réservable sur certains créneaux, avec un acompte correspondant uniquement à la location du salon ; le repas est réglé sur place, en supplément.</b>"
+  },
+  "restaurantSpecificCommentsByDay": {
+    "2026-10-23": null
+  },
+  "offers": [
+    {
+      "id": 86319,
+      "name": "Réservation classique",
+      "description": {
+        "da": "Lokale i stueetagen og første sal - betaling på stedet",
+        "de": "Raum im Erdgeschoss und im ersten Stock - Zahlung vor Ort",
+        "en": "Room on the ground floor and first floor - payment on site",
+        "es": "Sala en la planta baja y primer piso - pago en el lugar",
+        "fr": "Salle rez-de-chaussé et premier étage - paiement sur place",
+        "it": "Sala al piano terra e primo piano - pagamento in loco",
+        "nl": "Kamer op de begane grond en eerste verdieping - betaling ter plaatse",
+        "no": "Rom i første etasje og andre etasje - betaling på stedet",
+        "pt": "Sala no andar térreo e primeiro andar - pagamento no local",
+        "sv": "Rum på bottenvåningen och första våningen - betalning på plats"
+      },
+      "is_active": true,
+      "is_private": false,
+      "charge_per_guests": null,
+      "has_prepayment": false,
+      "has_duration": false,
+      "restricted_reservation_flow": false
+    },
+    {
+      "id": 86309,
+      "name": "Location Payante (Hors Repas) Salon Eure 2 couverts",
+      "description": {
+        "da": "Salon med en kapacitet på 2 til 7 personer - leje i 2 timer - betaling for menuer og drikkevarer på stedet og <b>online betaling for at leje salonen</b>",
+        "de": "Salon mit einer Kapazität von 2 bis 7 Personen - Vermietung für 2 Stunden - Bezahlung der Menüs und Getränke vor Ort und <b>Online-Zahlung zur Miete des Salons</b>",
+        "en": "Salon with a capacity of 2 to 7 covers - rental for 2 hours - payment of menus and drinks on site and <b>online payment to rent the salon</b>",
+        "es": "Salón con capacidad de 2 a 7 cubiertos - alquiler por 2 horas - pago de menús y bebidas en el lugar y <b>pago en línea para alquilar el salón</b>",
+        "fr": "Salon avec une capacité de 2 à 8 couverts - location de salle à payer directement en ligne pour 3h de temps - paiement des menus et boissons sur place et <b>paiement en ligne pour louer le salon</b>",
+        "it": "Salone con una capacità da 2 a 7 coperti - affitto per 2 ore - pagamento dei menu e delle bevande in loco e <b>pagamento online per affittare il salone</b>",
+        "nl": "Salon met een capaciteit van 2 tot 7 personen - verhuur voor 2 uur - betaling van menu's en dranken ter plaatse en <b>online betaling voor het huren van de salon</b>",
+        "no": "Salong med kapasitet til 2 til 7 personer - leie for 2 timer - betaling av menyer og drikkevarer på stedet og <b>nettpay for å leie salongen</b>",
+        "pt": "Salão com capacidade de 2 a 7 lugares - locação por 2 horas - pagamento dos menus e bebidas no local e <b>pagamento online para alugar o salão</b>",
+        "sv": "Salong med kapacitet för 2 till 7 personer - uthyrning i 2 timmar - betalning av menyer och drycker på plats och <b>onlinebetalning för att hyra salongen</b>"
+      },
+      "is_active": true,
+      "is_private": false,
+      "charge_per_guests": 7000,
+      "has_prepayment": true,
+      "has_duration": false,
+      "restricted_reservation_flow": false
+    },
+    {
+      "id": 86321,
+      "name": "Location Payante (Hors Repas) Salon Orne 2 couverts",
+      "description": {
+        "da": "Salon med en kapacitet på 2 til 7 personer - leje i 2 timer - betaling for menuer og drikkevarer på stedet og <b>online betaling for at leje salonen</b>",
+        "de": "Salon mit einer Kapazität von 2 bis 7 Personen - Miete für 2 Stunden - Bezahlung der Menüs und Getränke vor Ort und <b>Online-Zahlung zur Anmietung des Salons</b>",
+        "en": "Salon with a capacity of 2 to 7 covers - rental for 2 hours - payment for menus and drinks on site and <b>online payment to rent the salon</b>",
+        "es": "Salón con capacidad de 2 a 7 comensales - alquiler por 2 horas - pago de menús y bebidas en el lugar y <b>pago en línea para alquilar el salón</b>",
+        "fr": "Salon avec une capacité de 2 à 8 couverts -location de salle à payer directement en ligne pour 3h de temps - paiement des menus et boissons sur place et <b>paiement en ligne pour louer le salon</b>",
+        "it": "Salone con una capacità di 2 a 7 coperti - affitto per 2 ore - pagamento dei menu e delle bevande in loco e <b>pagamento online per affittare il salone</b>",
+        "nl": "Salon met een capaciteit van 2 tot 7 couverts - huur voor 2 uur - betaling van menu's en drankjes ter plaatse en <b>online betaling voor het huren van de salon</b>",
+        "no": "Salong med kapasitet fra 2 til 7 personer - leie i 2 timer - betaling for menyer og drikke på stedet og <b>online betaling for å leie salongen</b>",
+        "pt": "Salão com capacidade para 2 a 7 pessoas - locação por 2 horas - pagamento dos menus e bebidas no local e <b>pagamento online para alugar o salão</b>",
+        "sv": "Salong med kapacitet för 2 till 7 personer - uthyrning i 2 timmar - betalning för menyer och drycker på plats och <b>onlinebetalning för att hyra salongen</b>"
+      },
+      "is_active": true,
+      "is_private": false,
+      "charge_per_guests": 7000,
+      "has_prepayment": true,
+      "has_duration": false,
+      "restricted_reservation_flow": false
+    },
+    {
+      "id": 86329,
+      "name": "Location Payante (Hors Repas) Salon Manche 2 couverts",
+      "description": {
+        "da": "Salon med kapacitet til 2 til 8 personer - leje i 2 timer - betaling for menuer og drikkevarer på stedet og <b>online betaling for at leje salonen</b>",
+        "de": "Salon mit einer Kapazität von 2 bis 8 Personen - Miete für 2 Stunden - Bezahlung der Menüs und Getränke vor Ort und <b>Online-Zahlung zur Miete des Salons</b>",
+        "en": "Salon with a capacity of 2 to 8 covers - rental for 2 hours - payment for menus and drinks on site and <b>online payment to rent the salon</b>",
+        "es": "Salón con capacidad de 2 a 8 comensales - alquiler por 2 horas - pago de menús y bebidas en el lugar y <b>pago en línea para alquilar el salón</b>",
+        "fr": "Salon avec une capacité de 2 à 8 couverts - location de salle à payer directement en ligne pour 3h de temps - paiement des menus et boissons sur place et <b>paiement en ligne pour louer le salon</b>",
+        "it": "Salone con una capienza da 2 a 8 coperti - affitto per 2 ore - pagamento dei menu e delle bevande in loco e <b>pagamento online per affittare il salone</b>",
+        "nl": "Salon met een capaciteit van 2 tot 8 personen - huur voor 2 uur - betaling van menu's en dranken ter plaatse en <b>online betaling om de salon te huren</b>",
+        "no": "Salong med kapasitet for 2 til 8 personer - leie i 2 timer - betaling for menyer og drikkevarer på stedet og <b>online betaling for å leie salongen</b>",
+        "pt": "Salão com capacidade de 2 a 8 lugares - aluguel por 2 horas - pagamento de menus e bebidas no local e <b>pagamento online para alugar o salão</b>",
+        "sv": "Salong med kapacitet för 2 till 8 personer - uthyrning i 2 timmar - betalning för menyer och drycker på plats och <b>onlinebetalning för att hyra salongen</b>"
+      },
+      "is_active": true,
+      "is_private": false,
+      "charge_per_guests": 7000,
+      "has_prepayment": true,
+      "has_duration": false,
+      "restricted_reservation_flow": false
+    }
+  ],
+  "shift": {
+    "id": 309402,
+    "name": "Réservation midi",
+    "confirmation": {
+      "is_auto": true,
+      "is_auto_until": null
+    },
+    "charge_param": null,
+    "prepayment_param": null,
+    "cancelation_param": {
+      "enduser_cancelable_before": 60,
+      "enduser_cancelable_reference": "shift"
+    },
+    "is_offer_required": true,
+    "offer_required_from_pax": 1,
+    "offers": [
+      {
+        "id": 86319,
+        "stock_id": 363953,
+        "capacity": {
+          "min": null,
+          "max": null,
+          "total_per_slot": null
+        },
+        "config": {
+          "is_limited_to_pax": true,
+          "is_same_for_all": true,
+          "min_pax_available": 1,
+          "max_pax_available": 8
+        },
+        "total": 22,
+        "has_prepayment": false,
+        "payment_type": "none",
+        "has_duration": false,
+        "turn_times": null,
+        "has_specific_rooms": true,
+        "rooms": [
+          115221
+        ],
+        "name": "Réservation classique",
+        "name_translations": {
+          "da": "Klassisk reservation",
+          "de": "Klassische Reservierung",
+          "en": "Classic Reservation",
+          "es": "Reserva clásica",
+          "fr": "Réservation classique",
+          "it": "Prenotazione classica",
+          "nl": "Klassieke reservering",
+          "no": "Klassisk reservasjon",
+          "pt": "Reserva clássica",
+          "sv": "Klassisk bokning"
+        },
+        "description": {
+          "da": "Lokale i stueetagen og første sal - betaling på stedet",
+          "de": "Raum im Erdgeschoss und im ersten Stock - Zahlung vor Ort",
+          "en": "Room on the ground floor and first floor - payment on site",
+          "es": "Sala en la planta baja y primer piso - pago en el lugar",
+          "fr": "Salle rez-de-chaussé et premier étage - paiement sur place",
+          "it": "Sala al piano terra e primo piano - pagamento in loco",
+          "nl": "Kamer op de begane grond en eerste verdieping - betaling ter plaatse",
+          "no": "Rom i første etasje og andre etasje - betaling på stedet",
+          "pt": "Sala no andar térreo e primeiro andar - pagamento no local",
+          "sv": "Rum på bottenvåningen och första våningen - betalning på plats"
+        },
+        "picture_url": null,
+        "is_private": false,
+        "charge_per_guests": null,
+        "stock": 0,
+        "is_unlimited": true,
+        "bookable_from_interval": null,
+        "bookable_from_reference": "shift",
+        "bookable_to_interval": null,
+        "bookable_to_reference": "shift"
+      },
+      {
+        "id": 86309,
+        "stock_id": 363908,
+        "capacity": {
+          "min": null,
+          "max": null,
+          "total_per_slot": null
+        },
+        "config": {
+          "is_limited_to_pax": true,
+          "is_same_for_all": true,
+          "min_pax_available": 2,
+          "max_pax_available": 2
+        },
+        "total": 0,
+        "has_prepayment": true,
+        "payment_type": "prepayment",
+        "has_duration": false,
+        "turn_times": null,
+        "has_specific_rooms": true,
+        "rooms": [
+          115487
+        ],
+        "name": "Location Payante (Hors Repas) Salon Eure 2 couverts",
+        "name_translations": {
+          "da": "Betalingssted (uden måltider) Salon Eure 2 kuverter",
+          "de": "Standort kostenpflichtig (außer Mahlzeiten) Salon Eure 2 Plätze",
+          "en": "Location payable (excluding meals) Salon Eure 2 covers",
+          "es": "Ubicación de pago (sin comidas) Salón Eure 2 cubiertos",
+          "fr": "Location Payante (Hors Repas) Salon Eure 2 couverts",
+          "it": "Posizione a pagamento (esclusi i pasti) Salone Eure 2 posti",
+          "nl": "Betaalde locatie (exclusief maaltijden) Salon Eure 2 couverts",
+          "no": "Betalingssted (uten måltider) Salon Eure 2 dekker",
+          "pt": "Local pago (exceto refeições) Salão Eure 2 lugares",
+          "sv": "Plats med kostnad (utan måltider) Salong Eure 2 platser"
+        },
+        "description": {
+          "da": "Salon med en kapacitet på 2 til 7 personer - leje i 2 timer - betaling for menuer og drikkevarer på stedet og <b>online betaling for at leje salonen</b>",
+          "de": "Salon mit einer Kapazität von 2 bis 7 Personen - Vermietung für 2 Stunden - Bezahlung der Menüs und Getränke vor Ort und <b>Online-Zahlung zur Miete des Salons</b>",
+          "en": "Salon with a capacity of 2 to 7 covers - rental for 2 hours - payment of menus and drinks on site and <b>online payment to rent the salon</b>",
+          "es": "Salón con capacidad de 2 a 7 cubiertos - alquiler por 2 horas - pago de menús y bebidas en el lugar y <b>pago en línea para alquilar el salón</b>",
+          "fr": "Salon avec une capacité de 2 à 8 couverts - location de salle à payer directement en ligne pour 3h de temps - paiement des menus et boissons sur place et <b>paiement en ligne pour louer le salon</b>",
+          "it": "Salone con una capacità da 2 a 7 coperti - affitto per 2 ore - pagamento dei menu e delle bevande in loco e <b>pagamento online per affittare il salone</b>",
+          "nl": "Salon met een capaciteit van 2 tot 7 personen - verhuur voor 2 uur - betaling van menu's en dranken ter plaatse en <b>online betaling voor het huren van de salon</b>",
+          "no": "Salong med kapasitet til 2 til 7 personer - leie for 2 timer - betaling av menyer og drikkevarer på stedet og <b>nettpay for å leie salongen</b>",
+          "pt": "Salão com capacidade de 2 a 7 lugares - locação por 2 horas - pagamento dos menus e bebidas no local e <b>pagamento online para alugar o salão</b>",
+          "sv": "Salong med kapacitet för 2 till 7 personer - uthyrning i 2 timmar - betalning av menyer och drycker på plats och <b>onlinebetalning för att hyra salongen</b>"
+        },
+        "picture_url": "https://ugc.zenchef.com/uploaded-files/377578/offers/86309/LOc64cPTujSGd8GNXKh9MK8I4Tm2gSg2FydBdP7V.jpg",
+        "is_private": false,
+        "charge_per_guests": 7000,
+        "stock": 0,
+        "is_unlimited": true,
+        "bookable_from_interval": null,
+        "bookable_from_reference": "shift",
+        "bookable_to_interval": null,
+        "bookable_to_reference": "shift"
+      },
+      {
+        "id": 86321,
+        "stock_id": 363959,
+        "capacity": {
+          "min": null,
+          "max": null,
+          "total_per_slot": null
+        },
+        "config": {
+          "is_limited_to_pax": true,
+          "is_same_for_all": true,
+          "min_pax_available": 2,
+          "max_pax_available": 2
+        },
+        "total": 0,
+        "has_prepayment": true,
+        "payment_type": "prepayment",
+        "has_duration": false,
+        "turn_times": null,
+        "has_specific_rooms": true,
+        "rooms": [
+          115488
+        ],
+        "name": "Location Payante (Hors Repas) Salon Orne 2 couverts",
+        "name_translations": {
+          "da": "Beliggenhed Salon Orne 2 pladser",
+          "de": "Standort Salon Orne 2 Plätze",
+          "en": "Location Salon Orne 2 covers",
+          "es": "Ubicación Salon Orne 2 cubiertos",
+          "fr": "Location Payante (Hors Repas) Salon Orne 2 couverts",
+          "it": "Posizione Salon Orne 2 coperti",
+          "nl": "Locatie Salon Orne 2 couverts",
+          "no": "Sted Salon Orne 2 dekker",
+          "pt": "Localização Salon Orne 2 coberturas",
+          "sv": "Plats Salon Orne 2 platser"
+        },
+        "description": {
+          "da": "Salon med en kapacitet på 2 til 7 personer - leje i 2 timer - betaling for menuer og drikkevarer på stedet og <b>online betaling for at leje salonen</b>",
+          "de": "Salon mit einer Kapazität von 2 bis 7 Personen - Miete für 2 Stunden - Bezahlung der Menüs und Getränke vor Ort und <b>Online-Zahlung zur Anmietung des Salons</b>",
+          "en": "Salon with a capacity of 2 to 7 covers - rental for 2 hours - payment for menus and drinks on site and <b>online payment to rent the salon</b>",
+          "es": "Salón con capacidad de 2 a 7 comensales - alquiler por 2 horas - pago de menús y bebidas en el lugar y <b>pago en línea para alquilar el salón</b>",
+          "fr": "Salon avec une capacité de 2 à 8 couverts -location de salle à payer directement en ligne pour 3h de temps - paiement des menus et boissons sur place et <b>paiement en ligne pour louer le salon</b>",
+          "it": "Salone con una capacità di 2 a 7 coperti - affitto per 2 ore - pagamento dei menu e delle bevande in loco e <b>pagamento online per affittare il salone</b>",
+          "nl": "Salon met een capaciteit van 2 tot 7 couverts - huur voor 2 uur - betaling van menu's en drankjes ter plaatse en <b>online betaling voor het huren van de salon</b>",
+          "no": "Salong med kapasitet fra 2 til 7 personer - leie i 2 timer - betaling for menyer og drikke på stedet og <b>online betaling for å leie salongen</b>",
+          "pt": "Salão com capacidade para 2 a 7 pessoas - locação por 2 horas - pagamento dos menus e bebidas no local e <b>pagamento online para alugar o salão</b>",
+          "sv": "Salong med kapacitet för 2 till 7 personer - uthyrning i 2 timmar - betalning för menyer och drycker på plats och <b>onlinebetalning för att hyra salongen</b>"
+        },
+        "picture_url": "https://ugc.zenchef.com/uploaded-files/377578/offers/86321/3lb4ZfnLpTseQWploZVZYmSTTicw9M6JOXdpO4lj.jpg",
+        "is_private": false,
+        "charge_per_guests": 7000,
+        "stock": 0,
+        "is_unlimited": true,
+        "bookable_from_interval": null,
+        "bookable_from_reference": "shift",
+        "bookable_to_interval": null,
+        "bookable_to_reference": "shift"
+      },
+      {
+        "id": 86329,
+        "stock_id": 364014,
+        "capacity": {
+          "min": null,
+          "max": null,
+          "total_per_slot": null
+        },
+        "config": {
+          "is_limited_to_pax": true,
+          "is_same_for_all": true,
+          "min_pax_available": 2,
+          "max_pax_available": 2
+        },
+        "total": 0,
+        "has_prepayment": true,
+        "payment_type": "prepayment",
+        "has_duration": false,
+        "turn_times": null,
+        "has_specific_rooms": true,
+        "rooms": [
+          115486
+        ],
+        "name": "Location Payante (Hors Repas) Salon Manche 2 couverts",
+        "name_translations": {
+          "da": "Sted Salon Manche 2 pladser",
+          "de": "Standort Salon Manche 2 Plätze",
+          "en": "Location Salon Manche 2 covers",
+          "es": "Ubicación Salón Manche 2 cubiertos",
+          "fr": "Location Payante (Hors Repas) Salon Manche 2 couverts",
+          "it": "Posizione Salon Manche 2 coperti",
+          "nl": "Locatie Salon Manche 2 plaatsen",
+          "no": "Sted Salon Manche 2 deksler",
+          "pt": "Localização Salão Manche 2 coberturas",
+          "sv": "Plats Salon Manche 2 platser"
+        },
+        "description": {
+          "da": "Salon med kapacitet til 2 til 8 personer - leje i 2 timer - betaling for menuer og drikkevarer på stedet og <b>online betaling for at leje salonen</b>",
+          "de": "Salon mit einer Kapazität von 2 bis 8 Personen - Miete für 2 Stunden - Bezahlung der Menüs und Getränke vor Ort und <b>Online-Zahlung zur Miete des Salons</b>",
+          "en": "Salon with a capacity of 2 to 8 covers - rental for 2 hours - payment for menus and drinks on site and <b>online payment to rent the salon</b>",
+          "es": "Salón con capacidad de 2 a 8 comensales - alquiler por 2 horas - pago de menús y bebidas en el lugar y <b>pago en línea para alquilar el salón</b>",
+          "fr": "Salon avec une capacité de 2 à 8 couverts - location de salle à payer directement en ligne pour 3h de temps - paiement des menus et boissons sur place et <b>paiement en ligne pour louer le salon</b>",
+          "it": "Salone con una capienza da 2 a 8 coperti - affitto per 2 ore - pagamento dei menu e delle bevande in loco e <b>pagamento online per affittare il salone</b>",
+          "nl": "Salon met een capaciteit van 2 tot 8 personen - huur voor 2 uur - betaling van menu's en dranken ter plaatse en <b>online betaling om de salon te huren</b>",
+          "no": "Salong med kapasitet for 2 til 8 personer - leie i 2 timer - betaling for menyer og drikkevarer på stedet og <b>online betaling for å leie salongen</b>",
+          "pt": "Salão com capacidade de 2 a 8 lugares - aluguel por 2 horas - pagamento de menus e bebidas no local e <b>pagamento online para alugar o salão</b>",
+          "sv": "Salong med kapacitet för 2 till 8 personer - uthyrning i 2 timmar - betalning för menyer och drycker på plats och <b>onlinebetalning för att hyra salongen</b>"
+        },
+        "picture_url": "https://ugc.zenchef.com/uploaded-files/377578/offers/86329/9FrpNxwGa2LM0mD9w1iaIEhUWNmGt96ypuw54NlH.jpg",
+        "is_private": false,
+        "charge_per_guests": 7000,
+        "stock": 0,
+        "is_unlimited": true,
+        "bookable_from_interval": null,
+        "bookable_from_reference": "shift",
+        "bookable_to_interval": null,
+        "bookable_to_reference": "shift"
+      }
+    ],
+    "slots": [
+      {
+        "name": "11:45",
+        "possible_guests": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "offers": [
+          {
+            "available_rooms": {
+              "1": [
+                115221
+              ],
+              "2": [
+                115221
+              ],
+              "3": [
+                115221
+              ],
+              "4": [
+                115221
+              ],
+              "5": [
+                115221
+              ],
+              "6": [
+                115221
+              ]
+            },
+            "has_prepayment": false,
+            "payment_type": "none",
+            "has_duration": false,
+            "turn_times": null,
+            "has_specific_rooms": true,
+            "rooms": [
+              115221
+            ],
+            "id": 86319,
+            "stock": 1000,
+            "capacity": {
+              "min": null,
+              "max": null,
+              "total_per_slot": null
+            },
+            "config": {
+              "is_limited_to_pax": true,
+              "is_same_for_all": true,
+              "min_pax_available": 1,
+              "max_pax_available": 8
+            },
+            "bookable_from": null,
+            "bookable_to": "2026-10-23 10:44:00",
+            "possible_guests": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          {
+            "available_rooms": {
+              "2": [
+                115487
+              ]
+            },
+            "has_prepayment": true,
+            "payment_type": "prepayment",
+            "has_duration": false,
+            "turn_times": null,
+            "has_specific_rooms": true,
+            "rooms": [
+              115487
+            ],
+            "id": 86309,
+            "stock": 1000,
+            "capacity": {
+              "min": null,
+              "max": null,
+              "total_per_slot": null
+            },
+            "config": {
+              "is_limited_to_pax": true,
+              "is_same_for_all": true,
+              "min_pax_available": 2,
+              "max_pax_available": 2
+            },
+            "bookable_from": null,
+            "bookable_to": "2026-10-23 10:44:00",
+            "possible_guests": [
+              2
+            ]
+          },
+          {
+            "available_rooms": {
+              "2": [
+                115488
+              ]
+            },
+            "has_prepayment": true,
+            "payment_type": "prepayment",
+            "has_duration": false,
+            "turn_times": null,
+            "has_specific_rooms": true,
+            "rooms": [
+              115488
+            ],
+            "id": 86321,
+            "stock": 1000,
+            "capacity": {
+              "min": null,
+              "max": null,
+              "total_per_slot": null
+            },
+            "config": {
+              "is_limited_to_pax": true,
+              "is_same_for_all": true,
+              "min_pax_available": 2,
+              "max_pax_available": 2
+            },
+            "bookable_from": null,
+            "bookable_to": "2026-10-23 10:44:00",
+            "possible_guests": [
+              2
+            ]
+          },
+          {
+            "available_rooms": {
+              "2": [
+                115486
+              ]
+            },
+            "has_prepayment": true,
+            "payment_type": "prepayment",
+            "has_duration": false,
+            "turn_times": null,
+            "has_specific_rooms": true,
+            "rooms": [
+              115486
+            ],
+            "id": 86329,
+            "stock": 1000,
+            "capacity": {
+              "min": null,
+              "max": null,
+              "total_per_slot": null
+            },
+            "config": {
+              "is_limited_to_pax": true,
+              "is_same_for_all": true,
+              "min_pax_available": 2,
+              "max_pax_available": 2
+            },
+            "bookable_from": null,
+            "bookable_to": "2026-10-23 10:44:00",
+            "possible_guests": [
+              2
+            ]
+          }
+        ]
+      },
+      {
+        "name": "12:00",
+        "possible_guests": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "offers": [
+          {
+            "available_rooms": {
+              "1": [
+                115221
+              ],
+              "2": [
+                115221
+              ],
+              "3": [
+                115221
+              ],
+              "4": [
+                115221
+              ],
+              "5": [
+                115221
+              ],
+              "6": [
+                115221
+              ]
+            },
+            "has_prepayment": false,
+            "payment_type": "none",
+            "has_duration": false,
+            "turn_times": null,
+            "has_specific_rooms": true,
+            "rooms": [
+              115221
+            ],
+            "id": 86319,
+            "stock": 1000,
+            "capacity": {
+              "min": null,
+              "max": null,
+              "total_per_slot": null
+            },
+            "config": {
+              "is_limited_to_pax": true,
+              "is_same_for_all": true,
+              "min_pax_available": 1,
+              "max_pax_available": 8
+            },
+            "bookable_from": null,
+            "bookable_to": "2026-10-23 10:44:00",
+            "possible_guests": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6
+            ]
+          },
+          {
+            "available_rooms": {
+              "2": [
+                115487
+              ]
+            },
+            "has_prepayment": true,
+            "payment_type": "prepayment",
+            "has_duration": false,
+            "turn_times": null,
+            "has_specific_rooms": true,
+            "rooms": [
+              115487
+            ],
+            "id": 86309,
+            "stock": 1000,
+            "capacity": {
+              "min": null,
+              "max": null,
+              "total_per_slot": null
+            },
+            "config": {
+              "is_limited_to_pax": true,
+              "is_same_for_all": true,
+              "min_pax_available": 2,
+              "max_pax_available": 2
+            },
+            "bookable_from": null,
+            "bookable_to": "2026-10-23 10:44:00",
+            "possible_guests": [
+              2
+            ]
+          },
+          {
+            "available_rooms": {
+              "2": [
+                115488
+              ]
+            },
+            "has_prepayment": true,
+            "payment_type": "prepayment",
+            "has_duration": false,
+            "turn_times": null,
+            "has_specific_rooms": true,
+            "rooms": [
+              115488
+            ],
+            "id": 86321,
+            "stock": 1000,
+            "capacity": {
+              "min": null,
+              "max": null,
+              "total_per_slot": null
+            },
+            "config": {
+              "is_limited_to_pax": true,
+              "is_same_for_all": true,
+              "min_pax_available": 2,
+              "max_pax_available": 2
+            },
+            "bookable_from": null,
+            "bookable_to": "2026-10-23 10:44:00",
+            "possible_guests": [
+              2
+            ]
+          },
+          {
+            "available_rooms": {
+              "2": [
+                115486
+              ]
+            },
+            "has_prepayment": true,
+            "payment_type": "prepayment",
+            "has_duration": false,
+            "turn_times": null,
+            "has_specific_rooms": true,
+            "rooms": [
+              115486
+            ],
+            "id": 86329,
+            "stock": 1000,
+            "capacity": {
+              "min": null,
+              "max": null,
+              "total_per_slot": null
+            },
+            "config": {
+              "is_limited_to_pax": true,
+              "is_same_for_all": true,
+              "min_pax_available": 2,
+              "max_pax_available": 2
+            },
+            "bookable_from": null,
+            "bookable_to": "2026-10-23 10:44:00",
+            "possible_guests": [
+              2
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
