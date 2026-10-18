@@ -2283,5 +2283,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-le-florentin": {
+    "name": "Le Florentin",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=376209&lang=fr",
+    "source": "https://leflorentinbistrot.com/reserver",
+    "venueKey": "bookings.zenchef.com/results?rid=376209",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
