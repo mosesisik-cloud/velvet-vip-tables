@@ -7450,7 +7450,11 @@
           "source": "VELVET curated · official website",
           "curated": true,
           "locationSource": "https://www.lecafedesmusees.fr/",
-          "locationVerifiedAt": "2026-10-18"
+          "locationVerifiedAt": "2026-10-18",
+          "bookingUrl": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=348911&lang=fr&showCollapsed=1",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-18"
         },
         {
           "placeId": "curated-PAR-la-plage-parisienne",
