@@ -457,6 +457,7 @@ test('native booking and own-booking readback bind approval without duplicate PO
       assert.equal(reserves,0);assert.equal(sends,0);await a.close();continue;
     }
     s = await act(a,s,{type:'select',time:'12:30',shiftId:venue.shiftId,...(venue.rooms ? {roomId:chosenRoom} : {})});
+    if (denfert) { assert.equal(s.terms.mealNotice, indianaDenfertRochereauSource.dailyAvailabilities['2026-10-23'].shifts[0].comment.fr); assert.equal(s.terms.seatingNotice,undefined); }
     if (moulin) assert.equal(s.terms.seatingNotice, moulinSource.dailyAvailabilities['2026-10-23'].shifts[0].comment.fr);
     if (deKas) {
       assert.equal(s.state,'offers'); assert.equal(s.canSubmit,false); const offer=s.offerChoices[0];
