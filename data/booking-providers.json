@@ -2452,5 +2452,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-indiana-cafe-ternes": {
+    "name": "Indiana Café Ternes",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=375456&pid=1001",
+    "source": "https://www.indianacafe.fr/restaurant/ternes",
+    "venueKey": "bookings.zenchef.com/results?rid=375456",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
