@@ -7439,6 +7439,20 @@
       "source": "VELVET curated + OpenStreetMap · official links where available",
       "restaurants": [
         {
+          "placeId": "curated-PAR-le-bistrot-de-paris",
+          "name": "Le Bistrot de Paris",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "33 rue de Lille, 75007 Paris",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Bistrot%20de%20Paris%2C%2033%20rue%20de%20Lille%2C%20Paris",
+          "website": "https://lcep.fr/le-bistrot-de-paris/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://lcep.fr/le-bistrot-de-paris/",
+          "locationVerifiedAt": "2026-10-18"
+        },
+        {
           "placeId": "curated-PAR-chez-rene",
           "name": "Chez René",
           "rating": null,
