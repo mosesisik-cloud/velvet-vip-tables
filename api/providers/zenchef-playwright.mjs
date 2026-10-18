@@ -1353,6 +1353,36 @@ export class ZenchefPlaywright {
     if (s.page.url() !== zenchefFormUrl(s.formSelection, s.venue) || form?.wish?.room_id !== roomId
       || !await s.page.getByText(roomName, { exact: true }).isVisible()) throw new ZenchefError('provider_room_mismatch', 409);
   }
+  async openCafeDesMuseesForm(s, url) {
+    if (s.venue !== ZENCHEF_CAFEDESMUSEES) throw new ZenchefError('provider_form_mismatch',502);
+    const raw=await s.page.locator('script#__NEXT_DATA__').textContent();
+    const data=JSON.parse(raw),form=data?.props?.initialState?.appStoreState,sdk=data?.props?.initialState?.sdkStoreState;
+    const expected=Object.fromEntries(new URL(url).searchParams),query=data.query || {};
+    const shift=form?.dailyAvailabilities?.[s.searchQuery.date]?.shifts?.find(x=>x.id===7248);
+    if (s.page.url() !== url || data.page !== '/form' || new URL(url).pathname !== '/form'
+      || expected.rid !== '348911' || expected.sdk !== '1' || expected.showCollapsed !== '1'
+      || Object.keys(query).length !== Object.keys(expected).length || Object.entries(expected).some(([k,v])=>query[k] !== v)
+      || !cafeDesMuseesMetadata(form) || !supportedZenchefFields(form,s.venue)
+      || Object.hasOwn(form,'partner_id') || form.wish?.day !== s.searchQuery.date || form.wish?.pax !== 2
+      || form.wish?.slot !== expected.slot || form.wish.waiting_list !== false
+      || form.hasRoomSelection !== false || form.isRoomMandatory !== false || form.wish.room_id !== null
+      || !Array.isArray(form.wish.offers) || form.wish.offers.length || !Array.isArray(form.offers) || form.offers.length
+      || shift?.closed !== false || shift.marked_as_full !== false
+      || !shift.shift_slots?.some(x=>x.name===expected.slot && x.closed===false && x.marked_as_full===false && x.possible_guests?.includes(2))
+      || sdk?.isSdk !== true || sdk.showCollapsed !== true || sdk.isCollapsed !== true || sdk.sdkEntrypoint !== 'restaurant')
+      throw new ZenchefError('provider_form_mismatch',502);
+    // Own cached handler only expands the selected form when no filter/offer/room is missing.
+    // Use the real launcher; never mutate query parameters or application state.
+    const launcher=s.page.locator('[data-testid="bookings-btn"]');
+    await launcher.waitFor({state:'visible',timeout:10000});
+    if (await launcher.count() !== 1 || !await launcher.isEnabled()
+      || (await launcher.innerText()).trim() !== 'Réserver une table'
+      || await s.page.locator(PROVIDER_FIELDS.firstname).count() !== 0) throw new ZenchefError('provider_form_mismatch',502);
+    await launcher.click();
+    await s.page.locator(PROVIDER_FIELDS.firstname).waitFor({state:'visible',timeout:10000});
+    if (s.page.url() !== url || await s.page.locator('script#__NEXT_DATA__').textContent() !== raw
+      || await launcher.isVisible()) throw new ZenchefError('provider_form_mismatch',502);
+  }
   async saturdayDurationInput(s) {
     if (s.venue !== ZENCHEF_LAPLAGEPARISIENNE) throw new ZenchefError('provider_fields_unverified',409);
     const input=s.page.locator('[id="custom_field__'+PLAGE_DURATION_SLUG+'"]');
@@ -1515,6 +1545,7 @@ export class ZenchefPlaywright {
             return await this.snapshot(s);
           }
           await s.page.goto(url, { waitUntil: 'domcontentloaded', timeout: 20000 });
+          if (s.venue === ZENCHEF_CAFEDESMUSEES) await this.openCafeDesMuseesForm(s,url);
           await s.page.locator(PROVIDER_FIELDS.firstname).waitFor({ state: 'visible', timeout: 20000 });
           const data = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent());
           const form = data?.props?.initialState?.appStoreState;
