@@ -5,7 +5,7 @@ export function mountProviderPlaywrightBooking(container, api, {
 } = {}) {
   if (!provider || !restaurantId || !endpoint.startsWith('/')) throw new Error('booking_config');
   const isZenchef = provider.toLowerCase() === 'zenchef';
-  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : null;
+  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : null;
   const dateInScope = date => restaurantId !== 'curated-PAR-bouillon-julien' || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && !['12-24','12-25','12-31'].includes(date.slice(5)));
   const timeInScope = time => restaurantId !== 'curated-PAR-bouillon-republique' || ['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(time);
   const key = `velvet:provider:${encodeURIComponent(provider)}:${encodeURIComponent(restaurantId)}`;
@@ -92,6 +92,11 @@ export function mountProviderPlaywrightBooking(container, api, {
   if (restaurantId === 'curated-PAR-bouillon-republique') {
     const scope=document.createElement('p'); scope.className='booking-scope';
     scope.textContent='Bokning i Velvet gäller Bouillon République på 39 boulevard du Temple i Paris för exakt två gäster, i mån av lediga bord. Endast lunchtiderna 11.30, 12.00, 12.30, 13.00, 13.30, 14.00 och 14.30 inom restaurangens Service du Vendredi ingår. Andra tider och tjänster, middag, grupper, evenemang, privata rum, leverans och hämtmat ingår inte. Hela sällskapet ska anlända i tid. Ingen viss placering garanteras. Kontrollera restaurangens aktuella villkor före bokning.';
+    container.querySelector('header').after(scope);
+  }
+  if (restaurantId === 'curated-PAR-brasserie-rosie') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller lunchserveringen Midi Semaine på Brasserie Rosie, 53 rue du Faubourg Saint-Antoine i Paris, för exakt två gäster, i mån av lediga bord. Middag, grupper, evenemang och privata rum ingår inte. Ingen viss placering garanteras. Restaurangen håller bordet i högst 15 minuter vid försening. Om det är fullbokat kan du kontakta eller besöka restaurangen, men det garanterar inget bord. Kontrollera restaurangens aktuella villkor före bokning.';
     container.querySelector('header').after(scope);
   }
   const write = (id, phase, idempotencyKey, reviewFingerprint) => {
