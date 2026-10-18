@@ -217,6 +217,11 @@ export function mountProviderPlaywrightBooking(container, api, {
     scope.textContent='Bokning i Velvet gäller lunchserveringen Déjeuner på Indiana Café Bercy Village, Chais 59-61, Cour Saint-Emilion i Paris, för exakt två gäster, i mån av lediga bord. Middag, grupper och val av särskilt rum ingår inte. Ingen viss placering garanteras. Terrassplatser kan inte reserveras. Kontrollera restaurangens aktuella villkor före bokning.';
     container.querySelector('header').after(scope);
   }
+  if (restaurantId === 'curated-PAR-la-plage-parisienne') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller lunchserveringen Déjeuner på La Plage Parisienne för exakt två gäster, i mån av lediga bord. Middag, grupper, erbjudanden, presentkort och val av särskilt rum ingår inte. Ingen viss placering garanteras. Restaurangens separata obligatoriska ruta om lördagskvällar visas även för andra valda dagar och måste godkännas uttryckligen. Ingen generell lunchöppning eller tvåtimmarsgräns för andra dagar utlovas. Officiell adress: Port de Javel Haut – Statue de la Liberté, 75015 Paris. Bokningssystemets adress: 8 10 quai javel haut, 75015 Paris. Kontrollera båda språkversionerna av villkoren före bokning.';
+    container.querySelector('header').after(scope);
+  }
   if (restaurantId === 'curated-PAR-zen-restaurant') {
     const scope=document.createElement('p'); scope.className='booking-scope';
     scope.textContent='Bokning i Velvet gäller den vanliga middagsserveringen Dîner på ZEN, 8 rue de L’Echelle i Paris, för exakt två gäster, i mån av lediga bord. Lunch och privat Omakase ingår inte. Grupper och val av särskilt rum ingår inte. Ingen viss placering eller våning garanteras. Restaurangens fullständiga villkor visas före godkännandet. Kontrollera dem före bokning.';
@@ -428,7 +433,8 @@ export function mountProviderPlaywrightBooking(container, api, {
       el('shift-notice').hidden = !review.shiftNotice;
       const denfertAddress = isZenchef && restaurantId === 'curated-PAR-indiana-cafe-denfert-rochereau';
       el('address-notice').textContent = denfertAddress ? 'Bokningssystemets adress: 1 Bis Avenue du Général Leclerc, 75014 Paris. Restaurangens officiella sida anger: 1 Avenue du Général Leclerc, 75014 Paris. Adressuppgifterna skiljer sig; samma entré är inte verifierad.' : '';
-      el('address-notice').hidden = !denfertAddress;
+      if (durationVenue) el('address-notice').textContent = 'Officiell adress: Port de Javel Haut – Statue de la Liberté, 75015 Paris. Bokningssystemets adress: 8 10 quai javel haut, 75015 Paris. Adressuppgifterna återges separat.';
+      el('address-notice').hidden = !denfertAddress && !durationVenue;
       el('terms-text').textContent = review.termsText;
     }
     el('status').textContent = terminal() ? outcome(next.result,next) : uncertain ? 'Resultatet måste kontrolleras. Skicka inte på nytt.' : needsReview() ? 'Servern har bekräftat att bokningen inte skickades. Granska uppgifterna igen innan du godkänner.' : hasReview() && !canSubmit() ? 'Uppgifterna visas för kontroll. Leverantörens slutliga bokningssteg är ännu inte tillgängligt.' : next.phase === 'guest' ? `${held(next) ? 'Tillfälligt reserverat. ' : ''}Fyll i och spara dina kontaktuppgifter. Bokningen är inte slutförd.` : next.blocked ? 'Leverantörens formulär är spärrat.' : 'Välj och kontrollera uppgifterna i leverantörens formulär.';
