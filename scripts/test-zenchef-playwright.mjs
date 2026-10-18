@@ -4,6 +4,7 @@ import { test, before, after, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+const bistrotSource = JSON.parse(fs.readFileSync(new URL('./fixtures/bistrot-paris-source.json', import.meta.url)));
 const reneSource = JSON.parse(fs.readFileSync(new URL('./fixtures/chez-rene-source.json', import.meta.url)));
 const savySource = JSON.parse(fs.readFileSync(new URL('./fixtures/chez-savy-source.json', import.meta.url)));
 const sommelierSource = JSON.parse(fs.readFileSync(new URL('./fixtures/petit-sommelier-source.json', import.meta.url)));
@@ -23,7 +24,7 @@ const laCoupoleSource = JSON.parse(fs.readFileSync(new URL('./fixtures/la-coupol
 const bofingerSource = JSON.parse(fs.readFileSync(new URL('./fixtures/bofinger-source.json', import.meta.url)));
 
 import { chromium } from 'playwright';
-import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_DEKAS, ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN, ZENCHEF_BOUILLONRACINE, ZENCHEF_BOUILLONREPUBLIQUE, ZENCHEF_ROSIE, ZENCHEF_ROSIELOU, ZENCHEF_ROSIEJOLIE, ZENCHEF_PETITSOMMELIER, ZENCHEF_CHEZSAVY, ZENCHEF_CHEZRENE, chezRenePolicy, chezSavyPolicy, petitSommelierPolicy, rosieJoliePolicy, rosieLouPolicy, rosiePolicy, bouillonRepubliquePolicy, bouillonRacinePolicy, bouillonJulienPolicy, vagenendePolicy, grandCafePolicy, piedDeCochonPolicy, laLorrainePolicy, procopePolicy, terminusNordPolicy, laCoupolePolicy, bofingerPolicy, approvedZenchefPayload, zenchefBookingResult, allowedZenchefInspectionRequest,
+import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_DEKAS, ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN, ZENCHEF_BOUILLONRACINE, ZENCHEF_BOUILLONREPUBLIQUE, ZENCHEF_ROSIE, ZENCHEF_ROSIELOU, ZENCHEF_ROSIEJOLIE, ZENCHEF_PETITSOMMELIER, ZENCHEF_CHEZSAVY, ZENCHEF_CHEZRENE, ZENCHEF_BISTROTPARIS, bistrotParisPolicy, chezRenePolicy, chezSavyPolicy, petitSommelierPolicy, rosieJoliePolicy, rosieLouPolicy, rosiePolicy, bouillonRepubliquePolicy, bouillonRacinePolicy, bouillonJulienPolicy, vagenendePolicy, grandCafePolicy, piedDeCochonPolicy, laLorrainePolicy, procopePolicy, terminusNordPolicy, laCoupolePolicy, bofingerPolicy, approvedZenchefPayload, zenchefBookingResult, allowedZenchefInspectionRequest,
   zenchefSearchUrl, zenchefAvailabilityEvidence, zenchefFormUrl, allowedZenchefPreparationRequest } from '../api/providers/zenchef-playwright.mjs';
 
 const fixture = (status = 'confirmed', reference = 'LOCAL-TEST-ONLY') => `<!doctype html><html><body>
@@ -303,18 +304,18 @@ function deKasDocument(u,date,payload) {
 }
 
 test('native booking and own-booking readback bind approval without duplicate POSTs', async () => {
-  for (const scenario of ['bouillon','bouillon-missing','bouillon-pending','bouillon-date','bouillon-party','bouillon-offer','bouillon-card','bouillon-manual','bouillon-stale','bouillon-attempt', 'vagenende','rosie','lou','savy','rene','vagenende-missing','rosie-missing','lou-missing','savy-missing','rene-missing','vagenende-pending','rosie-pending','lou-pending','savy-pending','rene-pending','vagenende-date','rosie-date','lou-date','savy-date','rene-date','vagenende-party','rosie-party','lou-party','savy-party','rene-party','vagenende-offer','rosie-offer','lou-offer','savy-offer','rene-offer','vagenende-card','rosie-card','lou-card','savy-card','rene-card','vagenende-manual','rosie-manual','lou-manual','savy-manual','rene-manual','vagenende-stale','rosie-stale','lou-stale','savy-stale','rene-stale','vagenende-attempt','rosie-attempt','lou-attempt','savy-attempt','rene-attempt', 'grandcafe','racine','sommelier','jolie','republique','grandcafe-missing','racine-missing','sommelier-missing','jolie-missing','republique-missing','grandcafe-pending','racine-pending','sommelier-pending','jolie-pending','republique-pending','grandcafe-date','racine-date','sommelier-date','jolie-date','republique-date','grandcafe-party','racine-party','sommelier-party','jolie-party','republique-party','grandcafe-offer','racine-offer','sommelier-offer','jolie-offer','republique-offer','grandcafe-card','racine-card','sommelier-card','jolie-card','republique-card','grandcafe-manual','racine-manual','sommelier-manual','jolie-manual','republique-manual','grandcafe-stale','racine-stale','sommelier-stale','jolie-stale','republique-stale','grandcafe-attempt','racine-attempt','sommelier-attempt','jolie-attempt','republique-attempt', 'pied','pied-missing','pied-pending','pied-date','pied-party','pied-offer','pied-card','pied-manual','pied-stale','pied-attempt', 'lorraine','lorraine-missing','lorraine-pending','lorraine-date','lorraine-party','lorraine-offer','lorraine-card','lorraine-manual','lorraine-stale','lorraine-attempt', 'procope','procope-missing','procope-pending','procope-date','procope-party','procope-offer','procope-card','procope-manual','procope-stale','procope-attempt', 'terminus','terminus-missing','terminus-pending','terminus-date','terminus-party','terminus-offer','terminus-card','terminus-manual','terminus-stale','terminus-attempt', 'lacoupole','lacoupole-missing','lacoupole-pending','lacoupole-date','lacoupole-party','lacoupole-offer','lacoupole-card','lacoupole-manual','lacoupole-stale','lacoupole-attempt', 'bofinger','bofinger-missing','bofinger-pending','bofinger-date','bofinger-party','bofinger-offer','bofinger-card','bofinger-manual','bofinger-stale','bofinger-attempt', 'confirmed', 'denied', 'persistence', 'payment', 'country', 'swedish', 'pesquiere', 'pesquiere-receipt', 'pesquiere-echo-bad-uuid', 'pesquiere-echo-date', 'pesquiere-echo-time', 'pesquiere-echo-party',
+  for (const scenario of ['bouillon','bouillon-missing','bouillon-pending','bouillon-date','bouillon-party','bouillon-offer','bouillon-card','bouillon-manual','bouillon-stale','bouillon-attempt', 'vagenende','rosie','lou','savy','rene','bistrot','vagenende-missing','rosie-missing','lou-missing','savy-missing','rene-missing','bistrot-missing','vagenende-pending','rosie-pending','lou-pending','savy-pending','rene-pending','bistrot-pending','vagenende-date','rosie-date','lou-date','savy-date','rene-date','bistrot-date','vagenende-party','rosie-party','lou-party','savy-party','rene-party','bistrot-party','vagenende-offer','rosie-offer','lou-offer','savy-offer','rene-offer','bistrot-offer','vagenende-card','rosie-card','lou-card','savy-card','rene-card','bistrot-card','vagenende-manual','rosie-manual','lou-manual','savy-manual','rene-manual','bistrot-manual','vagenende-stale','rosie-stale','lou-stale','savy-stale','rene-stale','bistrot-stale','vagenende-attempt','rosie-attempt','lou-attempt','savy-attempt','rene-attempt','bistrot-attempt', 'grandcafe','racine','sommelier','jolie','republique','grandcafe-missing','racine-missing','sommelier-missing','jolie-missing','republique-missing','grandcafe-pending','racine-pending','sommelier-pending','jolie-pending','republique-pending','grandcafe-date','racine-date','sommelier-date','jolie-date','republique-date','grandcafe-party','racine-party','sommelier-party','jolie-party','republique-party','grandcafe-offer','racine-offer','sommelier-offer','jolie-offer','republique-offer','grandcafe-card','racine-card','sommelier-card','jolie-card','republique-card','grandcafe-manual','racine-manual','sommelier-manual','jolie-manual','republique-manual','grandcafe-stale','racine-stale','sommelier-stale','jolie-stale','republique-stale','grandcafe-attempt','racine-attempt','sommelier-attempt','jolie-attempt','republique-attempt', 'pied','pied-missing','pied-pending','pied-date','pied-party','pied-offer','pied-card','pied-manual','pied-stale','pied-attempt', 'lorraine','lorraine-missing','lorraine-pending','lorraine-date','lorraine-party','lorraine-offer','lorraine-card','lorraine-manual','lorraine-stale','lorraine-attempt', 'procope','procope-missing','procope-pending','procope-date','procope-party','procope-offer','procope-card','procope-manual','procope-stale','procope-attempt', 'terminus','terminus-missing','terminus-pending','terminus-date','terminus-party','terminus-offer','terminus-card','terminus-manual','terminus-stale','terminus-attempt', 'lacoupole','lacoupole-missing','lacoupole-pending','lacoupole-date','lacoupole-party','lacoupole-offer','lacoupole-card','lacoupole-manual','lacoupole-stale','lacoupole-attempt', 'bofinger','bofinger-missing','bofinger-pending','bofinger-date','bofinger-party','bofinger-offer','bofinger-card','bofinger-manual','bofinger-stale','bofinger-attempt', 'confirmed', 'denied', 'persistence', 'payment', 'country', 'swedish', 'pesquiere', 'pesquiere-receipt', 'pesquiere-echo-bad-uuid', 'pesquiere-echo-date', 'pesquiere-echo-time', 'pesquiere-echo-party',
     'pesquiere-readback', 'pesquiere-readback-native-metadata', 'pesquiere-readback-room', 'pesquiere-readback-missing', 'pesquiere-readback-error',
     'pesquiere-readback-challenge', 'pesquiere-readback-redirect', 'pesquiere-readback-id', 'pesquiere-readback-date',
     'pesquiere-readback-time', 'pesquiere-readback-party', 'pesquiere-readback-pending', 'pesquiere-readback-uuid',
     'pesquiere-readback-bad-uuid', 'pesquiere-readback-metadata', 'pesquiere-readback-cross-before', 'pesquiere-readback-cross-after',
     'dekas', 'dekas-offer-id', 'dekas-offer-count', 'dekas-offer-missing', 'dekas-echo-only', 'dekas-attempt', 'dekas-stale-menu', 'dekas-stale-count', 'dekas-post-offer', 'dekas-stale-terms',
     'pirouette', 'pirouette-receipt', 'pirouette-card', 'pirouette-prepayment', 'pirouette-manual', 'pirouette-gift', 'pirouette-seating']) {
-    const deKas = scenario.startsWith('dekas'); const bofinger = scenario.startsWith('bofinger'); const laCoupole = scenario.startsWith('lacoupole'); const terminus = scenario.startsWith('terminus'); const procope = scenario.startsWith('procope'); const lorraine = scenario.startsWith('lorraine'); const pied = scenario.startsWith('pied'); const grandCafe = scenario.startsWith('grandcafe'); const vagenende = scenario.startsWith('vagenende'); const bouillon = scenario.startsWith('bouillon'); const racine = scenario.startsWith('racine'); const republique = scenario.startsWith('republique'); const rosie = scenario.startsWith('rosie'); const lou = scenario.startsWith('lou'); const jolie = scenario.startsWith('jolie'); const sommelier = scenario.startsWith('sommelier'); const savy = scenario.startsWith('savy'); const rene = scenario.startsWith('rene'); const noRoomLunch = bofinger || laCoupole || terminus || procope || lorraine || pied || grandCafe || vagenende || bouillon || racine || republique || rosie || lou || jolie || sommelier || savy || rene;
-    const venue = rene ? ZENCHEF_CHEZRENE : savy ? ZENCHEF_CHEZSAVY : sommelier ? ZENCHEF_PETITSOMMELIER : jolie ? ZENCHEF_ROSIEJOLIE : lou ? ZENCHEF_ROSIELOU : rosie ? ZENCHEF_ROSIE : republique ? ZENCHEF_BOUILLONREPUBLIQUE : racine ? ZENCHEF_BOUILLONRACINE : bouillon ? ZENCHEF_BOUILLONJULIEN : vagenende ? ZENCHEF_VAGENENDE : grandCafe ? ZENCHEF_GRANDCAFE : pied ? ZENCHEF_PIEDDECOCHON : lorraine ? ZENCHEF_LALORRAINE : procope ? ZENCHEF_PROCOPE : terminus ? ZENCHEF_TERMINUSNORD : laCoupole ? ZENCHEF_LACOUPOLE : bofinger ? ZENCHEF_BOFINGER : deKas ? ZENCHEF_DEKAS : scenario.startsWith('pirouette') ? ZENCHEF_PIROUETTE : scenario.startsWith('pesquiere') ? ZENCHEF_PESQUIERE : ZENCHEF_FISHCORNER;
+    const deKas = scenario.startsWith('dekas'); const bofinger = scenario.startsWith('bofinger'); const laCoupole = scenario.startsWith('lacoupole'); const terminus = scenario.startsWith('terminus'); const procope = scenario.startsWith('procope'); const lorraine = scenario.startsWith('lorraine'); const pied = scenario.startsWith('pied'); const grandCafe = scenario.startsWith('grandcafe'); const vagenende = scenario.startsWith('vagenende'); const bouillon = scenario.startsWith('bouillon'); const racine = scenario.startsWith('racine'); const republique = scenario.startsWith('republique'); const rosie = scenario.startsWith('rosie'); const lou = scenario.startsWith('lou'); const jolie = scenario.startsWith('jolie'); const sommelier = scenario.startsWith('sommelier'); const savy = scenario.startsWith('savy'); const rene = scenario.startsWith('rene'); const bistrot = scenario.startsWith('bistrot'); const noRoomLunch = bofinger || laCoupole || terminus || procope || lorraine || pied || grandCafe || vagenende || bouillon || racine || republique || rosie || lou || jolie || sommelier || savy || rene || bistrot;
+    const venue = bistrot ? ZENCHEF_BISTROTPARIS : rene ? ZENCHEF_CHEZRENE : savy ? ZENCHEF_CHEZSAVY : sommelier ? ZENCHEF_PETITSOMMELIER : jolie ? ZENCHEF_ROSIEJOLIE : lou ? ZENCHEF_ROSIELOU : rosie ? ZENCHEF_ROSIE : republique ? ZENCHEF_BOUILLONREPUBLIQUE : racine ? ZENCHEF_BOUILLONRACINE : bouillon ? ZENCHEF_BOUILLONJULIEN : vagenende ? ZENCHEF_VAGENENDE : grandCafe ? ZENCHEF_GRANDCAFE : pied ? ZENCHEF_PIEDDECOCHON : lorraine ? ZENCHEF_LALORRAINE : procope ? ZENCHEF_PROCOPE : terminus ? ZENCHEF_TERMINUSNORD : laCoupole ? ZENCHEF_LACOUPOLE : bofinger ? ZENCHEF_BOFINGER : deKas ? ZENCHEF_DEKAS : scenario.startsWith('pirouette') ? ZENCHEF_PIROUETTE : scenario.startsWith('pesquiere') ? ZENCHEF_PESQUIERE : ZENCHEF_FISHCORNER;
     const chosenRoom = venue === ZENCHEF_PIROUETTE ? 52521 : 52372, otherRoom = venue === ZENCHEF_PIROUETTE ? 65674 : 51183;
     const roomName = venue.rooms?.find(room=>room.id===chosenRoom)?.name;
-    const blockedPolicy = ['pirouette-card','pirouette-prepayment','pirouette-manual','bofinger-card','bofinger-manual','lacoupole-card','lacoupole-manual','terminus-card','terminus-manual','procope-card','procope-manual','lorraine-card','lorraine-manual','pied-card','pied-manual','grandcafe-card','racine-card','sommelier-card','jolie-card','republique-card','grandcafe-manual','racine-manual','sommelier-manual','jolie-manual','republique-manual','vagenende-card','rosie-card','lou-card','savy-card','rene-card','vagenende-manual','rosie-manual','lou-manual','savy-manual','rene-manual','bouillon-card','bouillon-manual'].includes(scenario);
+    const blockedPolicy = ['pirouette-card','pirouette-prepayment','pirouette-manual','bofinger-card','bofinger-manual','lacoupole-card','lacoupole-manual','terminus-card','terminus-manual','procope-card','procope-manual','lorraine-card','lorraine-manual','pied-card','pied-manual','grandcafe-card','racine-card','sommelier-card','jolie-card','republique-card','grandcafe-manual','racine-manual','sommelier-manual','jolie-manual','republique-manual','vagenende-card','rosie-card','lou-card','savy-card','rene-card','bistrot-card','vagenende-manual','rosie-manual','lou-manual','savy-manual','rene-manual','bistrot-manual','bouillon-card','bouillon-manual'].includes(scenario);
     let providerPage;
     const date = '2030-11-16'; let sends = 0, reads = 0, reserves = 0, recorded, liveSession;
     const readCase = scenario.startsWith('pesquiere-readback');
@@ -343,15 +344,15 @@ test('native booking and own-booking readback bind approval without duplicate PO
         wish: { day: date, pax: 2, waiting_list: false, offers: [], room_id: venue.rooms && isForm ? Number(u.searchParams.get('room_id')) : null, ...(isForm ? { slot: '12:30' } : {}) },
         rooms: venue.rooms, mandatoryFields: { firstname: 'required' }, isRoomMandatory: !!venue.rooms, dailyAvailabilities: { [date]: { date, shifts: [shift, { ...shift, id: 545347 }] } } };
       if (noRoomLunch) {
-        const policy = structuredClone((rene ? reneSource : savy ? savySource : sommelier ? sommelierSource : jolie ? jolieSource : lou ? louSource : rosie ? rosieSource : republique ? republiqueSource : racine ? racineSource : bouillon ? bouillonSource : vagenende ? vagenendeSource : grandCafe ? grandCafeSource : pied ? piedSource : lorraine ? laLorraineSource : procope ? procopeSource : terminus ? terminusNordSource : laCoupole ? laCoupoleSource : bofingerSource).dailyAvailabilities['2026-10-23'].shifts[0]);
+        const policy = structuredClone((bistrot ? bistrotSource : rene ? reneSource : savy ? savySource : sommelier ? sommelierSource : jolie ? jolieSource : lou ? louSource : rosie ? rosieSource : republique ? republiqueSource : racine ? racineSource : bouillon ? bouillonSource : vagenende ? vagenendeSource : grandCafe ? grandCafeSource : pied ? piedSource : lorraine ? laLorraineSource : procope ? procopeSource : terminus ? terminusNordSource : laCoupole ? laCoupoleSource : bofingerSource).dailyAvailabilities['2026-10-23'].shifts[0]);
         Object.assign(shift, policy, {bookable_from:null,bookable_to:null,shift_slots:[slot]});
         delete slot.available_rooms;
-        Object.assign(state,{name:venue.name,currency:'EUR',language:'fr',hasRoomSelection:false,restaurantComment:(rene ? reneSource : savy ? savySource : sommelier ? sommelierSource : jolie ? jolieSource : lou ? louSource : rosie ? rosieSource : republique ? republiqueSource : racine ? racineSource : bouillon ? bouillonSource : vagenende ? vagenendeSource : grandCafe ? grandCafeSource : pied ? piedSource : lorraine ? laLorraineSource : procope ? procopeSource : terminus ? terminusNordSource : laCoupole ? laCoupoleSource : bofingerSource).restaurantComment});
-        if (isForm && ['terminus-card','lorraine-card','pied-card','vagenende-card','rosie-card','lou-card','savy-card','rene-card','republique-card'].includes(scenario)) shift.charge_param.min_guests=2;
+        Object.assign(state,{name:venue.name,currency:'EUR',language:'fr',hasRoomSelection:false,restaurantComment:(bistrot ? bistrotSource : rene ? reneSource : savy ? savySource : sommelier ? sommelierSource : jolie ? jolieSource : lou ? louSource : rosie ? rosieSource : republique ? republiqueSource : racine ? racineSource : bouillon ? bouillonSource : vagenende ? vagenendeSource : grandCafe ? grandCafeSource : pied ? piedSource : lorraine ? laLorraineSource : procope ? procopeSource : terminus ? terminusNordSource : laCoupole ? laCoupoleSource : bofingerSource).restaurantComment});
+        if (isForm && ['terminus-card','lorraine-card','pied-card','vagenende-card','rosie-card','lou-card','savy-card','rene-card','bistrot-card','republique-card'].includes(scenario)) shift.charge_param.min_guests=2;
         if (isForm && ['lacoupole-card','procope-card','grandcafe-card','racine-card','sommelier-card','jolie-card','bouillon-card'].includes(scenario)) shift.charge_param={is_web_booking_askable:true,min_guests:1,charge_per_guests:10};
         if (isForm && scenario === 'bofinger-card') shift.charge_param.is_web_booking_askable=true;
-        if (isForm && ['grandcafe-manual','racine-manual','sommelier-manual','jolie-manual','republique-manual','vagenende-manual','rosie-manual','lou-manual','savy-manual','rene-manual'].includes(scenario)) shift.confirmation.is_auto=false;
-        if (isForm && ['bofinger-manual','lacoupole-manual','terminus-manual','procope-manual','lorraine-manual','pied-manual','bouillon-manual','rene-manual'].includes(scenario)) shift.confirmation.is_auto_until=null;
+        if (isForm && ['grandcafe-manual','racine-manual','sommelier-manual','jolie-manual','republique-manual','vagenende-manual','rosie-manual','lou-manual','savy-manual','rene-manual','bistrot-manual'].includes(scenario)) shift.confirmation.is_auto=false;
+        if (isForm && ['bofinger-manual','lacoupole-manual','terminus-manual','procope-manual','lorraine-manual','pied-manual','bouillon-manual','rene-manual','bistrot-manual'].includes(scenario)) shift.confirmation.is_auto_until=null;
       }
       const data = { page: isForm ? '/form' : '/results', query: Object.fromEntries(u.searchParams), props: { initialState: { appStoreState: state } } };
       return `<html><head><meta charset="utf-8"></head><body><h1>LOCAL NATIVE CONTRACT REPLAY</h1>${venue.rooms && isForm ? `<div>${roomName}</div>` : ''}${venue === ZENCHEF_PIROUETTE && isForm ? '<div id=seating>Jusqu&#39;&#224; 14:30</div>' : ''}<script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
@@ -361,7 +362,7 @@ test('native booking and own-booking readback bind approval without duplicate PO
     };
     const a = new ZenchefPlaywright({ mode: 'prepare', enableSubmission: true, now: () => Date.parse('2030-11-15T12:00:00Z'),
       reserveSubmission: async (intent,session) => { liveSession=session; reserves++; assert.equal(intent.mode, 'live'); assert.equal(intent.phase, 'booking');
-        assert.match(intent.reviewFingerprint, /^[a-f0-9]{64}$/); if (['bofinger-attempt','lacoupole-attempt','terminus-attempt','procope-attempt','lorraine-attempt','pied-attempt','grandcafe-attempt','racine-attempt','sommelier-attempt','jolie-attempt','republique-attempt','vagenende-attempt','rosie-attempt','lou-attempt','savy-attempt','rene-attempt','bouillon-attempt'].includes(scenario)) return {sendAllowed:true,attempt:{...intent,details:{...intent.details,shiftId:19173},attemptId:'synthetic-attempt',idempotencyKey:'journal-owned-key'}}; if (scenario === 'dekas-attempt') return {sendAllowed:true,attempt:{...intent,details:{...intent.details,offer:{...intent.offer,count:1}},attemptId:'synthetic-attempt',idempotencyKey:'journal-owned-key'}}; return { sendAllowed: scenario !== 'denied', attempt: { ...intent, sessionId: scenario === 'pesquiere-readback-cross-before' ? 'another-session' : intent.sessionId, attemptId: 'synthetic-attempt', idempotencyKey: 'journal-owned-key' } }; },
+        assert.match(intent.reviewFingerprint, /^[a-f0-9]{64}$/); if (['bofinger-attempt','lacoupole-attempt','terminus-attempt','procope-attempt','lorraine-attempt','pied-attempt','grandcafe-attempt','racine-attempt','sommelier-attempt','jolie-attempt','republique-attempt','vagenende-attempt','rosie-attempt','lou-attempt','savy-attempt','rene-attempt','bistrot-attempt','bouillon-attempt'].includes(scenario)) return {sendAllowed:true,attempt:{...intent,details:{...intent.details,shiftId:19173},attemptId:'synthetic-attempt',idempotencyKey:'journal-owned-key'}}; if (scenario === 'dekas-attempt') return {sendAllowed:true,attempt:{...intent,details:{...intent.details,offer:{...intent.offer,count:1}},attemptId:'synthetic-attempt',idempotencyKey:'journal-owned-key'}}; return { sendAllowed: scenario !== 'denied', attempt: { ...intent, sessionId: scenario === 'pesquiere-readback-cross-before' ? 'another-session' : intent.sessionId, attemptId: 'synthetic-attempt', idempotencyKey: 'journal-owned-key' } }; },
       recordResult: async session => { recorded = structuredClone(session.result); if (scenario === 'persistence') throw Error('disk'); },
       browserFactory: async () => ({ close: async () => {}, newContext: async opts => {
         const context = await browser.newContext(opts); context.on('page',page=>{providerPage=page;}); const route = context.route.bind(context);
@@ -447,7 +448,7 @@ test('native booking and own-booking readback bind approval without duplicate PO
       if (scenario === 'dekas-stale-menu') await providerPage.locator('script#__NEXT_DATA__').evaluate(e=>{const d=JSON.parse(e.textContent); d.props.initialState.appStoreState.dailyAvailabilities['2030-11-16'].shifts[0].offers[0].description.en='Changed menu';e.textContent=JSON.stringify(d);});
       await assert.rejects(act(a,s,command),/stale_review|offer_changed/);assert.equal(sends,0);assert.equal(reads,0);assert.equal(reserves,0);await a.close();continue;
     }
-    if (['bofinger-stale','lacoupole-stale','terminus-stale','procope-stale','lorraine-stale','pied-stale','grandcafe-stale','racine-stale','sommelier-stale','jolie-stale','republique-stale','vagenende-stale','rosie-stale','lou-stale','savy-stale','rene-stale','bouillon-stale'].includes(scenario)) {
+    if (['bofinger-stale','lacoupole-stale','terminus-stale','procope-stale','lorraine-stale','pied-stale','grandcafe-stale','racine-stale','sommelier-stale','jolie-stale','republique-stale','vagenende-stale','rosie-stale','lou-stale','savy-stale','rene-stale','bistrot-stale','bouillon-stale'].includes(scenario)) {
       await providerPage.locator('script#__NEXT_DATA__').evaluate(e=>{const d=JSON.parse(e.textContent);d.props.initialState.appStoreState.restaurantComment.fr='Changed terms';e.textContent=JSON.stringify(d);});
       await assert.rejects(act(a,s,command),/stale_review/);assert.equal(sends,0);assert.equal(reads,0);await a.close();continue;
     }
@@ -457,10 +458,10 @@ test('native booking and own-booking readback bind approval without duplicate PO
       assert.equal(sends,0); assert.equal(reads,0); assert.equal(reserves,0); await a.close(); continue;
     }
     const r = await act(a,s,command);
-    assert.equal(r.result.status, ['bouillon','vagenende','rosie','lou','savy','rene','grandcafe','racine','sommelier','jolie','republique','pied','lorraine','procope','terminus','lacoupole','bofinger','confirmed','swedish','pesquiere','pesquiere-readback','pesquiere-readback-native-metadata','pirouette','dekas'].includes(scenario) ? 'confirmed' : scenario === 'payment' ? 'payment_required' : 'unknown');
-    assert.equal(sends, ['bouillon-attempt','vagenende-attempt','rosie-attempt','lou-attempt','savy-attempt','rene-attempt','grandcafe-attempt','racine-attempt','sommelier-attempt','jolie-attempt','republique-attempt','pied-attempt','lorraine-attempt','procope-attempt','terminus-attempt','lacoupole-attempt','bofinger-attempt','denied','country','pesquiere-readback-cross-before','pirouette-gift','dekas-attempt','dekas-post-offer'].includes(scenario) ? 0 : 1); assert.equal(reserves, ['country','pirouette-gift','dekas-post-offer'].includes(scenario) ? 0 : 1);
+    assert.equal(r.result.status, ['bouillon','vagenende','rosie','lou','savy','rene','bistrot','grandcafe','racine','sommelier','jolie','republique','pied','lorraine','procope','terminus','lacoupole','bofinger','confirmed','swedish','pesquiere','pesquiere-readback','pesquiere-readback-native-metadata','pirouette','dekas'].includes(scenario) ? 'confirmed' : scenario === 'payment' ? 'payment_required' : 'unknown');
+    assert.equal(sends, ['bouillon-attempt','vagenende-attempt','rosie-attempt','lou-attempt','savy-attempt','rene-attempt','bistrot-attempt','grandcafe-attempt','racine-attempt','sommelier-attempt','jolie-attempt','republique-attempt','pied-attempt','lorraine-attempt','procope-attempt','terminus-attempt','lacoupole-attempt','bofinger-attempt','denied','country','pesquiere-readback-cross-before','pirouette-gift','dekas-attempt','dekas-post-offer'].includes(scenario) ? 0 : 1); assert.equal(reserves, ['country','pirouette-gift','dekas-post-offer'].includes(scenario) ? 0 : 1);
     assert.equal(reads,(noRoomLunch && !scenario.endsWith('-attempt')) || (deKas && !['dekas-attempt','dekas-post-offer'].includes(scenario)) || ['pesquiere','pirouette'].includes(scenario) || readCase && !['pesquiere-readback-bad-uuid','pesquiere-readback-metadata','pesquiere-readback-cross-before','pesquiere-readback-cross-after'].includes(scenario) ? 1 : 0,scenario);
-    if(['bofinger','lacoupole','terminus','procope','lorraine','pied','grandcafe','racine','sommelier','jolie','republique','vagenende','rosie','lou','savy','rene','bouillon'].includes(scenario)) {assert.equal(recorded.verification.bookingEvidence,'own_booking_readback');assert.equal(recorded.verification.policySource,venue.policySource);assert.equal(recorded.verification.shiftId,venue.shiftId);}
+    if(['bofinger','lacoupole','terminus','procope','lorraine','pied','grandcafe','racine','sommelier','jolie','republique','vagenende','rosie','lou','savy','rene','bistrot','bouillon'].includes(scenario)) {assert.equal(recorded.verification.bookingEvidence,'own_booking_readback');assert.equal(recorded.verification.policySource,venue.policySource);assert.equal(recorded.verification.shiftId,venue.shiftId);}
     if(scenario === 'dekas') {assert.equal(r.result.verification.offerEvidence,'own_booking_readback');assert.equal(r.result.verification.offerCount,2);assert.equal(recorded.verification.offerVersion,r.details.offer.version);assert.equal(r.result.reference,'12345');}
     if(scenario === 'pesquiere-readback') { assert.equal(r.result.verification.roomEvidence,'own_booking_readback'); assert.equal(r.result.reference,'12345'); }
     assert.equal(r.canSubmit,false); assert.equal(a.current('owner').canSubmit,false);
@@ -857,4 +858,86 @@ test('Chez René lunch pins own automatic threshold, card policy and service', (
   shift.id=68278;assert.equal(evidence().candidates.length,0);
   assert.throws(()=>zenchefSearchUrl({...query,party:3},ZENCHEF_CHEZRENE),/search_fields/);
   assert.equal(zenchefBookingResult(200,{id:123,uuid:'synthetic-only',status:'confirmed'},{restaurantId:ZENCHEF_CHEZRENE.restaurantId}).status,'unknown');
+});
+
+test('Bistrot de Paris pins own lunch threshold, 1800-second cutoff and service', () => {
+  const query={date:'2026-10-23',party:2};
+  const data={page:'/results',query:{rid:'357075',day:query.date,pax:'2'},props:{initialState:{appStoreState:structuredClone(bistrotSource)}}};
+  const evidence=()=>zenchefAvailabilityEvidence(data,query,Date.parse('2026-10-18T10:00:00Z'),ZENCHEF_BISTROTPARIS);
+  assert.equal(evidence().candidates.length,5);assert.equal(evidence().candidates[0].time,'12:00');assert.equal(evidence().candidates.at(-1).time,'14:00');
+  const formUrl=new URL(zenchefFormUrl({...query,time:'12:00'},ZENCHEF_BISTROTPARIS));assert.equal(formUrl.searchParams.get('fullscreen'),'1');assert.equal(formUrl.searchParams.has('pid'),false);
+  const shift=data.props.initialState.appStoreState.dailyAvailabilities[query.date].shifts[0];
+  for (const field of ['confirmation','charge_param','prepayment_param','is_offer_required','cancelation_param']) {
+    const changed=structuredClone(shift);delete changed[field];assert.equal(bistrotParisPolicy(bistrotSource,changed,2),false);
+  }
+  for(const auto of [true,1,'false',null,undefined]){shift.confirmation.is_auto=auto;assert.equal(evidence().candidates.length,0);}shift.confirmation.is_auto=false;
+  for(const min of [2,4,5,'6',null,undefined]){shift.charge_param.min_guests=min;assert.equal(evidence().candidates.length,0);}shift.charge_param.min_guests=6;
+  shift.cancelation_param.enduser_cancelable_reference='booking';assert.equal(evidence().candidates.length,0);shift.cancelation_param.enduser_cancelable_reference='shift';
+  shift.cancelation_param.enduser_cancelable_before=21600;assert.equal(evidence().candidates.length,0);shift.cancelation_param.enduser_cancelable_before=1800;
+  for(const threshold of [null,0,1,6,'4',undefined]){shift.confirmation.is_auto_until=threshold;assert.equal(evidence().candidates.length,0);}shift.confirmation.is_auto_until=4;
+  shift.id=68148;assert.equal(evidence().candidates.length,0);
+  assert.throws(()=>zenchefSearchUrl({...query,party:3},ZENCHEF_BISTROTPARIS),/search_fields/);
+  assert.equal(zenchefBookingResult(200,{id:123,uuid:'synthetic-only',status:'confirmed'},{restaurantId:ZENCHEF_BISTROTPARIS.restaurantId}).status,'unknown');
+});
+
+test('Bistrot fresh form requirements are rechecked after review', async () => {
+  const form = structuredClone(bistrotSource);
+  const query = { date: '2026-10-23', party: 2 };
+  const selection = { ...query, time: '12:00' };
+  form.wish.slot = selection.time;
+  const text = 'Synthetic EULA';
+  const shift = form.dailyAvailabilities[query.date].shifts[0];
+  const session = {
+    venue: ZENCHEF_BISTROTPARIS, searchQuery: query, formSelection: selection, noCardAllowed: true,
+    terms: { version: crypto.createHash('sha256').update(JSON.stringify([text, form.restaurantComment || null, shift])).digest('hex') },
+    page: {
+      url: () => zenchefFormUrl(selection, ZENCHEF_BISTROTPARIS),
+      locator: selector => selector === 'script#__NEXT_DATA__'
+        ? { textContent: async () => JSON.stringify({ props: { initialState: { appStoreState: form } } }) }
+        : { innerText: async () => text }
+    }
+  };
+  const verify = () => ZenchefPlaywright.prototype.verifyNativeRoom.call({}, session);
+  await verify();
+  form.mandatoryFields['custom_field.test'] = 'required';
+  await assert.rejects(verify(), error => error.message === 'provider_fields_unverified' && error.status === 409);
+  form.mandatoryFields['custom_field.test'] = 'hidden';
+  await verify();
+  form.mandatoryFields['custom_field_v2.1093'] = 'required';
+  await assert.rejects(verify(), /provider_fields_unverified/);
+  delete form.mandatoryFields;
+  await assert.rejects(verify(), /provider_fields_unverified/);
+});
+
+test('Fresh required fields guard covers FishCorner and room venues without weakening seating', async () => {
+  for (const venue of [ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE]) {
+    const room = venue.rooms?.[0];
+    const selection = { date: '2026-10-23', party: 2, time: '19:00', ...(room ? { roomId: room.id, roomName: room.name } : {}) };
+    const form = { mandatoryFields: { firstname: 'required', 'custom_field.test': 'hidden' }, wish: { room_id: room?.id } };
+    let seating = "Jusqu'à 21:00";
+    const session = {
+      venue, formSelection: selection, terms: { seatingNotice: seating },
+      page: {
+        url: () => zenchefFormUrl(selection, venue),
+        locator: () => ({ textContent: async () => JSON.stringify({ props: { initialState: { appStoreState: form } } }) }),
+        getByText: () => ({ count: async () => 1, isVisible: async () => true, innerText: async () => seating })
+      }
+    };
+    const verify = () => ZenchefPlaywright.prototype.verifyNativeRoom.call({}, session);
+    await verify(); // unchanged form at review
+    form.mandatoryFields['custom_field.test'] = 'required';
+    await assert.rejects(verify(), /provider_fields_unverified/); // changed after selection
+    form.mandatoryFields['custom_field.test'] = 'hidden';
+    await verify(); // fresh review accepted
+    form.mandatoryFields['custom_field_v2.1093'] = 'required';
+    await assert.rejects(verify(), /provider_fields_unverified/); // changed after review
+    delete form.mandatoryFields['custom_field_v2.1093'];
+    await verify();
+    if (venue === ZENCHEF_PIROUETTE) {
+      seating = "Jusqu'à 22:00";
+      await assert.rejects(verify(), /stale_review/);
+    }
+    delete form.mandatoryFields;
+    await assert.rejects(verify(), /provider_fields_unverified/);
+  }
 });
