@@ -9,7 +9,8 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
   const fail = code => { throw Object.assign(new Error(code), {status:409}); };
   const venue = id => Object.hasOwn(restaurants, id) && restaurants[id];
   const dateInScope = (id,date) => provider !== 'Zenchef' || id !== 'curated-PAR-bouillon-julien' || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && !['12-24','12-25','12-31'].includes(date.slice(5)));
-  const sameScopedDate = (attempt,details) => attempt.restaurantId !== 'curated-PAR-bouillon-julien' || (dateInScope(attempt.restaurantId,attempt.date) && details?.date === attempt.date && details?.time === attempt.time && details?.party === attempt.party);
+  const timeInScope = (id,time) => provider !== 'Zenchef' || id !== 'curated-PAR-bouillon-republique' || ['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(time);
+  const sameScopedDetails = (attempt,details) => !['curated-PAR-bouillon-julien','curated-PAR-bouillon-republique'].includes(attempt.restaurantId) || (dateInScope(attempt.restaurantId,attempt.date) && timeInScope(attempt.restaurantId,attempt.time) && details?.date === attempt.date && details?.time === attempt.time && details?.party === attempt.party);
   const row = (attempt, owner) => ({
     id:`PB-${attempt.attemptId}`,userId:owner,provider,restaurantId:attempt.restaurantId,
     restaurant:venue(attempt.restaurantId)?.name || attempt.restaurantId,
@@ -26,6 +27,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
       || (!['hold','booking'].includes(intent.phase) && !cartPhase) || !intent.owner || !intent.sessionId
       || !/^[a-f0-9]{64}$/.test(intent.reviewFingerprint || '')) fail('intent_binding');
     if (!dateInScope(intent.restaurantId,intent.details?.date)) fail('special_date_unsupported');
+    if (!timeInScope(intent.restaurantId,intent.details?.time)) fail('lunch_time_unsupported');
     const configured=venue(intent.restaurantId).offer;
     const shift=venue(intent.restaurantId).shiftId;
     if (shift && (intent.details?.shiftId !== shift || intent.details?.party !== 2 || intent.phase !== 'booking')) fail('shift_binding');
@@ -40,7 +42,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     const proof=result?.verification;
     const policy = venue(attempt.restaurantId)?.confirmationPolicySource ?? confirmationPolicySource;
     const rooms = venue(attempt.restaurantId)?.rooms;
-    return dateInScope(attempt.restaurantId,attempt.date) && typeof policy === 'string' && policy.length > 0
+    return dateInScope(attempt.restaurantId,attempt.date) && timeInScope(attempt.restaurantId,attempt.time) && typeof policy === 'string' && policy.length > 0
       && (!rooms || (rooms.some(room=>room.id === attempt.roomId && room.name === attempt.roomName)
         && proof?.roomId === attempt.roomId && proof?.roomName === attempt.roomName))
       && (!venue(attempt.restaurantId)?.roomEvidence || proof?.roomEvidence === venue(attempt.restaurantId).roomEvidence)
@@ -74,7 +76,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     recordAttempt({intent,attempt:claimed,result}) {
       scope(intent);
       const attempt=ledger.get(intent.owner,claimed?.attemptId);
-      if (!attempt || !sameScopedDate(attempt,intent.details) || attempt.provider !== provider || attempt.mode !== mode
+      if (!attempt || !sameScopedDetails(attempt,intent.details) || attempt.provider !== provider || attempt.mode !== mode
         || ['restaurantId','sessionId','phase','reviewFingerprint'].some(key=>attempt[key]!==intent[key])
         || !sameBookingOffer(attempt.details?.offer,intent.details?.offer)
         || (venue(intent.restaurantId).shiftId && attempt.details?.shiftId !== intent.details?.shiftId)
@@ -98,7 +100,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     verifySnapshot(snapshot,owner) {
       const proof=snapshot.result?.verification;
       const attempt=proof?.attemptId && ledger.get(owner,proof.attemptId);
-      if (!attempt || !sameScopedDate(attempt,snapshot.details) || attempt.provider !== provider || attempt.mode !== mode || !venue(attempt.restaurantId)
+      if (!attempt || !sameScopedDetails(attempt,snapshot.details) || attempt.provider !== provider || attempt.mode !== mode || !venue(attempt.restaurantId)
         || attempt.phase !== 'booking' || attempt.status !== 'confirmed'
         || attempt.restaurantId !== snapshot.restaurantId || attempt.sessionId !== snapshot.id
         || !sameBookingOffer(attempt.details?.offer,snapshot.details?.offer)

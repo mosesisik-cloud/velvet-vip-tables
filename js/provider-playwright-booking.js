@@ -5,8 +5,9 @@ export function mountProviderPlaywrightBooking(container, api, {
 } = {}) {
   if (!provider || !restaurantId || !endpoint.startsWith('/')) throw new Error('booking_config');
   const isZenchef = provider.toLowerCase() === 'zenchef';
-  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : null;
+  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : null;
   const dateInScope = date => restaurantId !== 'curated-PAR-bouillon-julien' || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && !['12-24','12-25','12-31'].includes(date.slice(5)));
+  const timeInScope = time => restaurantId !== 'curated-PAR-bouillon-republique' || ['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(time);
   const key = `velvet:provider:${encodeURIComponent(provider)}:${encodeURIComponent(restaurantId)}`;
   const aliases = { firstname:'Förnamn', firstName:'Förnamn', lastname:'Efternamn', lastName:'Efternamn', email:'E-post', emailAddress:'E-post', phone:'Telefon', phoneNumber:'Telefon', comment:'Önskemål' };
   if (isZenchef) { aliases.civility = 'Tilltal'; aliases.country = 'Telefonens land'; }
@@ -88,6 +89,11 @@ export function mountProviderPlaywrightBooking(container, api, {
     scope.textContent='Bokning i Velvet gäller första lunchsittningen (Déjeuner 1 service) på Bouillon Racine i Paris för exakt två gäster, i mån av lediga bord. Senare lunchsittningar, middag, bar, grupper, evenemang och privata rum ingår inte. Ingen viss placering garanteras. I det franska bokningsformuläret anges att bordet inte längre garanteras efter 15 minuters försening. Kontrollera restaurangens aktuella villkor före bokning.';
     container.querySelector('header').after(scope);
   }
+  if (restaurantId === 'curated-PAR-bouillon-republique') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller Bouillon République på 39 boulevard du Temple i Paris för exakt två gäster, i mån av lediga bord. Endast lunchtiderna 11.30, 12.00, 12.30, 13.00, 13.30, 14.00 och 14.30 inom restaurangens Service du Vendredi ingår. Andra tider och tjänster, middag, grupper, evenemang, privata rum, leverans och hämtmat ingår inte. Hela sällskapet ska anlända i tid. Ingen viss placering garanteras. Kontrollera restaurangens aktuella villkor före bokning.';
+    container.querySelector('header').after(scope);
+  }
   const write = (id, phase, idempotencyKey, reviewFingerprint) => {
     const value = { id, phase, ...(idempotencyKey ? { idempotencyKey } : {}), ...(reviewFingerprint ? { reviewFingerprint } : {}) };
     storage.setItem(key, JSON.stringify(value)); marker = value;
@@ -129,7 +135,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     && fingerprint(finalFingerprint()) && (!state.reviewFingerprint || state.reviewFingerprint === finalFingerprint())
     && (!isZenchef || (fingerprint(state.reviewToken) && fingerprint(state.terms?.version)))
     && (finalReview().expiresAt === undefined || !expired(finalReview())) && typeof finalReview().details.termsText === 'string' && !!finalReview().details.termsText.trim();
-  const canSubmit = () => dateInScope(state?.details?.date) && !needsReview() && state?.canSubmit === true && hasReview();
+  const canSubmit = () => dateInScope(state?.details?.date) && timeInScope(state?.details?.time) && !needsReview() && state?.canSubmit === true && hasReview();
   function controls() {
     const locked = busy || uncertain || isSubmit() || needsReview() || !storageOK || terminal() || !!state?.blocked;
     container.querySelectorAll('button,input,textarea,select').forEach(node => { node.disabled = locked; });
@@ -149,7 +155,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     const proof = result?.verification;
     if (result?.status === 'confirmed') {
       if (proof?.verified === true && proof.source === 'provider' && proof.restaurantId === restaurantId
-        && (!lunchShift || (proof.bookingEvidence === 'own_booking_readback' && proof.shiftId === lunchShift && dateInScope(snapshot.details?.date) && snapshot.details?.shiftId === lunchShift && snapshot.details?.party === 2))
+        && (!lunchShift || (proof.bookingEvidence === 'own_booking_readback' && proof.shiftId === lunchShift && dateInScope(snapshot.details?.date) && timeInScope(snapshot.details?.time) && snapshot.details?.shiftId === lunchShift && snapshot.details?.party === 2))
         && proof.sessionId === snapshot.id && typeof proof.attemptId === 'string' && proof.attemptId
         // The durable journal key is server-owned; the UI UUID is only correlation.
         && (!isZenchef || (fingerprint(proof.idempotencyKey)
@@ -179,7 +185,7 @@ export function mountProviderPlaywrightBooking(container, api, {
       // Project the actual Zenchef transport, without changing its wire fields.
       const phase = next.result ? 'result' : ({availability_observed:'slots',offers:'offers',contact:'guest',review:'booking_review'})[next.state] || 'selection';
       next = {...next,phase,bookingReview:next.state === 'review' ? {
-        details:{...next.details,restaurantId:next.restaurantId,guest:Object.fromEntries(Object.entries(next.details || {}).filter(([name]) => Object.hasOwn(aliases,name))),termsText:[next.terms?.text,next.terms?.restaurantNotice?.replace(/<\/?br\s*\/?\s*>/gi,'\n').replace(/<\/?(?:b|u)\s*>/gi,'')].filter(Boolean).join('\n\n'),seatingNotice:next.terms?.seatingNotice},
+        details:{...next.details,restaurantId:next.restaurantId,guest:Object.fromEntries(Object.entries(next.details || {}).filter(([name]) => Object.hasOwn(aliases,name))),termsText:[next.terms?.text,next.terms?.restaurantNotice?.replace(/<\/?br\s*\/?\s*>/gi,'\n').replace(/<\/?(?:b|u)\s*>/gi,'').replace(/<a\b[^>]*>|<\/a\s*>/gi,'')].filter(Boolean).join('\n\n'),seatingNotice:next.terms?.seatingNotice},
         reviewFingerprint:next.reviewFingerprint,
       } : null};
     }
@@ -214,6 +220,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     el('slots').replaceChildren();
     if (isZenchef && next.phase === 'slots') {
       for (const slot of next.availabilityEvidence?.candidates || []) {
+        if (!timeInScope(slot.time)) continue;
         if (!/^([01]\d|2[0-3]):[0-5]\d$/.test(slot.time) || !(typeof slot.shiftId === 'string' || Number.isInteger(slot.shiftId))) continue;
         const button = document.createElement('button'); button.type = 'button'; button.textContent = `${slot.time} · Välj tid`;
         button.dataset.slot = slot.time;
@@ -269,6 +276,7 @@ export function mountProviderPlaywrightBooking(container, api, {
   async function run(action = null) {
     if (disposed || busy || (action && (uncertain || isSubmit() || needsReview() && action.type !== 'review' || drafts.size && action.type !== 'fill' || !state || terminal() || state.blocked))) return;
     if (action?.type === 'search' && !dateInScope(action.date)) { el('status').textContent='Den 24, 25 och 31 december ingår inte i bokning via Velvet.'; return; }
+    if (action?.type === 'select' && !timeInScope(action.time)) { el('status').textContent='Endast de angivna lunchtiderna ingår i bokning via Velvet.'; return; }
     if (action?.type === 'hold' && (!canHold() || !el('hold-consent').checked)) return;
     if (action?.type === 'submit' && (!canSubmit() || !el('terms').checked)) return;
     busy = true; controls(); el('status').textContent = 'Kontrollerar…';
