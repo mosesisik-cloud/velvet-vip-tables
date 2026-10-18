@@ -2192,5 +2192,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-chez-rene": {
+    "name": "Chez René",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=357076&fullscreen=1&lang=fr",
+    "source": "https://lcep.fr/chez-rene/",
+    "venueKey": "bookings.zenchef.com/results?rid=357076",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
