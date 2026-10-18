@@ -5,7 +5,7 @@ export function mountProviderPlaywrightBooking(container, api, {
 } = {}) {
   if (!provider || !restaurantId || !endpoint.startsWith('/')) throw new Error('booking_config');
   const isZenchef = provider.toLowerCase() === 'zenchef';
-  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : null;
+  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : null;
   const key = `velvet:provider:${encodeURIComponent(provider)}:${encodeURIComponent(restaurantId)}`;
   const aliases = { firstname:'Förnamn', firstName:'Förnamn', lastname:'Efternamn', lastName:'Efternamn', email:'E-post', emailAddress:'E-post', phone:'Telefon', phoneNumber:'Telefon', comment:'Önskemål' };
   if (isZenchef) { aliases.civility = 'Tilltal'; aliases.country = 'Telefonens land'; }
@@ -60,6 +60,11 @@ export function mountProviderPlaywrightBooking(container, api, {
   if (restaurantId === 'curated-PAR-la-lorraine') {
     const scope=document.createElement('p'); scope.className='booking-scope';
     scope.textContent='Bokning i Velvet gäller ordinarie lunch på La Lorraine i Paris för exakt två gäster, i mån av lediga bord. Frukost, middag, evenemang, grupper, privata rum, leverans och hämtmat ingår inte. Ingen viss placering garanteras. Vid mer än 15 minuters försening garanterar restaurangen inte längre bordet. Kontrollera restaurangens aktuella villkor före bokning.';
+    container.querySelector('header').after(scope);
+  }
+  if (restaurantId === 'curated-PAR-au-pied-de-cochon') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller ordinarie lunch på Au Pied de Cochon i Paris för exakt två gäster, i mån av lediga bord. Frukost, middag, evenemang, grupper, privata rum, leverans och hämtmat ingår inte. Ingen viss placering garanteras. Vid mer än 15 minuters försening garanterar restaurangen inte längre bordet. Restaurangen har även platser för gäster utan reservation. Kontrollera restaurangens aktuella villkor före bokning.';
     container.querySelector('header').after(scope);
   }
   const write = (id, phase, idempotencyKey, reviewFingerprint) => {
