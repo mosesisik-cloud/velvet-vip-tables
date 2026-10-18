@@ -404,5 +404,53 @@
         }
       }
     ]
+  },
+  "form": {
+    "url": "https://bookings.zenchef.com/form?rid=352718&fullscreen=1&lang=fr&day=2026-10-23&pax=2&slot=12%3A00",
+    "status": 200,
+    "sha256": "0b7c5fe62e1be9c2e43ec2422ccc542459c01c20d4fad044db417fdd1d84b380",
+    "hasRoomSelection": true,
+    "isRoomMandatory": false,
+    "wish": {
+      "pax": 2,
+      "day": "2026-10-23",
+      "slot": "12:00",
+      "offers": [],
+      "waiting_list": false,
+      "room_id": null
+    },
+    "mandatoryFields": {
+      "firstname": "required",
+      "lastname": "required",
+      "email": "required",
+      "phone_number": "required",
+      "country": "required",
+      "comment": "displayed",
+      "private_comment": "hidden",
+      "prescriber_id": "hidden",
+      "customersheet.customer_company_id": "hidden",
+      "civility": "required",
+      "url": "hidden",
+      "customersheet.vip": "hidden",
+      "waiter_id": "hidden",
+      "slots_count": "hidden",
+      "voucher_code": "displayed"
+    },
+    "customFields": [],
+    "customFieldsV2": [],
+    "emptyCustomPayload": {
+      "custom_field": {},
+      "custom_field_v2": []
+    }
+  },
+  "bundles": {
+    "app": {
+      "file": "_app-30bffcb9f4c3b7b2.js",
+      "sha256": "f93de04840ca6c559814f814a2c2bd86886a7962dbf24bd024bb3c01360d0cdd"
+    },
+    "form": {
+      "file": "form-84144e7c9a8b854d.js",
+      "sha256": "b5ada4d2894b110846303a2b4d33120be97c42b88e89d4b33b522001d4ec50c4"
+    }
   }
 }
