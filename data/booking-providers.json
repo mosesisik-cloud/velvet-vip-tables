@@ -1188,6 +1188,19 @@
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
   },
+  "curated-PAR-brasserie-vagenende": {
+    "name": "Brasserie Vagenende",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=356807&fullscreen=1",
+    "source": "https://www.vagenende.com/reserver",
+    "venueKey": "bookings.zenchef.com/results?rid=356807",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
+  },
   "curated-PAR-le-grand-cafe-capucines": {
     "name": "Le Grand Café Capucines",
     "city": "Paris",
