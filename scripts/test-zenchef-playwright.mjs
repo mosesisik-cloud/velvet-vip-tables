@@ -4,12 +4,13 @@ import { test, before, after, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+const procopeSource = JSON.parse(fs.readFileSync(new URL('./fixtures/procope-source.json', import.meta.url)));
 const terminusNordSource = JSON.parse(fs.readFileSync(new URL('./fixtures/terminus-nord-source.json', import.meta.url)));
 const laCoupoleSource = JSON.parse(fs.readFileSync(new URL('./fixtures/la-coupole-source.json', import.meta.url)));
 const bofingerSource = JSON.parse(fs.readFileSync(new URL('./fixtures/bofinger-source.json', import.meta.url)));
 
 import { chromium } from 'playwright';
-import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_DEKAS, ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, terminusNordPolicy, laCoupolePolicy, bofingerPolicy, approvedZenchefPayload, zenchefBookingResult, allowedZenchefInspectionRequest,
+import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_DEKAS, ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, procopePolicy, terminusNordPolicy, laCoupolePolicy, bofingerPolicy, approvedZenchefPayload, zenchefBookingResult, allowedZenchefInspectionRequest,
   zenchefSearchUrl, zenchefAvailabilityEvidence, zenchefFormUrl, allowedZenchefPreparationRequest } from '../api/providers/zenchef-playwright.mjs';
 
 const fixture = (status = 'confirmed', reference = 'LOCAL-TEST-ONLY') => `<!doctype html><html><body>
@@ -289,18 +290,18 @@ function deKasDocument(u,date,payload) {
 }
 
 test('native booking and own-booking readback bind approval without duplicate POSTs', async () => {
-  for (const scenario of ['terminus','terminus-missing','terminus-pending','terminus-date','terminus-party','terminus-offer','terminus-card','terminus-manual','terminus-stale','terminus-attempt', 'lacoupole','lacoupole-missing','lacoupole-pending','lacoupole-date','lacoupole-party','lacoupole-offer','lacoupole-card','lacoupole-manual','lacoupole-stale','lacoupole-attempt', 'bofinger','bofinger-missing','bofinger-pending','bofinger-date','bofinger-party','bofinger-offer','bofinger-card','bofinger-manual','bofinger-stale','bofinger-attempt', 'confirmed', 'denied', 'persistence', 'payment', 'country', 'swedish', 'pesquiere', 'pesquiere-receipt', 'pesquiere-echo-bad-uuid', 'pesquiere-echo-date', 'pesquiere-echo-time', 'pesquiere-echo-party',
+  for (const scenario of ['procope','procope-missing','procope-pending','procope-date','procope-party','procope-offer','procope-card','procope-manual','procope-stale','procope-attempt', 'terminus','terminus-missing','terminus-pending','terminus-date','terminus-party','terminus-offer','terminus-card','terminus-manual','terminus-stale','terminus-attempt', 'lacoupole','lacoupole-missing','lacoupole-pending','lacoupole-date','lacoupole-party','lacoupole-offer','lacoupole-card','lacoupole-manual','lacoupole-stale','lacoupole-attempt', 'bofinger','bofinger-missing','bofinger-pending','bofinger-date','bofinger-party','bofinger-offer','bofinger-card','bofinger-manual','bofinger-stale','bofinger-attempt', 'confirmed', 'denied', 'persistence', 'payment', 'country', 'swedish', 'pesquiere', 'pesquiere-receipt', 'pesquiere-echo-bad-uuid', 'pesquiere-echo-date', 'pesquiere-echo-time', 'pesquiere-echo-party',
     'pesquiere-readback', 'pesquiere-readback-native-metadata', 'pesquiere-readback-room', 'pesquiere-readback-missing', 'pesquiere-readback-error',
     'pesquiere-readback-challenge', 'pesquiere-readback-redirect', 'pesquiere-readback-id', 'pesquiere-readback-date',
     'pesquiere-readback-time', 'pesquiere-readback-party', 'pesquiere-readback-pending', 'pesquiere-readback-uuid',
     'pesquiere-readback-bad-uuid', 'pesquiere-readback-metadata', 'pesquiere-readback-cross-before', 'pesquiere-readback-cross-after',
     'dekas', 'dekas-offer-id', 'dekas-offer-count', 'dekas-offer-missing', 'dekas-echo-only', 'dekas-attempt', 'dekas-stale-menu', 'dekas-stale-count', 'dekas-post-offer', 'dekas-stale-terms',
     'pirouette', 'pirouette-receipt', 'pirouette-card', 'pirouette-prepayment', 'pirouette-manual', 'pirouette-gift', 'pirouette-seating']) {
-    const deKas = scenario.startsWith('dekas'); const bofinger = scenario.startsWith('bofinger'); const laCoupole = scenario.startsWith('lacoupole'); const terminus = scenario.startsWith('terminus'); const noRoomLunch = bofinger || laCoupole || terminus;
-    const venue = terminus ? ZENCHEF_TERMINUSNORD : laCoupole ? ZENCHEF_LACOUPOLE : bofinger ? ZENCHEF_BOFINGER : deKas ? ZENCHEF_DEKAS : scenario.startsWith('pirouette') ? ZENCHEF_PIROUETTE : scenario.startsWith('pesquiere') ? ZENCHEF_PESQUIERE : ZENCHEF_FISHCORNER;
+    const deKas = scenario.startsWith('dekas'); const bofinger = scenario.startsWith('bofinger'); const laCoupole = scenario.startsWith('lacoupole'); const terminus = scenario.startsWith('terminus'); const procope = scenario.startsWith('procope'); const noRoomLunch = bofinger || laCoupole || terminus || procope;
+    const venue = procope ? ZENCHEF_PROCOPE : terminus ? ZENCHEF_TERMINUSNORD : laCoupole ? ZENCHEF_LACOUPOLE : bofinger ? ZENCHEF_BOFINGER : deKas ? ZENCHEF_DEKAS : scenario.startsWith('pirouette') ? ZENCHEF_PIROUETTE : scenario.startsWith('pesquiere') ? ZENCHEF_PESQUIERE : ZENCHEF_FISHCORNER;
     const chosenRoom = venue === ZENCHEF_PIROUETTE ? 52521 : 52372, otherRoom = venue === ZENCHEF_PIROUETTE ? 65674 : 51183;
     const roomName = venue.rooms?.find(room=>room.id===chosenRoom)?.name;
-    const blockedPolicy = ['pirouette-card','pirouette-prepayment','pirouette-manual','bofinger-card','bofinger-manual','lacoupole-card','lacoupole-manual','terminus-card','terminus-manual'].includes(scenario);
+    const blockedPolicy = ['pirouette-card','pirouette-prepayment','pirouette-manual','bofinger-card','bofinger-manual','lacoupole-card','lacoupole-manual','terminus-card','terminus-manual','procope-card','procope-manual'].includes(scenario);
     let providerPage;
     const date = '2030-11-16'; let sends = 0, reads = 0, reserves = 0, recorded, liveSession;
     const readCase = scenario.startsWith('pesquiere-readback');
@@ -329,14 +330,14 @@ test('native booking and own-booking readback bind approval without duplicate PO
         wish: { day: date, pax: 2, waiting_list: false, offers: [], room_id: venue.rooms && isForm ? Number(u.searchParams.get('room_id')) : null, ...(isForm ? { slot: '12:30' } : {}) },
         rooms: venue.rooms, mandatoryFields: { firstname: 'required' }, isRoomMandatory: !!venue.rooms, dailyAvailabilities: { [date]: { date, shifts: [shift, { ...shift, id: 545347 }] } } };
       if (noRoomLunch) {
-        const policy = structuredClone((terminus ? terminusNordSource : laCoupole ? laCoupoleSource : bofingerSource).dailyAvailabilities['2026-10-23'].shifts[0]);
+        const policy = structuredClone((procope ? procopeSource : terminus ? terminusNordSource : laCoupole ? laCoupoleSource : bofingerSource).dailyAvailabilities['2026-10-23'].shifts[0]);
         Object.assign(shift, policy, {bookable_from:null,bookable_to:null,shift_slots:[slot]});
         delete slot.available_rooms;
-        Object.assign(state,{name:venue.name,currency:'EUR',language:'fr',hasRoomSelection:false,restaurantComment:(terminus ? terminusNordSource : laCoupole ? laCoupoleSource : bofingerSource).restaurantComment});
+        Object.assign(state,{name:venue.name,currency:'EUR',language:'fr',hasRoomSelection:false,restaurantComment:(procope ? procopeSource : terminus ? terminusNordSource : laCoupole ? laCoupoleSource : bofingerSource).restaurantComment});
         if (isForm && scenario === 'terminus-card') shift.charge_param.min_guests=2;
-        if (isForm && scenario === 'lacoupole-card') shift.charge_param={is_web_booking_askable:true,min_guests:1,charge_per_guests:10};
+        if (isForm && ['lacoupole-card','procope-card'].includes(scenario)) shift.charge_param={is_web_booking_askable:true,min_guests:1,charge_per_guests:10};
         if (isForm && scenario === 'bofinger-card') shift.charge_param.is_web_booking_askable=true;
-        if (isForm && ['bofinger-manual','lacoupole-manual','terminus-manual'].includes(scenario)) shift.confirmation.is_auto_until=null;
+        if (isForm && ['bofinger-manual','lacoupole-manual','terminus-manual','procope-manual'].includes(scenario)) shift.confirmation.is_auto_until=null;
       }
       const data = { page: isForm ? '/form' : '/results', query: Object.fromEntries(u.searchParams), props: { initialState: { appStoreState: state } } };
       return `<html><head><meta charset="utf-8"></head><body><h1>LOCAL NATIVE CONTRACT REPLAY</h1>${venue.rooms && isForm ? `<div>${roomName}</div>` : ''}${venue === ZENCHEF_PIROUETTE && isForm ? '<div id=seating>Jusqu&#39;&#224; 14:30</div>' : ''}<script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
@@ -346,7 +347,7 @@ test('native booking and own-booking readback bind approval without duplicate PO
     };
     const a = new ZenchefPlaywright({ mode: 'prepare', enableSubmission: true, now: () => Date.parse('2030-11-15T12:00:00Z'),
       reserveSubmission: async (intent,session) => { liveSession=session; reserves++; assert.equal(intent.mode, 'live'); assert.equal(intent.phase, 'booking');
-        assert.match(intent.reviewFingerprint, /^[a-f0-9]{64}$/); if (['bofinger-attempt','lacoupole-attempt','terminus-attempt'].includes(scenario)) return {sendAllowed:true,attempt:{...intent,details:{...intent.details,shiftId:19173},attemptId:'synthetic-attempt',idempotencyKey:'journal-owned-key'}}; if (scenario === 'dekas-attempt') return {sendAllowed:true,attempt:{...intent,details:{...intent.details,offer:{...intent.offer,count:1}},attemptId:'synthetic-attempt',idempotencyKey:'journal-owned-key'}}; return { sendAllowed: scenario !== 'denied', attempt: { ...intent, sessionId: scenario === 'pesquiere-readback-cross-before' ? 'another-session' : intent.sessionId, attemptId: 'synthetic-attempt', idempotencyKey: 'journal-owned-key' } }; },
+        assert.match(intent.reviewFingerprint, /^[a-f0-9]{64}$/); if (['bofinger-attempt','lacoupole-attempt','terminus-attempt','procope-attempt'].includes(scenario)) return {sendAllowed:true,attempt:{...intent,details:{...intent.details,shiftId:19173},attemptId:'synthetic-attempt',idempotencyKey:'journal-owned-key'}}; if (scenario === 'dekas-attempt') return {sendAllowed:true,attempt:{...intent,details:{...intent.details,offer:{...intent.offer,count:1}},attemptId:'synthetic-attempt',idempotencyKey:'journal-owned-key'}}; return { sendAllowed: scenario !== 'denied', attempt: { ...intent, sessionId: scenario === 'pesquiere-readback-cross-before' ? 'another-session' : intent.sessionId, attemptId: 'synthetic-attempt', idempotencyKey: 'journal-owned-key' } }; },
       recordResult: async session => { recorded = structuredClone(session.result); if (scenario === 'persistence') throw Error('disk'); },
       browserFactory: async () => ({ close: async () => {}, newContext: async opts => {
         const context = await browser.newContext(opts); context.on('page',page=>{providerPage=page;}); const route = context.route.bind(context);
@@ -432,7 +433,7 @@ test('native booking and own-booking readback bind approval without duplicate PO
       if (scenario === 'dekas-stale-menu') await providerPage.locator('script#__NEXT_DATA__').evaluate(e=>{const d=JSON.parse(e.textContent); d.props.initialState.appStoreState.dailyAvailabilities['2030-11-16'].shifts[0].offers[0].description.en='Changed menu';e.textContent=JSON.stringify(d);});
       await assert.rejects(act(a,s,command),/stale_review|offer_changed/);assert.equal(sends,0);assert.equal(reads,0);assert.equal(reserves,0);await a.close();continue;
     }
-    if (['bofinger-stale','lacoupole-stale','terminus-stale'].includes(scenario)) {
+    if (['bofinger-stale','lacoupole-stale','terminus-stale','procope-stale'].includes(scenario)) {
       await providerPage.locator('script#__NEXT_DATA__').evaluate(e=>{const d=JSON.parse(e.textContent);d.props.initialState.appStoreState.restaurantComment.fr='Changed terms';e.textContent=JSON.stringify(d);});
       await assert.rejects(act(a,s,command),/stale_review/);assert.equal(sends,0);assert.equal(reads,0);await a.close();continue;
     }
@@ -442,10 +443,10 @@ test('native booking and own-booking readback bind approval without duplicate PO
       assert.equal(sends,0); assert.equal(reads,0); assert.equal(reserves,0); await a.close(); continue;
     }
     const r = await act(a,s,command);
-    assert.equal(r.result.status, ['terminus','lacoupole','bofinger','confirmed','swedish','pesquiere','pesquiere-readback','pesquiere-readback-native-metadata','pirouette','dekas'].includes(scenario) ? 'confirmed' : scenario === 'payment' ? 'payment_required' : 'unknown');
-    assert.equal(sends, ['terminus-attempt','lacoupole-attempt','bofinger-attempt','denied','country','pesquiere-readback-cross-before','pirouette-gift','dekas-attempt','dekas-post-offer'].includes(scenario) ? 0 : 1); assert.equal(reserves, ['country','pirouette-gift','dekas-post-offer'].includes(scenario) ? 0 : 1);
+    assert.equal(r.result.status, ['procope','terminus','lacoupole','bofinger','confirmed','swedish','pesquiere','pesquiere-readback','pesquiere-readback-native-metadata','pirouette','dekas'].includes(scenario) ? 'confirmed' : scenario === 'payment' ? 'payment_required' : 'unknown');
+    assert.equal(sends, ['procope-attempt','terminus-attempt','lacoupole-attempt','bofinger-attempt','denied','country','pesquiere-readback-cross-before','pirouette-gift','dekas-attempt','dekas-post-offer'].includes(scenario) ? 0 : 1); assert.equal(reserves, ['country','pirouette-gift','dekas-post-offer'].includes(scenario) ? 0 : 1);
     assert.equal(reads,(noRoomLunch && !scenario.endsWith('-attempt')) || (deKas && !['dekas-attempt','dekas-post-offer'].includes(scenario)) || ['pesquiere','pirouette'].includes(scenario) || readCase && !['pesquiere-readback-bad-uuid','pesquiere-readback-metadata','pesquiere-readback-cross-before','pesquiere-readback-cross-after'].includes(scenario) ? 1 : 0,scenario);
-    if(['bofinger','lacoupole','terminus'].includes(scenario)) {assert.equal(recorded.verification.bookingEvidence,'own_booking_readback');assert.equal(recorded.verification.policySource,venue.policySource);assert.equal(recorded.verification.shiftId,venue.shiftId);}
+    if(['bofinger','lacoupole','terminus','procope'].includes(scenario)) {assert.equal(recorded.verification.bookingEvidence,'own_booking_readback');assert.equal(recorded.verification.policySource,venue.policySource);assert.equal(recorded.verification.shiftId,venue.shiftId);}
     if(scenario === 'dekas') {assert.equal(r.result.verification.offerEvidence,'own_booking_readback');assert.equal(r.result.verification.offerCount,2);assert.equal(recorded.verification.offerVersion,r.details.offer.version);assert.equal(r.result.reference,'12345');}
     if(scenario === 'pesquiere-readback') { assert.equal(r.result.verification.roomEvidence,'own_booking_readback'); assert.equal(r.result.reference,'12345'); }
     assert.equal(r.canSubmit,false); assert.equal(a.current('owner').canSubmit,false);
@@ -571,4 +572,21 @@ test('Terminus Nord uses its own lunch and exact card threshold, separate from V
   for(const id of [57186,19383,20148,19170]){shift.id=id;assert.equal(evidence().candidates.length,0);}
   assert.throws(()=>zenchefSearchUrl({...query,party:3},ZENCHEF_TERMINUSNORD),/search_fields/);
   assert.equal(zenchefBookingResult(200,{id:123,uuid:'synthetic-only',status:'confirmed'},{restaurantId:ZENCHEF_TERMINUSNORD.restaurantId}).status,'unknown');
+});
+
+test('Procope first lunch for two excludes later services and exact auto threshold changes', () => {
+  const query={date:'2026-10-23',party:2};
+  const data={page:'/results',query:{rid:'250682',day:query.date,pax:'2'},props:{initialState:{appStoreState:structuredClone(procopeSource)}}};
+  const evidence=()=>zenchefAvailabilityEvidence(data,query,Date.parse('2026-10-18T10:00:00Z'),ZENCHEF_PROCOPE);
+  assert.deepEqual(evidence().candidates.map(x=>x.time),['12:00','12:15','12:30','12:45','13:00']);
+  const shift=data.props.initialState.appStoreState.dailyAvailabilities[query.date].shifts[0];
+  for (const field of ['confirmation','charge_param','prepayment_param','is_offer_required','cancelation_param']) {
+    const changed=structuredClone(shift);delete changed[field];assert.equal(procopePolicy(procopeSource,changed,2),false);
+  }
+  for(const threshold of [null,0,1,6,'4',undefined]) {shift.confirmation.is_auto_until=threshold;assert.equal(evidence().candidates.length,0);}
+  shift.confirmation.is_auto_until=4;
+  for(const id of [54002,18192,56212,119485,19380]){shift.id=id;assert.equal(evidence().candidates.length,0);}
+  shift.id=18190;shift.charge_param={is_web_booking_askable:false};assert.equal(evidence().candidates.length,0);
+  assert.throws(()=>zenchefSearchUrl({...query,party:3},ZENCHEF_PROCOPE),/search_fields/);
+  assert.equal(zenchefBookingResult(200,{id:123,uuid:'synthetic-only',status:'confirmed'},{restaurantId:ZENCHEF_PROCOPE.restaurantId}).status,'unknown');
 });
