@@ -1188,6 +1188,19 @@
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
   },
+  "curated-PAR-bouillon-racine": {
+    "name": "Bouillon Racine",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=132&lang=fr",
+    "source": "https://www.bouillonracine.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=132",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
+  },
   "curated-PAR-bouillon-julien": {
     "name": "Bouillon Julien",
     "city": "Paris",
