@@ -2205,5 +2205,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-le-bistrot-de-paris": {
+    "name": "Le Bistrot de Paris",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=357075&fullscreen=1&lang=fr",
+    "source": "https://lcep.fr/le-bistrot-de-paris/",
+    "venueKey": "bookings.zenchef.com/results?rid=357075",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
