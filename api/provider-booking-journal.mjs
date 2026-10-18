@@ -10,7 +10,9 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
   const venue = id => Object.hasOwn(restaurants, id) && restaurants[id];
   const dateInScope = (id,date) => provider !== 'Zenchef' || (id !== 'curated-PAR-bouillon-julien' && id !== 'curated-PAR-brasserie-rosie-jolie') || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && (id === 'curated-PAR-bouillon-julien' ? !['12-24','12-25','12-31'].includes(date.slice(5)) : !(date.slice(5) >= '08-03' && date.slice(5) <= '08-23')));
   const timeInScope = (id,time) => provider !== 'Zenchef' || id !== 'curated-PAR-bouillon-republique' || ['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(time);
-  const sameScopedDetails = (attempt,details) => !['curated-PAR-bouillon-julien','curated-PAR-bouillon-republique','curated-PAR-brasserie-rosie-jolie'].includes(attempt.restaurantId) || (dateInScope(attempt.restaurantId,attempt.date) && timeInScope(attempt.restaurantId,attempt.time) && details?.date === attempt.date && details?.time === attempt.time && details?.party === attempt.party);
+  const purposeVenue = id => provider === 'Zenchef' && id === 'curated-PAR-indiana-cafe-montparnasse';
+  const validPurpose = value => typeof value === 'string' && !!value.trim() && value.length <= 200 && !/[\x00-\x1f\x7f]/.test(value);
+  const sameScopedDetails = (attempt,details) => purposeVenue(attempt.restaurantId) ? (validPurpose(attempt.details?.reservationPurpose) && details?.reservationPurpose === attempt.details.reservationPurpose && details?.date === attempt.date && details?.time === attempt.time && details?.party === attempt.party) : !['curated-PAR-bouillon-julien','curated-PAR-bouillon-republique','curated-PAR-brasserie-rosie-jolie'].includes(attempt.restaurantId) || (dateInScope(attempt.restaurantId,attempt.date) && timeInScope(attempt.restaurantId,attempt.time) && details?.date === attempt.date && details?.time === attempt.time && details?.party === attempt.party);
   const row = (attempt, owner) => ({
     id:`PB-${attempt.attemptId}`,userId:owner,provider,restaurantId:attempt.restaurantId,
     restaurant:venue(attempt.restaurantId)?.name || attempt.restaurantId,
@@ -28,6 +30,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
       || !/^[a-f0-9]{64}$/.test(intent.reviewFingerprint || '')) fail('intent_binding');
     if (!dateInScope(intent.restaurantId,intent.details?.date)) fail('special_date_unsupported');
     if (!timeInScope(intent.restaurantId,intent.details?.time)) fail('lunch_time_unsupported');
+    if (purposeVenue(intent.restaurantId) ? !validPurpose(intent.details?.reservationPurpose) : intent.details?.reservationPurpose !== undefined) fail('purpose_binding');
     const configured=venue(intent.restaurantId).offer;
     const shift=venue(intent.restaurantId).shiftId;
     if (shift && (intent.details?.shiftId !== shift || intent.details?.party !== 2 || intent.phase !== 'booking')) fail('shift_binding');
@@ -67,7 +70,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
         reviewFingerprint:intent.reviewFingerprint,date:intent.details?.date,
         time:intent.details?.time,party:intent.details?.party,
         ...(venue(intent.restaurantId).offer ? {details:{offer:cleanBookingOffer(intent.details.offer)}} : {}),
-        ...(venue(intent.restaurantId).shiftId ? {details:{shiftId:intent.details.shiftId}} : {}),
+        ...(venue(intent.restaurantId).shiftId ? {details:{shiftId:intent.details.shiftId,...(purposeVenue(intent.restaurantId) ? {reservationPurpose:intent.details.reservationPurpose} : {})}} : {}),
         ...(venue(intent.restaurantId).rooms ? {roomId:intent.details.roomId,roomName:intent.details.roomName} : {})});
       if (!gate.sendAllowed) fail('already_attempted');
       if (intent.phase === 'booking') register.upsert(row(gate.attempt,intent.owner));

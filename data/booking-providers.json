@@ -2387,5 +2387,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-indiana-cafe-montparnasse": {
+    "name": "Indiana Café Montparnasse",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=375451&pid=1001",
+    "source": "https://www.indianacafe.fr/restaurant/montparnasse",
+    "venueKey": "bookings.zenchef.com/results?rid=375451",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }

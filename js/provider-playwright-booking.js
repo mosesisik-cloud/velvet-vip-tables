@@ -5,11 +5,12 @@ export function mountProviderPlaywrightBooking(container, api, {
 } = {}) {
   if (!provider || !restaurantId || !endpoint.startsWith('/')) throw new Error('booking_config');
   const isZenchef = provider.toLowerCase() === 'zenchef';
-  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : restaurantId === 'curated-PAR-brasserie-rosie-lou' ? 118503 : restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 298043 : restaurantId === 'curated-PAR-le-petit-sommelier' ? 37613 : restaurantId === 'curated-PAR-chez-savy' ? 68279 : restaurantId === 'curated-PAR-chez-rene' ? 68277 : restaurantId === 'curated-PAR-le-bistrot-de-paris' ? 68145 : restaurantId === 'curated-PAR-aux-bons-crus' ? 20711 : restaurantId === 'curated-PAR-aux-crus-de-bourgogne' ? 22200 : restaurantId === 'curated-PAR-le-petit-retro' ? 116623 : restaurantId === 'curated-PAR-au-moulin-a-vent' ? 139531 : restaurantId === 'curated-PAR-le-petit-pontoise' ? 9493 : restaurantId === 'curated-PAR-le-florentin' ? 283681 : restaurantId === 'curated-PAR-martha-pizze-amore' ? 159369 : restaurantId === 'curated-PAR-le-cafe-marly' ? 122853 : restaurantId === 'curated-PAR-le-cafe-ruc' ? 32216 : restaurantId === 'curated-PAR-indiana-cafe-bonne-nouvelle' ? 253448 : restaurantId === 'curated-PAR-indiana-cafe-richelieu-drouot' ? 276858 : restaurantId === 'curated-PAR-indiana-cafe-beaugrenelle' ? 281252 : restaurantId === 'curated-PAR-indiana-cafe-tolbiac' ? 243266 : null;
+  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : restaurantId === 'curated-PAR-brasserie-rosie-lou' ? 118503 : restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 298043 : restaurantId === 'curated-PAR-le-petit-sommelier' ? 37613 : restaurantId === 'curated-PAR-chez-savy' ? 68279 : restaurantId === 'curated-PAR-chez-rene' ? 68277 : restaurantId === 'curated-PAR-le-bistrot-de-paris' ? 68145 : restaurantId === 'curated-PAR-aux-bons-crus' ? 20711 : restaurantId === 'curated-PAR-aux-crus-de-bourgogne' ? 22200 : restaurantId === 'curated-PAR-le-petit-retro' ? 116623 : restaurantId === 'curated-PAR-au-moulin-a-vent' ? 139531 : restaurantId === 'curated-PAR-le-petit-pontoise' ? 9493 : restaurantId === 'curated-PAR-le-florentin' ? 283681 : restaurantId === 'curated-PAR-martha-pizze-amore' ? 159369 : restaurantId === 'curated-PAR-le-cafe-marly' ? 122853 : restaurantId === 'curated-PAR-le-cafe-ruc' ? 32216 : restaurantId === 'curated-PAR-indiana-cafe-bonne-nouvelle' ? 253448 : restaurantId === 'curated-PAR-indiana-cafe-richelieu-drouot' ? 276858 : restaurantId === 'curated-PAR-indiana-cafe-beaugrenelle' ? 281252 : restaurantId === 'curated-PAR-indiana-cafe-tolbiac' ? 243266 : restaurantId === 'curated-PAR-indiana-cafe-montparnasse' ? 314295 : null;
   const dateInScope = date => !['curated-PAR-bouillon-julien','curated-PAR-brasserie-rosie-jolie'].includes(restaurantId) || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && (restaurantId === 'curated-PAR-bouillon-julien' ? !['12-24','12-25','12-31'].includes(date.slice(5)) : !(date.slice(5) >= '08-03' && date.slice(5) <= '08-23')));
   const timeInScope = time => restaurantId !== 'curated-PAR-bouillon-republique' || ['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(time);
   const key = `velvet:provider:${encodeURIComponent(provider)}:${encodeURIComponent(restaurantId)}`;
   const aliases = { firstname:'Förnamn', firstName:'Förnamn', lastname:'Efternamn', lastName:'Efternamn', email:'E-post', emailAddress:'E-post', phone:'Telefon', phoneNumber:'Telefon', comment:'Önskemål' };
+  if (isZenchef && restaurantId === 'curated-PAR-indiana-cafe-montparnasse') aliases.reservationPurpose = 'Anledning till bokningen (Motif de la réservation)';
   if (isZenchef) { aliases.civility = 'Tilltal'; aliases.country = 'Telefonens land'; }
   let state = null, busy = false, disposed = false, uncertain = false, marker = null, storageOK = true;
   try {
@@ -194,6 +195,11 @@ export function mountProviderPlaywrightBooking(container, api, {
     scope.textContent='Bokning i Velvet gäller lunchserveringen Déjeuner på Indiana Café Tolbiac, 74 Avenue France i Paris, för exakt två gäster, i mån av lediga bord. Middag, grupper och val av särskilt rum ingår inte. Terrassplatser kan inte reserveras. Ingen viss placering garanteras. Kontrollera restaurangens aktuella villkor före bokning.';
     container.querySelector('header').after(scope);
   }
+  if (restaurantId === 'curated-PAR-indiana-cafe-montparnasse') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller lunchserveringen Déjeuner på Indiana Café Montparnasse, 72 Boulevard du Montparnasse i Paris, för exakt två gäster, i mån av lediga bord. Middag, grupper och val av särskilt rum ingår inte. Ingen viss placering garanteras. Ange anledning till bokningen och kontrollera restaurangens aktuella villkor före bokning.';
+    container.querySelector('header').after(scope);
+  }
   const write = (id, phase, idempotencyKey, reviewFingerprint) => {
     const value = { id, phase, ...(idempotencyKey ? { idempotencyKey } : {}), ...(reviewFingerprint ? { reviewFingerprint } : {}) };
     storage.setItem(key, JSON.stringify(value)); marker = value;
@@ -285,7 +291,7 @@ export function mountProviderPlaywrightBooking(container, api, {
       // Project the actual Zenchef transport, without changing its wire fields.
       const phase = next.result ? 'result' : ({availability_observed:'slots',offers:'offers',contact:'guest',review:'booking_review'})[next.state] || 'selection';
       next = {...next,phase,bookingReview:next.state === 'review' ? {
-        details:{...next.details,restaurantId:next.restaurantId,guest:Object.fromEntries(Object.entries(next.details || {}).filter(([name]) => Object.hasOwn(aliases,name))),termsText:[next.terms?.text,next.terms?.restaurantNotice?.replace(/<\/?br\s*\/?\s*>/gi,'\n').replace(/<\/?p\s*>/gi,'\n').replace(/<\/?(?:b|u)\s*>/gi,'').replace(/<a\b[^>]*>|<\/a\s*>/gi,'')].filter(Boolean).join('\n\n'),seatingNotice:next.terms?.seatingNotice},
+        details:{...next.details,restaurantId:next.restaurantId,guest:Object.fromEntries(Object.entries(next.details || {}).filter(([name]) => Object.hasOwn(aliases,name))),termsText:[next.terms?.text,next.terms?.restaurantNotice?.replace(/<\/?br\s*\/?\s*>/gi,'\n').replace(/<\/?p\s*>/gi,'\n').replace(/<\/?(?:b|u|strong)\s*>/gi,'').replace(/<\/?span\b[^>]*>/gi,'').replace(/<a\b[^>]*>|<\/a\s*>/gi,'')].filter(Boolean).join('\n\n'),seatingNotice:next.terms?.seatingNotice},
         reviewFingerprint:next.reviewFingerprint,
       } : null};
     }
@@ -303,7 +309,8 @@ export function mountProviderPlaywrightBooking(container, api, {
       seen.add(field.name);
       const label = document.createElement('label'); label.textContent = aliases[field.name];
       const input = document.createElement(field.name === 'civility' ? 'select' : field.name === 'comment' ? 'textarea' : 'input');
-      input.dataset.field = field.name; input.setAttribute('aria-label', aliases[field.name]);
+      input.dataset.field = field.name;
+      if (field.name === 'reservationPurpose') input.required = true; input.setAttribute('aria-label', aliases[field.name]);
       if (field.name === 'civility') {
         for (const [value,text] of [['','Välj tilltal'],['mr','Mr'],['mrs','Mrs'],['mx','Mx']]) { const option = document.createElement('option'); option.value = value; option.textContent = text; input.append(option); }
       } else if (field.name !== 'comment') input.type = /^email/.test(field.name) ? 'email' : /phone/i.test(field.name) ? 'tel' : 'text';
@@ -358,6 +365,7 @@ export function mountProviderPlaywrightBooking(container, api, {
       const review = finalReview().details;
       renderOffer(el('final-offer'),review.offer);
       const guest = Object.entries(review.guest || {}).filter(([name,value]) => Object.hasOwn(aliases,name) && typeof value === 'string').map(([name,value]) => `${aliases[name]}: ${value}`).join(', ');
+      if (isZenchef && restaurantId === 'curated-PAR-indiana-cafe-montparnasse') el('final-details').style.whiteSpace = 'pre-wrap';
       el('final-details').textContent = `Slutför bokning: ${restaurantName}, ${review.date} kl. ${review.time}, ${review.party} gäster. ${review.roomName ? `Rum: ${review.roomName}. ` : ''}${guest}`;
       el('seating-notice').textContent = review.seatingNotice ? `Sittning: ${review.seatingNotice}` : '';
       el('seating-notice').hidden = !review.seatingNotice;
