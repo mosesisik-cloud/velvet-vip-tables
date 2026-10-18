@@ -5,7 +5,8 @@ export function mountProviderPlaywrightBooking(container, api, {
 } = {}) {
   if (!provider || !restaurantId || !endpoint.startsWith('/')) throw new Error('booking_config');
   const isZenchef = provider.toLowerCase() === 'zenchef';
-  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : null;
+  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : null;
+  const dateInScope = date => restaurantId !== 'curated-PAR-bouillon-julien' || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && !['12-24','12-25','12-31'].includes(date.slice(5)));
   const key = `velvet:provider:${encodeURIComponent(provider)}:${encodeURIComponent(restaurantId)}`;
   const aliases = { firstname:'Förnamn', firstName:'Förnamn', lastname:'Efternamn', lastName:'Efternamn', email:'E-post', emailAddress:'E-post', phone:'Telefon', phoneNumber:'Telefon', comment:'Önskemål' };
   if (isZenchef) { aliases.civility = 'Tilltal'; aliases.country = 'Telefonens land'; }
@@ -77,6 +78,11 @@ export function mountProviderPlaywrightBooking(container, api, {
     scope.textContent='Bokning i Velvet gäller ordinarie lunch på Brasserie Vagenende i Paris för exakt två gäster, i mån av lediga bord. Middag, nyårsevenemang, grupper, privata rum, leverans och hämtmat ingår inte. Ingen viss placering garanteras. Kontrollera restaurangens aktuella villkor före bokning.';
     container.querySelector('header').after(scope);
   }
+  if (restaurantId === 'curated-PAR-bouillon-julien') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller ordinarie lunch på Bouillon Julien i Paris för exakt två gäster, i mån av lediga bord. Den 24, 25 och 31 december ingår inte i denna första bokningsversion, oavsett år. Middag, jul- och nyårsevenemang, grupper och privata rum ingår inte. Kommentarsfältet ändrar inte bokningstiden och hela sällskapet måste vara på plats. Ingen viss placering eller plats utan reservation garanteras. Kontrollera restaurangens aktuella villkor före bokning.';
+    container.querySelector('header').after(scope);
+  }
   const write = (id, phase, idempotencyKey, reviewFingerprint) => {
     const value = { id, phase, ...(idempotencyKey ? { idempotencyKey } : {}), ...(reviewFingerprint ? { reviewFingerprint } : {}) };
     storage.setItem(key, JSON.stringify(value)); marker = value;
@@ -118,7 +124,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     && fingerprint(finalFingerprint()) && (!state.reviewFingerprint || state.reviewFingerprint === finalFingerprint())
     && (!isZenchef || (fingerprint(state.reviewToken) && fingerprint(state.terms?.version)))
     && (finalReview().expiresAt === undefined || !expired(finalReview())) && typeof finalReview().details.termsText === 'string' && !!finalReview().details.termsText.trim();
-  const canSubmit = () => !needsReview() && state?.canSubmit === true && hasReview();
+  const canSubmit = () => dateInScope(state?.details?.date) && !needsReview() && state?.canSubmit === true && hasReview();
   function controls() {
     const locked = busy || uncertain || isSubmit() || needsReview() || !storageOK || terminal() || !!state?.blocked;
     container.querySelectorAll('button,input,textarea,select').forEach(node => { node.disabled = locked; });
@@ -138,7 +144,7 @@ export function mountProviderPlaywrightBooking(container, api, {
     const proof = result?.verification;
     if (result?.status === 'confirmed') {
       if (proof?.verified === true && proof.source === 'provider' && proof.restaurantId === restaurantId
-        && (!lunchShift || (proof.bookingEvidence === 'own_booking_readback' && proof.shiftId === lunchShift && snapshot.details?.shiftId === lunchShift && snapshot.details?.party === 2))
+        && (!lunchShift || (proof.bookingEvidence === 'own_booking_readback' && proof.shiftId === lunchShift && dateInScope(snapshot.details?.date) && snapshot.details?.shiftId === lunchShift && snapshot.details?.party === 2))
         && proof.sessionId === snapshot.id && typeof proof.attemptId === 'string' && proof.attemptId
         // The durable journal key is server-owned; the UI UUID is only correlation.
         && (!isZenchef || (fingerprint(proof.idempotencyKey)
@@ -257,6 +263,7 @@ export function mountProviderPlaywrightBooking(container, api, {
   const post = (path, body) => request(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   async function run(action = null) {
     if (disposed || busy || (action && (uncertain || isSubmit() || needsReview() && action.type !== 'review' || drafts.size && action.type !== 'fill' || !state || terminal() || state.blocked))) return;
+    if (action?.type === 'search' && !dateInScope(action.date)) { el('status').textContent='Den 24, 25 och 31 december ingår inte i bokning via Velvet.'; return; }
     if (action?.type === 'hold' && (!canHold() || !el('hold-consent').checked)) return;
     if (action?.type === 'submit' && (!canSubmit() || !el('terms').checked)) return;
     busy = true; controls(); el('status').textContent = 'Kontrollerar…';

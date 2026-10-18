@@ -32,13 +32,14 @@ function validate(input) {
   if (typeof input.date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(input.date)) fail('invalid_date');
   const date = new Date(input.date + 'T12:00:00Z');
   if (!Number.isFinite(+date) || date.toISOString().slice(0, 10) !== input.date) fail('invalid_date');
+  if (input.provider === 'Zenchef' && input.restaurantId === 'curated-PAR-bouillon-julien' && ['12-24','12-25','12-31'].includes(input.date.slice(5))) fail('special_date_unsupported');
   if (typeof input.time !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d$/.test(input.time)) fail('invalid_time');
   if (!Number.isInteger(input.party) || input.party < 1 || input.party > 100) fail('invalid_party');
   if (input.roomId !== undefined || input.roomName !== undefined) {
     if (!Number.isSafeInteger(input.roomId) || input.roomId <= 0) fail('invalid_room');
     clean.roomId = input.roomId; clean.roomName = token(input.roomName,'invalid_room');
   }
-  const lunchShift = input.provider === 'Zenchef' ? (input.restaurantId === 'curated-PAR-bofinger' ? 19170 : input.restaurantId === 'curated-PAR-la-coupole' ? 20148 : input.restaurantId === 'curated-PAR-terminus-nord' ? 19380 : input.restaurantId === 'curated-PAR-le-procope' ? 18190 : input.restaurantId === 'curated-PAR-la-lorraine' ? 16674 : input.restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : input.restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : input.restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : null) : null;
+  const lunchShift = input.provider === 'Zenchef' ? (input.restaurantId === 'curated-PAR-bofinger' ? 19170 : input.restaurantId === 'curated-PAR-la-coupole' ? 20148 : input.restaurantId === 'curated-PAR-terminus-nord' ? 19380 : input.restaurantId === 'curated-PAR-le-procope' ? 18190 : input.restaurantId === 'curated-PAR-la-lorraine' ? 16674 : input.restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : input.restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : input.restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : input.restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : null) : null;
   if (input.details !== undefined) {
     if (lunchShift) {
       if (input.details?.shiftId !== lunchShift || Object.keys(input.details).length !== 1

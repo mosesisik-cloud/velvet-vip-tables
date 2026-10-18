@@ -1188,6 +1188,19 @@
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
   },
+  "curated-PAR-bouillon-julien": {
+    "name": "Bouillon Julien",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=350246&lang=fr",
+    "source": "https://www.bouillon-julien.com/rserver",
+    "venueKey": "bookings.zenchef.com/results?rid=350246",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
+  },
   "curated-PAR-brasserie-vagenende": {
     "name": "Brasserie Vagenende",
     "city": "Paris",

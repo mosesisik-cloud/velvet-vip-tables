@@ -18,7 +18,7 @@ import { LUZETTE_LUNCH_RECEIPT_POLICY, TEATERGRILLEN_LUNCH_RECEIPT_POLICY, TENNS
 import { KVARNEN_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
 import { createProviderJournal } from './provider-booking-journal.mjs';
 import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_DEKAS, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
-import { ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE } from './providers/zenchef-playwright.mjs';
+import { ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
 import fs from "node:fs";
 import path from "node:path";
@@ -55,9 +55,10 @@ const laLorraineLive = process.env.VELVET_ZENCHEF_LALORRAINE === 'live';
 const piedDeCochonLive = process.env.VELVET_ZENCHEF_PIEDDECOCHON === 'live';
 const grandCafeLive = process.env.VELVET_ZENCHEF_GRANDCAFE === 'live';
 const vagenendeLive = process.env.VELVET_ZENCHEF_VAGENENDE === 'live';
+const bouillonJulienLive = process.env.VELVET_ZENCHEF_BOUILLONJULIEN === 'live';
 let zenchefJournal;
 const zenchefInspection = new ZenchefPlaywright({
-  mode: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive || piedDeCochonLive || grandCafeLive || vagenendeLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive || piedDeCochonLive || grandCafeLive || vagenendeLive,
+  mode: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive || piedDeCochonLive || grandCafeLive || vagenendeLive || bouillonJulienLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive || piedDeCochonLive || grandCafeLive || vagenendeLive || bouillonJulienLive,
   reserveSubmission: intent => zenchefJournal.reserveAttempt(intent),
   recordResult: session => {
     const saved = zenchefJournal.recordAttempt({intent:session.approval,attempt:session.attempt,result:session.result});
@@ -112,6 +113,9 @@ const playwrightRuntime = new PlaywrightRuntime({
         actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
         current:(_id,owner)=>zenchefInspection.current(owner)}] : []),
       ...(vagenendeLive ? [{restaurantId:ZENCHEF_VAGENENDE.restaurantId,enabled:true,mode:'live',
+        actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
+        current:(_id,owner)=>zenchefInspection.current(owner)}] : []),
+      ...(bouillonJulienLive ? [{restaurantId:ZENCHEF_BOUILLONJULIEN.restaurantId,enabled:true,mode:'live',
         actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
         current:(_id,owner)=>zenchefInspection.current(owner)}] : [])],
     TableCheck: {provider:'TableCheck',restaurantId:SAZON.restaurantId,mode:'prepare',
@@ -372,7 +376,9 @@ zenchefJournal = createProviderJournal({ledger:playwrightAttempts,register:booki
     ...(grandCafeLive ? {[ZENCHEF_GRANDCAFE.restaurantId]:{name:ZENCHEF_GRANDCAFE.name,city:'Paris',
       shiftId:ZENCHEF_GRANDCAFE.shiftId,confirmationPolicySource:ZENCHEF_GRANDCAFE.policySource}} : {}),
     ...(vagenendeLive ? {[ZENCHEF_VAGENENDE.restaurantId]:{name:ZENCHEF_VAGENENDE.name,city:'Paris',
-      shiftId:ZENCHEF_VAGENENDE.shiftId,confirmationPolicySource:ZENCHEF_VAGENENDE.policySource}} : {})}});
+      shiftId:ZENCHEF_VAGENENDE.shiftId,confirmationPolicySource:ZENCHEF_VAGENENDE.policySource}} : {}),
+    ...(bouillonJulienLive ? {[ZENCHEF_BOUILLONJULIEN.restaurantId]:{name:ZENCHEF_BOUILLONJULIEN.name,city:'Paris',
+      shiftId:ZENCHEF_BOUILLONJULIEN.shiftId,confirmationPolicySource:ZENCHEF_BOUILLONJULIEN.policySource}} : {})}});
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);
