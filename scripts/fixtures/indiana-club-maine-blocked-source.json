@@ -1,0 +1,61 @@
+{
+  "restaurantId": "curated-PAR-indiana-cafe-club-maine",
+  "venueId": "375448",
+  "nativeName": "Indiana Club Maine",
+  "officialAddress": "77 Avenue du Maine,75014 Paris",
+  "nativeAddress": "77 Av. du Maine",
+  "city": "Paris",
+  "zip": "75014",
+  "observedAt": "2026-10-18",
+  "status": "parked_conflicting_address_in_native_notice",
+  "resultsUrl": "https://bookings.zenchef.com/results?rid=375448&pid=1001&lang=fr&day=2026-10-23&pax=2",
+  "resultsSha256": "751d3150e1abb23768f5bdffbf8a00ce999f5a35361fbd6edd26e51e80279e87",
+  "formUrl": "https://bookings.zenchef.com/form?rid=375448&pid=1001&lang=fr&day=2026-10-23&pax=2&slot=12%3A00",
+  "formSha256": "7c36e7eea8115702faa270db775be578ab7fde1221739c9993fef920d503ca9d",
+  "query": {
+    "rid": "375448",
+    "pid": "1001",
+    "lang": "fr",
+    "day": "2026-10-23",
+    "pax": "2",
+    "slot": "12:00"
+  },
+  "partner_id": "1001",
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "slot": "12:00",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "restaurantComment": {
+    "fr": "Ce restaurant est situé 74 avenue du Maine. A ne pas confondre avec notre restaurant du 72 boulevard du Montparnasse. :) \n\nLa plupart de nos tables sont sans réservation, donc n’hésitez pas à passer ! Nous gardons votre table au chaud 15 min maximum, au-delà, elle sera réattribuée. Pour toute question nous sommes joignables au +33 1 43 22 50 46\n\nBillards non-réservables"
+  },
+  "shift": {
+    "id": 275974,
+    "name": "Déjeuner",
+    "comment": null,
+    "confirmation": {
+      "is_auto": true,
+      "is_auto_until": null
+    },
+    "charge_param": null,
+    "prepayment_param": null,
+    "is_offer_required": false,
+    "offer_required_from_pax": null,
+    "cancelation_param": {
+      "enduser_cancelable_before": 10800,
+      "enduser_cancelable_reference": "shift"
+    }
+  },
+  "limits": {
+    "resultsGets": 1,
+    "formGets": 1,
+    "assetGets": 0,
+    "realTransactions": 0,
+    "receiptReads": 0
+  }
+}
