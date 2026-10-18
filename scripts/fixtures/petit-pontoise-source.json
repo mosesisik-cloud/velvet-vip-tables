@@ -1,0 +1,306 @@
+{
+  "restaurantId": "118",
+  "name": "Le Petit Pontoise",
+  "address": "9, rue de Pontoise",
+  "city": "Paris",
+  "query": {
+    "rid": "118",
+    "pid": "1001",
+    "lang": "fr",
+    "day": "2026-10-23",
+    "pax": "2"
+  },
+  "partner_id": "1001",
+  "restaurantTimezone": "Europe/Paris",
+  "currency": "EUR",
+  "language": "fr",
+  "initializedSSR": true,
+  "isDisabled": 0,
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "dailyAvailabilities": {
+    "2026-10-23": {
+      "date": "2026-10-23",
+      "shifts": [
+        {
+          "id": 9493,
+          "marked_as_full": false,
+          "closed": false,
+          "is_voucher_codes_active": true,
+          "is_voucher_codes_limit_reached": false,
+          "bookable_from": null,
+          "bookable_to": "2026-10-23 14:00:00",
+          "shift_slots": [
+            {
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 12,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 4,
+                  "4_pax_slots": 6,
+                  "6_pax_slots": 8,
+                  "8_pax_slots": 8,
+                  "10_pax_slots": 9,
+                  "12_pax_slots": 10
+                }
+              },
+              "name": "12:00",
+              "slot_name": "12:00",
+              "interval_in_minutes": 720,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 12:00:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 12,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 4,
+                  "4_pax_slots": 6,
+                  "6_pax_slots": 8,
+                  "8_pax_slots": 8,
+                  "10_pax_slots": 9,
+                  "12_pax_slots": 10
+                }
+              },
+              "name": "12:30",
+              "slot_name": "12:30",
+              "interval_in_minutes": 750,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 12:30:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 12,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 4,
+                  "4_pax_slots": 6,
+                  "6_pax_slots": 8,
+                  "8_pax_slots": 8,
+                  "10_pax_slots": 9,
+                  "12_pax_slots": 10
+                }
+              },
+              "name": "13:00",
+              "slot_name": "13:00",
+              "interval_in_minutes": 780,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 13:00:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 12,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 4,
+                  "4_pax_slots": 6,
+                  "6_pax_slots": 8,
+                  "8_pax_slots": 8,
+                  "10_pax_slots": 9,
+                  "12_pax_slots": 10
+                }
+              },
+              "name": "13:30",
+              "slot_name": "13:30",
+              "interval_in_minutes": 810,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 13:30:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "waitlist_possible_guests": []
+            },
+            {
+              "capacity": {
+                "min": 1,
+                "max": 8,
+                "total_per_slot": 12,
+                "waitlist_min": 0,
+                "waitlist_max": 0,
+                "waitlist_total_per_slot": 0,
+                "show_turn_times": false,
+                "buffer_slots_count": 0,
+                "turn_times": {
+                  "2_pax_slots": 4,
+                  "4_pax_slots": 6,
+                  "6_pax_slots": 8,
+                  "8_pax_slots": 8,
+                  "10_pax_slots": 9,
+                  "12_pax_slots": 10
+                }
+              },
+              "name": "14:00",
+              "slot_name": "14:00",
+              "interval_in_minutes": 840,
+              "closed": false,
+              "marked_as_full": false,
+              "bookable_from": null,
+              "bookable_to": "2026-10-23 14:00:00",
+              "possible_guests": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+              ],
+              "waitlist_possible_guests": []
+            }
+          ],
+          "name": "Déjeuner",
+          "name_translations": {
+            "fr": "Déjeuner"
+          },
+          "comment": null,
+          "color": "a",
+          "is_standard": true,
+          "charge_param": {
+            "is_web_booking_askable": true,
+            "min_guests": 6,
+            "charge_per_guests": 25
+          },
+          "prepayment_param": null,
+          "cancelation_param": {
+            "enduser_cancelable_before": 0,
+            "enduser_cancelable_reference": "shift"
+          },
+          "confirmation": {
+            "is_auto": false,
+            "is_auto_until": 4
+          },
+          "capacity": {
+            "min": 1,
+            "max": 8,
+            "total_per_slot": 12,
+            "waitlist_min": 0,
+            "waitlist_max": 0,
+            "waitlist_total_per_slot": 0,
+            "show_turn_times": false,
+            "buffer_slots_count": 0,
+            "turn_times": {
+              "2_pax_slots": 4,
+              "4_pax_slots": 6,
+              "6_pax_slots": 8,
+              "8_pax_slots": 8,
+              "10_pax_slots": 9,
+              "12_pax_slots": 10
+            }
+          },
+          "bookable_rooms": [
+            5207,
+            5325
+          ],
+          "open": "12:00",
+          "close": "14:00",
+          "total": 38,
+          "waitlist_total": 0,
+          "is_offer_required": false,
+          "offer_required_from_pax": null
+        }
+      ]
+    }
+  },
+  "restaurantComment": {
+    "fr": "Chers Amis, <br> <br>\nLe Petit Pontoise est ouvert tous les jours (sauf mardi) au déjeuner & au diner.<br> <br>\nAu plaisir de vous accueillir avec vos amis, vos collègues, votre moitié, votre famille et toutes les personnes qui vous font du bien.\n<br> <br>\nPour toute réservation de plus de 9 personnes, vous pouvez nous écrire à contact@lepetitpontoise.fr"
+  },
+  "mandatoryFields": {
+    "firstname": "required",
+    "lastname": "required",
+    "email": "required",
+    "phone_number": "required",
+    "country": "required",
+    "comment": "displayed",
+    "private_comment": "hidden",
+    "prescriber_id": "hidden",
+    "customersheet.customer_company_id": "hidden",
+    "civility": "required",
+    "url": "hidden",
+    "customersheet.vip": "hidden",
+    "waiter_id": "hidden",
+    "slots_count": "hidden",
+    "voucher_code": "displayed"
+  },
+  "customFields": [],
+  "customFieldsV2": [],
+  "restaurantSpecificCommentsByDay": {
+    "2026-10-23": null
+  }
+}
