@@ -31,7 +31,7 @@ assert.equal(resolveEmbeddedBooking(registry, 'not-reviewed'), null);
 assert.equal(resolveEmbeddedBooking(registry, '__proto__'), null);
 assert.equal(Object.values(registry).filter(row => row.provider === 'SevenRooms').length, 50);
 assert.equal(Object.values(registry).filter(row => row.integrationMode === 'native_embed').length, 64);
-assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 106);
+assert.equal(Object.values(registry).filter(row => row.integrationMode === 'external_link').length, 107);
 for(const id of ['curated-SBH-bonito-saint-barth','osm-SBH-bonito']) {
   assert.equal(registry[id].venueId,'bonitostbarth');
   assert.equal(registry[id].url,'https://www.sevenrooms.com/reservations/bonitostbarth');
