@@ -18,7 +18,7 @@ import { LUZETTE_LUNCH_RECEIPT_POLICY, TEATERGRILLEN_LUNCH_RECEIPT_POLICY, TENNS
 import { KVARNEN_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
 import { createProviderJournal } from './provider-booking-journal.mjs';
 import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_DEKAS, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
-import { ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE } from './providers/zenchef-playwright.mjs';
+import { ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
 import fs from "node:fs";
 import path from "node:path";
@@ -49,9 +49,10 @@ const pirouetteLive = process.env.VELVET_ZENCHEF_PIROUETTE === 'live';
 const dekasLive = process.env.VELVET_ZENCHEF_DEKAS === 'live';
 const bofingerLive = process.env.VELVET_ZENCHEF_BOFINGER === 'live';
 const laCoupoleLive = process.env.VELVET_ZENCHEF_LACOUPOLE === 'live';
+const terminusNordLive = process.env.VELVET_ZENCHEF_TERMINUSNORD === 'live';
 let zenchefJournal;
 const zenchefInspection = new ZenchefPlaywright({
-  mode: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive,
+  mode: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive,
   reserveSubmission: intent => zenchefJournal.reserveAttempt(intent),
   recordResult: session => {
     const saved = zenchefJournal.recordAttempt({intent:session.approval,attempt:session.attempt,result:session.result});
@@ -88,6 +89,9 @@ const playwrightRuntime = new PlaywrightRuntime({
         actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
         current:(_id,owner)=>zenchefInspection.current(owner)}] : []),
       ...(laCoupoleLive ? [{restaurantId:ZENCHEF_LACOUPOLE.restaurantId,enabled:true,mode:'live',
+        actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
+        current:(_id,owner)=>zenchefInspection.current(owner)}] : []),
+      ...(terminusNordLive ? [{restaurantId:ZENCHEF_TERMINUSNORD.restaurantId,enabled:true,mode:'live',
         actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
         current:(_id,owner)=>zenchefInspection.current(owner)}] : [])],
     TableCheck: {provider:'TableCheck',restaurantId:SAZON.restaurantId,mode:'prepare',
@@ -336,7 +340,9 @@ zenchefJournal = createProviderJournal({ledger:playwrightAttempts,register:booki
     ...(bofingerLive ? {[ZENCHEF_BOFINGER.restaurantId]:{name:ZENCHEF_BOFINGER.name,city:'Paris',
       shiftId:ZENCHEF_BOFINGER.shiftId,confirmationPolicySource:ZENCHEF_BOFINGER.policySource}} : {}),
     ...(laCoupoleLive ? {[ZENCHEF_LACOUPOLE.restaurantId]:{name:ZENCHEF_LACOUPOLE.name,city:'Paris',
-      shiftId:ZENCHEF_LACOUPOLE.shiftId,confirmationPolicySource:ZENCHEF_LACOUPOLE.policySource}} : {})}});
+      shiftId:ZENCHEF_LACOUPOLE.shiftId,confirmationPolicySource:ZENCHEF_LACOUPOLE.policySource}} : {}),
+    ...(terminusNordLive ? {[ZENCHEF_TERMINUSNORD.restaurantId]:{name:ZENCHEF_TERMINUSNORD.name,city:'Paris',
+      shiftId:ZENCHEF_TERMINUSNORD.shiftId,confirmationPolicySource:ZENCHEF_TERMINUSNORD.policySource}} : {})}});
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);
