@@ -472,12 +472,7 @@ export function mountProviderPlaywrightBooking(container, api, {
       el('address-notice').hidden = !denfertAddress && !durationVenue;
       el('hours-notice').textContent = restaurantId === 'curated-PAR-savannah-cafe' ? 'Savannah Café: restaurangens webbplats anger lunch 12:00–14:00, medan bokningssystemet erbjuder 11:30–14:00. Uppgifterna skiljer sig; kontrollera den valda tiden före godkännandet.' : '';
       el('hours-notice').hidden = restaurantId !== 'curated-PAR-savannah-cafe';
-      if (restaurantId === 'curated-PAR-batistou') {
-    const scope=document.createElement('p'); scope.className='booking-scope';
-    scope.textContent='Bokning i Velvet gäller Service Continu på Batistou, 65 Boulevard de Ménilmontant i Paris, för exakt två gäster, i mån av lediga bord. Bokningssystemet erbjuder tider 11:30–22:30 inom samma servering. Grupper, specialerbjudanden, presentkort och val av särskilt rum ingår inte. Ingen viss placering eller sittningstid garanteras. Restaurangens meddelande saknar gruppantal och telefonnummer; texten återges oförändrad före godkännandet.';
-    container.querySelector('header').after(scope);
-  }
-  if (restaurantId === 'curated-PAR-becco') {
+      if (restaurantId === 'curated-PAR-becco') {
         el('hours-notice').textContent = 'Becco: restaurangens tvåtimmarsregel gäller fredags- och lördagskvällar. Ingen tvåtimmarsgräns för lunch anges här.';
         el('hours-notice').hidden = false;
       }
