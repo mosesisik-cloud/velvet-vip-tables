@@ -806,6 +806,11 @@ export class ZenchefPlaywright {
   async verifyNativeRoom(s) {
     if (NO_ROOM_LUNCH_VENUES.includes(s.venue)) {
       const form = JSON.parse(await s.page.locator('script#__NEXT_DATA__').textContent())?.props?.initialState?.appStoreState;
+      // Form requirements can change after selection or review. Recheck before
+      // approval and the durable send grant, not only when opening the form.
+      const supported = ['firstname', 'lastname', 'email', 'phone_number', 'country', 'civility'];
+      if (!form?.mandatoryFields || Object.entries(form.mandatoryFields).some(([key, value]) => value === 'required' && !supported.includes(key)))
+        throw new ZenchefError('provider_fields_unverified', 409);
       const shift = form?.dailyAvailabilities?.[s.searchQuery.date]?.shifts?.find(row => row.id === s.venue.shiftId);
       const text = await s.page.locator('[data-testid="eula-checkbox"]').innerText();
       if (s.page.url() !== zenchefFormUrl(s.formSelection, s.venue) || form?.wish?.slot !== s.formSelection.time
