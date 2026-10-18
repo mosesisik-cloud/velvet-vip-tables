@@ -210,7 +210,7 @@ export function mountProviderPlaywrightBooking(container, api, {
       // Project the actual Zenchef transport, without changing its wire fields.
       const phase = next.result ? 'result' : ({availability_observed:'slots',offers:'offers',contact:'guest',review:'booking_review'})[next.state] || 'selection';
       next = {...next,phase,bookingReview:next.state === 'review' ? {
-        details:{...next.details,restaurantId:next.restaurantId,guest:Object.fromEntries(Object.entries(next.details || {}).filter(([name]) => Object.hasOwn(aliases,name))),termsText:[next.terms?.text,next.terms?.restaurantNotice?.replace(/<\/?br\s*\/?\s*>/gi,'\n').replace(/<\/?(?:b|u)\s*>/gi,'').replace(/<a\b[^>]*>|<\/a\s*>/gi,'')].filter(Boolean).join('\n\n'),seatingNotice:next.terms?.seatingNotice},
+        details:{...next.details,restaurantId:next.restaurantId,guest:Object.fromEntries(Object.entries(next.details || {}).filter(([name]) => Object.hasOwn(aliases,name))),termsText:[next.terms?.text,next.terms?.restaurantNotice?.replace(/<\/?br\s*\/?\s*>/gi,'\n').replace(/<\/?p\s*>/gi,'\n').replace(/<\/?(?:b|u)\s*>/gi,'').replace(/<a\b[^>]*>|<\/a\s*>/gi,'')].filter(Boolean).join('\n\n'),seatingNotice:next.terms?.seatingNotice},
         reviewFingerprint:next.reviewFingerprint,
       } : null};
     }
