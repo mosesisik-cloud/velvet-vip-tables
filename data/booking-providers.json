@@ -2556,5 +2556,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-jules-jo": {
+    "name": "Jules Jo",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?pid=1001&rid=359960",
+    "source": "https://www.julesjo.com/",
+    "venueKey": "bookings.zenchef.com/results?rid=359960",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
