@@ -1,0 +1,28 @@
+{
+  "requestedUrl": "https://bookings.zenchef.com/results?rid=363233&pid=1001&lang=fr&day=2026-10-23&pax=2",
+  "finalUrl": "https://bookings.zenchef.com/unavailable?rid=363233&pid=1001&lang=fr&day=2026-10-23&pax=2",
+  "status": 200,
+  "sha256": "87d84cb31e0cf1476cfd1c679142df5f80db657eed3d31e060d3827af0b684e3",
+  "page": "/unavailable",
+  "query": {
+    "rid": "363233",
+    "pid": "1001",
+    "lang": "fr",
+    "day": "2026-10-23",
+    "pax": "2"
+  },
+  "restaurantId": "363233",
+  "name": "",
+  "initializedSSR": false,
+  "isDisabled": true,
+  "error": "",
+  "partner_id": "1001",
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "dailyAvailabilities": {}
+}
