@@ -2244,5 +2244,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-le-petit-retro": {
+    "name": "Le Petit Rétro",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=361808&lang=fr",
+    "source": "https://www.petitretro.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=361808",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
