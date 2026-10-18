@@ -40,27 +40,31 @@ const jolie=process.argv.includes('--rosie-jolie') || process.env.VELVET_TEST_PR
 const jolieBlocked=['2026','2030'].flatMap(year=>['08-03','08-13','08-23'].map(day=>year+'-'+day));
 const jolieAdjacent=['2026-08-02','2026-08-24','2030-08-02','2030-08-24'];
 const dateGuardDates=jolie?jolieBlocked:bouillon?bouillonHolidays:[];
+const petit=process.argv.includes('--petit-sommelier') || process.env.VELVET_TEST_PROVIDER==='PetitSommelier';
+const petitTimes=Array.from({length:29},(_,i)=>String(11+Math.floor(i/4)).padStart(2,'0')+':'+String((i%4)*15).padStart(2,'0'));
 const rosieFamily=rosie || rosieLou || jolie;
 const rosieTimes=['12:00','12:15','12:30','12:45','13:00','13:15','13:30','13:45','14:00','14:15'];
 const lunchCoreOnly=process.argv.includes('--lunch-core-only');
 const lunchReviewOnly=process.argv.includes('--lunch-review-only');
-const automaticLunch=grandCafe || vagenende || racine || republique || rosieFamily;
+const automaticLunch=grandCafe || vagenende || racine || republique || rosieFamily || petit;
 const cardLunch=terminusNord || laLorraine || piedDeCochon || vagenende || republique || rosie || rosieLou;
 const cardThreshold=rosieFamily?5:republique?4:vagenende?5:piedDeCochon?5:laLorraine?8:12;
-const namedLunch=bofinger || laCoupole || terminusNord || procope || laLorraine || piedDeCochon || grandCafe || vagenende || bouillon || racine || republique || rosieFamily;
-const lunchSlug=jolie?'rosie-jolie':rosieLou?'rosie-lou':rosie?'rosie':republique?'bouillon-republique':racine?'bouillon-racine':bouillon?'bouillon-julien':vagenende?'vagenende':grandCafe?'grand-cafe':piedDeCochon?'pied-de-cochon':laLorraine?'la-lorraine':procope?'procope':terminusNord?'terminus-nord':laCoupole?'la-coupole':'bofinger';
+const namedLunch=bofinger || laCoupole || terminusNord || procope || laLorraine || piedDeCochon || grandCafe || vagenende || bouillon || racine || republique || rosieFamily || petit;
+const lunchSlug=petit?'petit-sommelier':jolie?'rosie-jolie':rosieLou?'rosie-lou':rosie?'rosie':republique?'bouillon-republique':racine?'bouillon-racine':bouillon?'bouillon-julien':vagenende?'vagenende':grandCafe?'grand-cafe':piedDeCochon?'pied-de-cochon':laLorraine?'la-lorraine':procope?'procope':terminusNord?'terminus-nord':laCoupole?'la-coupole':'bofinger';
 const lunchTail=namedLunch && process.argv.includes('--'+lunchSlug+'-tail');
 const lunchSource=namedLunch?JSON.parse(fs.readFileSync(path.join(root,'scripts/fixtures/'+lunchSlug+'-source.json'),'utf8')):null;
-const lunchCases=[...(jolie?['form-cancellation-reference','form-cancellation-exact','form-borrowed-card','date-changed','holiday-readback']:[]),...(rosie || rosieLou?['form-card-price','form-card-price-type','form-cancellation-reference','form-cancellation-exact']:[]),...(republique?['form-card-price','form-card-price-type','form-cancellation-reference','form-cancellation-exact','time-changed','wrong-saved-time']:[]),...(racine?['form-cancellation-reference','form-cancellation-exact']:[]),...(bouillon?['form-auto-missing','form-auto-type','form-auto-drift','form-cancellation-exact','form-cancellation-reference','date-changed','holiday-readback']:[]),...(vagenende?['form-card-price','form-card-price-type','form-cancellation-reference']:[]),...(automaticLunch?['form-auto-flag-missing','form-auto-flag-string','form-auto-flag-number','form-auto-flag-null','form-auto-until-missing','form-auto-until-string','form-auto-until-drift']:[]),...(procope?['form-auto-missing','form-auto-type','form-auto-drift']:[]),...(cardLunch?['form-card-threshold-string','form-card-threshold-null','form-card-threshold-missing','form-card-threshold-drift','form-card-flag-type',...(!automaticLunch?['form-auto-type']:[])]:[]),'notice-changed','form-card','form-manual','form-prepayment','form-shift','form-cancellation','missing-saved-time','wrong-saved-party','pending-saved','unexpected-offer','missing-offers','saved-room','mismatch-readback-id','mismatch-readback-uuid','mismatch-readback-date','readback-error','readback-http-error'];
+const lunchCases=[...(petit?['form-cancellation-reference','form-cancellation-exact','form-notice-missing','form-notice-null','form-notice-number','form-notice-object','form-notice-changed','form-eula-empty','search-partner-missing','search-partner-wrong','form-partner-missing','form-partner-wrong','payload-partner-wrong']:[]),...(jolie?['form-cancellation-reference','form-cancellation-exact','form-borrowed-card','date-changed','holiday-readback']:[]),...(rosie || rosieLou?['form-card-price','form-card-price-type','form-cancellation-reference','form-cancellation-exact']:[]),...(republique?['form-card-price','form-card-price-type','form-cancellation-reference','form-cancellation-exact','time-changed','wrong-saved-time']:[]),...(racine?['form-cancellation-reference','form-cancellation-exact']:[]),...(bouillon?['form-auto-missing','form-auto-type','form-auto-drift','form-cancellation-exact','form-cancellation-reference','date-changed','holiday-readback']:[]),...(vagenende?['form-card-price','form-card-price-type','form-cancellation-reference']:[]),...(automaticLunch?['form-auto-flag-missing','form-auto-flag-string','form-auto-flag-number','form-auto-flag-null','form-auto-until-missing','form-auto-until-string','form-auto-until-drift']:[]),...(procope?['form-auto-missing','form-auto-type','form-auto-drift']:[]),...(cardLunch?['form-card-threshold-string','form-card-threshold-null','form-card-threshold-missing','form-card-threshold-drift','form-card-flag-type',...(!automaticLunch?['form-auto-type']:[])]:[]),'notice-changed','form-card','form-manual','form-prepayment','form-shift','form-cancellation','missing-saved-time','wrong-saved-party','pending-saved','unexpected-offer','missing-offers','saved-room','mismatch-readback-id','mismatch-readback-uuid','mismatch-readback-date','readback-error','readback-http-error'];
+const lunchFrom=process.argv.find(arg=>arg.startsWith('--lunch-from='))?.split('=')[1];
+assert.ok(!lunchFrom || lunchCases.includes(lunchFrom),'Unknown lunch tail start');
 const readbackVenue = namedLunch || roomVenue || dekas;
 const zenchef = fishcorner || readbackVenue;
 const chosenRoom = pirouette ? 52521 : 52372;
 const otherRoom = pirouette ? 65674 : 51183;
 const alternateRoom = pirouette ? 65674 : 52373;
 const chosenRoomName = pirouette ? 'Salle principale' : 'Mazagran salle';
-const zenchefShift = jolie ? 298043 : rosieLou ? 118503 : rosie ? 43203 : republique ? 528175 : racine ? 93989 : bouillon ? 12711 : vagenende ? 63972 : grandCafe ? 19590 : piedDeCochon ? 29 : laLorraine ? 16674 : procope ? 18190 : terminusNord ? 19380 : laCoupole ? 20148 : bofinger ? 19170 : dekas ? 494748 : pirouette ? 189024 : pesquiere ? 136503 : 545372;
-const zenchefRid = jolie ? '376490' : rosieLou ? '361941' : rosie ? '355132' : republique ? '357115' : racine ? '132' : bouillon ? '350246' : vagenende ? '356807' : grandCafe ? '101232' : piedDeCochon ? '247' : laLorraine ? '478' : procope ? '250682' : terminusNord ? '82241' : laCoupole ? '83871' : bofinger ? '84941' : dekas ? '386643' : pirouette ? '363313' : pesquiere ? '362908' : '388090';
-const zenchefName = jolie ? 'Brasserie Rosie Jolie' : rosieLou ? 'Brasserie Rosie Lou' : rosie ? 'Brasserie Rosie' : republique ? 'Bouillon R\u00e9publique' : racine ? 'Bouillon Racine' : bouillon ? 'Bouillon Julien' : vagenende ? 'Brasserie Vagenende' : grandCafe ? 'Le Grand Caf\u00e9 Capucines' : piedDeCochon ? 'Au Pied de Cochon' : laLorraine ? 'La Lorraine' : procope ? 'Le Procope' : terminusNord ? 'Terminus Nord' : laCoupole ? 'La Coupole' : bofinger ? 'Bofinger' : dekas ? 'DeKas' : pirouette ? 'Pirouette' : pesquiere ? 'Pesquiere' : 'FishCorner';
+const zenchefShift = petit ? 37613 : jolie ? 298043 : rosieLou ? 118503 : rosie ? 43203 : republique ? 528175 : racine ? 93989 : bouillon ? 12711 : vagenende ? 63972 : grandCafe ? 19590 : piedDeCochon ? 29 : laLorraine ? 16674 : procope ? 18190 : terminusNord ? 19380 : laCoupole ? 20148 : bofinger ? 19170 : dekas ? 494748 : pirouette ? 189024 : pesquiere ? 136503 : 545372;
+const zenchefRid = petit ? '1404' : jolie ? '376490' : rosieLou ? '361941' : rosie ? '355132' : republique ? '357115' : racine ? '132' : bouillon ? '350246' : vagenende ? '356807' : grandCafe ? '101232' : piedDeCochon ? '247' : laLorraine ? '478' : procope ? '250682' : terminusNord ? '82241' : laCoupole ? '83871' : bofinger ? '84941' : dekas ? '386643' : pirouette ? '363313' : pesquiere ? '362908' : '388090';
+const zenchefName = petit ? 'Le Petit Sommelier' : jolie ? 'Brasserie Rosie Jolie' : rosieLou ? 'Brasserie Rosie Lou' : rosie ? 'Brasserie Rosie' : republique ? 'Bouillon R\u00e9publique' : racine ? 'Bouillon Racine' : bouillon ? 'Bouillon Julien' : vagenende ? 'Brasserie Vagenende' : grandCafe ? 'Le Grand Caf\u00e9 Capucines' : piedDeCochon ? 'Au Pied de Cochon' : laLorraine ? 'La Lorraine' : procope ? 'Le Procope' : terminusNord ? 'Terminus Nord' : laCoupole ? 'La Coupole' : bofinger ? 'Bofinger' : dekas ? 'DeKas' : pirouette ? 'Pirouette' : pesquiere ? 'Pesquiere' : 'FishCorner';
 const rooms = pirouette ? [{id:52521,name:'Salle principale'},{id:65674,name:'Terasse'}] : [{id:51183,name:'La Pesquiere'},{id:52372,name:'Mazagran salle'},{id:52373,name:'Mazagran terrasse'}];
 const noema = process.argv.includes('--noema') || process.env.VELVET_TEST_PROVIDER === 'Noema';
 const kvarnen = process.argv.includes('--kvarnen') || process.env.VELVET_TEST_PROVIDER === 'Kvarnen';
@@ -126,7 +130,7 @@ const italiano = process.argv.includes('--italiano') || process.env.VELVET_TEST_
 const nativeGuest = pelikan || guestLunch || italiano || agnes;
 const guestChoice = ciccios || nativeGuest;
 const contactFinal = teatergrillen || luzette || riche || sturehof || gondolen || klotet;
-assert.ok([jolie,rosieLou,rosie,republique,racine,bouillon,vagenende,grandCafe,piedDeCochon,laLorraine,procope,terminusNord,laCoupole,bofinger,kvarnen,hantverket,pelikan,tennstopet,teatergrillen,luzette,bobonne,agnes,klotet,gondolen,sazon,fishcorner,pesquiere,pirouette,dekas,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar,italiano,copine].filter(Boolean).length <= 1, 'Choose one named provider scenario');
+assert.ok([petit,jolie,rosieLou,rosie,republique,racine,bouillon,vagenende,grandCafe,piedDeCochon,laLorraine,procope,terminusNord,laCoupole,bofinger,kvarnen,hantverket,pelikan,tennstopet,teatergrillen,luzette,bobonne,agnes,klotet,gondolen,sazon,fishcorner,pesquiere,pirouette,dekas,noema,ciccios,riche,sturehof,beirut,balzac,kommendoren,astrid,vau,boqueria,dagmar,italiano,copine].filter(Boolean).length <= 1, 'Choose one named provider scenario');
 // Noema/Ciccios saved-source evidence: issue129 comment6241312516, native phoneField/Next copy.
 const nativePhone = contactFinal || nativeGuest || noema || ciccios;
 const receiptMode = noema || guestChoice || contactFinal;
@@ -135,7 +139,7 @@ const receiptCode = kvarnen ? 'synthetic-kvarnen-only' : hantverket ? 'synthetic
 const mealId = kvarnen ? 91 : hantverket ? 7097 : pelikan ? 1540 : tennstopet ? 54277 : teatergrillen ? 6491 : luzette ? 7253 : bobonne ? 31 : agnes ? 1628 : klotet ? 63872 : gondolen ? 33008 : copine ? 4790 : italiano ? 22890 : dagmar ? 63588 : boqueria ? 22 : vau ? 22476 : astrid ? 55508 : kommendoren ? 3501 : balzac ? 354 : beirut ? 30471 : sturehof ? 3913 : riche ? 7180 : ciccios ? 2379 : noema ? 35204 : 9778;
 const scopeInvalid = [{mealid:999999999},{amount:noema ? 9 : ciccios ? 8 : 3}];
 const mealType = tennstopet ? 0 : klotet ? 0 : dagmar ? 0 : noema || guestLunch || contactFinal ? 2 : 3;
-const restaurantId = jolie ? 'curated-PAR-brasserie-rosie-jolie' : rosieLou ? 'curated-PAR-brasserie-rosie-lou' : rosie ? 'curated-PAR-brasserie-rosie' : republique ? 'curated-PAR-bouillon-republique' : racine ? 'curated-PAR-bouillon-racine' : bouillon ? 'curated-PAR-bouillon-julien' : vagenende ? 'curated-PAR-brasserie-vagenende' : grandCafe ? 'curated-PAR-le-grand-cafe-capucines' : piedDeCochon ? 'curated-PAR-au-pied-de-cochon' : laLorraine ? 'curated-PAR-la-lorraine' : procope ? 'curated-PAR-le-procope' : terminusNord ? 'curated-PAR-terminus-nord' : laCoupole ? 'curated-PAR-la-coupole' : bofinger ? 'curated-PAR-bofinger' : kvarnen ? 'curated-STO-kvarnen' : hantverket ? 'curated-STO-hantverket' : pelikan ? 'curated-STO-pelikan' : tennstopet ? 'curated-STO-tennstopet' : teatergrillen ? 'curated-STO-teatergrillen' : luzette ? 'curated-STO-luzette' : bobonne ? 'curated-STO-brasserie-bobonne' : agnes ? 'curated-STO-agnes' : klotet ? 'curated-STO-cafe-klotet' : gondolen ? 'curated-STO-gondolen' : sazon ? 'osm-BAL-sazon' : copine ? 'curated-STO-copine' : italiano ? 'curated-STO-italiano' : dekas ? 'curated-AMS-de-kas' : dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
+const restaurantId = petit ? 'curated-PAR-le-petit-sommelier' : jolie ? 'curated-PAR-brasserie-rosie-jolie' : rosieLou ? 'curated-PAR-brasserie-rosie-lou' : rosie ? 'curated-PAR-brasserie-rosie' : republique ? 'curated-PAR-bouillon-republique' : racine ? 'curated-PAR-bouillon-racine' : bouillon ? 'curated-PAR-bouillon-julien' : vagenende ? 'curated-PAR-brasserie-vagenende' : grandCafe ? 'curated-PAR-le-grand-cafe-capucines' : piedDeCochon ? 'curated-PAR-au-pied-de-cochon' : laLorraine ? 'curated-PAR-la-lorraine' : procope ? 'curated-PAR-le-procope' : terminusNord ? 'curated-PAR-terminus-nord' : laCoupole ? 'curated-PAR-la-coupole' : bofinger ? 'curated-PAR-bofinger' : kvarnen ? 'curated-STO-kvarnen' : hantverket ? 'curated-STO-hantverket' : pelikan ? 'curated-STO-pelikan' : tennstopet ? 'curated-STO-tennstopet' : teatergrillen ? 'curated-STO-teatergrillen' : luzette ? 'curated-STO-luzette' : bobonne ? 'curated-STO-brasserie-bobonne' : agnes ? 'curated-STO-agnes' : klotet ? 'curated-STO-cafe-klotet' : gondolen ? 'curated-STO-gondolen' : sazon ? 'osm-BAL-sazon' : copine ? 'curated-STO-copine' : italiano ? 'curated-STO-italiano' : dekas ? 'curated-AMS-de-kas' : dagmar ? 'curated-STO-villa-dagmar' : boqueria ? 'curated-STO-boqueria' : vau ? 'curated-STO-vau-de-ville' : astrid ? 'curated-STO-brasserie-astrid' : pirouette ? 'osm-MCO-pirouette' : kommendoren ? 'curated-STO-kommendoren' : balzac ? 'curated-STO-balzac' : beirut ? 'curated-STO-beirut-cafe' : pesquiere ? 'osm-STT-la-pesquiere-le-mazagran-et-lou-revelen' : sturehof ? 'curated-STO-sturehof' : fishcorner ? 'osm-SBH-fishcorner' : riche ? 'curated-STO-riche' : ciccios ? 'curated-STO-ciccios' : noema ? 'curated-STO-noema' : 'curated-STO-zink-italian-cuisine';
 const venue = JSON.parse(fs.readFileSync(path.join(root, 'api/bokabord-restaurants.json')))[receiptMode ? restaurantId : 'curated-STO-zink-italian-cuisine'];
 const saveUrl = 'https://app.bokabord.se/reservation/api/booking/saveBooking';
 let date = process.env.VELVET_TEST_DATE || (tennstopet || klotet ? '2026-10-23' : '2030-01-15');
@@ -217,9 +221,22 @@ function zenchefDocument(address) {
     }
     if(form && outcome==='form-manual'){if(automaticLunch)shift.confirmation.is_auto=false;else shift.confirmation.is_auto_until=null;}
     if(form && outcome==='form-prepayment')shift.prepayment_param={is_web_booking_askable:true};
-    if(form && outcome==='form-shift')shift.id=jolie?411615:rosieLou?118508:rosie?80093:racine?371604:procope?18191:laCoupole?19170:20148;
+    if(form && outcome==='form-shift')shift.id=petit?37614:jolie?411615:rosieLou?118508:rosie?80093:racine?371604:procope?18191:laCoupole?19170:20148;
     if(republique){shift.shift_slots=[...republiqueTimes,...republiqueBlocked].map(name=>({...slot,name}));if(form)state.wish.slot=url.searchParams.get('slot');}
     if(rosieFamily){shift.shift_slots=rosieTimes.map(name=>({...slot,name}));if(form)state.wish.slot=url.searchParams.get('slot');}
+    if(petit){shift.shift_slots=petitTimes.map(name=>({...slot,name}));if(form)state.wish.slot=url.searchParams.get('slot');}
+    if(form && petit){
+      if(outcome==='form-cancellation-reference')shift.cancelation_param.enduser_cancelable_reference='booking';
+      if(outcome==='form-cancellation-exact')shift.cancelation_param.enduser_cancelable_before=21660;
+    }
+    if(form){
+      if(outcome==='form-notice-missing')delete state.restaurantComment.fr;
+      if(outcome==='form-notice-null')state.restaurantComment.fr=null;
+      if(outcome==='form-notice-number')state.restaurantComment.fr=7;
+      if(outcome==='form-notice-object')state.restaurantComment.fr={text:''};
+      if(outcome==='form-notice-empty')state.restaurantComment.fr='';
+      if(outcome==='form-notice-changed')state.restaurantComment.fr='Changed notice';
+    }
     if(form && jolie){
       if(outcome==='form-cancellation-reference')shift.cancelation_param.enduser_cancelable_reference='shift';
       if(outcome==='form-cancellation-exact')shift.cancelation_param.enduser_cancelable_before=43200;
@@ -254,17 +271,24 @@ function zenchefDocument(address) {
     if(form && outcome==='form-cancellation')shift.cancelation_param.enduser_cancelable_before=1;
   }
   const data = {page:form?'/form':'/results',query:Object.fromEntries(url.searchParams),props:{initialState:{appStoreState:state}}};
+  if(petit){
+    assert.equal(url.searchParams.get('pid'),'1001','Native routing must preserve official partner');
+    const outcome=process.env.VELVET_TEST_OUTCOME;
+    if(outcome===(form?'form-partner-missing':'search-partner-missing'))delete data.query.pid;
+    if(outcome===(form?'form-partner-wrong':'search-partner-wrong'))data.query.pid='9999';
+  }
   return `<html><meta charset="utf-8"><body><h1>${namedLunch?lunchSource.name:zenchefName} LOCAL TEST — no real booking</h1>${roomVenue&&form?`<div>${rooms.find(room=>room.id===Number(url.searchParams.get('room_id')))?.name}</div>`:''}${pirouette&&form?`<div id="seating">Jusqu&#39;à 21:00</div>`:''}<script id="__NEXT_DATA__" type="application/json">${JSON.stringify(data)}</script>
   ${form ? ['firstname','lastname','email'].map(k=>`<input data-testid="${k}-input">`).join('') +
     `<div class="iti"><button type="button" class="iti__selected-country" title="France (+33)" aria-label="Selected country France"><span class="iti__flag iti__fr"></span></button><input data-testid="phone-input"></div>` +
-    `<label>Mr<input type="radio" name="civility" value="mr" style="display:none"></label><label data-testid="eula-checkbox"><input type="checkbox">Synthetic test terms</label>
+    `<label>Mr<input type="radio" name="civility" value="mr" style="display:none"></label><label data-testid="eula-checkbox"><input type="checkbox">${process.env.VELVET_TEST_OUTCOME==='form-eula-empty'?'':'Synthetic test terms'}</label>
     <button data-testid="validate-btn">Reserve fixture</button><script>
     document.querySelector('[data-testid="validate-btn"]').onclick=()=>{
       const value=k=>document.querySelector('[data-testid="'+k+'-input"]').value;
       const firstname=value('firstname'),lastname=value('lastname'),email=value('email'),phone=value('phone');
-      const payload={day:${JSON.stringify(date)},nb_guests:2,time:${JSON.stringify(republique||rosieFamily?url.searchParams.get('slot'):'12:30')},lang:'fr',firstname,lastname,civility:'mr',country:'fr',phone_number:phone,email,
+      const payload={day:${JSON.stringify(date)},nb_guests:2,time:${JSON.stringify(republique||rosieFamily||petit?url.searchParams.get('slot'):'12:30')},lang:'fr',firstname,lastname,civility:'mr',country:'fr',phone_number:phone,email,
         comment:'',custom_field:{},custom_field_v2:[],customersheet:{firstname,lastname,civility:'mr',phone,email,
         optins:[{type:'review_mail',value:true},{type:'review_sms',value:true}],country:'fr',lang:'fr'},offers:[],partner_id:'1001',type:'web'${roomVenue?",wish:{booking_room_id:"+Number(url.searchParams.get('room_id'))+"}":''}};
+      ${petit && process.env.VELVET_TEST_OUTCOME==='payload-partner-wrong'?"payload.partner_id='9999';":''}
       ${roomVenue && process.env.VELVET_TEST_OUTCOME === 'missing-request-room' ? 'delete payload.wish;' : ''}
       ${roomVenue && process.env.VELVET_TEST_OUTCOME === 'mismatch-request-room' ? 'payload.wish.booking_room_id='+otherRoom+';' : ''}
       ${pirouette && process.env.VELVET_TEST_OUTCOME === 'code-request' ? "payload.custom_field={code:'fixture-code'};" : ''}
@@ -634,7 +658,7 @@ if (childMode) {
                 try{const row=db.prepare('SELECT owner,payload FROM playwright_attempts_v1 ORDER BY rowid DESC LIMIT 1').get();const attempt=JSON.parse(row.payload);
                   assert.equal(attempt.restaurantId,restaurantId);assert.equal(attempt.status,'unknown');assert.equal(attempt.party,2);assert.deepEqual(attempt.details,{shiftId:zenchefShift});
                   assert.ok(row.owner&&attempt.sessionId);assert.match(attempt.reviewFingerprint,/^[a-f0-9]{64}$/);
-                  const payload=JSON.parse(options.postData);assert.deepEqual(payload.offers,[]);assert.equal(payload.wish,undefined);assert.equal(payload.shift_id,undefined);
+                  const payload=JSON.parse(options.postData);if(petit){assert.equal(payload.partner_id,'1001');assert.equal(payload.time,'17:45');assert.equal(attempt.time,'17:45');}assert.deepEqual(payload.offers,[]);assert.equal(payload.wish,undefined);assert.equal(payload.shift_id,undefined);
                   process.send?.({kind:'durable-service-before-dispatch',shiftId:attempt.details.shiftId});
                 }catch(error){process.send?.({kind:'lunch-fixture-assertion',message:error.message});throw error;}finally{db.close();}
               }
@@ -776,7 +800,7 @@ async function main() {
       VELVET_TENNSTOPET_RECEIPT: tennstopet && tennstopetEnabled ? 'enabled' : 'disabled',
       VELVET_TEATERGRILLEN_RECEIPT: teatergrillen ? 'enabled' : 'disabled',
       VELVET_TEST_DATE: date,
-      VELVET_TEST_PROVIDER: jolie ? 'RosieJolie' : rosieLou ? 'RosieLou' : rosie ? 'Rosie' : republique ? 'BouillonRepublique' : racine ? 'BouillonRacine' : bouillon ? 'BouillonJulien' : vagenende ? 'Vagenende' : grandCafe ? 'GrandCafe' : piedDeCochon ? 'PiedDeCochon' : laLorraine ? 'LaLorraine' : procope ? 'Procope' : terminusNord ? 'TerminusNord' : laCoupole ? 'LaCoupole' : bofinger ? 'Bofinger' : kvarnen ? 'Kvarnen' : hantverket ? 'Hantverket' : pelikan ? 'Pelikan' : tennstopet ? 'Tennstopet' : teatergrillen ? 'Teatergrillen' : luzette ? 'Luzette' : bobonne ? 'Bobonne' : agnes ? 'Agnes' : klotet ? 'Klotet' : gondolen ? 'Gondolen' : sazon ? 'Sazon' : copine ? 'Copine' : italiano ? 'Italiano' : dekas ? 'DeKas' : dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
+      VELVET_TEST_PROVIDER: petit ? 'PetitSommelier' : jolie ? 'RosieJolie' : rosieLou ? 'RosieLou' : rosie ? 'Rosie' : republique ? 'BouillonRepublique' : racine ? 'BouillonRacine' : bouillon ? 'BouillonJulien' : vagenende ? 'Vagenende' : grandCafe ? 'GrandCafe' : piedDeCochon ? 'PiedDeCochon' : laLorraine ? 'LaLorraine' : procope ? 'Procope' : terminusNord ? 'TerminusNord' : laCoupole ? 'LaCoupole' : bofinger ? 'Bofinger' : kvarnen ? 'Kvarnen' : hantverket ? 'Hantverket' : pelikan ? 'Pelikan' : tennstopet ? 'Tennstopet' : teatergrillen ? 'Teatergrillen' : luzette ? 'Luzette' : bobonne ? 'Bobonne' : agnes ? 'Agnes' : klotet ? 'Klotet' : gondolen ? 'Gondolen' : sazon ? 'Sazon' : copine ? 'Copine' : italiano ? 'Italiano' : dekas ? 'DeKas' : dagmar ? 'Dagmar' : boqueria ? 'Boqueria' : vau ? 'Vau' : astrid ? 'Astrid' : pirouette ? 'Pirouette' : kommendoren ? 'Kommendoren' : balzac ? 'Balzac' : beirut ? 'Beirut' : pesquiere ? 'Pesquiere' : sturehof ? 'Sturehof' : fishcorner ? 'FishCorner' : riche ? 'Riche' : ciccios ? 'Ciccios' : noema ? 'Noema' : 'BokaBord',
       VELVET_NOEMA_RECEIPT: noema ? 'enabled' : 'disabled',
       VELVET_CICCIOS_RECEIPT: ciccios ? 'enabled' : 'disabled',
       VELVET_RICHE_RECEIPT: riche ? 'enabled' : 'disabled',
@@ -793,6 +817,7 @@ async function main() {
       VELVET_ZENCHEF_FISHCORNER: zenchef ? 'live' : 'disabled',
       VELVET_ZENCHEF_PESQUIERE: roomVenue ? 'live' : 'disabled',
       VELVET_ZENCHEF_PIROUETTE: pirouette ? 'live' : 'disabled',
+      VELVET_ZENCHEF_PETITSOMMELIER: petit ? 'live' : 'disabled',
       VELVET_ZENCHEF_ROSIEJOLIE: jolie ? 'live' : 'disabled',
       VELVET_ZENCHEF_ROSIELOU: rosieLou ? 'live' : 'disabled',
       VELVET_ZENCHEF_ROSIE: rosie ? 'live' : 'disabled',
@@ -848,9 +873,10 @@ async function main() {
       await page.locator(sazon ? '#provider-preparation [data-prep-start]' : zenchef ? '#provider-playwright-booking [data-start]' : '#bokabord-mirror [data-start]').waitFor();
       if(namedLunch){assert.equal((await page.locator('.restaurant-detail h1').innerText()).trim(),zenchefName);
         const scope=page.locator('.booking-scope');await scope.evaluate(el=>el.scrollIntoView({block:'center',behavior:'instant'}));
-        for(const text of [jolie?'38 avenue Raymond Poincar\u00e9 i Paris':rosieLou?'31 boulevard de Bonne Nouvelle i Paris':rosie?'53 rue du Faubourg Saint-Antoine i Paris':republique?'39 boulevard du Temple i Paris':zenchefName+' i Paris','exakt tv\u00e5',jolie?'D\u00c9JEUNER':rosieLou?'Service midi semaine':rosie?'Midi Semaine':republique?'11.30, 12.00, 12.30, 13.00, 13.30, 14.00 och 14.30':racine?'f\u00f6rsta lunchsittningen (D\u00e9jeuner 1 service)':bouillon || vagenende?'ordinarie lunch':procope?'f\u00f6rsta lunchsittningen (D\u00e9jeuner 1er service)':'15 minuters','Ingen viss placering'])assert.ok((await scope.innerText()).includes(text),text);
+        for(const text of [petit?'49 avenue du Maine i Paris':jolie?'38 avenue Raymond Poincar\u00e9 i Paris':rosieLou?'31 boulevard de Bonne Nouvelle i Paris':rosie?'53 rue du Faubourg Saint-Antoine i Paris':republique?'39 boulevard du Temple i Paris':zenchefName+' i Paris','exakt tv\u00e5',petit?'MIDI-service':jolie?'D\u00c9JEUNER':rosieLou?'Service midi semaine':rosie?'Midi Semaine':republique?'11.30, 12.00, 12.30, 13.00, 13.30, 14.00 och 14.30':racine?'f\u00f6rsta lunchsittningen (D\u00e9jeuner 1 service)':bouillon || vagenende?'ordinarie lunch':procope?'f\u00f6rsta lunchsittningen (D\u00e9jeuner 1er service)':'15 minuters','Ingen viss placering'])assert.ok((await scope.innerText()).includes(text),text);
         assert.ok(await scope.evaluate(el=>{const r=el.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&el.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2));}));
         if(procope || vagenende || bouillon || republique)assert.ok(!(await scope.innerText()).includes('15 min'));
+        if(petit){const text=await scope.innerText();for(const absent of ['15 min','augusti','december','11.30','garanterar inget bord'])assert.ok(!text.includes(absent));}
         if(jolie){const text=await scope.innerText();for(const expected of ['3\u201323 augusti','saknar \u00e5rtal','inte en bekr\u00e4ftad \u00e5rlig st\u00e4ngning','15 minuter'])assert.ok(text.includes(expected),expected);assert.ok(!text.includes('kontakta eller bes\u00f6ka'));}
         if(rosie || rosieLou){const text=await scope.innerText();for(const expected of ['15 minuter','garanterar inget bord'])assert.ok(text.includes(expected));for(const absent of ['oavsett \u00e5r','11.30','24, 25 och 31 december'])assert.ok(!text.includes(absent));}
         if(racine){const text=await scope.innerText();assert.ok(text.includes('franska bokningsformul\u00e4ret'));assert.ok(!text.includes('31 december'));assert.ok(!text.includes('20 minuter'));}
@@ -1218,8 +1244,8 @@ async function main() {
       let recoveredRoom;
       let offerGuardsChecked=false;let holidayGuardRuns=0;
       await start('confirmed'); browser = await chromium.launch();
-      const flow = async (view, expectedDispatches = 1, roomId = chosenRoom, scenario = '', selectedTime = rosieFamily?'12:15':'12:30') => {
-        const page = view.page;
+      const flow = async (view, expectedDispatches = 1, roomId = chosenRoom, scenario = '', selectedTime = petit?'17:45':rosieFamily?'12:15':'12:30') => {
+        const page = view.page;const flowDispatchesBefore=submits();
         const action = async click => {
           const pending = page.waitForResponse(r => r.request().method() === 'POST'
             && /^\/restaurant-bookings\/playwright(?:\/[a-f0-9-]+\/action)?$/.test(new URL(r.url()).pathname), {timeout:65_000});
@@ -1248,6 +1274,10 @@ async function main() {
           holidayGuardRuns++;console.log('PASS '+zenchefName+' scoped date UI/API guards, run '+holidayGuardRuns);
         }
         await panel(page).locator('[name=date]').fill(date);
+        if(scenario.startsWith('search-partner-')){
+          const pending=page.waitForResponse(r=>r.request().method()==='POST'&&r.request().postDataJSON()?.type==='search');await panel(page).locator('[data-search] button').click();const response=await pending;
+          assert.equal(response.status(),502);assert.equal((await response.json()).error,'provider_state_unverified');assert.equal(submits(),flowDispatchesBefore);assert.equal((await api(page,'/restaurant-bookings/playwright/attempts')).body.attempts.length,0);return;
+        }
         const searched = await action(() => panel(page).locator('[data-search] button').click());
         if(roomVenue){
           assert.equal(await panel(page).locator('[data-room="12:30"]').inputValue(),'');
@@ -1267,6 +1297,7 @@ async function main() {
           await panel(page).locator('[data-room="12:30"]').selectOption(String(roomId));
         }
         if(namedLunch){assert.equal(await panel(page).locator('[data-room]').count(),0);assert.equal(searched.body.availabilityEvidence.candidates[0].shiftId,zenchefShift);}
+        if(petit){assert.deepEqual(searched.body.availabilityEvidence.candidates.map(s=>s.time),petitTimes);assert.deepEqual(await panel(page).locator('[data-slot]').evaluateAll(nodes=>nodes.map(n=>n.dataset.slot)),petitTimes);}
         if(rosieFamily){assert.deepEqual(searched.body.availabilityEvidence.candidates.map(s=>s.time),rosieTimes);assert.deepEqual(await panel(page).locator('[data-slot]').evaluateAll(nodes=>nodes.map(n=>n.dataset.slot)),rosieTimes);}
         if(republique){
           assert.deepEqual(searched.body.availabilityEvidence.candidates.map(s=>s.time),republiqueTimes);
@@ -1282,7 +1313,14 @@ async function main() {
           const refresh=page.waitForResponse(r=>r.request().method()==='POST'&&new URL(r.url()).pathname.endsWith('/current'));
           await panel(page).locator('[data-refresh]').click();await refresh;await page.waitForFunction(()=>!document.querySelector('#provider-playwright-booking [data-refresh]').disabled);
         }
-        const selected=await action(() => panel(page).locator('[data-slot="'+selectedTime+'"]').click());
+        let selected;
+        if(scenario.startsWith('form-partner-') || scenario==='form-notice-number' || scenario==='form-notice-object'){
+          const pending=page.waitForResponse(r=>r.request().method()==='POST'&&r.request().postDataJSON()?.type==='select');
+          await panel(page).locator('[data-slot="'+selectedTime+'"]').click();const response=await pending;const body=await response.json();
+          assert.ok(response.status()>=400);assert.equal(submits(),flowDispatchesBefore);assert.equal((await api(page,'/restaurant-bookings/playwright/attempts')).body.attempts.length,0);
+          console.log('PASS closed selection '+scenario+' HTTP'+response.status()+' '+body.error);return;
+        }
+        selected=await action(() => panel(page).locator('[data-slot="'+selectedTime+'"]').click());
         let selectedOffer;
         if(dekas){
           assert.equal(selected.body.state,'offers');
@@ -1317,8 +1355,8 @@ async function main() {
         if(namedLunch){
           if(vagenende){assert.ok(!(await panel(page).locator('[data-final-details]').innerText()).includes('22h'));}
           assert.equal(reviewed.body.details.shiftId,zenchefShift);assert.equal(reviewed.body.details.party,2);assert.equal(reviewed.body.details.offer,undefined);assert.equal(reviewed.body.details.roomId,undefined);
-          const notice=reviewed.body.terms.restaurantNotice;assert.equal(notice,lunchSource.restaurantComment.fr);const terms=await panel(page).locator('[data-terms-text]').innerText();
-          for(const text of jolie?['French Riviera','15 min','3 au 23 ao\u00fbt inclus','plus de 16 personnes','uniquement Rosie Jolie']:rosieLou?['Loupiot.e.s','Atlantique','15mn, pas plus','plus de 12 personnes','Passez \u00e0 la brasserie ou appelez-nous']:rosie?['15mn, pas plus','plus de 16 personnes','Passez \u00e0 la brasserie ou appelez-nous']:republique?['plus de 20 personnes',"Venez au complet et \u00e0 l'heure",'Please come in full and on time']:bouillon?['commentaire','totalit\u00e9 des convives','r\u00e9servation est fixe','directement au restaurant']:vagenende?['plus de 8 personnes','31 d\u00e9cembre 2025','22h au plus tard']:procope?['15h30','17h30','sans r\u00e9servation','plus de 9 personnes']:['15 min'])assert.ok(terms.includes(text),text);
+          const notice=reviewed.body.terms.restaurantNotice;if(!scenario.startsWith('form-notice-'))assert.equal(notice,lunchSource.restaurantComment.fr);const terms=await panel(page).locator('[data-terms-text]').innerText();
+          for(const text of scenario.startsWith('form-notice-')?[]:petit?[]:jolie?['French Riviera','15 min','3 au 23 ao\u00fbt inclus','plus de 16 personnes','uniquement Rosie Jolie']:rosieLou?['Loupiot.e.s','Atlantique','15mn, pas plus','plus de 12 personnes','Passez \u00e0 la brasserie ou appelez-nous']:rosie?['15mn, pas plus','plus de 16 personnes','Passez \u00e0 la brasserie ou appelez-nous']:republique?['plus de 20 personnes',"Venez au complet et \u00e0 l'heure",'Please come in full and on time']:bouillon?['commentaire','totalit\u00e9 des convives','r\u00e9servation est fixe','directement au restaurant']:vagenende?['plus de 8 personnes','31 d\u00e9cembre 2025','22h au plus tard']:procope?['15h30','17h30','sans r\u00e9servation','plus de 9 personnes']:['15 min'])assert.ok(terms.includes(text),text);
           if(procope || vagenende || bouillon || republique){assert.ok(!terms.includes('15 min'));assert.ok(!notice.includes('15 min'));}
           if(laLorraine){assert.ok(terms.includes('SERVICE VOITURIER'));assert.ok(!terms.includes('15h30'));assert.ok(!terms.includes('sans r\u00e9servation'));}
           if(piedDeCochon){assert.ok(terms.includes('SANS r\u00e9servation'));assert.ok(!terms.includes('SERVICE VOITURIER'));assert.ok(!terms.includes('15h30'));}
@@ -1329,10 +1367,10 @@ async function main() {
           await panel(page).screenshot({path:path.join(root,'..',lunchSlug+'-review-'+page.viewportSize().width+'.png')});
           if(jolie){for(const absent of ['Passez','appelez-nous','Rositos','Loupiot','2026','2030'])assert.ok(!notice.includes(absent),absent);}
           if(rosie || rosieLou){assert.ok(!notice.includes(rosieLou?'plus de 16 personnes':'plus de 12 personnes'));assert.ok(!notice.includes(rosieLou?'Rositos':'Loupiot.e.s'));}
-          if(rosieFamily && !scenario){
-            assert.equal(reviewed.body.details.time,selectedTime);assert.equal(reviewed.body.canSubmit,true);
+          if((rosieFamily || petit) && !scenario){
+            assert.equal(reviewed.body.details.time,selectedTime);assert.equal(reviewed.body.canSubmit,true);if(petit){assert.equal(notice,'');assert.equal(terms,'Synthetic test terms');assert.ok(reviewed.body.terms.text.trim());}
             assert.ok(!/<\/?(?:br|b|u|a)\b[^>]*>/i.test(terms));assert.equal(await panel(page).locator('[data-terms-text]').locator('a,b,u,br,img,iframe').count(),0);
-            const sourceDocument=zenchefDocument('https://bookings.zenchef.com/form?rid='+zenchefRid+'&lang=fr&day='+date+'&pax=2&slot='+encodeURIComponent(selectedTime));
+            const sourceDocument=zenchefDocument('https://bookings.zenchef.com/form?rid='+zenchefRid+(petit?'&pid=1001':'')+'&lang=fr&day='+date+'&pax=2&slot='+encodeURIComponent(selectedTime));
             const sourceState=JSON.parse(sourceDocument.match(/<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/)[1]).props.initialState.appStoreState;
             const expected=createHash('sha256').update(JSON.stringify([reviewed.body.terms.text,sourceState.restaurantComment,sourceState.dailyAvailabilities[date].shifts[0]])).digest('hex');
             assert.equal(reviewed.body.terms.version,expected);
@@ -1343,7 +1381,7 @@ async function main() {
           if(scenario==='scope-review'){assert.equal(reviewed.body.canSubmit,true);assert.equal(reviewed.body.details.time,selectedTime);return reviewed;}
           if(scenario==='review-only'){
             assert.equal(reviewed.body.canSubmit,true);assert.ok(!/<\/?(?:br|b|u)\s*\/?\s*>/i.test(terms),'Display markup removed');assert.ok(!/<\/?a\b[^>]*>/i.test(terms),'Anchor markup removed, labels retained');assert.equal(await panel(page).locator('[data-terms-text] a').count(),0);
-            const sourceDocument=zenchefDocument('https://bookings.zenchef.com/form?rid='+zenchefRid+'&lang=fr&day='+date+'&pax=2&slot=12%3A30');
+            const sourceDocument=zenchefDocument('https://bookings.zenchef.com/form?rid='+zenchefRid+(petit?'&pid=1001':'')+'&lang=fr&day='+date+'&pax=2&slot=12%3A30');
             const sourceState=JSON.parse(sourceDocument.match(/<script id="__NEXT_DATA__" type="application\/json">([\s\S]*?)<\/script>/)[1]).props.initialState.appStoreState;
             const expectedVersion=createHash('sha256').update(JSON.stringify([reviewed.body.terms.text,sourceState.restaurantComment,sourceState.dailyAvailabilities[date].shifts[0]])).digest('hex');
             assert.equal(reviewed.body.terms.version,expectedVersion,'Digest still binds complete raw notice, including EN variant');
@@ -1398,7 +1436,7 @@ async function main() {
         const before = submits(); await panel(page).locator('[data-terms]').check();
         const readbacksBefore=messages.filter(m=>m.kind==='supplier-own-readback').length;
         const pending=action(() => panel(page).locator('[data-submit]').dblclick());
-        if(readbackVenue && before===0){
+        if(readbackVenue && before===0 && expectedDispatches!==0){
           const deadline=Date.now()+5000;
           while(!messages.some(m=>m.kind==='supplier-own-readback')&&Date.now()<deadline)await new Promise(resolve=>setTimeout(resolve,20));
           assert.ok(messages.some(m=>m.kind==='supplier-own-readback'),'Expected independent own-booking readback');
@@ -1472,9 +1510,9 @@ async function main() {
       assert.equal(messages.filter(m=>['unexpected-supplier-request','blocked-node-network'].includes(m.kind)).length,0);
       console.log('PASS '+zenchefName+' lost supplier reply: durable unknown, owner isolation, refresh/restart without replay');
       }
-      if(namedLunch && (!lunchCoreOnly || rosie || rosieLou)){for(const outcome of lunchCoreOnly?(rosieLou?['form-cancellation-exact','form-null-card','form-shift']:['form-cancellation-exact','form-shift','notice-changed']):lunchCases){
+      if(namedLunch && (!lunchCoreOnly || rosie || rosieLou || jolie)){for(const outcome of lunchCoreOnly?(jolie?['form-notice-empty','notice-changed']:rosieLou?['form-cancellation-exact','form-null-card','form-shift']:['form-cancellation-exact','form-shift','notice-changed']):lunchCases.filter((_,index)=>!lunchFrom || index>=lunchCases.indexOf(lunchFrom))){
         console.log('CHECK '+zenchefName+' '+outcome);await stop();await start(outcome);const view=await makeView();
-        try{const result=await flow(view,1,chosenRoom,outcome);if(result)assert.equal(result.body.result.status,'unknown',outcome);}
+        try{const result=await flow(view,outcome==='payload-partner-wrong'?0:1,chosenRoom,outcome);if(result)assert.equal(result.body.result.status,'unknown',outcome);}
         finally{await view.context.close();}
       }}
       if(bouillon || republique || jolie){
@@ -1521,7 +1559,7 @@ async function main() {
           }
           console.log('PASS '+zenchefName+' real SQLite date/time/party reserve/record/restart/projection guards (synthetic proof)');
         }finally{ledger.close();register.close();}
-        for(const allowedDate of jolie?jolieAdjacent:bouillon && !lunchCoreOnly?bouillonAdjacent:[]){
+        for(const allowedDate of jolie && !lunchCoreOnly?jolieAdjacent:bouillon && !lunchCoreOnly?bouillonAdjacent:[]){
           console.log('CHECK '+zenchefName+' adjacent '+allowedDate);await stop();await start('boundary',true,allowedDate);const view=await makeView();
           try{
             const result=await flow(view,1,chosenRoom,'boundary');assert.equal(result.body.result.status,'confirmed');assert.equal(result.body.details.date,allowedDate);

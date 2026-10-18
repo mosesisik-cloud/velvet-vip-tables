@@ -2166,5 +2166,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-le-petit-sommelier": {
+    "name": "Le Petit Sommelier",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=1404&pid=1001&lang=fr",
+    "source": "https://www.lepetitsommelierdeparis.com/",
+    "venueKey": "bookings.zenchef.com/results?rid=1404",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
