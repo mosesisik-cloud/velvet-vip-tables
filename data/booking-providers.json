@@ -2270,5 +2270,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-le-petit-pontoise": {
+    "name": "Le Petit Pontoise",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=118&pid=1001",
+    "source": "https://www.lepetitpontoise.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=118",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
