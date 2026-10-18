@@ -406,7 +406,7 @@ if (childMode) {
             element.textContent=JSON.stringify(data);
           }).then(()=>process.send?.({kind:'fixture-offer-changed'}));
         });
-        if(namedLunch)process.on('message',message=>{
+        if(namedLunch || fishcorner || roomVenue)process.on('message',message=>{
           if(message.kind==='fixture-change-time')page.locator('script#__NEXT_DATA__').evaluate(el=>{const data=JSON.parse(el.textContent);data.props.initialState.appStoreState.wish.slot='15:00';el.textContent=JSON.stringify(data);}).then(()=>process.send?.({kind:'fixture-notice-changed'}));
           if(message.kind==='fixture-change-date')page.locator('script#__NEXT_DATA__').evaluate((el,changedDate)=>{const data=JSON.parse(el.textContent);data.props.initialState.appStoreState.wish.day=changedDate;el.textContent=JSON.stringify(data);},jolie?'2030-08-13':'2030-12-24').then(()=>process.send?.({kind:'fixture-notice-changed'}));
           if(message.kind==='fixture-change-custom')page.locator('script#__NEXT_DATA__').evaluate(el=>{const data=JSON.parse(el.textContent);const state=data.props.initialState.appStoreState;state.customFields ??= [{id:4379,slug:'test'}];state.customFields[0] ??= {id:4379,slug:'test'};state.customFields[0].enabled=true;state.customFields[0].required=true;state.mandatoryFields['custom_field.test']='required';el.textContent=JSON.stringify(data);}).then(()=>process.send?.({kind:'fixture-notice-changed'}));
@@ -1502,7 +1502,7 @@ async function main() {
         for(const width of [390,1366]){const view=await makeView(width);try{const reviewed=await flow(view,0,chosenRoom,'review-only');const ended=await api(view.page,'/restaurant-bookings/playwright/'+reviewed.body.id,{method:'DELETE'});assert.equal(ended.status,200);}finally{await view.context.close();}}
         console.log(JSON.stringify({status:'PASS',scenario:'notice_visual_tail',restaurantId,integrationCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim(),viewports:[390,1366],APIRequests:apiCalls.length,supplierBoundaryAttempts:submits(),actualSupplierRequests:0}));return;
       }
-      if(!lunchTail){
+      if(!lunchTail && !process.argv.includes('--field-guard-tail')){
       first = await makeView();
       const success = await flow(first);
       assert.equal(success.body.result.status,'confirmed');
