@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-254-indiana-cafe-richelieu-drouot-lunch";
+const VERSION = "v4-real-255-indiana-cafe-beaugrenelle-lunch";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
