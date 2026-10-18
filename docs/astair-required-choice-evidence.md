@@ -21,3 +21,13 @@ Own French restaurant notice says the restaurant will contact guests the day bef
 PARK: own metadata does show automatic initial confirmation and no card/deposit requirement. This is NOT a card blocker or auto=false/manual request. However an end-to-end ordinary contract has not been established for explicit mandatoryroom plus separate required96preference and subsequent reconfirmation obligation. Missing evidence/work: user-selected room-bound availability and exact room/preference semantics, native form/serializer/readback binding, and truthful handling of later mandatory reconfirmation. Do not treat initialauto as proof future reconfirmation can be ignored or as complete fulfillment of the reservation obligation. No claim restaurant cannot be booked or is unavailable.
 
 Preliminary findings delivered to master/32d5;32d5 supports provisional park and keeps identity isolated. No provider/shared/flag changes; no alternative dates/pax/rooms/hosts or form/nativebrowser/assets probes. No live inputs, holds, POST/submit, booking/payment, messages or receipt/capability reads. Source/rawhash/query/identity/service/requiredfield read and diffcheck only; no executable testloop. No real supplier confirmation. No selfmerge/deploy; live266 unchanged.
+
+## Exact raw French restaurant notice
+
+```text
+<b>Chers clients, afin de reconfirmer votre réservation nous vous contacterons la veille de votre venue. Toute réservation non reconfirmée ne sera malheureusement pas prise en compte. </b>
+<br><br/>
+Nous proposons deux services, nous pourrons vous demander en fonction de l'affluence de libérer la table pour le second service.
+<br><br/>
+Merci de respecter l’horaire de votre réservation :)
+```
