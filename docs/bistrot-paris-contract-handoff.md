@@ -34,3 +34,5 @@ Synthetic browser tests cover own-readback success, missing/pending/wrong date/p
 Independent exact-SHA review, actual app QA with simulated mutations and publication remain with32d5. Parked identities excluded from clean branch.
 
 Validation: node --test scripts/test-zenchef-playwright.mjs PASS 36/36 (137.3 seconds); git diff --check PASS.
+
+Post-review blocker correction: actual app QA found that an unsupported custom field becoming required after review bypassed the selection-only check. verifyNativeRoom now rechecks fresh mandatoryFields for the no-room lunch family on review and submit, before approval/durable grant/transport. Missing metadata and required custom_field or custom_field_v2 fail with 409 provider_fields_unverified; the disabled/hidden Bistrot field still passes. Focused Bistrot tests PASS 2/2; actual app reproduction/retest belongs to release QA. No provider traffic or broad matrix repeated.

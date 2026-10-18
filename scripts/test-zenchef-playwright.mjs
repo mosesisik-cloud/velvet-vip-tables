@@ -879,3 +879,32 @@ test('Bistrot de Paris pins own lunch threshold, 1800-second cutoff and service'
   assert.throws(()=>zenchefSearchUrl({...query,party:3},ZENCHEF_BISTROTPARIS),/search_fields/);
   assert.equal(zenchefBookingResult(200,{id:123,uuid:'synthetic-only',status:'confirmed'},{restaurantId:ZENCHEF_BISTROTPARIS.restaurantId}).status,'unknown');
 });
+
+test('Bistrot fresh form requirements are rechecked after review', async () => {
+  const form = structuredClone(bistrotSource);
+  const query = { date: '2026-10-23', party: 2 };
+  const selection = { ...query, time: '12:00' };
+  form.wish.slot = selection.time;
+  const text = 'Synthetic EULA';
+  const shift = form.dailyAvailabilities[query.date].shifts[0];
+  const session = {
+    venue: ZENCHEF_BISTROTPARIS, searchQuery: query, formSelection: selection, noCardAllowed: true,
+    terms: { version: crypto.createHash('sha256').update(JSON.stringify([text, form.restaurantComment || null, shift])).digest('hex') },
+    page: {
+      url: () => zenchefFormUrl(selection, ZENCHEF_BISTROTPARIS),
+      locator: selector => selector === 'script#__NEXT_DATA__'
+        ? { textContent: async () => JSON.stringify({ props: { initialState: { appStoreState: form } } }) }
+        : { innerText: async () => text }
+    }
+  };
+  const verify = () => ZenchefPlaywright.prototype.verifyNativeRoom.call({}, session);
+  await verify();
+  form.mandatoryFields['custom_field.test'] = 'required';
+  await assert.rejects(verify(), error => error.message === 'provider_fields_unverified' && error.status === 409);
+  form.mandatoryFields['custom_field.test'] = 'hidden';
+  await verify();
+  form.mandatoryFields['custom_field_v2.1093'] = 'required';
+  await assert.rejects(verify(), /provider_fields_unverified/);
+  delete form.mandatoryFields;
+  await assert.rejects(verify(), /provider_fields_unverified/);
+});
