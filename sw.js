@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-248-le-petit-pontoise-lunch";
+const VERSION = "v4-real-249-le-florentin-lunch";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
