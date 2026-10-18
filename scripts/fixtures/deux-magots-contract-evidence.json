@@ -1,0 +1,221 @@
+{
+  "restaurantId": "384667",
+  "name": "Les Deux Magots",
+  "address": "6 place Saint-Germain-des-Prés",
+  "city": "Paris",
+  "restaurantTimezone": "Europe/Paris",
+  "currency": "EUR",
+  "language": "fr",
+  "query": {
+    "rid": "384667",
+    "pid": "1001",
+    "fullscreen": "1",
+    "lang": "fr",
+    "day": "2026-10-23",
+    "pax": "2",
+    "slot": "12:00"
+  },
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "slot": "12:00",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "mandatoryFields": {
+    "firstname": "required",
+    "lastname": "required",
+    "email": "required",
+    "phone_number": "required",
+    "country": "required",
+    "comment": "displayed",
+    "private_comment": "hidden",
+    "prescriber_id": "hidden",
+    "customersheet.customer_company_id": "hidden",
+    "civility": "required",
+    "url": "hidden",
+    "customersheet.vip": "hidden",
+    "waiter_id": "hidden",
+    "slots_count": "hidden",
+    "voucher_code": "hidden",
+    "custom_field_v2.1093": "required"
+  },
+  "customFieldsV2": [
+    {
+      "id": 1093,
+      "owner_id": 119333,
+      "label": {
+        "ca": "Una preferència de col·locació?",
+        "da": "En placeringspræference?",
+        "de": "Eine Platzierungspräferenz?",
+        "en": "A placement preference?",
+        "es": "¿Una preferencia de ubicación?",
+        "fr": "Préférence de placement",
+        "it": "Una preferenza di posizionamento?",
+        "nl": "Een plaatsingsvoorkeur?",
+        "no": "En plassering preferanse?",
+        "pt": "Uma preferência de colocação?",
+        "sv": "En placeringspreferens?"
+      },
+      "slug": "a-placement-preference",
+      "type": "select",
+      "scope": "booking",
+      "sort_order": 1,
+      "options": [
+        {
+          "id": 666,
+          "label": {
+            "ca": "Sense preferència",
+            "da": "Ingen præference",
+            "de": "Keine Präferenz",
+            "en": "No preference",
+            "es": "Sin preferencia",
+            "fr": "Pas de préférence",
+            "it": "Nessuna preferenza",
+            "nl": "Geen voorkeur",
+            "no": "Ingen preferanse",
+            "pt": "Sem preferência",
+            "sv": "Ingen preferens"
+          },
+          "value": "historic-room",
+          "sort_order": 1
+        },
+        {
+          "id": 667,
+          "label": {
+            "ca": "Sala històrica",
+            "da": "Historisk rum",
+            "de": "Historischer Saal",
+            "en": "Historical Room",
+            "es": "Sala histórica",
+            "fr": "Salle historique",
+            "it": "Sala storica",
+            "nl": "Historische zaal",
+            "no": "Historisk rom",
+            "pt": "Sala histórica",
+            "sv": "Historiskt rum"
+          },
+          "value": "verandas",
+          "sort_order": 2
+        },
+        {
+          "id": 668,
+          "label": {
+            "ca": "Verandes",
+            "da": "Verandager",
+            "de": "Verandas",
+            "en": "Verandas",
+            "es": "Verandas",
+            "fr": "Vérandas",
+            "it": "Verande",
+            "nl": "Veranda's",
+            "no": "Verandaer",
+            "pt": "Varandas",
+            "sv": "Verandor"
+          },
+          "value": "terrace",
+          "sort_order": 3
+        },
+        {
+          "id": 669,
+          "label": {
+            "ca": "Terrassa",
+            "da": "Terrasse",
+            "de": "Terrasse",
+            "en": "Terrace",
+            "es": "Terraza",
+            "fr": "Terrasse",
+            "it": "Terrazza",
+            "nl": "Terras",
+            "no": "Terrasse",
+            "pt": "Terraço",
+            "sv": "Terrass"
+          },
+          "value": "garden",
+          "sort_order": 4
+        },
+        {
+          "id": 670,
+          "label": {
+            "ca": "Jardí",
+            "da": "Have",
+            "de": "Garten",
+            "en": "Garden",
+            "es": "Jardín",
+            "fr": "Jardin",
+            "it": "Giardino",
+            "nl": "Tuin",
+            "no": "Hage",
+            "pt": "Jardim",
+            "sv": "Trädgård"
+          },
+          "value": "garden-2",
+          "sort_order": 5
+        }
+      ],
+      "display_options": {
+        "admin_form": {
+          "is_displayed": true,
+          "is_required": false
+        },
+        "widget_form": {
+          "is_displayed": true,
+          "is_required": true
+        },
+        "booking_list": {
+          "is_displayed": true
+        }
+      },
+      "created_at": "2026-10-15T11:57:46+00:00",
+      "updated_at": "2026-10-15T12:04:00+00:00"
+    }
+  ],
+  "restaurantComment": {
+    "da": "<div style=\"text-align: center;\"><strong>Reservationer er kun tilgængelige til frokost og middag.</strong></div><p style=\"text-align: center;\">&nbsp;</p><p style=\"text-align: center;\"><strong>Vi holder borde til walk-ins, så kom endelig direkte!</strong></p><p style=\"text-align: center;\">&nbsp;</p><div style=\"text-align: center;\">Bemærk venligst, at placeringen er underlagt tilgængelighed.</div><p style=\"text-align: center;\"><strong>-</strong></p><p style=\"text-align: center;\">For privatliv og grupper på 9 personer eller flere, skriv venligst til:</p><p style=\"text-align: center;\"><a href=\"mailto:commercial@lesdeuxmagots.fr\" target=\"_blank\" rel=\"noopener noreferrer\">commercial@lesdeuxmagots.fr</a></p>",
+    "de": "<div style=\"text-align: center;\"><strong>Reservierungen sind nur für das Mittag- und Abendessen verfügbar.</strong></div><p style=\"text-align: center;\">&nbsp;</p><p style=\"text-align: center;\"><strong>Wir halten Tische für den Durchgang bereit, zögern Sie nicht, direkt zu kommen!</strong></p><p style=\"text-align: center;\">&nbsp;</p><div style=\"text-align: center;\">Bitte beachten Sie, dass die Platzierung je nach Verfügbarkeit erfolgt.</div><p style=\"text-align: center;\"><strong>-</strong></p><p style=\"text-align: center;\">Für Privatveranstaltungen und Gruppen von 9 Personen oder mehr, bitte schreiben Sie an:</p><p style=\"text-align: center;\"><a href=\"mailto:commercial@lesdeuxmagots.fr\" target=\"_blank\" rel=\"noopener noreferrer\">commercial@lesdeuxmagots.fr</a></p>",
+    "en": "<div style=\"text-align: center;\"><strong>Reservations are available only for lunch and dinner.</strong></div><p style=\"text-align: center;\">&nbsp;</p><p style=\"text-align: center;\"><strong>We keep tables for walk-ins, feel free to come directly!</strong></p><p style=\"text-align: center;\">&nbsp;</p><div style=\"text-align: center;\">Please note that seating is subject to availability.</div><p style=\"text-align: center;\"><strong>-</strong></p><p style=\"text-align: center;\">For privatizations and groups of 9 people or more, please write to:</p><p style=\"text-align: center;\"><a href=\"mailto:commercial@lesdeuxmagots.fr\" target=\"_blank\" rel=\"noopener noreferrer\">commercial@lesdeuxmagots.fr</a></p>",
+    "es": "<div style=\"text-align: center;\"><strong>Las reservas están disponibles solo para el almuerzo y la cena.</strong></div><p style=\"text-align: center;\">&nbsp;</p><p style=\"text-align: center;\"><strong>Mantenemos mesas para los que llegan sin reserva, ¡no dudes en venir directamente!</strong></p><p style=\"text-align: center;\">&nbsp;</p><div style=\"text-align: center;\">Por favor, tenga en cuenta que la asignación de mesas está sujeta a disponibilidad.</div><p style=\"text-align: center;\"><strong>-</strong></p><p style=\"text-align: center;\">Para privatizaciones y grupos de 9 personas o más, por favor escriba a:</p><p style=\"text-align: center;\"><a href=\"mailto:commercial@lesdeuxmagots.fr\" target=\"_blank\" rel=\"noopener noreferrer\">commercial@lesdeuxmagots.fr</a></p>",
+    "fr": "<div style=\"text-align: center;\"><strong>Les r&eacute;servations sont disponibles uniquement pour le d&eacute;jeuner et le d&icirc;ner.</strong></div>\n<p style=\"text-align: center;\">&nbsp;</p>\n<p style=\"text-align: center;\"><strong>Nous gardons des tables pour le passage, n'h&eacute;sitez-pas &agrave; venir directement !</strong></p>\n<p style=\"text-align: center;\">&nbsp;</p>\n<div style=\"text-align: center;\">Merci de noter que le placement est soumis &agrave; disponibilit&eacute;.</div>\n<p style=\"text-align: center;\"><strong>-</strong></p>\n<p style=\"text-align: center;\">Pour les privatisations et les groupes de 9 personnes ou plus, veuillez &eacute;crire &agrave; :</p>\n<p style=\"text-align: center;\"><a href=\"mailto:commercial@lesdeuxmagots.fr\" target=\"_blank\" rel=\"noopener noreferrer\">commercial@lesdeuxmagots.fr</a></p>",
+    "it": "<div style=\"text-align: center;\"><strong>Le prenotazioni sono disponibili solo per il pranzo e la cena.</strong></div><p style=\"text-align: center;\">&nbsp;</p><p style=\"text-align: center;\"><strong>Abbiamo tavoli riservati per i passanti, non esitate a venire direttamente!</strong></p><p style=\"text-align: center;\">&nbsp;</p><div style=\"text-align: center;\">Si prega di notare che il posizionamento è soggetto a disponibilità.</div><p style=\"text-align: center;\"><strong>-</strong></p><p style=\"text-align: center;\">Per privatizzazioni e gruppi di 9 persone o più, si prega di scrivere a:</p><p style=\"text-align: center;\"><a href=\"mailto:commercial@lesdeuxmagots.fr\" target=\"_blank\" rel=\"noopener noreferrer\">commercial@lesdeuxmagots.fr</a></p>",
+    "nl": "<div style=\"text-align: center;\"><strong>Reserveringen zijn alleen beschikbaar voor de lunch en het diner.</strong></div><p style=\"text-align: center;\">&nbsp;</p><p style=\"text-align: center;\"><strong>We houden tafels vrij voor binnenlopers, aarzel niet om direct te komen!</strong></p><p style=\"text-align: center;\">&nbsp;</p><div style=\"text-align: center;\">Houd er rekening mee dat de plaatsing afhankelijk is van beschikbaarheid.</div><p style=\"text-align: center;\"><strong>-</strong></p><p style=\"text-align: center;\">Voor privatiseringen en groepen van 9 personen of meer, schrijf alstublieft naar:</p><p style=\"text-align: center;\"><a href=\"mailto:commercial@lesdeuxmagots.fr\" target=\"_blank\" rel=\"noopener noreferrer\">commercial@lesdeuxmagots.fr</a></p>",
+    "no": "<div style=\"text-align: center;\"><strong>Reservasjoner er kun tilgjengelig for lunsj og middag.</strong></div><p style=\"text-align: center;\">&nbsp;</p><p style=\"text-align: center;\"><strong>Vi holder bord for drop-ins, ikke nøl med å komme direkte!</strong></p><p style=\"text-align: center;\">&nbsp;</p><div style=\"text-align: center;\">Vennligst merk at plasseringen er avhengig av tilgjengelighet.</div><p style=\"text-align: center;\"><strong>-</strong></p><p style=\"text-align: center;\">For privatiseringer og grupper på 9 personer eller flere, vennligst skriv til:</p><p style=\"text-align: center;\"><a href=\"mailto:commercial@lesdeuxmagots.fr\" target=\"_blank\" rel=\"noopener noreferrer\">commercial@lesdeuxmagots.fr</a></p>",
+    "pt": "<div style=\"text-align: center;\"><strong>As reservas estão disponíveis apenas para o almoço e o jantar.</strong></div><p style=\"text-align: center;\">&nbsp;</p><p style=\"text-align: center;\"><strong>Reservamos mesas para os que chegam sem reserva, não hesite em vir diretamente!</strong></p><p style=\"text-align: center;\">&nbsp;</p><div style=\"text-align: center;\">Por favor, note que a colocação está sujeita à disponibilidade.</div><p style=\"text-align: center;\"><strong>-</strong></p><p style=\"text-align: center;\">Para privatizações e grupos de 9 pessoas ou mais, por favor escreva para:</p><p style=\"text-align: center;\"><a href=\"mailto:commercial@lesdeuxmagots.fr\" target=\"_blank\" rel=\"noopener noreferrer\">commercial@lesdeuxmagots.fr</a></p>",
+    "sv": "<div style=\"text-align: center;\"><strong>Bokningar är endast tillgängliga för lunch och middag.</strong></div><p style=\"text-align: center;\">&nbsp;</p><p style=\"text-align: center;\"><strong>Vi håller bord för drop-ins, tveka inte att komma direkt!</strong></p><p style=\"text-align: center;\">&nbsp;</p><div style=\"text-align: center;\">Observera att placeringen är beroende av tillgänglighet.</div><p style=\"text-align: center;\"><strong>-</strong></p><p style=\"text-align: center;\">För privatarrangemang och grupper om 9 personer eller fler, vänligen skriv till:</p><p style=\"text-align: center;\"><a href=\"mailto:commercial@lesdeuxmagots.fr\" target=\"_blank\" rel=\"noopener noreferrer\">commercial@lesdeuxmagots.fr</a></p>"
+  },
+  "lunch": {
+    "id": 441859,
+    "name": "Déjeuner",
+    "confirmation": {
+      "is_auto": true,
+      "is_auto_until": null
+    },
+    "charge_param": {
+      "is_web_booking_askable": false,
+      "min_guests": 1,
+      "charge_per_guests": 30
+    },
+    "prepayment_param": null,
+    "cancelation_param": {
+      "enduser_cancelable_before": 14400,
+      "enduser_cancelable_reference": "shift"
+    },
+    "is_offer_required": false,
+    "offer_required_from_pax": null
+  },
+  "observedTimesForTwo": [
+    "12:00",
+    "12:15",
+    "12:30",
+    "12:45",
+    "13:00",
+    "13:15",
+    "13:30",
+    "13:45",
+    "14:00",
+    "14:15",
+    "14:30"
+  ]
+}
