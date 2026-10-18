@@ -1,0 +1,81 @@
+{
+  "restaurantId": "314952",
+  "name": "Le Petit Célestin",
+  "address": "12 Quai des Celestins",
+  "city": "Paris",
+  "query": {
+    "rid": "314952",
+    "lang": "fr",
+    "day": "2026-10-23",
+    "pax": "2"
+  },
+  "restaurantTimezone": "Europe/Paris",
+  "currency": "EUR",
+  "language": "fr",
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "source": {
+    "url": "https://bookings.zenchef.com/results?rid=314952&lang=fr&day=2026-10-23&pax=2",
+    "status": 200,
+    "sha256": "6dbd785836f6803843f284ebc4db35bcc7dfc075131ab7b9e0a9e247883f7369"
+  },
+  "shifts": [
+    {
+      "id": 16082,
+      "name": "Déjeuner",
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": 4
+      },
+      "charge_param": {
+        "is_web_booking_askable": true,
+        "min_guests": 1,
+        "charge_per_guests": 70
+      },
+      "prepayment_param": null,
+      "is_offer_required": false,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 28800,
+        "enduser_cancelable_reference": "shift"
+      },
+      "timesForTwo": [
+        "12:00",
+        "12:30",
+        "13:00",
+        "13:30",
+        "14:00"
+      ]
+    },
+    {
+      "id": 16083,
+      "name": "Dîner",
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": 4
+      },
+      "charge_param": {
+        "is_web_booking_askable": true,
+        "min_guests": 2,
+        "charge_per_guests": 70
+      },
+      "prepayment_param": null,
+      "is_offer_required": false,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 10800,
+        "enduser_cancelable_reference": "booking"
+      },
+      "timesForTwo": [
+        "19:30"
+      ]
+    }
+  ]
+}
