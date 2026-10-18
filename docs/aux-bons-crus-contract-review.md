@@ -27,3 +27,11 @@ A narrow venue policy can potentially pin hasRoomSelection=true, isRoomMandatory
 ## Boundaries
 
 Only docs and sanitized fixture changed so far. No provider/registry/API/UI activation, room choice, hold, booking, contact input, code, payment, message, capability or receipt read. No duplicate results search or alternate date. The current shared fresh-required-fields guard remains unchanged. Actual rendered EULA and final receipt remain unverified; source-only form access is not a completed booking. This is not evidence that the restaurant is closed or unbookable through its own site.
+
+## Provider handoff after release-owner approval
+
+Release owner explicitly approved a venue-specific policy within the existing no-chosen-room engine. Export ZENCHEF_AUXBONSCRUS, canonical curated-PAR-aux-bons-crus, rid352718/shift20711/exact2. Policy pins true optional-room flag, false mandatory flag, null wish room, empty offers, exact single room10289/name, exact bookable room and every two-person slot room array. Own typed lunch policy pinned. No room parameter or room guarantee; native payload omits wish when room is null. Existing saved-readback guard rejects any chosen room and requires empty booking_offers. All native fresh-field checks remain unchanged.
+
+Focused synthetic verification PASS4/4: fifteen Aux browser scenarios using existing final-consent/durable-grant/same-attempt-readback harness; twenty-two source mutations; own positive ten slots; no room/pid URL; party-three rejection. Browser negatives include post-review selected room/room drift/mandatory room/new custom requirement with zero sends/reads/grants, receipt chosen-room rejection, changed card/manual/notice, wrong durable service and missing/pending/date/party/offer readbacks. Existing Bistrot and FishCorner/room fresh-field method regressions also PASS. No broad matrix rerun or additional live GET. The optional ZENCHEF_TEST_SCENARIO_PREFIX test filter only selects synthetic scenarios and does not change runtime behavior.
+
+Source and code support the contract; actual rendered EULA/whole-app behavior and exact integrated SHA still require release review/QA. No actual final supplier receipt has been read. The earlier provisional parking is superseded by this concrete provider handoff; publication remains with32d5.
