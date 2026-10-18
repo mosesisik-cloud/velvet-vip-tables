@@ -1,0 +1,456 @@
+{
+  "source": {
+    "url": "https://bookings.zenchef.com/results?rid=352718&fullscreen=1&lang=fr&day=2026-10-23&pax=2",
+    "status": 200,
+    "sha256": "2774070f2c354e58bd93ff55b42b62075d139050d74a8f09e82b3d56d9b8edc1",
+    "observedAt": "2026-10-18"
+  },
+  "restaurantId": "352718",
+  "name": "AUX BONS CRUS",
+  "address": "54 RUE GODEFROY CAVAIGNAC",
+  "city": "Paris",
+  "hasRoomSelection": true,
+  "isRoomMandatory": false,
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "rooms": [
+    {
+      "id": 10289,
+      "name": "Salle principale",
+      "name_translations": {
+        "fr": "Salle principale"
+      }
+    }
+  ],
+  "restaurantComment": {
+    "en": "<b>For FRIDAY and SATURDAY dinners: When reserving for the first service, the table must be released at 9:30 PM. Due to numerous no-shows, we are unfortunately required to request a credit card hold for dinner (please return to this site once the hold is done to confirm the reservation).</b> <b>For tables of 5 or more people, please call us directly.</b>",
+    "fr": "<b>Pour les dîners du VENDREDI et du SAMEDI : En réservant au premier service, la table sera reprise à 21h30. Suite à de nombreux no-show, nous sommes malheureusement dans l'obligation, pour le diner, de demander une empreinte bancaire (bien revenir sur ce site une fois l’empreinte effectuée).\n\nPour les tables supérieures ou égales à 5 personnes, merci de nous appeler directement.</b>",
+    "pt": "<b>Para os jantares de SEXTA e SÁBADO: Ao reservar para o primeiro serviço, a mesa será liberada às 21h30. Devido a numerosas faltas, estamos infelizmente obrigados a solicitar uma impressão bancária para o jantar (por favor, retorne a este site assim que a impressão for feita).</b> <b>Para mesas de 5 ou mais pessoas, por favor, ligue-nos diretamente.</b>",
+    "sv": "<b>För fredags- och lördagsmiddagar: När du bokar till första sittning kommer bordet att tas tillbaka klockan 21:30. På grund av många no-shows är vi tyvärr tvungna att be om en bankavtryck för middagen (vänligen återvänd till denna sida när avtrycket har gjorts).</b> <b>För bord med 5 eller fler personer, vänligen ring oss direkt.</b>"
+  },
+  "mandatoryFields": {
+    "firstname": "required",
+    "lastname": "required",
+    "email": "required",
+    "phone_number": "required",
+    "country": "required",
+    "comment": "displayed",
+    "private_comment": "hidden",
+    "prescriber_id": "hidden",
+    "customersheet.customer_company_id": "hidden",
+    "civility": "required",
+    "url": "hidden",
+    "customersheet.vip": "hidden",
+    "waiter_id": "hidden",
+    "slots_count": "hidden",
+    "voucher_code": "displayed"
+  },
+  "customFields": [],
+  "lunch": {
+    "id": 20711,
+    "name": "Semaine Midi",
+    "confirmation": {
+      "is_auto": true,
+      "is_auto_until": null
+    },
+    "charge_param": null,
+    "prepayment_param": null,
+    "is_offer_required": false,
+    "offer_required_from_pax": null,
+    "cancelation_param": {
+      "enduser_cancelable_before": 14400,
+      "enduser_cancelable_reference": "shift"
+    },
+    "comment": {
+      "fr": "Pour les réservations de 7 personnes et plus, merci de nous appeler au restaurant 0145672113"
+    },
+    "bookable_rooms": [
+      10289
+    ],
+    "slots": [
+      {
+        "name": "12:00",
+        "closed": false,
+        "marked_as_full": false,
+        "possible_guests": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "available_rooms": {
+          "1": [
+            10289
+          ],
+          "2": [
+            10289
+          ],
+          "3": [
+            10289
+          ],
+          "4": [
+            10289
+          ],
+          "5": [
+            10289
+          ],
+          "6": [
+            10289
+          ]
+        }
+      },
+      {
+        "name": "12:15",
+        "closed": false,
+        "marked_as_full": false,
+        "possible_guests": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "available_rooms": {
+          "1": [
+            10289
+          ],
+          "2": [
+            10289
+          ],
+          "3": [
+            10289
+          ],
+          "4": [
+            10289
+          ],
+          "5": [
+            10289
+          ],
+          "6": [
+            10289
+          ]
+        }
+      },
+      {
+        "name": "12:30",
+        "closed": false,
+        "marked_as_full": false,
+        "possible_guests": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "available_rooms": {
+          "1": [
+            10289
+          ],
+          "2": [
+            10289
+          ],
+          "3": [
+            10289
+          ],
+          "4": [
+            10289
+          ],
+          "5": [
+            10289
+          ],
+          "6": [
+            10289
+          ]
+        }
+      },
+      {
+        "name": "12:45",
+        "closed": false,
+        "marked_as_full": false,
+        "possible_guests": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "available_rooms": {
+          "1": [
+            10289
+          ],
+          "2": [
+            10289
+          ],
+          "3": [
+            10289
+          ],
+          "4": [
+            10289
+          ],
+          "5": [
+            10289
+          ],
+          "6": [
+            10289
+          ]
+        }
+      },
+      {
+        "name": "13:00",
+        "closed": false,
+        "marked_as_full": false,
+        "possible_guests": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "available_rooms": {
+          "1": [
+            10289
+          ],
+          "2": [
+            10289
+          ],
+          "3": [
+            10289
+          ],
+          "4": [
+            10289
+          ],
+          "5": [
+            10289
+          ],
+          "6": [
+            10289
+          ]
+        }
+      },
+      {
+        "name": "13:15",
+        "closed": false,
+        "marked_as_full": false,
+        "possible_guests": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "available_rooms": {
+          "1": [
+            10289
+          ],
+          "2": [
+            10289
+          ],
+          "3": [
+            10289
+          ],
+          "4": [
+            10289
+          ],
+          "5": [
+            10289
+          ],
+          "6": [
+            10289
+          ]
+        }
+      },
+      {
+        "name": "13:30",
+        "closed": false,
+        "marked_as_full": false,
+        "possible_guests": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "available_rooms": {
+          "1": [
+            10289
+          ],
+          "2": [
+            10289
+          ],
+          "3": [
+            10289
+          ],
+          "4": [
+            10289
+          ],
+          "5": [
+            10289
+          ],
+          "6": [
+            10289
+          ]
+        }
+      },
+      {
+        "name": "13:45",
+        "closed": false,
+        "marked_as_full": false,
+        "possible_guests": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "available_rooms": {
+          "1": [
+            10289
+          ],
+          "2": [
+            10289
+          ],
+          "3": [
+            10289
+          ],
+          "4": [
+            10289
+          ],
+          "5": [
+            10289
+          ],
+          "6": [
+            10289
+          ]
+        }
+      },
+      {
+        "name": "14:00",
+        "closed": false,
+        "marked_as_full": false,
+        "possible_guests": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "available_rooms": {
+          "1": [
+            10289
+          ],
+          "2": [
+            10289
+          ],
+          "3": [
+            10289
+          ],
+          "4": [
+            10289
+          ],
+          "5": [
+            10289
+          ],
+          "6": [
+            10289
+          ]
+        }
+      },
+      {
+        "name": "14:15",
+        "closed": false,
+        "marked_as_full": false,
+        "possible_guests": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "available_rooms": {
+          "1": [
+            10289
+          ],
+          "2": [
+            10289
+          ],
+          "3": [
+            10289
+          ],
+          "4": [
+            10289
+          ],
+          "5": [
+            10289
+          ],
+          "6": [
+            10289
+          ]
+        }
+      }
+    ]
+  },
+  "form": {
+    "url": "https://bookings.zenchef.com/form?rid=352718&fullscreen=1&lang=fr&day=2026-10-23&pax=2&slot=12%3A00",
+    "status": 200,
+    "sha256": "0b7c5fe62e1be9c2e43ec2422ccc542459c01c20d4fad044db417fdd1d84b380",
+    "hasRoomSelection": true,
+    "isRoomMandatory": false,
+    "wish": {
+      "pax": 2,
+      "day": "2026-10-23",
+      "slot": "12:00",
+      "offers": [],
+      "waiting_list": false,
+      "room_id": null
+    },
+    "mandatoryFields": {
+      "firstname": "required",
+      "lastname": "required",
+      "email": "required",
+      "phone_number": "required",
+      "country": "required",
+      "comment": "displayed",
+      "private_comment": "hidden",
+      "prescriber_id": "hidden",
+      "customersheet.customer_company_id": "hidden",
+      "civility": "required",
+      "url": "hidden",
+      "customersheet.vip": "hidden",
+      "waiter_id": "hidden",
+      "slots_count": "hidden",
+      "voucher_code": "displayed"
+    },
+    "customFields": [],
+    "customFieldsV2": [],
+    "emptyCustomPayload": {
+      "custom_field": {},
+      "custom_field_v2": []
+    }
+  },
+  "bundles": {
+    "app": {
+      "file": "_app-30bffcb9f4c3b7b2.js",
+      "sha256": "f93de04840ca6c559814f814a2c2bd86886a7962dbf24bd024bb3c01360d0cdd"
+    },
+    "form": {
+      "file": "form-84144e7c9a8b854d.js",
+      "sha256": "b5ada4d2894b110846303a2b4d33120be97c42b88e89d4b33b522001d4ec50c4"
+    }
+  }
+}
