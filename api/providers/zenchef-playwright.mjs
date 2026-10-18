@@ -1339,6 +1339,7 @@ export class ZenchefPlaywright {
           if (NO_ROOM_LUNCH_VENUES.includes(s.venue)) {
             s.terms.restaurantNotice = form.restaurantComment?.fr || '';
             if (s.venue === ZENCHEF_MOULINVENT) s.terms.seatingNotice = shift?.comment?.fr || '';
+            if (s.venue === ZENCHEF_INDIANADENFERTROCHEREAU) s.terms.mealNotice = shift.comment.fr;
             if (!s.terms.restaurantNotice.trim() && !(s.venue === ZENCHEF_PETITSOMMELIER && form.restaurantComment?.fr === '')) s.noCardAllowed = false;
           }
           if (!text.trim()) s.noCardAllowed = false;
