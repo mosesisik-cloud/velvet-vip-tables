@@ -2179,5 +2179,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-chez-savy": {
+    "name": "Chez Savy",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=357117&fullscreen=1&lang=fr",
+    "source": "https://lcep.fr/savy/",
+    "venueKey": "bookings.zenchef.com/results?rid=357117",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }

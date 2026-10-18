@@ -75,11 +75,14 @@ export const ZENCHEF_ROSIEJOLIE = Object.freeze({ restaurantId: 'curated-PAR-bra
 export const ZENCHEF_PETITSOMMELIER = Object.freeze({ restaurantId: 'curated-PAR-le-petit-sommelier', venueId: '1404', name: 'Le Petit Sommelier',
   url: 'https://bookings.zenchef.com/results?rid=1404&pid=1001&lang=fr', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
   shiftId: 37613, source: 'https://www.lepetitsommelierdeparis.com/', policySource: 'https://bookings.zenchef.com/gtc?rid=1404&lang=fr' });
-const NO_ROOM_LUNCH_VENUES = Object.freeze([ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN, ZENCHEF_BOUILLONRACINE, ZENCHEF_BOUILLONREPUBLIQUE, ZENCHEF_ROSIE, ZENCHEF_ROSIELOU, ZENCHEF_ROSIEJOLIE, ZENCHEF_PETITSOMMELIER]);
+export const ZENCHEF_CHEZSAVY = Object.freeze({ restaurantId: 'curated-PAR-chez-savy', venueId: '357117', name: 'Chez Savy',
+  url: 'https://bookings.zenchef.com/results?rid=357117&fullscreen=1&lang=fr', timezone: 'Europe/Paris', minParty: 2, maxParty: 2,
+  shiftId: 68279, source: 'https://lcep.fr/savy/', policySource: 'https://bookings.zenchef.com/gtc?rid=357117&lang=fr' });
+const NO_ROOM_LUNCH_VENUES = Object.freeze([ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN, ZENCHEF_BOUILLONRACINE, ZENCHEF_BOUILLONREPUBLIQUE, ZENCHEF_ROSIE, ZENCHEF_ROSIELOU, ZENCHEF_ROSIEJOLIE, ZENCHEF_PETITSOMMELIER, ZENCHEF_CHEZSAVY]);
 const ROOM_VENUES = Object.freeze([ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE]);
 const READBACK_VENUES = Object.freeze([...ROOM_VENUES, ZENCHEF_DEKAS, ...NO_ROOM_LUNCH_VENUES]);
 export const ZENCHEF_POLICY_SOURCE = 'https://bookings.zenchef.com/gtc?rid=388090&lang=fr';
-const VENUES = Object.freeze({ [ZENCHEF_PETITSOMMELIER.restaurantId]: ZENCHEF_PETITSOMMELIER, [ZENCHEF_ROSIEJOLIE.restaurantId]: ZENCHEF_ROSIEJOLIE, [ZENCHEF_ROSIELOU.restaurantId]: ZENCHEF_ROSIELOU, [ZENCHEF_ROSIE.restaurantId]: ZENCHEF_ROSIE, [ZENCHEF_BOUILLONREPUBLIQUE.restaurantId]: ZENCHEF_BOUILLONREPUBLIQUE, [ZENCHEF_BOUILLONRACINE.restaurantId]: ZENCHEF_BOUILLONRACINE, [ZENCHEF_BOUILLONJULIEN.restaurantId]: ZENCHEF_BOUILLONJULIEN, [ZENCHEF_VAGENENDE.restaurantId]: ZENCHEF_VAGENENDE, [ZENCHEF_GRANDCAFE.restaurantId]: ZENCHEF_GRANDCAFE, [ZENCHEF_PIEDDECOCHON.restaurantId]: ZENCHEF_PIEDDECOCHON, [ZENCHEF_LALORRAINE.restaurantId]: ZENCHEF_LALORRAINE, [ZENCHEF_PROCOPE.restaurantId]: ZENCHEF_PROCOPE, [ZENCHEF_TERMINUSNORD.restaurantId]: ZENCHEF_TERMINUSNORD, [ZENCHEF_LACOUPOLE.restaurantId]: ZENCHEF_LACOUPOLE, [ZENCHEF_BOFINGER.restaurantId]: ZENCHEF_BOFINGER, [ZENCHEF_DEKAS.restaurantId]: ZENCHEF_DEKAS, [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE, [ZENCHEF_PIROUETTE.restaurantId]: ZENCHEF_PIROUETTE });
+const VENUES = Object.freeze({ [ZENCHEF_CHEZSAVY.restaurantId]: ZENCHEF_CHEZSAVY, [ZENCHEF_PETITSOMMELIER.restaurantId]: ZENCHEF_PETITSOMMELIER, [ZENCHEF_ROSIEJOLIE.restaurantId]: ZENCHEF_ROSIEJOLIE, [ZENCHEF_ROSIELOU.restaurantId]: ZENCHEF_ROSIELOU, [ZENCHEF_ROSIE.restaurantId]: ZENCHEF_ROSIE, [ZENCHEF_BOUILLONREPUBLIQUE.restaurantId]: ZENCHEF_BOUILLONREPUBLIQUE, [ZENCHEF_BOUILLONRACINE.restaurantId]: ZENCHEF_BOUILLONRACINE, [ZENCHEF_BOUILLONJULIEN.restaurantId]: ZENCHEF_BOUILLONJULIEN, [ZENCHEF_VAGENENDE.restaurantId]: ZENCHEF_VAGENENDE, [ZENCHEF_GRANDCAFE.restaurantId]: ZENCHEF_GRANDCAFE, [ZENCHEF_PIEDDECOCHON.restaurantId]: ZENCHEF_PIEDDECOCHON, [ZENCHEF_LALORRAINE.restaurantId]: ZENCHEF_LALORRAINE, [ZENCHEF_PROCOPE.restaurantId]: ZENCHEF_PROCOPE, [ZENCHEF_TERMINUSNORD.restaurantId]: ZENCHEF_TERMINUSNORD, [ZENCHEF_LACOUPOLE.restaurantId]: ZENCHEF_LACOUPOLE, [ZENCHEF_BOFINGER.restaurantId]: ZENCHEF_BOFINGER, [ZENCHEF_DEKAS.restaurantId]: ZENCHEF_DEKAS, [ZENCHEF_ARPEGE.restaurantId]: ZENCHEF_ARPEGE, [ZENCHEF_FISHCORNER.restaurantId]: ZENCHEF_FISHCORNER, [ZENCHEF_PESQUIERE.restaurantId]: ZENCHEF_PESQUIERE, [ZENCHEF_PIROUETTE.restaurantId]: ZENCHEF_PIROUETTE });
 const FIXTURE_URL = 'https://zenchef-fixture.invalid/';
 const TTL = 10 * 60_000;
 const FIELDS = ['firstname', 'lastname', 'email', 'phone'];
@@ -462,6 +465,19 @@ export function petitSommelierPolicy(state, shift, party) {
     && shift.cancelation_param?.enduser_cancelable_before === 21600
     && shift.cancelation_param.enduser_cancelable_reference === 'shift';
 }
+export function chezSavyPolicy(state, shift, party) {
+  return party === 2 && state?.restaurantId === ZENCHEF_CHEZSAVY.venueId
+    && state.currency === 'EUR' && state.language === 'fr' && state.hasRoomSelection === false
+    && state.isRoomMandatory === false && state.wish?.room_id === null
+    && Array.isArray(state.wish.offers) && state.wish.offers.length === 0
+    && shift?.id === 68279 && shift.name === 'Midi'
+    && shift.confirmation?.is_auto === true && shift.confirmation.is_auto_until === null
+    && shift.charge_param?.is_web_booking_askable === true && shift.charge_param.min_guests === 6
+    && shift.charge_param.charge_per_guests === 20 && shift.prepayment_param === null
+    && shift.is_offer_required === false && shift.offer_required_from_pax === null
+    && shift.cancelation_param?.enduser_cancelable_before === 10800
+    && shift.cancelation_param.enduser_cancelable_reference === 'shift';
+}
 const noRoomLunchPolicy = (venue, state, shift, party) => venue === ZENCHEF_BOFINGER
   ? bofingerPolicy(state, shift, party) : venue === ZENCHEF_LACOUPOLE ? laCoupolePolicy(state, shift, party)
     : venue === ZENCHEF_TERMINUSNORD ? terminusNordPolicy(state, shift, party)
@@ -476,7 +492,8 @@ const noRoomLunchPolicy = (venue, state, shift, party) => venue === ZENCHEF_BOFI
                       : venue === ZENCHEF_ROSIE ? rosiePolicy(state, shift, party)
                         : venue === ZENCHEF_ROSIELOU ? rosieLouPolicy(state, shift, party)
                           : venue === ZENCHEF_ROSIEJOLIE ? rosieJoliePolicy(state, shift, party)
-                            : venue === ZENCHEF_PETITSOMMELIER && petitSommelierPolicy(state, shift, party);
+                            : venue === ZENCHEF_PETITSOMMELIER ? petitSommelierPolicy(state, shift, party)
+                              : venue === ZENCHEF_CHEZSAVY && chezSavyPolicy(state, shift, party);
 
 // Read only the server-rendered provider state, never execute or mutate its store.
 // Candidate slots are not held, selected, confirmed or guaranteed bookable later.
