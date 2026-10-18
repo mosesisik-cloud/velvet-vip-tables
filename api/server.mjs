@@ -18,7 +18,7 @@ import { LUZETTE_LUNCH_RECEIPT_POLICY, TEATERGRILLEN_LUNCH_RECEIPT_POLICY, TENNS
 import { KVARNEN_LUNCH_RECEIPT_POLICY } from './bokabord-receipt-confirmation.mjs';
 import { createProviderJournal } from './provider-booking-journal.mjs';
 import { ZenchefPlaywright, ZENCHEF_ARPEGE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE, ZENCHEF_PIROUETTE, ZENCHEF_DEKAS, ZENCHEF_POLICY_SOURCE } from './providers/zenchef-playwright.mjs';
-import { ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN, ZENCHEF_BOUILLONRACINE, ZENCHEF_BOUILLONREPUBLIQUE, ZENCHEF_ROSIE, ZENCHEF_ROSIELOU, ZENCHEF_ROSIEJOLIE, ZENCHEF_PETITSOMMELIER, ZENCHEF_CHEZSAVY, ZENCHEF_CHEZRENE, ZENCHEF_BISTROTPARIS, ZENCHEF_AUXBONSCRUS, ZENCHEF_AUXCRUSBOURGOGNE, ZENCHEF_PETITRETRO } from './providers/zenchef-playwright.mjs';
+import { ZENCHEF_BOFINGER, ZENCHEF_LACOUPOLE, ZENCHEF_TERMINUSNORD, ZENCHEF_PROCOPE, ZENCHEF_LALORRAINE, ZENCHEF_PIEDDECOCHON, ZENCHEF_GRANDCAFE, ZENCHEF_VAGENENDE, ZENCHEF_BOUILLONJULIEN, ZENCHEF_BOUILLONRACINE, ZENCHEF_BOUILLONREPUBLIQUE, ZENCHEF_ROSIE, ZENCHEF_ROSIELOU, ZENCHEF_ROSIEJOLIE, ZENCHEF_PETITSOMMELIER, ZENCHEF_CHEZSAVY, ZENCHEF_CHEZRENE, ZENCHEF_BISTROTPARIS, ZENCHEF_AUXBONSCRUS, ZENCHEF_AUXCRUSBOURGOGNE, ZENCHEF_PETITRETRO, ZENCHEF_MOULINVENT } from './providers/zenchef-playwright.mjs';
 import { SevenRoomsPlaywright, SEVENROOMS_PILOT } from './providers/sevenrooms-playwright.mjs';
 import fs from "node:fs";
 import path from "node:path";
@@ -68,9 +68,10 @@ const bistrotParisLive = process.env.VELVET_ZENCHEF_BISTROTPARIS === 'live';
 const auxBonsCrusLive = process.env.VELVET_ZENCHEF_AUXBONSCRUS === 'live';
 const auxCrusBourgogneLive = process.env.VELVET_ZENCHEF_AUXCRUSBOURGOGNE === 'live';
 const petitRetroLive = process.env.VELVET_ZENCHEF_PETITRETRO === 'live';
+const moulinVentLive = process.env.VELVET_ZENCHEF_MOULINVENT === 'live';
 let zenchefJournal;
 const zenchefInspection = new ZenchefPlaywright({
-  mode: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive || piedDeCochonLive || grandCafeLive || vagenendeLive || bouillonJulienLive || bouillonRacineLive || bouillonRepubliqueLive || rosieLive || rosieLouLive || rosieJolieLive || petitSommelierLive || chezSavyLive || chezReneLive || bistrotParisLive || auxBonsCrusLive || auxCrusBourgogneLive || petitRetroLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive || piedDeCochonLive || grandCafeLive || vagenendeLive || bouillonJulienLive || bouillonRacineLive || bouillonRepubliqueLive || rosieLive || rosieLouLive || rosieJolieLive || petitSommelierLive || chezSavyLive || chezReneLive || bistrotParisLive || auxBonsCrusLive || auxCrusBourgogneLive || petitRetroLive,
+  mode: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive || piedDeCochonLive || grandCafeLive || vagenendeLive || bouillonJulienLive || bouillonRacineLive || bouillonRepubliqueLive || rosieLive || rosieLouLive || rosieJolieLive || petitSommelierLive || chezSavyLive || chezReneLive || bistrotParisLive || auxBonsCrusLive || auxCrusBourgogneLive || petitRetroLive || moulinVentLive ? 'prepare' : 'inspect', enableSubmission: fishCornerLive || pesquiereLive || pirouetteLive || dekasLive || bofingerLive || laCoupoleLive || terminusNordLive || procopeLive || laLorraineLive || piedDeCochonLive || grandCafeLive || vagenendeLive || bouillonJulienLive || bouillonRacineLive || bouillonRepubliqueLive || rosieLive || rosieLouLive || rosieJolieLive || petitSommelierLive || chezSavyLive || chezReneLive || bistrotParisLive || auxBonsCrusLive || auxCrusBourgogneLive || petitRetroLive || moulinVentLive,
   reserveSubmission: intent => zenchefJournal.reserveAttempt(intent),
   recordResult: session => {
     const saved = zenchefJournal.recordAttempt({intent:session.approval,attempt:session.attempt,result:session.result});
@@ -164,6 +165,9 @@ const playwrightRuntime = new PlaywrightRuntime({
         actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
         current:(_id,owner)=>zenchefInspection.current(owner)}] : []),
       ...(petitRetroLive ? [{restaurantId:ZENCHEF_PETITRETRO.restaurantId,enabled:true,mode:'live',
+        actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
+        current:(_id,owner)=>zenchefInspection.current(owner)}] : []),
+      ...(moulinVentLive ? [{restaurantId:ZENCHEF_MOULINVENT.restaurantId,enabled:true,mode:'live',
         actions:['search','select','fill','review','submit','refresh'],adapter:zenchefInspection,
         current:(_id,owner)=>zenchefInspection.current(owner)}] : [])],
     TableCheck: {provider:'TableCheck',restaurantId:SAZON.restaurantId,mode:'prepare',
@@ -450,7 +454,9 @@ zenchefJournal = createProviderJournal({ledger:playwrightAttempts,register:booki
     ...(auxCrusBourgogneLive ? {[ZENCHEF_AUXCRUSBOURGOGNE.restaurantId]:{name:ZENCHEF_AUXCRUSBOURGOGNE.name,city:'Paris',
       shiftId:ZENCHEF_AUXCRUSBOURGOGNE.shiftId,confirmationPolicySource:ZENCHEF_AUXCRUSBOURGOGNE.policySource}} : {}),
     ...(petitRetroLive ? {[ZENCHEF_PETITRETRO.restaurantId]:{name:ZENCHEF_PETITRETRO.name,city:'Paris',
-      shiftId:ZENCHEF_PETITRETRO.shiftId,confirmationPolicySource:ZENCHEF_PETITRETRO.policySource}} : {})}});
+      shiftId:ZENCHEF_PETITRETRO.shiftId,confirmationPolicySource:ZENCHEF_PETITRETRO.policySource}} : {}),
+    ...(moulinVentLive ? {[ZENCHEF_MOULINVENT.restaurantId]:{name:ZENCHEF_MOULINVENT.name,city:'Paris',
+      shiftId:ZENCHEF_MOULINVENT.shiftId,confirmationPolicySource:ZENCHEF_MOULINVENT.policySource}} : {})}});
 const PAY_FILE = process.env.VELVET_PAY || path.join(__dir, "pay.json");
 const IDV_DIR = process.env.VELVET_IDV || path.join(__dir, "idv");
 const PORT = Number(process.env.PORT || 8787);
