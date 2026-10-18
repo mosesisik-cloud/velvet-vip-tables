@@ -1188,6 +1188,19 @@
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
   },
+  "curated-PAR-au-pied-de-cochon": {
+    "name": "Au Pied de Cochon",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=247&fullscreen&lang=fr&withCloseButton=1",
+    "source": "https://www.pieddecochon.com/",
+    "venueKey": "bookings.zenchef.com/results?rid=247",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
+  },
   "curated-PAR-la-lorraine": {
     "name": "La Lorraine",
     "city": "Paris",
