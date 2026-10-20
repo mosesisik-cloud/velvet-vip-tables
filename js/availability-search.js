@@ -40,8 +40,10 @@ export function availabilityTermsNotes(row, tr) {
   const options = [row, ...(Array.isArray(row.slots) ? row.slots.filter(Boolean) : [])];
   const notes = [];
   if (row.availabilityScope === 'reviewed_shift') notes.push(tr('reviewedScopeNote'));
-  if (options.some(option => option.requiresPrepayment || option.paymentRequirement === 'prepayment')) notes.push(tr('prepaymentNote'));
-  else if (options.some(option => option.requiresCard || option.paymentRequirement === 'card')) notes.push(tr('cardNote'));
+  if (options.some(option => option.confirmationMode === 'manual')) notes.push(tr('manualConfirmationNote'));
+  if (options.some(option => option.confirmationMode === 'unknown')) notes.push(tr('unknownConfirmationNote'));
+  if (options.some(option => option.requiresPrepayment || option.prepaymentApplies === true || option.paymentRequirement === 'prepayment')) notes.push(tr('prepaymentNote'));
+  else if (options.some(option => option.requiresCard || option.cardGuaranteeApplies === true || option.paymentRequirement === 'card')) notes.push(tr('cardNote'));
   if (options.some(option => option.paymentRequirement === 'mixed')) notes.push(tr('mixedNote'));
   const unknownPayment = options.some(option => option.paymentRequirement === 'not_specified');
   const unknownCancellation = options.some(option => option.cancellationPolicyStatus === 'unknown');

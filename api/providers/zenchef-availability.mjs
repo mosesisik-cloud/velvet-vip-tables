@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { interpretZenchefPolicy } from './zenchef-policy-evidence.mjs';
 import { ZENCHEF_DEKAS, ZENCHEF_PIROUETTE, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE,
   zenchefSearchUrl, zenchefAvailabilityEvidence } from './zenchef-playwright.mjs';
 const bindings=JSON.parse(fs.readFileSync(new URL('./zenchef-search-bindings.json',import.meta.url),'utf8'));
@@ -30,10 +31,13 @@ export function createZenchefAvailability({registry,fetcher=fetch,now=Date.now,t
       if(html.length>5000000)throw Error('provider_response_size');
       const matches=[...html.matchAll(/<script\b[^>]*\bid=["']__NEXT_DATA__["'][^>]*>([\s\S]*?)<\/script>/g)];
       if(matches.length!==1)throw Error('provider_state_missing');
-      const evidence=zenchefAvailabilityEvidence(JSON.parse(matches[0][1]),q,now(),venue);
+      const data=JSON.parse(matches[0][1]);
+      const evidence=zenchefAvailabilityEvidence(data,q,now(),venue);
+      const shifts=data.props.initialState.appStoreState.dailyAvailabilities[q.date].shifts;
       // Keep room/menu options as evidence, never make those choices for guests.
       const slots=evidence.candidates.filter(s=>Math.abs(minutes(s.time)-minutes(q.time))<=90)
         .map(s=>({time:s.time,shiftId:s.shiftId,bookingUrl:url,paymentRequirement:'not_specified',
+          ...interpretZenchefPolicy(shifts.find(shift=>shift.id===s.shiftId),q.party),
           ...(s.rooms ? {rooms:s.rooms.map(room=>({id:room.id,name:room.name}))} : {}),
           ...(s.offers ? {offers:s.offers.map(offer=>({offerId:offer.offerId,count:offer.count,
             name:offer.name,description:offer.description,currency:offer.currency,

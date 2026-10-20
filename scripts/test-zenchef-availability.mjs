@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import './test-zenchef-policy-evidence.mjs';
 import fs from 'node:fs';
 import {createZenchefAvailability} from '../api/providers/zenchef-availability.mjs';
 import {AvailabilitySearch} from '../api/availability-search.mjs';
@@ -15,6 +16,24 @@ const fetcher=async(url,options)=>{calls++;assert.equal(url,venue.url+'&day=2026
 const adapter=createZenchefAvailability({registry,fetcher,now});
 let result=await adapter(row,q);assert.equal(result.status,'available');assert.equal(result.slots.length,1);assert.deepEqual(result.slots[0].rooms,venue.rooms);assert.equal(result.confirmationVerified,false);assert.equal(result.paymentRequirement,'not_specified');
 for(const lang of ['sv','en','es','fr'])assert.ok(availabilityTermsNotes(result,availabilityCopy(lang).text).includes(availabilityCopy(lang).text('reviewedScopeNote')));
+assert.equal(result.slots[0].confirmationMode,'unknown');
+assert.equal(result.slots[0].cardGuaranteeApplies,null);
+for(const confirmation of [{is_auto:false,is_auto_until:null},{is_auto:true,is_auto_until:null}]) {
+ data=document();Object.assign(data.props.initialState.appStoreState.dailyAvailabilities[q.date].shifts[0],{
+  confirmation,charge_param:{is_web_booking_askable:true,min_guests:2},prepayment_param:null});
+ const evidence=await adapter(row,q);
+ assert.equal(evidence.slots[0].confirmationMode,confirmation.is_auto?'automatic':'manual');
+ assert.equal(evidence.slots[0].cardGuaranteeApplies,true);
+ assert.equal(evidence.slots[0].prepaymentApplies,null);
+ assert.equal(evidence.slots[0].bookingConfirmed,false);
+ assert.equal(evidence.slots[0].formInspected,false);
+ assert.equal(evidence.confirmationVerified,false);
+ for(const lang of ['sv','en','es','fr']) {
+  const tr=availabilityCopy(lang).text,notes=availabilityTermsNotes(evidence,tr);
+  assert.equal(notes.includes(tr('manualConfirmationNote')),!confirmation.is_auto);
+  assert.ok(notes.includes(tr('cardNote')));
+ }
+}
 for(const mutate of [d=>d.query.rid='wrong',d=>d.query.day='2026-10-24',d=>d.props.initialState.appStoreState.wish.pax=3,d=>d.props.initialState.appStoreState.restaurantTimezone='UTC',d=>d.props.initialState.appStoreState.wish.waiting_list=true]){data=document();mutate(data);assert.equal((await adapter(row,q)).status,'error');}
 data=document();data.props.initialState.appStoreState.dailyAvailabilities[q.date].shifts[0].shift_slots=[];assert.equal((await adapter(row,q)).status,'unavailable');
 let before=calls;
