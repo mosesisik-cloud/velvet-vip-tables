@@ -2608,5 +2608,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-ardent": {
+    "name": "Ardent",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=358338&fullscreen&lang=fr&withCloseButton=1",
+    "source": "https://www.restaurant-ardentparis.com/",
+    "venueKey": "bookings.zenchef.com/results?rid=358338",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
