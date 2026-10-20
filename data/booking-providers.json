@@ -2738,5 +2738,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-LYO-cafe-comptoir-abel": {
+    "name": "Café Comptoir Abel",
+    "city": "Lyon",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=357745&fullscreen=1",
+    "source": "https://www.maisonabel.fr/maison-abel/le-cafe-comptoir-chez-abel/",
+    "venueKey": "bookings.zenchef.com/results?rid=357745",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }

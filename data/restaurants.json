@@ -13003,7 +13003,11 @@
           "source": "VELVET curated · official website",
           "curated": true,
           "locationSource": "https://www.maisonabel.fr/maison-abel/le-cafe-comptoir-chez-abel/",
-          "locationVerifiedAt": "2026-10-20"
+          "locationVerifiedAt": "2026-10-20",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=357745&fullscreen=1",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-20"
         }
       ]
     }
