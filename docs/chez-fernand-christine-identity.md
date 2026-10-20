@@ -1,0 +1,7 @@
+# Chez Fernand Christine
+
+Own9RueChristine75006Paris/+33143251855, distinctGuisarde13Rue. Normalized scan837catalog/193registry found only separateGuisarde name matches, noChristineaddress/domain/phone/rid361894. RootJSONLDphone0143546171 differs from ownmodule/footer/provider0143251855; preserve distinction.
+
+Canonicalcurated-PAR-chez-fernand-christine/exportZENCHEF_CHEZ_FERNAND_CHRISTINE/flagVELVET_ZENCHEF_CHEZ_FERNAND_CHRISTINE. Basepublic282154b8371. Initialscope121338/lunch/exact2/only12,12:30,13,13:30,14/explicitÀlacarte60971x2. Mixed/count1/count3 excluded; selection must be userinitiated. Originalpolicy autoFALSE-until4/cardTRUE-min4-per25/prepaynull/requiredofferTRUE. Exact90minFRseatingNoticebeforeconsent; NULLmealpriceunknownnotfree. SDKquerysdk1/close1/rid361894/showCollapsed1/noPIDlangfullscreen;selectedslot held in currentclientstate,notquery.
+
+Source/nativePR469a1aa2d59 accepted bymaster. OriginalresultsSHA4334ff573de308e9504cc77dbd639c946b55ff35a524cb62ee48c80cfd277a1d. Integrator verified12stagehashes+3network+3PNG and viewedbothÀlacartePNGs;staleNEXT_DATA/results remainsinitial,livewishpassiveread+DOM show[]→60971x1disabled→x2enabled→Contact. Mobilemenurepetitionabsent,90minvisible;mobileEULAoutofinitial900,desktopinside. Mixed1+1proof retained as excludedcase. No livetransaction or supplierreceipt; no duplicate replay/probes. OFF pending implementation/review/actualappQA/finalCI/release.
