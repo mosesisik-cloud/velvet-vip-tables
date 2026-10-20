@@ -219,7 +219,7 @@ export function mountProviderPlaywrightBooking(container, api, {
   }
   if (restaurantId === 'curated-PAR-chez-fernand-christine') {
     const scope=document.createElement('p'); scope.className='booking-scope';
-    scope.textContent='Bokning i Velvet gäller lunch på Chez Fernand Christine, 9 Rue Christine i Paris, för exakt två gäster med det uttryckliga valet À la carte för båda. Tiderna är 12:00, 12:30, 13:00, 13:30 och 14:00 i mån av lediga bord. Restaurangens sittningstid är 1 timme och 30 minuter. Matpriset anges inte i bokningsformuläret. Lunchformeln, blandade menyval, middag, större sällskap och val av rum eller terrass ingår inte. Velvet skickar inga särskilda önskemål eller presentkortsuppgifter.';
+    scope.textContent='Bokning i Velvet gäller lunch måndag–fredag på Chez Fernand Christine, 9 Rue Christine i Paris, för exakt två gäster med det uttryckliga valet À la carte för båda. Tiderna är 12:00, 12:30, 13:00, 13:30 och 14:00 i mån av lediga bord. Restaurangens sittningstid är 1 timme och 30 minuter. Matpriset anges inte i bokningsformuläret. Lunchformeln, blandade menyval, middag, större sällskap och val av rum eller terrass ingår inte. Velvet skickar inga särskilda önskemål eller presentkortsuppgifter.';
     container.querySelector('header').after(scope);
   }
   if (restaurantId === 'curated-PAR-chez-fernand-guisarde') {
