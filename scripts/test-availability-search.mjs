@@ -6,7 +6,7 @@ import {availabilityCities} from '../js/availability-search.js';
 assert.deepEqual(availabilityCities({destinations:{a:{destination:'Stockholm'},b:{destination:'Ibiza'}}}),['Ibiza','Stockholm']);
 const server=createServer(async(req,res)=>{try {
  if(req.url==='/') {res.setHeader('Content-Type','text/html');res.end(`<meta name="viewport" content="width=device-width,initial-scale=1"><link rel="stylesheet" href="/css/app.css"><link rel="stylesheet" href="/css/availability-search.css"><main></main><script type="module">import {mountAvailabilitySearch} from '/js/availability-search.js'; window.ui=mountAvailabilitySearch(document.querySelector('main'),{restaurants:[{city:'Stockholm'},{city:'Ibiza'}]});</script>`);return;}
- const path=req.url.split('?')[0];if(!['/js/availability-search.js','/css/availability-search.css','/css/app.css'].includes(path)){res.writeHead(404).end();return;}
+ const path=req.url.split('?')[0];if(!/^\/js\/[a-z-]+\.js$/.test(path)&&!['/css/availability-search.css','/css/app.css'].includes(path)){res.writeHead(404).end();return;}
  res.setHeader('Content-Type',path.endsWith('.js')?'application/javascript':'text/css');res.end(await readFile(new URL('..'+path,import.meta.url)));
  }catch{res.writeHead(500).end();}});
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
@@ -34,7 +34,7 @@ try{
  await page.getByText('1 restaurang har lediga tider',{exact:false}).waitFor();
  assert.equal(calls[0].searchParams.get('city'),'Stockholm');assert.equal(calls[0].searchParams.get('party'),'2');assert.equal(calls[0].searchParams.get('progressive'),'1');
  assert.equal(await page.locator('.availability-slot').count(),2);
- assert.equal(await page.locator('.availability-slot').nth(1).getAttribute('href'),'#/restaurant/good');
+ assert.match(await page.locator('.availability-slot').nth(1).getAttribute('href'),/^#\/restaurant\/good\?date=.*&time=19%3A30&party=2$/);
  assert.equal(await page.locator('.availability-results script').count(),0);
  assert.equal(await page.locator('.availability-card h2').textContent(),'Test <script>bad()</script>');
  await page.locator('summary').click();
