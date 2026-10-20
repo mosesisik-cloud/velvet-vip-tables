@@ -19,3 +19,19 @@ Rawbody contains an empty root element, an inline Zenchef SDK loader and this co
 This is evidence of an own Zenchef widget configuration, but the returned HTML contains no concrete results/form href, ReserveAction URL or directly observed booking redirect. An acceptsReservations True value alone does not supply that route. The app module /assets/index-BxTjHQ_d.js is referenced but not fetched or executed; no SDK/native/asset request is authorized by this source-only boundary. Do not invent fullscreen/lang/pid query parameters or borrow them from Guisarde.
 
 Stop at unresolved ordinary entry, not a claim that Zenchef is unsupported, the restaurant is closed, or booking is unavailable. No supplier results/form query, SDK, script execution, alternate host/path/branch, contact, reservation, hold or payment. No policy/schema/availability/confirmation/card data established. Originalhash verified and document diffcheckPASS; no runtime tests or shared/runtime changes. Existing282 unchanged. Master can decide whether a separately bounded read of the referenced own application source is warranted; no such further request made here.
+
+## Authorized bounded own-module inspection
+
+Master authorized one rawtextGET of the EXACT root-referenced module; no execution or imports. https://www.restaurantchezfernand.fr/assets/index-BxTjHQ_d.js returnedHTTP200/no redirect at2026-10-20T17:31:08.034Z,507846bytes,SHA256f00e0fa2948191a2ccfe2461a646174b2558525a38aa4155e3e5b4c6026ec1b4. Stored own-module.js and own-module-meta.json beside the root evidence; hash/length verified.
+
+The shared booking-button props are exactly:
+
+```javascript
+nC={type:`button`,"data-zc-action":`open`}
+```
+
+The floating booking component kC renders a button spreading those props (`...nC`) and labels it via reservationWidget.label (French Reservation / English Book a table). This delegates opening to the root's Zenchef SDK/config361894. No concrete results/form URL or additional query parameters are present in the own module. Its separate api.zenchef.com/api/v1/restaurants/361894/reviews reference is a REVIEWS route, not a booking entry, and was not fetched.
+
+Module-rendered identity states Chez Fernand Christine,9 Rue Christine75006Paris. Footer and privacy text contain0143251855, agreeing with the original search lead; the root JSON-LD's0143546171 discrepancy remains recorded. No contact was made and no canonical phone changed.
+
+Outcome remains unresolved concrete booking destination/query within this inspection boundary. Exactly one moduleGET added; no imports/SDK/analytics/fonts/browser/provider/results/form fetched, no code executed or transaction. No invented URL/defaults. Await master assessment before further network work.
