@@ -66,3 +66,31 @@ No lang, pid, fullscreen, day, pax, room or offer is added by this own path. In 
 Remaining runtime boundaries: initial construction requires the own config/script element to exist in the DOM; subsequent widget-listening/height/open/redirect/popup events and supplier content are unknown until separately authorized inspection. The SDK also contains other website_popup/payment/redirect/analytics branches, but they are NOT the selected initial booking URL and none was followed. Provider identity/policy/schema/availability/default language/native rendering and successful acceptance remain unknown. Dynamic server changes since capture are not inferred away.
 
 The previously unresolved INITIAL destination is now statically established from own config plus captured SDK. Stop here for coordinator assessment BEFORE any results/form request. No SDK execution, CSS/import/analytics/font requests, browser replay, provider traffic, transaction, contact or implementation; document-only update to the same PR469.
+
+## Authorized results-only qualification — required-offer boundary
+
+ONE read-only GET of the statically established initial URL plus ONLY the explicitly requested search inputs day2026-10-23/pax2 returnedHTTP200/no redirect at2026-10-20T20:27:10.492Z. OriginalSHA2564334ff573de308e9504cc77dbd639c946b55ff35a524cb62ee48c80cfd277a1d. Exact requested/final URL:
+
+```text
+https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2
+```
+
+Original results.html/results-meta.json/results-state.json saved beside earlier evidence. Raw query contains exactly those six STRING values. day/pax are user-selected search values, not original SDK parameters. sdkStoreState is isSdktrue/showCollapsedtrue/isCollapsedtrue/iframePositionright/sdkEntrypointrestaurant.
+
+Provider identity matches Chez Fernand Christine,9 Rue Christine75006Paris,+33143251855, corroborating own rendered-module identity/phone. Earlier root JSON-LD phone0143546171 discrepancy remains visible in this record. No Guisarde data substituted.
+
+Own lunch121338Dejeuner: confirmation{is_auto:false,is_auto_until:4}, charge{is_web_booking_askable:true,min_guests:4,charge_per_guests:25}, prepaymentnull. This is the existing threshold shape for automatic acceptance below4 and no card below4, not false/null manual confirmation and not a null charge. Exact2 falls below both thresholds, but a required-offer step remains: is_offer_requiredtrue/offer_required_from_paxnull, wish.offers initiallyempty. Do NOT silently choose an offer or treat this as an ordinary no-offer contract.
+
+Five available half-hour slots12:00,12:30,13:00,13:30,14:00 include2. Shiftfromnull/to2026-10-2314:15; each slotfromnull/toits own time. Full shift and each slotcapacity: min1/max20/total_per_slot40/waitlistvalues0/show_turn_timesfalse/buffer0/all six turn_times values6. Cancellation10800seconds relative shift. Own explicit French shiftcomment states a90minute table duration; this is text evidence, distinct from internal capacity and any unobserved DOM endtime.
+
+Global offer objects preserved completely in originalstate:
+
+-23228Formule Dejeuner: active/from2023-06-19/no end date/weekdaysMon–Fri/charge2450/no prepayment; description distinguishes two-course24.5 and three-course29.5EUR; no claim that the stored charge proves a selected final bill.
+-60971A la carte: active/from2025-04-15/no end date/weekdaysMon–Fri/chargenull/no prepayment.
+-47494year-end menu: activeflagtrue but date2025-12-24 through2025-12-31,charge15500/no prepayment; historical for selected2026date, not selected or generalized.
+
+Lunch shift offers23228 and60971 retain complete stock/capacity/config/payment_type none/has_prepaymentfalse/window metadata. Each of the five slot offers retains stock1000, min/max/totalcapacitynull, is_limited_to_paxfalse/is_same_for_allfalse/min_pax_available1/maxnull, own fromnull/toits time and possible_guests1–20. No offer selected, count constructed or payload sent.
+
+FR/FR/EUR/isInUpdateFlowfalse/partner_idABSENT despite no querylang. Sixstandardrequired,comment/voucherdisplayed,customFields[]/V2[],custom_field{}. roomselectionfalse/mandatoryfalse/wishroomnull; rawrooms77565Devant/77566Salle double-space Milieu/77567Fond retained. connectedvouchersfalse/shoptrue/voucherParamABSENT/bothcodesempty/lunchactivevouchertrue/limitfalse. Daynotice23octnull. Full original French restaurantnotice offers phone contact when the desired booking is unavailable; no contact made. Dinner121339 has charge threshold1 and14400second cancellation, and is excluded.
+
+STOP before emptyform/native/implementation: mandatory menu selection plus own90minute term requires explicit scope assessment; current qualification does not establish the no-offer contact flow. No claim that lunch2 necessarily requires card or manual approval. No further GET/SDK/browser, no input/offer selection/hold/contact/reservation/payment. Originalresults hash and exact rawHTML-to-savedstate deepJSON verified. This source record is ready for coordinator decision;283 implementation is not assumed.
