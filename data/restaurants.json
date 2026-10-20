@@ -7439,6 +7439,20 @@
       "source": "VELVET curated + OpenStreetMap · official links where available",
       "restaurants": [
         {
+          "placeId": "curated-PAR-brasserie-jaja-amsterdam",
+          "name": "Brasserie Jaja",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "47 Rue d’Amsterdam, 75008 Paris",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Brasserie%20Jaja%2C%2047%20Rue%20d%E2%80%99Amsterdam%2C%20Paris",
+          "website": "https://www.brasseriejaja.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.brasseriejaja.fr/",
+          "locationVerifiedAt": "2026-10-20"
+        },
+        {
           "placeId": "curated-PAR-bien-eleve",
           "name": "Bien élevé",
           "rating": null,
