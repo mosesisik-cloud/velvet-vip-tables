@@ -1,0 +1,9 @@
+# L’Escudella — identity only
+
+Canonical `curated-PAR-escudella`; reserved export `ZENCHEF_ESCUDELLA`; reserved flag `VELVET_ZENCHEF_ESCUDELLA`. Base public278 `fbdbe2ee565aff3c47c93d83bf9c942736d8e7dd`. No activation here.
+
+Official https://www.escudella.fr/ and native agree:41 Avenue de Ségur,75007 Paris,+33764259297. Normalized identity-field scan found no matches in833catalog/189registry. Catalog834; registry unchanged. Groupnotice0982287070 is separate from currentcontact0764259297; never rewrite the notice or claim identical phones.
+
+Saved evidence/escudella/official.html SHA25648b0cfcd0be421cb4165e73df74985a56612dfb47bf42a0df3522857b5f48e5b; results.html SHA256e5bb7a1000d7a8f95233231ce16e977adc479d98f1cdd829558d6403cee72d07; form.html SHA256874e95ecaf5e1c2ea411ee9d1d2caa60bb52d61257ec35cd516481c61b5e0402. All locally verified. OwnReserveAction301to results?rid=348060&fullscreen&lang=fr&withCloseButton=1, exactemptyfullscreen/noPIDSDKpartner/FRFR. No new supplierGET/native replay.
+
+Scope4974Déjeuner/exact2/ONLY12,12:30,13,13:30,14/autoTRUE-null/nullcardprepay/nooffer14400SHIFT/commentnull. Interveningquartertimes possible_guests[] without inventedreason. ENABLEDoptional legacy2196numero-de-bon-cadeau/displayed/fullmetadata including2022-12-12T16:19:09.000000Z and2026-09-22T06:00:06.000000Z retained; ordinarylunchWITHOUTgiftcertificate, no value sent/no genericcustom[]relaxation. Rawconnectedvoucher/shopvoucher/voucheractive flags remaintrue, require native no-giftordinaryContact proof. Sixstandardrequired/V2[]/roomflagsfalse/wishnull/rawrooms1917+129186unselected. Full7languagegroupnoticebound; wholeFRbeforeconsent preservingoldgrouptelephone/email. No groupcontact/menu/room/durationpromise. Dinner119246 table-reuse excluded. OFF until provider/native/review/actualappQA/release. Lava and parked identities excluded.

@@ -7439,6 +7439,20 @@
       "source": "VELVET curated + OpenStreetMap · official links where available",
       "restaurants": [
         {
+          "placeId": "curated-PAR-escudella",
+          "name": "L’Escudella",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "41 Avenue de Ségur, 75007 Paris",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=L%E2%80%99Escudella%2C%2041%20Avenue%20de%20S%C3%A9gur%2C%20Paris",
+          "website": "https://www.escudella.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.escudella.fr/",
+          "locationVerifiedAt": "2026-10-20"
+        },
+        {
           "placeId": "curated-PAR-comptoir-petits-champs",
           "name": "Le Comptoir des Petits Champs",
           "rating": null,
