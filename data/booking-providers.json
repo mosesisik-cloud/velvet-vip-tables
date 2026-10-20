@@ -2712,5 +2712,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-chez-fernand-guisarde": {
+    "name": "Chez Fernand Guisarde",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=384073&fullscreen&lang=fr&withCloseButton=1",
+    "source": "https://www.restaurantchezfernand-guisarde.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=384073",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
