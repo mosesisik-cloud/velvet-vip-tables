@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Local booking contract fixture</title>
+<main data-fixture="tock-contract-v1">
+<h1>TEST DATA — not Tock and not a real reservation</h1>
+<label>Date <input id="date" type="date"></label><label>Party <input id="party" type="number"></label>
+<button id="search">Search test availability</button><div id="slots"></div>
+<label>First name <input id="firstname"></label><label>Last name <input id="lastname"></label>
+<label>Email <input id="email"></label><label>Phone <input id="phone"></label><label>Note <textarea id="comment"></textarea></label>
+<button id="review">Review test reservation</button><p id="terms" data-version="fixture-1">Local simulation only. No hold, payment or restaurant booking.</p>
+<button id="submit">Confirm simulation</button><p id="result"></p>
+</main><script>
+document.querySelector('#search').onclick=()=>{
+  document.querySelector('#slots').innerHTML='<button data-slot="fixture-dinner" data-time="19:00">TEST 19:00</button>';
+  document.querySelector('[data-slot]').onclick=e=>{ e.target.dataset.selected='true'; };
+};
+document.querySelector('#review').onclick=()=>{};
+document.querySelector('#submit').onclick=()=>{
+  window.fixtureSubmissions=(window.fixtureSubmissions||0)+1;
+  const result=document.querySelector('#result');
+  result.dataset.status=window.fixtureOutcome||'confirmed';
+  result.dataset.reference='FIXTURE-ONLY-1';
+  result.textContent='Simulation result only';
+};
+</script></html>
