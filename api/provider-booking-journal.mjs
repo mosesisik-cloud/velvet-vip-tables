@@ -10,6 +10,9 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
   const venue = id => Object.hasOwn(restaurants, id) && restaurants[id];
   const dateInScope = (id,date) => provider !== 'Zenchef' || (id !== 'curated-PAR-bouillon-julien' && id !== 'curated-PAR-brasserie-rosie-jolie') || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && (id === 'curated-PAR-bouillon-julien' ? !['12-24','12-25','12-31'].includes(date.slice(5)) : !(date.slice(5) >= '08-03' && date.slice(5) <= '08-23')));
   const timeInScope = (id,time) => provider !== 'Zenchef' || id !== 'curated-PAR-bouillon-republique' || ['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(time);
+  const christineDetails = (details, contact = false) => !!details && typeof details === 'object' && !Array.isArray(details)
+    && Object.keys(details).every(key => ['date','time','party','shiftId','offer',
+      ...(contact ? ['firstname','lastname','email','phone','civility','country'] : [])].includes(key));
   const durationVenue = id => provider === 'Zenchef' && id === 'curated-PAR-la-plage-parisienne';
   const purposeVenue = id => provider === 'Zenchef' && id === 'curated-PAR-indiana-cafe-montparnasse';
   const visitReasonVenue = id => provider === 'Zenchef' && ['curated-PAR-indiana-cafe-les-halles','curated-PAR-indiana-cafe-ternes'].includes(id);
@@ -36,6 +39,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     if (purposeVenue(intent.restaurantId) ? !validPurpose(intent.details?.reservationPurpose) : intent.details?.reservationPurpose !== undefined) fail('purpose_binding');
     if (visitReasonVenue(intent.restaurantId) ? !validVisitReason(intent.restaurantId,intent.details?.reservationVisitReason) : intent.details?.reservationVisitReason !== undefined) fail('visit_reason_binding');
     if (durationVenue(intent.restaurantId) ? intent.details?.reservationSaturdayDurationAcknowledged !== true : intent.details?.reservationSaturdayDurationAcknowledged !== undefined) fail('duration_acknowledgement_binding');
+    if (intent.restaurantId === 'curated-PAR-chez-fernand-christine' && !christineDetails(intent.details)) fail('offer_binding');
     const configured=venue(intent.restaurantId).offer;
     const shift=venue(intent.restaurantId).shiftId;
     if (shift && (intent.details?.shiftId !== shift || intent.details?.party !== 2 || intent.phase !== 'booking')) fail('shift_binding');
@@ -112,7 +116,8 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     verifySnapshot(snapshot,owner) {
       const proof=snapshot.result?.verification;
       const attempt=proof?.attemptId && ledger.get(owner,proof.attemptId);
-      if (!attempt || !sameScopedDetails(attempt,snapshot.details) || attempt.provider !== provider || attempt.mode !== mode || !venue(attempt.restaurantId)
+      if ((snapshot.restaurantId === 'curated-PAR-chez-fernand-christine' && !christineDetails(snapshot.details,true))
+        || !attempt || !sameScopedDetails(attempt,snapshot.details) || attempt.provider !== provider || attempt.mode !== mode || !venue(attempt.restaurantId)
         || attempt.phase !== 'booking' || attempt.status !== 'confirmed'
         || attempt.restaurantId !== snapshot.restaurantId || attempt.sessionId !== snapshot.id
         || !sameBookingOffer(attempt.details?.offer,snapshot.details?.offer)

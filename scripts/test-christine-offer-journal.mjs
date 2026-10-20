@@ -45,6 +45,11 @@ test('only exact saved-offer proof confirms and metadata remains bound through U
     assert.equal(j.verifySnapshot({...snapshot,details:{...request.details,shiftId:429732}},'guest'),null);
     assert.equal(j.verifySnapshot({...snapshot,details:{...request.details,offer:changed}},'guest'),null);
     assert.equal(j.verifySnapshot(snapshot,'other'),null);
+    for (const key of ['offers','booking_offers','offerId','offerCount']) {
+      const details={...request.details,[key]:[{offer_id:60971,count:1},{offer_id:23228,count:1}]};
+      assert.equal(j.verifySnapshot({...snapshot,details},'guest'),null);
+      assert.throws(()=>j.recordAttempt({intent:{...request,details},attempt,result}),/offer_binding/);
+    }
     for (const change of [{date:'2030-01-16'},{time:'12:30'},{party:3}]) {
       const details={...request.details,...change};
       assert.equal(j.verifySnapshot({...snapshot,details},'guest'),null);
@@ -57,6 +62,8 @@ test('missing offer, invented free price and unexpected menu fields fail before 
   try {
     for (const invalid of [undefined,{...offer,mealPrice:0},{...offer,count:3},{...offer,secret:'unexpected'},{...offer,depositApplies:true}])
       assert.throws(()=>j.reserveAttempt({...request,details:{...request.details,offer:invalid}}),/offer_binding/);
+    for (const key of ['offers','booking_offers','offerId','offerCount'])
+      assert.throws(()=>j.reserveAttempt({...request,details:{...request.details,[key]:[]}}),/offer_binding/);
     assert.deepEqual(ledger.list('guest'),[]);
   } finally {ledger.close();}
 });
