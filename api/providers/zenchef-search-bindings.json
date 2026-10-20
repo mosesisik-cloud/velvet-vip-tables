@@ -1,0 +1,26 @@
+{
+  "curated-AMS-de-kas": {
+    "name": "De Kas",
+    "city": "Amsterdam",
+    "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=386643&lang=en&showCollapsed=1",
+    "venueKey": "bookings.zenchef.com/results?rid=386643"
+  },
+  "osm-MCO-pirouette": {
+    "name": "Pirouette",
+    "city": "Nice",
+    "url": "https://bookings.zenchef.com/results?rid=363313&pid=1001",
+    "venueKey": "bookings.zenchef.com/results?rid=363313"
+  },
+  "osm-SBH-fishcorner": {
+    "name": "FishCorner",
+    "city": "St. Barts",
+    "url": "https://bookings.zenchef.com/results?pid=1001&rid=388090",
+    "venueKey": "bookings.zenchef.com/results?rid=388090"
+  },
+  "osm-STT-la-pesquiere-le-mazagran-et-lou-revelen": {
+    "name": "La PeSQuière, Le Mazagran et Lou Revelen",
+    "city": "Saint-Tropez",
+    "url": "https://bookings.zenchef.com/results?rid=362908&fullscreen=1",
+    "venueKey": "bookings.zenchef.com/results?rid=362908"
+  }
+}

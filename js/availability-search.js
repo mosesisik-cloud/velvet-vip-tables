@@ -1,6 +1,6 @@
 import { getBookingCopy, requestBookingNotes } from './booking-copy.js?v=188';
 import { placeBrandHTML } from './place-brand.js?v=178';
-import { availabilityCopy } from './availability-copy.js?v=180';
+import { availabilityCopy } from './availability-copy.js?v=283';
 const escapeHTML = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const localDate = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
 export function availabilityCities(restaurants) {
@@ -39,6 +39,7 @@ export function availabilityCacheMatches(saved, query, now = Date.now()) {
 export function availabilityTermsNotes(row, tr) {
   const options = [row, ...(Array.isArray(row.slots) ? row.slots.filter(Boolean) : [])];
   const notes = [];
+  if (row.availabilityScope === 'reviewed_shift') notes.push(tr('reviewedScopeNote'));
   if (options.some(option => option.requiresPrepayment || option.paymentRequirement === 'prepayment')) notes.push(tr('prepaymentNote'));
   else if (options.some(option => option.requiresCard || option.paymentRequirement === 'card')) notes.push(tr('cardNote'));
   if (options.some(option => option.paymentRequirement === 'mixed')) notes.push(tr('mixedNote'));
@@ -137,7 +138,7 @@ export function mountAvailabilitySearch(container, { restaurants, apiBase = '', 
       return `<article class="availability-card" data-result-key="${escapeHTML(row.restaurantId)}"><div class="availability-card-head"><div><p class="availability-city">${escapeHTML(row.city || query.get('city'))}</p><h2><a href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${placeBrandHTML({placeId:row.restaurantId,name})}</a></h2><p class="availability-provider">${escapeHTML(tr('via', {provider:row.provider || tr('bookingSystem')}))}</p></div><span class="availability-badge">${escapeHTML(tr('available'))}</span></div><div class="availability-slots" aria-label="${escapeHTML(tr('slotsFor', {name}))}">${slots}</div><p class="availability-card-note">${row.partial ? escapeHTML(tr('partialNote')) + ' ' : ''}${availabilityTermsNotes(row, tr).map(escapeHTML).join(' ')} ${escapeHTML(tr('continueNote'))}</p></article>`;
     }).join('');
     const labels = {pending:tr('pending'),unsupported:tr('unsupported'),error:tr('error'),unavailable:tr('unavailable')};
-    const markup = cards + (rest.length ? `<details class="availability-other" ${available.length ? '' : 'open'}><summary>${escapeHTML(tr('other', {count:rest.length}))}</summary><ul>${rest.map(row => `<li><div><a href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${escapeHTML(row.restaurant || row.name || tr('restaurant'))}</a><p>${escapeHTML(row.status === 'request_only' || row.bookingMode === 'request_only' ? getBookingCopy(language).requestHeading + '. ' + requestBookingNotes(row, language).join(' ') : labels[row.status] || tr('unconfirmed'))}</p></div><a class="availability-detail" href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${escapeHTML(row.status === 'request_only' || row.bookingMode === 'request_only' ? getBookingCopy(language).requestOpen : tr('show'))} <span aria-hidden="true">→</span></a></li>`).join('')}</ul></details>` : '');
+    const markup = cards + (rest.length ? `<details class="availability-other" ${available.length ? '' : 'open'}><summary>${escapeHTML(tr('other', {count:rest.length}))}</summary><ul>${rest.map(row => `<li><div><a href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${escapeHTML(row.restaurant || row.name || tr('restaurant'))}</a><p>${escapeHTML(row.status === 'request_only' || row.bookingMode === 'request_only' ? getBookingCopy(language).requestHeading + '. ' + requestBookingNotes(row, language).join(' ') : labels[row.status] || tr('unconfirmed'))}${row.availabilityScope === 'reviewed_shift' ? ' ' + escapeHTML(tr('reviewedScopeNote')) : ''}</p></div><a class="availability-detail" href="#/restaurant/${encodeURIComponent(row.restaurantId)}">${escapeHTML(row.status === 'request_only' || row.bookingMode === 'request_only' ? getBookingCopy(language).requestOpen : tr('show'))} <span aria-hidden="true">→</span></a></li>`).join('')}</ul></details>` : '');
     reconcile(rows.length ? markup : complete ? `<p class="availability-empty">${escapeHTML(tr('empty'))}</p>` : '');
   }
   async function submit(event) {
