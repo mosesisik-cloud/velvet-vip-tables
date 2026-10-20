@@ -1,0 +1,9 @@
+# L’office Paris — identity only
+
+Canonical `curated-PAR-office-paris`; reserved export `ZENCHEF_OFFICEPARIS`; reserved flag `VELVET_ZENCHEF_OFFICEPARIS`. Base public272 `fb483bcc43b883de402dc8e9a1f54e7db220f60f`. No activation in this identity change.
+
+Official https://www.office-resto.com/ identifies L’office at3 Rue Richer,75009 Paris,+33147706731. Native L’office agrees. Normalized name/alias/address/phone/domain/rid scan of827catalog/183registry found no matching identity. Catalog828; registry unchanged. Ardent40RueRicher is a separate restaurant mentioned in the notice, not an alias or second integration.
+
+Saved official office-paris-official-20261020.html SHA25684ddeb86a8410750b55839bde5fe32d2101a6267b3370f17679fc649b9e078c5; provider evidence/office-paris/results.html SHA2562567e195a1ac877c8688c912f7a9f711f245e0a73dcbf15c3a986967dfc3ecf8; form.html SHA256bf77624e780ccc0ef69c2dba1941d3cadcc712ddc4e4ac3b513615dbf27706bb. All hashes locally verified without new requests. Own ReserveAction301 leads to results?rid=350113&fullscreen&lang=fr&withCloseButton=1. Fullscreen is exactly empty string/nativefalse; no pid/sdk, FR/FR, updatefalse.
+
+Scope: ordinary lunch12173 Déjeuner/exact2; eleven quarter-hour slots12:00–14:30 subject to actual availability. Automatictrue/untilnull. Preserve nonnull cardpolicy askabletrue/min12/per20, not applicable to2; prepaymentnull/noofferfalse-null/cancellation10800SHIFT. Six standard required fields/custom[]V2[]/offers[]; roomcatalog6185/18492/59370 remains unselected, wishroomnull/no mandatory selection. Preserve full restaurantFR notice referring to Ardent, and lunchFR notice about25EUR formula excluding public holidays and open terrace. No selected menu, terrace guarantee or dinner duration promise. Dinner/statedlargergroups excluded. Keep OFF until provider/native/review/actualappQA/release. Lava and other parked identities excluded.
