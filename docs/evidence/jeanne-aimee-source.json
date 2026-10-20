@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "status": "blocked-results-redirect-unavailable",
+  "agent": "codex-worker-cbfe5665-79ca-415d-91ac-5c184e516939",
+  "issue": 129,
+  "baseCommit": "256572e7ecea022023e5850fc08c6c32e747238f",
+  "identity": {
+    "name": "JEANNE-AIMÉE",
+    "address": "3 rue Bourdaloue, 75009 Paris",
+    "phone": "+33973884844",
+    "website": "https://www.restaurantjeanneaimee.com/en/",
+    "canonicalRestaurantId": null
+  },
+  "dedup": {
+    "base": "256572e7ecea022023e5850fc08c6c32e747238f",
+    "matches": []
+  },
+  "sources": [
+    {
+      "url": "https://www.restaurantjeanneaimee.com/en/",
+      "status": 200,
+      "location": null,
+      "fetchedAt": "2026-10-20T21:29:36.213Z",
+      "sha256": "0e72a2315328bafab43ed695f731d27ad8107a022d68a1e81f36821952f61d4d",
+      "bytes": 40340
+    },
+    {
+      "url": "https://sdk.zenchef.com/v1/sdk.min.js",
+      "status": 200,
+      "location": null,
+      "fetchedAt": "2026-10-20T21:30:43.070Z",
+      "sha256": "f5ec269f8bb0d928001b2ef06de94b126498c88905586e3a5a328b7a491fc86c",
+      "bytes": 19582
+    },
+    {
+      "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=356997&lang=en&showCollapsed=1&day=2026-10-21&pax=2",
+      "status": 302,
+      "location": "/unavailable?sdk=1&withCloseButton=1&rid=356997&lang=en&showCollapsed=1&day=2026-10-21&pax=2",
+      "fetchedAt": "2026-10-20T21:30:47.982Z",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "sdkConfiguration": {
+    "restaurant": "356997",
+    "lang": "en"
+  },
+  "initialUrl": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=356997&lang=en&showCollapsed=1",
+  "selection": {
+    "day": "2026-10-21",
+    "pax": 2
+  },
+  "availability": null,
+  "policy": null,
+  "limitations": [
+    "Provider returned an empty 302 response; redirect not followed",
+    "No native browser, form or alternative date/language probe",
+    "No reservation, hold, payment or contact",
+    "No implementation, activation or inference of restaurant closure"
+  ]
+}
