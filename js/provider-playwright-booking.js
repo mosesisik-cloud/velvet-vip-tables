@@ -219,7 +219,7 @@ export function mountProviderPlaywrightBooking(container, api, {
   }
   if (restaurantId === 'curated-PAR-le-cornichon-goncourt') {
     const scope=document.createElement('p'); scope.className='booking-scope';
-    scope.textContent='Bokning i Velvet gäller ordinarie lunch på Le Cornichon, 2 rue des Goncourt i Paris, för exakt två gäster, i mån av lediga bord. De tider som stöds är 12:00, 12:30 och 14:00. Bokning måste göras senast 15 minuter före vald tid. Middag, större sällskap, specialerbjudanden och val av särskilt rum ingår inte. Ingen viss placering eller meny garanteras. Kontrollera den valda tidens sittningsvillkor före godkännandet. Restaurangens gruppinformation återges före godkännandet. Velvet gör inga gruppbokningar eller kontaktförfrågningar.';
+    scope.textContent='Bokning i Velvet gäller ordinarie lunch på Le Cornichon, 2 rue des Goncourt i Paris, för exakt två gäster, i mån av lediga bord. Den tid som stöds är 12:00 med sluttid 13:00 enligt restaurangens bokningsformulär. Bokning måste göras senast 11:45. Middag, större sällskap, specialerbjudanden och val av särskilt rum ingår inte. Ingen viss placering eller meny garanteras. Kontrollera den valda tidens sittningsvillkor före godkännandet. Restaurangens gruppinformation återges före godkännandet. Velvet gör inga gruppbokningar eller kontaktförfrågningar.';
     container.querySelector('header').after(scope);
   }
   if (restaurantId === 'curated-PAR-escudella') {
