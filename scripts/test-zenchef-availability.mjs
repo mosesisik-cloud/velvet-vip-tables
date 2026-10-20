@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {createZenchefAvailability} from '../api/providers/zenchef-availability.mjs';
 import {AvailabilitySearch} from '../api/availability-search.mjs';
-import {ZENCHEF_PIROUETTE as venue} from '../api/providers/zenchef-playwright.mjs';
+import {ZENCHEF_PIROUETTE as venue, ZENCHEF_DEKAS, ZENCHEF_FISHCORNER, ZENCHEF_PESQUIERE} from '../api/providers/zenchef-playwright.mjs';
 import {availabilityTermsNotes} from '../js/availability-search.js';
 import {availabilityCopy} from '../js/availability-copy.js';
 const registry=JSON.parse(fs.readFileSync(new URL('../data/booking-providers.json',import.meta.url)));
@@ -26,3 +26,25 @@ const service=new AvailabilitySearch({registry,restaurants:{destinations:{NCE:{d
 const search=await service.search({...q,city:'Nice'});assert.equal(search.results[0].status,'available');
 registry[id].liveAvailabilitySupported=false;before=calls;assert.equal((await service.venue(id,registry[id],q)).status,'unsupported');assert.equal(calls,before);
 console.log('PASS Zenchef catalogue adapter: identity/date/party/timezone, rooms, window, gates, errors, abort, four-language scope, actual search integration; mocked GET only.');
+
+// Exercise each reviewed identity, including the menu-only De Kas contract.
+registry[id].liveAvailabilitySupported=true;
+for(const v of [ZENCHEF_FISHCORNER,ZENCHEF_PESQUIERE,ZENCHEF_DEKAS]) {
+ const d=document(),state=d.props.initialState.appStoreState;
+ d.query.rid=v.venueId;state.restaurantId=v.venueId;state.restaurantTimezone=v.timezone;
+ const shift=state.dailyAvailabilities[q.date].shifts[0];shift.id=v.shiftId;
+ if(v.rooms){state.rooms=v.rooms;shift.shift_slots.forEach(s=>s.available_rooms={2:v.rooms.map(r=>r.id)});}
+ if(v===ZENCHEF_DEKAS){
+  const offer={id:118785,name_translations:{en:'Lunch'},description:{en:'Menu terms'},has_prepayment:false,payment_type:'none',charge_per_guests:null,has_duration:false,config:{is_same_for_all:true,is_limited_to_pax:true,min_pax_available:1,max_pax_available:null},stock:6,possible_guests:[2],available_rooms:{2:[138396]},bookable_from:null,bookable_to:null};
+  Object.assign(state,{currency:'EUR',language:'en',isRoomMandatory:false,offers:[{id:118785,is_active:true,is_private:false,has_prepayment:false,has_duration:false}]});state.wish.room_id=null;
+  Object.assign(shift,{name:'Lunch',charge_param:null,confirmation:{is_auto:true,is_auto_until:null},is_offer_required:true,offer_required_from_pax:null,prepayment_param:{is_web_booking_askable:true,min_guests:7,charge_per_guests:5000,deposit_type:'fixed'},offers:[offer]});
+  shift.shift_slots.forEach(s=>s.offers=[offer]);
+ }
+ let count=0;
+ const check=createZenchefAvailability({registry,now,fetcher:async(url,opt)=>{count++;assert.equal(url,v.url+'&day='+q.date+'&pax=2');assert.equal(opt.method,'GET');return {ok:true,text:async()=>'<script id="__NEXT_DATA__">'+JSON.stringify(d)+'</script>'}}});
+ const r=await check({...registry[v.restaurantId],restaurantId:v.restaurantId},q);
+ assert.equal(r.status,'available',v.restaurantId);assert.equal(count,1);
+ if(v===ZENCHEF_DEKAS){assert.equal(r.slots[0].offers[0].offerId,118785);assert.equal(r.slots[0].offers[0].mealPrice,null);assert.equal(r.slots[0].offers[0].submissionSupported,undefined);assert.equal(r.slots[0].offers[0].version,undefined);}
+ else if(v.rooms)assert.deepEqual(r.slots[0].rooms,v.rooms);
+}
+console.log('PASS all four venue bindings and De Kas menu projection; no internal submission capability exposed.');

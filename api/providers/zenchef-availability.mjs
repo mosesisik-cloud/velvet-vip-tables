@@ -33,7 +33,11 @@ export function createZenchefAvailability({registry,fetcher=fetch,now=Date.now,t
       const evidence=zenchefAvailabilityEvidence(JSON.parse(matches[0][1]),q,now(),venue);
       // Keep room/menu options as evidence, never make those choices for guests.
       const slots=evidence.candidates.filter(s=>Math.abs(minutes(s.time)-minutes(q.time))<=90)
-        .map(s=>({...s,bookingUrl:url,paymentRequirement:'not_specified'}));
+        .map(s=>({time:s.time,shiftId:s.shiftId,bookingUrl:url,paymentRequirement:'not_specified',
+          ...(s.rooms ? {rooms:s.rooms.map(room=>({id:room.id,name:room.name}))} : {}),
+          ...(s.offers ? {offers:s.offers.map(offer=>({offerId:offer.offerId,count:offer.count,
+            name:offer.name,description:offer.description,currency:offer.currency,
+            mealPrice:offer.mealPrice,priceStatus:offer.priceStatus,menuSource:offer.menuSource}))} : {})}));
       if(!bound(registry?.[id],id))return {...base,status:'unsupported'};
       return {...base,status:slots.length?'available':'unavailable',slots,checkedAt:evidence.observedAt,
         evidenceSource:evidence.source};
