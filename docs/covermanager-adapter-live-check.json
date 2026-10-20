@@ -1,0 +1,212 @@
+{
+  "scope": "Test-local enablement only; no production changes or booking actions",
+  "query": {
+    "date": "2026-10-23",
+    "party": 2,
+    "time": "20:00"
+  },
+  "results": [
+    {
+      "id": "osm-IBZ-can-caus",
+      "requests": [
+        {
+          "url": "https://www.covermanager.com/reserve/module_restaurant/restaurante-cancaus/spanish",
+          "method": "GET",
+          "status": 200
+        },
+        {
+          "url": "https://www.covermanager.com/Config/get_init_module/restaurante-cancaus/spanish",
+          "method": "POST",
+          "status": 200
+        },
+        {
+          "url": "https://www.covermanager.com/Reserve/change_day/restaurante-cancaus/2026-10-23/2/spanish",
+          "method": "POST",
+          "status": 200
+        }
+      ],
+      "result": {
+        "restaurantId": "osm-IBZ-can-caus",
+        "restaurant": "Can Caus",
+        "city": "Ibiza",
+        "provider": "CoverManager",
+        "status": "available",
+        "slots": [
+          {
+            "time": "19:30",
+            "zones": [],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-cancaus/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          },
+          {
+            "time": "20:00",
+            "zones": [],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-cancaus/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          },
+          {
+            "time": "20:30",
+            "zones": [],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-cancaus/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          },
+          {
+            "time": "21:00",
+            "zones": [],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-cancaus/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          },
+          {
+            "time": "21:30",
+            "zones": [],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-cancaus/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          }
+        ],
+        "partial": false,
+        "checkedAt": "2026-10-20T21:29:20.142Z",
+        "paymentRequirement": "not_specified",
+        "cancellationPolicyStatus": "unknown",
+        "confirmationVerified": false,
+        "evidenceSource": "provider_calendar",
+        "timezone": "Europe/Madrid"
+      }
+    },
+    {
+      "id": "osm-IBZ-ama-lur",
+      "requests": [
+        {
+          "url": "https://www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+          "method": "GET",
+          "status": 200
+        },
+        {
+          "url": "https://www.covermanager.com/Config/get_init_module/restaurante-amaluribiza/spanish",
+          "method": "POST",
+          "status": 200
+        },
+        {
+          "url": "https://www.covermanager.com/Reserve/change_day/restaurante-amaluribiza/2026-10-23/2/spanish",
+          "method": "POST",
+          "status": 200
+        }
+      ],
+      "result": {
+        "restaurantId": "osm-IBZ-ama-lur",
+        "restaurant": "Ama Lur",
+        "city": "Ibiza",
+        "provider": "CoverManager",
+        "status": "available",
+        "slots": [
+          {
+            "time": "19:30",
+            "zones": [
+              "Sala"
+            ],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          },
+          {
+            "time": "19:45",
+            "zones": [
+              "Sala"
+            ],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          },
+          {
+            "time": "20:00",
+            "zones": [
+              "Sala"
+            ],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          },
+          {
+            "time": "20:15",
+            "zones": [
+              "Sala"
+            ],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          },
+          {
+            "time": "20:30",
+            "zones": [
+              "Sala"
+            ],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          },
+          {
+            "time": "20:45",
+            "zones": [
+              "Sala"
+            ],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          },
+          {
+            "time": "21:00",
+            "zones": [
+              "Sala"
+            ],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          },
+          {
+            "time": "21:15",
+            "zones": [
+              "Sala"
+            ],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          },
+          {
+            "time": "21:30",
+            "zones": [
+              "Sala"
+            ],
+            "bookingUrl": "https://www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+            "paymentRequirement": "not_specified",
+            "cancellationPolicyStatus": "unknown",
+            "confirmationMode": "unknown"
+          }
+        ],
+        "partial": false,
+        "checkedAt": "2026-10-20T21:29:22.045Z",
+        "paymentRequirement": "not_specified",
+        "cancellationPolicyStatus": "unknown",
+        "confirmationVerified": false,
+        "evidenceSource": "provider_calendar",
+        "timezone": "Europe/Madrid"
+      }
+    }
+  ]
+}
