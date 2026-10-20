@@ -2686,5 +2686,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-le-cornichon-goncourt": {
+    "name": "Le Cornichon",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=366035&fullscreen&lang=fr&withCloseButton=1",
+    "source": "https://www.lecornichon.paris/",
+    "venueKey": "bookings.zenchef.com/results?rid=366035",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
