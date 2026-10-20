@@ -5,7 +5,7 @@ export function mountProviderPlaywrightBooking(container, api, {
 } = {}) {
   if (!provider || !restaurantId || !endpoint.startsWith('/')) throw new Error('booking_config');
   const isZenchef = provider.toLowerCase() === 'zenchef';
-  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : restaurantId === 'curated-PAR-brasserie-rosie-lou' ? 118503 : restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 298043 : restaurantId === 'curated-PAR-le-petit-sommelier' ? 37613 : restaurantId === 'curated-PAR-chez-savy' ? 68279 : restaurantId === 'curated-PAR-chez-rene' ? 68277 : restaurantId === 'curated-PAR-le-bistrot-de-paris' ? 68145 : restaurantId === 'curated-PAR-aux-bons-crus' ? 20711 : restaurantId === 'curated-PAR-aux-crus-de-bourgogne' ? 22200 : restaurantId === 'curated-PAR-le-petit-retro' ? 116623 : restaurantId === 'curated-PAR-au-moulin-a-vent' ? 139531 : restaurantId === 'curated-PAR-le-petit-pontoise' ? 9493 : restaurantId === 'curated-PAR-le-florentin' ? 283681 : restaurantId === 'curated-PAR-martha-pizze-amore' ? 159369 : restaurantId === 'curated-PAR-le-cafe-marly' ? 122853 : restaurantId === 'curated-PAR-le-cafe-ruc' ? 32216 : restaurantId === 'curated-PAR-indiana-cafe-bonne-nouvelle' ? 253448 : restaurantId === 'curated-PAR-indiana-cafe-richelieu-drouot' ? 276858 : restaurantId === 'curated-PAR-indiana-cafe-beaugrenelle' ? 281252 : restaurantId === 'curated-PAR-indiana-cafe-tolbiac' ? 243266 : restaurantId === 'curated-PAR-indiana-cafe-montparnasse' ? 314295 : restaurantId === 'curated-PAR-indiana-cafe-republique' ? 274078 : restaurantId === 'curated-PAR-indiana-cafe-bercy-village' ? 245385 : restaurantId === 'curated-PAR-indiana-cafe-denfert-rochereau' ? 278132 : restaurantId === 'curated-PAR-indiana-cafe-les-halles' ? 275998 : restaurantId === 'curated-PAR-indiana-cafe-ternes' ? 276269 : restaurantId === 'curated-PAR-okomusu' ? 87616 : restaurantId === 'curated-PAR-chez-fernand-guisarde' ? 429732 : restaurantId === 'curated-PAR-ibrik-kitchen' ? 17983 : restaurantId === 'curated-PAR-le-cornichon-goncourt' ? 172864 : restaurantId === 'curated-PAR-escudella' ? 4974 : restaurantId === 'curated-PAR-comptoir-petits-champs' ? 292 : restaurantId === 'curated-PAR-les-canailles-pigalle' ? 107333 : restaurantId === 'curated-PAR-brasserie-jaja-amsterdam' ? 347295 : restaurantId === 'curated-PAR-bien-eleve' ? 36016 : restaurantId === 'curated-PAR-ardent' ? 82526 : restaurantId === 'curated-PAR-office-paris' ? 12173 : restaurantId === 'curated-PAR-batistou' ? 176469 : restaurantId === 'curated-PAR-becco' ? 177844 : restaurantId === 'curated-PAR-jules-jo' ? 86920 : restaurantId === 'curated-PAR-savannah-cafe' ? 300276 : restaurantId === 'curated-PAR-biche-paris8' ? 149228 : restaurantId === 'curated-PAR-casimir' ? 160340 : restaurantId === 'curated-PAR-cafe-des-musees' ? 7248 : restaurantId === 'curated-PAR-la-plage-parisienne' ? 535548 : restaurantId === 'curated-PAR-zen-restaurant' ? 192088 : null;
+  const lunchShift = restaurantId === 'curated-PAR-bofinger' ? 19170 : restaurantId === 'curated-PAR-la-coupole' ? 20148 : restaurantId === 'curated-PAR-terminus-nord' ? 19380 : restaurantId === 'curated-PAR-le-procope' ? 18190 : restaurantId === 'curated-PAR-la-lorraine' ? 16674 : restaurantId === 'curated-PAR-au-pied-de-cochon' ? 29 : restaurantId === 'curated-PAR-le-grand-cafe-capucines' ? 19590 : restaurantId === 'curated-PAR-brasserie-vagenende' ? 63972 : restaurantId === 'curated-PAR-bouillon-julien' ? 12711 : restaurantId === 'curated-PAR-bouillon-racine' ? 93989 : restaurantId === 'curated-PAR-bouillon-republique' ? 528175 : restaurantId === 'curated-PAR-brasserie-rosie' ? 43203 : restaurantId === 'curated-PAR-brasserie-rosie-lou' ? 118503 : restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 298043 : restaurantId === 'curated-PAR-le-petit-sommelier' ? 37613 : restaurantId === 'curated-PAR-chez-savy' ? 68279 : restaurantId === 'curated-PAR-chez-rene' ? 68277 : restaurantId === 'curated-PAR-le-bistrot-de-paris' ? 68145 : restaurantId === 'curated-PAR-aux-bons-crus' ? 20711 : restaurantId === 'curated-PAR-aux-crus-de-bourgogne' ? 22200 : restaurantId === 'curated-PAR-le-petit-retro' ? 116623 : restaurantId === 'curated-PAR-au-moulin-a-vent' ? 139531 : restaurantId === 'curated-PAR-le-petit-pontoise' ? 9493 : restaurantId === 'curated-PAR-le-florentin' ? 283681 : restaurantId === 'curated-PAR-martha-pizze-amore' ? 159369 : restaurantId === 'curated-PAR-le-cafe-marly' ? 122853 : restaurantId === 'curated-PAR-le-cafe-ruc' ? 32216 : restaurantId === 'curated-PAR-indiana-cafe-bonne-nouvelle' ? 253448 : restaurantId === 'curated-PAR-indiana-cafe-richelieu-drouot' ? 276858 : restaurantId === 'curated-PAR-indiana-cafe-beaugrenelle' ? 281252 : restaurantId === 'curated-PAR-indiana-cafe-tolbiac' ? 243266 : restaurantId === 'curated-PAR-indiana-cafe-montparnasse' ? 314295 : restaurantId === 'curated-PAR-indiana-cafe-republique' ? 274078 : restaurantId === 'curated-PAR-indiana-cafe-bercy-village' ? 245385 : restaurantId === 'curated-PAR-indiana-cafe-denfert-rochereau' ? 278132 : restaurantId === 'curated-PAR-indiana-cafe-les-halles' ? 275998 : restaurantId === 'curated-PAR-indiana-cafe-ternes' ? 276269 : restaurantId === 'curated-PAR-okomusu' ? 87616 : restaurantId === 'curated-PAR-chez-fernand-christine' ? 121338 : restaurantId === 'curated-PAR-chez-fernand-guisarde' ? 429732 : restaurantId === 'curated-PAR-ibrik-kitchen' ? 17983 : restaurantId === 'curated-PAR-le-cornichon-goncourt' ? 172864 : restaurantId === 'curated-PAR-escudella' ? 4974 : restaurantId === 'curated-PAR-comptoir-petits-champs' ? 292 : restaurantId === 'curated-PAR-les-canailles-pigalle' ? 107333 : restaurantId === 'curated-PAR-brasserie-jaja-amsterdam' ? 347295 : restaurantId === 'curated-PAR-bien-eleve' ? 36016 : restaurantId === 'curated-PAR-ardent' ? 82526 : restaurantId === 'curated-PAR-office-paris' ? 12173 : restaurantId === 'curated-PAR-batistou' ? 176469 : restaurantId === 'curated-PAR-becco' ? 177844 : restaurantId === 'curated-PAR-jules-jo' ? 86920 : restaurantId === 'curated-PAR-savannah-cafe' ? 300276 : restaurantId === 'curated-PAR-biche-paris8' ? 149228 : restaurantId === 'curated-PAR-casimir' ? 160340 : restaurantId === 'curated-PAR-cafe-des-musees' ? 7248 : restaurantId === 'curated-PAR-la-plage-parisienne' ? 535548 : restaurantId === 'curated-PAR-zen-restaurant' ? 192088 : null;
   const dateInScope = date => !['curated-PAR-bouillon-julien','curated-PAR-brasserie-rosie-jolie'].includes(restaurantId) || (typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date) && (restaurantId === 'curated-PAR-bouillon-julien' ? !['12-24','12-25','12-31'].includes(date.slice(5)) : !(date.slice(5) >= '08-03' && date.slice(5) <= '08-23')));
   const timeInScope = time => restaurantId !== 'curated-PAR-bouillon-republique' || ['11:30','12:00','12:30','13:00','13:30','14:00','14:30'].includes(time);
   const durationVenue = isZenchef && restaurantId === 'curated-PAR-la-plage-parisienne';
@@ -217,6 +217,11 @@ export function mountProviderPlaywrightBooking(container, api, {
     scope.textContent='Bokning i Velvet gäller lunchserveringen Déjeuner på Indiana Café Bercy Village, Chais 59-61, Cour Saint-Emilion i Paris, för exakt två gäster, i mån av lediga bord. Middag, grupper och val av särskilt rum ingår inte. Ingen viss placering garanteras. Terrassplatser kan inte reserveras. Kontrollera restaurangens aktuella villkor före bokning.';
     container.querySelector('header').after(scope);
   }
+  if (restaurantId === 'curated-PAR-chez-fernand-christine') {
+    const scope=document.createElement('p'); scope.className='booking-scope';
+    scope.textContent='Bokning i Velvet gäller lunch måndag–fredag på Chez Fernand Christine, 9 Rue Christine i Paris, för exakt två gäster med det uttryckliga valet À la carte för båda. Tiderna är 12:00, 12:30, 13:00, 13:30 och 14:00 i mån av lediga bord. Restaurangens sittningstid är 1 timme och 30 minuter. Matpriset anges inte i bokningsformuläret. Lunchformeln, blandade menyval, middag, större sällskap och val av rum eller terrass ingår inte. Velvet skickar inga särskilda önskemål eller presentkortsuppgifter.';
+    container.querySelector('header').after(scope);
+  }
   if (restaurantId === 'curated-PAR-chez-fernand-guisarde') {
     const scope=document.createElement('p'); scope.className='booking-scope';
     scope.textContent='Bokning i Velvet gäller ordinarie lunch på Chez Fernand Guisarde, 13 Rue Guisarde i Paris, för exakt två gäster, i mån av lediga bord. De tider som stöds är kvartstider från 12:00 till 14:15. Middag, större sällskap, specialerbjudanden och val av särskilt rum eller terrass ingår inte. Ingen viss placering, meny eller sluttid garanteras. Velvet skickar inga särskilda önskemål, presentkortsuppgifter eller kontaktförfrågningar.';
@@ -347,30 +352,35 @@ export function mountProviderPlaywrightBooking(container, api, {
   const details = review => review && review.restaurantId === restaurantId
     && /^\d{4}-\d{2}-\d{2}$/.test(review.date) && /^\d{2}:\d{2}/.test(review.time)
     && Number.isInteger(review.party) && review.party > 0
+    && (restaurantId !== 'curated-PAR-chez-fernand-christine' || (review.shiftId === 121338 && review.party === 2))
     && (!durationVenue || (review.reservationSaturdayDurationAcknowledged === true && review.shiftId === 535548 && review.party === 2));
   const fingerprint = value => typeof value === 'string' && value.length > 0;
-  const validOffer = offer => offer?.offerId === 118785 && offer.count === 2 && offer.name === 'Lunch'
-    && typeof offer.description === 'string' && !!offer.description.trim() && offer.currency === 'EUR'
-    && offer.mealPrice === null && offer.priceStatus === 'not_provided_by_booking_form'
-    && offer.menuSource === 'https://restaurantdekas.com/eng/menu' && offer.depositApplies === false
-    && offer.depositMinGuests === 7 && offer.selectionSource === 'native_offer'
-    && offer.submissionSupported === true && /^[a-f0-9]{64}$/.test(offer.version || '');
+  const christineVenue = restaurantId === 'curated-PAR-chez-fernand-christine';
+  const validOffer = offer => (christineVenue || restaurantId === 'curated-AMS-de-kas')
+    && offer?.offerId === (christineVenue ? 60971 : 118785) && offer.count === 2
+    && offer.name === (christineVenue ? 'À la carte' : 'Lunch')
+    && typeof offer.description === 'string' && (christineVenue ? offer.description === '' : !!offer.description.trim())
+    && offer.currency === 'EUR' && offer.mealPrice === null && offer.priceStatus === 'not_provided_by_booking_form'
+    && offer.menuSource === (christineVenue ? 'https://www.restaurantchezfernand.fr/' : 'https://restaurantdekas.com/eng/menu')
+    && offer.depositApplies === false && offer.depositMinGuests === (christineVenue ? 4 : 7)
+    && offer.selectionSource === 'native_offer' && offer.submissionSupported === true
+    && /^[a-f0-9]{64}$/.test(offer.version || '');
   function renderOffer(target, offer) {
     target.replaceChildren(); target.hidden = !validOffer(offer);
     if (target.hidden) return;
     for (const text of [`Meny: ${offer.name} · ${offer.count} gäster`, offer.description,
-      'Pris anges inte i bokningsformuläret.', 'Ingen deposition krävs för detta sällskap om två gäster.']) {
+      'Pris anges inte i bokningsformuläret.', 'Ingen deposition krävs för detta sällskap om två gäster.'].filter(Boolean)) {
       const paragraph = document.createElement('p'); paragraph.textContent = text; target.append(paragraph);
     }
     const link = document.createElement('a'); link.href = offer.menuSource; link.target = '_blank'; link.rel = 'noopener noreferrer';
-    link.textContent = 'Se restaurangens meny'; target.append(link);
+    link.textContent = christineVenue ? 'Se restaurangens webbplats' : 'Se restaurangens meny'; target.append(link);
   }
   const finalReview = () => state?.bookingReview;
   const finalFingerprint = () => finalReview()?.reviewFingerprint;
   const canHold = () => state?.phase === 'hold_review' && state.canHold === true && details(state.holdReview)
     && fingerprint(state.holdReview.fingerprint) && !expired(state.holdReview) && marker?.phase === 'open';
   const hasReview = () => state?.phase === 'booking_review' && details(finalReview()?.details)
-    && (finalReview()?.details.offer === undefined || validOffer(finalReview().details.offer))
+    && ((!christineVenue && finalReview()?.details.offer === undefined) || validOffer(finalReview().details.offer))
     && fingerprint(finalFingerprint()) && (!state.reviewFingerprint || state.reviewFingerprint === finalFingerprint())
     && (!isZenchef || (fingerprint(state.reviewToken) && fingerprint(state.terms?.version)))
     && (finalReview().expiresAt === undefined || !expired(finalReview())) && typeof finalReview().details.termsText === 'string' && !!finalReview().details.termsText.trim();
@@ -401,7 +411,7 @@ export function mountProviderPlaywrightBooking(container, api, {
           && fingerprint(isSubmit() ? marker.reviewFingerprint : snapshot.reviewFingerprint)
           && proof.detailsDigest === (isSubmit() ? marker.reviewFingerprint : snapshot.reviewFingerprint)))
         && (snapshot.details?.roomId === undefined || (proof.roomId === snapshot.details.roomId && proof.roomName === snapshot.details.roomName))
-        && (snapshot.details?.offer === undefined || (validOffer(snapshot.details.offer) && proof.offerEvidence === 'own_booking_readback'
+        && ((!christineVenue && snapshot.details?.offer === undefined) || (validOffer(snapshot.details?.offer) && proof.offerEvidence === 'own_booking_readback'
           && proof.offerId === snapshot.details.offer.offerId && proof.offerCount === snapshot.details.offer.count && proof.offerVersion === snapshot.details.offer.version))
         && typeof result.reference === 'string' && result.reference.trim()) return `Bokningen är bekräftad. Referens: ${result.reference}`;
       return 'Bokningen är inte verifierad. Skicka inte en ny bokning. Kontrollera resultatet med restaurangen.';
