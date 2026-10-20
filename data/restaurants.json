@@ -7450,7 +7450,11 @@
           "source": "VELVET curated · official website",
           "curated": true,
           "locationSource": "https://ibrik.fr/",
-          "locationVerifiedAt": "2026-10-20"
+          "locationVerifiedAt": "2026-10-20",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=352129&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-20"
         },
         {
           "placeId": "curated-PAR-le-cornichon-goncourt",
