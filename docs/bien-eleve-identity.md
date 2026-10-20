@@ -1,0 +1,9 @@
+# Bien élevé Paris — identity only
+
+Canonical `curated-PAR-bien-eleve`; reserved export `ZENCHEF_BIENELEVE`; reserved flag `VELVET_ZENCHEF_BIENELEVE`. Base public274 `853399101083410d04a72e6492f855d928fd5312`. No activation here.
+
+Official https://www.bieneleve.fr/ and native Bien Elevé agree:47 Rue Richer,75009 Paris,+33145814435. Normalized identity-field scan found no matches in829catalog/185registry. Catalog830; registry unchanged. Ardent in the notice is a separate restaurant, not an alias or automatic fallback.
+
+Saved own evidence/bien-eleve/official.html SHA256f8fe074c01ff82e1698b45b50bf941a4b76a4fd242becbdb95bdb069933662ea; results.html SHA256700b51e25ca95697491564901336eaace16abf9e7004be3a5c083495ad5b70a6; form.html SHA256c4bae2e3d9053f2933452a915fc6808bcccafd7133464c97762b0dd2c1d72b37. All locally verified. Own ordinarylink results?rid=354279 only; no lang/pid/sdk/fullscreen/close/collapsed parameters. FR native language is separate. No new supplier GET/native replay.
+
+Scope own36016 Midi semaine/exact2/eightquarters12:00–13:45 subject to availability. Preserve raw confirmationfalse/until10; automatic threshold is supplier logic, not actual booking confirmation. Nullcharge/prepay/noofferfalse-null/cancellation10800SHIFT/nullshiftcomment. Bind exact own disabled optional hidden legacy694 checkbox terrasse-sous-reserve-de-disponibilite/fullmetadata including timestamps; never expose/check/send. Six standardrequired/customV2[]/offers[]; rooms17111/17195 unselected/wishnull. Full FRnotice with br/newline projected beforeconsent: automatic-email wording is supplier notice, not proof of sent/received receipt; no automatic switch to Ardent. No terrace/menu/duration promise. Dinner36018 excluded. OFF until provider/native/review/actualappQA/release. Lava and other parked identities excluded.
