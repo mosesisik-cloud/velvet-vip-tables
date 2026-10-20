@@ -1,0 +1,9 @@
+# Le Comptoir des Petits Champs — identity only
+
+Canonical `curated-PAR-comptoir-petits-champs`; reserved export `ZENCHEF_COMPTOIRPETITSCHAMPS`; reserved flag `VELVET_ZENCHEF_COMPTOIRPETITSCHAMPS`. Base public277 `448c350fb801eb3d394e15449ad70bcf046d66ce`. No activation here.
+
+Official https://www.lecomptoirdespetitschamps.fr/ and native agree:17 Rue des Petits-Champs,75001 Paris,0142964754. Normalized identity-field scan found no matches in832catalog/188registry. Catalog833; registry unchanged. Chimère/Café Véry in notices are separate restaurants, not aliases or automatic fallbacks.
+
+Saved evidence/comptoir-petits-champs/official.html SHA2564593eacd2095f7b1dc1ae8b44171e35a42621f87e864b34a7fc963e555c404bb; results.html SHA2566be5b9c717644479ef20cfa1b847008641ea2a10b8c84fd22f5678c8394f1478; form.html SHA2565441c5f72b79ca84911ecde3f62c51089b63f860461f42baa07f7d22d63fc822. All locally verified. Own ReserveAction301 to results?rid=77441&fullscreen&lang=fr&withCloseButton=1; exactemptyfullscreen, no pid/sdk/statepartner, FRFR. No new supplierGET/native replay.
+
+Scope292 Déjeuner semaine/exact2/11quarters12–14:30/autoTRUE-null/nullchargeprepay/nooffer86400SHIFT/commentnull. Sixrequired/custom[]V2[]/no-roomselection/wishnull/rawrooms78743+89681unselected. Two full raw historicaloffers28189(date2025-12-31) and28252(2025-12-24) remainactiveTRUE/has_prepaymentTRUE/5000/unselected, never erased or selected as lunch. Exactfullarraydigest e3a1475d826fdd5e70696d6afda4f35ed183ef130abe6ddb9d18beb83e78ebef plusdate/unselectedguard required. FullFR+ENrawnotice retained including links/newlines/curlyquotes; safe complete readableFRprojection beforeconsent including cancellation request and alternatives. No rawHTMLinjection/referral/contact/room/menu/duration promise. Dinner6847 excluded. OFF until provider/native/review/actualappQA/release. Lava and parked identities excluded.
