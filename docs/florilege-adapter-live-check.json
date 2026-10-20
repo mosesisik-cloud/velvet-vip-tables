@@ -1,0 +1,103 @@
+{
+  "scope": "Local adapter only, no production flags changed or bookings created",
+  "query": {
+    "date": "2026-10-23",
+    "time": "19:00",
+    "party": 2
+  },
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://www.tablecheck.com/ja/shops/florilege/reserve",
+      "status": 200,
+      "headersMs": 3959,
+      "redirected": false,
+      "sameUrl": true,
+      "totalMs": 4853,
+      "bytes": 79169
+    },
+    {
+      "method": "GET",
+      "url": "https://www.tablecheck.com/ja/shops/florilege/menu_items?num_people=2&date=2026-10-23&duration=&service_category_id=",
+      "status": 200,
+      "headersMs": 3033,
+      "redirected": false,
+      "sameUrl": true,
+      "totalMs": 3034,
+      "bytes": 664
+    },
+    {
+      "method": "GET",
+      "url": "https://www.tablecheck.com/ja/shops/florilege/available?reservation%5Bstart_at_epoch%5D=1792746000&reservation%5Bnum_people_adult%5D=2&reservation%5Borders_attributes%5D%5B0%5D%5Bmenu_item_id%5D=69de281e8f8b857354384826&reservation%5Borders_attributes%5D%5B0%5D%5Bis_group_order%5D=true",
+      "status": 200,
+      "headersMs": 799,
+      "redirected": false,
+      "sameUrl": true,
+      "totalMs": 800,
+      "bytes": 83
+    },
+    {
+      "method": "GET",
+      "url": "https://www.tablecheck.com/ja/shops/florilege/available?reservation%5Bstart_at_epoch%5D=1792746900&reservation%5Bnum_people_adult%5D=2&reservation%5Borders_attributes%5D%5B0%5D%5Bmenu_item_id%5D=69de281e8f8b857354384826&reservation%5Borders_attributes%5D%5B0%5D%5Bis_group_order%5D=true",
+      "status": 200,
+      "headersMs": 3446,
+      "redirected": false,
+      "sameUrl": true,
+      "totalMs": 3447,
+      "bytes": 83
+    },
+    {
+      "method": "GET",
+      "url": "https://www.tablecheck.com/ja/shops/florilege/available?reservation%5Bstart_at_epoch%5D=1792747800&reservation%5Bnum_people_adult%5D=2&reservation%5Borders_attributes%5D%5B0%5D%5Bmenu_item_id%5D=69de281e8f8b857354384826&reservation%5Borders_attributes%5D%5B0%5D%5Bis_group_order%5D=true",
+      "status": 200,
+      "headersMs": 3458,
+      "redirected": false,
+      "sameUrl": true,
+      "totalMs": 3459,
+      "bytes": 83
+    }
+  ],
+  "result": {
+    "restaurantId": "curated-TYO-florilege",
+    "restaurant": "Florilège",
+    "city": "Tokyo",
+    "provider": "TableCheck",
+    "slots": [
+      {
+        "time": "18:00",
+        "menuId": "69de281e8f8b857354384826",
+        "menuName": "フルテイスティングコース（ディナー）",
+        "bookingUrl": "https://www.tablecheck.com/ja/shops/florilege/reserve",
+        "paymentRequirement": "prepayment",
+        "confirmationMode": "automatic",
+        "confirmationVerified": false
+      },
+      {
+        "time": "18:15",
+        "menuId": "69de281e8f8b857354384826",
+        "menuName": "フルテイスティングコース（ディナー）",
+        "bookingUrl": "https://www.tablecheck.com/ja/shops/florilege/reserve",
+        "paymentRequirement": "prepayment",
+        "confirmationMode": "automatic",
+        "confirmationVerified": false
+      },
+      {
+        "time": "18:30",
+        "menuId": "69de281e8f8b857354384826",
+        "menuName": "フルテイスティングコース（ディナー）",
+        "bookingUrl": "https://www.tablecheck.com/ja/shops/florilege/reserve",
+        "paymentRequirement": "prepayment",
+        "confirmationMode": "automatic",
+        "confirmationVerified": false
+      }
+    ],
+    "checkedAt": "2026-10-20T21:19:23.278Z",
+    "paymentRequirement": "prepayment",
+    "cancellationPolicyStatus": "unknown",
+    "availabilityScope": "reviewed_shift",
+    "confirmationVerified": false,
+    "status": "available",
+    "partial": false,
+    "evidenceSource": "provider_menu_scoped_availability"
+  }
+}

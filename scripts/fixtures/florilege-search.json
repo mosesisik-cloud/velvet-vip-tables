@@ -1,0 +1,211 @@
+{
+  "source": "https://www.tablecheck.com/ja/shops/florilege/reserve",
+  "scope": "Selected non-sensitive source tags and policy assignments; not an executable page",
+  "html": "<form class=\"simple_form form-horizontal reserveform \" id=\"new_reservation\" novalidate=\"novalidate\" data-reservation-url=\"/ja/shops/florilege/reserve/create\" data-reservation-request-url=\"/ja/reservation_requests/join?shop_id=florilege\" action=\"/ja/shops/florilege/reserve/create\" accept-charset=\"UTF-8\" data-remote=\"true\" method=\"post\">\n<div id=\"shop-data\" data-shop=\"florilege\" data-utc-offset=\"32400\">\n<div class=\"menu-item-data\" data-id=\"6a1803b9e80c1373f9be87bc\" data-name=\"ウラリレージュ（2026年7月11日ディナー）\" data-menu-type=\"main\" data-is-group-order=\"true\" data-payment-type=\"prepay_required\">\n<div class=\"menu-item-data\" data-id=\"6a1804010f56ca9e160ac42c\" data-name=\"ウラリレージュ（2026年7月12日 ランチ）\" data-menu-type=\"main\" data-is-group-order=\"true\" data-payment-type=\"prepay_required\">\n<div class=\"menu-item-data\" data-id=\"6550a35710b9b300d6fc2cbb\" data-name=\"クリスマス&amp;ホリデーズランチコース\" data-menu-type=\"main\" data-is-group-order=\"true\" data-payment-type=\"prepay_required\">\n<div class=\"menu-item-data\" data-id=\"6550a3d5916f1400d1958ab5\" data-name=\"クリスマス&amp;ホリデーズディナーコース\" data-menu-type=\"main\" data-is-group-order=\"true\" data-payment-type=\"prepay_required\">\n<div class=\"menu-item-data\" data-id=\"683d0e24391342730c337f13\" data-name=\"ショートコース（ランチ）\" data-menu-type=\"main\" data-is-group-order=\"true\" data-payment-type=\"prepay_required\">\n<div class=\"menu-item-data\" data-id=\"69de27e11f87c5f89c384a7c\" data-name=\"フルテイスティングコース（ランチ）\" data-menu-type=\"main\" data-is-group-order=\"true\" data-payment-type=\"prepay_required\">\n<div class=\"menu-item-data\" data-id=\"69de281e8f8b857354384826\" data-name=\"フルテイスティングコース（ディナー）\" data-menu-type=\"main\" data-is-group-order=\"true\" data-payment-type=\"prepay_required\">\nOnlineAvailability.autoAccept         = true;\nReservationCourses.isRequired         = true;\nReservationCourses.maxOrders          = 1;\nReserveForm.max_num_people            = 4;",
+  "menuResponse": {
+    "menu_items": [
+      {
+        "id": "683d0e24391342730c337f13",
+        "qty_remaining": null,
+        "online_time_steps": [
+          [
+            1792724400,
+            43200
+          ],
+          [
+            1792725300,
+            44100
+          ],
+          [
+            1792726200,
+            45000
+          ]
+        ]
+      },
+      {
+        "id": "69de27e11f87c5f89c384a7c",
+        "qty_remaining": null,
+        "online_time_steps": [
+          [
+            1792724400,
+            43200
+          ],
+          [
+            1792725300,
+            44100
+          ],
+          [
+            1792726200,
+            45000
+          ]
+        ]
+      },
+      {
+        "id": "69de281e8f8b857354384826",
+        "qty_remaining": null,
+        "online_time_steps": [
+          [
+            1792746000,
+            64800
+          ],
+          [
+            1792746900,
+            65700
+          ],
+          [
+            1792747800,
+            66600
+          ]
+        ]
+      },
+      {
+        "id": "6ab3a633244268a666cafab9",
+        "qty_remaining": 0,
+        "online_time_steps": []
+      },
+      {
+        "id": "6ab3da8e2d80954e8086a9a5",
+        "qty_remaining": null,
+        "online_time_steps": [
+          [
+            1792724400,
+            43200
+          ]
+        ]
+      },
+      {
+        "id": "6ab3dbc4a1a8485f7786b1e2",
+        "qty_remaining": 0,
+        "online_time_steps": []
+      }
+    ]
+  },
+  "observations": {
+    "restaurantId": "curated-TYO-florilege",
+    "query": {
+      "date": "2026-10-23",
+      "party": 2,
+      "timezone": "Asia/Tokyo"
+    },
+    "scope": "Only three reviewed prepayment menus and their supplier-provided date-specific times. Anonymous GET only. No form submission, hold, cart or payment.",
+    "rows": [
+      {
+        "menuId": "683d0e24391342730c337f13",
+        "time": "12:00",
+        "url": "https://www.tablecheck.com/ja/shops/florilege/available?reservation%5Bstart_at_epoch%5D=1792724400&reservation%5Bnum_people_adult%5D=2&reservation%5Borders_attributes%5D%5B0%5D%5Bmenu_item_id%5D=683d0e24391342730c337f13&reservation%5Borders_attributes%5D%5B0%5D%5Bis_group_order%5D=true",
+        "method": "GET",
+        "paymentRequirement": "prepayment",
+        "confirmationVerified": false,
+        "httpStatus": 200,
+        "observedAt": "2026-10-20T21:13:23.734Z",
+        "sha256": "cb35e6f2362d3b59d80cdceffc4edf950c2b40a93f241d62f91e92cb36ff03e2",
+        "supplierStatus": "failure",
+        "status": "unavailable"
+      },
+      {
+        "menuId": "683d0e24391342730c337f13",
+        "time": "12:15",
+        "url": "https://www.tablecheck.com/ja/shops/florilege/available?reservation%5Bstart_at_epoch%5D=1792725300&reservation%5Bnum_people_adult%5D=2&reservation%5Borders_attributes%5D%5B0%5D%5Bmenu_item_id%5D=683d0e24391342730c337f13&reservation%5Borders_attributes%5D%5B0%5D%5Bis_group_order%5D=true",
+        "method": "GET",
+        "paymentRequirement": "prepayment",
+        "confirmationVerified": false,
+        "httpStatus": 200,
+        "observedAt": "2026-10-20T21:13:26.716Z",
+        "sha256": "cb35e6f2362d3b59d80cdceffc4edf950c2b40a93f241d62f91e92cb36ff03e2",
+        "supplierStatus": "failure",
+        "status": "unavailable"
+      },
+      {
+        "menuId": "683d0e24391342730c337f13",
+        "time": "12:30",
+        "url": "https://www.tablecheck.com/ja/shops/florilege/available?reservation%5Bstart_at_epoch%5D=1792726200&reservation%5Bnum_people_adult%5D=2&reservation%5Borders_attributes%5D%5B0%5D%5Bmenu_item_id%5D=683d0e24391342730c337f13&reservation%5Borders_attributes%5D%5B0%5D%5Bis_group_order%5D=true",
+        "method": "GET",
+        "paymentRequirement": "prepayment",
+        "confirmationVerified": false,
+        "httpStatus": 200,
+        "observedAt": "2026-10-20T21:13:27.507Z",
+        "sha256": "cb35e6f2362d3b59d80cdceffc4edf950c2b40a93f241d62f91e92cb36ff03e2",
+        "supplierStatus": "failure",
+        "status": "unavailable"
+      },
+      {
+        "menuId": "69de27e11f87c5f89c384a7c",
+        "time": "12:00",
+        "url": "https://www.tablecheck.com/ja/shops/florilege/available?reservation%5Bstart_at_epoch%5D=1792724400&reservation%5Bnum_people_adult%5D=2&reservation%5Borders_attributes%5D%5B0%5D%5Bmenu_item_id%5D=69de27e11f87c5f89c384a7c&reservation%5Borders_attributes%5D%5B0%5D%5Bis_group_order%5D=true",
+        "method": "GET",
+        "paymentRequirement": "prepayment",
+        "confirmationVerified": false,
+        "httpStatus": 200,
+        "observedAt": "2026-10-20T21:13:28.227Z",
+        "sha256": "cb35e6f2362d3b59d80cdceffc4edf950c2b40a93f241d62f91e92cb36ff03e2",
+        "supplierStatus": "failure",
+        "status": "unavailable"
+      },
+      {
+        "menuId": "69de27e11f87c5f89c384a7c",
+        "time": "12:15",
+        "url": "https://www.tablecheck.com/ja/shops/florilege/available?reservation%5Bstart_at_epoch%5D=1792725300&reservation%5Bnum_people_adult%5D=2&reservation%5Borders_attributes%5D%5B0%5D%5Bmenu_item_id%5D=69de27e11f87c5f89c384a7c&reservation%5Borders_attributes%5D%5B0%5D%5Bis_group_order%5D=true",
+        "method": "GET",
+        "paymentRequirement": "prepayment",
+        "confirmationVerified": false,
+        "httpStatus": 200,
+        "observedAt": "2026-10-20T21:13:28.940Z",
+        "sha256": "cb35e6f2362d3b59d80cdceffc4edf950c2b40a93f241d62f91e92cb36ff03e2",
+        "supplierStatus": "failure",
+        "status": "unavailable"
+      },
+      {
+        "menuId": "69de27e11f87c5f89c384a7c",
+        "time": "12:30",
+        "url": "https://www.tablecheck.com/ja/shops/florilege/available?reservation%5Bstart_at_epoch%5D=1792726200&reservation%5Bnum_people_adult%5D=2&reservation%5Borders_attributes%5D%5B0%5D%5Bmenu_item_id%5D=69de27e11f87c5f89c384a7c&reservation%5Borders_attributes%5D%5B0%5D%5Bis_group_order%5D=true",
+        "method": "GET",
+        "paymentRequirement": "prepayment",
+        "confirmationVerified": false,
+        "httpStatus": 200,
+        "observedAt": "2026-10-20T21:13:29.813Z",
+        "sha256": "cb35e6f2362d3b59d80cdceffc4edf950c2b40a93f241d62f91e92cb36ff03e2",
+        "supplierStatus": "failure",
+        "status": "unavailable"
+      },
+      {
+        "menuId": "69de281e8f8b857354384826",
+        "time": "18:00",
+        "url": "https://www.tablecheck.com/ja/shops/florilege/available?reservation%5Bstart_at_epoch%5D=1792746000&reservation%5Bnum_people_adult%5D=2&reservation%5Borders_attributes%5D%5B0%5D%5Bmenu_item_id%5D=69de281e8f8b857354384826&reservation%5Borders_attributes%5D%5B0%5D%5Bis_group_order%5D=true",
+        "method": "GET",
+        "paymentRequirement": "prepayment",
+        "confirmationVerified": false,
+        "httpStatus": 200,
+        "observedAt": "2026-10-20T21:13:30.624Z",
+        "sha256": "8c2c942700121a06df2359ebba131d80728f74bc237073eb95ded411f27b9c77",
+        "supplierStatus": "success",
+        "status": "available"
+      },
+      {
+        "menuId": "69de281e8f8b857354384826",
+        "time": "18:15",
+        "url": "https://www.tablecheck.com/ja/shops/florilege/available?reservation%5Bstart_at_epoch%5D=1792746900&reservation%5Bnum_people_adult%5D=2&reservation%5Borders_attributes%5D%5B0%5D%5Bmenu_item_id%5D=69de281e8f8b857354384826&reservation%5Borders_attributes%5D%5B0%5D%5Bis_group_order%5D=true",
+        "method": "GET",
+        "paymentRequirement": "prepayment",
+        "confirmationVerified": false,
+        "httpStatus": 200,
+        "observedAt": "2026-10-20T21:13:31.196Z",
+        "sha256": "8c2c942700121a06df2359ebba131d80728f74bc237073eb95ded411f27b9c77",
+        "supplierStatus": "success",
+        "status": "available"
+      },
+      {
+        "menuId": "69de281e8f8b857354384826",
+        "time": "18:30",
+        "url": "https://www.tablecheck.com/ja/shops/florilege/available?reservation%5Bstart_at_epoch%5D=1792747800&reservation%5Bnum_people_adult%5D=2&reservation%5Borders_attributes%5D%5B0%5D%5Bmenu_item_id%5D=69de281e8f8b857354384826&reservation%5Borders_attributes%5D%5B0%5D%5Bis_group_order%5D=true",
+        "method": "GET",
+        "paymentRequirement": "prepayment",
+        "confirmationVerified": false,
+        "httpStatus": 200,
+        "observedAt": "2026-10-20T21:13:31.860Z",
+        "sha256": "8c2c942700121a06df2359ebba131d80728f74bc237073eb95ded411f27b9c77",
+        "supplierStatus": "success",
+        "status": "available"
+      }
+    ]
+  }
+}
