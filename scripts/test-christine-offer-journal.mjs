@@ -45,6 +45,11 @@ test('only exact saved-offer proof confirms and metadata remains bound through U
     assert.equal(j.verifySnapshot({...snapshot,details:{...request.details,shiftId:429732}},'guest'),null);
     assert.equal(j.verifySnapshot({...snapshot,details:{...request.details,offer:changed}},'guest'),null);
     assert.equal(j.verifySnapshot(snapshot,'other'),null);
+    for (const change of [{date:'2030-01-16'},{time:'12:30'},{party:3}]) {
+      const details={...request.details,...change};
+      assert.equal(j.verifySnapshot({...snapshot,details},'guest'),null);
+      assert.throws(()=>j.recordAttempt({intent:{...request,details},attempt,result}),/attempt_binding|shift_binding/);
+    }
   } finally {ledger.close();}
 });
 test('missing offer, invented free price and unexpected menu fields fail before reservation',()=>{
