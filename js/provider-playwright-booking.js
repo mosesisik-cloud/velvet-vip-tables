@@ -352,6 +352,7 @@ export function mountProviderPlaywrightBooking(container, api, {
   const details = review => review && review.restaurantId === restaurantId
     && /^\d{4}-\d{2}-\d{2}$/.test(review.date) && /^\d{2}:\d{2}/.test(review.time)
     && Number.isInteger(review.party) && review.party > 0
+    && (restaurantId !== 'curated-PAR-chez-fernand-christine' || (review.shiftId === 121338 && review.party === 2))
     && (!durationVenue || (review.reservationSaturdayDurationAcknowledged === true && review.shiftId === 535548 && review.party === 2));
   const fingerprint = value => typeof value === 'string' && value.length > 0;
   const christineVenue = restaurantId === 'curated-PAR-chez-fernand-christine';
