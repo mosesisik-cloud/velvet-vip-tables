@@ -18,7 +18,7 @@ export class BookingRegister {
       && row.roomName.trim() && row.roomName.length <= 256 && !/[\x00-\x1f\x7f]/.test(row.roomName)) {
       clean.roomId=row.roomId; clean.roomName=row.roomName;
     }
-    const offer=cleanBookingOffer(row.offer); if (offer) clean.offer=offer;
+    const offer=cleanBookingOffer(row.offer,row.restaurantId); if (offer) clean.offer=offer;
     if (typeof row.mealLabel === 'string' && row.mealLabel.trim() && row.mealLabel.length <= 256
       && !/[\x00-\x1f\x7f]/.test(row.mealLabel)) clean.mealLabel=row.mealLabel;
     if (!clean.id || !clean.userId || !clean.status) return;

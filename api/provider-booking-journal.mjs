@@ -21,7 +21,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     restaurant:venue(attempt.restaurantId)?.name || attempt.restaurantId,
     destination:venue(attempt.restaurantId)?.city || '',date:attempt.date,time:attempt.time,
     ...(Number.isSafeInteger(attempt.roomId) && attempt.roomName ? {roomId:attempt.roomId,roomName:attempt.roomName} : {}),
-    ...(attempt.details?.offer ? {offer:cleanBookingOffer(attempt.details.offer)} : {}),
+    ...(attempt.details?.offer ? {offer:cleanBookingOffer(attempt.details.offer,attempt.restaurantId)} : {}),
     party:attempt.party,status:attempt.status,providerReference:attempt.reference || '',
     createdAt:attempt.createdAt,updatedAt:attempt.updatedAt,
   });
@@ -40,7 +40,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
     const shift=venue(intent.restaurantId).shiftId;
     if (shift && (intent.details?.shiftId !== shift || intent.details?.party !== 2 || intent.phase !== 'booking')) fail('shift_binding');
     if (configured) {
-      const offer=cleanBookingOffer(intent.details?.offer);
+      const offer=cleanBookingOffer(intent.details?.offer,intent.restaurantId);
       if (!offer || offer.offerId !== configured.offerId || offer.count !== configured.count || offer.count !== intent.details?.party) fail('offer_binding');
     } else if (intent.details?.offer !== undefined) fail('offer_binding');
     const rooms = venue(intent.restaurantId).rooms;
@@ -57,7 +57,7 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
       && (!venue(attempt.restaurantId)?.orderEvidence || proof?.orderEvidence === venue(attempt.restaurantId).orderEvidence)
       && (!venue(attempt.restaurantId)?.shiftId || (attempt.details?.shiftId === venue(attempt.restaurantId).shiftId
         && attempt.party === 2 && proof?.shiftId === attempt.details.shiftId && proof?.bookingEvidence === 'own_booking_readback'))
-      && (!venue(attempt.restaurantId)?.offer || (cleanBookingOffer(attempt.details?.offer)
+      && (!venue(attempt.restaurantId)?.offer || (cleanBookingOffer(attempt.details?.offer,attempt.restaurantId)
         && proof?.offerEvidence === 'own_booking_readback'
         && proof.offerId === attempt.details.offer.offerId && proof.offerCount === attempt.details.offer.count
         && proof.offerVersion === attempt.details.offer.version))
@@ -74,8 +74,12 @@ export function createProviderJournal({ ledger, register, provider, restaurants,
         sessionId:intent.sessionId,phase:intent.phase,mode,idempotencyKey,
         reviewFingerprint:intent.reviewFingerprint,date:intent.details?.date,
         time:intent.details?.time,party:intent.details?.party,
-        ...(venue(intent.restaurantId).offer ? {details:{offer:cleanBookingOffer(intent.details.offer)}} : {}),
-        ...(venue(intent.restaurantId).shiftId ? {details:{shiftId:intent.details.shiftId,...(purposeVenue(intent.restaurantId) ? {reservationPurpose:intent.details.reservationPurpose} : {}),...(visitReasonVenue(intent.restaurantId) ? {reservationVisitReason:intent.details.reservationVisitReason} : {}),...(durationVenue(intent.restaurantId) ? {reservationSaturdayDurationAcknowledged:true} : {})}} : {}),
+        ...(venue(intent.restaurantId).offer || venue(intent.restaurantId).shiftId ? {details:{
+          ...(venue(intent.restaurantId).offer ? {offer:cleanBookingOffer(intent.details.offer,intent.restaurantId)} : {}),
+          ...(venue(intent.restaurantId).shiftId ? {shiftId:intent.details.shiftId} : {}),
+          ...(purposeVenue(intent.restaurantId) ? {reservationPurpose:intent.details.reservationPurpose} : {}),
+          ...(visitReasonVenue(intent.restaurantId) ? {reservationVisitReason:intent.details.reservationVisitReason} : {}),
+          ...(durationVenue(intent.restaurantId) ? {reservationSaturdayDurationAcknowledged:true} : {})}} : {}),
         ...(venue(intent.restaurantId).rooms ? {roomId:intent.details.roomId,roomName:intent.details.roomName} : {})});
       if (!gate.sendAllowed) fail('already_attempted');
       if (intent.phase === 'booking') register.upsert(row(gate.attempt,intent.owner));

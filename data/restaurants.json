@@ -7450,7 +7450,11 @@
           "source": "VELVET curated · official website",
           "curated": true,
           "locationSource": "https://www.restaurantchezfernand.fr/",
-          "locationVerifiedAt": "2026-10-20"
+          "locationVerifiedAt": "2026-10-20",
+          "bookingUrl": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-20"
         },
         {
           "placeId": "curated-PAR-chez-fernand-guisarde",

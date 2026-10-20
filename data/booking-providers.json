@@ -2725,5 +2725,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-chez-fernand-christine": {
+    "name": "Chez Fernand Christine",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1",
+    "source": "https://www.restaurantchezfernand.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=361894",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
