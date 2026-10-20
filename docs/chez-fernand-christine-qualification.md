@@ -35,3 +35,34 @@ The floating booking component kC renders a button spreading those props (`...nC
 Module-rendered identity states Chez Fernand Christine,9 Rue Christine75006Paris. Footer and privacy text contain0143251855, agreeing with the original search lead; the root JSON-LD's0143546171 discrepancy remains recorded. No contact was made and no canonical phone changed.
 
 Outcome remains unresolved concrete booking destination/query within this inspection boundary. Exactly one moduleGET added; no imports/SDK/analytics/fonts/browser/provider/results/form fetched, no code executed or transaction. No invented URL/defaults. Await master assessment before further network work.
+
+## Authorized static SDK trace — initial destination established
+
+Master authorized ONE rawtextGET of the exact SDK URL referenced by the own root, with no execution/import/provider requests. https://sdk.zenchef.com/v1/sdk.min.js returnedHTTP200/no redirect at2026-10-20T20:24:30.170Z,19582bytes,SHA256f5ec269f8bb0d928001b2ef06de94b126498c88905586e3a5a328b7a491fc86c. Saved sdk.min.js and sdk-meta.json beside own evidence; hash/bytes independently verified. This later SDK capture is timestamped separately from the earlier root/module captures.
+
+Static chain in this captured SDK:
+
+1. ce reads the first .zc-widget-config through I.extractFromDocument; own raw root supplies restaurant361894 and data-openfalse, with no other attributes. Script-host detection Q selects Zenchef for the explicit sdk.zenchef.com source; I.env falls back to prod because own data-env is absent. K selects the production bookings.zenchef.com origin.
+2. I.bwParameters maps data-restaurant to rid. Missing data-lang/data-partner-id/data-position/etc returnnull and P.addParameter omits nullish values. Missing data-hide-default-button deterministically produces showCollapsedSTRING1. These are SDK-proven rules, not assumed defaults. data-openfalse affects only the open delay (null), not the URL.
+3. P.loadConfig constructs h without multivenue and adds sdkSTRING1 and withCloseButtonSTRING1 before the mapped parameters. h.page selects results: own root URL has no search parameters for prepayment, credit-card-imprint or preview and no multivenue config. h.build uses URL/URLSearchParams in insertion order; P.resetSrc assigns the built URL to the iframe.
+4. y listens to clicks on data-zc-action, passes open through c/R to O, which calls P.open. With showCollapsed1, P.open sends an open-widget postMessage to the iframe; it does not add booking query values. The own module contains no ZcWidget/ZenchefWidget/openWith/openOffer calls.
+
+Relevant exact small code fragments from the SDK:
+
+```javascript
+get env(){return this.getAttribute("data-env")??"prod"}
+this.iframe.setAttribute("src",this.urlBuilder.build())
+case"open":this.iframeBuilder.open();break;
+```
+
+The deterministic INITIAL iframe destination for the captured own root configuration is therefore:
+
+```text
+https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1
+```
+
+No lang, pid, fullscreen, day, pax, room or offer is added by this own path. In particular, ownHTMLlangfr does not become a bookingquerylang in this SDK. No URL was fetched to validate the derivation; it is a static derivation, not an observed browser request.
+
+Remaining runtime boundaries: initial construction requires the own config/script element to exist in the DOM; subsequent widget-listening/height/open/redirect/popup events and supplier content are unknown until separately authorized inspection. The SDK also contains other website_popup/payment/redirect/analytics branches, but they are NOT the selected initial booking URL and none was followed. Provider identity/policy/schema/availability/default language/native rendering and successful acceptance remain unknown. Dynamic server changes since capture are not inferred away.
+
+The previously unresolved INITIAL destination is now statically established from own config plus captured SDK. Stop here for coordinator assessment BEFORE any results/form request. No SDK execution, CSS/import/analytics/font requests, browser replay, provider traffic, transaction, contact or implementation; document-only update to the same PR469.
