@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {AvailabilitySearch} from '../api/availability-search.mjs';
 import {createFlorilegeAvailability,florilegeSearchPolicy,florilegeMenuTimes,florilegeAvailabilityStatus,FLORILEGE_SEARCH as v} from '../api/providers/tablecheck-florilege-availability.mjs';
 const fixture=JSON.parse(fs.readFileSync(new URL('./fixtures/florilege-search.json',import.meta.url)));
 const row={restaurantId:v.id,provider:v.provider,name:v.name,city:v.city,url:v.registryUrl,venueKey:'www.tablecheck.com/shops/florilege/reserve',liveAvailabilitySupported:true};
@@ -46,6 +47,35 @@ assert.deepEqual(florilegeMenuTimes(empty,q,policies),[]);
 for(const raw of [{status:'success',data:[]},{status:'success',data:['unexpected']},{status:'reservation_request'},{status:'other_day'}])assert.notEqual(florilegeAvailabilityStatus(raw),'available');
 const controller=new AbortController();controller.abort();calls=[];
 assert.equal((await adapter(row,{...q,signal:controller.signal})).status,'error');assert.equal(calls.length,0);
+const partialAdapter=createFlorilegeAvailability({registry,fetcher:async(url,options)=>{
+ if(url.includes('1792746900'))throw new DOMException('Provider timeout','TimeoutError');
+ return fetcher(url,options);
+}});
+const partial=await partialAdapter(row,q);
+assert.equal(partial.status,'available');assert.equal(partial.partial,true);
+assert.deepEqual(partial.slots.map(s=>s.time),['18:00','18:30']);
+assert.ok(partial.slots.every(s=>Number.isFinite(Date.parse(s.checkedAt))));
+const brokenAdapter=createFlorilegeAvailability({registry,fetcher:async(url,options)=>{
+ if(new URL(url).pathname.endsWith('/available'))throw new Error('network');
+ return fetcher(url,options);
+}});
+assert.equal((await brokenAdapter(row,q)).status,'error');
+const canceled=new AbortController();
+const cancelAdapter=createFlorilegeAvailability({registry,fetcher:async(url,options)=>{
+ const r=await fetcher(url,options);if(url.includes('1792746900'))canceled.abort();return r;
+}});
+const canceledResult=await cancelAdapter(row,{...q,signal:canceled.signal});
+assert.equal(canceledResult.status,'error');assert.equal(canceledResult.reason,'search_aborted');assert.deepEqual(canceledResult.slots,[]);
 registry[v.id].liveAvailabilitySupported=false;calls=[];
 assert.equal((await adapter(row,q)).status,'unsupported');assert.equal(calls.length,0);
+const service=new AvailabilitySearch({registry,restaurants:{destinations:{TYO:{destination:'Tokyo',restaurants:[{placeId:v.id,name:v.name}]}}},now:()=>Date.parse('2026-10-20T21:14:00Z'),adapters:{TableCheck:adapter}});
+assert.equal((await service.search({...q,city:'Tokyo'})).results[0].status,'unsupported');assert.equal(calls.length,0);
+registry[v.id].liveAvailabilitySupported=true;
+const integrated=await service.search({...q,city:'Tokyo'});
+assert.equal(integrated.results[0].status,'available');assert.equal(integrated.results[0].slots.length,3);
+const flipAdapter=createFlorilegeAvailability({registry,fetcher:async(url,options)=>{
+ const response=await fetcher(url,options);if(new URL(url).pathname.endsWith('/available'))registry[v.id].liveAvailabilitySupported=false;
+ return response;
+}});
+assert.equal((await flipAdapter(row,q)).status,'unsupported');
 console.log('PASS Florilege: observed source binding, exact GET-only search, date/menu/time scope, prepayment disclosure, request-only/unknown distinction, disabled gates and abort. No live requests.');

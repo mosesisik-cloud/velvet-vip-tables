@@ -83,12 +83,15 @@ export function createFlorilegeAvailability({registry,fetcher=fetch,now=Date.now
           'reservation[orders_attributes][0][menu_item_id]':time.menuId,'reservation[orders_attributes][0][is_group_order]':'true'});
         const status=florilegeAvailabilityStatus(await read(root+'/available?'+params));
         if(status==='available')slots.push({time:time.time,menuId:time.menuId,menuName:time.menuName,
-          bookingUrl:FLORILEGE_SEARCH.page,paymentRequirement:'prepayment',confirmationMode:'automatic',confirmationVerified:false});
+          bookingUrl:FLORILEGE_SEARCH.page,paymentRequirement:'prepayment',confirmationMode:'automatic',confirmationVerified:false,checkedAt:new Date(now()).toISOString()});
         else if(status!=='unavailable')uncertain=true;
       };
       // Independent read-only menu/time checks; at most three in flight.
       for(let start=0;start<times.length;start+=3) {
-        await Promise.all(times.slice(start,start+3).map(check));
+        const results=await Promise.allSettled(times.slice(start,start+3).map(check));
+        if(results.some(result=>result.status==='rejected'))uncertain=true;
+        q.signal?.throwIfAborted();
+        if(signal.aborted){uncertain=true;break;}
       }
       slots.sort((a,b)=>a.time.localeCompare(b.time)||a.menuId.localeCompare(b.menuId));
       if(!bound(registry?.[FLORILEGE_SEARCH.id]))return {...base,status:'unsupported'};
