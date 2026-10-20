@@ -2673,5 +2673,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-escudella": {
+    "name": "L’Escudella",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=348060&fullscreen&lang=fr&withCloseButton=1",
+    "source": "https://www.escudella.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=348060",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
