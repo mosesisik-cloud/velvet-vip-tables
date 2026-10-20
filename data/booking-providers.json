@@ -2647,5 +2647,18 @@
     "checkedAt": "2026-10-18",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-PAR-les-canailles-pigalle": {
+    "name": "Les Canailles Pigalle",
+    "city": "Paris",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=361319&pid=1001",
+    "source": "https://restaurantlescanailles.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=361319",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-18",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }

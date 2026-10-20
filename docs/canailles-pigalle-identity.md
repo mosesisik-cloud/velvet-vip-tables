@@ -1,0 +1,9 @@
+# Les Canailles Pigalle — identity only
+
+Canonical `curated-PAR-les-canailles-pigalle`; reserved export `ZENCHEF_CANAILLESPIGALLE`; reserved flag `VELVET_ZENCHEF_CANAILLESPIGALLE`. Base public276 `222027531f6ab9fa6ee1461caf53b89d80ca6e24`. No activation here.
+
+Official https://restaurantlescanailles.fr/ and native LES CANAILLES agree:25 Rue La Bruyère,75009 Paris,0148741048. Normalized identity-field scan found no matches in831catalog/187registry. Catalog832; registry unchanged. Distinct from Comptoir Canaille/Vaugirard/Antibes/Le Touquet; suggested restaurant361320 not followed.
+
+Saved own evidence/les-canailles-pigalle/official.html SHA256234b576844aa92b910c38694562c43631d40de17d8863c1213ded1eda54537e8; results.html SHA256bee64e2276050128a4e41fc5a33c56d8e626c35876114af459eb10e81c1d511c; form.html SHA2567c2681c2f41a3b27775c6d8ad82ba374f2dd04c8487f255dd7225bed6d060a82. All locally verified. Own anchor results?rid=361319&pid=1001, typed statepartner1001, no addedlangSDKfullscreenclose. FRFR/EUR. No new supplierGET/native replay.
+
+Scope own107333 Déjeuner/exact2/ONLY12:00,12:30,13:00,13:30; observedslot+shift bookable_to11:55 retained. AutoTRUE/null/nullchargeprepay/noofferfalse-null/cancellation10800SHIFT/nullshiftcomment. Sixrequired/custom[]V2[]/roomflagsfalse/wishnull; rawrooms43053blank/67873Woody/147847Préférence3 unselected. FullFRrequest-to-phone notice preserved including double space before0148741048 and projected beforeconsent; no contactaction or duration promise. Rawoffer49528 MenuStValentin remainsactiveTRUE but only2025-02-14, unselected, never lunchmenu/price; exactmetadata+selecteddateguard required. Preserve timestamps2025-01-08T17:19:59.000000Z/2026-04-30T09:22:47.000000Z. Dinner107337 table-reuse excluded. OFF until provider/native/review/actualappQA/release. Lava and other parked identities excluded.
