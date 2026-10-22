@@ -1,0 +1,43 @@
+{
+  "owner": "codex-worker-cbfe5665-79ca-415d-91ac-5c184e516939",
+  "base": "c0b19144651eef8bd182b3fd6eff348d2a02d9ba",
+  "identity": {
+    "name": "Léon de Lyon",
+    "address": "1 rue Pleney,69001 Lyon",
+    "phone": "+33472101112"
+  },
+  "status": "parked",
+  "ownEntry": "https://bookings.zenchef.com/results?rid=360528&pid=1001",
+  "sources": [
+    {
+      "url": "https://www.leon-de-lyon.com/",
+      "status": 200,
+      "location": null,
+      "fetchedAt": "2026-10-22T19:10:03.942Z",
+      "bytes": 87337,
+      "sha256": "f4c571130c73f89b30081038a484978da9367af148299f80039963bbd4439148"
+    },
+    {
+      "url": "https://bookings.zenchef.com/results?rid=360528&pid=1001&day=2026-10-23&pax=2",
+      "status": 302,
+      "location": "/unavailable?rid=360528&pid=1001&day=2026-10-23&pax=2",
+      "fetchedAt": "2026-10-22T19:10:06.667Z",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "reason": "Single requested lunch query returned302 to same-query /unavailable, empty body",
+  "unknown": [
+    "Available lunch slots",
+    "Confirmation policy",
+    "Charge/prepayment/cancellation",
+    "Room/offer/voucher/form requirements"
+  ],
+  "limitations": [
+    "Redirect not followed",
+    "No additional date or party queries",
+    "No form/native replay or provider implementation",
+    "No booking/hold/payment/contact/capability request",
+    "No conclusion about all future availability"
+  ]
+}
