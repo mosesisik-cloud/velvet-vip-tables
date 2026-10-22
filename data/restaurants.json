@@ -13008,6 +13008,20 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-20"
+        },
+        {
+          "placeId": "curated-LYO-bistrot-abel",
+          "name": "Le Bistrot d'Abel",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "49 Rue de la Bourse, 69002 Lyon",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Bistrot%20d%27Abel%2C%2049%20Rue%20de%20la%20Bourse%2C%20Lyon",
+          "website": "https://www.maisonabel.fr/maison-abel/contact/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.maisonabel.fr/maison-abel/contact/",
+          "locationVerifiedAt": "2026-10-22"
         }
       ]
     }
