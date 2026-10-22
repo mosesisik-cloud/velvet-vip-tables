@@ -1,0 +1,1603 @@
+{
+  "sources": [
+    {
+      "url": "https://www.brasserieroseaux.fr/",
+      "status": 200,
+      "location": null,
+      "fetchedAt": "2026-10-22T19:12:22.061Z",
+      "bytes": 621283,
+      "sha256": "158f9060ccbbd9a4b4862097d8fd5ab6272a4f168947fcc4d3dedb93b8a18782"
+    },
+    {
+      "url": "https://bookings.zenchef.com/results?rid=370036&pid=1001&day=2026-10-23&pax=2",
+      "status": 200,
+      "location": null,
+      "fetchedAt": "2026-10-22T19:12:24.889Z",
+      "bytes": 155842,
+      "sha256": "b5f134cc0cf06f435add7696e6ea01eae13a122ebcde51fe763811e01107b731"
+    },
+    {
+      "url": "https://bookings.zenchef.com/form?rid=370036&pid=1001&day=2026-10-23&pax=2&slot=12%3A00",
+      "status": 200,
+      "location": null,
+      "fetchedAt": "2026-10-22T19:12:28.868Z",
+      "bytes": 156708,
+      "sha256": "273edb0dea8e871d87f118a6068453ccfa6aa1a62ebfb5c9f121daea5001e9fc"
+    }
+  ],
+  "query": {
+    "rid": "370036",
+    "pid": "1001",
+    "day": "2026-10-23",
+    "pax": "2"
+  },
+  "page": "/results",
+  "buildId": "907c2a6d69",
+  "props": {
+    "initialState": {
+      "appStoreState": {
+        "name": "Brasserie Roseaux",
+        "address": "34 Cr Franklin Roosevelt",
+        "zip": "69006",
+        "city": "Lyon",
+        "restaurantId": "370036",
+        "restaurantCountry": "fr",
+        "restaurantLanguage": "fr",
+        "language": "fr",
+        "restaurantTimezone": "Europe/Paris",
+        "currency": "EUR",
+        "phone": "+33451680891",
+        "printedPhone": null,
+        "restaurantComment": {
+          "fr": "Pour toutes réservations de plus de 8 couverts, merci de nous  écrire par mail à contact@brasserieroseaux.fr\n<br><br>\nA très bientôt"
+        },
+        "restaurantSpecificCommentsByDay": {
+          "2026-10-23": null
+        },
+        "mandatoryFields": {
+          "firstname": "required",
+          "lastname": "required",
+          "email": "required",
+          "phone_number": "required",
+          "country": "required",
+          "comment": "displayed",
+          "private_comment": "hidden",
+          "prescriber_id": "hidden",
+          "customersheet.customer_company_id": "hidden",
+          "civility": "required",
+          "url": "hidden",
+          "customersheet.vip": "hidden",
+          "waiter_id": "hidden",
+          "slots_count": "hidden",
+          "voucher_code": "hidden",
+          "custom_field.numero-de-bon-cadeau": "displayed"
+        },
+        "customFields": [
+          {
+            "id": 4654,
+            "restaurant_id": 370036,
+            "title": "NUMÉRO DE BON CADEAU",
+            "step": 3,
+            "type": "auto",
+            "enabled": true,
+            "created_at": "2025-03-11T16:53:52.000000Z",
+            "updated_at": "2025-03-11T16:53:52.000000Z",
+            "slug": "numero-de-bon-cadeau",
+            "options": [],
+            "displayType": "text",
+            "required": false
+          }
+        ],
+        "customFieldsV2": [],
+        "customFieldsPrivatisation": [],
+        "rooms": [
+          {
+            "id": 72063,
+            "name": "Salle principale",
+            "name_translations": {
+              "fr": "Salle principale"
+            }
+          },
+          {
+            "id": 77638,
+            "name": "Verrière",
+            "name_translations": {
+              "fr": "Verrière"
+            }
+          },
+          {
+            "id": 93023,
+            "name": "Terrasse",
+            "name_translations": {
+              "fr": "Terrasse"
+            }
+          }
+        ],
+        "hasRoomSelection": false,
+        "isRoomMandatory": false,
+        "hasConnectedVouchers": true,
+        "shouldDisplayShopVoucher": true,
+        "voucherCodes": {
+          "bookingVoucherCodes": [],
+          "validatedVoucherCodes": []
+        },
+        "custom_field": {},
+        "wish": {
+          "pax": 2,
+          "day": "2026-10-23",
+          "offers": [],
+          "waiting_list": false,
+          "room_id": null
+        },
+        "query": {
+          "rid": "370036",
+          "pid": "1001",
+          "day": "2026-10-23",
+          "pax": "2"
+        },
+        "reservationAutoConf": null,
+        "isDisabled": 0,
+        "isInUpdateFlow": false,
+        "initializedSSR": true,
+        "suggestedRestaurantIds": [],
+        "widgetParameters": {
+          "primaryColor": "4d4f32",
+          "onBrandColor": null
+        },
+        "dailyAvailabilities": {
+          "2026-10-23": {
+            "date": "2026-10-23",
+            "shifts": [
+              {
+                "id": 378092,
+                "marked_as_full": false,
+                "closed": false,
+                "is_voucher_codes_active": false,
+                "is_voucher_codes_limit_reached": false,
+                "bookable_from": "2026-08-24 12:00:00",
+                "bookable_to": "2026-10-23 13:30:00",
+                "shift_slots": [
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "3": [
+                        77638
+                      ],
+                      "4": [
+                        77638,
+                        72063
+                      ],
+                      "5": [
+                        72063,
+                        77638
+                      ],
+                      "6": [
+                        72063,
+                        77638
+                      ],
+                      "7": [
+                        77638,
+                        72063
+                      ],
+                      "9": [
+                        77638
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 9,
+                      "total_per_slot": 30,
+                      "waitlist_min": 1,
+                      "waitlist_max": 1,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "12:00",
+                    "slot_name": "12:00",
+                    "interval_in_minutes": 720,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2026-08-24 12:00:00",
+                    "bookable_to": "2026-10-23 12:00:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      9
+                    ],
+                    "waitlist_possible_guests": [
+                      1
+                    ]
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "3": [
+                        77638
+                      ],
+                      "4": [
+                        77638,
+                        72063
+                      ],
+                      "5": [
+                        72063,
+                        77638
+                      ],
+                      "6": [
+                        72063,
+                        77638
+                      ],
+                      "7": [
+                        77638,
+                        72063
+                      ],
+                      "9": [
+                        77638
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 9,
+                      "total_per_slot": 20,
+                      "waitlist_min": 1,
+                      "waitlist_max": 9,
+                      "waitlist_total_per_slot": 20,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "12:15",
+                    "slot_name": "12:15",
+                    "interval_in_minutes": 735,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2026-08-24 12:00:00",
+                    "bookable_to": "2026-10-23 12:15:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      9
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8,
+                      9
+                    ]
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 9,
+                      "total_per_slot": 15,
+                      "waitlist_min": 1,
+                      "waitlist_max": 1,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "12:30",
+                    "slot_name": "12:30",
+                    "interval_in_minutes": 750,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2026-08-24 12:00:00",
+                    "bookable_to": "2026-10-23 12:30:00",
+                    "possible_guests": [
+                      1,
+                      2
+                    ],
+                    "waitlist_possible_guests": [
+                      1
+                    ]
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "3": [
+                        77638
+                      ],
+                      "4": [
+                        77638,
+                        72063
+                      ],
+                      "5": [
+                        72063,
+                        77638
+                      ],
+                      "6": [
+                        72063,
+                        77638
+                      ],
+                      "7": [
+                        77638,
+                        72063
+                      ],
+                      "9": [
+                        77638
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 9,
+                      "total_per_slot": 10,
+                      "waitlist_min": 1,
+                      "waitlist_max": 1,
+                      "waitlist_total_per_slot": 8,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "12:45",
+                    "slot_name": "12:45",
+                    "interval_in_minutes": 765,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2026-08-24 12:00:00",
+                    "bookable_to": "2026-10-23 12:45:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      9
+                    ],
+                    "waitlist_possible_guests": [
+                      1
+                    ]
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "3": [
+                        77638
+                      ],
+                      "4": [
+                        77638,
+                        72063
+                      ],
+                      "5": [
+                        72063,
+                        77638
+                      ],
+                      "6": [
+                        72063,
+                        77638
+                      ],
+                      "7": [
+                        77638,
+                        72063
+                      ],
+                      "9": [
+                        77638
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 9,
+                      "total_per_slot": 10,
+                      "waitlist_min": 1,
+                      "waitlist_max": 1,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "13:00",
+                    "slot_name": "13:00",
+                    "interval_in_minutes": 780,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2026-08-24 12:00:00",
+                    "bookable_to": "2026-10-23 13:00:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      9
+                    ],
+                    "waitlist_possible_guests": [
+                      1
+                    ]
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "3": [
+                        77638
+                      ],
+                      "4": [
+                        77638,
+                        72063
+                      ],
+                      "5": [
+                        72063,
+                        77638
+                      ],
+                      "6": [
+                        72063,
+                        77638
+                      ],
+                      "7": [
+                        77638,
+                        72063
+                      ],
+                      "9": [
+                        77638
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 9,
+                      "total_per_slot": 20,
+                      "waitlist_min": 1,
+                      "waitlist_max": 9,
+                      "waitlist_total_per_slot": 20,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "13:15",
+                    "slot_name": "13:15",
+                    "interval_in_minutes": 795,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2026-08-24 12:00:00",
+                    "bookable_to": "2026-10-23 13:15:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      9
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8,
+                      9
+                    ]
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "3": [
+                        77638
+                      ],
+                      "4": [
+                        77638,
+                        72063
+                      ],
+                      "5": [
+                        72063,
+                        77638
+                      ],
+                      "6": [
+                        72063,
+                        77638
+                      ],
+                      "7": [
+                        77638,
+                        72063
+                      ],
+                      "9": [
+                        77638
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 9,
+                      "total_per_slot": 10,
+                      "waitlist_min": 1,
+                      "waitlist_max": 1,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "13:30",
+                    "slot_name": "13:30",
+                    "interval_in_minutes": 810,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2026-08-24 12:00:00",
+                    "bookable_to": "2026-10-23 13:30:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      9
+                    ],
+                    "waitlist_possible_guests": [
+                      1
+                    ]
+                  }
+                ],
+                "name": "Déjeuner",
+                "name_translations": {
+                  "fr": "Déjeuner"
+                },
+                "comment": null,
+                "color": "a",
+                "is_standard": true,
+                "charge_param": null,
+                "prepayment_param": null,
+                "cancelation_param": {
+                  "enduser_cancelable_before": 86400,
+                  "enduser_cancelable_reference": "shift"
+                },
+                "confirmation": {
+                  "is_auto": true,
+                  "is_auto_until": null
+                },
+                "capacity": {
+                  "min": 1,
+                  "max": 9,
+                  "total_per_slot": 20,
+                  "waitlist_min": 1,
+                  "waitlist_max": 9,
+                  "waitlist_total_per_slot": 20,
+                  "show_turn_times": false,
+                  "buffer_slots_count": 0,
+                  "turn_times": {
+                    "2_pax_slots": 8,
+                    "4_pax_slots": 8,
+                    "6_pax_slots": 8,
+                    "8_pax_slots": 8,
+                    "10_pax_slots": 9,
+                    "12_pax_slots": 10
+                  }
+                },
+                "bookable_rooms": [
+                  72063,
+                  77638,
+                  93023
+                ],
+                "open": "12:00",
+                "close": "13:30",
+                "total": 55,
+                "waitlist_total": 20,
+                "is_offer_required": false,
+                "offer_required_from_pax": null
+              },
+              {
+                "id": 577528,
+                "marked_as_full": false,
+                "closed": false,
+                "is_voucher_codes_active": true,
+                "is_voucher_codes_limit_reached": false,
+                "bookable_from": null,
+                "bookable_to": "2026-10-23 21:30:00",
+                "shift_slots": [
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "4": [
+                        72063
+                      ],
+                      "5": [
+                        72063
+                      ],
+                      "6": [
+                        72063
+                      ],
+                      "7": [
+                        72063
+                      ],
+                      "8": [
+                        72063
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 20,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": true,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 10,
+                        "8_pax_slots": 10,
+                        "10_pax_slots": 10,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "19:00",
+                    "slot_name": "19:00",
+                    "interval_in_minutes": 1140,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": null,
+                    "bookable_to": "2026-10-23 19:00:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "4": [
+                        72063
+                      ],
+                      "5": [
+                        72063
+                      ],
+                      "6": [
+                        72063
+                      ],
+                      "7": [
+                        72063
+                      ],
+                      "8": [
+                        72063
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 20,
+                      "waitlist_min": 0,
+                      "waitlist_max": 0,
+                      "waitlist_total_per_slot": 0,
+                      "show_turn_times": true,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 10,
+                        "8_pax_slots": 10,
+                        "10_pax_slots": 10,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "19:15",
+                    "slot_name": "19:15",
+                    "interval_in_minutes": 1155,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": null,
+                    "bookable_to": "2026-10-23 19:15:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ],
+                    "waitlist_possible_guests": []
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "4": [
+                        72063
+                      ],
+                      "5": [
+                        72063
+                      ],
+                      "6": [
+                        72063
+                      ],
+                      "7": [
+                        72063
+                      ],
+                      "8": [
+                        72063
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 20,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": true,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 10,
+                        "8_pax_slots": 10,
+                        "10_pax_slots": 10,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "19:30",
+                    "slot_name": "19:30",
+                    "interval_in_minutes": 1170,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": null,
+                    "bookable_to": "2026-10-23 19:30:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "4": [
+                        72063
+                      ],
+                      "5": [
+                        72063
+                      ],
+                      "6": [
+                        72063
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 10,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": true,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 10,
+                        "8_pax_slots": 10,
+                        "10_pax_slots": 10,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "19:45",
+                    "slot_name": "19:45",
+                    "interval_in_minutes": 1185,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": null,
+                    "bookable_to": "2026-10-23 19:45:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      4,
+                      5,
+                      6
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "available_rooms": [],
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 4,
+                      "waitlist_min": 0,
+                      "waitlist_max": 0,
+                      "waitlist_total_per_slot": 0,
+                      "show_turn_times": true,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 10,
+                        "8_pax_slots": 10,
+                        "10_pax_slots": 10,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "20:00",
+                    "slot_name": "20:00",
+                    "interval_in_minutes": 1200,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": null,
+                    "bookable_to": "2026-10-23 20:00:00",
+                    "possible_guests": [],
+                    "waitlist_possible_guests": []
+                  },
+                  {
+                    "available_rooms": [],
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 4,
+                      "waitlist_min": 0,
+                      "waitlist_max": 0,
+                      "waitlist_total_per_slot": 0,
+                      "show_turn_times": true,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 10,
+                        "8_pax_slots": 10,
+                        "10_pax_slots": 10,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "20:15",
+                    "slot_name": "20:15",
+                    "interval_in_minutes": 1215,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": null,
+                    "bookable_to": "2026-10-23 20:15:00",
+                    "possible_guests": [],
+                    "waitlist_possible_guests": []
+                  },
+                  {
+                    "available_rooms": [],
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 4,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 8,
+                      "show_turn_times": true,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 10,
+                        "8_pax_slots": 10,
+                        "10_pax_slots": 10,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "20:30",
+                    "slot_name": "20:30",
+                    "interval_in_minutes": 1230,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": null,
+                    "bookable_to": "2026-10-23 20:30:00",
+                    "possible_guests": [],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "4": [
+                        72063
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 4,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 8,
+                      "show_turn_times": true,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 10,
+                        "8_pax_slots": 10,
+                        "10_pax_slots": 10,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "20:45",
+                    "slot_name": "20:45",
+                    "interval_in_minutes": 1245,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": null,
+                    "bookable_to": "2026-10-23 20:45:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      4
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "4": [
+                        72063
+                      ],
+                      "5": [
+                        72063
+                      ],
+                      "6": [
+                        72063
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 10,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 10,
+                        "8_pax_slots": 10,
+                        "10_pax_slots": 10,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "21:00",
+                    "slot_name": "21:00",
+                    "interval_in_minutes": 1260,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": null,
+                    "bookable_to": "2026-10-23 21:00:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      4,
+                      5,
+                      6
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "4": [
+                        72063
+                      ],
+                      "5": [
+                        72063
+                      ],
+                      "6": [
+                        72063
+                      ],
+                      "7": [
+                        72063
+                      ],
+                      "8": [
+                        72063
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 20,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 10,
+                        "8_pax_slots": 10,
+                        "10_pax_slots": 10,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "21:15",
+                    "slot_name": "21:15",
+                    "interval_in_minutes": 1275,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": null,
+                    "bookable_to": "2026-10-23 21:15:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "available_rooms": {
+                      "1": [
+                        77638,
+                        72063
+                      ],
+                      "2": [
+                        77638,
+                        72063
+                      ],
+                      "3": [
+                        77638
+                      ],
+                      "4": [
+                        72063,
+                        77638
+                      ],
+                      "5": [
+                        72063
+                      ],
+                      "6": [
+                        72063,
+                        77638
+                      ],
+                      "7": [
+                        72063
+                      ],
+                      "8": [
+                        72063
+                      ]
+                    },
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 20,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 8,
+                        "4_pax_slots": 8,
+                        "6_pax_slots": 10,
+                        "8_pax_slots": 10,
+                        "10_pax_slots": 10,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "21:30",
+                    "slot_name": "21:30",
+                    "interval_in_minutes": 1290,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": null,
+                    "bookable_to": "2026-10-23 21:30:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  }
+                ],
+                "name": "Diner",
+                "name_translations": {
+                  "fr": "Diner"
+                },
+                "comment": null,
+                "color": "f",
+                "is_standard": false,
+                "charge_param": null,
+                "prepayment_param": null,
+                "cancelation_param": {
+                  "enduser_cancelable_before": 86460,
+                  "enduser_cancelable_reference": "shift"
+                },
+                "confirmation": {
+                  "is_auto": true,
+                  "is_auto_until": null
+                },
+                "capacity": {
+                  "min": 1,
+                  "max": 8,
+                  "total_per_slot": 15,
+                  "waitlist_min": 1,
+                  "waitlist_max": 8,
+                  "waitlist_total_per_slot": 10,
+                  "show_turn_times": true,
+                  "buffer_slots_count": 0,
+                  "turn_times": {
+                    "2_pax_slots": 8,
+                    "4_pax_slots": 8,
+                    "6_pax_slots": 10,
+                    "8_pax_slots": 10,
+                    "10_pax_slots": 10,
+                    "12_pax_slots": 10
+                  }
+                },
+                "bookable_rooms": [
+                  72063,
+                  77638
+                ],
+                "open": "19:00",
+                "close": "21:30",
+                "total": 55,
+                "waitlist_total": 20,
+                "is_offer_required": false,
+                "offer_required_from_pax": null
+              }
+            ]
+          }
+        },
+        "offers": [],
+        "shiftMenus": {},
+        "partner_id": "1001"
+      }
+    }
+  },
+  "nativeEvidence": {
+    "files": [
+      {
+        "name": "native-390.png",
+        "sha256": "7c1cfaddf5e493208b0112c259786b1d3d24d0752062cb899ab5074cf7abfc15"
+      },
+      {
+        "name": "native-1366.png",
+        "sha256": "d657e438995eef1f6547c3652cf204d545d7651b90e9dda47fb55c971238611a"
+      },
+      {
+        "name": "native-390.json",
+        "sha256": "a8c9e6681ae4695187949e80007897a3fc96431aaa87e6e60ff02b8ccb51243b"
+      },
+      {
+        "name": "native-network.json",
+        "sha256": "1255d14972ef52a76e8ec0c48407e5e72d15e06c519ca15a5677faf3f1544e21"
+      },
+      {
+        "name": "provider-native-contact.png",
+        "sha256": "c3afd24d110ca1db3edfe3b035a1e28d22dbe6903fd541eb24a64ee391fc0a12"
+      },
+      {
+        "name": "provider-native-contact.json",
+        "sha256": "a7993b053c66df4b4a1f80161f97aed3a6f7148313b495a60fee75a9189f38ab"
+      },
+      {
+        "name": "provider-native-network.json",
+        "sha256": "d257d700d998a3bae74ff62e584691862383e229596108a9c4d92fd98e0d3788"
+      },
+      {
+        "name": "provider-native-gift.png",
+        "sha256": "781b5059606fc045ddabc8e75e510cffa7f6582bfcd80fce416cf20a318f96ca"
+      }
+    ],
+    "assets": [
+      {
+        "url": "https://bookings.zenchef.com/_next/static/css/db065d200a406bc1.css",
+        "sha256": "29a1d0934c2b11a095d686dfa59a5d6f2b2da36284c78e491dc9281eb9ba7d41",
+        "bytes": 74700,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/css/d4c42f923a84f3a7.css",
+        "sha256": "8fbc4e4b5513d6f30a6c7568a5b7f75e73b9c54de5310838522a412013fdc18a",
+        "bytes": 816885,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/css/c4483fbc93050034.css",
+        "sha256": "32df5382f90927fd1c266169049e5d15b63e8f948c87821cd4f796526b3866d4",
+        "bytes": 16434,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/polyfills-42372ed130431b0a.js",
+        "sha256": "0973c1d64c88adc8e3c950410cb58b288f72118d5965b78049438deb8f2f9683",
+        "bytes": 112594,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/webpack-2ef61829d9123729.js",
+        "sha256": "f1aaffd1d8a655bd4236504489a251c54757275dc014096e565a229d2991cf3d",
+        "bytes": 6427,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/framework-3f1684f7bf141cef.js",
+        "sha256": "6aea8316c6d741feb7d55dd063a859920e6519b6db934ac2360c2abfeb016e4a",
+        "bytes": 189781,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/5166-6f9fa6ee05ced572.js",
+        "sha256": "015b2790c5d853a40360b1975b1078754a0b5f0502eb6f7f3f2591479985525e",
+        "bytes": 164305,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/main-1fc61e6be505efdb.js",
+        "sha256": "ba4b252fed3befee1767777548911ea91bceacf0f3551922c8e5a15d1cd84fca",
+        "bytes": 132,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/dfa3c843-801f53a5d8620e36.js",
+        "sha256": "347bca611ab71d43fddc68a98acda1b223b4b3ab86be890349785bc11f15bd9f",
+        "bytes": 60608,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/4375-7e103a5d8025eae3.js",
+        "sha256": "6fc547c5b770b4c8bd117e2137a351888111628773a2aa978674c008067f2faf",
+        "bytes": 1475042,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/pages/_app-929a42aa97076404.js",
+        "sha256": "2ace10f2016d303473bbf9353b9c4d85aed7f5836a60f19dfa8e218a78b2b53f",
+        "bytes": 657192,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/5591-6d1143af0c9cc211.js",
+        "sha256": "fc4d5454b045d1a71842e9085abcb3fca43772e9210eeb429060553cb6255444",
+        "bytes": 6828,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/6433-98007d76ec3534da.js",
+        "sha256": "5945012188e084bdcbf13832d44f83c9d484bfebd5fdbfe4bea476bd556908cf",
+        "bytes": 10980,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/5346-ac979f0034f0b8ab.js",
+        "sha256": "030643ba578e2b776192be22dbbffb1945c58e3020c950c30da32a5f1f2ad516",
+        "bytes": 37207,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/80-864af3169927de45.js",
+        "sha256": "633e60dfa3ea640934f082ed1ecba2db13e05a27b5e8a20abc1a5d6564ea3b5c",
+        "bytes": 8610,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/5766-f32fe6e37f452bac.js",
+        "sha256": "740540d81c2f1053be4cbbbd8ed8bfb7ec6843fa12b948b9b3a5634ac10c8f1a",
+        "bytes": 1062541,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/9967-45938675359b1333.js",
+        "sha256": "b8f8ac233ca906b0578bd17f8a77b549203c869ab90790f00c413c1ac7369cba",
+        "bytes": 159442,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/1470-5f6a3dfddaa6ff71.js",
+        "sha256": "4e63867d4735b3343fdb33dfa4c1b0bc55bc8996dcf0de845a8cd98a7731e0bc",
+        "bytes": 10263,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/6723-70ca8cc1380a65dc.js",
+        "sha256": "31ab23565d1dc816409c4c56b1e4e5df8a6665a1ce7cf0778c5afdde1e0f1f74",
+        "bytes": 14289,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/4477-b830f5a701387aa9.js",
+        "sha256": "bc9364a39ac4e0027075eba8683eceb5190fe2766d08b321d1d17b9a7c8f1d88",
+        "bytes": 9600,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/pages/form-de3c4554a07c82c5.js",
+        "sha256": "999d3d0187e59658025b63731862f6adbcfa8490e67643fa951f3c639e5f2880",
+        "bytes": 38797,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/907c2a6d69/_buildManifest.js",
+        "sha256": "2cda017d0dff022a69d498a6257c4bf8219881ca0080a9b7e4bfb1da5d6290d9",
+        "bytes": 3423,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/907c2a6d69/_ssgManifest.js",
+        "sha256": "6f5b4aa00d2f8d6aed9935b471806bf7acef464d0c1d390260e5fe27f800c67e",
+        "bytes": 77,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/2907-12bf501eddc079f7.js",
+        "sha256": "071bbd44e30b9d84fc8bad96c638f252db5bec8cc1919e833a56f2b85ff7968f",
+        "bytes": 24146,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/1479-fb0a3b007212219c.js",
+        "sha256": "559fb9d51ac771dfe6a29ceeacd65b4eac6ea357ebf2f5d894ff19cf61e6a047",
+        "bytes": 13816,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/9799-3c2aeae194e6868d.js",
+        "sha256": "a408ba51c03ad4134cb513d8cd4dae88539a5123f9ebf9e0571370b304a75533",
+        "bytes": 8220,
+        "reused": true
+      },
+      {
+        "url": "https://bookings.zenchef.com/_next/static/chunks/pages/results-74933d648d84a99f.js",
+        "sha256": "ad86a79a75abdd5456623391f406a470133a01db288b2b67feeb48ff15a70cb4",
+        "bytes": 39742,
+        "reused": true
+      }
+    ],
+    "limitations": [
+      "Original client replay and actual adapter contact inspection entirely offline; no entered personal data or final submit",
+      "Own summary refresh held only in harness until teardown; all mutation requests aborted",
+      "Phone flag images blocked; cached assets matched exact own-page references",
+      "Final send and independent saved receipt tested with synthetic transport only"
+    ]
+  }
+}
