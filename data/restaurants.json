@@ -13062,6 +13062,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-22"
+        },
+        {
+          "placeId": "curated-LYO-nosch",
+          "name": "NOSCH",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "24 Rue Palais Grillet, 69002 Lyon",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=NOSCH%2C%2024%20Rue%20Palais%20Grillet%2C%20Lyon",
+          "website": "https://nosch.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://nosch.fr/",
+          "locationVerifiedAt": "2026-10-22",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=361415&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-22"
         }
       ]
     }
