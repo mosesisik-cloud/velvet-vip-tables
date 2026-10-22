@@ -1328,8 +1328,9 @@
     "integrationMode": "external_link",
     "verification": "official_link_only",
     "checkedAt": "2026-10-15",
-    "liveAvailabilitySupported": false,
-    "completionTracking": "unsupported"
+    "liveAvailabilitySupported": true,
+    "completionTracking": "unsupported",
+    "availabilityScope": "Reviewed shift only, two guests; room/menu/payment terms rechecked in supplier results"
   },
   "curated-STO-ag": {
     "provider": "Elyra",
@@ -1617,8 +1618,9 @@
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
     "checkedAt": "2026-10-15",
-    "liveAvailabilitySupported": false,
-    "completionTracking": "unsupported"
+    "liveAvailabilitySupported": true,
+    "completionTracking": "unsupported",
+    "availabilityScope": "Reviewed shift only, two guests; room/menu/payment terms rechecked in supplier results"
   },
   "osm-CER-carnissage-poltu-quatu": {
     "name": "Carnissage Poltu Quatu",
@@ -1673,9 +1675,10 @@
     "checkedAt": "2026-10-15",
     "verification": "embedded_form_loaded",
     "integrationMode": "native_embed",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
-    "notes": "Exact official identity in Nice, catalog Monaco grouping needs location review. Initial form only; no slots selected. "
+    "notes": "Exact official identity in Nice, catalog Monaco grouping needs location review. Initial form only; no slots selected. ",
+    "availabilityScope": "Reviewed shift only, two guests; room/menu/payment terms rechecked in supplier results"
   },
   "osm-MCO-gigi-tavola": {
     "name": "Gigi Tavola",
@@ -1978,9 +1981,10 @@
     "integrationMode": "external_link",
     "verification": "official_link_only",
     "checkedAt": "2026-10-16",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
-    "identityNote": "Official restaurant page at41RueRepubliqueGustavia links this exactZenchefID; phonefallback retained."
+    "identityNote": "Official restaurant page at41RueRepubliqueGustavia links this exactZenchefID; phonefallback retained.",
+    "availabilityScope": "Reviewed shift only, two guests; room/menu/payment terms rechecked in supplier results"
   },
   "curated-CAP-da-paolino": {
     "name": "Da Paolino",

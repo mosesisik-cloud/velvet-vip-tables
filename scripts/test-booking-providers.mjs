@@ -121,6 +121,6 @@ for (const [id, provider, expectedUrl] of [
 ]) {
  const row=resolveEmbeddedBooking(registry,id);
  assert.equal(row.provider,provider);assert.equal(row.url,expectedUrl);
- assert.equal(row.integrationMode,'external_link');assert.equal(row.liveAvailabilitySupported,false);assert.equal(row.completionTracking,'unsupported');
+ assert.equal(row.integrationMode,'external_link');assert.equal(row.liveAvailabilitySupported,id==='osm-SBH-fishcorner');assert.equal(row.completionTracking,'unsupported');
  assert.equal(resolveEmbeddedBooking({[id]:{...registry[id],url:expectedUrl.replace('shangpalacedubai','wrongvenue').replace('388090','388091')}},id),null);
 }
