@@ -592,7 +592,7 @@ export function mountProviderPlaywrightBooking(container, api, {
   const post = (path, body) => request(path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
   async function run(action = null) {
     if (disposed || busy || (action && (uncertain || isSubmit() || needsReview() && action.type !== 'review' || drafts.size && action.type !== 'fill' || !state || terminal() || state.blocked))) return;
-    if (action?.type === 'search' && !dateInScope(action.date)) { el('status').textContent=restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 'Den 3–23 augusti ingår inte i bokning via Velvet.' : 'Den 24, 25 och 31 december ingår inte i bokning via Velvet.'; return; }
+    if (action?.type === 'search' && !dateInScope(action.date)) { el('status').textContent=restaurantId === 'curated-LYO-le-vivarais' ? 'Bokning på Le Vivarais gäller lunch tisdag–fredag. Välj ett datum inom dessa dagar.' : restaurantId === 'curated-PAR-brasserie-rosie-jolie' ? 'Den 3–23 augusti ingår inte i bokning via Velvet.' : 'Den 24, 25 och 31 december ingår inte i bokning via Velvet.'; return; }
     if (action?.type === 'select' && !timeInScope(action.time)) { el('status').textContent='Endast de angivna lunchtiderna ingår i bokning via Velvet.'; return; }
     if (action?.type === 'hold' && (!canHold() || !el('hold-consent').checked)) return;
     if (action?.type === 'submit' && (!canSubmit() || !el('terms').checked)) return;
