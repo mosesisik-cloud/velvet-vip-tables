@@ -13098,6 +13098,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-22"
+        },
+        {
+          "placeId": "curated-LYO-le-vivarais",
+          "name": "Le Vivarais",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "1 Pl. Gailleton, 69002 Lyon",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Vivarais%2C%201%20Pl.%20Gailleton%2C%20Lyon",
+          "website": "https://www.restaurant-levivarais.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.restaurant-levivarais.fr/",
+          "locationVerifiedAt": "2026-10-22",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=356393&fullscreen=&lang=fr&withCloseButton=1",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-22"
         }
       ]
     }
