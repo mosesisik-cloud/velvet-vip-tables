@@ -13134,6 +13134,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-22"
+        },
+        {
+          "placeId": "curated-LYO-le-merciere",
+          "name": "Le Mercière",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "56 Rue Mercière, 69002 Lyon",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Merci%C3%A8re%2C%2056%20Rue%20Merci%C3%A8re%2C%20Lyon",
+          "website": "https://lemerciere.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://lemerciere.com/",
+          "locationVerifiedAt": "2026-10-22",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=360735&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-22"
         }
       ]
     }
