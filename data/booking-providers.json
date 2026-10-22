@@ -2764,5 +2764,18 @@
     "checkedAt": "2026-10-22",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-LYO-comptoir-chabert": {
+    "name": "COMPTOIR CHABERT",
+    "city": "Lyon",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=354752&fullscreen&lang=fr&withCloseButton=1",
+    "source": "https://www.chezchabert.com/informations-contact/",
+    "venueKey": "bookings.zenchef.com/results?rid=354752",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-22",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
