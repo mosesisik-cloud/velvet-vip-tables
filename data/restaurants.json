@@ -13021,7 +13021,11 @@
           "source": "VELVET curated · official website",
           "curated": true,
           "locationSource": "https://www.maisonabel.fr/maison-abel/contact/",
-          "locationVerifiedAt": "2026-10-22"
+          "locationVerifiedAt": "2026-10-22",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=357746&fullscreen=1",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-22"
         }
       ]
     }
