@@ -2777,5 +2777,18 @@
     "checkedAt": "2026-10-22",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-LYO-maison-moly": {
+    "name": "Maison Moly",
+    "city": "Lyon",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=362732&fullscreen&lang=fr&withCloseButton=1",
+    "source": "https://www.maisonmoly.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=362732",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-22",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
