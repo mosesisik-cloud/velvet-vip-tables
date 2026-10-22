@@ -13044,6 +13044,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-22"
+        },
+        {
+          "placeId": "curated-LYO-maison-moly",
+          "name": "Maison Moly",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "38 Rue de l'Arbre Sec, 69001 Lyon",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Maison%20Moly%2C%2038%20Rue%20de%20l%27Arbre%20Sec%2C%20Lyon",
+          "website": "https://www.maisonmoly.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.maisonmoly.fr/",
+          "locationVerifiedAt": "2026-10-22",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=362732&fullscreen&lang=fr&withCloseButton=1",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-22"
         }
       ]
     }
