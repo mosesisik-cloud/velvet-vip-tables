@@ -12,7 +12,7 @@ const provenance=[];
 const read=async name=>{const bytes=await fs.readFile(path.join(root,name));provenance.push({file:name,sha256:createHash('sha256').update(bytes).digest('hex')});return JSON.parse(bytes.toString('utf8').replace(/^\uFEFF/,''));};
 const optional=async name=>{try{return await read(name);}catch(e){if(e.code==='ENOENT')return null;throw e;}};
 const [catalog,registry,bb,brands,manifest]=await Promise.all([read('data/restaurants.json'),read('data/booking-providers.json'),read('api/bokabord-restaurants.json'),read('data/restaurant-brands.json'),optional('data/external200-manifest.json')]);
-const rootOwner='01a14080-83ed-7991-ac52-7f57761f13e7',externalOwner='01a14189-8478-7353-97ad-3549532fc728',logoOwner='01a14138-697b-7681-aac3-72cf68a8f205';
+const rootOwner='01a14080-83ed-7991-ac52-7f57761f13e7',externalOwner='01a14189-8468-7353-97ad-3549532fc728',logoOwner='01a14138-697b-7681-aac3-72cf68a8f205';
 const externalIds=new Set((manifest?.records||[]).map(r=>r.restaurantId));
 const audits=new Map();
 const [brandReview,externalWorklist,routeEvidence]=await Promise.all([optional('docs/restaurant-brand-review.json'),optional('data/external200-worklist.json'),optional('data/restaurant-route-evidence.json')]);
