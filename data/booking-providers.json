@@ -2816,5 +2816,18 @@
     "checkedAt": "2026-10-22",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-LYO-le-vivarais": {
+    "name": "Le Vivarais",
+    "city": "Lyon",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=356393&fullscreen=&lang=fr&withCloseButton=1",
+    "source": "https://www.restaurant-levivarais.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=356393",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-22",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
