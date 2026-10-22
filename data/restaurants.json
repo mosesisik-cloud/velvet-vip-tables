@@ -13080,6 +13080,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-22"
+        },
+        {
+          "placeId": "curated-LYO-brasserie-roseaux",
+          "name": "Brasserie Roseaux",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "34 Cr Franklin Roosevelt, 69006 Lyon",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Brasserie%20Roseaux%2C%2034%20Cr%20Franklin%20Roosevelt%2C%20Lyon",
+          "website": "https://www.brasserieroseaux.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.brasserieroseaux.fr/",
+          "locationVerifiedAt": "2026-10-22",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=370036&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-22"
         }
       ]
     }
