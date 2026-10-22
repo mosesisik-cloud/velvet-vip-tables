@@ -1023,7 +1023,7 @@
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
     "venueKey": "www.sevenrooms.com/reservations/spagobh",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
     "notes": "Read-only source and provider checks; no hold, booking or payment submitted.",
     "venueId": "spagobh",
@@ -1031,6 +1031,15 @@
     "frameCheck": {
       "error": null,
       "inputs": 24
+    },
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "available",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
     }
   },
   "osm-MRB-zozoi": {
@@ -1043,7 +1052,7 @@
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
     "venueKey": "www.sevenrooms.com/reservations/restaurantezozoi",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
     "notes": "Read-only source and provider checks; no hold, booking or payment submitted.",
     "venueId": "restaurantezozoi",
@@ -1051,6 +1060,15 @@
     "frameCheck": {
       "error": null,
       "inputs": 8
+    },
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "available",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
     }
   },
   "osm-HVA-silk": {
@@ -1063,7 +1081,7 @@
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
     "venueKey": "www.sevenrooms.com/reservations/silkhvar",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
     "notes": "Official Hvar page links to landing/silkhvar, whose Make a Reservation link leads to verified native form. Zagreb OpenTable footer rejected.",
     "venueId": "silkhvar",
@@ -1071,6 +1089,15 @@
     "frameCheck": {
       "error": null,
       "inputs": 7
+    },
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "available",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
     }
   },
   "curated-BCN-lasarte": {
@@ -1401,11 +1428,20 @@
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
     "venueKey": "www.sevenrooms.com/reservations/ambermandarin",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
     "notes": "Current officialBookTable route leads to samevenue ambermandarin modernform; isolatedlegacyroute loads matchingAmber name/address in iframe.",
     "venueId": "ambermandarin",
-    "providerTitle": "Reservation at Amber"
+    "providerTitle": "Reservation at Amber",
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "unavailable",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
+    }
   },
   "curated-TUL-arca-tulum": {
     "provider": "OpenTable",
@@ -1460,9 +1496,18 @@
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
     "checkedAt": "2026-10-15",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
-    "venueId": "billyho"
+    "venueId": "billyho",
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "available",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
+    }
   },
   "curated-SIN-odette": {
     "name": "Odette",
@@ -1474,9 +1519,18 @@
     "integrationMode": "native_embed",
     "verification": "embedded_form_loaded",
     "checkedAt": "2026-10-15",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
-    "venueId": "odette"
+    "venueId": "odette",
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "unavailable",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
+    }
   },
   "osm-BAL-lulu-bistrot": {
     "name": "Lulu Bistrot",
@@ -1575,9 +1629,18 @@
     "integrationMode": "external_link",
     "verification": "official_link_only",
     "checkedAt": "2026-10-15",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
-    "venueId": "alma"
+    "venueId": "alma",
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "unavailable",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
+    }
   },
   "curated-STT-gigi-ramatuelle": {
     "name": "Gigi Ramatuelle",
@@ -1759,9 +1822,18 @@
     "verification": "official_link_only",
     "providerTitle": "Bagatelle St. Barth Reservations",
     "integrationMode": "external_link",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
-    "locality": "Gustavia"
+    "locality": "Gustavia",
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "available",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
+    }
   },
   "osm-SBH-la-guerite": {
     "provider": "SevenRooms",
@@ -1774,9 +1846,18 @@
     "verification": "official_link_only",
     "integrationMode": "external_link",
     "venueKey": "www.sevenrooms.com/reservations/lagueritedb",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
-    "locality": "Gustavia"
+    "locality": "Gustavia",
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "unavailable",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
+    }
   },
   "osm-SBH-la-petite-plage": {
     "provider": "SevenRooms",
@@ -1833,9 +1914,18 @@
     "verification": "official_link_only",
     "integrationMode": "external_link",
     "venueKey": "www.sevenrooms.com/reservations/restaurantsella",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
-    "locality": "Public"
+    "locality": "Public",
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "available",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
+    }
   },
   "osm-IBZ-ama-lur": {
     "name": "Ama Lur",
@@ -1964,9 +2054,18 @@
     "verification": "official_link_only",
     "providerTitle": "Shang Palace Dubai Reservations",
     "integrationMode": "external_link",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
-    "venueKey": "www.sevenrooms.com/reservations/shangpalacedubai"
+    "venueKey": "www.sevenrooms.com/reservations/shangpalacedubai",
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "available",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
+    }
   },
   "osm-SBH-fishcorner": {
     "name": "FishCorner",
@@ -1993,9 +2092,18 @@
     "checkedAt": "2026-10-16",
     "verification": "official_link_only",
     "integrationMode": "external_link",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
-    "notes": "Official Paolino Lemontrees branch link and initial provider name/address verified. Distinct from Casa Paolino. Default day closed, no live times or full journey verified; seasonal status unknown."
+    "notes": "Official Paolino Lemontrees branch link and initial provider name/address verified. Distinct from Casa Paolino. Default day closed, no live times or full journey verified; seasonal status unknown.",
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "unavailable",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
+    }
   },
   "curated-CER-matsuhisa-cala-di-volpe": {
     "provider": "SevenRooms",
@@ -2008,12 +2116,21 @@
     "checkedAt": "2026-10-16",
     "verification": "official_link_only",
     "integrationMode": "external_link",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
     "cancellationPolicy": {
       "summary": "Kostnadsfri avbokning senast 24 timmar före besöket. Vid senare avbokning eller uteblivet besök debiteras 150 EUR per person. För grupper med fler än 10 personer gäller 72 timmars avbokningsfrist.",
       "source": "https://www.sevenrooms.com/reservations/matsuhisaportocervo",
       "checkedAt": "2026-10-16"
+    },
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "available",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
     }
   },
   "curated-MYK-scorpios-mykonos": {
@@ -2026,9 +2143,18 @@
     "checkedAt": "2026-10-16",
     "verification": "official_link_only",
     "integrationMode": "external_link",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
-    "venueKey": "www.sevenrooms.com/reservations/scorpiosmykonosrestaurant"
+    "venueKey": "www.sevenrooms.com/reservations/scorpiosmykonosrestaurant",
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "unavailable",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
+    }
   },
   "curated-TUL-hartwood": {
     "name": "Hartwood",
@@ -2094,10 +2220,19 @@
     "verification": "official_link_only",
     "providerTitle": "Reservation at BONITO St Barth",
     "integrationMode": "external_link",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
     "venueKey": "www.sevenrooms.com/reservations/bonitostbarth",
-    "locality": "Gustavia"
+    "locality": "Gustavia",
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "available",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
+    }
   },
   "osm-SBH-bonito": {
     "provider": "SevenRooms",
@@ -2110,10 +2245,19 @@
     "verification": "official_link_only",
     "providerTitle": "Reservation at BONITO St Barth",
     "integrationMode": "external_link",
-    "liveAvailabilitySupported": false,
+    "liveAvailabilitySupported": true,
     "completionTracking": "unsupported",
     "venueKey": "www.sevenrooms.com/reservations/bonitostbarth",
-    "locality": "Gustavia"
+    "locality": "Gustavia",
+    "availabilityVerification": {
+      "method": "provider_readonly_range",
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "date": "2026-10-23",
+      "party": 2,
+      "time": "19:00",
+      "status": "available",
+      "scope": "Query-specific observation; not confirmation or guaranteed future availability"
+    }
   },
   "curated-PAR-bouillon-republique": {
     "name": "Bouillon République",

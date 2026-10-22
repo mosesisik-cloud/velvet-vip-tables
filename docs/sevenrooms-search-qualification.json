@@ -1,0 +1,831 @@
+{
+  "observedAt": "2026-10-20T20:52:05.986Z",
+  "scope": "Qualification only; local registry copies; production and repository gates unchanged",
+  "query": {
+    "date": "2026-10-23",
+    "party": 2,
+    "time": "19:00"
+  },
+  "requests": [
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=PaolinoLemontrees&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "517119232e3e65b128b1a54ab2f4b5fd9526c1534545ec3a6e85250267d7d337"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=matsuhisaportocervo&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "2bf7b62a85087d0e1ed380068ba07ef837152103e4b2654e2ed0b442abe14b7d"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=ambermandarin&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "232677565c276cde1f4fbedebf00bcb4d68f93cb6eedc2e1eb8eb486133f1d23"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=spagobh&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "1417ebf97bd47849cfa1c1108e2fb177599ffca815265cb96141995693949744"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=alma&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "057eaab858df0a0003f64b0038f7b78f091ca5c58c8589873658ab647b0c825f"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=scorpiosmykonosrestaurant&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "ec9f6ea58c255b62bbdebf22a52f4ff56ba926c5ecb8ffec219a3c8a0a353840"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=bonitostbarth&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "7d59ffc6464efd0972d148ef49e02c202f4d8d1bf7eb658c07c66bbfefeffa12"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=odette&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "02079c40329a39e480f1c61957a3b8fb19fd5302b4da4449326342adb24e930d"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=billyho&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "8878c4eb3383e2118e54645656dccaa57425d42a9ba79a4fba68bdb20a351c3c"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=shangpalacedubai&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "e8ce87f75a45b121220471bdb12602a6f3fc94a42889f5de28873d7a4fc0ad68"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=silkhvar&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "0915e43467c6f106e9717b22d4838c635198317def6c446c7638d92a326f42f0"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=restaurantezozoi&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "e30fdec2af28cfeac4fd906600cfc857ee991222b8073203668e5a191adcb511"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=bagatellestbarth&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "2eecf0c2aa7851c1eb759d6cb385596f7bfce215411069aa7d5ec12055ba1e8e"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=lagueritedb&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "96d9874cedf60ea5f79d136eb75e8f91e25b4b51ad8d8b37aad79d5217954bd9"
+    },
+    {
+      "url": "https://www.sevenrooms.com/api-yoa/availability/ng/widget/range?venue=restaurantsella&party_size=2&halo_size_interval=100&start_date=2026-10-23&num_days=1&channel=SEVENROOMS_WIDGET&exclude_pdr=true&intent=user_search",
+      "httpStatus": 200,
+      "sha256": "99e253f76718b6d3024657e76c7cc9fc62b4b974643b68407fb0b859ce826b8e"
+    }
+  ],
+  "results": [
+    {
+      "restaurantId": "curated-CAP-da-paolino",
+      "restaurant": "Da Paolino",
+      "city": "Capri",
+      "provider": "SevenRooms",
+      "slots": [],
+      "checkedAt": "2026-10-20T20:51:58.261Z",
+      "status": "unavailable"
+    },
+    {
+      "restaurantId": "curated-CER-matsuhisa-cala-di-volpe",
+      "restaurant": "Matsuhisa Cala di Volpe",
+      "city": "Porto Cervo",
+      "provider": "SevenRooms",
+      "slots": [
+        {
+          "time": "19:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/matsuhisaportocervo?default_date=2026-10-23&default_party_size=2&default_time=19%3A30",
+          "requiresCard": true,
+          "requiresPrepayment": false,
+          "paymentRequirement": "card"
+        },
+        {
+          "time": "20:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/matsuhisaportocervo?default_date=2026-10-23&default_party_size=2&default_time=20%3A00",
+          "requiresCard": true,
+          "requiresPrepayment": false,
+          "paymentRequirement": "card"
+        },
+        {
+          "time": "20:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/matsuhisaportocervo?default_date=2026-10-23&default_party_size=2&default_time=20%3A30",
+          "requiresCard": true,
+          "requiresPrepayment": false,
+          "paymentRequirement": "card"
+        }
+      ],
+      "checkedAt": "2026-10-20T20:51:58.932Z",
+      "status": "available"
+    },
+    {
+      "restaurantId": "curated-HKG-amber",
+      "restaurant": "Amber",
+      "city": "Hong Kong",
+      "provider": "SevenRooms",
+      "slots": [],
+      "checkedAt": "2026-10-20T20:51:59.605Z",
+      "status": "unavailable"
+    },
+    {
+      "restaurantId": "curated-LAX-spago-beverly-hills",
+      "restaurant": "Spago Beverly Hills",
+      "city": "Los Angeles",
+      "provider": "SevenRooms",
+      "slots": [
+        {
+          "time": "17:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/spagobh?default_date=2026-10-23&default_party_size=2&default_time=17%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "17:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/spagobh?default_date=2026-10-23&default_party_size=2&default_time=17%3A45",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/spagobh?default_date=2026-10-23&default_party_size=2&default_time=18%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/spagobh?default_date=2026-10-23&default_party_size=2&default_time=18%3A15",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/spagobh?default_date=2026-10-23&default_party_size=2&default_time=18%3A45",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/spagobh?default_date=2026-10-23&default_party_size=2&default_time=19%3A15",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/spagobh?default_date=2026-10-23&default_party_size=2&default_time=19%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/spagobh?default_date=2026-10-23&default_party_size=2&default_time=19%3A45",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/spagobh?default_date=2026-10-23&default_party_size=2&default_time=20%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/spagobh?default_date=2026-10-23&default_party_size=2&default_time=20%3A15",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/spagobh?default_date=2026-10-23&default_party_size=2&default_time=20%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        }
+      ],
+      "checkedAt": "2026-10-20T20:52:00.147Z",
+      "status": "available"
+    },
+    {
+      "restaurantId": "curated-LIS-alma",
+      "restaurant": "Alma",
+      "city": "Lisbon",
+      "provider": "SevenRooms",
+      "slots": [],
+      "checkedAt": "2026-10-20T20:52:00.417Z",
+      "status": "unavailable"
+    },
+    {
+      "restaurantId": "curated-MCO-pavyllon-monte-carlo",
+      "status": "not_probed",
+      "reason": "multi_venue_or_experience_scope"
+    },
+    {
+      "restaurantId": "curated-MYK-scorpios-mykonos",
+      "restaurant": "Scorpios Mykonos",
+      "city": "Mykonos",
+      "provider": "SevenRooms",
+      "slots": [],
+      "checkedAt": "2026-10-20T20:52:00.789Z",
+      "status": "unavailable"
+    },
+    {
+      "restaurantId": "curated-SBH-bonito-saint-barth",
+      "restaurant": "Bonito Saint Barth",
+      "city": "St. Barts",
+      "provider": "SevenRooms",
+      "slots": [
+        {
+          "time": "18:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=18%3A00",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "18:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=18%3A15",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "18:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=18%3A30",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "18:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=18%3A45",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "19:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=19%3A00",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "19:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=19%3A15",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "19:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=19%3A30",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "19:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=19%3A45",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "20:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=20%3A15",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "20:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=20%3A30",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        }
+      ],
+      "checkedAt": "2026-10-20T20:52:01.416Z",
+      "status": "available"
+    },
+    {
+      "restaurantId": "curated-SIN-odette",
+      "restaurant": "Odette",
+      "city": "Singapore",
+      "provider": "SevenRooms",
+      "slots": [],
+      "checkedAt": "2026-10-20T20:52:02.028Z",
+      "status": "unavailable"
+    },
+    {
+      "restaurantId": "curated-STT-gigi-ramatuelle",
+      "status": "not_probed",
+      "reason": "multi_venue_or_experience_scope"
+    },
+    {
+      "restaurantId": "curated-TUL-gitano-tulum",
+      "status": "not_probed",
+      "reason": "multi_venue_or_experience_scope"
+    },
+    {
+      "restaurantId": "osm-BAL-billy-ho",
+      "restaurant": "Billy Ho",
+      "city": "Bali",
+      "provider": "SevenRooms",
+      "slots": [
+        {
+          "time": "17:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=17%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "17:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=17%3A45",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=18%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=18%3A15",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=18%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=18%3A45",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=19%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=19%3A15",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=19%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=19%3A45",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=20%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=20%3A15",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/billyho?default_date=2026-10-23&default_party_size=2&default_time=20%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        }
+      ],
+      "checkedAt": "2026-10-20T20:52:02.659Z",
+      "status": "available"
+    },
+    {
+      "restaurantId": "osm-DXB-shang-palace",
+      "restaurant": "Shang Palace Dubai",
+      "city": "Dubai",
+      "provider": "SevenRooms",
+      "slots": [
+        {
+          "time": "18:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai?default_date=2026-10-23&default_party_size=2&default_time=18%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai?default_date=2026-10-23&default_party_size=2&default_time=18%3A15",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai?default_date=2026-10-23&default_party_size=2&default_time=18%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai?default_date=2026-10-23&default_party_size=2&default_time=18%3A45",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai?default_date=2026-10-23&default_party_size=2&default_time=19%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai?default_date=2026-10-23&default_party_size=2&default_time=19%3A15",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai?default_date=2026-10-23&default_party_size=2&default_time=19%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai?default_date=2026-10-23&default_party_size=2&default_time=19%3A45",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai?default_date=2026-10-23&default_party_size=2&default_time=20%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai?default_date=2026-10-23&default_party_size=2&default_time=20%3A15",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/shangpalacedubai?default_date=2026-10-23&default_party_size=2&default_time=20%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        }
+      ],
+      "checkedAt": "2026-10-20T20:52:03.199Z",
+      "status": "available"
+    },
+    {
+      "restaurantId": "osm-HVA-silk",
+      "restaurant": "Silk",
+      "city": "Hvar",
+      "provider": "SevenRooms",
+      "slots": [
+        {
+          "time": "17:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=17%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "17:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=17%3A45",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=18%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=18%3A15",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=18%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=18%3A45",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=19%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=19%3A15",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=19%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=19%3A45",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=20%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=20%3A15",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/silkhvar?default_date=2026-10-23&default_party_size=2&default_time=20%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        }
+      ],
+      "checkedAt": "2026-10-20T20:52:03.956Z",
+      "status": "available"
+    },
+    {
+      "restaurantId": "osm-MRB-zozoi",
+      "restaurant": "Zozoï",
+      "city": "Marbella",
+      "provider": "SevenRooms",
+      "slots": [
+        {
+          "time": "17:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/restaurantezozoi?default_date=2026-10-23&default_party_size=2&default_time=17%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/restaurantezozoi?default_date=2026-10-23&default_party_size=2&default_time=18%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "18:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/restaurantezozoi?default_date=2026-10-23&default_party_size=2&default_time=18%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/restaurantezozoi?default_date=2026-10-23&default_party_size=2&default_time=19%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/restaurantezozoi?default_date=2026-10-23&default_party_size=2&default_time=19%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/restaurantezozoi?default_date=2026-10-23&default_party_size=2&default_time=20%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "20:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/restaurantezozoi?default_date=2026-10-23&default_party_size=2&default_time=20%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        }
+      ],
+      "checkedAt": "2026-10-20T20:52:04.400Z",
+      "status": "available"
+    },
+    {
+      "restaurantId": "osm-SBH-bagatelle",
+      "restaurant": "Bagatelle",
+      "city": "St. Barts",
+      "provider": "SevenRooms",
+      "slots": [
+        {
+          "time": "19:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bagatellestbarth?default_date=2026-10-23&default_party_size=2&default_time=19%3A00",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        },
+        {
+          "time": "19:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bagatellestbarth?default_date=2026-10-23&default_party_size=2&default_time=19%3A30",
+          "requiresCard": false,
+          "requiresPrepayment": false,
+          "paymentRequirement": "not_specified"
+        }
+      ],
+      "checkedAt": "2026-10-20T20:52:05.073Z",
+      "status": "available"
+    },
+    {
+      "restaurantId": "osm-SBH-bonito",
+      "restaurant": "Bonito Saint Barth",
+      "city": "St. Barts",
+      "provider": "SevenRooms",
+      "slots": [
+        {
+          "time": "18:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=18%3A00",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "18:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=18%3A15",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "18:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=18%3A30",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "18:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=18%3A45",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "19:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=19%3A00",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "19:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=19%3A15",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "19:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=19%3A30",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "19:45",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=19%3A45",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "20:15",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=20%3A15",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        },
+        {
+          "time": "20:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth?default_date=2026-10-23&default_party_size=2&default_time=20%3A30",
+          "requiresCard": true,
+          "requiresPrepayment": true,
+          "paymentRequirement": "prepayment"
+        }
+      ],
+      "checkedAt": "2026-10-20T20:52:05.075Z",
+      "status": "available"
+    },
+    {
+      "restaurantId": "osm-SBH-la-guerite",
+      "restaurant": "La Guérite",
+      "city": "St. Barts",
+      "provider": "SevenRooms",
+      "slots": [],
+      "checkedAt": "2026-10-20T20:52:05.376Z",
+      "status": "unavailable"
+    },
+    {
+      "restaurantId": "osm-SBH-sella",
+      "restaurant": "Sella",
+      "city": "St. Barts",
+      "provider": "SevenRooms",
+      "slots": [
+        {
+          "time": "19:00",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/restaurantsella?default_date=2026-10-23&default_party_size=2&default_time=19%3A00",
+          "requiresCard": true,
+          "requiresPrepayment": false,
+          "paymentRequirement": "card"
+        },
+        {
+          "time": "19:30",
+          "bookingUrl": "https://www.sevenrooms.com/reservations/restaurantsella?default_date=2026-10-23&default_party_size=2&default_time=19%3A30",
+          "requiresCard": true,
+          "requiresPrepayment": false,
+          "paymentRequirement": "card"
+        }
+      ],
+      "checkedAt": "2026-10-20T20:52:05.986Z",
+      "status": "available"
+    }
+  ]
+}
