@@ -13116,6 +13116,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-22"
+        },
+        {
+          "placeId": "curated-LYO-shiyo",
+          "name": "SHIYO",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "2 cour Saint-Martin, 69002 Lyon",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=SHIYO%2C%202%20cour%20Saint-Martin%2C%20Lyon",
+          "website": "https://www.shiyo.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.shiyo.fr/",
+          "locationVerifiedAt": "2026-10-22",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=377346&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-22"
         }
       ]
     }
