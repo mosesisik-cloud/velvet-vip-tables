@@ -13026,6 +13026,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-22"
+        },
+        {
+          "placeId": "curated-LYO-comptoir-chabert",
+          "name": "COMPTOIR CHABERT",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "14 Quai Romain Rolland, 69005 Lyon",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Comptoir%20Chabert%2C%2014%20Quai%20Romain%20Rolland%2C%20Lyon",
+          "website": "https://www.chezchabert.com/informations-contact/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.chezchabert.com/informations-contact/",
+          "locationVerifiedAt": "2026-10-22",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=354752&fullscreen&lang=fr&withCloseButton=1",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-22"
         }
       ]
     }
