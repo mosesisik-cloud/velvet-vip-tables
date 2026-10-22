@@ -2790,5 +2790,18 @@
     "checkedAt": "2026-10-22",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-LYO-nosch": {
+    "name": "NOSCH",
+    "city": "Lyon",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=361415&pid=1001",
+    "source": "https://nosch.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=361415",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-22",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
