@@ -11,7 +11,7 @@ const registry=await read(path.join(root,'data/booking-providers.json'));
 const bokabord=await read(path.join(root,'api/bokabord-restaurants.json'));
 const migration=await read(path.join(root,'work/catalog-duplicate-audit.json'));
 const rows=Object.entries(catalogue.destinations).flatMap(([cityCode,d])=>d.restaurants.map(r=>({...r,cityCode,city:d.destination})));
-assert.equal(rows.length,839);const byId=new Map(rows.map(r=>[r.placeId,r]));assert.equal(byId.size,839);
+assert.equal(rows.length,840);const byId=new Map(rows.map(r=>[r.placeId,r]));assert.equal(byId.size,840);
 const normalize=s=>String(s||'').normalize('NFC').trim().toLowerCase();
 const events=new Map();const sourceFiles=[];const missingWaves=[];const unmappedEvidence=[];
 const discoveredWaves=(await fs.readdir(work)).map(name=>/^discovery-wave(\d+)-(?:decisions|results)\.json$/.exec(name)).filter(Boolean).map(match=>Number(match[1]));
@@ -40,7 +40,7 @@ const ledger=rows.map(r=>{const history=events.get(r.placeId)||[];const latest=h
  else category=history.length?'unresolved':'unaudited';
  return {restaurantId:r.placeId,name:r.name,city:r.city,cityCode:r.cityCode,website:r.website||null,category,provider:bb?'Bokabord':provider?.provider||null,bookingUrl:bb?.url||provider?.url||null,latestStatus:latest?.status||null,evidence:history};});
 for(const id of [...Object.keys(registry),...Object.keys(bokabord)])assert.ok(byId.has(id),'Orphaned registry '+id);
-const counts=Object.fromEntries(categories.map(c=>[c,ledger.filter(r=>r.category===c).length]));assert.equal(Object.values(counts).reduce((a,b)=>a+b,0),839);
+const counts=Object.fromEntries(categories.map(c=>[c,ledger.filter(r=>r.category===c).length]));assert.equal(Object.values(counts).reduce((a,b)=>a+b,0),840);
 const overlap=Object.keys(registry).filter(id=>bokabord[id]);
 const candidates=new Map();
 function group(key,reason,row){if(!key)return;if(!candidates.has(key))candidates.set(key,{reason,rows:[]});candidates.get(key).rows.push({id:row.restaurantId,name:row.name,city:row.city});}
@@ -50,7 +50,7 @@ const duplicateVenueCandidates=[...candidates.values()].filter(g=>g.rows.length>
 const duplicateVenueEvidence=ledger.filter(r=>r.latestStatus==='duplicate_email_request_only_observed').map(r=>({id:r.restaurantId,name:r.name,city:r.city,evidence:r.evidence.at(-1)}));
 let published={status:'unknown',source:'https://b2b.bakemyday.se/velvet/data/booking-providers.json',verifiedLiveCount:null,scope:'generic registry only; public Bokabord registry not independently checked',liveBokabordCount:null,liveTotalCount:null,preparedRows:[]};
 try{const response=await fetch(published.source,{signal:AbortSignal.timeout(10000),cache:'no-store'});if(!response.ok)throw Error('HTTP '+response.status);const live=await response.json();if(!live||Array.isArray(live)||typeof live!=='object'||!Object.values(live).every(r=>r&&typeof r.provider==='string'&&typeof r.url==='string'))throw Error('Unexpected public registry');published={...published,status:'generic_registry_verified',checkedAt:new Date().toISOString(),verifiedLiveCount:Object.keys(live).length,preparedRows:Object.entries(registry).filter(([id,row])=>!live[id]||JSON.stringify(row)!==JSON.stringify(live[id])).map(([id,row])=>({id,provider:row.provider,change:live[id]?'changed':'new'})),liveOnlyIds:Object.keys(live).filter(id=>!registry[id])};}catch(error){published.error=error.message;}
-const report={generatedAt:new Date().toISOString(),reportScope:'WORKSPACE, not published deployment',published,totalRows:839,uniqueIds:839,counts,registryCounts:{generic:Object.keys(registry).length,bokabord:Object.keys(bokabord).length,overlap},integratedRows:counts.integrated_native+counts.integrated_external+counts.integrated_bokabord,notIntegratedRows:839-counts.integrated_native-counts.integrated_external-counts.integrated_bokabord,scope:'Catalog records, not deduplicated real-world venues. Integration means registry routing, not tested completed booking or payment.',sourceFiles,missingWaves,unmappedEvidence,conflicts,duplicateVenueCandidates,duplicateVenueEvidence,rows:ledger};
-assert.equal(report.integratedRows+report.notIntegratedRows,839);
+const report={generatedAt:new Date().toISOString(),reportScope:'WORKSPACE, not published deployment',published,totalRows:840,uniqueIds:840,counts,registryCounts:{generic:Object.keys(registry).length,bokabord:Object.keys(bokabord).length,overlap},integratedRows:counts.integrated_native+counts.integrated_external+counts.integrated_bokabord,notIntegratedRows:840-counts.integrated_native-counts.integrated_external-counts.integrated_bokabord,scope:'Catalog records, not deduplicated real-world venues. Integration means registry routing, not tested completed booking or payment.',sourceFiles,missingWaves,unmappedEvidence,conflicts,duplicateVenueCandidates,duplicateVenueEvidence,rows:ledger};
+assert.equal(report.integratedRows+report.notIntegratedRows,840);
 await fs.mkdir(path.dirname(output),{recursive:true});await fs.writeFile(output,JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({counts,integrated:report.integratedRows,notIntegrated:report.notIntegratedRows,missingWaves,unmappedEvidence:unmappedEvidence.length,duplicateVenueCandidates:duplicateVenueCandidates.length,output},null,2));
