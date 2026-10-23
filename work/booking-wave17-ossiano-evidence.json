@@ -1,0 +1,150 @@
+{
+  "schemaVersion": 1,
+  "restaurantId": "curated-DXB-ossiano",
+  "issue": 70,
+  "agent": "gabbe-wave17-01a02152",
+  "worker": "wave17_gaggan",
+  "checkedAt": "2026-10-16",
+  "inspectionSafety": {
+    "backgroundSideEffects": "unknown",
+    "serviceWorkerBlocking": "not_recorded",
+    "requestWriteInterception": "not_recorded",
+    "networkAudit": "not_recorded",
+    "writeFreeEndToEndCertified": false,
+    "basis": "Historical parent browser observations record the initial provider page and no deliberate field change, search, slot selection or submission by the operator. Service-worker blocking, write-request interception and network audit were not recorded. Initial-page observation and no deliberate submission do not certify absence of automatic/background side effects. This provenance correction adds no new live inspection or fabricated logs."
+  },
+  "identity": {
+    "status": "verified",
+    "name": "Ossiano",
+    "city": "Dubai",
+    "country": "UAE",
+    "property": "Atlantis, The Palm",
+    "address": "Atlantis, The Palm, Crescent Road, The Palm, Dubai, UAE",
+    "source": "https://www.atlantis.com/dubai/atlantis-the-palm/dining/ossiano",
+    "addressSource": "https://www.atlantis.com/dubai/atlantis-the-palm/location-and-contact",
+    "basis": "Restaurant-specific operator page identifies Ossiano under Atlantis, The Palm. Operator contact page supplies the resort address. Michelin's restaurant listing independently matches name, property and Crescent Road address.",
+    "excludedIdentity": "Atlantis The Royal is a separate property. No other Atlantis restaurant or generic hotel room booking route was substituted."
+  },
+  "route": {
+    "provider": "SevenRooms",
+    "venueId": "ossianodubai",
+    "venueKey": "www.sevenrooms.com/reservations/ossianodubai/AD-website",
+    "exactOfficialBookingUrl": "https://www.sevenrooms.com/reservations/ossianodubai/AD-website",
+    "observedRedirectUrl": "https://www.sevenrooms.com/explore/ossianodubai/reservations/create/search?tracking=AD-website",
+    "sourceUrl": "https://www.atlantis.com/dubai/atlantis-the-palm/dining/ossiano",
+    "linkLabel": "Reserve",
+    "observedMode": "official_external_link_unresolved_operating_status",
+    "sourceRelationship": "Operator restaurant page links this exact restaurant-specific SevenRooms route.",
+    "webResult": "The official link redirected to the matching venue search URL. Web extraction produced no readable provider body; a separate fetch returned an internal error. These results are inconclusive about form rendering or service availability.",
+    "browserResult": "Parent coordinator observed the linked original SevenRooms top-level page: matching Ossiano name and Atlantis The Palm, Dubai address; guest/date/time controls; displayed date 15 October and a closure notice for that date. Other-dates heading rendered without any listed dates or slots. The historical operator-action record shows no deliberate field changes, searches or slot selections; it is not a network audit or proof of no background effects.",
+    "initialStandaloneFormObserved": true,
+    "nativeEmbeddingObserved": false,
+    "availabilityObserved": false,
+    "confirmedReservation": false,
+    "manualRequestRouteVerified": false,
+    "doNotNormalizeWithoutReview": true
+  },
+  "operatingStatus": {
+    "status": "unresolved_conflicting_sources",
+    "publishAsBookable": false,
+    "operatorObservation": "Current operator restaurant page contains a tasting-menu section, holiday dining promotions and Reserve links, but the retrieved page does not explicitly establish reopening or current service on the check date.",
+    "conflictingObservation": "Current Michelin restaurant listing explicitly states that Ossiano is temporarily closed, while retaining a reservation link and generic opening hours on the same page. Parent browser check of SevenRooms showed closure for displayed 15 October with no alternative slots listed.",
+    "interpretation": "A reservation link, generic hours, initial form, newly-reimagined copy, promotional menu or future holiday offer is not evidence that the restaurant is currently open. Absence of a closure banner on the operator page does not resolve the conflict. The SevenRooms date-specific closure notice is not generalized to permanent closure, all dates or a reopening date.",
+    "closureDate": null,
+    "reopeningDate": null,
+    "reopeningVerified": false
+  },
+  "evidence": [
+    {
+      "url": "https://www.atlantis.com/dubai/atlantis-the-palm/dining/ossiano",
+      "type": "official_operator_restaurant_page",
+      "observation": "Ossiano identity, tasting-menu and holiday-dining content; Reserve links point to the exact SevenRooms route. No explicit reopening statement was present in retrieved text.",
+      "checkedAt": "2026-10-16"
+    },
+    {
+      "url": "https://www.atlantis.com/dubai/atlantis-the-palm/location-and-contact",
+      "type": "official_operator_address",
+      "observation": "Property address identifies Atlantis, The Palm on Crescent Road in Dubai. Hotel room reservation contacts were not repurposed as a restaurant booking integration.",
+      "checkedAt": "2026-10-16"
+    },
+    {
+      "url": "https://www.sevenrooms.com/reservations/ossianodubai/AD-website",
+      "type": "officially_linked_provider_destination",
+      "observation": "Web tool followed the official link to the same ossianodubai venue search route with tracking=AD-website. Parent subsequently verified the initial standalone form in a browser; no available times were displayed or confirmed.",
+      "checkedAt": "2026-10-16"
+    },
+    {
+      "url": "https://www.sevenrooms.com/explore/ossianodubai/reservations/create/search?tracking=AD-website",
+      "type": "provider_browser_observation_by_parent",
+      "observedBy": "/root",
+      "observation": "Parent accessibility snapshot from the historical inspection showed Ossiano - Reservations, Atlantis The Palm in Dubai, two guests, displayed 15 October, all times, and a notice that the restaurant was closed on that displayed date. Other-dates heading had no dates or slots listed. About copy referred to a newly reimagined setting. Recorded parent actions did not change fields, search or select a slot; automatic/background requests were not audited.",
+      "checkedAt": "2026-10-16",
+      "scope": "Standalone original provider page, not an iframe and not a completed reservation."
+    },
+    {
+      "url": "https://guide.michelin.com/ae-du/en/dubai-emirate/dubai/restaurant/ossiano",
+      "type": "current_guide_status_conflict",
+      "observation": "Restaurant listing matches Ossiano at Atlantis The Palm, Crescent Road, and explicitly indicates temporary closure. Michelin is the original publisher of this status, not the restaurant operator. The page also retains a booking link; that coexistence is not proof of operation.",
+      "checkedAt": "2026-10-16"
+    }
+  ],
+  "previousEvidenceReview": {
+    "filesRead": [
+      "docs/booking-queue.md",
+      "data/restaurant-worklist.json",
+      "docs/restaurant-brand-review.json",
+      "../velvet-vip-tables/docs/booking-connectors-wave16.md"
+    ],
+    "observation": "Current shared worklist has no active reviewed provider mapping. Brand review has unresolved official-source leads. The available local wave16 report does not mention Ossiano. Parent coordinator reported an earlier operating-status conflict and requested earlier evidence in issue 83; no contents of that reply were assumed.",
+    "revalidation": "This fragment independently establishes the operator link and current Michelin closure notice instead of treating the earlier conflict as verified without sources."
+  },
+  "proposedRecord": {
+    "restaurantId": "curated-DXB-ossiano",
+    "integrationAction": "do_not_activate_until_status_conflict_resolved",
+    "providerMapping": null,
+    "identityStatus": "verified",
+    "bookingRouteStatus": "official_link_verified_operating_status_unresolved",
+    "implementationStatus": "blocked",
+    "disposition": "needs_operating_status_confirmation",
+    "source": "https://www.atlantis.com/dubai/atlantis-the-palm/dining/ossiano",
+    "checked": "2026-10-16",
+    "blocker": "Official booking link and initial provider form exist, but current Michelin listing says temporarily closed. Provider showed closure on its displayed 15 October date and no alternative inventory. Authoritative reopening/current service evidence was not established.",
+    "next": "Coordinator should resolve the specific operating-status conflict using dated operator reopening/service evidence and re-test the exact linked provider route read-only. Preserve this exact identity and source chain. If operation is confirmed, review the exact tracking path/redirect and test original-form rendering before any embed claim."
+  },
+  "tests": [
+    {
+      "name": "official_identity_match",
+      "result": "passed",
+      "detail": "Matched operator restaurant page and Atlantis The Palm property address; independent guide listing agrees."
+    },
+    {
+      "name": "official_booking_link_extraction",
+      "result": "passed",
+      "detail": "Followed the restaurant-specific Reserve href and recorded its exact path and redirect without replacing it with a guessed normalized URL."
+    },
+    {
+      "name": "operating_status_resolution",
+      "result": "blocked",
+      "detail": "Operator promotions/Reserve links do not establish reopening; current Michelin listing states temporary closure."
+    },
+    {
+      "name": "provider_browser_rendering",
+      "result": "passed_standalone_initial_form_only",
+      "detail": "Local worker browser surface was unavailable, but parent supplied CUA accessibility evidence from the historical inspection of the exact provider page and matching restaurant controls. Closure on displayed 15 October; no alternative dates/slots. No iframe test was recorded. No deliberate field change, search or slot selection was recorded; this is operator-action evidence, not network-level side-effect verification."
+    },
+    {
+      "name": "no_side_effects",
+      "result": "unknown",
+      "detail": "Historical operator actions were limited to public-page navigation and local evidence inspection, with no deliberate reservation/hold/payment/message submission, slot selection, personal-data entry or access-control bypass. Background effects remain unknown because service-worker blocking, request-write interception and network audit were not recorded. No write-free end-to-end certification is made."
+    },
+    {
+      "name": "json_parse",
+      "result": "passed",
+      "detail": "Node parsed JSON and asserted exact ID/issue, null active mapping, false bookable/embedding/availability/success flags and presence of both sides of the source conflict."
+    }
+  ],
+  "publication": {
+    "status": "not_published",
+    "basis": "Evidence-only fragment. No shared registry, catalogue, UI, canonical worklist or remote issue edits. Parent coordinator handles review and integration."
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "restaurantId": "curated-BKK-gaggan-at-louis-vuitton",
+  "issue": 59,
+  "agent": "gabbe-wave17-01a02152",
+  "worker": "wave17_gaggan",
+  "checkedAt": "2026-10-16",
+  "inspectionSafety": {
+    "backgroundSideEffects": "unknown",
+    "serviceWorkerBlocking": "not_recorded",
+    "requestWriteInterception": "not_recorded",
+    "networkAudit": "not_recorded",
+    "writeFreeEndToEndCertified": false,
+    "basis": "Historical browser/tool observations record public page navigation and no deliberate booking-form submission or guest-data entry by the operator. Service-worker blocking, write-request interception and network audit were not recorded. No network-level safeguard or absence of automatic/background side effects is certified. This provenance correction adds no new live inspection or fabricated logs."
+  },
+  "identity": {
+    "status": "verified",
+    "name": "Gaggan at Louis Vuitton",
+    "city": "Bangkok",
+    "country": "Thailand",
+    "address": "Unit 2F-S01-B, Second Floor, Gaysorn Amarin, 496-502 Ploenchit Road, Lumpini, Pathumwan, Bangkok 10330",
+    "basis": "Official Louis Vuitton restaurant-specific location record identifies this Gaysorn Amarin restaurant. The official Bangkok editorial page separately identifies its restaurant and cafe.",
+    "excludedIdentity": {
+      "name": "Gaggan",
+      "address": "68 Sukhumvit 31, Sukhumvit Rd, Klongton-Neu, Wattana, Bangkok 10110",
+      "source": "https://gaggan.com/",
+      "reason": "Different address and restaurant. Its current reservation link must not be reused for the Louis Vuitton entity."
+    }
+  },
+  "route": {
+    "provider": "sevenrooms",
+    "venueKey": "gagganatlouisvuitton",
+    "experienceId": "10421662797",
+    "exactOfficialBookingUrl": "https://www.sevenrooms.com/experiences/gagganatlouisvuitton/gaggan-by-louis-vuitton-10421662797",
+    "sourceUrl": "https://my.louisvuitton.com/eng-my/magazine/articles/lv-the-place-bangkok",
+    "linkLabel": "Reserve a table",
+    "observedMode": "unavailable_historical_external_link",
+    "sourceRelationship": "The restaurant section, not the cafe section, links this exact experience URL.",
+    "browserResult": "SevenRooms page-not-found message; no reservation controls rendered.",
+    "nativeEmbeddingObserved": false,
+    "availabilityObserved": false,
+    "confirmedReservation": false,
+    "manualRequestRouteVerified": false
+  },
+  "operatingStatus": {
+    "status": "closed_indicated_route_unavailable",
+    "confidence": "high_for_unavailable_booking_route",
+    "basis": "Search-indexed official Louis Vuitton restaurant record explicitly has Closed in its title. Fresh fetches of US, Thai and Singapore restaurant location URLs return 404. Fresh US and Thai store directories omit this restaurant while retaining the separate Le Cafe Louis Vuitton. The older Malaysian editorial still links the now-missing SevenRooms experience.",
+    "limitation": "The closure wording is available in the indexed official page, not a currently renderable location page. No closure date or reopening status is inferred. The contradictory older editorial is not evidence of current operation."
+  },
+  "evidence": [
+    {
+      "url": "https://us.louisvuitton.com/eng-us/point-of-sale/thailand/louis-vuitton-bangkok-the-place-gaggan",
+      "type": "official_restaurant_identity_and_closure_indication",
+      "observation": "Indexed official location record identifies the Gaysorn Amarin address and labels this restaurant Closed. Fresh direct fetch returns 404.",
+      "checkedAt": "2026-10-16"
+    },
+    {
+      "url": "https://my.louisvuitton.com/eng-my/magazine/articles/lv-the-place-bangkok",
+      "type": "official_historical_booking_link",
+      "observation": "Restaurant section links the exact SevenRooms experience above; cafe has a separate link. Editorial is still available but not proof of current restaurant operation.",
+      "checkedAt": "2026-10-16"
+    },
+    {
+      "url": "https://www.sevenrooms.com/experiences/gagganatlouisvuitton/gaggan-by-louis-vuitton-10421662797",
+      "type": "provider_browser_observation",
+      "observation": "Browser rendered SevenRooms page-not-found message and Go Back link; no date, party-size, time, guest or payment controls. Web fetch also returned 404.",
+      "checkedAt": "2026-10-16"
+    },
+    {
+      "url": "https://us.louisvuitton.com/eng-us/stores/thailand",
+      "type": "official_current_directory",
+      "observation": "Fresh directory includes LV The Place Bangkok and its separate cafe, but not Gaggan at Louis Vuitton.",
+      "checkedAt": "2026-10-16"
+    },
+    {
+      "url": "https://th.louisvuitton.com/tha-th/stores",
+      "type": "official_current_directory",
+      "observation": "Indexed older version includes Gaggan with Closed label; fresh retrieved version omits it. This difference is retained rather than presenting cached content as live.",
+      "checkedAt": "2026-10-16"
+    },
+    {
+      "url": "https://gaggan.com/",
+      "type": "official_excluded_restaurant",
+      "observation": "Gaggan's own site gives a Sukhumvit 31 address and a separate request-table route, confirming that it is not the Louis Vuitton Gaysorn Amarin entity.",
+      "checkedAt": "2026-10-16"
+    }
+  ],
+  "proposedRecord": {
+    "restaurantId": "curated-BKK-gaggan-at-louis-vuitton",
+    "integrationAction": "do_not_activate_provider_mapping",
+    "providerMapping": null,
+    "identityStatus": "verified",
+    "bookingRouteStatus": "unavailable",
+    "implementationStatus": "not_integrated",
+    "disposition": "closed_indicated",
+    "source": "https://us.louisvuitton.com/eng-us/point-of-sale/thailand/louis-vuitton-bangkok-the-place-gaggan",
+    "checked": "2026-10-16",
+    "blocker": "Officially linked SevenRooms experience no longer exists; official indexed location is marked closed and current directories omit the restaurant.",
+    "next": "Coordinator may accept a documented unavailable/closed-indicated outcome. Reopen only on new official evidence of this exact restaurant's operation and a working official booking route. Do not substitute Gaggan or Le Cafe Louis Vuitton."
+  },
+  "tests": [
+    {
+      "name": "official_identity_match",
+      "result": "passed",
+      "detail": "Louis Vuitton restaurant-specific location and official editorial match Gaggan at Louis Vuitton in Gaysorn Amarin, Bangkok."
+    },
+    {
+      "name": "official_booking_link_extraction",
+      "result": "passed",
+      "detail": "Read restaurant-specific Reserve a table href from official editorial."
+    },
+    {
+      "name": "provider_initial_page",
+      "result": "unavailable",
+      "detail": "Opened exact linked experience in background browser. Page not found; no form."
+    },
+    {
+      "name": "no_side_effects",
+      "result": "unknown",
+      "detail": "Historical operator-action record shows page navigation, with no deliberate reservation/hold/payment/message submission, guest-data entry, login or access-control bypass. That action record is not network evidence: background effects are unknown, and service-worker blocking, request-write interception and network audit were not recorded."
+    },
+    {
+      "name": "json_parse",
+      "result": "passed",
+      "detail": "Node parsed JSON and asserted exact restaurantId/issue, no proposed active mapping and no embedding/availability/reservation claim."
+    }
+  ],
+  "publication": {
+    "status": "not_published",
+    "basis": "Evidence-only fragment; parent coordinator owns shared-registry changes, PR and integration."
+  }
+}
