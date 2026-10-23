@@ -1,0 +1,93 @@
+{
+  "restaurantId": "curated-LON-gymkhana",
+  "issue": 96,
+  "agent": "codex-68b622ee-2283-45c3-ba53-1a36b35c35c2",
+  "checkedOn": "2026-10-16",
+  "timeZone": "Europe/Stockholm",
+  "baseCommit": "ab7fbe172fe0be8eae393614650c4bbf296785f5",
+  "status": "evidence_ready_integration_blocked",
+  "identity": {
+    "name": "Gymkhana London",
+    "address": "42 Albemarle Street, Mayfair, London, W1S 4JH",
+    "officialWebsite": "https://gymkhanalondon.com/",
+    "verification": "official_operator_record",
+    "operatorRecordId": 1534,
+    "operatorSlug": "gymkhanalondon"
+  },
+  "bookingRoute": {
+    "classification": "official_link_only",
+    "provider": "SevenRooms",
+    "venueId": "gymkhana",
+    "url": "https://www.sevenrooms.com/explore/gymkhana/reservations/create/search?venues=gymkhana%2Cambassadorsclubhouse%2Ctrishna",
+    "source": "https://jksrestaurants.com/venues/gymkhanalondon/",
+    "sourceData": "https://jksrestaurants.com/entries.json",
+    "linkLabel": "BOOK A TABLE",
+    "otherVenueChoices": [
+      "ambassadorsclubhouse",
+      "trishna"
+    ],
+    "providerPageLoaded": false,
+    "embeddedFormVerified": false,
+    "liveAvailabilityObserved": false,
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "reservationCreated": false
+  },
+  "sources": [
+    {
+      "url": "https://jksrestaurants.com/venues/gymkhanalondon/",
+      "method": "HTTP GET, scripts not executed",
+      "httpStatus": 200,
+      "note": "Official operator's London-specific venue page. Its frontend loads the public entries.json feed."
+    },
+    {
+      "url": "https://jksrestaurants.com/static/js/main.b9ffcaf9.js",
+      "method": "HTTP GET, source inspection only",
+      "httpStatus": 200,
+      "note": "Manifest loads entries.json from jksrestaurants.com. Venue template uses call_to_action_url."
+    },
+    {
+      "url": "https://jksrestaurants.com/entries.json",
+      "method": "HTTP GET, exact id 1534 and slug gymkhanalondon selected",
+      "httpStatus": 200,
+      "recordModifiedGMT": "2026-05-28T10:17:32",
+      "observedFields": {
+        "title.rendered": "Gymkhana London",
+        "acf.address": "<div>\n<p>42 Albemarle Street, Mayfair<br />\nLondon, W1S 4JH</p>\n</div>\n",
+        "acf.website": "https://gymkhanalondon.com/",
+        "acf.booking_venue_id": "gymkhana",
+        "acf.call_to_action_text": "BOOK A TABLE",
+        "acf.call_to_action_url": "https://www.sevenrooms.com/explore/gymkhana/reservations/create/search?venues=gymkhana%2Cambassadorsclubhouse%2Ctrishna"
+      }
+    },
+    {
+      "url": "https://gymkhanalondon.com/",
+      "method": "Web reader then one direct HTTP GET",
+      "httpStatus": 429,
+      "note": "Web reader returned 403; direct GET returned 429. No further requests or access-control bypass. Not used as a successful current page check."
+    }
+  ],
+  "integration": {
+    "status": "not_integrated",
+    "proposedMode": "external_link",
+    "runtimeMapping": null,
+    "canonicalWorklistChanged": false,
+    "blocker": "Existing SevenRooms external-link validator rejects the official /explore/ path and venues query. Do not truncate, normalize or invent a different booking URL to pass validation.",
+    "nextStep": "Booking coordinator should review this evidence and, if approving activation, assign the shared resolver and registry to one integrator for a narrowly scoped exact-link exception with negative destination tests. Preserve the full official link and expose only an external link. Alternatively retain blocked status until another official supported URL is verified."
+  },
+  "tests": {
+    "baselineProviderSuite": "PASS: 130 restaurant mappings and provider destination guards; service-worker navigation/private-state checks",
+    "scopedEvidenceTest": "scripts/test-booking-gymkhana-evidence.mjs",
+    "networkSafety": "Only static source GETs; no provider page, JavaScript execution, service workers, availability queries, forms, holds or payments.",
+    "limitations": [
+      "No provider browser or iframe test",
+      "No live availability, payment terms, checkout or confirmation verification",
+      "Unit checks validate the evidence contract and current resolver behavior; they do not prove provider service availability"
+    ]
+  },
+  "publication": {
+    "status": "not_published",
+    "merged": false,
+    "deployed": false
+  }
+}
