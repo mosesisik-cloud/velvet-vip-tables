@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "checkedAt": "2026-10-16",
+  "claimOwner": "gabbe-wave17-01a02152",
+  "records": [
+    {
+      "issue": 93,
+      "restaurantId": "curated-HVA-dalmatino-hvar",
+      "name": "Dalmatino Hvar",
+      "identity": {
+        "name": "Restaurant Dalmatino Hvar",
+        "address": "Sveti Marak 1, 21450 Hvar, Croatia",
+        "source": "https://dalmatino-hvar.com/"
+      },
+      "sources": [
+        {
+          "url": "https://dalmatino-hvar.com/",
+          "observation": "Official Dalmatino HVAR homepage identifies its Hvar restaurant and Sveti Marak 1 address. Reservation links directly to https://www.sevenrooms.com/reservations/dalmatinohvar. This is not a same-name restaurant in another Croatian town."
+        },
+        {
+          "url": "https://dalmatino-hvar.com/frequently-asked-questions/",
+          "observation": "Official FAQ uses the same SevenRooms link and directs new reservations through the website. It states credit-card details are required for bookings, a EUR25-per-person fee for cancellation within 24 hours and for no-shows, and a 15-minute late-arrival grace period. These are published policy statements, not checkout verification."
+        },
+        {
+          "url": "https://www.sevenrooms.com/reservations/dalmatinohvar",
+          "observation": "Official booking destination redirects to https://www.sevenrooms.com/explore/dalmatinohvar/reservations/create/search. Web retrieval returned a JavaScript page without readable venue/form text. No date, guest, time, search or onward checkout control was used."
+        }
+      ],
+      "classification": "official_external_provider_link_verified",
+      "duplicateIdentityReview": {
+        "existingRestaurantId": "osm-HVA-dalmatino",
+        "existingMappingSource": "data/booking-providers.json",
+        "existingUrl": "https://www.sevenrooms.com/reservations/dalmatinohvar",
+        "existingOfficialSource": "https://dalmatino-hvar.com/",
+        "existingVerification": "embedded_form_loaded",
+        "existingIntegrationMode": "native_embed",
+        "existingCheckedAt": "2026-10-15",
+        "finding": "The curated and existing OSM records refer to the same named Hvar restaurant and exact provider venue. This is a catalogue alias/integration gap, not an additional independent restaurant.",
+        "integrationDecision": "Coordinator should reconcile the stable-ID alias and existing reviewed binding before adding this proposal. Preserve existing native evidence; this review neither retests nor downgrades it. Do not count two catalogue IDs as two restaurants."
+      },
+      "rootBrowserObservation": {
+        "checkedAt": "2026-10-16",
+        "observer": "gabbe-wave17-01a02152/root",
+        "url": "https://www.sevenrooms.com/explore/dalmatinohvar/reservations/create/search",
+        "method": "Parent CUA navigation and initial accessibility state",
+        "observation": "Rendered Dalmatino Hvar - Reservations with address Sveti Marak Hvar 1, Hvar 21450. Initial form showed 2 guests, 15 October and all times. Its automatic initial response said closed on Thursday 15 October and displayed an Other dates with availability heading, without any specific alternate date or slot.",
+        "fieldsChanged": false,
+        "searchSubmitted": false,
+        "slotSelected": false,
+        "nativeEmbeddingObserved": false,
+        "availabilityObserved": false,
+        "confirmedReservation": false,
+        "limitation": "An automatic single-date status is not permanent closure. No specific bookable slot was observed; initial standalone rendering does not establish native embedding."
+      },
+      "proposedMapping": {
+        "name": "Dalmatino Hvar",
+        "city": "Hvar",
+        "provider": "SevenRooms",
+        "venueId": "dalmatinohvar",
+        "url": "https://www.sevenrooms.com/reservations/dalmatinohvar",
+        "venueKey": "www.sevenrooms.com/reservations/dalmatinohvar",
+        "source": "https://dalmatino-hvar.com/",
+        "checkedAt": "2026-10-16",
+        "verification": "official_link_only",
+        "integrationMode": "external_link",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "manualContactCandidate": null,
+      "checks": {
+        "officialIdentityVerified": true,
+        "exactOfficialLinkRead": true,
+        "nativeEmbeddingObserved": false,
+        "availabilityObserved": false,
+        "confirmedReservation": false,
+        "availabilitySearchSubmitted": false,
+        "holdCreated": null,
+        "guestInformationSubmitted": false,
+        "contactSent": false,
+        "paymentSubmitted": false
+      },
+      "inspectionSafety": {
+        "backgroundSideEffects": "unknown",
+        "serviceWorkerBlocking": "not_recorded",
+        "requestWriteInterception": "not_recorded",
+        "networkAudit": "not_recorded",
+        "writeFreeEndToEndCertified": false,
+        "basis": "Evidence records visible initial provider state, its automatic initial response and deliberate agent actions only. The false submission/contact flags describe unperformed agent actions, not certified system outcomes. No agent field changes or search submission were observed. Contemporaneous network auditing, service-worker blocking and write-request interception provenance were not recorded; background requests and side effects remain unknown. Existing alias evidence is historical and is not recertified by this inspection."
+      },
+      "limitations": [
+        "No network audit or safeguard provenance for service-worker blocking and write-request interception was recorded. Absence of deliberate form submission does not certify zero background side effects or a write-free end-to-end inspection.",
+        "Exact official-link provenance and redirect were established by this reviewer; parent separately observed the original standalone initial form and a single-date closed status. Neither proves native readiness or available inventory.",
+        "An existing OSM catalogue ID already has the same exact provider integration. Resolve the duplicate/alias with the coordinator before applying this proposal or counting it as a new restaurant.",
+        "Keep liveAvailabilitySupported explicitly false so legacy SevenRooms defaults do not initiate inventory requests for this newly reviewed link.",
+        "Published FAQ terms were not compared with a selected booking or checkout. No payment amount, guarantee acceptance, final policy agreement or confirmation was tested."
+      ],
+      "publication": "not_published"
+    },
+    {
+      "issue": 94,
+      "restaurantId": "curated-HVA-gariful",
+      "name": "Gariful",
+      "identity": {
+        "name": "Restaurant Gariful",
+        "address": "Riva 21, 21450 Hvar, Croatia",
+        "source": "https://hvar-gariful.hr/contact/"
+      },
+      "sources": [
+        {
+          "url": "https://hvar-gariful.hr/",
+          "observation": "Official restaurant homepage identifies Gariful on Hvar's waterfront. Three main-content Book a table links target https://www.i-host.gr/reservations/new?channel=website&lang=eng&restaurant=1779. The navigation menu also retains a separate BookMeATable link; the proposed route follows the repeated primary CTA."
+        },
+        {
+          "url": "https://hvar-gariful.hr/contact/",
+          "observation": "Official contact page gives Riva 21, 21450 Hvar, +385 (0)21 742999 and the restaurant mailbox. Its main Book a table control uses the same i-host restaurant=1779 destination; general enquiry fields are distinct from this booking link."
+        },
+        {
+          "url": "https://www.i-host.gr/reservations/new?channel=website&lang=eng&restaurant=1779",
+          "observation": "Exact official primary destination is retrievable. Web extraction exposes unresolved client templates and multiple policy fragments, including unrelated winery text. Those templates establish neither visible venue identity nor available times, payment requirements or applicable cancellation terms. No fields or controls were used."
+        },
+        {
+          "url": "https://bookmeatable.com/restaurants/restoran-gariful-103?lang=en-gb",
+          "observation": "Secondary navigation link on the official site. Provider page names Restoran Gariful and the same restaurant mailbox. The read-only extracted page contains booking inputs and conditional state/payment text. No availability or final terms were tested, and this alternate route is not proposed for publication."
+        }
+      ],
+      "classification": "official_external_provider_link_verified",
+      "rootBrowserObservation": {
+        "checkedAt": "2026-10-16",
+        "observer": "gabbe-wave17-01a02152/root",
+        "url": "https://www.i-host.gr/reservations/new?channel=website&lang=eng&restaurant=1779",
+        "method": "Parent CUA navigation and initial accessibility state",
+        "observation": "Original standalone form rendered Reservation Options in English, People choices 1-40, Friday 16 October default date, time choices 12:00-23:30 and a disabled Reserve control.",
+        "restaurantIdentityVisible": false,
+        "identityBasis": "No restaurant name/address was visible in the accessibility tree. The official Gariful page's repeated exact i-host URL remains the identity binding.",
+        "standaloneBrowserFormObserved": true,
+        "fieldsChanged": false,
+        "searchSubmitted": false,
+        "slotSelected": false,
+        "nativeEmbeddingObserved": false,
+        "availabilityObserved": false,
+        "confirmedReservation": false,
+        "limitation": "Initial time choices are not a bookable inventory response. A standalone form is not proof of native embedding. No policy was inferred from hidden templates."
+      },
+      "proposedMapping": {
+        "name": "Gariful",
+        "city": "Hvar",
+        "provider": "i-host",
+        "url": "https://www.i-host.gr/reservations/new?channel=website&lang=eng&restaurant=1779",
+        "venueKey": "www.i-host.gr/reservations/new?restaurant=1779",
+        "source": "https://hvar-gariful.hr/",
+        "checkedAt": "2026-10-16",
+        "verification": "official_link_only",
+        "integrationMode": "external_link",
+        "liveAvailabilitySupported": false,
+        "completionTracking": "unsupported"
+      },
+      "manualContactCandidate": null,
+      "checks": {
+        "officialIdentityVerified": true,
+        "exactOfficialLinkRead": true,
+        "standaloneBrowserFormObserved": true,
+        "nativeEmbeddingObserved": false,
+        "availabilityObserved": false,
+        "confirmedReservation": false,
+        "availabilitySearchSubmitted": false,
+        "holdCreated": null,
+        "guestInformationSubmitted": false,
+        "contactSent": false,
+        "paymentSubmitted": false
+      },
+      "inspectionSafety": {
+        "backgroundSideEffects": "unknown",
+        "serviceWorkerBlocking": "not_recorded",
+        "requestWriteInterception": "not_recorded",
+        "networkAudit": "not_recorded",
+        "writeFreeEndToEndCertified": false,
+        "basis": "Evidence records visible initial provider state and deliberate agent actions only. The false submission/contact flags describe unperformed agent actions, not certified system outcomes. No agent field changes or reservation submission were observed. Contemporaneous network auditing, service-worker blocking and write-request interception provenance were not recorded; background requests and side effects remain unknown."
+      },
+      "limitations": [
+        "No network audit or safeguard provenance for service-worker blocking and write-request interception was recorded. Absence of deliberate form submission does not certify zero background side effects or a write-free end-to-end inspection.",
+        "Two different provider links remain on the official site. The primary i-host route is repeatedly linked, but the site does not establish whether the secondary BookMeATable route is current or retired. Do not claim either supplies live inventory from page retrieval alone.",
+        "Use an exact restaurantId/source/full-URL binding. Current generic identity-parameter extraction omits restaurant, so simply allowlisting i-host would not pin restaurant=1779. Preserve the officially linked lang=eng value without inferred locale rewrites.",
+        "Root observed only the original standalone initial form. No original embedded form, inventory response, guest journey, hold, payment or reservation confirmation was observed.",
+        "Do not summarize Gariful cancellation/payment terms from the unresolved provider templates, which contain unrelated policy fragments. Applicable conditions remain unverified."
+      ],
+      "publication": "not_published"
+    }
+  ]
+}
