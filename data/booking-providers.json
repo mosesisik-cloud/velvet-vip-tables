@@ -2920,5 +2920,18 @@
     "checkedAt": "2026-10-24",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-BOD-chez-dupont": {
+    "name": "Chez Dupont",
+    "city": "Bordeaux",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=388882&lang=fr&showCollapsed=1",
+    "source": "https://www.chez-dupont.com/fr/la-table/",
+    "venueKey": "bookings.zenchef.com/results?rid=388882",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-24",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
