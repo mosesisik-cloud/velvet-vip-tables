@@ -1238,5 +1238,13 @@
     "region": "Europe",
     "listed": false,
     "note": "Sökbar restaurangdestination; ingen separat bedömning av klubb- eller säsongsutbud."
+  },
+  {
+    "code": "BOD",
+    "name": "Bordeaux",
+    "country": "France",
+    "region": "Europe",
+    "listed": false,
+    "note": "Sökbar restaurangdestination; ingen separat bedömning av klubb- eller säsongsutbud."
   }
 ]

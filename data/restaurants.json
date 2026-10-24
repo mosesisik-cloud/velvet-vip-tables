@@ -13208,6 +13208,32 @@
           "bookingVerifiedAt": "2026-10-24"
         }
       ]
+    },
+    "BOD": {
+      "destination": "Bordeaux",
+      "country": "France",
+      "fetchedAt": null,
+      "source": "VELVET curated · official website",
+      "restaurants": [
+        {
+          "placeId": "curated-BOD-le-bouchon-bordelais",
+          "name": "Le Bouchon Bordelais",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "2 rue Courbin, 33000 Bordeaux",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Bouchon%20Bordelais%2C%202%20rue%20Courbin%2C%20Bordeaux",
+          "website": "https://www.bouchon-bordelais.com/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.bouchon-bordelais.com/",
+          "locationVerifiedAt": "2026-10-24",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=349601&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-24"
+        }
+      ]
     }
   }
 }
