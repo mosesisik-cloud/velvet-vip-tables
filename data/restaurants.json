@@ -13152,6 +13152,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-22"
+        },
+        {
+          "placeId": "curated-LYO-le-cerf-volant",
+          "name": "Le Cerf-Volant",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "186 Avenue des Frères Lumière, 69008 Lyon",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Cerf-Volant%2C%20186%20Avenue%20des%20Fr%C3%A8res%20Lumi%C3%A8re%2C%20Lyon",
+          "website": "https://lecerf-volant.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://lecerf-volant.fr/",
+          "locationVerifiedAt": "2026-10-24",
+          "bookingUrl": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=378221&showCollapsed=1",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-24"
         }
       ]
     }

@@ -2855,5 +2855,18 @@
     "checkedAt": "2026-10-22",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-LYO-le-cerf-volant": {
+    "name": "Le Cerf-Volant",
+    "city": "Lyon",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=378221&showCollapsed=1",
+    "source": "https://lecerf-volant.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=378221",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-24",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
