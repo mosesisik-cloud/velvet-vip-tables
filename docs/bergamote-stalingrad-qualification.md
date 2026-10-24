@@ -1,0 +1,13 @@
+# Bergamote Stalingrad — parked: manual brunch confirmation
+
+Owner codex-worker-cbfe5665-79ca-415d-91ac-5c184e516939; Refs #129. Separate master assignment following Saint Rémi evidencePR532. Evidence only, no runtime changes. 32d5 retains identity/shared/release ownership. Both Bergamote branches are now parked independently; no further probes proposed.
+
+Same own page https://www.bergamote-bordeaux.com/buchesnoelsaintsylvestre links30Place deStalingrad,33100Bordeaux to https://bookings.zenchef.com/results?rid=375930&pid=1001 and Friday–Sunday brunch. Saved master source reused without refetch:2026-10-24T11:46:34.695Z,200,542718bytes,SHA256 bebab15459063833a09ff29a52c97326c9a1a254fd0d4a57ed26af402987f563. Saint Rémi375929 and gift shop excluded from this qualification.
+
+Exactly one results GET https://bookings.zenchef.com/results?rid=375930&pid=1001&day=2026-10-25&pax=2 returned200 at2026-10-24T11:47:34.800Z,164480bytes,SHA256 fc42e6e30a613d0b39ed0d5453d5f765b30b3d1e8643db58c5479658d98ed555. Own provider identity Bergamote Stalingrad,30 Pl. de Stalingrad,33100Bordeaux,+33556323518. Raw evidence under workspace evidence/bergamote-stalingrad; exact metadata and full safe state in docs/evidence/bergamote-stalingrad-source.json.
+
+Brunch shifts276316 Brunch1er service,274400 Brunch12h,275368 Brunch14h each independently report confirmation.is_auto=false,is_auto_until=null. Manual confirmation for two guests is the blocking contract. Observed possible_guests included2 at10:00/10:30/11:00/11:30,12:00/12:30/13:00/13:30,14:00. Historical availability does not establish a confirmed reservation or current guarantee.
+
+Each brunch has charge_param=null and prepayment min_guests3,charge_per_guests500,deposit_type fixed. This threshold does not apply to two and is not the stated blocker. Preserve distinct cancellation values86400/97200/86460seconds relative to shift. Openingnull,cutoffs11:30/13:30/14:00. All three comments require the brunch formula; exact text retained in fixture. Global French noticeempty. Complete Tea time offer61006 retained, including price/configuration, without selecting or using it. Separate tea-time275942 is also manual, has prepayment threshold2, own full French notice, all observed slots empty and cutoff2026-10-24 10:00; outside brunch scope.
+
+No formGET, replay, repeated availability check, real contact entry, consent, supplierPOST, reservation, hold, payment, shop interaction, message, OTP or bypass. No adapter or activation proposed. Validation consisted of saved-source hash, exact results identity/query/policies, complete safe projection and diff check. Documentation-only evidence needs no adapter test run. Actual supplier-confirmed full flow remains unverified.
