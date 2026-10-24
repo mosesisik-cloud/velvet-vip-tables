@@ -2933,5 +2933,18 @@
     "checkedAt": "2026-10-24",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-BOD-monzu-sainte-catherine": {
+    "name": "Monzù Promenade Sainte-Catherine",
+    "city": "Bordeaux",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=356808",
+    "source": "https://www.monzu.fr/promenade-ste-catherine",
+    "venueKey": "bookings.zenchef.com/results?rid=356808",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-24",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
