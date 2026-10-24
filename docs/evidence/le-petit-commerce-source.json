@@ -1,0 +1,53 @@
+{
+  "sources": [
+    {
+      "url": "https://lepetit-commerce-restaurant.com/reservation-en-ligne/",
+      "status": 200,
+      "location": null,
+      "bytes": 151824,
+      "sha256": "2ead067ac746725c7e239b91add1e4476655fbe7b9e4b2c615fa29ebf993bbc8",
+      "fetchedAt": "2026-10-24T11:16:44.883Z"
+    },
+    {
+      "url": "https://sdk.zenchef.com/v1/sdk.min.js",
+      "status": 200,
+      "bytes": 19582,
+      "sha256": "f5ec269f8bb0d928001b2ef06de94b126498c88905586e3a5a328b7a491fc86c",
+      "fetchedAt": "2026-10-24T11:16:48.221Z"
+    },
+    {
+      "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=367567&showCollapsed=1&day=2026-10-27&pax=2",
+      "status": 302,
+      "location": "/unavailable?sdk=1&withCloseButton=1&rid=367567&showCollapsed=1&day=2026-10-27&pax=2",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fetchedAt": "2026-10-24T11:16:54.013Z"
+    }
+  ],
+  "sdkReplay": {
+    "config": "<div\n   class=\"zc-widget-config\"\n   data-restaurant=\"367567\"></div>",
+    "iframe": [
+      "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=367567&showCollapsed=1"
+    ],
+    "requests": [
+      {
+        "url": "https://sdk.zenchef.com/v1/sdk.min.js",
+        "method": "GET"
+      },
+      {
+        "url": "https://sdk.zenchef.com/v1/sdk.css",
+        "method": "GET"
+      },
+      {
+        "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=367567&showCollapsed=1",
+        "method": "GET"
+      }
+    ]
+  },
+  "officialNoticesHtml": [
+    "<p><span>Nous ne prenons pas de réservation en terrasse. Si c&rsquo;est votre souhait, nous vous recommandons de réserver en début de service. Si une table extérieure est disponible à votre arrivée, nous vous la proposerons. </span></p>\n<p><span>Notez qu&rsquo;au-delà de 15 minutes de retard, votre table peut être libérée. </span></p>",
+    "<p>We don&rsquo;t take reservations for outside tables. If you wish, we recommend that you make a reservation at the beginning of the sitting. If an outside table is available when you arrive, we will offer it to you.</p>\n<p>Please note that if you are more than 15 minutes late, your table may be released.</p>",
+    "<h4 style=\"text-align: center;\">Privatisation et groupes</h4>\n<p style=\"text-align: center;\"><img decoding=\"async\" class=\"wp-image-1111 alignnone size-full\" src=\"https://lepetit-commerce-restaurant.com/wp-content/uploads/2023/11/5844-removebg-preview.png\" alt=\"\" width=\"249\" height=\"21\" /></p>\n<p style=\"text-align: center;\">Au delà de 6 convives et pour les formules de groupe, <span style=\"text-decoration: underline;\"><span style=\"color: #000000; text-decoration: underline;\"><a style=\"color: #000000; text-decoration: underline;\" href=\"#\">Contactez-nous</a></span></span> !</p>"
+  ],
+  "result": "Exact SDK-produced entry returns302 to /unavailable for2026-10-27/pax2; no native state or contract returned; no retry or form"
+}
