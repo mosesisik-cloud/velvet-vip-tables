@@ -1,0 +1,75 @@
+{
+  "inspectedAt": "2026-10-24T09:41:11.889Z",
+  "restaurantId": "osm-CPT-the-hussar-grill",
+  "supplierRestaurantId": "1068",
+  "source": "https://account.dineplan.com/widget/v3/frame/1nWHwN9S",
+  "sources": [
+    {
+      "url": "https://static-prod.dineplan.com/restaurant/templates/v1/js/pages/widget/v3/widget.step1.js?v=1779389965",
+      "sha256": "f61366d8d415b7dd039941952a5991bf5234beb11c87c8bad6cf625224f13e28"
+    },
+    {
+      "url": "https://static-prod.dineplan.com/restaurant/templates/v1/js/pages/widget/v3/widget.step2.js?v=1779389965",
+      "sha256": "d0fb62af306a3d7f594cfce4cb0a61b6892b2410239044ac1b8d33dad8490ef7"
+    },
+    {
+      "url": "https://static-prod.dineplan.com/restaurant/templates/v1/js/pages/widget/v3/widget.step3.js?v=1779389965",
+      "sha256": "32c6aa088720b9d4053edf2872104a26f8e7fc05158f80e6779bdf7bfc17c076"
+    },
+    {
+      "url": "https://static-prod.dineplan.com/restaurant/templates/v1/js/pages/widget/v3/widget.step4.js?v=1779389965",
+      "sha256": "607dc91013c08e1298d36f23da8758c66d5a117d2eeaf0fbb07319fff6a01c9a"
+    },
+    {
+      "url": "https://static-prod.dineplan.com/restaurant/templates/v1/js/pages/widget/v3/widget.step5.js?v=1779389965",
+      "sha256": "8d1dd52153c4eabacc828bfa425f56c58c67379a0f982d985aa6bd263518f4fe"
+    }
+  ],
+  "searchCandidates": [
+    {
+      "method": "POST",
+      "path": "/widget/v3/ajax_covers",
+      "inputs": [
+        "date",
+        "restaurant_id",
+        "csrf_token_name"
+      ],
+      "semantics": "Populate party-size choices"
+    },
+    {
+      "method": "POST",
+      "path": "/widget/v3/ajax_times",
+      "inputs": [
+        "date",
+        "covers",
+        "restaurant_id",
+        "booking_reference",
+        "csrf_token_name"
+      ],
+      "semantics": "Populate time choices; closed controls disabled state"
+    }
+  ],
+  "excludedUntilFurtherQualification": [
+    "/widget/v3/ajax_seating",
+    "/widget/v3/ajax_payment"
+  ],
+  "forbiddenInReadonlyAdapter": [
+    "/widget/v3/confirm",
+    "/widget/v3/ajax_process_booking_for_immediate_payment",
+    "/widget/v3/ajax_process_booking_for_new_immediate_payment"
+  ],
+  "cautions": [
+    "Client code establishes intent, not server-side absence of side effects",
+    "Use a fresh original form with empty booking_reference; never reuse or modify an existing booking",
+    "Keep CSRF/session values local and transient; do not persist in evidence",
+    "Allowlist exact methods/paths and reject redirects to unqualified endpoints",
+    "Empty, malformed, access-denied and failed responses must not be reported as no availability",
+    "Do not auto-select time/seating or continue into guest/payment steps",
+    "Salsify uses a separate calendar application; this contract does not establish its coverage"
+  ],
+  "sourceAssertionsPassed": true,
+  "directSearchRequestsExecuted": 0,
+  "liveAdapterImplemented": false,
+  "supplierConfirmationVerified": false,
+  "publicationVerified": false
+}

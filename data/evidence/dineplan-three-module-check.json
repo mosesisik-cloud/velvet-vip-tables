@@ -1,0 +1,246 @@
+{
+  "checkedAt": "2026-10-24T10:20:47.318Z",
+  "date": "2026-10-26",
+  "partySize": 2,
+  "results": [
+    {
+      "restaurantId": "osm-CPT-the-hussar-grill",
+      "result": {
+        "status": "options_observed",
+        "options": [
+          {
+            "time": "12:00",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "12:30",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "13:00",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "13:30",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "14:00",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "14:30",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "15:00",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "15:30",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "16:00",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "16:30",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "17:00",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "17:30",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "18:00",
+            "enabled": false,
+            "reason": "Closed for Online bookings"
+          },
+          {
+            "time": "18:30",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "19:00",
+            "enabled": false,
+            "reason": "Closed for Online bookings"
+          },
+          {
+            "time": "19:30",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "20:00",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "20:30",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "21:00",
+            "enabled": false,
+            "reason": "Closed for Online bookings"
+          },
+          {
+            "time": "21:30",
+            "enabled": false,
+            "reason": "Closed for Online bookings"
+          },
+          {
+            "time": "22:00",
+            "enabled": false,
+            "reason": "Closed for Online bookings"
+          },
+          {
+            "time": "22:30",
+            "enabled": false,
+            "reason": "Closed for Online bookings"
+          }
+        ],
+        "finalBookabilityVerified": false,
+        "restaurantId": "osm-CPT-the-hussar-grill",
+        "date": "2026-10-26",
+        "partySize": 2
+      }
+    },
+    {
+      "restaurantId": "curated-CPT-fyn",
+      "result": {
+        "status": "options_observed",
+        "options": [
+          {
+            "time": "12:00",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "12:15",
+            "enabled": false,
+            "reason": "Fully booked"
+          },
+          {
+            "time": "12:30",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "12:45",
+            "enabled": false,
+            "reason": "Fully booked"
+          },
+          {
+            "time": "13:00",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "13:15",
+            "enabled": false,
+            "reason": "Fully booked"
+          },
+          {
+            "time": "13:30",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "13:45",
+            "enabled": true,
+            "reason": ""
+          },
+          {
+            "time": "18:00",
+            "enabled": false,
+            "reason": "Fully Booked"
+          },
+          {
+            "time": "18:15",
+            "enabled": false,
+            "reason": "Fully booked"
+          },
+          {
+            "time": "18:30",
+            "enabled": false,
+            "reason": "Fully Booked"
+          },
+          {
+            "time": "18:45",
+            "enabled": false,
+            "reason": "Fully booked"
+          },
+          {
+            "time": "19:00",
+            "enabled": false,
+            "reason": "Fully Booked"
+          },
+          {
+            "time": "19:15",
+            "enabled": false,
+            "reason": "Fully booked"
+          },
+          {
+            "time": "19:30",
+            "enabled": false,
+            "reason": "Fully Booked"
+          },
+          {
+            "time": "19:45",
+            "enabled": false,
+            "reason": "Fully booked"
+          },
+          {
+            "time": "20:00",
+            "enabled": false,
+            "reason": "Fully booked"
+          },
+          {
+            "time": "20:15",
+            "enabled": false,
+            "reason": "Fully booked"
+          },
+          {
+            "time": "20:30",
+            "enabled": false,
+            "reason": "Fully Booked"
+          }
+        ],
+        "finalBookabilityVerified": false,
+        "restaurantId": "curated-CPT-fyn",
+        "date": "2026-10-26",
+        "partySize": 2
+      }
+    },
+    {
+      "restaurantId": "curated-CPT-la-colombe",
+      "result": {
+        "status": "unknown",
+        "reason": "party_not_qualified",
+        "options": []
+      }
+    }
+  ],
+  "publicationVerified": false,
+  "reservationConfirmed": false
+}

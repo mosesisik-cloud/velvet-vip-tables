@@ -1,0 +1,173 @@
+{
+  "checkedAt": "2026-10-24T10:10:59.200Z",
+  "restaurantId": "curated-CPT-fyn",
+  "date": "2026-10-26",
+  "partySize": 2,
+  "sessionCookiesPresent": true,
+  "csrfPresent": false,
+  "emptyBookingReferenceVerified": true,
+  "requests": [
+    {
+      "action": "ajax_covers",
+      "status": 200,
+      "jsonObject": true,
+      "entryCount": 6,
+      "items": [
+        {
+          "key": "2",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "3",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "4",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "5",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Unavailable"
+        },
+        {
+          "key": "6",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        }
+      ]
+    },
+    {
+      "action": "ajax_times",
+      "status": 200,
+      "jsonObject": true,
+      "entryCount": 19,
+      "items": [
+        {
+          "key": "20:30",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "20:15",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully booked"
+        },
+        {
+          "key": "20:00",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully booked"
+        },
+        {
+          "key": "19:45",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully booked"
+        },
+        {
+          "key": "19:30",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "19:15",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully booked"
+        },
+        {
+          "key": "19:00",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "18:45",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully booked"
+        },
+        {
+          "key": "18:30",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "18:15",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully booked"
+        },
+        {
+          "key": "18:00",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "13:45",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "13:30",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "13:15",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully booked"
+        },
+        {
+          "key": "13:00",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "12:45",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully booked"
+        },
+        {
+          "key": "12:30",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "12:15",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully booked"
+        },
+        {
+          "key": "12:00",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        }
+      ]
+    }
+  ],
+  "reservationConfirmed": false,
+  "slotSelected": false
+}

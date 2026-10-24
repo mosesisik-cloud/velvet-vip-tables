@@ -1,0 +1,81 @@
+{
+  "checkedAt": "2026-10-24T10:10:59.981Z",
+  "restaurantId": "curated-CPT-la-colombe",
+  "date": "2026-10-26",
+  "partySize": 2,
+  "sessionCookiesPresent": true,
+  "csrfPresent": false,
+  "emptyBookingReferenceVerified": true,
+  "requests": [
+    {
+      "action": "ajax_covers",
+      "status": 200,
+      "jsonObject": true,
+      "entryCount": 11,
+      "items": [
+        {
+          "key": "1",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "2",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "3",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "4",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "5",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "6",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "7",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "8",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "9",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        },
+        {
+          "key": "10",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Fully Booked"
+        }
+      ]
+    }
+  ],
+  "reservationConfirmed": false,
+  "slotSelected": false
+}
