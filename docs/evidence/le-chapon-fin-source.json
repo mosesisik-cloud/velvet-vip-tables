@@ -1,0 +1,1526 @@
+{
+  "sources": [
+    {
+      "url": "https://www.chapon-fin.com/",
+      "status": 200,
+      "location": null,
+      "bytes": 51783,
+      "sha256": "3d3f1b4a8310d0c85a7ee438cf6af55649ef05b66fde6f065765e7196d5ee8cf",
+      "fetchedAt": "2026-10-24T11:27:29.161Z"
+    },
+    {
+      "url": "https://sdk.zenchef.com/v1/sdk.min.js",
+      "status": 200,
+      "bytes": 19582,
+      "sha256": "f5ec269f8bb0d928001b2ef06de94b126498c88905586e3a5a328b7a491fc86c",
+      "fetchedAt": "2026-10-24T11:27:29.557Z"
+    },
+    {
+      "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=351861&lang=fr&showCollapsed=1&day=2026-10-27&pax=2",
+      "status": 200,
+      "location": null,
+      "bytes": 166648,
+      "sha256": "03e8826bb22dd4cee71ddb123101b71926b6cc52e22b55351e0cf976adf2d639",
+      "fetchedAt": "2026-10-24T11:27:36.535Z"
+    }
+  ],
+  "sdkReplay": {
+    "config": "<div\n        class=\"zc-widget-config\"\n        data-restaurant=\"351861\"\n        data-lang=\"fr\"\n></div>",
+    "iframe": [
+      "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=351861&lang=fr&showCollapsed=1"
+    ],
+    "requests": [
+      {
+        "url": "https://sdk.zenchef.com/v1/sdk.min.js",
+        "method": "GET"
+      },
+      {
+        "url": "https://sdk.zenchef.com/v1/sdk.css",
+        "method": "GET"
+      },
+      {
+        "url": "https://bookings.zenchef.com/results?sdk=1&withCloseButton=1&rid=351861&lang=fr&showCollapsed=1",
+        "method": "GET"
+      }
+    ]
+  },
+  "query": {
+    "sdk": "1",
+    "withCloseButton": "1",
+    "rid": "351861",
+    "lang": "fr",
+    "showCollapsed": "1",
+    "day": "2026-10-27",
+    "pax": "2"
+  },
+  "page": "/results",
+  "buildId": "b59e3e3c70",
+  "props": {
+    "initialState": {
+      "appStoreState": {
+        "name": "Le Chapon Fin",
+        "address": "5 RUE MONTESQUIEU",
+        "zip": "33000",
+        "city": "BORDEAUX",
+        "restaurantId": "351861",
+        "restaurantCountry": "fr",
+        "restaurantLanguage": "fr",
+        "language": "fr",
+        "restaurantTimezone": "Europe/Paris",
+        "currency": "EUR",
+        "phone": "+33556791010",
+        "printedPhone": null,
+        "restaurantComment": {
+          "fr": ""
+        },
+        "restaurantSpecificCommentsByDay": {
+          "2026-10-27": null
+        },
+        "mandatoryFields": {
+          "firstname": "required",
+          "lastname": "required",
+          "email": "required",
+          "phone_number": "required",
+          "country": "required",
+          "comment": "displayed",
+          "private_comment": "hidden",
+          "prescriber_id": "hidden",
+          "customersheet.customer_company_id": "hidden",
+          "civility": "required",
+          "url": "hidden",
+          "customersheet.vip": "hidden",
+          "waiter_id": "hidden",
+          "slots_count": "hidden",
+          "voucher_code": "hidden",
+          "custom_field.numero-de-bon-cadeau": "displayed",
+          "custom_field.lors-du-depot-dempreinte-bancaire-apres-validation-de-ma-banque-jattends-la-redirection-vers-le-site-marchand": "required",
+          "custom_field.jai-pris-connaissance-que-ma-reservation-est-validee-lorsque-je-recois-un-mail-de-confirmation": "required"
+        },
+        "customFields": [
+          {
+            "id": 1391,
+            "restaurant_id": 351861,
+            "title": "Numéro de bon cadeau",
+            "step": 3,
+            "type": "auto",
+            "enabled": true,
+            "created_at": "2021-12-27T08:56:16.000000Z",
+            "updated_at": "2021-12-27T08:56:16.000000Z",
+            "slug": "numero-de-bon-cadeau",
+            "options": [],
+            "displayType": "text",
+            "required": false
+          },
+          {
+            "id": 2006,
+            "restaurant_id": 351861,
+            "title": "Lors du dépôt d'empreinte bancaire, après validation de ma banque, j'attends la redirection vers le site marchand",
+            "step": 3,
+            "type": "checkbox",
+            "enabled": false,
+            "created_at": "2022-09-20T11:54:55.000000Z",
+            "updated_at": "2022-11-10T11:08:46.000000Z",
+            "slug": "lors-du-depot-dempreinte-bancaire-apres-validation-de-ma-banque-jattends-la-redirection-vers-le-site-marchand",
+            "options": [],
+            "displayType": "checkbox",
+            "required": true
+          },
+          {
+            "id": 2648,
+            "restaurant_id": 351861,
+            "title": "J'ai pris connaissance que ma réservation est validée lorsque je reçois un mail de confirmation",
+            "step": 3,
+            "type": "checkbox",
+            "enabled": false,
+            "created_at": "2023-05-10T08:28:04.000000Z",
+            "updated_at": "2023-05-10T08:40:38.000000Z",
+            "slug": "jai-pris-connaissance-que-ma-reservation-est-validee-lorsque-je-recois-un-mail-de-confirmation",
+            "options": [],
+            "displayType": "checkbox",
+            "required": true
+          }
+        ],
+        "customFieldsV2": [],
+        "customFieldsPrivatisation": [],
+        "rooms": [
+          {
+            "id": 25599,
+            "name": "Salle",
+            "name_translations": {
+              "fr": "Salle"
+            }
+          },
+          {
+            "id": 7898,
+            "name": "Petit salon",
+            "name_translations": {
+              "en": "Petit salon"
+            }
+          }
+        ],
+        "hasRoomSelection": false,
+        "isRoomMandatory": false,
+        "hasConnectedVouchers": true,
+        "shouldDisplayShopVoucher": true,
+        "voucherCodes": {
+          "bookingVoucherCodes": [],
+          "validatedVoucherCodes": []
+        },
+        "custom_field": {},
+        "wish": {
+          "pax": 2,
+          "day": "2026-10-27",
+          "offers": [],
+          "waiting_list": false,
+          "room_id": null
+        },
+        "query": {
+          "sdk": "1",
+          "withCloseButton": "1",
+          "rid": "351861",
+          "lang": "fr",
+          "showCollapsed": "1",
+          "day": "2026-10-27",
+          "pax": "2"
+        },
+        "reservationAutoConf": null,
+        "isDisabled": 0,
+        "isInUpdateFlow": false,
+        "initializedSSR": true,
+        "suggestedRestaurantIds": [],
+        "widgetParameters": {
+          "primaryColor": "dbbc56",
+          "onBrandColor": null
+        },
+        "dailyAvailabilities": {
+          "2026-10-27": {
+            "date": "2026-10-27",
+            "shifts": [
+              {
+                "id": 15498,
+                "marked_as_full": true,
+                "closed": false,
+                "is_voucher_codes_active": false,
+                "is_voucher_codes_limit_reached": false,
+                "bookable_from": "2026-04-30 13:00:00",
+                "bookable_to": "2026-10-27 11:30:00",
+                "shift_slots": [
+                  {
+                    "offers": [
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35647,
+                        "stock": 10,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": 10
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2026-04-30 13:00:00",
+                        "bookable_to": "2026-10-27 11:30:00",
+                        "possible_guests": []
+                      },
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35648,
+                        "stock": 10,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": 10
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2026-04-30 13:00:00",
+                        "bookable_to": "2026-10-27 11:30:00",
+                        "possible_guests": []
+                      }
+                    ],
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 16,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 4,
+                        "4_pax_slots": 6,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "12:00",
+                    "slot_name": "12:00",
+                    "interval_in_minutes": 720,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2026-04-30 13:00:00",
+                    "bookable_to": "2026-10-27 11:30:00",
+                    "possible_guests": [],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "offers": [
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35647,
+                        "stock": 10,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": 10
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2026-04-30 13:00:00",
+                        "bookable_to": "2026-10-27 11:30:00",
+                        "possible_guests": []
+                      },
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35648,
+                        "stock": 10,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": 10
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2026-04-30 13:00:00",
+                        "bookable_to": "2026-10-27 11:30:00",
+                        "possible_guests": []
+                      }
+                    ],
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 16,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 4,
+                        "4_pax_slots": 6,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "12:30",
+                    "slot_name": "12:30",
+                    "interval_in_minutes": 750,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2026-04-30 13:00:00",
+                    "bookable_to": "2026-10-27 11:30:00",
+                    "possible_guests": [],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "offers": [
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35647,
+                        "stock": 10,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": 10
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2026-04-30 13:00:00",
+                        "bookable_to": "2026-10-27 11:30:00",
+                        "possible_guests": []
+                      },
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35648,
+                        "stock": 10,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": 10
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2026-04-30 13:00:00",
+                        "bookable_to": "2026-10-27 11:30:00",
+                        "possible_guests": []
+                      }
+                    ],
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 16,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 10,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 4,
+                        "4_pax_slots": 6,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "13:00",
+                    "slot_name": "13:00",
+                    "interval_in_minutes": 780,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2026-04-30 13:00:00",
+                    "bookable_to": "2026-10-27 11:30:00",
+                    "possible_guests": [],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4
+                    ]
+                  }
+                ],
+                "name": "Déjeuner",
+                "name_translations": {
+                  "fr": "Déjeuner"
+                },
+                "comment": null,
+                "color": "f",
+                "is_standard": true,
+                "charge_param": {
+                  "is_web_booking_askable": true,
+                  "min_guests": 1,
+                  "charge_per_guests": 45
+                },
+                "prepayment_param": null,
+                "cancelation_param": {
+                  "enduser_cancelable_before": 86400,
+                  "enduser_cancelable_reference": "shift"
+                },
+                "confirmation": {
+                  "is_auto": false,
+                  "is_auto_until": 8
+                },
+                "capacity": {
+                  "min": 1,
+                  "max": 8,
+                  "total_per_slot": 16,
+                  "waitlist_min": 1,
+                  "waitlist_max": 8,
+                  "waitlist_total_per_slot": 10,
+                  "show_turn_times": false,
+                  "buffer_slots_count": 0,
+                  "turn_times": {
+                    "2_pax_slots": 4,
+                    "4_pax_slots": 6,
+                    "6_pax_slots": 8,
+                    "8_pax_slots": 8,
+                    "10_pax_slots": 9,
+                    "12_pax_slots": 10
+                  }
+                },
+                "bookable_rooms": [
+                  25599,
+                  7898
+                ],
+                "open": "12:00",
+                "close": "13:15",
+                "total": 40,
+                "waitlist_total": 20,
+                "is_offer_required": false,
+                "offer_required_from_pax": null,
+                "offers": [
+                  {
+                    "id": 35647,
+                    "stock_id": 73888,
+                    "capacity": {
+                      "min": null,
+                      "max": null,
+                      "total_per_slot": 10
+                    },
+                    "config": {
+                      "is_limited_to_pax": true,
+                      "is_same_for_all": true,
+                      "min_pax_available": 1,
+                      "max_pax_available": null
+                    },
+                    "total": 0,
+                    "has_prepayment": false,
+                    "payment_type": "none",
+                    "has_duration": false,
+                    "turn_times": null,
+                    "has_specific_rooms": false,
+                    "rooms": [],
+                    "name": "Menu Toulouse-Lautrec",
+                    "name_translations": {
+                      "fr": "Menu Toulouse-Lautrec"
+                    },
+                    "description": {
+                      "fr": "Entrée-Plat-Dessert"
+                    },
+                    "picture_url": "https://ugc.zenchef.com/uploaded-files/351861/offers/35647/C1FFeAl3HK9MV3SbT4B1XD358GA3yGTaj1QH4UVW.png",
+                    "is_private": false,
+                    "charge_per_guests": 6500,
+                    "stock": 0,
+                    "is_unlimited": true,
+                    "bookable_from_interval": null,
+                    "bookable_from_reference": "shift",
+                    "bookable_to_interval": null,
+                    "bookable_to_reference": "shift"
+                  },
+                  {
+                    "id": 35648,
+                    "stock_id": 73889,
+                    "capacity": {
+                      "min": null,
+                      "max": null,
+                      "total_per_slot": 10
+                    },
+                    "config": {
+                      "is_limited_to_pax": true,
+                      "is_same_for_all": true,
+                      "min_pax_available": 1,
+                      "max_pax_available": null
+                    },
+                    "total": 0,
+                    "has_prepayment": false,
+                    "payment_type": "none",
+                    "has_duration": false,
+                    "turn_times": null,
+                    "has_specific_rooms": false,
+                    "rooms": [],
+                    "name": "Menu Déjeuner du Chapon Fin",
+                    "name_translations": {
+                      "fr": "Menu Déjeuner du Chapon Fin"
+                    },
+                    "description": {
+                      "fr": "Entrée- Choix du plat - Dessert"
+                    },
+                    "picture_url": "https://ugc.zenchef.com/uploaded-files/351861/offers/35648/PuXxiCvyGQphTDgEIcUHeB0E3Q8w5iOOtKDJKwlb.jpg",
+                    "is_private": false,
+                    "charge_per_guests": 4500,
+                    "stock": 0,
+                    "is_unlimited": true,
+                    "bookable_from_interval": null,
+                    "bookable_from_reference": "shift",
+                    "bookable_to_interval": null,
+                    "bookable_to_reference": "shift"
+                  }
+                ]
+              },
+              {
+                "id": 51780,
+                "marked_as_full": false,
+                "closed": false,
+                "is_voucher_codes_active": false,
+                "is_voucher_codes_limit_reached": false,
+                "bookable_from": "2025-11-01 19:29:00",
+                "bookable_to": "2026-10-27 19:00:00",
+                "shift_slots": [
+                  {
+                    "offers": [
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35903,
+                        "stock": 1000,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": null
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2025-11-01 19:29:00",
+                        "bookable_to": "2026-10-27 19:00:00",
+                        "possible_guests": [
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8
+                        ]
+                      },
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35904,
+                        "stock": 1000,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": null
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2025-11-01 19:29:00",
+                        "bookable_to": "2026-10-27 19:00:00",
+                        "possible_guests": [
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8
+                        ]
+                      }
+                    ],
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 14,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 15,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 4,
+                        "4_pax_slots": 6,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "19:30",
+                    "slot_name": "19:30",
+                    "interval_in_minutes": 1170,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2025-11-01 19:29:00",
+                    "bookable_to": "2026-10-27 19:00:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "offers": [
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35903,
+                        "stock": 1000,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": null
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2025-11-01 19:29:00",
+                        "bookable_to": "2026-10-27 19:00:00",
+                        "possible_guests": [
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6
+                        ]
+                      },
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35904,
+                        "stock": 1000,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": null
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2025-11-01 19:29:00",
+                        "bookable_to": "2026-10-27 19:00:00",
+                        "possible_guests": [
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6
+                        ]
+                      }
+                    ],
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 14,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 15,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 4,
+                        "4_pax_slots": 6,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "20:00",
+                    "slot_name": "20:00",
+                    "interval_in_minutes": 1200,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2025-11-01 19:29:00",
+                    "bookable_to": "2026-10-27 19:00:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "offers": [
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35903,
+                        "stock": 1000,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": null
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2025-11-01 19:29:00",
+                        "bookable_to": "2026-10-27 19:00:00",
+                        "possible_guests": [
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8
+                        ]
+                      },
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35904,
+                        "stock": 1000,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": null
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2025-11-01 19:29:00",
+                        "bookable_to": "2026-10-27 19:00:00",
+                        "possible_guests": [
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8
+                        ]
+                      }
+                    ],
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 14,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 15,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 4,
+                        "4_pax_slots": 6,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "20:30",
+                    "slot_name": "20:30",
+                    "interval_in_minutes": 1230,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2025-11-01 19:29:00",
+                    "bookable_to": "2026-10-27 19:00:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  },
+                  {
+                    "offers": [
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35903,
+                        "stock": 1000,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": null
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2025-11-01 19:29:00",
+                        "bookable_to": "2026-10-27 19:00:00",
+                        "possible_guests": [
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8
+                        ]
+                      },
+                      {
+                        "has_prepayment": false,
+                        "payment_type": "none",
+                        "has_duration": false,
+                        "turn_times": null,
+                        "has_specific_rooms": false,
+                        "rooms": [],
+                        "id": 35904,
+                        "stock": 1000,
+                        "capacity": {
+                          "min": null,
+                          "max": null,
+                          "total_per_slot": null
+                        },
+                        "config": {
+                          "is_limited_to_pax": true,
+                          "is_same_for_all": true,
+                          "min_pax_available": 1,
+                          "max_pax_available": null
+                        },
+                        "bookable_from": "2025-11-01 19:29:00",
+                        "bookable_to": "2026-10-27 19:00:00",
+                        "possible_guests": [
+                          1,
+                          2,
+                          3,
+                          4,
+                          5,
+                          6,
+                          7,
+                          8
+                        ]
+                      }
+                    ],
+                    "capacity": {
+                      "min": 1,
+                      "max": 8,
+                      "total_per_slot": 14,
+                      "waitlist_min": 1,
+                      "waitlist_max": 8,
+                      "waitlist_total_per_slot": 15,
+                      "show_turn_times": false,
+                      "buffer_slots_count": 0,
+                      "turn_times": {
+                        "2_pax_slots": 4,
+                        "4_pax_slots": 6,
+                        "6_pax_slots": 8,
+                        "8_pax_slots": 8,
+                        "10_pax_slots": 9,
+                        "12_pax_slots": 10
+                      }
+                    },
+                    "name": "21:00",
+                    "slot_name": "21:00",
+                    "interval_in_minutes": 1260,
+                    "closed": false,
+                    "marked_as_full": false,
+                    "bookable_from": "2025-11-01 19:29:00",
+                    "bookable_to": "2026-10-27 19:00:00",
+                    "possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ],
+                    "waitlist_possible_guests": [
+                      1,
+                      2,
+                      3,
+                      4,
+                      5,
+                      6,
+                      7,
+                      8
+                    ]
+                  }
+                ],
+                "name": "Dîner",
+                "name_translations": {
+                  "fr": "Dîner"
+                },
+                "comment": null,
+                "color": "d",
+                "is_standard": true,
+                "charge_param": {
+                  "is_web_booking_askable": true,
+                  "min_guests": 1,
+                  "charge_per_guests": 85
+                },
+                "prepayment_param": null,
+                "cancelation_param": {
+                  "enduser_cancelable_before": 86460,
+                  "enduser_cancelable_reference": "shift"
+                },
+                "confirmation": {
+                  "is_auto": false,
+                  "is_auto_until": 8
+                },
+                "capacity": {
+                  "min": 1,
+                  "max": 8,
+                  "total_per_slot": 14,
+                  "waitlist_min": 1,
+                  "waitlist_max": 8,
+                  "waitlist_total_per_slot": 15,
+                  "show_turn_times": false,
+                  "buffer_slots_count": 0,
+                  "turn_times": {
+                    "2_pax_slots": 4,
+                    "4_pax_slots": 6,
+                    "6_pax_slots": 8,
+                    "8_pax_slots": 8,
+                    "10_pax_slots": 9,
+                    "12_pax_slots": 10
+                  }
+                },
+                "bookable_rooms": [
+                  25599,
+                  7898
+                ],
+                "open": "19:30",
+                "close": "21:15",
+                "total": 40,
+                "waitlist_total": 20,
+                "is_offer_required": false,
+                "offer_required_from_pax": null,
+                "offers": [
+                  {
+                    "id": 35903,
+                    "stock_id": 75358,
+                    "capacity": {
+                      "min": null,
+                      "max": null,
+                      "total_per_slot": null
+                    },
+                    "config": {
+                      "is_limited_to_pax": true,
+                      "is_same_for_all": true,
+                      "min_pax_available": 1,
+                      "max_pax_available": null
+                    },
+                    "total": 2,
+                    "has_prepayment": false,
+                    "payment_type": "none",
+                    "has_duration": false,
+                    "turn_times": null,
+                    "has_specific_rooms": false,
+                    "rooms": [],
+                    "name": "Menu Histoire du Chapon Fin 5 dates",
+                    "name_translations": {
+                      "fr": "Menu Histoire du Chapon Fin 5 dates"
+                    },
+                    "description": {
+                      "fr": "Notre menu en 5 actes avec le choix du plat\nTout en nous laissant la possibilité de vous surprendre, n'hésitez pas à nous communiquer vos restrictions alimentaires (qu'elles soient médicales ou simplement gustatives). Nous nous ferons un devoir de vous ravir."
+                    },
+                    "picture_url": "https://ugc.zenchef.com/uploaded-files/351861/offers/35903/u47lGQfucitBztJXE69K3zwm5AJKCn1c0a53YEuP.png",
+                    "is_private": false,
+                    "charge_per_guests": 8500,
+                    "stock": 0,
+                    "is_unlimited": true,
+                    "bookable_from_interval": null,
+                    "bookable_from_reference": "shift",
+                    "bookable_to_interval": null,
+                    "bookable_to_reference": "shift"
+                  },
+                  {
+                    "id": 35904,
+                    "stock_id": 75357,
+                    "capacity": {
+                      "min": null,
+                      "max": null,
+                      "total_per_slot": null
+                    },
+                    "config": {
+                      "is_limited_to_pax": true,
+                      "is_same_for_all": true,
+                      "min_pax_available": 1,
+                      "max_pax_available": null
+                    },
+                    "total": 2,
+                    "has_prepayment": false,
+                    "payment_type": "none",
+                    "has_duration": false,
+                    "turn_times": null,
+                    "has_specific_rooms": false,
+                    "rooms": [],
+                    "name": "Menu Histoire du Chapon Fin 6 dates",
+                    "name_translations": {
+                      "fr": "Menu Histoire du Chapon Fin 6 dates"
+                    },
+                    "description": {
+                      "fr": "Notre menu en 6 actes, l'expérience complète!\nTout en nous laissant la possibilité de vous surprendre, n'hésitez pas à nous communiquer vos restrictions alimentaires (qu'elles soient médicales ou simplement gustatives). Nous nous ferons un devoir de vous ravir."
+                    },
+                    "picture_url": "https://ugc.zenchef.com/uploaded-files/351861/offers/35904/DitbHVb2CpQsPSnirm5K3REMifSq2gQFb6irTea5.jpg",
+                    "is_private": false,
+                    "charge_per_guests": 10500,
+                    "stock": 0,
+                    "is_unlimited": true,
+                    "bookable_from_interval": null,
+                    "bookable_from_reference": "shift",
+                    "bookable_to_interval": null,
+                    "bookable_to_reference": "shift"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "offers": [
+          {
+            "id": 35647,
+            "name": "Menu Toulouse-Lautrec",
+            "name_translations": {
+              "fr": "Menu Toulouse-Lautrec"
+            },
+            "description": {
+              "fr": "Entrée-Plat-Dessert"
+            },
+            "date_from": "2024-07-06",
+            "date_to": null,
+            "is_active": true,
+            "is_private": false,
+            "is_highlighted": false,
+            "restricted_reservation_flow": false,
+            "is_on_first_step": false,
+            "charge_per_guests": 6500,
+            "has_prepayment": false,
+            "position": 4,
+            "type": null,
+            "created_at": "2024-07-06T15:52:08.000000Z",
+            "updated_at": "2026-06-30T07:43:09.000000Z",
+            "deleted_at": null,
+            "weekdays": {
+              "mon": false,
+              "tue": true,
+              "wed": true,
+              "thu": true,
+              "fri": true,
+              "sat": true,
+              "sun": false
+            },
+            "picture": {
+              "id": 251829,
+              "disk": "s3",
+              "name": "Capture.PNG",
+              "mime_type": "image/png",
+              "url": "https://ugc.zenchef.com/uploaded-files/351861/offers/35647/C1FFeAl3HK9MV3SbT4B1XD358GA3yGTaj1QH4UVW.png",
+              "is_public": true
+            },
+            "has_duration": false,
+            "turn_times": null,
+            "is_squeezed": false,
+            "experience_menu_link": null,
+            "parent_id": null
+          },
+          {
+            "id": 35648,
+            "name": "Menu Déjeuner du Chapon Fin",
+            "name_translations": {
+              "fr": "Menu Déjeuner du Chapon Fin"
+            },
+            "description": {
+              "fr": "Entrée- Choix du plat - Dessert"
+            },
+            "date_from": "2024-07-06",
+            "date_to": null,
+            "is_active": true,
+            "is_private": false,
+            "is_highlighted": false,
+            "restricted_reservation_flow": false,
+            "is_on_first_step": false,
+            "charge_per_guests": 4500,
+            "has_prepayment": false,
+            "position": 5,
+            "type": null,
+            "created_at": "2024-07-06T15:54:50.000000Z",
+            "updated_at": "2026-06-30T07:43:09.000000Z",
+            "deleted_at": null,
+            "weekdays": {
+              "mon": false,
+              "tue": true,
+              "wed": true,
+              "thu": true,
+              "fri": true,
+              "sat": true,
+              "sun": false
+            },
+            "picture": {
+              "id": 251830,
+              "disk": "s3",
+              "name": "dej.jpeg",
+              "mime_type": "image/jpeg",
+              "url": "https://ugc.zenchef.com/uploaded-files/351861/offers/35648/PuXxiCvyGQphTDgEIcUHeB0E3Q8w5iOOtKDJKwlb.jpg",
+              "is_public": true
+            },
+            "has_duration": false,
+            "turn_times": null,
+            "is_squeezed": false,
+            "experience_menu_link": null,
+            "parent_id": null
+          },
+          {
+            "id": 35903,
+            "name": "Menu Histoire du Chapon Fin 5 dates",
+            "name_translations": {
+              "fr": "Menu Histoire du Chapon Fin 5 dates"
+            },
+            "description": {
+              "fr": "Notre menu en 5 actes avec le choix du plat\nTout en nous laissant la possibilité de vous surprendre, n'hésitez pas à nous communiquer vos restrictions alimentaires (qu'elles soient médicales ou simplement gustatives). Nous nous ferons un devoir de vous ravir."
+            },
+            "date_from": "2024-07-10",
+            "date_to": null,
+            "is_active": true,
+            "is_private": false,
+            "is_highlighted": false,
+            "restricted_reservation_flow": false,
+            "is_on_first_step": false,
+            "charge_per_guests": 8500,
+            "has_prepayment": false,
+            "position": 6,
+            "type": null,
+            "created_at": "2024-07-10T11:16:17.000000Z",
+            "updated_at": "2026-06-30T07:43:09.000000Z",
+            "deleted_at": null,
+            "weekdays": {
+              "mon": false,
+              "tue": true,
+              "wed": true,
+              "thu": true,
+              "fri": true,
+              "sat": true,
+              "sun": false
+            },
+            "picture": {
+              "id": 251831,
+              "disk": "s3",
+              "name": "Capture.PNG",
+              "mime_type": "image/png",
+              "url": "https://ugc.zenchef.com/uploaded-files/351861/offers/35903/u47lGQfucitBztJXE69K3zwm5AJKCn1c0a53YEuP.png",
+              "is_public": true
+            },
+            "has_duration": false,
+            "turn_times": null,
+            "is_squeezed": false,
+            "experience_menu_link": null,
+            "parent_id": null
+          },
+          {
+            "id": 35904,
+            "name": "Menu Histoire du Chapon Fin 6 dates",
+            "name_translations": {
+              "fr": "Menu Histoire du Chapon Fin 6 dates"
+            },
+            "description": {
+              "fr": "Notre menu en 6 actes, l'expérience complète!\nTout en nous laissant la possibilité de vous surprendre, n'hésitez pas à nous communiquer vos restrictions alimentaires (qu'elles soient médicales ou simplement gustatives). Nous nous ferons un devoir de vous ravir."
+            },
+            "date_from": "2024-07-10",
+            "date_to": null,
+            "is_active": true,
+            "is_private": false,
+            "is_highlighted": false,
+            "restricted_reservation_flow": false,
+            "is_on_first_step": false,
+            "charge_per_guests": 10500,
+            "has_prepayment": false,
+            "position": 7,
+            "type": null,
+            "created_at": "2024-07-10T11:18:33.000000Z",
+            "updated_at": "2026-06-30T07:43:09.000000Z",
+            "deleted_at": null,
+            "weekdays": {
+              "mon": false,
+              "tue": true,
+              "wed": true,
+              "thu": true,
+              "fri": true,
+              "sat": true,
+              "sun": false
+            },
+            "picture": {
+              "id": 251833,
+              "disk": "s3",
+              "name": "SB2.JPG",
+              "mime_type": "image/jpeg",
+              "url": "https://ugc.zenchef.com/uploaded-files/351861/offers/35904/DitbHVb2CpQsPSnirm5K3REMifSq2gQFb6irTea5.jpg",
+              "is_public": true
+            },
+            "has_duration": false,
+            "turn_times": null,
+            "is_squeezed": false,
+            "experience_menu_link": null,
+            "parent_id": null
+          },
+          {
+            "id": 85082,
+            "name": "Saint Sylvestre 2025",
+            "name_translations": {
+              "fr": "Saint Sylvestre 2025"
+            },
+            "description": {
+              "fr": "Soirée exceptionnelle pour célébrer les 200 ans du Chapon Fin !\n Notre chef Younesse Bouakkaoui vous présente un menu en 8 temps, un voyage gustatif à travers des dates clefs, qui retracent l’histoire de notre si belle maison."
+            },
+            "date_from": "2025-12-31",
+            "date_to": "2025-12-31",
+            "is_active": true,
+            "is_private": false,
+            "is_highlighted": true,
+            "restricted_reservation_flow": false,
+            "is_on_first_step": false,
+            "charge_per_guests": 29500,
+            "has_prepayment": false,
+            "position": 15,
+            "type": null,
+            "created_at": "2025-12-04T15:55:53.000000Z",
+            "updated_at": "2026-04-30T09:22:43.000000Z",
+            "deleted_at": null,
+            "weekdays": {
+              "mon": false,
+              "tue": false,
+              "wed": true,
+              "thu": false,
+              "fri": false,
+              "sat": false,
+              "sun": false
+            },
+            "picture": null,
+            "has_duration": false,
+            "turn_times": null,
+            "is_squeezed": false,
+            "experience_menu_link": null,
+            "parent_id": null
+          },
+          {
+            "id": 90563,
+            "name": "Saint Valentin 2026",
+            "name_translations": {
+              "fr": "Saint Valentin 2026"
+            },
+            "description": {
+              "fr": "Découvrez la merveilleuse soirée de la Saint Valentin au Chapon Fin, le restaurant le plus romantique de Bordeaux. Notre chef Younesse Bouakkaoui vous propose un menu exceptionnel à cette occasion, accompagné d'une ambiance tamisée, douce et agréable, au son du piano."
+            },
+            "date_from": "2026-02-14",
+            "date_to": "2026-02-14",
+            "is_active": true,
+            "is_private": false,
+            "is_highlighted": true,
+            "restricted_reservation_flow": false,
+            "is_on_first_step": false,
+            "charge_per_guests": 15000,
+            "has_prepayment": false,
+            "position": 16,
+            "type": null,
+            "created_at": "2026-01-13T15:39:40.000000Z",
+            "updated_at": "2026-04-30T09:22:43.000000Z",
+            "deleted_at": null,
+            "weekdays": {
+              "mon": false,
+              "tue": false,
+              "wed": false,
+              "thu": false,
+              "fri": false,
+              "sat": true,
+              "sun": false
+            },
+            "picture": {
+              "id": 483195,
+              "disk": "s3",
+              "name": "couple.jpg",
+              "mime_type": "image/jpeg",
+              "url": "https://ugc.zenchef.com/uploaded-files/351861/offers/90563/gCoEpdXJvjUtvM0rzmTHTDLe2A3hJYz5GpsOxFfe.jpg",
+              "is_public": true
+            },
+            "has_duration": false,
+            "turn_times": null,
+            "is_squeezed": false,
+            "experience_menu_link": null,
+            "parent_id": null
+          },
+          {
+            "id": 91037,
+            "name": "Dîner Fest'Armagnac",
+            "name_translations": {
+              "fr": "Dîner Fest'Armagnac"
+            },
+            "description": {
+              "fr": "Soirée exceptionnelle dans le cadre du Festival Fest'Armagnac !\nNotre chef Younesse Bouakkaoui et notre cheffe sommellière Léna Gaudner ont préparé, avec les organisateurs du festival, un menu unique en accord mets et Armagnacs !\nUne soirée conviviale et pleine de surprises, en format table d'hôtes."
+            },
+            "date_from": "2026-03-06",
+            "date_to": "2026-03-06",
+            "is_active": true,
+            "is_private": false,
+            "is_highlighted": true,
+            "restricted_reservation_flow": false,
+            "is_on_first_step": false,
+            "charge_per_guests": 8000,
+            "has_prepayment": false,
+            "position": 17,
+            "type": null,
+            "created_at": "2026-01-15T14:11:16.000000Z",
+            "updated_at": "2026-04-30T09:22:43.000000Z",
+            "deleted_at": null,
+            "weekdays": {
+              "mon": false,
+              "tue": false,
+              "wed": false,
+              "thu": false,
+              "fri": true,
+              "sat": false,
+              "sun": false
+            },
+            "picture": {
+              "id": 484522,
+              "disk": "s3",
+              "name": "Affiche-FestArmagnac-2026-A3-9.jpg",
+              "mime_type": "image/jpeg",
+              "url": "https://ugc.zenchef.com/uploaded-files/351861/offers/91037/M3uU4Mt8ZyCU89Ah7nhWa3QR8yJT98hUkhYUcIHh.jpg",
+              "is_public": true
+            },
+            "has_duration": false,
+            "turn_times": null,
+            "is_squeezed": false,
+            "experience_menu_link": null,
+            "parent_id": null
+          }
+        ],
+        "shiftMenus": {
+          "15498": {
+            "url": "https://menuwidget.zenchef.com/v4.php?rid=351861",
+            "type": "menu"
+          },
+          "51780": {
+            "url": "https://menuwidget.zenchef.com/v4.php?rid=351861",
+            "type": "menu"
+          },
+          "294399": {
+            "url": "https://menuwidget.zenchef.com/v4.php?rid=351861",
+            "type": "menu"
+          }
+        }
+      }
+    }
+  }
+}
