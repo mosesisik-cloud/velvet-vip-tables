@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-10-24T09:28:10.692Z",
+  "restaurantId": "curated-CPT-fyn",
+  "sources": {
+    "official": {
+      "url": "https://www.fynrestaurant.com/make-a-booking",
+      "status": 200,
+      "sha256": "14541b662b43b8bf893959a2decf95c11d36effff87382fda1b9f90aef88323c"
+    },
+    "hostScript": {
+      "url": "https://public-prod.dineplan.com/widget/dineplan.widget.min.js",
+      "status": 200,
+      "sha256": "89394337be9e776dea446f73f9111e6f8450d54b6e49d7e5d726a85629a9b77b"
+    },
+    "child": {
+      "url": "https://account.dineplan.com/widget/v3/DjfvyT1k?source=direct",
+      "status": 200,
+      "sha256": "37fef716bc1d14ca156b0f38605feaaaab2f7e99f2f14ce6ebbd7fc8b4bee52a"
+    },
+    "form": {
+      "url": "https://account.dineplan.com/widget/v3/frame/DjfvyT1k",
+      "status": 200,
+      "sha256": "0c0086199a8c3786727f3ce42c4cb6e1124b678261a803bc6aac1349d3cbd4ec"
+    }
+  },
+  "sourceChainVerified": true,
+  "standaloneFormMarkupVerified": true,
+  "currentAvailabilityVerified": false,
+  "reservationConfirmed": false,
+  "publicationVerified": false
+}
