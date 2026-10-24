@@ -13304,6 +13304,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-24"
+        },
+        {
+          "placeId": "curated-BOD-bouillon-quinconces",
+          "name": "Bouillon des Quinconces",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "36 Allées d'Orléans, 33000 Bordeaux",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Bouillon%20des%20Quinconces%2C%2036%20All%C3%A9es%20d%27Orl%C3%A9ans%2C%20Bordeaux",
+          "website": "https://lesbouillonnants.com/restaurant/bouillon-bordeaux/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://lesbouillonnants.com/restaurant/bouillon-bordeaux/",
+          "locationVerifiedAt": "2026-10-24",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=376711&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-24"
         }
       ]
     }
