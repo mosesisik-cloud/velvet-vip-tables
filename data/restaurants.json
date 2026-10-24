@@ -13170,6 +13170,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-24"
+        },
+        {
+          "placeId": "curated-LYO-le-bistrot-de-lyon",
+          "name": "Le Bistrot de Lyon",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "64 Rue Mercière, 69002 Lyon",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Le%20Bistrot%20de%20Lyon%2C%2064%20Rue%20Merci%C3%A8re%2C%20Lyon",
+          "website": "https://bistrotdelyon.com/fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://bistrotdelyon.com/fr/",
+          "locationVerifiedAt": "2026-10-24",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=362476&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-24"
         }
       ]
     }

@@ -2868,5 +2868,18 @@
     "checkedAt": "2026-10-24",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-LYO-le-bistrot-de-lyon": {
+    "name": "Le Bistrot de Lyon",
+    "city": "Lyon",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=362476&pid=1001",
+    "source": "https://bistrotdelyon.com/fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=362476",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-24",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
