@@ -1,0 +1,38 @@
+{
+  "sources": [
+    {
+      "url": "https://www.legrandpan.fr/",
+      "status": 200,
+      "location": null,
+      "bytes": 78347,
+      "sha256": "adf1c37ce02930b7ae6e945d5ec2c1c190d324096726e23e4064c50d63d15032",
+      "fetchedAt": "2026-10-24T10:26:47.209Z"
+    },
+    {
+      "url": "https://www.google.com/maps/reserve/v/dine/c/j8u8_CBT7dM?source=pa&opi=89978449&hl=fr-FR&gei=fiPVaberNrCekdUPrqaYmQU&sourceurl=https://www.google.com/search?q%3Dle%2Bgrand%2Bpan%2Br%25C3%25A9servation%26sourceid%3Dchrome%26ie%3DUTF-8",
+      "status": 302,
+      "location": "https://consent.google.com/m?continue=https://www.google.com/maps/reserve/v/dine/c/j8u8_CBT7dM?source%3Dpa%26opi%3D89978449%26hl%3Dfr-FR%26gei%3DfiPVaberNrCekdUPrqaYmQU%26sourceurl%3Dhttps://www.google.com/search?q%253Dle%252Bgrand%252Bpan%252Br%2525C3%2525A9servation%2526sourceid%253Dchrome%2526ie%253DUTF-8&gl=SE&m=0&pc=rwg&cm=2&hl=fr&src=1",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fetchedAt": "2026-10-24T10:26:51.267Z"
+    },
+    {
+      "url": "https://consent.google.com/m?continue=https://www.google.com/maps/reserve/v/dine/c/j8u8_CBT7dM?source%3Dpa%26opi%3D89978449%26hl%3Dfr-FR%26gei%3DfiPVaberNrCekdUPrqaYmQU%26sourceurl%3Dhttps://www.google.com/search?q%253Dle%252Bgrand%252Bpan%252Br%2525C3%2525A9servation%2526sourceid%253Dchrome%2526ie%253DUTF-8&gl=SE&m=0&pc=rwg&cm=2&hl=fr&src=1",
+      "status": 303,
+      "location": "https://www.google.com/maps/reserve/v/dine/c/j8u8_CBT7dM?source=pa&opi=89978449&hl=fr-FR&gei=fiPVaberNrCekdUPrqaYmQU&sourceurl=https://www.google.com/search?q%3Dle%2Bgrand%2Bpan%2Br%25C3%25A9servation%26sourceid%3Dchrome%26ie%3DUTF-8&ucbcb=1",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fetchedAt": "2026-10-24T10:26:54.830Z"
+    },
+    {
+      "url": "https://www.google.com/maps/reserve/v/dine/c/j8u8_CBT7dM?source=pa&opi=89978449&hl=fr-FR&gei=fiPVaberNrCekdUPrqaYmQU&sourceurl=https://www.google.com/search?q%3Dle%2Bgrand%2Bpan%2Br%25C3%25A9servation%26sourceid%3Dchrome%26ie%3DUTF-8&ucbcb=1",
+      "status": 200,
+      "location": null,
+      "bytes": 152250,
+      "sha256": "23d37ed32c4d0abe8c2a11551f0237561d397b12862bf5c28c4346f74a2d3367",
+      "fetchedAt": "2026-10-24T10:27:00.624Z"
+    }
+  ],
+  "merchantAttribute": "%.@.[\"5HA9FJnH9ec\",\"Le Grand Pan\",[\"https://lh3.googleusercontent.com/grass-cs/AABkmLdngWI0YPBz4B3m1O9vvkM3U2z7Lu5uapTxVM2nrYbz5SkkM0xZmPhdwKhN6QZUCUdzcb98VBgMNvsy7s5XVBqXAZLcvtq6Ri_DChC46fSAcgQx4ECvfO5g6PeiK7bWtACEjiuoXwAlSuyU\\u003dw0-h0-k-no\"],4.6,[48.8330814,2.3057029],\"20 Rue Rosenwald, 75015 Paris, France\",\"+33 1 42 50 02 50\",\"http://www.legrandpan.fr/?utm_source\\u003dgmb\",\"https://maps.google.com/?cid\\u003d18371039472146177022\",[null,null,\"https://www.thefork.fr/legal#ConditionsdUtilisation\",\"https://www.thefork.fr/legal#PolitiqueDeConfidentialite\",null,null,null,null,null,null,null,\"10000064\",null,null,null,true,null,true,20,90,[],true,true,null,[\"TheFork\",[\"https://lh3.googleusercontent.com/Ak38DuOAEJJGntkVcts09tZOE3grOY6qyvFe0MEgKEzI7p34b1EkIJhevFEjZ9yCkw\"],null,[\"https://lh3.googleusercontent.com/McQRXViky19Y7vCwf9FcTO3AZOwSk3UXRlFTNYodu97imlTUultfFgdZYKfK8q8r\"]],true],\"Europe/Paris\",null,3,\"-1986020276981729817\",701,null,\"Restaurant de grillades à la française\",\"j8u8_CBT7dM\",null,null,true,null,null,null,null,\"0x47e670468b32e705:0xfef30b10e3f3dbfe\",null,null,\"/g/1vxcvqxn\",[null,null,\"https://maps.google.com/?cid\\u003d18371039472146177022\"],null,null,\"FR\",\"Paris et IDF\"],[[[\"https://lh3.googleusercontent.com/grass-cs/AABkmLdngWI0YPBz4B3m1O9vvkM3U2z7Lu5uapTxVM2nrYbz5SkkM0xZmPhdwKhN6QZUCUdzcb98VBgMNvsy7s5XVBqXAZLcvtq6Ri_DChC46fSAcgQx4ECvfO5g6PeiK7bWtACEjiuoXwAlSuyU\\u003dw0-h0-k-no\",[null,\"\"],\"Le Grand Pan\",[null,null,\"\"]],[\"https://lh3.googleusercontent.com/grass-cs/AABkmLdlMiRBov_b2DnhwfA8htcLBnkSMTsS2QYtSLDXMSoABnhVDA702TWe4rt8IVDr6Z3NrVaFAgKBNJ95owtVpZCVPrCUnP1waynNm5YTE8Jre5ojyGvOQ5veWN61qSCFZriLNkuk\\u003dw0-h0-k-no\",[null,\"\"],\"Le Grand Pan\",[null,null,\"\"]],[\"https://lh3.googleusercontent.com/grass-cs/AABkmLdhTCLl-HgLwmGHGqfYSmuh9m42MWlDQLh2f4fDHTPOwt6fovXZM_0HiJ-A1S9V9O76fldhq0xwuS9eOrywPLzm9c1ULf_p125DCTf0OJk00xg1M9gfn60Szo6LRylBQAN75mBxNQa2UJrY\\u003dw0-h0-k-no\",[null,\"\"],\"Le Grand Pan\",[null,null,\"\"]],[\"https://lh3.googleusercontent.com/grass-cs/AABkmLeVBXgvRp3ZLhXuDJ4MFn2i7_hUat4r1aLRtLgGKQV2WRkXSv06jRxQggtV5DR5Ha-fkKl6h-jUaqVnjeS2F1e30-8CVuA8w1SscM1uzkjFvX4OreOJnUcSaFX2Ll8h6XTy4IMzbI7DVnM\\u003dw0-h0-k-no\",[null,\"\"],\"Le Grand Pan\",[null,null,\"\"]],[\"https://lh3.googleusercontent.com/grass-cs/AABkmLdDZodxiBC17wtmNsx9vP6vd2did2KmiYtaGfA5cVy69MXHfB0XnPbb5bY_pbL_hJS2WPCu24n6yutvp8ydk3PkBiD0uKTk1X9IKyxWP_hfa_THTfzoh-msGnB1AwIXMR1dYQ-iyRfxwqwd\\u003dw0-h0-k-no\",[null,\"\"],\"Le Grand Pan\",[null,null,\"\"]],[\"https://lh3.googleusercontent.com/grass-cs/AABkmLc3rNrGu7gfkx_5hgzdqjS5gpSBSmr-qbgkGcwIm47lu0alBa-wWzUEQb8Vpj33bIKT5AleW2gRLOCVYjGziLNggBxJR-LKOXqZQFhrwUXGMnXbv6Wrv02jGdsyjdSdu4oNmQKz\\u003dw0-h0-k-no\",[null,\"\"],\"Le Grand Pan\",[null,null,\"\"]],[\"https://lh3.googleusercontent.com/grass-cs/AABkmLdbxfoJrHBRKJWJOg8K7UQCXJGhXalYBpGjL3uxkLgsQF614s4pA-wjITBB0bNcjk2yfMfQDhVU9boe59NMHZSm8k43M416X9D_YKbPJIyfQ3u_F1mWrXI1hXVDd_ZgQOt1CjaVpo4RUAC_\\u003dw0-h0-k-no\",[null,\"\"],\"Le Grand Pan\",[null,null,\"\"]],[\"https://lh3.googleusercontent.com/grass-cs/AABkmLc5UIerkiuxgS9xx3I3FCHm8LEEU0cYpoIXz8z-w79OYHf1v6vCWNdkL0c2IMJiuvMBstVvllyuvHnUIpp5MF6FSTfORCAh9mS0neWUVtqhc8LlDHG670R3TsfZUZulB6utV85Dwg\\u003dw0-h0-k-no\",[null,\"\"],\"Le Grand Pan\",[null,null,\"\"]],[\"https://lh3.googleusercontent.com/grass-cs/AABkmLcYO72I2DfDT-g-TXXFSxAp9p2GQc5D-I6CWFCYp4qF5NedMGerJeO6Crqxcdr969LTadpldx81l51IvqLJqDuLXqBcbLZq-XvVBmx5PMHCojp7Hbb6HGCdY1p9DYqcgf-zVp3jrIgDRaY\\u003dw0-h0-k-no\",[null,\"\"],\"Le Grand Pan\",[null,null,\"\"]],[\"https://lh3.googleusercontent.com/grass-cs/AABkmLcz81qfyXy_bIC85GJxgoVW6P5sDn0g2ZI9kvU0hwnKwR_BF0YOI9v2WGWCO-20batrKyUisJtIbLHIQ4UsM9nI8yAJ7S45TzB3hypGtYg65UU-MCXL6KoXUcul2IJOFfqOTb1MublvIVo\\u003dw0-h0-k-no\",[null,\"\"],\"Le Grand Pan\",[null,null,\"\"]]]],null,null,[[[\"S2i9WcCylBU\",\"Book without a special offer\",[null,\"\"],null,3,null,54,null,[],\"5HA9FJnH9ec\",[],[],1,null,null,null,null,null,null,[],null,null,null,null,null,null,null,\"5433801143605171221\"]]],null,null,null,null,null,null,null,null,[[\"dimanche\",\"dim.\",null,3,\"Fermé\"],[\"lundi\",\"lun.\",[[\"12:00\",\"14:00\"],[\"19:30\",\"23:00\"]],2],[\"mardi\",\"mar.\",[[\"12:00\",\"14:00\"],[\"19:30\",\"23:00\"]],2],[\"mercredi\",\"mer.\",[[\"12:00\",\"14:00\"],[\"19:30\",\"23:00\"]],2],[\"jeudi\",\"jeu.\",[[\"12:00\",\"14:00\"],[\"19:30\",\"23:00\"]],2],[\"vendredi\",\"ven.\",[[\"12:00\",\"14:00\"],[\"19:30\",\"23:00\"]],2],[\"samedi\",\"sam.\",null,3,\"Fermé\"]]]",
+  "classification": "TheFork through Google Maps Reserve; no provider query or form; outside existing Zenchef scope"
+}
