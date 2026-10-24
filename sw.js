@@ -11,7 +11,7 @@
  */
 "use strict";
 
-const VERSION = "v4-real-297-bouchon-bordelais-lunch";
+const VERSION = "v4-real-298-el-nacional-lunch";
 const SHELL_CACHE = "velvet-shell-" + VERSION;
 const RUNTIME_CACHE = "velvet-runtime-" + VERSION;
 
