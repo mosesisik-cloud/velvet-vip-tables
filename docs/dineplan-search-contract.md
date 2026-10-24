@@ -1,0 +1,11 @@
+# Dineplan v3 search qualification
+
+Refs #129. This isolated experimental parser and evidence bundle do not activate any restaurant or edit shared provider routing. The canonical integrator and existing release owner retain integration/publication ownership.
+
+The supplier's v3 step1 script populates guests with POST `ajax_covers` and times with POST `ajax_times`. Its time-option callback uses each HH:mm key and the `closed` and `reason` fields. The pure parser conservatively accepts boolean closed flags only; actual raw response types still need verification. Invalid, rejected, empty or mixed-corrupt responses return unknown with no options. All-disabled options do not establish that the restaurant is sold out. Reasons are untrusted plain text, never HTML.
+
+`node --test scripts/test-dineplan-time-options.mjs` exercises synthetic responses, not recorded supplier JSON. Native UI observations are separately recorded in `data/evidence/dineplan-hussar-native.json` and `data/evidence/dineplan-la-colombe-native.json`. Hussar Rondebosch showed sixteen enabled options for 26 October 2026/two guests; La Colombe displayed a calendar-level Fully Booked label before guest selection. No time was selected in either inspection.
+
+`data/evidence/dineplan-v3-boundaries.json` records public script hashes and endpoint intent. It is source evidence, not a server-side side-effect guarantee. Later steps invoke seating and payment lookup; final submission can call confirm or immediate-payment booking creation. Exclude all those paths from initial search qualification. Do not submit contact details, select inventory or follow payment flows during development.
+
+Remaining before a live adapter: verify fresh session/CSRF handling without retaining secrets, empty booking reference, restaurant identity and requested date/party binding, raw types, timeout/abort/error behavior, exact method/path allowlist and redirect rejection. Keep every registry live flag unchanged. Salsify's calendar application is a different contract. No full supplier confirmation or deployment is verified here.

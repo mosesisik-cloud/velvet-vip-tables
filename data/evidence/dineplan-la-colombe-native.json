@@ -1,0 +1,36 @@
+{
+  "observedDate": "2026-10-24",
+  "restaurantId": "curated-CPT-la-colombe",
+  "officialSource": "https://www.lacolombe.restaurant/la-colombe",
+  "officialBookingLink": "https://www.dineplan.com/widgetframe/GCPvsZBn",
+  "resolvedWrapper": "https://account.dineplan.com/widgetframe/GCPvsZBn",
+  "originalForm": "https://account.dineplan.com/widget/v3/frame/GCPvsZBn",
+  "formIdentity": "La Colombe Constantia",
+  "officialLocation": "Silvermist Estate, Hout Bay, Western Cape",
+  "officialLinkVerified": true,
+  "originalFormLoaded": true,
+  "calendarObservation": {
+    "date": "2026-10-26",
+    "label": "Fully Booked",
+    "partySize": null,
+    "partySelectorDisabled": true,
+    "timeSelectorDisabled": true,
+    "interpretation": "Calendar-level indication only; no party-specific availability query verified"
+  },
+  "officialPolicySummary": {
+    "depositRequired": true,
+    "depositAmount": null,
+    "paymentTiming": "At booking; unpaid reservation may be automatically cancelled",
+    "refund": "Official page says full refund when cancelling at least 48 hours beforehand; transaction-specific conditions not inspected",
+    "minimumChildAge": 8
+  },
+  "technicalObservation": "Date click returned a browser frame-tree timeout; the next successful state read displayed Fully Booked for 26 October. Not classified as a provider outage.",
+  "slotSelected": false,
+  "contactDetailsEntered": false,
+  "holdCreated": false,
+  "paymentCreated": false,
+  "reservationConfirmed": false,
+  "velvetLiveAvailabilityVerified": false,
+  "publicationChanged": false,
+  "nextStep": "Provider adapter needs read-only party-specific search qualification and exact deposit terms; retain external link without claiming full in-Velvet booking coverage"
+}
