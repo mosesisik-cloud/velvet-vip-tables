@@ -1,0 +1,85 @@
+{
+  "restaurantId": "376488",
+  "name": "Bigoudi Rooftop (Trocadéro)",
+  "address": "38 avenue Raymond Poincaré",
+  "city": "Paris",
+  "restaurantTimezone": "Europe/Paris",
+  "currency": "EUR",
+  "language": "fr",
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "restaurantComment": {
+    "ca": "Benvolguts clients,<br><br>Bigoudi Rooftop està obert cada dia, tot el dia i ofereix una vista inigualable de la Torre Eiffel i de tota la capital. Amb aires de passeig per la Croisette, amb una cuina assolellada i una atmosfera mediterrània per descobrir sol, en família o entre amics!<br><br>Servei de aparcacotxes al migdia i a la tarda - Es requereix vestimenta adequada.",
+    "da": "Kære kunder,<br><br>Bigoudi Rooftop er åbent hver dag, hele dagen og tilbyder en uovertruffen udsigt over Eiffeltårnet og hele hovedstaden. Nyd en stemning af en spadseretur langs Croisette, med solrig mad og en middelhavsatmosfære, der kan opdages alene, med familie eller blandt venner!<br><br>Valet-service til frokost og middag - Korrekt påklædning påkrævet.",
+    "de": "Liebe Kundinnen und Kunden,<br><br>Bigoudi Rooftop hat täglich geöffnet und bietet einen unvergleichlichen Blick auf den Eiffelturm und die gesamte Hauptstadt. Genießen Sie ein Ambiente, das an einen Spaziergang an der Croisette erinnert, mit sonniger Küche und mediterranem Flair, das Sie alleine, mit der Familie oder Freunden entdecken können!<br><br>Parkservice mittags und abends - Angemessene Kleidung erforderlich.",
+    "en": "Dear customers,<br><br>Bigoudi Rooftop is open every day, all day and offers an unparalleled view of the Eiffel Tower and the entire capital. Enjoy a stroll along the Croisette vibe, with sunny cuisine & a Mediterranean atmosphere to discover alone, with family, or among friends!<br><br>Valet service at noon and in the evening - Smart casual dress required.",
+    "es": "Estimados clientes,<br><br>Bigoudi Rooftop está abierto todos los días, todo el día y ofrece una vista inigualable de la Torre Eiffel y de toda la capital. Disfruta de un ambiente que recuerda a un paseo por la Croisette, con cocina soleada y un ambiente mediterráneo para descubrir solo, en familia o entre amigos!<br><br>Servicio de aparcacoches al mediodía y por la noche - Se requiere vestimenta adecuada.",
+    "fr": "Chèr.e.s client.e.s,<br><br>\nBigoudi Rooftop est ouvert tous les jours, toute la journée et offre une vue inégalable sur la Tour Eiffel et toute la capitale. \nDes airs de balade sur la Croisette, avec une cuisine ensoleillée & une ambiance méditerranéenne à venir découvrir seul, en famille, ou entre ami.e.s !<br><br>\nService voiturier midi et soir - Tenue correcte exigée.",
+    "it": "Gentili clienti,<br><br>Bigoudi Rooftop è aperto tutti i giorni, tutto il giorno e offre una vista impareggiabile sulla Torre Eiffel e su tutta la capitale. Godetevi un'atmosfera che ricorda una passeggiata sulla Croisette, con cucina soleggiata e un'atmosfera mediterranea da scoprire da soli, in famiglia o tra amici!<br><br>Servizio di valet a pranzo e cena - Viene richiesta un'adeguata tenuta.",
+    "nl": "Beste klanten,<br><br>Bigoudi Rooftop is elke dag de hele dag geopend en biedt een ongeëvenaard uitzicht op de Eiffeltoren en de hele hoofdstad. Geniet van een sfeer die doet denken aan een wandeling over de Croisette, met zonnige gerechten en een mediterrane sfeer om alleen, met familie of met vrienden te ontdekken!<br><br>Valetservice 's middags en 's avonds - Gepaste kleding vereist.",
+    "no": "Kjære kunder,<br><br>Bigoudi Rooftop er åpent hver dag, hele dagen og tilbyr en uovertruffen utsikt over Eiffeltårnet og hele hovedstaden. Nyt en atmosfære som minner om en spasertur langs Croisette, med solfylt mat og en middelhavsatmosfære som kan oppdages alene, med familie eller blant venner!<br><br>Valet-tjeneste til lunsj og middag - Korrekt antrekk kreves.",
+    "pt": "Prezados clientes,<br><br>O Bigoudi Rooftop está aberto todos os dias, o dia todo e oferece uma vista inigualável da Torre Eiffel e de toda a capital. Desfrute de uma atmosfera que lembra um passeio pela Croisette, com uma cozinha ensolarada e um ambiente mediterrâneo para descobrir sozinho, em família ou entre amigos!<br><br>Serviço de manobrista ao meio-dia e à noite - Traje adequado exigido.",
+    "sv": "Kära kunder,<br><br>Bigoudi Rooftop har öppet varje dag, hela dagen och erbjuder en oöverträffad utsikt över Eiffeltornet och hela huvudstaden. Njut av en atmosfär som påminner om en promenad längs Croisette, med solig mat och en medelhavsatmosfär att upptäcka ensam, med familj eller bland vänner!<br><br>Valet-service mitt på dagen och på kvällen - Korrekt klädsel krävs."
+  },
+  "restaurantSpecificCommentsByDay": {
+    "2026-10-23": null
+  },
+  "shift": {
+    "id": 480308,
+    "name": "Service continu",
+    "confirmation": {
+      "is_auto": true,
+      "is_auto_until": null
+    },
+    "charge_param": {
+      "is_web_booking_askable": true,
+      "min_guests": 1,
+      "charge_per_guests": 50
+    },
+    "prepayment_param": null,
+    "cancelation_param": {
+      "enduser_cancelable_before": 10800,
+      "enduser_cancelable_reference": "shift"
+    },
+    "is_offer_required": true,
+    "offer_required_from_pax": null
+  },
+  "observedTimesForTwo": [
+    "12:00",
+    "12:15",
+    "12:30",
+    "12:45",
+    "13:00",
+    "13:15",
+    "13:30",
+    "13:45",
+    "14:00",
+    "14:15",
+    "14:30",
+    "14:45",
+    "16:00",
+    "16:30",
+    "17:00",
+    "17:30",
+    "18:00",
+    "19:00",
+    "19:15",
+    "19:30",
+    "19:45",
+    "20:00",
+    "20:15",
+    "20:30",
+    "20:45",
+    "21:00",
+    "21:15",
+    "21:30",
+    "21:45"
+  ]
+}
