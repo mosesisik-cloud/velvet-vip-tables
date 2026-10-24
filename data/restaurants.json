@@ -13322,6 +13322,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-24"
+        },
+        {
+          "placeId": "curated-BOD-foison",
+          "name": "FOISON",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "53 Rue Lafaurie de Monbadon, 33000 Bordeaux",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=FOISON%2C%2053%20Rue%20Lafaurie%20de%20Monbadon%2C%20Bordeaux",
+          "website": "https://foison.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://foison.fr/",
+          "locationVerifiedAt": "2026-10-24",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=372834&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-24"
         }
       ]
     }
