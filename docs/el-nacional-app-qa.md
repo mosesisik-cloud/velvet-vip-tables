@@ -12,6 +12,8 @@ Local real app/API/provider/SQLite with synthetic supplier:
 
 All these runs passed first time; none aborted. Main began on worktree over providercad87c3, whose runtime bytes were then committed unchanged as134a887. Runtime CI40088323191/40088323268 passed; exact-final documentation commit CI is recorded in PR523.
 
-Scope390,notice1366,review390/1366 images inspected. Element captures are partly clipped by viewport; complete notice is checked in the DOM. Public GET/HEAD QA follows activation. Master independent review is readonly source/code/evidence review, not an additional executed browser test. Zero actual supplier bookings/holds/payments/contact operations; actual supplier-confirmed full booking remains unverified.
+Scope390,notice1366,review390/1366 images inspected. Element captures are partly clipped by viewport. The complete API notice is compared exactly to the saved source; DOM checks cover key conditions (15 minutes and12), order before consent and initially unchecked consent. Visible French text was inspected in the screenshots; this is not a full normalized-DOM equality assertion. Public GET/HEAD QA follows activation. Master independent review is readonly source/code/evidence review, not an additional executed browser test. Zero actual supplier bookings/holds/payments/contact operations; actual supplier-confirmed full booking remains unverified.
 
 Manifest298 SHA2569466b4984255ede7c91ba0599e2e20272f38aec1cacfb133086aa9a3a6d7ae3a. Server stage and unchanged public297 baseline verified; not yet activated at this report commit.
+
+Master review requested this evidence wording correction only. Runtime134a887 and the passing app runs are unchanged; no new app run is needed for this documentation correction.
