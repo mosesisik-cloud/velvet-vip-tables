@@ -1,6 +1,22 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { readFileSync } from 'node:fs';
 import { parseDineplanTimeOptions as parse } from './lib/dineplan-time-options.mjs';
+
+test('observed supplier field projection matches independent native form options', () => {
+  const load = name => JSON.parse(readFileSync(new URL(`../data/evidence/${name}`, import.meta.url), 'utf8'));
+  const evidence = load('dineplan-hussar-search-projection.json');
+  const native = load('dineplan-hussar-native.json');
+  const response = evidence.requests.find(r => r.action === 'ajax_times');
+  assert.equal(response.status, 200);
+  assert.equal(response.entryCount, response.items.length);
+  assert.equal(evidence.date, native.query.date);
+  assert.equal(evidence.partySize, native.query.partySize);
+  const result = parse(Object.fromEntries(response.items.map(({key, closed, reason}) => [key,{closed,reason}])));
+  assert.deepEqual(result.options.filter(o => o.enabled).map(o => o.time), native.enabledTimeOptions);
+  assert.deepEqual(result.options.filter(o => !o.enabled).map(o => o.time), native.closedForOnlineBookingOptions);
+  assert.equal(result.finalBookabilityVerified, false);
+});
 
 test('synthetic mixed options preserve online closure without claiming final availability', () => {
   const r = parse({ '19:00': { closed: true, reason: 'Closed for Online bookings' }, '18:30': { closed: false, reason: '' } });

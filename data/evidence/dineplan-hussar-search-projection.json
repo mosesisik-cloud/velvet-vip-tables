@@ -1,0 +1,197 @@
+{
+  "checkedAt": "2026-10-24T09:51:00.249Z",
+  "restaurantId": "osm-CPT-the-hussar-grill",
+  "date": "2026-10-26",
+  "partySize": 2,
+  "sessionCookiesPresent": true,
+  "csrfPresent": false,
+  "emptyBookingReferenceVerified": true,
+  "requests": [
+    {
+      "action": "ajax_covers",
+      "status": 200,
+      "jsonObject": true,
+      "entryCount": 7,
+      "items": [
+        {
+          "key": "1",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "2",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "3",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "4",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "5",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "6",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        }
+      ]
+    },
+    {
+      "action": "ajax_times",
+      "status": 200,
+      "jsonObject": true,
+      "entryCount": 22,
+      "items": [
+        {
+          "key": "22:30",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Closed for Online bookings"
+        },
+        {
+          "key": "22:00",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Closed for Online bookings"
+        },
+        {
+          "key": "21:30",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Closed for Online bookings"
+        },
+        {
+          "key": "21:00",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Closed for Online bookings"
+        },
+        {
+          "key": "20:30",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "20:00",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "19:30",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "19:00",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Closed for Online bookings"
+        },
+        {
+          "key": "18:30",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "18:00",
+          "closed": true,
+          "closedType": "boolean",
+          "reason": "Closed for Online bookings"
+        },
+        {
+          "key": "17:30",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "17:00",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "16:30",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "16:00",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "15:30",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "15:00",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "14:30",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "14:00",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "13:30",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "13:00",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "12:30",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        },
+        {
+          "key": "12:00",
+          "closed": false,
+          "closedType": "boolean",
+          "reason": ""
+        }
+      ]
+    }
+  ],
+  "reservationConfirmed": false,
+  "slotSelected": false
+}
