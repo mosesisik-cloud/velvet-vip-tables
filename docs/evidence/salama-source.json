@@ -1,0 +1,30 @@
+{
+  "sources": [
+    {
+      "url": "https://www.salama-saint-tropez.com/",
+      "status": 301,
+      "location": "https://www.salama-saint-tropez.com/fr/",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "fetchedAt": "2026-10-24T09:53:29.606Z"
+    },
+    {
+      "url": "https://www.salama-saint-tropez.com/fr/",
+      "status": 200,
+      "location": null,
+      "bytes": 212741,
+      "sha256": "0a9e20b572844a027cb686d45d4c78f2de4694b572676cdbf1fb10656ef1dcee",
+      "fetchedAt": "2026-10-24T09:53:33.716Z"
+    }
+  ],
+  "notice": "Les réservations s'effectuent uniquement par téléphone",
+  "telephone": "+33494965293",
+  "widget": {
+    "script": "https://sdk.zenchef.com/v1/sdk.min.js",
+    "restaurant": "352861",
+    "open": "2000",
+    "lang": "fr"
+  },
+  "decision": "Current primary source explicitly says telephone-only while also embedding a Zenchef SDK. Contradiction unresolved; no provider request or online-booking claim.",
+  "providerRequests": 0
+}
