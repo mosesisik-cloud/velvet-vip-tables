@@ -1,0 +1,107 @@
+{
+  "restaurantId": "355969",
+  "name": "Les Marches",
+  "address": "5 rue de la manutention",
+  "city": "Paris",
+  "query": {
+    "rid": "355969",
+    "pid": "1001",
+    "fullscreen": "1",
+    "lang": "fr",
+    "day": "2026-10-23",
+    "pax": "2"
+  },
+  "restaurantTimezone": "Europe/Paris",
+  "currency": "EUR",
+  "language": "fr",
+  "wish": {
+    "pax": 2,
+    "day": "2026-10-23",
+    "offers": [],
+    "waiting_list": false,
+    "room_id": null
+  },
+  "hasRoomSelection": false,
+  "isRoomMandatory": false,
+  "restaurantComment": {
+    "fr": "Nous ne prenons pas de réservations à l’extérieur, en fonction de la disponibilité nous vous installerons avec plaisir sur la terrasse."
+  },
+  "mandatoryFields": {
+    "firstname": "required",
+    "lastname": "required",
+    "email": "required",
+    "phone_number": "required",
+    "country": "required",
+    "comment": "displayed",
+    "private_comment": "hidden",
+    "prescriber_id": "hidden",
+    "customersheet.customer_company_id": "hidden",
+    "civility": "required",
+    "url": "hidden",
+    "customersheet.vip": "hidden",
+    "waiter_id": "hidden",
+    "slots_count": "hidden",
+    "voucher_code": "displayed"
+  },
+  "customFields": [],
+  "customFieldsV2": [],
+  "source": {
+    "url": "https://bookings.zenchef.com/results?rid=355969&pid=1001&fullscreen=1&lang=fr&day=2026-10-23&pax=2",
+    "status": 200,
+    "sha256": "70ea643020b064c9e427c7ccd415d8625fceb529cfcb8de3bc2d6117c8807da0"
+  },
+  "shifts": [
+    {
+      "id": 53498,
+      "name": "déjeuner",
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": null
+      },
+      "charge_param": {
+        "is_web_booking_askable": true,
+        "min_guests": 6,
+        "charge_per_guests": 25
+      },
+      "prepayment_param": null,
+      "is_offer_required": false,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 10800,
+        "enduser_cancelable_reference": "shift"
+      },
+      "timesForTwo": [
+        "12:00",
+        "12:15",
+        "13:30",
+        "13:45"
+      ]
+    },
+    {
+      "id": 53503,
+      "name": "Diner  Vendredi Samedi",
+      "confirmation": {
+        "is_auto": false,
+        "is_auto_until": null
+      },
+      "charge_param": {
+        "is_web_booking_askable": true,
+        "min_guests": 6,
+        "charge_per_guests": 20
+      },
+      "prepayment_param": null,
+      "is_offer_required": false,
+      "offer_required_from_pax": null,
+      "cancelation_param": {
+        "enduser_cancelable_before": 21600,
+        "enduser_cancelable_reference": "shift"
+      },
+      "timesForTwo": [
+        "19:30",
+        "19:45",
+        "21:30",
+        "21:45"
+      ]
+    }
+  ]
+}
