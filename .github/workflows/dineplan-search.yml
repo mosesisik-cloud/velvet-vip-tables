@@ -2,12 +2,14 @@ name: Dineplan search qualification
 on:
   push:
     paths:
+      - 'api/availability-search.mjs'
       - 'scripts/lib/dineplan-*.mjs'
       - 'scripts/test-dineplan-*.mjs'
       - 'data/evidence/dineplan-*.json'
       - '.github/workflows/dineplan-search.yml'
   pull_request:
     paths:
+      - 'api/availability-search.mjs'
       - 'scripts/lib/dineplan-*.mjs'
       - 'scripts/test-dineplan-*.mjs'
       - 'data/evidence/dineplan-*.json'
@@ -23,4 +25,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
-      - run: node --test scripts/test-dineplan-hussar-search.mjs scripts/test-dineplan-time-options.mjs
+      - run: node --test scripts/test-dineplan-hussar-search.mjs scripts/test-dineplan-time-options.mjs scripts/test-dineplan-search-contract.mjs
