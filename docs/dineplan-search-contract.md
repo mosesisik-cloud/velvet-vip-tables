@@ -1,5 +1,11 @@
 # Dineplan v3 search qualification
 
+## Review handoff
+
+The final three-venue transport was run read-only on 24 October for 26 October/two guests: Hussar Rondebosch returned sixteen enabled options, FYN five, and La Colombe returned `unknown / party_not_qualified` after the closed party choice, with no time request. See `data/evidence/dineplan-three-module-check.json`. All 22 offline tests and the four CI checks on the implementation commit passed. The PR is ready for review of this isolated candidate, not activation or deployment.
+
+Integrator checklist: move/import the candidate through the agreed provider module layout; bind the Dineplan adapter to the existing AvailabilitySearch injection; retain explicit per-restaurant live gates; apply FYN's corrected URL from PR #504; test the real guest UI and explain that displayed times are supplier options requiring rechecking. Payment/cancellation and final bookability remain unknown at the time-option stage. La Colombe's known official deposit requirement must remain visible if a later positive search is integrated. A closed/empty party result intentionally remains an error/unknown rather than a definitive unavailability claim. Release owner alone publishes after review. No registry or server file is changed by this PR.
+
 ## Additional venue qualification, 24 October
 
 Fresh original forms confirmed FYN Restaurant / supplier 1388 / key DjfvyT1k and La Colombe Constantia / supplier 345 / key GCPvsZBn. Separate transient sessions were used for 26 October 2026/two guests. FYN's covers and times endpoints returned HTTP 200, with five enabled times (12:00, 12:30, 13:00, 13:30, 13:45) among nineteen time entries. Its guest-count response retains `reason: Fully Booked` even for `closed: false`; the original script uses the closed flag to disable options and shows the reason only for disabled choices. Do not classify an enabled choice solely from the reason text.
