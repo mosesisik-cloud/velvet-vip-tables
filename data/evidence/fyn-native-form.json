@@ -1,0 +1,23 @@
+{
+  "observedAt": "2026-10-22T19:43:05.225Z",
+  "restaurantId": "curated-CPT-fyn",
+  "officialSource": "https://www.fynrestaurant.com/make-a-booking",
+  "currentUrl": "https://account.dineplan.com/widget/v3/DjfvyT1k?source=direct",
+  "proposedUrl": "https://account.dineplan.com/widget/v3/frame/DjfvyT1k",
+  "testedUrl": "https://account.dineplan.com/widget/v3/frame/DjfvyT1k?date=2026-10-23",
+  "identity": "FYN Restaurant",
+  "date": "2026-10-23",
+  "partySize": 2,
+  "enabledTimeOptions": [
+    "12:00",
+    "12:30",
+    "13:30",
+    "13:45"
+  ],
+  "eveningOptions": "disabled and labelled fully booked",
+  "originalSearchFormVerified": true,
+  "slotSelected": false,
+  "reservationConfirmed": false,
+  "publicationVerified": false,
+  "remaining": "Registry correction through release owner; final booking and seating not tested"
+}
