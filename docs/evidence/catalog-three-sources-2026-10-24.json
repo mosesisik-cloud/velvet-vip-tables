@@ -1,5 +1,5 @@
 {
-  "scope": "Exactly three new own pages; no provider query or forms",
+  "scope": "Three own pages fetched by worker, plus existing master-fetched La Petite Plage reservation evidence read locally; no provider query or forms",
   "records": [
     {
       "id": "osm-PAR-nino",
@@ -37,7 +37,7 @@
     {
       "id": "osm-STT-la-petite-plage",
       "name": "La Petite Plage Saint-Tropez",
-      "finding": "Links own /saint-tropez/reservation plus phone reservation text; underlying booking page not fetched within three-source cap",
+      "finding": "Own reservation page embeds exact SevenRooms lapetiteplagesainttropez booking URL; outside assigned Zenchef scope",
       "source": {
         "url": "https://www.restaurant-lapetiteplage.com/saint-tropez",
         "status": 200,
@@ -50,7 +50,21 @@
         " Plage logo\" class=\"nav_logo\"/></a><div id=\"w-node-_8a111e73-7c31-dbd0-5e7b-40f02e3e7bed-2e3e7bd9\" class=\"nav_block\"><a href=\"/saint-tropez/reservation\" class=\"button is-small hide-mobile-landscape\">RÉSERVER</a><div class=\"nav_divider hide-tablet\"></div><a href=\"/saint-tropez/contact\" class=\"nav_link hide-tablet\">PRIVATISATIONS ET",
         "></div></div></div></div></div></div></div></div></div></div><div class=\"pop-up_wrapper\"><div class=\"pop-up_block\"><div>Je réserve par téléphone au <a href=\"tel:0494170123\" class=\"telephone-link\">04 94 17 01 23 </a>Jusqu’à 20 personnes.</div><div data-w-id=\"109e0fba-0caa-f2dd-b2df-f68769956bf0\" class=\"pop-up_close-link\"><i",
         "51580d1804b4d2ffaf9eb_graphic-gold.webp\" alt=\"\" class=\"footer_graphic hide\"/></div><div class=\"mobile-cta_component\"><a href=\"/saint-tropez/reservation\" class=\"mobile-cta_button w-button\">Réserver</a></div><div><div class=\"w-dyn-list\"><div class=\"hide w-dyn-empty\"><div>No items found.</div></div></div><div data-w-id=\"9bf90fda-9268"
-      ]
+      ],
+      "reservationEvidence": {
+        "provenance": "Fetched by master, verified locally by worker; no new network request",
+        "source": {
+          "url": "https://www.restaurant-lapetiteplage.com/saint-tropez/reservation",
+          "finalUrl": "https://www.restaurant-lapetiteplage.com/saint-tropez/reservation",
+          "status": 200,
+          "at": "2026-10-24T10:29:51.710Z",
+          "bytes": 30575,
+          "sha256": "46458f253c7a14fd2aa385a23101de406fcdcc83995b618c1e8709a41c204215"
+        },
+        "iframe": "<iframe id=\"iframe_1\" title=\"Book online\" src=\"https://www.sevenrooms.com/explore/lapetiteplagesainttropez/reservations/create/search/\" frameborder=\"0\" allowfullscreen=\"true\" aria-hidden=\"false\" tabindex=\"0\" width=\"100%\" height=\"100%\">",
+        "provider": "SevenRooms",
+        "providerUrl": "https://www.sevenrooms.com/explore/lapetiteplagesainttropez/reservations/create/search/"
+      }
     }
   ]
 }
