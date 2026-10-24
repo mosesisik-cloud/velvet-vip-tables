@@ -42,3 +42,39 @@ test('access failures and cancellation cannot become empty availability',async()
   const a=await searchHussar({date:'2026-10-26',signal:c.signal,fetchImpl:()=>assert.fail('Unexpected request')});
   assert.equal(a.reason,'aborted_or_timeout');
 });
+
+test('redirect markers and unexpected response URLs stop immediately',async()=>{
+  for (const marker of [{redirected:true},{url:'https://example.invalid/other'}]) {
+    let calls=0;
+    const result=await searchHussar({date:'2026-10-26',fetchImpl:async()=>{
+      calls++;const response=new Response(html);
+      for(const [key,value] of Object.entries(marker)) Object.defineProperty(response,key,{value});
+      return response;
+    }});
+    assert.equal(result.status,'unknown');assert.equal(calls,1);
+  }
+});
+test('cancellation during the time request discards late positive results',async()=>{
+  const controller=new AbortController();const f=fixture();
+  const result=await searchHussar({date:'2026-10-26',signal:controller.signal,fetchImpl:async(...args)=>{
+    const response=await f.fetchImpl(...args);
+    if(f.calls.length===3) controller.abort();
+    return response;
+  }});
+  assert.equal(result.reason,'aborted_or_timeout');assert.deepEqual(result.options,[]);
+});
+test('separate searches start without any previous session cookie',async()=>{
+  for(let i=0;i<2;i++){
+    const f=fixture();await searchHussar({date:'2026-10-26',fetchImpl:f.fetchImpl});
+    assert.equal(f.calls[0].headers.Cookie,undefined);
+    assert.equal(f.calls[1].headers.Cookie,'session=fixture');
+  }
+});
+test('malformed time JSON fails closed without a booking request',async()=>{
+  const f=fixture();
+  const r=await searchHussar({date:'2026-10-26',fetchImpl:async(...args)=>{
+    const response=await f.fetchImpl(...args);
+    return f.calls.length===3 ? new Response('<html>Access denied</html>') : response;
+  }});
+  assert.equal(r.reason,'supplier_error');assert.deepEqual(r.options,[]);assert.equal(f.calls.length,3);
+});
