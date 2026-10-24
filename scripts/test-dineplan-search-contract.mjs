@@ -4,6 +4,10 @@ import { createDineplanSearchContract } from './lib/dineplan-search-contract.mjs
 import { AvailabilitySearch } from '../api/availability-search.mjs';
 const row={restaurantId:'osm-CPT-the-hussar-grill',name:'The Hussar Grill',city:'Cape Town',provider:'Dineplan',url:'https://account.dineplan.com/widget/v3/frame/1nWHwN9S',liveAvailabilitySupported:true};
 const query={date:'2026-10-26',party:2,time:'19:00'};
+test('FYN legacy child-widget destination remains blocked',async()=>{
+ const adapter=createDineplanSearchContract({search:()=>assert.fail('Unexpected transport')});
+ assert.equal((await adapter({...row,restaurantId:'curated-CPT-fyn',url:'https://account.dineplan.com/widget/v3/DjfvyT1k?source=direct'},query)).status,'unsupported');
+});
 const result={status:'options_observed',restaurantId:row.restaurantId,date:query.date,partySize:2,options:[{time:'12:00',enabled:true},{time:'18:30',enabled:true},{time:'19:00',enabled:false},{time:'20:30',enabled:true}]};
 test('shared format filters window and leaves terms and confirmation unknown',async()=>{
  const output=await createDineplanSearchContract({search:async()=>result})(row,query);

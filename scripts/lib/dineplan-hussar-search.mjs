@@ -1,9 +1,19 @@
 import { parseDineplanTimeOptions } from './dineplan-time-options.mjs';
 const base = 'https://account.dineplan.com/widget/v3/';
+export const qualifiedDineplanVenues = Object.freeze({
+  'osm-CPT-the-hussar-grill': Object.freeze({key:'1nWHwN9S',supplierId:'1068',title:'The Hussar Grill Rondebosch',url:base+'frame/1nWHwN9S'}),
+  'curated-CPT-fyn': Object.freeze({key:'DjfvyT1k',supplierId:'1388',title:'FYN Restaurant',url:base+'frame/DjfvyT1k'}),
+  'curated-CPT-la-colombe': Object.freeze({key:'GCPvsZBn',supplierId:'345',title:'La Colombe Constantia',url:'https://www.dineplan.com/widgetframe/GCPvsZBn'})
+});
 
-// Qualification-only transport: one exact venue, two guests, no slot selection.
+// Qualification-only transport: exact allowlisted venues, two guests, no slot selection.
 // No shared registry activation, credentials persisted, or confirmation claims.
-export async function searchHussar({date, partySize = 2, signal, fetchImpl = fetch}) {
+export async function searchHussar(query) {
+  return searchDineplan({...query,restaurantId:'osm-CPT-the-hussar-grill'});
+}
+export async function searchDineplan({restaurantId,date, partySize = 2, signal, fetchImpl = fetch}) {
+  const venue = Object.hasOwn(qualifiedDineplanVenues,restaurantId) ? qualifiedDineplanVenues[restaurantId] : null;
+  if(!venue) throw new TypeError('Unqualified restaurant');
   if (partySize !== 2 || !/^\d{4}-\d{2}-\d{2}$/.test(date ?? '') ||
       !Number.isFinite(Date.parse(date)) || new Date(date).toISOString().slice(0,10) !== date) {
     throw new TypeError('Invalid qualified query');
@@ -12,7 +22,7 @@ export async function searchHussar({date, partySize = 2, signal, fetchImpl = fet
   const jar = new Map();
   async function request(path, data) {
     activeSignal.throwIfAborted();
-    const allowed = ['frame/1nWHwN9S', 'ajax_covers', 'ajax_times'];
+    const allowed = ['frame/'+venue.key, 'ajax_covers', 'ajax_times'];
     if (!allowed.includes(path)) throw new Error('Unqualified endpoint');
     const headers = {};
     if (jar.size) headers.Cookie = [...jar].map(([k,v]) => `${k}=${v}`).join('; ');
@@ -27,11 +37,11 @@ export async function searchHussar({date, partySize = 2, signal, fetchImpl = fet
     return r;
   }
   try {
-    const html = await (await request('frame/1nWHwN9S')).text();
+    const html = await (await request('frame/'+venue.key)).text();
     const rid = html.match(/id="restaurant_id"[^>]*value="(\d+)"/)?.[1];
     const reference = html.match(/id="booking_reference"[^>]*value="([^"]*)"/)?.[1];
     const csrf = html.match(/const csrf_hash\s*=\s*"([^"]*)"/)?.[1];
-    if (!html.includes('The Hussar Grill Rondebosch') || rid !== '1068' || reference !== '' || csrf === undefined) throw new Error('Unverified supplier identity or session');
+    if (!html.includes(venue.title) || rid !== venue.supplierId || reference !== '' || csrf === undefined) throw new Error('Unverified supplier identity or session');
     const fields = {date,restaurant_id:rid,csrf_token_name:csrf};
     const covers = await (await request('ajax_covers',fields)).json();
     if (!covers || typeof covers !== 'object' || Array.isArray(covers) || !Object.hasOwn(covers,'2') || covers['2']?.closed !== false) {
@@ -39,7 +49,7 @@ export async function searchHussar({date, partySize = 2, signal, fetchImpl = fet
     }
     const payload = await (await request('ajax_times',{...fields,covers:'2',booking_reference:''})).json();
     activeSignal.throwIfAborted();
-    return {...parseDineplanTimeOptions(payload),restaurantId:'osm-CPT-the-hussar-grill',date,partySize:2};
+    return {...parseDineplanTimeOptions(payload),restaurantId,date,partySize:2};
   } catch {
     return {status:'unknown',reason:activeSignal.aborted ? 'aborted_or_timeout':'supplier_error',options:[]};
   } finally {

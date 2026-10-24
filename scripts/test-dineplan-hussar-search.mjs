@@ -1,7 +1,21 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { searchHussar } from './lib/dineplan-hussar-search.mjs';
+import { searchHussar, searchDineplan, qualifiedDineplanVenues } from './lib/dineplan-hussar-search.mjs';
 const html = 'The Hussar Grill Rondebosch <input id="restaurant_id" value="1068"><input id="booking_reference" value=""> const csrf_hash = "test-token";';
+test('each qualified venue binds its own supplier id and form key',async()=>{
+ for(const [restaurantId,venue] of Object.entries(qualifiedDineplanVenues)){
+  const f=fixture(html.replace('The Hussar Grill Rondebosch',venue.title).replace('1068',venue.supplierId));
+  const r=await searchDineplan({restaurantId,date:'2026-10-26',fetchImpl:f.fetchImpl});
+  assert.equal(r.restaurantId,restaurantId);assert.equal(r.status,'options_observed');
+  assert.ok(f.calls[0].url.endsWith('/frame/'+venue.key));
+  assert.equal(f.calls[2].body.get('restaurant_id'),venue.supplierId);
+ }
+});
+test('another qualified restaurant form cannot satisfy requested identity',async()=>{
+ const f=fixture();
+ assert.equal((await searchDineplan({restaurantId:'curated-CPT-fyn',date:'2026-10-26',fetchImpl:f.fetchImpl})).status,'unknown');
+ assert.equal(f.calls.length,1);
+});
 function fixture(first=html, covers={'2':{closed:false}}, times={'12:00':{closed:false}}) {
   const calls=[];
   return {calls,fetchImpl:async (url,opts)=>{
