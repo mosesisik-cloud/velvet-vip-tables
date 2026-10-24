@@ -2,18 +2,20 @@ import fs from 'node:fs';
 import { ProviderMirror, MirrorError, baseAllowedRequest } from './mirror-base.mjs';
 
 // CoverManager provider module on the shared mirror core. Registry, not user-supplied URLs.
-// Renderar i spegeln (verifierat 2026-10-16, Lío Ibiza). Modulen skickar egna POST:ar vid laddning - spegelns vakt blockerar dem i inspect-läge.
-// Live submission stays disabled (bookable: false) until the provider's booking
-// contract is verified in a coordinated test; the armed-submission guard in the
-// core still fails closed on any provider POST.
+// Renderar i spegeln (verifierat 2026-10-16, Lío Ibiza). Flöde drivet 2026-10-24 med
+// skrivanrop avbrutna i webbläsaren: kalender/gäst/tid/zon fungerar via dokumenterade
+// läs-POST:ar. Bokningssteget är reCAPTCHA-gateat (/reservs/avaible_reserv_module) —
+// CAPTCHA kringgås aldrig, därför stannar skarp inlämning avstängd (bookable: false).
 const CONFIG = {
   name: 'CoverManager',
   registryFile: new URL('./covermanager-mirror-restaurants.json', import.meta.url),
   assetHosts: ['cdnjs.cloudflare.com', 'ajax.googleapis.com', 'unpkg.com', 'js.stripe.com', 'm.stripe.network', 'fonts.googleapis.com', 'fonts.gstatic.com'],
   providerHosts: ['www.covermanager.com', 'covermanager.com'],
-  writePath: /save|confirm|payment|checkout|cancel|delete|login|register|buy|pay/i,
-  // Session-scoped UI-state echoes observed at page load; they create no reservation.
-  allowReadPosts: [/^\/reservation\/(update_people|update_hours|ibox2|highlight)\//],
+  writePath: /save|confirm|payment|checkout|cancel|delete|login|register|buy|pay|reservs/i,
+  // Session-scoped UI-state echoes observed 2026-10-24; they create no reservation.
+  // NOTE: the booking gate /reservs/avaible_reserv_module is reCAPTCHA-protected.
+  // The mirror never bypasses CAPTCHA, so live submission stays off for CoverManager.
+  allowReadPosts: [/^\/reservation\/(update_people|update_hours|update_hour_people|update_extra|update_extra_message|ibox2|highlight|interactiveMap)(\/|$)/],
   bookable: false,
   readySignal: '/reservation/',
   contactSelector: 'input[type="email"]:visible, input[name*="first" i]:visible, input[name*="last" i]:visible, input[name*="phone" i]:visible, input[type="tel"]:visible',
