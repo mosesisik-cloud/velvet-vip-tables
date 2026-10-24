@@ -1,0 +1,50 @@
+{
+  "owner": "codex-worker-cbfe5665-79ca-415d-91ac-5c184e516939",
+  "date": "2026-10-24",
+  "argot": {
+    "identity": "L’Argot,132 rue Bugeaud,Lyon",
+    "sources": [
+      {
+        "url": "https://www.facebook.com/LArgot-767306976650922/",
+        "status": 301,
+        "location": "https://www.facebook.com/people/LArgot/100063472845109/",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "fetchedAt": "2026-10-24T09:52:09.430Z"
+      },
+      {
+        "url": "https://www.facebook.com/people/LArgot/100063472845109/",
+        "status": 200,
+        "location": null,
+        "bytes": 502492,
+        "sha256": "4ca528c3e13fea6b2ca17d38d87f2b03e18bd6be18dabb3abe94f043fc5fed31",
+        "fetchedAt": "2026-10-24T09:52:13.021Z"
+      }
+    ],
+    "observation": "Canonical official social page title identifies L'Argot Lyon, but accessible HTML exposes no booking URL, Zenchef domain or restaurant ID; web fetch was throttled. Third-party rid356566 not used.",
+    "providerRequests": 0
+  },
+  "gitanjali": {
+    "identity": "Existing catalogue osm-PAR-gitanjali",
+    "sources": [
+      {
+        "url": "https://gitanjali.fr/",
+        "status": 200,
+        "location": null,
+        "fetchedAt": "2026-10-24T09:52:27.281Z",
+        "bytes": 181029,
+        "sha256": "db15a1ec9e15ef30cb2cc36faecb6d16a88a0abaef172965321e3a2a7f930e1d"
+      },
+      {
+        "url": "https://gitanjali.fr/reservation/",
+        "status": 200,
+        "location": null,
+        "fetchedAt": "2026-10-24T09:52:31.127Z",
+        "bytes": 115597,
+        "sha256": "96809933953e0564015f032b6f554b938230a6d9134f85ba31f16751d69b761c"
+      }
+    ],
+    "observation": "Own root links own /reservation/. Booking page references WordPress super-restaurant-reservations-pro/assets/js/frontend.js?ver=1.1.1 and admin-ajax.php; no Zenchef route. Plugin not fetched, no form submitted.",
+    "providerRequests": 0
+  }
+}
