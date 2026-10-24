@@ -1,0 +1,44 @@
+{
+  "osm-CER-su-entu": {
+    "name": "Su Entu",
+    "url": "https://widget.thefork.com/83da438b-14a5-487b-b0a6-3e5f9faba29b",
+    "source": "https://www.su-entu.it/",
+    "verifiedAt": "2026-10-15",
+    "uuid": "83da438b-14a5-487b-b0a6-3e5f9faba29b"
+  },
+  "curated-STO-almaza": {
+    "name": "Restaurang Almaza",
+    "url": "https://module.lafourchette.com/sv_SE/module/398057-4483d",
+    "source": "https://www.restaurangalmaza.se/",
+    "verifiedAt": "2026-10-15",
+    "moduleId": "398057-4483d"
+  },
+  "curated-STO-lebanon-meza-lounge": {
+    "name": "Lebanon Meza Lounge",
+    "url": "https://widget.thefork.com/sv/487687a4-4938-4d1f-8b1a-53c3cc49ae2f?step=date&utm_source=mezalounge.se",
+    "source": "https://mezalounge.se/",
+    "verifiedAt": "2026-10-15",
+    "uuid": "487687a4-4938-4d1f-8b1a-53c3cc49ae2f"
+  },
+  "curated-BCN-cocina-hermanos-torres": {
+    "name": "Cocina Hermanos Torres",
+    "url": "https://module.lafourchette.com/en_GB/module/399277-70e69",
+    "source": "https://cocinahermanostorres.com/en/reserve/",
+    "verifiedAt": "2026-10-15",
+    "moduleId": "399277-70e69"
+  },
+  "osm-CAP-da-tonino": {
+    "name": "Da Tonino",
+    "url": "https://widget.thefork.com/it/09420ac9-a0a0-41df-ba2e-e73f378b4bc6",
+    "source": "https://www.ristorantedatonino.com/",
+    "verifiedAt": "2026-10-15",
+    "uuid": "09420ac9-a0a0-41df-ba2e-e73f378b4bc6"
+  },
+  "curated-BCN-lasarte": {
+    "name": "Lasarte",
+    "url": "https://widget.thefork.com/es/8d0f31a7-a7fe-4a02-b8cc-891e23565219?step=date",
+    "source": "https://www.restaurantlasarte.com/es/reserva",
+    "verifiedAt": "2026-10-15",
+    "uuid": "8d0f31a7-a7fe-4a02-b8cc-891e23565219"
+  }
+}
