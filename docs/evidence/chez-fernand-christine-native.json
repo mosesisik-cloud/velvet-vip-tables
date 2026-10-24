@@ -1,0 +1,916 @@
+{
+  "schemaVersion": 1,
+  "at": "2026-10-20T21:03:51.623Z",
+  "classification": "Offline replay of original restaurant results and original client sources. Not supplier-confirmed booking. No fresh offers/form GET, no actual submission.",
+  "restaurantId": "361894",
+  "resultsSha256": "4334ff573de308e9504cc77dbd639c946b55ff35a524cb62ee48c80cfd277a1d",
+  "sourceManifest": [
+    {
+      "url": "https://bookings.zenchef.com/_next/static/chunks/pages/_app-a594f8b01517e683.js",
+      "at": "2026-10-20T15:14:19.625133+00:00",
+      "freshGET": false,
+      "status": 200,
+      "contentType": "application/javascript; charset=UTF-8",
+      "finalUrl": "https://bookings.zenchef.com/_next/static/chunks/pages/_app-a594f8b01517e683.js",
+      "bytes": 657586,
+      "sha256": "c87ee2585d01c6e86fabb1f29d0950497817eb5feca8426671fb229d2c9f9509",
+      "validJavaScriptResponse": true,
+      "reused": true
+    },
+    {
+      "url": "https://bookings.zenchef.com/_next/static/chunks/pages/results-803a0db5615ab11c.js",
+      "status": 200,
+      "bytes": 39744,
+      "sha256": "79bd01415618e7e50b5ff461f603bdb8c2aa26d10ae13b398fd6f04a135954cd",
+      "at": "2026-10-20T21:00:06.387Z",
+      "freshGET": true
+    },
+    {
+      "url": "https://bookings.zenchef.com/_next/static/2b18f39ef7/_buildManifest.js",
+      "at": "2026-10-20T15:14:19.733843+00:00",
+      "freshGET": false,
+      "status": 200,
+      "contentType": "application/javascript; charset=UTF-8",
+      "finalUrl": "https://bookings.zenchef.com/_next/static/2b18f39ef7/_buildManifest.js",
+      "bytes": 3374,
+      "sha256": "a7039dfadf806a4ab4a6be848901601f1942d2d4178fe7482cd958d5a67f68f3",
+      "validJavaScriptResponse": true,
+      "reused": true
+    },
+    {
+      "url": "https://bookings.zenchef.com/_next/static/chunks/pages/offers-b5c31684a647ec4e.js",
+      "status": 200,
+      "sha256": "a54c9a2a9fd28f86ba26ebadd20962e07fa0a224604da062218e409c1eb276d3",
+      "bytes": 11992,
+      "at": "2026-10-20T21:00:51.281Z",
+      "freshGET": true
+    },
+    {
+      "url": "https://bookings.zenchef.com/_next/static/chunks/1175-33f05052518ab1f2.js",
+      "sha256": "63238b034c20d137f2553f237b4363378e283700cb41c66a921a8b461248ffce",
+      "bytes": 24147,
+      "reused": true,
+      "freshGET": false,
+      "provenance": "Existing own workspace cache; exact filename referenced by own original results HTML; hash taken at reuse"
+    },
+    {
+      "url": "https://bookings.zenchef.com/_next/static/chunks/317-9f7c59c1b8808e4d.js",
+      "sha256": "7dd0938a5140891f51646ce9754b5344db4e1030c27384d6c0175cf1afe6eda8",
+      "bytes": 13822,
+      "reused": true,
+      "freshGET": false,
+      "provenance": "Existing own workspace cache; exact filename referenced by own original results HTML; hash taken at reuse"
+    },
+    {
+      "url": "https://bookings.zenchef.com/_next/static/chunks/234-48de32c7b67dc28d.js",
+      "sha256": "3342047c2ca3b085a65afde55f2b29e8c6f4641b8b0c0cd354800fd58d71c91e",
+      "bytes": 8226,
+      "reused": true,
+      "freshGET": false,
+      "provenance": "Existing own workspace cache; exact filename referenced by own original results HTML; hash taken at reuse"
+    },
+    {
+      "url": "https://bookings.zenchef.com/_next/static/media/aromaticons.603e134f.woff2",
+      "sha256": "4ac22d855a420e36effeb55d5024f23981303600d3e0d90e91375aa9156f01b3",
+      "bytes": 111504,
+      "status": 200,
+      "at": "2026-10-20T21:03:28.738Z",
+      "freshGET": true
+    },
+    {
+      "url": "https://bookings.zenchef.com/_next/static/media/DMSans-Variable.latin.c9cac293.woff2",
+      "sha256": "aa530716b0d351866af7dbfa3eee4120fb36f2d071baff8c234185141865c7ff",
+      "bytes": 62556,
+      "status": 200,
+      "at": "2026-10-20T21:03:28.825Z",
+      "freshGET": true
+    }
+  ],
+  "runs": [
+    {
+      "run": "alacarte-1366",
+      "stages": [
+        {
+          "label": "offers-empty",
+          "file": "alacarte-1366-offers-empty.json",
+          "sha256": "cec0bc1f3bdef3acdcb8568a1b54704e6881fcc455143320978a2633b9746d20",
+          "url": "https://bookings.zenchef.com/offers?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2",
+          "wish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null,
+            "slot": "12:00"
+          },
+          "continueButton": {
+            "text": "Continuer",
+            "testid": "disabled-continue-btn",
+            "disabled": true
+          },
+          "eula": [],
+          "initialDataPage": "/results",
+          "initialDataWish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null
+          },
+          "visibleText": "CHEZ FERNAND CHRISTINE\nFR\n2 couverts\nvendredi 23 octobre\n12:00\nSélectionnez une expérience\nVeuillez sélectionner au moins 2 expériences\n24,5 €/couvert\nFormule Déjeuner\nLe Restaurant Chez Fernand vous propose tous les jours ouvrés une formule déjeuner. Entrée + Plat ou Plat + Dessert à 24,5 Euro Entrée + Plat + Dessert à 29,5 Euro\nÀ la carte\n  \nContinuer\n\nChez Fernand Christine - Réservation en ligne"
+        },
+        {
+          "label": "offers-one",
+          "file": "alacarte-1366-offers-one.json",
+          "sha256": "ef57699f995ad8bb594d1bdc0a52bfd7304a094022a2dc55de70a1d1ba72cc6d",
+          "url": "https://bookings.zenchef.com/offers?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2",
+          "wish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [
+              {
+                "offer_id": 60971,
+                "count": 1
+              }
+            ],
+            "waiting_list": false,
+            "room_id": null,
+            "slot": "12:00"
+          },
+          "continueButton": {
+            "text": "Valider la sélection",
+            "testid": "go-to-form-btn",
+            "disabled": true
+          },
+          "eula": [],
+          "initialDataPage": "/results",
+          "initialDataWish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null
+          },
+          "visibleText": "CHEZ FERNAND CHRISTINE\nFR\n2 couverts\nvendredi 23 octobre\n12:00\nSélectionnez une expérience\nVeuillez sélectionner au moins 2 expériences\n24,5 €/couvert\nFormule Déjeuner\nLe Restaurant Chez Fernand vous propose tous les jours ouvrés une formule déjeuner. Entrée + Plat ou Plat + Dessert à 24,5 Euro Entrée + Plat + Dessert à 29,5 Euro\n 1 \nÀ la carte\n  \n1\nValider la sélection\n\nChez Fernand Christine - Réservation en ligne"
+        },
+        {
+          "label": "offers-two",
+          "file": "alacarte-1366-offers-two.json",
+          "sha256": "abb8433f1757f816cce12505c7dd28498ce7fc59f8227ee885fde39d25b40766",
+          "url": "https://bookings.zenchef.com/offers?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2",
+          "wish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [
+              {
+                "offer_id": 60971,
+                "count": 2
+              }
+            ],
+            "waiting_list": false,
+            "room_id": null,
+            "slot": "12:00"
+          },
+          "continueButton": {
+            "text": "Valider la sélection",
+            "testid": "go-to-form-btn",
+            "disabled": false
+          },
+          "eula": [],
+          "initialDataPage": "/results",
+          "initialDataWish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null
+          },
+          "visibleText": "CHEZ FERNAND CHRISTINE\nFR\n2 couverts\nvendredi 23 octobre\n12:00\nSélectionnez une expérience\n24,5 €/couvert\nFormule Déjeuner\nLe Restaurant Chez Fernand vous propose tous les jours ouvrés une formule déjeuner. Entrée + Plat ou Plat + Dessert à 24,5 Euro Entrée + Plat + Dessert à 29,5 Euro\n 2 \nÀ la carte\n  \n2\nValider la sélection\n\nChez Fernand Christine - Réservation en ligne"
+        },
+        {
+          "label": "form-empty",
+          "file": "alacarte-1366-form-empty.json",
+          "sha256": "8718b93ab5bff97bf69cc2627405dc5c61edeb298963d6fe505512bb192c1342",
+          "url": "https://bookings.zenchef.com/form?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2",
+          "wish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [
+              {
+                "offer_id": 60971,
+                "count": 2
+              }
+            ],
+            "waiting_list": false,
+            "room_id": null,
+            "slot": "12:00"
+          },
+          "eula": [
+            {
+              "text": "J'accepte les conditions générales d'utilisation du service.   *",
+              "state": "unchecked",
+              "rect": {
+                "x": 105,
+                "y": 710.328125,
+                "width": 836,
+                "height": 21,
+                "top": 710.328125,
+                "right": 941,
+                "bottom": 731.328125,
+                "left": 105
+              },
+              "href": "/gtc?rid=361894&lang=fr"
+            }
+          ],
+          "initialDataPage": "/results",
+          "initialDataWish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null
+          },
+          "formFields": [
+            {
+              "tag": "INPUT",
+              "name": "civility",
+              "type": "radio",
+              "value": "mrs",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "civility",
+              "type": "radio",
+              "value": "mr",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "civility",
+              "type": "radio",
+              "value": "mx",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "firstname",
+              "type": "text",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "lastname",
+              "type": "text",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "search",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "phone_number",
+              "type": "tel",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "email",
+              "type": "email",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "TEXTAREA",
+              "name": "",
+              "type": "textarea",
+              "value": "",
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "checkbox",
+              "value": "on",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "checkbox",
+              "value": "on",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "checkbox",
+              "value": "on",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "checkbox",
+              "value": "on",
+              "checked": false,
+              "required": false
+            }
+          ],
+          "visibleText": "CHEZ FERNAND CHRISTINE\nFR\nContact\nCivilité\nMadame\nMonsieur\nMx.\nPrénom\nNom\nTéléphone\nEmail\nCommentaires, préférences ou restrictions alimentaires\n(facultatif)\nJ'accepte les conditions générales d'utilisation du service.   *\nSauvegardez les informations pour mes prochaines réservations.\nEnvoyez-moi des offres et actualités par e-mail.\nEnvoyez-moi des offres et actualités par SMS.\nRéserver\nVotre réservation\nmodifier\nVous disposez de votre table pour une durée de 1h30.\n2\nven. 23 oct.\n12:00\nChez Fernand Christine\n9 Rue Christine, 75006 Paris\nÀ la carte\n× 2\nPolitique de protection des données personnelles\n\nChez Fernand Christine - Réservation en ligne"
+        }
+      ],
+      "network": {
+        "sha256": "9361c17a9942715c5c9d538cd67f02127aece36620ae14b3f9b42958594ec2e7",
+        "counts": {
+          "own-original": 1,
+          "cached": 32,
+          "abort-unknown": 7,
+          "own-embedded-locale": 2,
+          "held-then-abort": 4,
+          "abort-mutation": 2
+        },
+        "abortedMutations": [
+          {
+            "url": "https://bookings.zenchef.com/unleash/api/frontend/client/metrics",
+            "method": "POST"
+          },
+          {
+            "url": "https://bookings-middleware.zenchef.com/quotation-preview?restaurantId=361894",
+            "method": "POST"
+          }
+        ],
+        "remoteRequests": 0
+      },
+      "screenshotSha256": "e5bec94bd259fc313cb439e50f1306825fefafc120606e2a8f7a0efe3b295beb"
+    },
+    {
+      "run": "alacarte-390",
+      "stages": [
+        {
+          "label": "offers-empty",
+          "file": "alacarte-390-offers-empty.json",
+          "sha256": "73c948c7e260b48907f70697940852b845fa90301360b129921029caccd10dad",
+          "url": "https://bookings.zenchef.com/offers?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2",
+          "wish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null,
+            "slot": "12:00"
+          },
+          "continueButton": {
+            "text": "Continuer",
+            "testid": "disabled-continue-btn",
+            "disabled": true
+          },
+          "eula": [],
+          "initialDataPage": "/results",
+          "initialDataWish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null
+          },
+          "visibleText": "CHEZ FERNAND CHRISTINE\nFR\n2 couverts\nvendredi 23 octobre\n12:00\nSélectionnez une expérience\nVeuillez sélectionner au moins 2 expériences\n24,5 €/couvert\nFormule Déjeuner\nLe Restaurant Chez Fernand vous propose tous les jours ouvrés une formule déjeuner. Entrée + Plat ou Plat + Dessert à 24,5 Euro Entrée + Plat + Dessert à 29,5 Euro\nÀ la carte\n  \nContinuer\n\nChez Fernand Christine - Réservation en ligne"
+        },
+        {
+          "label": "offers-one",
+          "file": "alacarte-390-offers-one.json",
+          "sha256": "c6f955ef4d68675620249ab75baf48b484bc663b8c046899ccae937c448f82ce",
+          "url": "https://bookings.zenchef.com/offers?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2",
+          "wish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [
+              {
+                "offer_id": 60971,
+                "count": 1
+              }
+            ],
+            "waiting_list": false,
+            "room_id": null,
+            "slot": "12:00"
+          },
+          "continueButton": {
+            "text": "Valider la sélection",
+            "testid": "go-to-form-btn",
+            "disabled": true
+          },
+          "eula": [],
+          "initialDataPage": "/results",
+          "initialDataWish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null
+          },
+          "visibleText": "CHEZ FERNAND CHRISTINE\nFR\n2 couverts\nvendredi 23 octobre\n12:00\nSélectionnez une expérience\nVeuillez sélectionner au moins 2 expériences\n24,5 €/couvert\nFormule Déjeuner\nLe Restaurant Chez Fernand vous propose tous les jours ouvrés une formule déjeuner. Entrée + Plat ou Plat + Dessert à 24,5 Euro Entrée + Plat + Dessert à 29,5 Euro\n 1 \nÀ la carte\n  \n1\nValider la sélection\n\nChez Fernand Christine - Réservation en ligne"
+        },
+        {
+          "label": "offers-two",
+          "file": "alacarte-390-offers-two.json",
+          "sha256": "e629ffaa9fe598180adbd74def8a3ef8b0e23650ff2f230cfe7b15fff15af842",
+          "url": "https://bookings.zenchef.com/offers?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2",
+          "wish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [
+              {
+                "offer_id": 60971,
+                "count": 2
+              }
+            ],
+            "waiting_list": false,
+            "room_id": null,
+            "slot": "12:00"
+          },
+          "continueButton": {
+            "text": "Valider la sélection",
+            "testid": "go-to-form-btn",
+            "disabled": false
+          },
+          "eula": [],
+          "initialDataPage": "/results",
+          "initialDataWish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null
+          },
+          "visibleText": "CHEZ FERNAND CHRISTINE\nFR\n2 couverts\nvendredi 23 octobre\n12:00\nSélectionnez une expérience\n24,5 €/couvert\nFormule Déjeuner\nLe Restaurant Chez Fernand vous propose tous les jours ouvrés une formule déjeuner. Entrée + Plat ou Plat + Dessert à 24,5 Euro Entrée + Plat + Dessert à 29,5 Euro\n 2 \nÀ la carte\n  \n2\nValider la sélection\n\nChez Fernand Christine - Réservation en ligne"
+        },
+        {
+          "label": "form-empty",
+          "file": "alacarte-390-form-empty.json",
+          "sha256": "e0fc090d0d30f1894ebdb2dff01d63641a55ef3fdc0fb07352ed32a6c88189bf",
+          "url": "https://bookings.zenchef.com/form?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2",
+          "wish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [
+              {
+                "offer_id": 60971,
+                "count": 2
+              }
+            ],
+            "waiting_list": false,
+            "room_id": null,
+            "slot": "12:00"
+          },
+          "eula": [
+            {
+              "text": "J'accepte les conditions générales d'utilisation du service.   *",
+              "state": "unchecked",
+              "rect": {
+                "x": 57,
+                "y": 975.078125,
+                "width": 284,
+                "height": 41,
+                "top": 975.078125,
+                "right": 341,
+                "bottom": 1016.078125,
+                "left": 57
+              },
+              "href": "/gtc?rid=361894&lang=fr"
+            }
+          ],
+          "initialDataPage": "/results",
+          "initialDataWish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null
+          },
+          "formFields": [
+            {
+              "tag": "INPUT",
+              "name": "civility",
+              "type": "radio",
+              "value": "mrs",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "civility",
+              "type": "radio",
+              "value": "mr",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "civility",
+              "type": "radio",
+              "value": "mx",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "firstname",
+              "type": "text",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "lastname",
+              "type": "text",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "phone_number",
+              "type": "tel",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "email",
+              "type": "email",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "TEXTAREA",
+              "name": "",
+              "type": "textarea",
+              "value": "",
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "checkbox",
+              "value": "on",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "checkbox",
+              "value": "on",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "checkbox",
+              "value": "on",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "checkbox",
+              "value": "on",
+              "checked": false,
+              "required": false
+            }
+          ],
+          "visibleText": "CHEZ FERNAND CHRISTINE\nFR\nContact\nCivilité\nMadame\nMonsieur\nMx.\nPrénom\nNom\nTéléphone\nEmail\nCommentaires, préférences ou restrictions alimentaires\n(facultatif)\nJ'accepte les conditions générales d'utilisation du service.   *\nSauvegardez les informations pour mes prochaines réservations.\nEnvoyez-moi des offres et actualités par e-mail.\nEnvoyez-moi des offres et actualités par SMS.\nRéserver\nPolitique de protection des données personnelles\nVotre réservation\nmodifier\nVous disposez de votre table pour une durée de 1h30.\n2\nven. 23 oct.\n12:00\nChez Fernand Christine\n9 Rue Christine, 75006 Paris\n\nChez Fernand Christine - Réservation en ligne"
+        }
+      ],
+      "network": {
+        "sha256": "70b6220f84cc18c2d6ed37b0244827ddf6d4cabe0a51e05b737b49896e8c6ec9",
+        "counts": {
+          "own-original": 1,
+          "cached": 32,
+          "abort-unknown": 7,
+          "own-embedded-locale": 2,
+          "held-then-abort": 4,
+          "abort-mutation": 2
+        },
+        "abortedMutations": [
+          {
+            "url": "https://bookings.zenchef.com/unleash/api/frontend/client/metrics",
+            "method": "POST"
+          },
+          {
+            "url": "https://bookings-middleware.zenchef.com/quotation-preview?restaurantId=361894",
+            "method": "POST"
+          }
+        ],
+        "remoteRequests": 0
+      },
+      "screenshotSha256": "347b2d552669191081a608a53e868fbac54e1efac49b897ca91837cde9b483a7"
+    },
+    {
+      "run": "mixed-1366",
+      "stages": [
+        {
+          "label": "offers-empty",
+          "file": "mixed-1366-offers-empty.json",
+          "sha256": "cec0bc1f3bdef3acdcb8568a1b54704e6881fcc455143320978a2633b9746d20",
+          "url": "https://bookings.zenchef.com/offers?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2",
+          "wish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null,
+            "slot": "12:00"
+          },
+          "continueButton": {
+            "text": "Continuer",
+            "testid": "disabled-continue-btn",
+            "disabled": true
+          },
+          "eula": [],
+          "initialDataPage": "/results",
+          "initialDataWish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null
+          },
+          "visibleText": "CHEZ FERNAND CHRISTINE\nFR\n2 couverts\nvendredi 23 octobre\n12:00\nSélectionnez une expérience\nVeuillez sélectionner au moins 2 expériences\n24,5 €/couvert\nFormule Déjeuner\nLe Restaurant Chez Fernand vous propose tous les jours ouvrés une formule déjeuner. Entrée + Plat ou Plat + Dessert à 24,5 Euro Entrée + Plat + Dessert à 29,5 Euro\nÀ la carte\n  \nContinuer\n\nChez Fernand Christine - Réservation en ligne"
+        },
+        {
+          "label": "offers-one",
+          "file": "mixed-1366-offers-one.json",
+          "sha256": "ef57699f995ad8bb594d1bdc0a52bfd7304a094022a2dc55de70a1d1ba72cc6d",
+          "url": "https://bookings.zenchef.com/offers?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2",
+          "wish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [
+              {
+                "offer_id": 60971,
+                "count": 1
+              }
+            ],
+            "waiting_list": false,
+            "room_id": null,
+            "slot": "12:00"
+          },
+          "continueButton": {
+            "text": "Valider la sélection",
+            "testid": "go-to-form-btn",
+            "disabled": true
+          },
+          "eula": [],
+          "initialDataPage": "/results",
+          "initialDataWish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null
+          },
+          "visibleText": "CHEZ FERNAND CHRISTINE\nFR\n2 couverts\nvendredi 23 octobre\n12:00\nSélectionnez une expérience\nVeuillez sélectionner au moins 2 expériences\n24,5 €/couvert\nFormule Déjeuner\nLe Restaurant Chez Fernand vous propose tous les jours ouvrés une formule déjeuner. Entrée + Plat ou Plat + Dessert à 24,5 Euro Entrée + Plat + Dessert à 29,5 Euro\n 1 \nÀ la carte\n  \n1\nValider la sélection\n\nChez Fernand Christine - Réservation en ligne"
+        },
+        {
+          "label": "offers-two",
+          "file": "mixed-1366-offers-two.json",
+          "sha256": "d9c9a887e4673bc4f251dfc3f12b4b8e820455df5ac28f53df5c9af477fd42a0",
+          "url": "https://bookings.zenchef.com/offers?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2",
+          "wish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [
+              {
+                "offer_id": 60971,
+                "count": 1
+              },
+              {
+                "offer_id": 23228,
+                "count": 1
+              }
+            ],
+            "waiting_list": false,
+            "room_id": null,
+            "slot": "12:00"
+          },
+          "continueButton": {
+            "text": "Valider la sélection",
+            "testid": "go-to-form-btn",
+            "disabled": false
+          },
+          "eula": [],
+          "initialDataPage": "/results",
+          "initialDataWish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null
+          },
+          "visibleText": "CHEZ FERNAND CHRISTINE\nFR\n2 couverts\nvendredi 23 octobre\n12:00\nSélectionnez une expérience\n24,5 €/couvert\n 1 \nFormule Déjeuner\nLe Restaurant Chez Fernand vous propose tous les jours ouvrés une formule déjeuner. Entrée + Plat ou Plat + Dessert à 24,5 Euro Entrée + Plat + Dessert à 29,5 Euro\n 1 \nÀ la carte\n  \n2 • 24,5 €\nValider la sélection\n\nChez Fernand Christine - Réservation en ligne"
+        },
+        {
+          "label": "form-empty",
+          "file": "mixed-1366-form-empty.json",
+          "sha256": "9868a24815b9bdb6ae05fa9a69c477c3a93e1bd9627371e65bb68cdb443033f1",
+          "url": "https://bookings.zenchef.com/form?sdk=1&withCloseButton=1&rid=361894&showCollapsed=1&day=2026-10-23&pax=2",
+          "wish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [
+              {
+                "offer_id": 60971,
+                "count": 1
+              },
+              {
+                "offer_id": 23228,
+                "count": 1
+              }
+            ],
+            "waiting_list": false,
+            "room_id": null,
+            "slot": "12:00"
+          },
+          "eula": [
+            {
+              "text": "J'accepte les conditions générales d'utilisation du service.   *",
+              "state": "unchecked",
+              "rect": {
+                "x": 105,
+                "y": 684.1875,
+                "width": 836,
+                "height": 21,
+                "top": 684.1875,
+                "right": 941,
+                "bottom": 705.1875,
+                "left": 105
+              },
+              "href": "/gtc?rid=361894&lang=fr"
+            }
+          ],
+          "initialDataPage": "/results",
+          "initialDataWish": {
+            "pax": 2,
+            "day": "2026-10-23",
+            "offers": [],
+            "waiting_list": false,
+            "room_id": null
+          },
+          "formFields": [
+            {
+              "tag": "INPUT",
+              "name": "civility",
+              "type": "radio",
+              "value": "mrs",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "civility",
+              "type": "radio",
+              "value": "mr",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "civility",
+              "type": "radio",
+              "value": "mx",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "firstname",
+              "type": "text",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "lastname",
+              "type": "text",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "search",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "phone_number",
+              "type": "tel",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "email",
+              "type": "email",
+              "value": "",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "TEXTAREA",
+              "name": "",
+              "type": "textarea",
+              "value": "",
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "checkbox",
+              "value": "on",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "checkbox",
+              "value": "on",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "checkbox",
+              "value": "on",
+              "checked": false,
+              "required": false
+            },
+            {
+              "tag": "INPUT",
+              "name": "",
+              "type": "checkbox",
+              "value": "on",
+              "checked": false,
+              "required": false
+            }
+          ],
+          "visibleText": "CHEZ FERNAND CHRISTINE\nFR\nContact\nCivilité\nMadame\nMonsieur\nMx.\nPrénom\nNom\nTéléphone\nEmail\nCommentaires, préférences ou restrictions alimentaires\n(facultatif)\nJ'accepte les conditions générales d'utilisation du service.   *\nSauvegardez les informations pour mes prochaines réservations.\nEnvoyez-moi des offres et actualités par e-mail.\nEnvoyez-moi des offres et actualités par SMS.\nRéserver\nVotre réservation\nmodifier\nVous disposez de votre table pour une durée de 1h30.\n2\nven. 23 oct.\n12:00\nChez Fernand Christine\n9 Rue Christine, 75006 Paris\nÀ la carte\n× 1\nFormule Déjeuner\n24,5 € × 1\nTotal\n24,5 €\nPolitique de protection des données personnelles\n\nChez Fernand Christine - Réservation en ligne"
+        }
+      ],
+      "network": {
+        "sha256": "2a73dbdd20789e030aaec04a600c402c282178893c34130a98492b302f98347b",
+        "counts": {
+          "own-original": 1,
+          "cached": 30,
+          "abort-unknown": 14,
+          "own-embedded-locale": 2,
+          "held-then-abort": 4,
+          "abort-mutation": 2
+        },
+        "abortedMutations": [
+          {
+            "url": "https://bookings.zenchef.com/unleash/api/frontend/client/metrics",
+            "method": "POST"
+          },
+          {
+            "url": "https://bookings-middleware.zenchef.com/quotation-preview?restaurantId=361894",
+            "method": "POST"
+          }
+        ],
+        "remoteRequests": 0
+      },
+      "screenshotSha256": "7c3b436b29a60e7969dc0fd7cc48680220366b3d1b6a8dd51a283bee4677c4c6"
+    }
+  ]
+}
