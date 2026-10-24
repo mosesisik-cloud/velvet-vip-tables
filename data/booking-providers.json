@@ -2907,5 +2907,18 @@
     "checkedAt": "2026-10-24",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-BOD-el-nacional": {
+    "name": "El Nacional",
+    "city": "Bordeaux",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=385074&pid=1001",
+    "source": "https://www.elnacional.fr/",
+    "venueKey": "bookings.zenchef.com/results?rid=385074",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-24",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }

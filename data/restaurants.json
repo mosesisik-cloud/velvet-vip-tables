@@ -13232,6 +13232,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-24"
+        },
+        {
+          "placeId": "curated-BOD-el-nacional",
+          "name": "El Nacional",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "23bis rue Rode, 33000 Bordeaux",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=El%20Nacional%2C%2023bis%20rue%20Rode%2C%20Bordeaux",
+          "website": "https://www.elnacional.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.elnacional.fr/",
+          "locationVerifiedAt": "2026-10-24",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=385074&pid=1001",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-24"
         }
       ]
     }
