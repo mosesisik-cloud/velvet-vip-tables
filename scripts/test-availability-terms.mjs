@@ -5,6 +5,7 @@ import { chromium } from 'playwright';
 import { availabilityTermsNotes } from '../js/availability-search.js';
 import { availabilityCopy } from '../js/availability-copy.js';
 const cases = [
+  { restaurantId:'reviewed-shift', availabilityScope:'reviewed_shift', paymentRequirement:'not_specified', cancellationPolicyStatus:'unknown', slots:[{time:'19:00'}], keys:['reviewedScopeNote','paymentUnknownNote','cancellationUnknownNote','finalTermsNote'] },
   { restaurantId:'row-unknown', paymentRequirement:'not_specified', cancellationPolicyStatus:'unknown', slots:[{time:'19:00'}], keys:['paymentUnknownNote','cancellationUnknownNote','finalTermsNote'] },
   { restaurantId:'slot-unknown', slots:[{time:'19:00',paymentRequirement:'not_specified',cancellationPolicyStatus:'unknown'}], keys:['paymentUnknownNote','cancellationUnknownNote','finalTermsNote'] },
   { restaurantId:'card-and-unknown', slots:[{time:'19:00',requiresCard:true,paymentRequirement:'card'},{time:'19:30',paymentRequirement:'not_specified'}], keys:['cardNote','paymentUnknownNote','finalTermsNote'] },
@@ -45,5 +46,5 @@ try {
     }
     await page.close();
   }
-  console.log('PASS: 28 localized mocked result renders; row/slot unknowns, mixed card and unknown, prepayment retained, no invented unknown/free terms. No external requests.');
+  console.log('PASS: 32 localized mocked result renders; row/slot unknowns, mixed card and unknown, prepayment retained, no invented unknown/free terms. No external requests.');
 } finally {await browser.close();server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}

@@ -1,6 +1,7 @@
 // Independent copy helper: usable by the UI and Node tests without application boot.
 const languages = ['sv', 'en', 'es', 'fr'];
 const copy = {
+  reviewedScopeNote: ['Sökningen omfattar ett begränsat urval för två gäster. Välj rum och meny hos restaurangen; en visad tid är ingen reservation.', 'This search covers a limited selection for two guests. Choose the room and menu with the restaurant; a displayed time is not a reservation.', 'Esta búsqueda cubre una selección limitada para dos personas. Elige la sala y el menú con el restaurante; un horario mostrado no es una reserva.', 'Cette recherche couvre une sélection limitée pour deux personnes. Choisissez la salle et le menu auprès du restaurant ; un horaire affiché ne constitue pas une réservation.'],
   eyebrow: ['ETT BORD ATT LÄNGTA TILL', 'A TABLE TO LOOK FORWARD TO', 'UNA MESA QUE TE ESPERA', 'UNE TABLE À DÉCOUVRIR'],
   title: ['Var vill du äta?', 'Where would you like to eat?', '¿Dónde quieres comer?', 'Où souhaitez-vous manger ?'],
   intro: ['Hitta lediga bord för din kväll. Välj destination, dag och sällskap.', 'Find a table for your evening. Choose a destination, date and party size.', 'Encuentra una mesa para tu velada. Elige destino, fecha y número de comensales.', 'Trouvez une table pour votre soirée. Choisissez une destination, une date et le nombre de personnes.'],

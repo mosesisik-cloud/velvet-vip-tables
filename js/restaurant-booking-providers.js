@@ -55,7 +55,7 @@ export function resolveEmbeddedBooking(registry, restaurantId) {
       const exact=Object.hasOwn(EXACT_EXTERNAL_LINKS,restaurantId) ? EXACT_EXTERNAL_LINKS[restaurantId] : null;
       if (!exact || Object.entries(exact).some(([key,value])=>row[key]!==value)
         || row.integrationMode!=='external_link' || row.verification!=='official_link_only'
-        || row.liveAvailabilitySupported!==false || row.completionTracking!=='unsupported') return null;
+        || (row.liveAvailabilitySupported!==false && !(restaurantId==='curated-CAP-da-paolino' && row.liveAvailabilitySupported===true)) || row.completionTracking!=='unsupported') return null;
       if (row.provider === 'Typeform' && (row.responseTimeHours?.max !== 24
         || Object.keys(row.responseTimeHours).length !== 1)) return null;
       return {...row,restaurantId,url:row.url,integrationMode:'external_link'};

@@ -37,7 +37,7 @@ for(const id of ['curated-SBH-bonito-saint-barth','osm-SBH-bonito']) {
   assert.equal(registry[id].url,'https://www.sevenrooms.com/reservations/bonitostbarth');
   assert.equal(registry[id].city,'St. Barts');
   assert.equal(registry[id].integrationMode,'external_link');
-  assert.equal(registry[id].liveAvailabilitySupported,false);
+  assert.equal(registry[id].liveAvailabilitySupported,true);
   assert.equal(registry[id].completionTracking,'unsupported');
 }
 for (const id of ['osm-IBZ-ama-lur', 'osm-MRB-the-farm', 'osm-STT-gaio', 'osm-STT-l-opera', 'osm-STT-le-cafe']) {
@@ -48,7 +48,7 @@ for (const id of ['osm-IBZ-ama-lur', 'osm-MRB-the-farm', 'osm-STT-gaio', 'osm-ST
 for (const id of ['osm-DXB-carluccio-s', 'osm-SBH-bagatelle', 'osm-SBH-la-guerite', 'osm-SBH-la-petite-plage', 'osm-SBH-le-cafe', 'osm-SBH-sella']) {
   const imported = registry[id];
   assert.equal(imported.integrationMode, 'external_link');
-  assert.equal(imported.liveAvailabilitySupported, false);
+  assert.equal(imported.liveAvailabilitySupported, ['osm-SBH-bagatelle','osm-SBH-la-guerite','osm-SBH-sella'].includes(id));
   assert.equal(imported.completionTracking, 'unsupported');
   assert.equal(imported.verification, 'official_link_only');
   if (id.startsWith('osm-SBH-')) assert.equal(imported.city, 'St. Barts', 'Locality must not replace the search destination');
@@ -121,6 +121,6 @@ for (const [id, provider, expectedUrl] of [
 ]) {
  const row=resolveEmbeddedBooking(registry,id);
  assert.equal(row.provider,provider);assert.equal(row.url,expectedUrl);
- assert.equal(row.integrationMode,'external_link');assert.equal(row.liveAvailabilitySupported,false);assert.equal(row.completionTracking,'unsupported');
+ assert.equal(row.integrationMode,'external_link');assert.equal(row.liveAvailabilitySupported,true);assert.equal(row.completionTracking,'unsupported');
  assert.equal(resolveEmbeddedBooking({[id]:{...registry[id],url:expectedUrl.replace('shangpalacedubai','wrongvenue').replace('388090','388091')}},id),null);
 }

@@ -27,6 +27,19 @@ jobs:
       - run: node scripts/test-external-destinations.mjs
       - run: node scripts/test-place-brand.mjs
       - run: node scripts/test-delicity-availability.mjs
+      - run: node scripts/test-zenchef-availability.mjs
       - run: node scripts/test-availability-gates.mjs
+      - run: node scripts/test-sevenrooms-qualified-search.mjs
       - run: node scripts/external200-validate.mjs
       - run: node scripts/external200-test-routes.mjs
+  search-ui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/test-availability-terms.mjs
+      - run: node scripts/test-availability-search.mjs

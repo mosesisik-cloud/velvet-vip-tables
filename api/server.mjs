@@ -1,3 +1,4 @@
+import { createZenchefAvailability } from './providers/zenchef-availability.mjs';
 import {TablecheckSazon, SAZON} from './providers/tablecheck-sazon.mjs';
 import { cleanBookingOffer } from './booking-offer.mjs';
 import { createDelicityAvailability } from './providers/delicity-availability.mjs';
@@ -39,6 +40,7 @@ const availabilitySearch = new AvailabilitySearch({
   restaurants: JSON.parse(fs.readFileSync(path.join(fs.existsSync(path.join(__dir, 'public-data')) ? path.join(__dir, 'public-data') : path.join(__dir, '../data'), 'restaurants.json'), 'utf8')),
 });
 availabilitySearch.adapters.Delicity = createDelicityAvailability({registry:availabilitySearch.registry});
+availabilitySearch.adapters.Zenchef = createZenchefAvailability({registry:availabilitySearch.registry});
 for (const [id,row] of Object.entries(RESTAURANT_DETAILS)) availabilitySearch.registry[id] = {...row, provider:'BokaBord', city:'Stockholm'};
 const mirrorMode = process.env.VELVET_BOKABORD_MIRROR || 'disabled';
 // These adapters have no verified checkout. Never accept mode/URLs from clients.
