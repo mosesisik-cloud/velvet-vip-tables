@@ -2946,5 +2946,18 @@
     "checkedAt": "2026-10-24",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-BOD-monzu-grands-hommes": {
+    "name": "Monzù Grands-Hommes",
+    "city": "Bordeaux",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=354097",
+    "source": "https://www.monzu.fr/grands-hommes",
+    "venueKey": "bookings.zenchef.com/results?rid=354097",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-24",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }

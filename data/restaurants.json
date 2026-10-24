@@ -13286,6 +13286,24 @@
           "bookingProvider": "Zenchef",
           "bookingDirect": true,
           "bookingVerifiedAt": "2026-10-24"
+        },
+        {
+          "placeId": "curated-BOD-monzu-grands-hommes",
+          "name": "Monzù Grands-Hommes",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "12 Pl. des Grands Hommes, 33000 Bordeaux",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=Monz%C3%B9%20Grands-Hommes%2C%2012%20Pl.%20des%20Grands%20Hommes%2C%20Bordeaux",
+          "website": "https://www.monzu.fr/grands-hommes",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://www.monzu.fr/grands-hommes",
+          "locationVerifiedAt": "2026-10-24",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=354097",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-24"
         }
       ]
     }
