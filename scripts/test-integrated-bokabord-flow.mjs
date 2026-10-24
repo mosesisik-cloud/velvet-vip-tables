@@ -1887,6 +1887,13 @@ async function main() {
           if(musees){assert.equal(reviewed.body.terms.restaurantNotice,'');for(const key of ['shiftNotice','mealNotice','seatingNotice'])assert.equal(reviewed.body.terms[key],undefined);assert.ok(!(await panel(page).locator('[data-terms-text]').innerText()).includes('Code Promo'));}
           if(lyonBistrot){assert.equal(reviewed.body.terms.seatingNotice,lyonSeating(selectedTime));const seating=panel(page).locator('[data-seating-notice]');assert.ok((await seating.innerText()).includes(lyonSeating(selectedTime)));assert.equal(await seating.evaluate(e=>Boolean(e.compareDocumentPosition(document.querySelector('[data-terms]'))&Node.DOCUMENT_POSITION_FOLLOWING)),true);}
           const notice=reviewed.body.terms.restaurantNotice;if(!scenario.startsWith('form-notice-'))assert.equal(notice,quinconces?lunchSource.restaurantComment.fr:grands?lunchSource.restaurantComment.fr:monzu?lunchSource.restaurantComment.fr:dupont?lunchSource.restaurantComment.fr:nacional?lunchSource.restaurantComment.fr:bouchon?'Français:\n'+lunchSource.restaurantComment.fr+'\n\nEnglish:\n'+lunchSource.restaurantComment.en:laffable?lunchSource.restaurantComment.fr+'\n\n'+lunchSource.dailyAvailabilities['2026-10-23'].shifts[0].comment.fr+'\n\n'+lunchSource.restaurantSpecificCommentsByDay['2026-10-23'].fr:lyonBistrot?lunchSource.restaurantComment.fr+'\n\n'+lunchSource.dailyAvailabilities['2026-10-23'].shifts[0].comment.fr:merciere?lunchSource.restaurantComment.fr:shiyo?lunchSource.restaurantComment.fr+'\n\n'+lunchSource.dailyAvailabilities['2026-10-23'].shifts[0].comment.fr:biche || plage || zenRestaurant?'Fran\u00e7ais:\n'+lunchSource.restaurantComment.fr+'\n\nEnglish:\n'+lunchSource.restaurantComment.en:lunchSource.restaurantComment.fr);const terms=await panel(page).locator('[data-terms-text]').innerText();
+          if(quinconces && !scenario.startsWith('form-notice-')) {
+            const normalized=value=>value.replace(/\s+/g,' ').trim();
+            const expected=[reviewed.body.terms.text,lunchSource.restaurantComment.fr.replace(/<[^>]*>/g,' ')].join(' ');
+            assert.equal(normalized(terms),normalized(expected),'Entire visible notice matches plain source text');
+            assert.ok(!/<\/?(?:center|br|b)\b/i.test(terms),'No raw source markup in visible notice');
+          }
+
           if(bouchon || laffable || lyonBistrot || shiyo&&!merciere){
             const normal=v=>v.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim();
             assert.ok(normal(terms).includes(normal(lunchSource.restaurantComment.fr)));
