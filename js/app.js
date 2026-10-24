@@ -14,7 +14,7 @@ import { restaurantStatusKey, publicationConfirmed, canStartPayment, loginReturn
 import { mountAvailabilitySearch } from './availability-search.js?v=188';
 import { getEmbeddedBooking, mountEmbeddedBooking, hasEmbeddedBooking } from './restaurant-booking-providers.js?v=189';
 import { mountBokabordMirror } from "./bokabord-mirror.js?v=225";
-import { mountProviderPlaywrightBooking } from "./provider-playwright-booking.js?v=298";
+import { mountProviderPlaywrightBooking } from "./provider-playwright-booking.js?v=299";
 // VELVET — VIP tables, shared. V2 SPA (no dependencies)
 import { t, applyLang, bootLang, LANGS, getLang, currentLang } from "./i18n.js?v=177";
 import { publicFields as mrzPublic, nameMatch, ageYears } from "./mrz.js?v=159";
