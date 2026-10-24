@@ -1,0 +1,56 @@
+{
+  "scope": "Exactly three new own pages; no provider query or forms",
+  "records": [
+    {
+      "id": "osm-PAR-nino",
+      "name": "Nino",
+      "finding": "Uniiti-owned site, /fr/booking and uniiti.com/shop/nino links; no direct Zenchef binding",
+      "source": {
+        "url": "https://nino-sevres.fr/fr",
+        "status": 200,
+        "location": null,
+        "bytes": 58950,
+        "sha256": "e1b980755408efc5ff97ca961a64e4e25a9e2cdd163a60f537f48a78b59f2576",
+        "fetchedAt": "2026-10-24T10:28:46.660Z"
+      },
+      "snippets": [
+        "                                    <a href=\"https://uniiti.com/shop/nino\" target=\"_blank\">"
+      ]
+    },
+    {
+      "id": "osm-PAR-bonheur-ruan",
+      "name": "Bonheur Ruan",
+      "finding": "reserver points to /contactus; no direct Zenchef binding",
+      "source": {
+        "url": "https://www.bonheur-ruan.fr",
+        "status": 200,
+        "location": null,
+        "bytes": 23121,
+        "sha256": "40963bcaf10312c6fc8d11986c3b5cca04850cb5868f64381aacdb4a2bff4455",
+        "fetchedAt": "2026-10-24T10:28:50.202Z"
+      },
+      "snippets": [
+        "s><a href=/desserts-2>DESSERTS</a></ul></div><li><a href=\"/\">Accueil</a><li><a href=/customer/info>Mon compte</a><li><a href=/contactus>Contactez-nous</a></ul><div class=mobile-menu-items></div></div></div></div><div class=overlayOffCanvas></div><div class=master-wrapper-content><div class=ajaxCartInfo data-getaja",
+        "class=\"btn btn-primary btn-lg btn-warning\" style=padding:10px;font-size:20px;color:#fff>Commandez maintenant</a><br> <a href=/contactus type=btn class=\"btn btn-primary btn-sm btn-warning\" style=margin-top:5px;font-size:20px;color:#fff>reserver</a></div></div><div class=\"container asimix-container\" style=\"font-fami"
+      ]
+    },
+    {
+      "id": "osm-STT-la-petite-plage",
+      "name": "La Petite Plage Saint-Tropez",
+      "finding": "Links own /saint-tropez/reservation plus phone reservation text; underlying booking page not fetched within three-source cap",
+      "source": {
+        "url": "https://www.restaurant-lapetiteplage.com/saint-tropez",
+        "status": 200,
+        "location": null,
+        "bytes": 50682,
+        "sha256": "2dfc769a7a2f786c02963bd1af7b3293ea7045b5714b081aa26519886aa51d1b",
+        "fetchedAt": "2026-10-24T10:28:53.575Z"
+      },
+      "snippets": [
+        " Plage logo\" class=\"nav_logo\"/></a><div id=\"w-node-_8a111e73-7c31-dbd0-5e7b-40f02e3e7bed-2e3e7bd9\" class=\"nav_block\"><a href=\"/saint-tropez/reservation\" class=\"button is-small hide-mobile-landscape\">RÉSERVER</a><div class=\"nav_divider hide-tablet\"></div><a href=\"/saint-tropez/contact\" class=\"nav_link hide-tablet\">PRIVATISATIONS ET",
+        "></div></div></div></div></div></div></div></div></div></div><div class=\"pop-up_wrapper\"><div class=\"pop-up_block\"><div>Je réserve par téléphone au <a href=\"tel:0494170123\" class=\"telephone-link\">04 94 17 01 23 </a>Jusqu’à 20 personnes.</div><div data-w-id=\"109e0fba-0caa-f2dd-b2df-f68769956bf0\" class=\"pop-up_close-link\"><i",
+        "51580d1804b4d2ffaf9eb_graphic-gold.webp\" alt=\"\" class=\"footer_graphic hide\"/></div><div class=\"mobile-cta_component\"><a href=\"/saint-tropez/reservation\" class=\"mobile-cta_button w-button\">Réserver</a></div><div><div class=\"w-dyn-list\"><div class=\"hide w-dyn-empty\"><div>No items found.</div></div></div><div data-w-id=\"9bf90fda-9268"
+      ]
+    }
+  ]
+}
