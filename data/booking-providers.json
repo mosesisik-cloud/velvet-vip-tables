@@ -2842,5 +2842,18 @@
     "checkedAt": "2026-10-22",
     "liveAvailabilitySupported": false,
     "completionTracking": "unsupported"
+  },
+  "curated-LYO-le-merciere": {
+    "name": "Le Mercière",
+    "city": "Lyon",
+    "provider": "Zenchef",
+    "url": "https://bookings.zenchef.com/results?rid=360735&pid=1001",
+    "source": "https://lemerciere.com/",
+    "venueKey": "bookings.zenchef.com/results?rid=360735",
+    "integrationMode": "external_link",
+    "verification": "official_link_only",
+    "checkedAt": "2026-10-22",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported"
   }
 }
