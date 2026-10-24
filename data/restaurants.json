@@ -8902,6 +8902,24 @@
           ],
           "imageSource": "https://www.bonheur-ruan.fr/",
           "imageVerifiedAt": "2026-09-17T10:26:11.779Z"
+        },
+        {
+          "placeId": "curated-PAR-laffable",
+          "name": "L’Affable",
+          "rating": null,
+          "reviewCount": 0,
+          "address": "10 Rue de Saint-Simon, 75007 Paris",
+          "mapsUrl": "https://www.google.com/maps/search/?api=1&query=L%E2%80%99Affable%2C%2010%20Rue%20de%20Saint-Simon%2C%20Paris",
+          "website": "https://laffable.fr/",
+          "primaryType": "restaurant",
+          "source": "VELVET curated · official website",
+          "curated": true,
+          "locationSource": "https://laffable.fr/",
+          "locationVerifiedAt": "2026-10-24",
+          "bookingUrl": "https://bookings.zenchef.com/results?rid=355946",
+          "bookingProvider": "Zenchef",
+          "bookingDirect": true,
+          "bookingVerifiedAt": "2026-10-24"
         }
       ]
     },
