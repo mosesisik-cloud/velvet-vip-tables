@@ -1,5 +1,11 @@
 # Dineplan v3 search qualification
 
+## Additional venue qualification, 24 October
+
+Fresh original forms confirmed FYN Restaurant / supplier 1388 / key DjfvyT1k and La Colombe Constantia / supplier 345 / key GCPvsZBn. Separate transient sessions were used for 26 October 2026/two guests. FYN's covers and times endpoints returned HTTP 200, with five enabled times (12:00, 12:30, 13:00, 13:30, 13:45) among nineteen time entries. Its guest-count response retains `reason: Fully Booked` even for `closed: false`; the original script uses the closed flag to disable options and shows the reason only for disabled choices. Do not classify an enabled choice solely from the reason text.
+
+La Colombe's covers endpoint returned HTTP 200 with the two-person choice explicitly closed and reason Fully Booked, corroborating the earlier calendar indication for this date. Inspection stopped before querying times. These are dated supplier observations, not confirmed reservations. The two sanitized field projections are included separately; the transport remains restricted to Hussar Rondebosch, and no registry support is expanded. FYN still requires the destination correction described in PR #504; La Colombe's mandatory deposit remains a booking-stage dependency.
+
 The qualification transport `scripts/lib/dineplan-hussar-search.mjs` now performs only the exact Rondebosch page GET and two search POSTs, with a transient cookie jar, twenty-second total timeout, abort support and redirects rejected. It accepts only two guests, checks supplier ID 1068 and an empty booking reference, and returns unknown on errors or ambiguous guest results. It has no seating, contact, payment or confirmation endpoint. Run both test files with `node --test scripts/test-dineplan-hussar-search.mjs scripts/test-dineplan-time-options.mjs scripts/test-dineplan-search-contract.mjs` (19 tests; also run by the offline Dineplan CI workflow). A read-only run of this actual module for 26 October/two guests returned sixteen enabled options; its dated result is `data/evidence/dineplan-hussar-module-check.json`. This is not production integration.
 
 Refs #129. This isolated experimental parser and evidence bundle do not activate any restaurant or edit shared provider routing. The canonical integrator and existing release owner retain integration/publication ownership.
