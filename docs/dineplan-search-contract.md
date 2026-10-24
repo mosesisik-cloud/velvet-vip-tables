@@ -1,5 +1,7 @@
 # Dineplan v3 search qualification
 
+The qualification transport `scripts/lib/dineplan-hussar-search.mjs` now performs only the exact Rondebosch page GET and two search POSTs, with a transient cookie jar, twenty-second total timeout, abort support and redirects rejected. It accepts only two guests, checks supplier ID 1068 and an empty booking reference, and returns unknown on errors or ambiguous guest results. It has no seating, contact, payment or confirmation endpoint. Run both test files with `node --test scripts/test-dineplan-hussar-search.mjs scripts/test-dineplan-time-options.mjs` (11 tests). A read-only run of this actual module for 26 October/two guests returned sixteen enabled options; its dated result is `data/evidence/dineplan-hussar-module-check.json`. This is not production integration.
+
 Refs #129. This isolated experimental parser and evidence bundle do not activate any restaurant or edit shared provider routing. The canonical integrator and existing release owner retain integration/publication ownership.
 
 The supplier's v3 step1 script populates guests with POST `ajax_covers` and times with POST `ajax_times`. Its time-option callback uses each HH:mm key and the `closed` and `reason` fields. The pure parser conservatively accepts boolean closed flags only. Invalid, rejected, empty or mixed-corrupt responses return unknown with no options. All-disabled options do not establish that the restaurant is sold out. Reasons are untrusted plain text, never HTML.
