@@ -1,0 +1,9 @@
+# Gigi Tavola: manual confirmation
+
+Owner codex-worker-cbfe5665-79ca-415d-91ac-5c184e516939;24October2026, refs #129. Existing catalogue osm-MCO-gigi-tavola is physically in Nice. Own https://www.gigitavola.com/ directly embeds https://bookings.zenchef.com/results?rid=353615&pid=1001. Root200 SHA6e35d917402c0eb5c8bfd568c94264ad7f9b9dc18ba0eadf1e7d1071a2dee583.
+
+ONE future26October2026/pax2 results GET returned200, SHA76dfb2db1123a44eadb41b70bd6b1fab314edf3802d9488f37912a59adfc59a6. Identity matches Gigi Tavola,5 quai des deux Emmanuel port de nice,06300 Nice,+33493317265. Full safe policy/notice/slot projection and exact metadata are in docs/evidence/gigi-tavola-source.json; originals in the workspace evidence/gigi-tavola directory.
+
+Lunch30585/Midi has four two-person slots12:00–12:45, but confirmation is explicitly `is_auto:false,is_auto_until:null`. Dinner30586 has the same manual-confirmation policy. This is the blocking condition for the assigned automatically confirmed booking scope. Charge threshold is8 guests at lunch and7 at dinner,10EUR/guest, so card policy alone is not asserted to block two guests. Prepayment is null. Lunch cancellation3600seconds relative to shift; opening2026-07-28 13:00, final deadline14:15. Full notices, all ten lunch slots and dinner policy retained without reinterpretation.
+
+Lunch notice states the table is no longer guaranteed after15minutes of lateness without contact. Global notice asks guests to telephone if unable to book online, with four language variants retained. No phone call or restaurant message was sent. No empty form or further availability query was made after the manual-confirmation finding. No runtime, catalogue or provider changes; no actual reservation, hold or payment. Do not repeat this check without changed primary-source evidence.
