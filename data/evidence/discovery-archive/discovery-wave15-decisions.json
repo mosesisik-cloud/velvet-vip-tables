@@ -1,0 +1,137 @@
+[
+  {
+    "placeId": "osm-IBZ-ama-lur",
+    "name": "Ama Lur",
+    "city": "Ibiza",
+    "status": "verified_provider_link",
+    "evidence": "Exact named official booking source; see registry. No slot/hold/checkout.",
+    "source": "https://amaluribiza.com/reservas/",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-IBZ-macao-cafe-santa-gertrudis",
+    "name": "Macao Café Santa Gertrudis",
+    "city": "Ibiza",
+    "status": "unresolved_official_source",
+    "evidence": "Search found directories/social references only, no verified primary booking source.",
+    "source": "",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-IBZ-sense-santa-gertrudis",
+    "name": "Sense Santa Gertrudis",
+    "city": "Ibiza",
+    "status": "unresolved_identity",
+    "evidence": "Search results unrelated Santa Gertrudis names; none used.",
+    "source": "",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-IBZ-bar-costa",
+    "name": "Bar Costa",
+    "city": "Ibiza",
+    "status": "unresolved_official_source",
+    "evidence": "Search found directories only; no primary booking destination verified.",
+    "source": "",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-IBZ-bambuddha",
+    "name": "Bambuddha",
+    "city": "Ibiza",
+    "status": "provider_not_accepting_online",
+    "evidence": "Official Servme oid404 initial form says not accepting online reservations at moment, call restaurant. Excluded functional registry; no closure inference.",
+    "source": "https://www.bambuddha.com/en",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-MRB-the-farm",
+    "name": "The Farm",
+    "city": "Marbella",
+    "status": "verified_provider_link",
+    "evidence": "Exact named official booking source; see registry. No slot/hold/checkout.",
+    "source": "https://thefarm-marbella.com/contact/",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-MRB-el-patio-de-mariscal",
+    "name": "El Patio de Mariscal",
+    "city": "Marbella",
+    "status": "manual_phone_email",
+    "evidence": "Official Wix contact page C/VirgendelosDolores3Marbella gives reservations phone952867701/645051066 and emailreservas@elpatiodemariscal.es; no engine.",
+    "source": "https://elpatiodemariscal.wixsite.com/elpatiodemariscal/contactanos",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-STT-le-sporting",
+    "name": "Le Sporting",
+    "city": "Saint-Tropez",
+    "status": "unresolved_connection",
+    "evidence": "Search official le-sporting.com connection closed. Tourism listing newer LeSportingbyPapum. No closure inference.",
+    "source": "https://le-sporting.com/",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-STT-le-cafe",
+    "name": "Le Café",
+    "city": "Saint-Tropez",
+    "status": "verified_provider_link",
+    "evidence": "Exact named official booking source; see registry. No slot/hold/checkout.",
+    "source": "https://www.lecafe.fr/saint-tropez-restaurant/contact",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-STT-clandestino-saint-tropez",
+    "name": "Clandestino Saint Tropez",
+    "city": "Saint-Tropez",
+    "status": "unresolved_dns",
+    "evidence": "Official search candidate clandestino.fr DNS failure.",
+    "source": "https://www.clandestino.fr/",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-STT-l-opera",
+    "name": "L’Opéra",
+    "city": "Saint-Tropez",
+    "status": "verified_provider_link",
+    "evidence": "Exact named official booking source; see registry. No slot/hold/checkout.",
+    "source": "https://www.opera-saint-tropez.com/fr/reservation/",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-STT-gaio",
+    "name": "GAÏO",
+    "city": "Saint-Tropez",
+    "status": "verified_provider_link",
+    "evidence": "Exact named official booking source; see registry. No slot/hold/checkout.",
+    "source": "https://www.gaio.club/",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "curated-MCO-pavyllon-monte-carlo",
+    "name": "Pavyllon Monte-Carlo",
+    "city": "Monaco",
+    "status": "verified_provider_link",
+    "evidence": "Exact named official booking source; see registry. No slot/hold/checkout.",
+    "source": "https://www.yannick-alleno.com/contact",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-MCO-les-amoureux",
+    "name": "Les Amoureux",
+    "city": "Monaco",
+    "status": "ordering_only_observed",
+    "evidence": "Official Delicity-built site1RueBavastroNice links delivery/pickup, not table reservation. No guessed Delicity booking slug.",
+    "source": "https://lesamoureuxpizzeria.com/",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-MCO-le-36-bonap",
+    "name": "Le 36 Bonap",
+    "city": "Monaco",
+    "status": "unresolved_official_source",
+    "evidence": "Search LeBonap.fr is administrative restaurant La Roche sur Yon, WRONG venue; explicitly rejected.",
+    "source": "",
+    "checkedAt": "2026-10-15"
+  }
+]

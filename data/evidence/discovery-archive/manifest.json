@@ -1,0 +1,42 @@
+{
+  "archivedOn": "2026-10-27",
+  "scope": "Historical decisions and proposals only; no runtime changes or current booking claims",
+  "files": [
+    {
+      "file": "discovery-wave14-decisions.json",
+      "records": 15,
+      "sha256": "11ba5b027ca68952583664497bea305ad9da640d6ccc29900d40eefbf529caa1"
+    },
+    {
+      "file": "discovery-wave14-registry.json",
+      "records": null,
+      "sha256": "82f2d564b5360ffe47d7660232fc4f09eff1b5d2d55ce42a9a9c5d3e6c998584"
+    },
+    {
+      "file": "discovery-wave15-decisions.json",
+      "records": 15,
+      "sha256": "a5d158738d07b3830945b470cbef3fa6d9f4b6bb01b97ce4973576eef375e599"
+    },
+    {
+      "file": "discovery-wave15-registry.json",
+      "records": null,
+      "sha256": "fd811965165b6039df4ba7d41e6222308a5243a14a9deb520b5cd429fd744242"
+    },
+    {
+      "file": "discovery-wave16-decisions.json",
+      "records": 15,
+      "sha256": "49d45512719eeb96ccd3bc34c43e81b22bb94a25633fa19061fdb2c981ddd59a"
+    },
+    {
+      "file": "discovery-wave16-registry.json",
+      "records": null,
+      "sha256": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356"
+    },
+    {
+      "file": "discovery-wave16-candidates.json",
+      "records": 3,
+      "sha256": "c30ca4d34bbee25f28ba0fbd43c4ff93ba0cd76393bf471bb72ef88283abdd30"
+    }
+  ],
+  "excluded": "Live ad-hoc scripts, raw captures, vendor bundles, timestamp-only guest-shell rerun. Original files remain local."
+}

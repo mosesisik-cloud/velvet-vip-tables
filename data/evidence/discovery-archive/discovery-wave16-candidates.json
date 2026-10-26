@@ -1,0 +1,33 @@
+[
+  {
+    "placeId": "curated-DXB-ossiano",
+    "name": "Ossiano",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "future_booking_window",
+    "source": "https://www.atlantis.com/dubai/atlantis-the-palm/dining/ossiano",
+    "evidence": "Official rendered page states bookings open from 3 December 2026; exact SevenRooms ossianodubai link observed. Not evidence of current slots.",
+    "bookingUrl": "https://www.sevenrooms.com/reservations/ossianodubai/AD-website"
+  },
+  {
+    "placeId": "osm-DXB-armani-amal",
+    "name": "Armani/Amal",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "operating_status_conflict",
+    "source": "https://www.armanihotels.com/en/hotels/armani-hotel-dubai/dine/armani-amal",
+    "evidence": "Official opening-hours data says Temporary: Closed, while exact SevenRooms form says open daily 18:00-22:30. Form identity verified; operational availability not established.",
+    "bookingUrl": "https://www.sevenrooms.com/explore/amal/reservations/create/search?tracking=armani-amal"
+  },
+  {
+    "placeId": "osm-DXB-armani-lounge-burj-khalifa",
+    "name": "Armani Lounge Burj Khalifa",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "operating_status_conflict",
+    "source": "https://www.armanihotels.com/en/hotels/armani-hotel-dubai/dine/armani-lounge",
+    "evidence": "Official page says temporarily closed while FAQ and SevenRooms form say open daily. Catalog Atmosphere website belongs to a different venue. Correct Armani/Lounge form identity verified; do not treat as operational until conflict resolved.",
+    "bookingUrl": "https://www.sevenrooms.com/explore/loungearmani/reservations/create/search?tracking=armani-lounge",
+    "incorrectCatalogWebsite": "https://www.atmosphereburjkhalifa.com/"
+  }
+]
