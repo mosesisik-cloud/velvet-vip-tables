@@ -1,0 +1,142 @@
+[
+  {
+    "placeId": "curated-DXB-ossiano",
+    "name": "Ossiano",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "future_booking_window",
+    "source": "https://www.atlantis.com/dubai/atlantis-the-palm/dining/ossiano",
+    "evidence": "Official rendered page states bookings open from 3 December 2026; exact SevenRooms ossianodubai link observed. Not evidence of current slots.",
+    "bookingUrl": "https://www.sevenrooms.com/reservations/ossianodubai/AD-website"
+  },
+  {
+    "placeId": "osm-DXB-swiss-butter-dubai-sofitel-downtown",
+    "name": "Swiss Butter - Dubai Sofitel Downtown",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "official_source_unverified",
+    "source": "https://swissbutter.com/",
+    "evidence": "Brand site rendered empty under GET-only guard. Official brand LinkedIn identifies Sofitel Downtown branch; no current table policy or exact booking endpoint verified. London domain excluded."
+  },
+  {
+    "placeId": "osm-DXB-hey-pesto",
+    "name": "Hey Pesto",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "identity_unconfirmed",
+    "source": null,
+    "evidence": "Historical brand references and multiple Dubai locations; no current exact official branch booking source verified."
+  },
+  {
+    "placeId": "osm-DXB-u250cb83b7574",
+    "name": "باب المنصور",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "no_table_booking_verified",
+    "source": "https://orders.babalmansour.ae/locate-us",
+    "evidence": "Official ordering site identifies Sheikh Mohamed Ben Rashid Boulevard Dubai. Ordering is not table booking; no instant table engine verified."
+  },
+  {
+    "placeId": "osm-DXB-bait-al-mandi",
+    "name": "Bait al Mandi",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "branch_unconfirmed",
+    "source": "https://baitalmandi.com/branches/dubai.html",
+    "evidence": "Official site lists multiple Dubai branches. Catalog has no branch/address; cannot choose a booking destination."
+  },
+  {
+    "placeId": "osm-DXB-ud1aecdbe724f",
+    "name": "ريم البوادي",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "branch_unconfirmed",
+    "source": "https://reemalbawadi.limetray.com/locate-us",
+    "evidence": "Branded site has Marina Walk and Downtown locations and a reservation request form. Catalog branch unidentified; no instant inventory verified. Removed repurposed old domain not used."
+  },
+  {
+    "placeId": "osm-DXB-pizza-pino",
+    "name": "Pizza Pino",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "identity_unconfirmed",
+    "source": null,
+    "evidence": "No exact current Dubai official booking source verified; unrelated US/other Pizza Pino sites excluded."
+  },
+  {
+    "placeId": "osm-DXB-tche-tche",
+    "name": "Tche-Tche",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "branch_unconfirmed",
+    "source": "https://tchetchecafe.com",
+    "evidence": "Generic chain site does not establish catalog Dubai branch or exact table booking endpoint."
+  },
+  {
+    "placeId": "osm-DXB-armani-amal",
+    "name": "Armani/Amal",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "operating_status_conflict",
+    "source": "https://www.armanihotels.com/en/hotels/armani-hotel-dubai/dine/armani-amal",
+    "evidence": "Official opening-hours data says Temporary: Closed, while exact SevenRooms form says open daily 18:00-22:30. Form identity verified; operational availability not established.",
+    "bookingUrl": "https://www.sevenrooms.com/explore/amal/reservations/create/search?tracking=armani-amal"
+  },
+  {
+    "placeId": "osm-DXB-armani-lounge-burj-khalifa",
+    "name": "Armani Lounge Burj Khalifa",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "operating_status_conflict",
+    "source": "https://www.armanihotels.com/en/hotels/armani-hotel-dubai/dine/armani-lounge",
+    "evidence": "Official page says temporarily closed while FAQ and SevenRooms form say open daily. Catalog Atmosphere website belongs to a different venue. Correct Armani/Lounge form identity verified; do not treat as operational until conflict resolved.",
+    "bookingUrl": "https://www.sevenrooms.com/explore/loungearmani/reservations/create/search?tracking=armani-lounge",
+    "incorrectCatalogWebsite": "https://www.atmosphereburjkhalifa.com/"
+  },
+  {
+    "placeId": "osm-DXB-the-daily-city-walk",
+    "name": "The Daily City Walk",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "manual_contact",
+    "source": "https://www.rovehotels.com/en/hotels/rove-city-walk/daily-city-walk/",
+    "evidence": "Exact branch official page lists +97145619999. No general table engine verified. Hotel room booking excluded; expired September brunch promotion not used.",
+    "contactUrl": "tel:+97145619999"
+  },
+  {
+    "placeId": "osm-DXB-l-eto",
+    "name": "L’eto",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "branch_unconfirmed",
+    "source": "https://letocaffe.com",
+    "evidence": "Official multi-country chain site; generic catalog Dubai row does not identify branch. Delivery/cake ordering is not table booking."
+  },
+  {
+    "placeId": "osm-DXB-b-to-b-lebanese-restaurant",
+    "name": "B to B Lebanese restaurant",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "identity_unconfirmed",
+    "source": null,
+    "evidence": "No exact Dubai restaurant-controlled booking endpoint verified. Similar Beirut brand cannot establish this catalog entity."
+  },
+  {
+    "placeId": "osm-DXB-pizza-hut",
+    "name": "Pizza Hut",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "branch_unconfirmed",
+    "source": null,
+    "evidence": "Generic Pizza Hut Dubai catalog row lacks branch. No exact table reservation endpoint verified; food ordering cannot establish table availability."
+  },
+  {
+    "placeId": "osm-DXB-nordsee",
+    "name": "Nordsee",
+    "city": "Dubai",
+    "checkedAt": "2026-10-16",
+    "status": "identity_unconfirmed",
+    "source": null,
+    "evidence": "No current official Dubai branch booking source verified. Historical UAE references do not establish current operation or closure."
+  }
+]

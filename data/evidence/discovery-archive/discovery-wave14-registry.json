@@ -1,0 +1,16 @@
+{
+  "osm-PAR-bigbang": {
+    "name": "Bigbang",
+    "city": "Sevres",
+    "provider": "JoinOko",
+    "url": "https://reservation.joinoko.com/784893b8aceb4e017dddef37?lang=fr",
+    "venueKey": "reservation.joinoko.com/784893b8aceb4e017dddef37",
+    "source": "https://sevres.bigbang-restaurant.fr/fr/",
+    "checkedAt": "2026-10-15",
+    "verification": "embedded_form_loaded",
+    "integrationMode": "external_link",
+    "liveAvailabilitySupported": false,
+    "completionTracking": "unsupported",
+    "notes": "Exact BIGBANG SEVRES identity and 40-44 Grande Rue92310Sevres. New provider conservative external until full journey audit. Initial iframe party stage only. lang=fr official link rendered English in test; do not claim language propagation."
+  }
+}

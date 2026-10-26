@@ -1,0 +1,137 @@
+[
+  {
+    "placeId": "osm-ATH-o-takis",
+    "name": "o Takis",
+    "city": "Athens Riviera",
+    "source": "https://instagram.com/takiskebab",
+    "status": "unresolved_social_profile",
+    "evidence": "Instagram profile unavailable, no closure inference.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-ATH-napul-e-italian-comfort-food-wine",
+    "name": "Napul'è Italian Comfort Food & Wine",
+    "city": "Athens Riviera",
+    "source": "https://www.napuleitaliancomfortfood.com/",
+    "status": "no_engine_observed",
+    "evidence": "Official Napule Vari site and exact address Vasileos Konstantinou43; no booking engine found on landing page.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-ATH-masati",
+    "name": "Masati",
+    "city": "Athens Riviera",
+    "source": "http://masati.eu",
+    "status": "unresolved_dns",
+    "evidence": "masati.eu DNS failure.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-ATH-sea-satin-athens",
+    "name": "Sea Satin Athens",
+    "city": "Athens Riviera",
+    "source": "https://www.seasatinathens.com/",
+    "status": "manual_request",
+    "evidence": "Official Book A Table leads contact-details: phone/email and message request; Voula address, no inventory.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-CAP-panorama",
+    "name": "Panorama",
+    "city": "Capri",
+    "source": "https://www.panoramacapri.com/",
+    "status": "manual_contact_observed",
+    "evidence": "Official /reservation page gives Capri address and phone+390818375290/email; no table controls rendered.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-CAP-l-approdo-1980",
+    "name": "L'Approdo 1980",
+    "city": "Capri",
+    "source": "http://www.ApprodoCapri.com",
+    "status": "unresolved_403",
+    "evidence": "Official source returned403; no bypass.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-CAP-da-gioia",
+    "name": "Da Gioia",
+    "city": "Capri",
+    "source": "http://www.dagioiacapri.com/",
+    "status": "unresolved_stale_redirect",
+    "evidence": "Official original domain redirects Oetker Da Gioia path showing page not found. Hotel room booking links excluded.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-AMF-relish-lounge-bar-ristorante",
+    "name": "Relish Lounge Bar & Ristorante",
+    "city": "Amalfi Coast",
+    "source": "https://www.facebook.com/relishloungebar/",
+    "status": "social_only_observed",
+    "evidence": "Official inventory Facebook page rendered, no verified reservation engine found.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-PAR-gitanjali",
+    "name": "Gitanjali",
+    "city": "Paris",
+    "source": "https://gitanjali.fr/",
+    "status": "unresolved_rate_limit",
+    "evidence": "Official reservation page exists but returns429; stopped instead of bypass.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-PAR-restaurant-inter-entreprises-sevres-manufacture",
+    "name": "Restaurant Inter Entreprises Sèvres Manufacture",
+    "city": "Paris",
+    "source": "https://serenest.fr/",
+    "status": "not_public_booking_source",
+    "evidence": "Serenest corporate catering website not an exact public reservation form for Sevres Manufacture.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-PAR-bigbang",
+    "name": "Bigbang",
+    "city": "Paris",
+    "source": "https://sevres.bigbang-restaurant.fr/fr/",
+    "status": "verified_provider_link",
+    "evidence": "Official BIGBANG SEVRES points exact JoinOko id784893b8aceb4e017dddef37; iframe shows matching name/address40-44GrandeRue92310Sevres and party controls.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-PAR-paris-dakar",
+    "name": "Paris Dakar",
+    "city": "Paris",
+    "source": "https://app.miap.co/?pickup=143#/authentication",
+    "status": "unresolved_dns",
+    "evidence": "Inventory MIAP pickup=143 URL fails DNS; ordering/authentication is not verified table booking.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-PAR-nino",
+    "name": "Nino",
+    "city": "Paris",
+    "source": "https://nino-sevres.fr/",
+    "status": "unresolved_empty_booking_form",
+    "evidence": "Official Uniiti-built /fr/booking page shows Reservation heading and exact Nino Sevres address5Rue de Ville dAvray but no booking controls under read-only probe. Do not claim functional availability.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-PAR-bonheur-ruan",
+    "name": "Bonheur Ruan",
+    "city": "Paris",
+    "source": "https://www.bonheur-ruan.fr",
+    "status": "manual_request",
+    "evidence": "Official /contactus expressly says reservation requests receive reply by email; date/time/party fields, no instant confirmation.",
+    "checkedAt": "2026-10-15"
+  },
+  {
+    "placeId": "osm-CRV-la-fromagerie",
+    "name": "La Fromagerie",
+    "city": "Courchevel",
+    "source": "https://www.maisontournier.com/fr/page/restaurant-fromagerie-courchevel-maison-tournier.5012.html?preview=577bcc914f9e55d5e4e4f82f9f00e7d4",
+    "status": "phone_only",
+    "evidence": "Official page explicitly Reservation uniquement par telephone +33479082747. Sibling Cap Horn/Django/Casserole navigation is not La Fromagerie.",
+    "checkedAt": "2026-10-15"
+  }
+]
