@@ -1,0 +1,16 @@
+{
+  "curated-AMF-la-sponda": {
+    "name": "La Sponda",
+    "venueId": "lasponda",
+    "url": "https://www.sevenrooms.com/reservations/lasponda?venues=lasponda&lang=en",
+    "source": "https://sirenuse.it/en/la-sponda-restaurant/book-a-table/",
+    "verifiedAt": "2026-10-16"
+  },
+  "curated-PAR-plenitude": {
+    "name": "Plénitude",
+    "venueId": "plenitude",
+    "url": "https://www.sevenrooms.com/reservations/plenitude",
+    "source": "https://www.chevalblanc.com/en/maison/paris/restaurants-and-bars/plenitude/",
+    "verifiedAt": "2026-10-16"
+  }
+}

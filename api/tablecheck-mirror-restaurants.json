@@ -1,0 +1,34 @@
+{
+  "osm-BAL-sazon": {
+    "name": "Sazón",
+    "url": "https://www.tablecheck.com/en/regent-bali-canggu-sazon/reserve",
+    "source": "https://sazonbali.com/",
+    "verifiedAt": "2026-10-15",
+    "slug": "regent-bali-canggu-sazon"
+  },
+  "curated-AMS-ciel-bleu": {
+    "name": "Ciel Bleu",
+    "url": "https://www.tablecheck.com/en/okura-nl-cielbleu/reserve/message",
+    "source": "https://www.cielbleu.nl/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-HKT-suay-cherngtalay": {
+    "name": "Suay Cherngtalay",
+    "url": "https://www.tablecheck.com/en/suay-restaurant-phuket/reserve/message",
+    "source": "https://www.suayrestaurant.com/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-BKK-sorn": {
+    "name": "Sorn",
+    "url": "https://www.tablecheck.com/en/sorn-fine-southern-cuisine/reserve/experiences?menu_lists=6ab4d39faf04e7f6886dccc9&utm_source=website",
+    "source": "https://sornfinesouthern.com/reservations/",
+    "verifiedAt": "2026-10-15"
+  },
+  "curated-TYO-florilege": {
+    "name": "Florilège",
+    "url": "https://www.tablecheck.com/shops/florilege/reserve",
+    "source": "https://www.aoyama-florilege.jp/reservations.html",
+    "verifiedAt": "2026-10-15",
+    "slug": "florilege"
+  }
+}

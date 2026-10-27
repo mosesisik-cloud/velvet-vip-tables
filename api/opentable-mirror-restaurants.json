@@ -1,0 +1,58 @@
+{
+  "curated-MIA-mila-miami": {
+    "name": "MILA Miami",
+    "url": "https://www.opentable.com/r/mila-miami-restaurant-miami-2",
+    "source": "https://mila-miami.com/",
+    "verifiedAt": "2026-10-15",
+    "venueId": ""
+  },
+  "osm-MIA-mayfair-grill": {
+    "name": "Mayfair Grill",
+    "url": "https://www.opentable.com/r/mayfair-grill-miami",
+    "source": "https://www.mayfair-grill.com",
+    "verifiedAt": "2026-10-15",
+    "venueId": ""
+  },
+  "osm-MIA-la-cabrera-coconut-grove": {
+    "name": "La Cabrera - Coconut Grove",
+    "url": "https://www.opentable.com/restref/client/?restref=1377148&lang=en-US",
+    "source": "https://lacabreramiami.com/",
+    "verifiedAt": "2026-10-15",
+    "venueId": ""
+  },
+  "curated-SYD-saint-peter": {
+    "name": "Saint Peter",
+    "url": "https://www.opentable.com.au/booking/restref/availability?rid=60911&restRef=60911",
+    "source": "https://www.saintpeter.com.au/",
+    "verifiedAt": "2026-10-15",
+    "venueId": ""
+  },
+  "curated-LON-core-by-clare-smyth": {
+    "name": "CORE by Clare Smyth",
+    "url": "https://www.opentable.co.uk/r/core-by-clare-smyth-london",
+    "source": "https://corebyclaresmyth.com/",
+    "verifiedAt": "2026-10-15",
+    "venueId": ""
+  },
+  "curated-LON-the-ledbury": {
+    "name": "The Ledbury",
+    "url": "https://www.opentable.co.uk/the-ledbury",
+    "source": "https://www.theledbury.com/?page=restaurant",
+    "verifiedAt": "2026-10-15",
+    "venueId": ""
+  },
+  "curated-ASP-cache-cache-aspen": {
+    "name": "Cache Cache Aspen",
+    "url": "https://www.opentable.com/r/cache-cache-aspen",
+    "source": "https://cachecache.com/",
+    "verifiedAt": "2026-10-15",
+    "venueId": ""
+  },
+  "curated-ASP-bosq": {
+    "name": "Bosq",
+    "url": "https://www.opentable.com/r/bosq-reservations-aspen?restref=264196&lang=en-US",
+    "source": "https://www.bosqaspen.com/",
+    "verifiedAt": "2026-10-15",
+    "venueId": ""
+  }
+}

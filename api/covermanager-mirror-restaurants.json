@@ -1,0 +1,58 @@
+{
+  "curated-IBZ-lio-ibiza": {
+    "name": "Lío Ibiza",
+    "url": "https://www.covermanager.com/reservation/module_restaurant/lio-ibiza/english?timefix=20:30&hour=20:30",
+    "source": "https://www.liogroup.com/ibiza/reservations",
+    "verifiedAt": "2026-10-15",
+    "slug": "lio-ibiza"
+  },
+  "osm-IBZ-can-caus": {
+    "name": "Can Caus",
+    "url": "https://www.covermanager.com/reserve/module_restaurant/restaurante-cancaus/spanish",
+    "source": "https://cancaus.com",
+    "verifiedAt": "2026-10-15",
+    "slug": "restaurante-cancaus"
+  },
+  "curated-IBZ-casa-maca": {
+    "name": "Casa Maca",
+    "url": "https://www.covermanager.com/reservation/module_restaurant/restaurante-casa-maca/english",
+    "source": "https://www.casamaca.com/en/",
+    "verifiedAt": "2026-10-15",
+    "slug": "restaurante-casa-maca"
+  },
+  "curated-AMF-don-alfonso-1890": {
+    "name": "Don Alfonso 1890",
+    "url": "https://www.covermanager.com/reservation/module_restaurant/restaurante-donalfonso/english",
+    "source": "https://www.donalfonso.com/en/hotel-with-restaurant-sorrento-coast",
+    "verifiedAt": "2026-10-15",
+    "slug": "restaurante-donalfonso"
+  },
+  "curated-MRB-skina": {
+    "name": "Skina",
+    "url": "https://www.covermanager.com/reservation/module_restaurant/restaurante-skina/english",
+    "source": "https://www.restauranteskina.com/en/booking/",
+    "verifiedAt": "2026-10-15",
+    "slug": "restaurante-skina"
+  },
+  "curated-BKK-le-du": {
+    "name": "Le Du",
+    "url": "https://www.covermanager.com/reservation/module_restaurant/restaurante-ledu/english",
+    "source": "https://www.ledubkk.com/reservation",
+    "verifiedAt": "2026-10-15",
+    "slug": "restaurante-ledu"
+  },
+  "osm-IBZ-ama-lur": {
+    "name": "Ama Lur",
+    "url": "https://www.covermanager.com/reserve/module_restaurant/restaurante-amaluribiza/spanish",
+    "source": "https://amaluribiza.com/reservas/",
+    "verifiedAt": "2026-10-15",
+    "slug": "restaurante-amaluribiza"
+  },
+  "osm-MRB-the-farm": {
+    "name": "The Farm",
+    "url": "https://www.covermanager.com/reservation/module_restaurant/restaurante-thefarm/english",
+    "source": "https://thefarm-marbella.com/contact/",
+    "verifiedAt": "2026-10-15",
+    "slug": "restaurante-thefarm"
+  }
+}
