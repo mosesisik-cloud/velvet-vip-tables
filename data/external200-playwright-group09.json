@@ -1,0 +1,516 @@
+{
+  "schemaVersion": 1,
+  "group": 9,
+  "reviewedAt": "2026-10-15T23:59:40.136830+00:00",
+  "restaurants": [
+    {
+      "restaurantId": "osm-MIA-fuku",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official Fuku sandwich branch at 135 Miracle Mile Coral Gables opened March 2026. Manifest only says Fuku/Miami and supplies no locator; cannot establish whether it means this venue or another Fuku."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://eatfuku.com/find-fuku/coral-gables/"
+      ]
+    },
+    {
+      "restaurantId": "osm-MIA-genuine-pizza",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Historical operator blog mentions Genuine Pizza and Harrys Pizzeria. Multiple/rebranded sites exist; no current exact branch established from generic manifest name."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://thegenuinekitchen.wordpress.com/",
+        "https://www.opentable.com/r/genuine-pizza-by-michael-schwartz-aventura-mall-aventura"
+      ]
+    },
+    {
+      "restaurantId": "osm-MIA-le-petit-cafe",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Search produced namesakes in Brooklyn and Paris rather than a verified Miami venue. These booking links must not be assigned to this ID."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://www.lepetitny.com/contact-us"
+      ]
+    },
+    {
+      "restaurantId": "osm-MIA-lulu",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Earlier indexed Spanish restaurant page names 3105 Commodore Plaza, Miami, but live root now displays unrelated gambling content. lulucoconutgrove.food now displays unrelated Turkish content. Neither is approved as an official booking destination."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://www.luluinthegrove.com/",
+        "https://lulucoconutgrove.food/"
+      ]
+    },
+    {
+      "restaurantId": "osm-MIA-miller-s-ale-house",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Manifest specifies Coral Gables branch, but official location URL returns 404. No current restaurant address/booking route verified; 404 alone does not prove closure."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://millersalehouse.com/locations/coral-gables/",
+        "https://www.restaurantji.com/fl/coral-gables/millers-ale-house-coral-gables-/"
+      ]
+    },
+    {
+      "restaurantId": "osm-MIA-monty-s",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official Montys Sunset is at 300 Alton Road, Miami Beach, while Montys also has Coconut Grove identity. Generic manifest lacks locator; no Miami Beach booking link assigned to Miami ID."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://www.montyssobe.com/",
+        "https://www.montysrawbar.com/"
+      ]
+    },
+    {
+      "restaurantId": "osm-MIA-panorama-restaurant-sky-lounge",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Manifest legacy Sonesta restaurant URL failed to fetch. Secondary historical guide places Panorama at 2889 McFarlane Road, eighth floor. Current official identity/operator not resolved."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://www.sonesta.com/CoconutGrove/index.cfm?fa=restaurant1.home",
+        "https://websites.kw-ic.com/Portals/61/Documents/One%20Park%20Grove%20Restaurant%20List%202.18.2022.pdf",
+        "https://coconutgrove.com/business/hotel-arya-2/"
+      ]
+    },
+    {
+      "restaurantId": "osm-MIA-poke-305-grove",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Operator profile lists 3415 Main Highway among multiple locations. Manifest Clover root is a generic POS homepage, not a restaurant-specific table booking link. Current Grove table-booking policy unverified."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://www.linkedin.com/company/poke-305",
+        "https://www.poke305.com/"
+      ]
+    },
+    {
+      "restaurantId": "osm-MIA-pummarola-coral-gable",
+      "providerCandidate": "Wix original request form",
+      "providerVenueId": null,
+      "officialSource": "https://www.pummarola.us/reservations",
+      "bookingUrl": "https://www.pummarola.us/reservations",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "No verified live inventory through a Velvet backend adapter; initial fields/default time options do not prove bookable availability.",
+        "Request-only route: a submitted request must remain pending until separately confirmed by the supplier.",
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "No visible navigation href to /reservations found on home/locations/contact; discovered in operator page config.",
+        "Unlisted/noindex page and operational acceptance unverified.",
+        "No supported branch query documented; do not invent parameters. Location checkboxes permit multiple branches; instruct only Coral Gables plus Dine-In Reservation.",
+        "Static all-day quarter-hour dropdown and automatic default date/time are not availability. Success text was inspected in HTML only; no request submitted.",
+        "No visible cancellation, card guarantee or prepayment terms in initial form.",
+        "Independent review is by groups_1_3; root owns activation and copy.",
+        "Root screenshot review: mobile documentwidth980px atviewport390; scaled desktop layout and cookie banner overlaps fields. No cookie interaction performed.",
+        "Previous mobile observation: Original form rendered at390x844; root screenshot review found980px documentwidth/desktop scaling and cookie banner covering fields; mobile usability limited, not mobile-adapted PASS."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://www.pummarola.us/",
+        "https://www2.myfloridalicense.com/abt/documents/CityFeeDistribution3rdQtr2025-2026.pdf",
+        "https://www.pummarola.us/bookonline",
+        "https://www.pummarola.us/reservations",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-MIA-the-cheesecake-factory",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved_branch",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Official chain allows online reservations for rewards members, up to six guests and 30 days ahead. Manifest lacks branch. Coconut Creek is not Coconut Grove; no branch or account booking route assigned."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://www.thecheesecakefactory.com/",
+        "https://www.opentable.com/r/the-cheesecake-factory-coconut-grove-miami"
+      ]
+    },
+    {
+      "restaurantId": "curated-SBH-bonito-saint-barth",
+      "providerCandidate": "SevenRooms",
+      "providerVenueId": "bonitostbarth",
+      "officialSource": "https://www.bonitosbh.com/",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "No verified live inventory through a Velvet backend adapter; initial fields/default time options do not prove bookable availability.",
+        "Likely duplicate venue represented by curated-SBH-bonito-saint-barth and osm-SBH-bonito; IDs preserved, no merge.",
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "No slot selected, no date/guest change, no submission, no completion tracking.",
+        "Automatically offered times are point-in-time UI observations only, not actively verified safe-search availability; liveAvailability remainsfalse.",
+        "Do not count two stableIDs as two unique restaurants.",
+        "Cancellation and card guarantee details not inspected beyond initial page; no policy inferred.",
+        "Previous mobile observation: Canonical SevenRooms original UI rendered390x844, BONITO St Barth,6 Rue Lubin Brin Gustavia, EN/FR selector; no inputs or clicks.",
+        "Previous prepayment observation: Initial provider UI automatically offered21Oct2026 slots for2 guests, labelled EUR180 prepayment; no slot selected, perperson basis not established.",
+        "Two stable IDs refer to the same verified Bonito venue; keep both IDs but deduplicate the physical venue when scheduling provider tests. Observed EUR180 prepayment UI is not a completed payment or validated charge basis."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://www.bonitosbh.com/",
+        "https://www.sevenrooms.com/reservations/bonitostbarth",
+        "https://www.sevenrooms.com/explore/bonitostbarth/reservations/create/search",
+        "data/booking-providers.json",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "curated-SBH-le-toiny-restaurant",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://letoiny.com/",
+      "bookingUrl": null,
+      "currentRouteStatus": "manual_email",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "manual_only",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Only an explicit manual contact route is verified; no automated table inventory or confirmation contract established.",
+        "Official hotel identifies La Table and Beach Club and directs restaurant reservations to restaurant@letoiny.com. Restaurant-specific manual contact retained; no hotel reservation engine substituted."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://letoiny.com/",
+        "https://www.thefork.com/restaurant/le-toiny-r215803",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "curated-SBH-tamarin-st-barth",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://tamarinstbarth.com/contact/",
+      "bookingUrl": null,
+      "currentRouteStatus": "manual_email",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "manual_only",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Only an explicit manual contact route is verified; no automated table inventory or confirmation contract established.",
+        "Official contact page explicitly asks all reservation requests by email to info@tamarinstbarth.com. Telephone +590 590 29 27 74 is also listed."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://tamarinstbarth.com/contact/",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-bagatelle",
+      "providerCandidate": "SevenRooms",
+      "providerVenueId": "bagatellestbarth",
+      "officialSource": "https://bagatelle.com/venues/st-barths/booking/",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/bagatellestbarth",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "Historical provider UI availability observation exists only; it is not a current backend inventory or booking-completion test.",
+        "Seasonal closed-hours display is not treated as permanent closure.",
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "Previous mobile observation: 390x844 screenshot of same availability results readable; no checkout tested",
+        "Previous cardGuarantee observation: For 6+ guests a credit card is required, managed through Stripe with SevenRooms.",
+        "Previous prepayment observation: For 15+ guests, fixed menu and 50% deposit upon acceptance.",
+        "Previous cancellation observation: For group deposit bookings, notify at least 12 hours before reservation or deposit is non-refundable."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://bagatelle.com/venues/st-barths/booking/",
+        "https://www.sevenrooms.com/reservations/bagatellestbarth",
+        "data/booking-providers.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-bart-s-food-lounge",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": null,
+      "bookingUrl": null,
+      "currentRouteStatus": "unresolved",
+      "identityVerified": false,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "unresolved",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Exact-name OSM-derived candidate on Rue du Général de Gaulle. No restaurant-owned current identity, operation or reservation source verified."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://www.cartogiraffe.com/france/saint-barth%C3%A9lemy/saint-barth%C3%A9lemy/bart%2Bs%2Bfood%2Blounge/",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-black-ginger",
+      "providerCandidate": "Contact Form 7 / direct request",
+      "providerVenueId": null,
+      "officialSource": "https://blackgingersbh.com/en/reservations/",
+      "bookingUrl": "https://blackgingersbh.com/en/reservations/",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "No verified live inventory through a Velvet backend adapter; initial fields/default time options do not prove bookable availability.",
+        "Request-only route: a submitted request must remain pending until separately confirmed by the supplier.",
+        "Prepared as evidence only: provider is not admitted by an existing reviewed registry adapter; no allowlist expanded.",
+        "Request form was read but not submitted; no table inventory proven.",
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "Previous mobile observation: 390x844 screenshot inspected at request fields and Send Request; readable narrow layout; no submission"
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://blackgingersbh.com/en/reservations/"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-bonito",
+      "providerCandidate": "SevenRooms",
+      "providerVenueId": "bonitostbarth",
+      "officialSource": "https://www.bonitosbh.com/",
+      "bookingUrl": "https://www.sevenrooms.com/reservations/bonitostbarth",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "No verified live inventory through a Velvet backend adapter; initial fields/default time options do not prove bookable availability.",
+        "Likely duplicate venue represented by curated-SBH-bonito-saint-barth and osm-SBH-bonito; IDs preserved, no merge.",
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "No slot selected, no date/guest change, no submission, no completion tracking.",
+        "Automatically offered times are point-in-time UI observations only, not actively verified safe-search availability; liveAvailability remainsfalse.",
+        "Do not count two stableIDs as two unique restaurants.",
+        "Cancellation and card guarantee details not inspected beyond initial page; no policy inferred.",
+        "Previous mobile observation: Canonical SevenRooms original UI rendered390x844, BONITO St Barth,6 Rue Lubin Brin Gustavia, EN/FR selector; no inputs or clicks.",
+        "Previous prepayment observation: Initial provider UI automatically offered21Oct2026 slots for2 guests, labelled EUR180 prepayment; no slot selected, perperson basis not established.",
+        "Two stable IDs refer to the same verified Bonito venue; keep both IDs but deduplicate the physical venue when scheduling provider tests. Observed EUR180 prepayment UI is not a completed payment or validated charge basis."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://www.bonitosbh.com/",
+        "https://www.sevenrooms.com/reservations/bonitostbarth",
+        "https://www.sevenrooms.com/explore/bonitostbarth/reservations/create/search",
+        "data/booking-providers.json",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-eddy-s",
+      "providerCandidate": "Contact Form7 original restaurant request form",
+      "providerVenueId": null,
+      "officialSource": "https://eddysghetto.com/",
+      "bookingUrl": "https://eddysghetto.com/",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "No verified live inventory through a Velvet backend adapter; initial fields/default time options do not prove bookable availability.",
+        "Request-only route: a submitted request must remain pending until separately confirmed by the supplier.",
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "reCAPTCHA present; challenge and POST traffic not executed; no bypass.",
+        "Original form requests date/party via free text, not live inventory.",
+        "Form submission/delivery untested. Do not label working end-to-end booking.",
+        "No visible cancellation/card guarantee/prepayment terms found.",
+        "Previous mobile observation: Booking-specific textarea visible under guard390x844; no input/submit",
+        "Original request form includes reCAPTCHA. No CAPTCHA bypass, request submission or receipt verification."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://eddysghetto.com/",
+        "data/external200-round4-evidence.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-fishcorner",
+      "providerCandidate": "Zenchef",
+      "providerVenueId": "388090",
+      "officialSource": "https://www.fishcornerstbarth.com/en/book-online",
+      "bookingUrl": "https://bookings.zenchef.com/results?pid=1001&rid=388090",
+      "currentRouteStatus": "official_external_link",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "candidate",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Requires the canonical provider adapter, audited pre-submit/hold boundaries and an explicit confirmation contract before enabling direct booking.",
+        "No verified live inventory through a Velvet backend adapter; initial fields/default time options do not prove bookable availability.",
+        "No reservation confirmation, payment, waitlist or contact request submitted.",
+        "Zenchef fetch restricted; no browser, iframe, mobile or live availability validation on2026-10-16.",
+        "Zenchef rid388090 is explicitly bound by the official BOOK link; pid1001 is a partner query parameter, not a venue ID. Restricted fetch prevented provider UI/availability testing."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://www.fishcornerstbarth.com/en/book-online",
+        "data/booking-providers.json"
+      ]
+    },
+    {
+      "restaurantId": "osm-SBH-l-isoletta",
+      "providerCandidate": null,
+      "providerVenueId": null,
+      "officialSource": "https://www.isolettastbarth.com/contact",
+      "bookingUrl": null,
+      "currentRouteStatus": "manual_phone",
+      "identityVerified": true,
+      "backendPlaywrightImplemented": false,
+      "backendPlaywrightTested": false,
+      "supplierConfirmationVerified": false,
+      "readiness": "manual_only",
+      "blockers": [
+        "No enabled backend Playwright adapter or supplier-confirmation test for this stable ID; existing external links, iframe observations and app-view tests are research/fallback only.",
+        "Only an explicit manual contact route is verified; no automated table inventory or confirmation contract established.",
+        "Official contact page says reserve by +590 590 52 02 02 or visit; reservations@isolettastbarth.com also listed. No provider inventory found."
+      ],
+      "evidence": [
+        "data/external200-group09.json",
+        "https://www.isolettastbarth.com/contact",
+        "data/external200-round4-evidence.json"
+      ]
+    }
+  ]
+}
